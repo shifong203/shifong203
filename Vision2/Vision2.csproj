@@ -1,0 +1,2817 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{1B11B5F1-FFA8-4560-B3FA-DAE330F80C9B}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>Vision2</RootNamespace>
+    <AssemblyName>Vision2</AssemblyName>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <TargetFrameworkProfile />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Logo.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>Vision2.Program</StartupObject>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AdvMotAPI">
+      <HintPath>Dll\AdvMotAPI.dll</HintPath>
+    </Reference>
+    <Reference Include="AmphenolMES">
+      <HintPath>..\..\项目\yuefan\安费诺\Omega-WF2  AOI对接接口文件及说明\20.12-21-V01\AmphenolMES.dll</HintPath>
+    </Reference>
+    <Reference Include="halcondotnet, Version=19.11.0.0, Culture=neutral, PublicKeyToken=4973bed59ddbf2b8, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files\MVTec\HALCON-20.11-Steady\bin\dotnet35\halcondotnet.dll</HintPath>
+    </Reference>
+    <Reference Include="HslCommunication">
+      <HintPath>Dll\HslCommunication.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="MVReader, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Dll\MVReader.exe</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI">
+      <HintPath>..\ErosProjcetDLL\bin\Debug\NPOI.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OOXML">
+      <HintPath>..\ErosProjcetDLL\bin\Debug\NPOI.OOXML.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OpenXml4Net">
+      <HintPath>..\ErosProjcetDLL\bin\Debug\NPOI.OpenXml4Net.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.OpenXmlFormats">
+      <HintPath>..\ErosProjcetDLL\bin\Debug\NPOI.OpenXmlFormats.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Design" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Net.Http.WebRequest" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.Windows" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="ThridLibray, Version=1.0.0.31445, Culture=neutral, PublicKeyToken=407bb547be8622a9, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\dll\ThridLibray.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ConClass\GlobalVariable.cs" />
+    <Compile Include="ConClass\Npoi.cs" />
+    <Compile Include="ConClass\OnManagementForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ConClass\OnManagementForm.Designer.cs">
+      <DependentUpon>OnManagementForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ControlUsar\ControlBorderManager.cs" />
+    <Compile Include="EPSON Robot Remote TCPIP\EPSON Robot .cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EPSON Robot Remote TCPIP\EPSON Robot .Designer.cs">
+      <DependentUpon>EPSON Robot .cs</DependentUpon>
+    </Compile>
+    <Compile Include="EPSON Robot Remote TCPIP\EPSON Robot TCPIP.cs" />
+    <Compile Include="ErosDataForm\ExclecData.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ErosDataForm\ExclecData.Designer.cs">
+      <DependentUpon>ExclecData.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ErosProjcetDLL\Project\AlarmForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ErosProjcetDLL\Project\AlarmForm.Designer.cs">
+      <DependentUpon>AlarmForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ErosProjcetDLL\Project\AlarmListBoxt.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ErosProjcetDLL\Project\AlarmListBoxt.Designer.cs">
+      <DependentUpon>AlarmListBoxt.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ErosProjcetDLL\UI\DataGridViewF\DataGridViewNumericUpDownCell.cs" />
+    <Compile Include="ErosProjcetDLL\UI\DataGridViewF\DataGridViewNumericUpDownColumn.cs" />
+    <Compile Include="ErosProjcetDLL\UI\DataGridViewF\DataGridViewNumericUpDownEditingControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ErosProjcetDLL\UI\PanelScrollTest.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ErosProjcetDLL\UI\PropertyGrid\Class1.cs" />
+    <Compile Include="ErosProjcetDLL\UI\PropertyGrid\ExportAttribute.cs" />
+    <Compile Include="ErosUI\DataTimeForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ErosUI\DataTimeForm.Designer.cs">
+      <DependentUpon>DataTimeForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ErosUI\ErosDataProgramUI.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ErosUI\ErosDataProgramUI.Designer.cs">
+      <DependentUpon>ErosDataProgramUI.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ErosUI\Form1 .cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ErosUI\Form2.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ErosUI\Form2.Designer.cs">
+      <DependentUpon>Form2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ErosUI\FormText.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ErosUI\FormText.Designer.cs">
+      <DependentUpon>FormText.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ErosUI\OpenDis.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ErosUI\OpenDis.Designer.cs">
+      <DependentUpon>OpenDis.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ErosUI\RealTimeImageMaker.cs" />
+    <Compile Include="ErosUI\UICon.cs" />
+    <Compile Include="Form1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form1.Designer.cs">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ErosProjcetDLL\Bytes\ByteHelper.cs" />
+    <Compile Include="ErosProjcetDLL\Code\Code.cs" />
+    <Compile Include="ErosProjcetDLL\Code\Combox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ErosProjcetDLL\Code\ICode.cs" />
+    <Compile Include="ErosProjcetDLL\Code\UserCode.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ErosProjcetDLL\Code\UserCode.Designer.cs">
+      <DependentUpon>UserCode.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ErosProjcetDLL\CsCode\CSharpCode.cs" />
+    <Compile Include="ErosProjcetDLL\CsCode\CSharpCodeProgramFrom.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ErosProjcetDLL\CsCode\CSharpCodeProgramFrom.Designer.cs">
+      <DependentUpon>CSharpCodeProgramFrom.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ErosProjcetDLL\CsCode\CSharpCodeUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ErosProjcetDLL\CsCode\CSharpCodeUserControl.Designer.cs">
+      <DependentUpon>CSharpCodeUserControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ErosProjcetDLL\Dynamic\ErosDynamic.cs" />
+    <Compile Include="ErosProjcetDLL\ErosDesignSurface\ErosDesign.cs" />
+    <Compile Include="ErosProjcetDLL\ErosDesignSurface\ErosDesign.Designer.cs">
+      <DependentUpon>ErosDesign.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ErosProjcetDLL\ErosDesignSurface\ErosDesignSurface.cs" />
+    <Compile Include="ErosProjcetDLL\Excel\Npoi.cs" />
+    <Compile Include="ErosProjcetDLL\FileCon\FileCon.cs" />
+    <Compile Include="ErosProjcetDLL\PLCUI\ErosNewFrom.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ErosProjcetDLL\PLCUI\ErosNewFrom.Designer.cs">
+      <DependentUpon>ErosNewFrom.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ErosProjcetDLL\PLCUI\HMI.cs" />
+    <Compile Include="ErosProjcetDLL\PLCUI\HMIDIC.cs" />
+    <Compile Include="ErosProjcetDLL\PLCUI\MouseHook.cs" />
+    <Compile Include="ErosProjcetDLL\PLCUI\SettingService.cs" />
+    <Compile Include="ErosProjcetDLL\PLCUI\UIMoveKnob.cs" />
+    <Compile Include="ErosProjcetDLL\PLCUI\UISizeDot.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ErosProjcetDLL\PLCUI\UISizeDot.Designer.cs">
+      <DependentUpon>UISizeDot.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ErosProjcetDLL\Project\AlarmText.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ErosProjcetDLL\Project\AlarmText.Designer.cs">
+      <DependentUpon>AlarmText.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ErosProjcetDLL\Project\CHMHelp.cs" />
+    <Compile Include="ErosProjcetDLL\Project\Class1.cs" />
+    <Compile Include="ErosProjcetDLL\Project\CsvParsingHelper.cs" />
+    <Compile Include="ErosProjcetDLL\Project\INodeNew.cs" />
+    <Compile Include="ErosProjcetDLL\Project\IntEnum.cs" />
+    <Compile Include="ErosProjcetDLL\Project\IntEnumUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ErosProjcetDLL\Project\IntEnumUserControl.Designer.cs">
+      <DependentUpon>IntEnumUserControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ErosProjcetDLL\Project\LandingForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ErosProjcetDLL\Project\LandingForm.Designer.cs">
+      <DependentUpon>LandingForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ErosProjcetDLL\Project\LogMessage.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ErosProjcetDLL\Project\LogMessage.Designer.cs">
+      <DependentUpon>LogMessage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ErosProjcetDLL\Project\NewPragram.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ErosProjcetDLL\Project\NewPragram.Designer.cs">
+      <DependentUpon>NewPragram.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ErosProjcetDLL\Project\NewUserForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ErosProjcetDLL\Project\NewUserForm.Designer.cs">
+      <DependentUpon>NewUserForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ErosProjcetDLL\Project\ProjectDictionary.cs" />
+    <Compile Include="ErosProjcetDLL\Project\ProjectINI.cs" />
+    <Compile Include="ErosProjcetDLL\Project\ProjectNobet.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ErosProjcetDLL\Project\ProjectNobet.Designer.cs">
+      <DependentUpon>ProjectNobet.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ErosProjcetDLL\Project\ProjectObj.cs" />
+    <Compile Include="ErosProjcetDLL\Project\PropertyForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ErosProjcetDLL\Project\PropertyForm.Designer.cs">
+      <DependentUpon>PropertyForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ErosProjcetDLL\Project\RealTimeImageMaker.cs" />
+    <Compile Include="ErosProjcetDLL\Project\RunAdminForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ErosProjcetDLL\Project\RunAdminForm.Designer.cs">
+      <DependentUpon>RunAdminForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ErosProjcetDLL\Project\ToolForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ErosProjcetDLL\Project\ToolForm.Designer.cs">
+      <DependentUpon>ToolForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ErosProjcetDLL\Project\ToolKitForm.cs" />
+    <Compile Include="ErosProjcetDLL\Project\ToolKitForm.Designer.cs">
+      <DependentUpon>ToolKitForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ErosProjcetDLL\Project\UresForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ErosProjcetDLL\Project\UresForm.Designer.cs">
+      <DependentUpon>UresForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ErosProjcetDLL\Project\User.cs" />
+    <Compile Include="ErosProjcetDLL\Project\数据分析.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ErosProjcetDLL\Project\数据分析.Designer.cs">
+      <DependentUpon>数据分析.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ErosProjcetDLL\StaticConFile\GlobalVariable.cs" />
+    <Compile Include="ErosProjcetDLL\StaticConFile\StaticCON.cs" />
+    <Compile Include="ErosProjcetDLL\UI\DataGridViewF\DataGridViewComboBoxColumnEx.cs" />
+    <Compile Include="ErosProjcetDLL\UI\DataGridViewF\DataGridViewEx.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ErosProjcetDLL\UI\DataGridViewF\StaticCon.cs" />
+    <Compile Include="ErosProjcetDLL\UI\dss.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ErosProjcetDLL\UI\dss.Designer.cs">
+      <DependentUpon>dss.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ErosProjcetDLL\UI\Iamage\ImageList.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ErosProjcetDLL\UI\Iamage\ImageList.Designer.cs">
+      <DependentUpon>ImageList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ErosProjcetDLL\UI\OpenFileSiez.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ErosProjcetDLL\UI\OpenFileSiez.Designer.cs">
+      <DependentUpon>OpenFileSiez.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ErosProjcetDLL\UI\PictureBoxEX.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ErosProjcetDLL\UI\PropertyGrid\DictionaryAddPG.cs" />
+    <Compile Include="ErosProjcetDLL\UI\PropertyGrid\ErosConverter.cs" />
+    <Compile Include="ErosProjcetDLL\UI\PropertyGrid\ListStringEditorControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ErosProjcetDLL\UI\PropertyGrid\ListStringEditorControl.Designer.cs">
+      <DependentUpon>ListStringEditorControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ErosProjcetDLL\UI\PropertyGrid\MyControlAttibute.cs" />
+    <Compile Include="ErosProjcetDLL\UI\PropertyGrid\MyPropertyGrid .cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ErosProjcetDLL\UI\PropertyGrid\PageTypeEditor_FolderBrowserDialog.cs" />
+    <Compile Include="ErosProjcetDLL\UI\PropertyGrid\PageTypeEditor_OpenFileDialog.cs" />
+    <Compile Include="ErosProjcetDLL\UI\PropertyGrid\PropertyOrderPair.cs" />
+    <Compile Include="ErosProjcetDLL\UI\RichTextBoxExtension.cs" />
+    <Compile Include="ErosProjcetDLL\UI\TabControl\DrawTabControl.cs" />
+    <Compile Include="ErosProjcetDLL\UI\TabControl\TabControlEx.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ErosProjcetDLL\UI\ToolStrip\ToolStrip.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ErosProjcetDLL\UI\ToolStrip\TSButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ErosProjcetDLL\UI\TreeView\CTreeTaskBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ErosProjcetDLL\UI\UIConcs.cs" />
+    <Compile Include="ProductionManagement\ProductionData.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ProductionManagement\ProductionData.Designer.cs">
+      <DependentUpon>ProductionData.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ProductionManagement\Productive_Task.cs" />
+    <Compile Include="ProductionManagement\UserProduction.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ProductionManagement\UserProduction.Designer.cs">
+      <DependentUpon>UserProduction.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ProductionManagement\UserProductive.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ProductionManagement\UserProductive.Designer.cs">
+      <DependentUpon>UserProductive.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Project\DebugF\CommandControl1.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Project\DebugF\CommandControl1.Designer.cs">
+      <DependentUpon>CommandControl1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Project\DebugF\DebugCompiler.cs" />
+    <Compile Include="Project\DebugF\DebugForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Project\DebugF\DebugForm.Designer.cs">
+      <DependentUpon>DebugForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Project\DebugF\DllCon.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Project\DebugF\DllCon.Designer.cs">
+      <DependentUpon>DllCon.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Project\DebugF\DllUers.cs" />
+    <Compile Include="Project\DebugF\IO\AlwaysIO.cs" />
+    <Compile Include="Project\DebugF\IO\C154Cylinder.cs" />
+    <Compile Include="Project\DebugF\IO\CylinderControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Project\DebugF\IO\CylinderControl.Designer.cs">
+      <DependentUpon>CylinderControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Project\DebugF\IO\Data3D_UserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Project\DebugF\IO\Data3D_UserControl.Designer.cs">
+      <DependentUpon>Data3D_UserControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Project\DebugF\IO\DODIAxis.cs" />
+    <Compile Include="Project\DebugF\IO\Form1C154DIDO.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Project\DebugF\IO\Form1C154DIDO.Designer.cs">
+      <DependentUpon>Form1C154DIDO.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Project\DebugF\IO\FY6400.cs" />
+    <Compile Include="Project\DebugF\IO\IAxisGrub.cs" />
+    <Compile Include="Project\DebugF\IO\Local_variable_scale_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Project\DebugF\IO\Local_variable_scale_Form.Designer.cs">
+      <DependentUpon>Local_variable_scale_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Project\DebugF\IO\MP_C154Form1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Project\DebugF\IO\MP_C154Form1.designer.cs">
+      <DependentUpon>MP_C154Form1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Project\DebugF\IO\RunCodeStr.cs" />
+    <Compile Include="Project\DebugF\IO\RunCodeUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Project\DebugF\IO\RunCodeUserControl.Designer.cs">
+      <DependentUpon>RunCodeUserControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Project\DebugF\IO\RunUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Project\DebugF\IO\RunUserControl.Designer.cs">
+      <DependentUpon>RunUserControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Project\DebugF\IO\Run_project.cs" />
+    <Compile Include="Project\DebugF\IO\TrayControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Project\DebugF\IO\TrayControl.Designer.cs">
+      <DependentUpon>TrayControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Project\DebugF\IO\TrayDatas.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Project\DebugF\IO\TrayDatas.Designer.cs">
+      <DependentUpon>TrayDatas.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Project\DebugF\IO\TrayDataUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Project\DebugF\IO\TrayDataUserControl.Designer.cs">
+      <DependentUpon>TrayDataUserControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Project\DebugF\PLCValuesUI.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Project\DebugF\PLCValuesUI.Designer.cs">
+      <DependentUpon>PLCValuesUI.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Project\DebugF\PLC\PLCButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Project\DebugF\PLC\PLCDebug.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Project\DebugF\PLC\PLCDebug.Designer.cs">
+      <DependentUpon>PLCDebug.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Project\DebugF\PLC\PLCText.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Project\DebugF\TechnologyFile\TechnologyUserControl1.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Project\DebugF\TechnologyFile\TechnologyUserControl1.Designer.cs">
+      <DependentUpon>TechnologyUserControl1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Project\DebugF\UserInterfaceControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Project\DebugF\UserInterfaceControl.Designer.cs">
+      <DependentUpon>UserInterfaceControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Project\DebugF\工艺库\AxisDPUserControl1.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Project\DebugF\工艺库\AxisDPUserControl1.Designer.cs">
+      <DependentUpon>AxisDPUserControl1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Project\DebugF\工艺库\MatrixC.cs" />
+    <Compile Include="Project\formula\ButtenModeUI.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Project\formula\ButtenModeUI.Designer.cs">
+      <DependentUpon>ButtenModeUI.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Project\formula\DataGuiVievModeUI.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Project\formula\DataGuiVievModeUI.Designer.cs">
+      <DependentUpon>DataGuiVievModeUI.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Project\formula\FormulaControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Project\formula\FormulaControl.Designer.cs">
+      <DependentUpon>FormulaControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Project\formula\FormulaEditorControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Project\formula\FormulaEditorControl.Designer.cs">
+      <DependentUpon>FormulaEditorControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Project\formula\FormulaForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Project\formula\FormulaForm.Designer.cs">
+      <DependentUpon>FormulaForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Project\formula\FormulaPrForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Project\formula\FormulaPrForm.Designer.cs">
+      <DependentUpon>FormulaPrForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Project\Mes\IMesData.cs" />
+    <Compile Include="Project\formula\JabilForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Project\formula\JabilForm.Designer.cs">
+      <DependentUpon>JabilForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Project\formula\LinkData.cs" />
+    <Compile Include="Project\formula\LinkDataForm1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Project\formula\LinkDataForm1.Designer.cs">
+      <DependentUpon>LinkDataForm1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Project\formula\LinkVasetControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Project\formula\LinkVasetControl.Designer.cs">
+      <DependentUpon>LinkVasetControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Project\formula\MaterialContrsl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Project\formula\MaterialContrsl.Designer.cs">
+      <DependentUpon>MaterialContrsl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Project\formula\MaterialManagement.cs" />
+    <Compile Include="Project\formula\MaterialUserControl1.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Project\formula\MaterialUserControl1.Designer.cs">
+      <DependentUpon>MaterialUserControl1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Project\Mes\MesJib.cs" />
+    <Compile Include="Project\formula\Product.cs" />
+    <Compile Include="Project\formula\ProductEX.cs" />
+    <Compile Include="Project\formula\RecipeCompiler.cs" />
+    <Compile Include="Project\formula\SynchronizationForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Project\formula\SynchronizationForm.Designer.cs">
+      <DependentUpon>SynchronizationForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Project\formula\UserFormulaContrsl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Project\formula\UserFormulaContrsl.Designer.cs">
+      <DependentUpon>UserFormulaContrsl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Project\Mes\丸旭Mes.cs" />
+    <Compile Include="Project\Mes\伟世通Mes.cs" />
+    <Compile Include="Project\FOVForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Project\FOVForm.Designer.cs">
+      <DependentUpon>FOVForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Project\LodingProject.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Project\LodingProject.Designer.cs">
+      <DependentUpon>LodingProject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Project\MainForm1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Project\MainForm1.Designer.cs">
+      <DependentUpon>MainForm1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Project\Mes\安费诺Mes.cs" />
+    <Compile Include="Project\NewProjectForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Project\NewProjectForm.Designer.cs">
+      <DependentUpon>NewProjectForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Project\ProcessControl\ManageProcess.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Project\ProcessControl\ManageProcess.Designer.cs">
+      <DependentUpon>ManageProcess.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Project\ProcessControl\PrControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Project\ProcessControl\PrControl.Designer.cs">
+      <DependentUpon>PrControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Project\ProcessControl\ProcessControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Project\ProcessControl\ProcessControl.Designer.cs">
+      <DependentUpon>ProcessControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Project\ProcessControl\ProcessUser.cs" />
+    <Compile Include="Project\ProjectForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Project\ProjectForm.Designer.cs">
+      <DependentUpon>ProjectForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Project\ProjectNodetControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Project\ProjectNodetControl.Designer.cs">
+      <DependentUpon>ProjectNodetControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Project\simulateQRForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Project\simulateQRForm.Designer.cs">
+      <DependentUpon>simulateQRForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Project\SimulateTrayMesForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Project\SimulateTrayMesForm.designer.cs">
+      <DependentUpon>SimulateTrayMesForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources2.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Socket\DebugPLC\CommandControl1.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Socket\DebugPLC\CommandControl1.Designer.cs">
+      <DependentUpon>CommandControl1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Socket\DebugPLC\DebugComp.cs" />
+    <Compile Include="Socket\DebugPLC\DIDO\abstract_Axis.cs" />
+    <Compile Include="Socket\DebugPLC\DIDO\C154Axis.cs" />
+    <Compile Include="Socket\DebugPLC\DIDO\C154_AxisGrub.cs" />
+    <Compile Include="Socket\DebugPLC\DIDO\DIDOUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Socket\DebugPLC\DIDO\DIDOUserControl.Designer.cs">
+      <DependentUpon>DIDOUserControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Socket\DebugPLC\DIDO\IDIDO.cs" />
+    <Compile Include="Socket\DebugPLC\DIDO\MP_C154.cs" />
+    <Compile Include="Socket\DebugPLC\EnumTextUserControl1.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Socket\DebugPLC\EnumTextUserControl1.Designer.cs">
+      <DependentUpon>EnumTextUserControl1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Socket\DebugPLC\GExCode.cs" />
+    <Compile Include="Socket\DebugPLC\IAxis.cs" />
+    <Compile Include="Socket\DebugPLC\IAxisGrub.cs" />
+    <Compile Include="Socket\DebugPLC\ICylinder.cs" />
+    <Compile Include="Socket\DebugPLC\InterfacePLCUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Socket\DebugPLC\InterfacePLCUserControl.Designer.cs">
+      <DependentUpon>InterfacePLCUserControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Socket\DebugPLC\InterfacePlcUserControl2.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Socket\DebugPLC\InterfacePlcUserControl2.Designer.cs">
+      <DependentUpon>InterfacePlcUserControl2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Socket\DebugPLC\IPLCInterface.cs" />
+    <Compile Include="Socket\DebugPLC\PLCRun.cs" />
+    <Compile Include="Socket\DebugPLC\PLC\AxisControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Socket\DebugPLC\PLC\AxisControl.Designer.cs">
+      <DependentUpon>AxisControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Socket\DebugPLC\PLC\CylinderControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Socket\DebugPLC\PLC\CylinderControl.Designer.cs">
+      <DependentUpon>CylinderControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Socket\DebugPLC\PLC\ListCyinderControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Socket\DebugPLC\PLC\ListCyinderControl.Designer.cs">
+      <DependentUpon>ListCyinderControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Socket\DebugPLC\PLC\ListPLCIOUserControl1.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Socket\DebugPLC\PLC\ListPLCIOUserControl1.Designer.cs">
+      <DependentUpon>ListPLCIOUserControl1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Socket\DebugPLC\PLC\Pf.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Socket\DebugPLC\PLC\Pf.Designer.cs">
+      <DependentUpon>Pf.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Socket\DebugPLC\PLC\PLCAxis.cs" />
+    <Compile Include="Socket\DebugPLC\PLC\PLCButtonV2.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Socket\DebugPLC\PLC\PLCIO.cs" />
+    <Compile Include="Socket\DebugPLC\PLC\PLCIOUserControl1.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Socket\DebugPLC\PLC\PLCIOUserControl1.Designer.cs">
+      <DependentUpon>PLCIOUserControl1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Socket\DebugPLC\PLC\PLCText.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Socket\DebugPLC\PointFile.cs" />
+    <Compile Include="Socket\DebugPLC\pop-UpWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Socket\DebugPLC\pop-UpWindow.Designer.cs">
+      <DependentUpon>pop-UpWindow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Socket\DebugPLC\Robot\Axis4PUserControl1.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Socket\DebugPLC\Robot\Axis4PUserControl1.Designer.cs">
+      <DependentUpon>Axis4PUserControl1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Socket\DebugPLC\Robot\Axis6PUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Socket\DebugPLC\Robot\Axis6PUserControl.Designer.cs">
+      <DependentUpon>Axis6PUserControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Socket\DebugPLC\Robot\AxisSPD.cs" />
+    <Compile Include="Socket\DebugPLC\Robot\DebugRobot.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Socket\DebugPLC\Robot\DebugRobot.Designer.cs">
+      <DependentUpon>DebugRobot.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Socket\DebugPLC\Robot\EpsenRobot6.cs" />
+    <Compile Include="Socket\DebugPLC\Robot\ExecnteControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Socket\DebugPLC\Robot\ExecnteControl.Designer.cs">
+      <DependentUpon>ExecnteControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Socket\DebugPLC\Robot\Execnte_Program_Control.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Socket\DebugPLC\Robot\Execnte_Program_Control.Designer.cs">
+      <DependentUpon>Execnte_Program_Control.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Socket\DebugPLC\Robot\Sequential_programme.cs" />
+    <Compile Include="Socket\DebugPLC\Robot\SetToolForm1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Socket\DebugPLC\Robot\SetToolForm1.Designer.cs">
+      <DependentUpon>SetToolForm1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Socket\DebugPLC\Robot\SteppingControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Socket\DebugPLC\Robot\SteppingControl.Designer.cs">
+      <DependentUpon>SteppingControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Socket\DebugPLC\Robot\TrayControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Socket\DebugPLC\Robot\TrayControl.Designer.cs">
+      <DependentUpon>TrayControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Socket\DebugPLC\Robot\TrayRobot.cs" />
+    <Compile Include="Socket\DebugPLC\Robot\UserRobotControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Socket\DebugPLC\Robot\UserRobotControl.Designer.cs">
+      <DependentUpon>UserRobotControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Socket\DebugPLC\UserControl1.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Socket\DebugPLC\UserControl1.Designer.cs">
+      <DependentUpon>UserControl1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Socket\ErosConLink\AsyncTCPClient.cs" />
+    <Compile Include="Socket\ErosConLink\Check.cs" />
+    <Compile Include="Socket\ErosConLink\Clcd9700.cs" />
+    <Compile Include="Socket\ErosConLink\ConnDB.cs" />
+    <Compile Include="Socket\ErosConLink\DoubleBufferListView.cs" />
+    <Compile Include="Socket\ErosConLink\EquipmentStatus.cs" />
+    <Compile Include="Socket\ErosConLink\ErosRunType.cs" />
+    <Compile Include="Socket\ErosConLink\FY6400.cs" />
+    <Compile Include="Socket\ErosConLink\IDEnumUserControl1.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Socket\ErosConLink\IDEnumUserControl1.Designer.cs">
+      <DependentUpon>IDEnumUserControl1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Socket\ErosConLink\JsonCon.cs" />
+    <Compile Include="Socket\ErosConLink\LinkIDValueControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Socket\ErosConLink\LinkIDValueControl.Designer.cs">
+      <DependentUpon>LinkIDValueControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Socket\ErosConLink\LinkNameAddreControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Socket\ErosConLink\LinkNameAddreControl.Designer.cs">
+      <DependentUpon>LinkNameAddreControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Socket\ErosConLink\LinkNameAddresControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Socket\ErosConLink\LinkNameAddresControl.Designer.cs">
+      <DependentUpon>LinkNameAddresControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Socket\ErosConLink\LinkNameListValueNameUserControl1.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Socket\ErosConLink\LinkNameListValueNameUserControl1.Designer.cs">
+      <DependentUpon>LinkNameListValueNameUserControl1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Socket\ErosConLink\LinkNamesControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Socket\ErosConLink\LinkNamesControl.Designer.cs">
+      <DependentUpon>LinkNamesControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Socket\ErosConLink\LinkName_ValuesNameUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Socket\ErosConLink\LinkName_ValuesNameUserControl.Designer.cs">
+      <DependentUpon>LinkName_ValuesNameUserControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Socket\ErosConLink\ModbusTCPClint.cs" />
+    <Compile Include="Socket\ErosConLink\PCIDIDO.cs" />
+    <Compile Include="Socket\ErosConLink\PLcPC.cs" />
+    <Compile Include="Socket\ErosConLink\RS232Con.cs" />
+    <Compile Include="Socket\ErosConLink\RS232ConF\RS232ConControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Socket\ErosConLink\RS232ConF\RS232ConControl.Designer.cs">
+      <DependentUpon>RS232ConControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Socket\ErosConLink\S71200.cs" />
+    <Compile Include="Socket\ErosConLink\S7200PPI.cs" />
+    <Compile Include="Socket\ErosConLink\SECS_GEM.cs" />
+    <Compile Include="Socket\ErosConLink\Sharp7.cs" />
+    <Compile Include="Socket\ErosConLink\SocketClint.cs" />
+    <Compile Include="Socket\ErosConLink\SocketServer.cs" />
+    <Compile Include="Socket\ErosConLink\StaticCon.cs" />
+    <Compile Include="Socket\ErosConLink\UClass.cs" />
+    <Compile Include="Socket\ErosConLink\三菱MC.cs" />
+    <Compile Include="Socket\ErosConLink\海达U700.cs" />
+    <Compile Include="Socket\ErosConLink\环境传感器.cs" />
+    <Compile Include="Socket\ErosUI\ErosBtn.cs" />
+    <Compile Include="Socket\ErosUI\ErosNewFrom.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Socket\ErosUI\ErosNewFrom.Designer.cs">
+      <DependentUpon>ErosNewFrom.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Socket\ErosUI\GolbalVariable.cs" />
+    <Compile Include="Socket\ErosUI\LinkPLC.cs" />
+    <Compile Include="Socket\ErosUI\MouseHook.cs" />
+    <Compile Include="Socket\ErosUI\MyControlAttibute.cs" />
+    <Compile Include="Socket\ErosUI\PLCBtn.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Socket\ErosUI\PropertyBase.cs" />
+    <Compile Include="Socket\ErosUI\PropertyGridDateItem.cs" />
+    <Compile Include="Socket\ErosUI\retxtForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Socket\ErosUI\retxtForm.Designer.cs">
+      <DependentUpon>retxtForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Socket\ErosUI\SettingService.cs" />
+    <Compile Include="Socket\ErosUI\TextBoxProperty.cs" />
+    <Compile Include="Socket\ErosUI\ToolForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Socket\ErosUI\ToolForm.Designer.cs">
+      <DependentUpon>ToolForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Socket\ErosUI\UIMoveKnob.cs" />
+    <Compile Include="Socket\ErosUI\UISizeDot.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Socket\ErosUI\UISizeDot.Designer.cs">
+      <DependentUpon>UISizeDot.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Socket\ErosUI\UserInterfaceControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Socket\ErosUI\UserInterfaceControl.Designer.cs">
+      <DependentUpon>UserInterfaceControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Socket\ErosUI\曲线窗口.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Socket\ErosUI\曲线窗口.Designer.cs">
+      <DependentUpon>曲线窗口.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Socket\LocalIPForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Socket\LocalIPForm.Designer.cs">
+      <DependentUpon>LocalIPForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Socket\Modbus.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Socket\Modbus.Designer.cs">
+      <DependentUpon>Modbus.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Socket\ModbusTCPIP.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Socket\ModbusTCPIP.Designer.cs">
+      <DependentUpon>ModbusTCPIP.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Socket\newSocketForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Socket\newSocketForm.Designer.cs">
+      <DependentUpon>newSocketForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Socket\SocketConnectForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Socket\SocketConnectForm.Designer.cs">
+      <DependentUpon>SocketConnectForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Socket\SocketServerForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Socket\SocketServerForm.Designer.cs">
+      <DependentUpon>SocketServerForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Socket\Values.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Socket\Values.Designer.cs">
+      <DependentUpon>Values.cs</DependentUpon>
+    </Compile>
+    <Compile Include="visionLink\EquipmentManagement.cs" />
+    <Compile Include="vision\Calib\AutoCalibForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="vision\Calib\AutoCalibForm.Designer.cs">
+      <DependentUpon>AutoCalibForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="vision\Calib\AutoCalibPoint.cs" />
+    <Compile Include="vision\Calib\AutoCalibUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="vision\Calib\AutoCalibUserControl.Designer.cs">
+      <DependentUpon>AutoCalibUserControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="vision\Calib\CalibForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="vision\Calib\CalibForm.Designer.cs">
+      <DependentUpon>CalibForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="vision\Calib\CalibForm1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="vision\Calib\CalibForm1.Designer.cs">
+      <DependentUpon>CalibForm1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="vision\Calib\CalidControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="vision\Calib\CalidControl.Designer.cs">
+      <DependentUpon>CalidControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="vision\Calib\Coordinate.cs" />
+    <Compile Include="vision\Calib\CoordinateControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="vision\Calib\CoordinateControl.Designer.cs">
+      <DependentUpon>CoordinateControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="vision\Cams\CamControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="vision\Cams\CamControl.Designer.cs">
+      <DependentUpon>CamControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="vision\Cams\Camera.cs" />
+    <Compile Include="vision\Cams\CamParam.cs" />
+    <Compile Include="vision\Cams\CamProUI.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="vision\Cams\CamProUI.Designer.cs">
+      <DependentUpon>CamProUI.cs</DependentUpon>
+    </Compile>
+    <Compile Include="vision\Cams\DahuaCamera.cs" />
+    <Compile Include="vision\Cams\DahuaCams.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="vision\Cams\DahuaCams.Designer.cs">
+      <DependentUpon>DahuaCams.cs</DependentUpon>
+    </Compile>
+    <Compile Include="vision\Cams\ICamera.cs" />
+    <Compile Include="vision\HalconRunFile\Controls\Color_Dete_Control.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\Controls\Color_Dete_Control.Designer.cs">
+      <DependentUpon>Color_Dete_Control.cs</DependentUpon>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\PCBFile\CapacitanceMinMaxV.cs" />
+    <Compile Include="vision\HalconRunFile\PCBFile\RectangleCapacitance.cs" />
+    <Compile Include="vision\HalconRunFile\PCBFile\RectangleCapacitanceControl1.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\PCBFile\RectangleCapacitanceControl1.Designer.cs">
+      <DependentUpon>RectangleCapacitanceControl1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="vision\OneResultOBj.cs" />
+    <Compile Include="vision\FormRestfDataIamge.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="vision\FormRestfDataIamge.Designer.cs">
+      <DependentUpon>FormRestfDataIamge.cs</DependentUpon>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\Controls\CalibControls.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\Controls\CalibControls.Designer.cs">
+      <DependentUpon>CalibControls.cs</DependentUpon>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\Controls\Color_DetectionUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\Controls\Color_DetectionUserControl.Designer.cs">
+      <DependentUpon>Color_DetectionUserControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\Controls\OvergildControl1.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\Controls\OvergildControl1.Designer.cs">
+      <DependentUpon>OvergildControl1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\Controls\CPKForm1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\Controls\CPKForm1.Designer.cs">
+      <DependentUpon>CPKForm1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\Controls\DrawContrlos.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\Controls\DrawContrlos.Designer.cs">
+      <DependentUpon>DrawContrlos.cs</DependentUpon>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\Controls\dynamicParameter.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\Controls\dynamicParameter.Designer.cs">
+      <DependentUpon>dynamicParameter.cs</DependentUpon>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\Controls\ElementMeasureControl1.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\Controls\ElementMeasureControl1.Designer.cs">
+      <DependentUpon>ElementMeasureControl1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\Controls\ForImageForm1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\Controls\ForImageForm1.Designer.cs">
+      <DependentUpon>ForImageForm1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\Controls\HalconRunProgram.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\Controls\HalconRunProgram.Designer.cs">
+      <DependentUpon>HalconRunProgram.cs</DependentUpon>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\Controls\HsvUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\Controls\HsvUserControl.Designer.cs">
+      <DependentUpon>HsvUserControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\Controls\ImageForm1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\Controls\ImageForm1.Designer.cs">
+      <DependentUpon>ImageForm1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\Controls\ListObjHalcon.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\Controls\ListObjHalcon.Designer.cs">
+      <DependentUpon>ListObjHalcon.cs</DependentUpon>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\Controls\MeasureConTrolEx.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\Controls\MeasureConTrolEx.Designer.cs">
+      <DependentUpon>MeasureConTrolEx.cs</DependentUpon>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\Controls\MeasureMletUserControlcs.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\Controls\MeasureMletUserControlcs.Designer.cs">
+      <DependentUpon>MeasureMletUserControlcs.cs</DependentUpon>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\Controls\ModelControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\Controls\ModelControl.Designer.cs">
+      <DependentUpon>ModelControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\Controls\ObjDataGr.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\Controls\ObjDataGr.Designer.cs">
+      <DependentUpon>ObjDataGr.cs</DependentUpon>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\Controls\OCRTextModeUserContro.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\Controls\OCRTextModeUserContro.Designer.cs">
+      <DependentUpon>OCRTextModeUserContro.cs</DependentUpon>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\Controls\VisionContainerControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\Controls\VisionContainerControl.Designer.cs">
+      <DependentUpon>VisionContainerControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\PCBFile\BPCBoJB.cs" />
+    <Compile Include="vision\HalconRunFile\PCBFile\Capacitance.cs" />
+    <Compile Include="vision\HalconRunFile\PCBFile\CapacitianceControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\PCBFile\CapacitianceControl.Designer.cs">
+      <DependentUpon>CapacitianceControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\PCBFile\ICPint.cs" />
+    <Compile Include="vision\HalconRunFile\PCBFile\ICPintControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\PCBFile\ICPintControl.Designer.cs">
+      <DependentUpon>ICPintControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\PCBFile\PCBAControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\PCBFile\PCBAControl.Designer.cs">
+      <DependentUpon>PCBAControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\Controls\Pint_Round_brushControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\Controls\Pint_Round_brushControl.Designer.cs">
+      <DependentUpon>Pint_Round_brushControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\Controls\PinUserControl1.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\Controls\PinUserControl1.designer.cs">
+      <DependentUpon>PinUserControl1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\Controls\PretreatmentUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\Controls\PretreatmentUserControl.Designer.cs">
+      <DependentUpon>PretreatmentUserControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\Controls\QRCodeControl1.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\Controls\QRCodeControl1.Designer.cs">
+      <DependentUpon>QRCodeControl1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\Controls\ResultUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\Controls\ResultUserControl.Designer.cs">
+      <DependentUpon>ResultUserControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\Controls\RGBHSViMAGE.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\Controls\RGBHSViMAGE.Designer.cs">
+      <DependentUpon>RGBHSViMAGE.cs</DependentUpon>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\Controls\ThresholdControls.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\Controls\ThresholdControls.Designer.cs">
+      <DependentUpon>ThresholdControls.cs</DependentUpon>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\Controls\Vision2UserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\Controls\Vision2UserControl.Designer.cs">
+      <DependentUpon>Vision2UserControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\Controls\VisionUserC.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\Controls\VisionUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\Controls\Welding_Spot_Control1.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\Controls\Welding_Spot_Control1.Designer.cs">
+      <DependentUpon>Welding_Spot_Control1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\Controls\Wire_Solder_Control.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\Controls\Wire_Solder_Control.Designer.cs">
+      <DependentUpon>Wire_Solder_Control.cs</DependentUpon>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\Controls\算子表.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\Controls\算子表.Designer.cs">
+      <DependentUpon>算子表.cs</DependentUpon>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\PCBFile\InterfacePCBA.cs" />
+    <Compile Include="vision\HalconRunFile\RunProgramFile\Calculate.cs" />
+    <Compile Include="vision\HalconRunFile\RunProgramFile\CalculateUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\RunProgramFile\CalculateUserControl.Designer.cs">
+      <DependentUpon>CalculateUserControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\RunProgramFile\Color_Aisle.cs" />
+    <Compile Include="vision\HalconRunFile\RunProgramFile\Color_Detection.cs" />
+    <Compile Include="vision\HalconRunFile\RunProgramFile\MeasureTyoes.cs" />
+    <Compile Include="vision\HalconRunFile\RunProgramFile\Overgild.cs" />
+    <Compile Include="vision\HalconRunFile\RunProgramFile\HalconResult.cs" />
+    <Compile Include="vision\HalconRunFile\RunProgramFile\HalconRun.cs" />
+    <Compile Include="vision\HalconRunFile\RunProgramFile\IDrawHalcon.cs" />
+    <Compile Include="vision\HalconRunFile\RunProgramFile\InterfaceVisionControl.cs" />
+    <Compile Include="vision\HalconRunFile\RunProgramFile\Measure.cs" />
+    <Compile Include="vision\HalconRunFile\RunProgramFile\MeasureMlet.cs" />
+    <Compile Include="vision\HalconRunFile\RunProgramFile\ModelVision.cs" />
+    <Compile Include="vision\HalconRunFile\PCBFile\PCBA.cs" />
+    <Compile Include="vision\HalconRunFile\RunProgramFile\PinT.cs" />
+    <Compile Include="vision\HalconRunFile\RunProgramFile\Pin_Round_brush_needlecs.cs" />
+    <Compile Include="vision\HalconRunFile\RunProgramFile\QRCode.cs" />
+    <Compile Include="vision\HalconRunFile\RunProgramFile\RunProgram.cs" />
+    <Compile Include="vision\HalconRunFile\RunProgramFile\Select_obj_type.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\RunProgramFile\Select_obj_type.Designer.cs">
+      <DependentUpon>Select_obj_type.cs</DependentUpon>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\RunProgramFile\Select_Shape_Min_Max.cs" />
+    <Compile Include="vision\HalconRunFile\RunProgramFile\Text_Model.cs" />
+    <Compile Include="vision\HalconRunFile\RunProgramFile\ThresholdControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\RunProgramFile\ThresholdControl.Designer.cs">
+      <DependentUpon>ThresholdControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\RunProgramFile\Threshold_Min_Max.cs" />
+    <Compile Include="vision\HalconRunFile\RunProgramFile\TiffeOffsetImage.cs" />
+    <Compile Include="vision\HalconRunFile\RunProgramFile\Variation_Model.cs" />
+    <Compile Include="vision\HalconRunFile\RunProgramFile\VisionContainer.cs" />
+    <Compile Include="vision\HalconRunFile\RunProgramFile\Waves.cs" />
+    <Compile Include="vision\HalconRunFile\RunProgramFile\Welding_Spot.cs" />
+    <Compile Include="vision\HalconRunFile\RunProgramFile\Wire_Solder.cs" />
+    <Compile Include="vision\HWindID.cs" />
+    <Compile Include="vision\ImageRsetData.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="vision\ImageRsetData.Designer.cs">
+      <DependentUpon>ImageRsetData.cs</DependentUpon>
+    </Compile>
+    <Compile Include="vision\Interface_Vision_Control.cs" />
+    <Compile Include="vision\LibraryForm1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="vision\LibraryForm1.Designer.cs">
+      <DependentUpon>LibraryForm1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="vision\LibraryFormAdd.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="vision\LibraryFormAdd.Designer.cs">
+      <DependentUpon>LibraryFormAdd.cs</DependentUpon>
+    </Compile>
+    <Compile Include="vision\PMRunControl1.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="vision\PMRunControl1.Designer.cs">
+      <DependentUpon>PMRunControl1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="vision\RestObjImage.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="vision\RestObjImage.Designer.cs">
+      <DependentUpon>RestObjImage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="vision\RsetListObjForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="vision\RsetListObjForm.Designer.cs">
+      <DependentUpon>RsetListObjForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="vision\ValueMaxMinContrl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="vision\ValueMaxMinContrl.Designer.cs">
+      <DependentUpon>ValueMaxMinContrl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="vision\Vision.cs" />
+    <Compile Include="vision\VisionUserControl1.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="vision\VisionUserControl1.Designer.cs">
+      <DependentUpon>VisionUserControl1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="vision\VisonForm1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="vision\VisonForm1.Designer.cs">
+      <DependentUpon>VisonForm1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="vision\VisonRsoertUI.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="vision\VisonRsoertUI.Designer.cs">
+      <DependentUpon>VisonRsoertUI.cs</DependentUpon>
+    </Compile>
+    <Compile Include="vision\Zazaniao.cs" />
+    <Compile Include="Web References\cnshah0tis01\Reference.cs" />
+    <EmbeddedResource Include="ConClass\OnManagementForm.resx">
+      <DependentUpon>OnManagementForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EPSON Robot Remote TCPIP\EPSON Robot .resx">
+      <DependentUpon>EPSON Robot .cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ErosDataForm\ExclecData.resx">
+      <DependentUpon>ExclecData.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ErosProjcetDLL\Project\AlarmForm.resx">
+      <DependentUpon>AlarmForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ErosProjcetDLL\Project\AlarmListBoxt.resx">
+      <DependentUpon>AlarmListBoxt.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ErosUI\DataTimeForm.resx">
+      <DependentUpon>DataTimeForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ErosUI\ErosDataProgramUI.resx">
+      <DependentUpon>ErosDataProgramUI.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ErosUI\Form1 .resx">
+      <DependentUpon>Form1 .cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ErosUI\Form2.resx">
+      <DependentUpon>Form2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ErosUI\FormText.resx">
+      <DependentUpon>FormText.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ErosUI\OpenDis.resx">
+      <DependentUpon>OpenDis.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ErosProjcetDLL\Code\UserCode.resx">
+      <DependentUpon>UserCode.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ErosProjcetDLL\CsCode\CSharpCodeProgramFrom.resx">
+      <DependentUpon>CSharpCodeProgramFrom.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ErosProjcetDLL\CsCode\CSharpCodeUserControl.resx">
+      <DependentUpon>CSharpCodeUserControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ErosProjcetDLL\ErosDesignSurface\ErosDesign.resx">
+      <DependentUpon>ErosDesign.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ErosProjcetDLL\PLCUI\ErosNewFrom.resx">
+      <DependentUpon>ErosNewFrom.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ErosProjcetDLL\Project\AlarmText.resx">
+      <DependentUpon>AlarmText.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ErosProjcetDLL\Project\IntEnumUserControl.resx">
+      <DependentUpon>IntEnumUserControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ErosProjcetDLL\Project\LandingForm.resx">
+      <DependentUpon>LandingForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ErosProjcetDLL\Project\LogMessage.resx">
+      <DependentUpon>LogMessage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ErosProjcetDLL\Project\NewPragram.resx">
+      <DependentUpon>NewPragram.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ErosProjcetDLL\Project\NewUserForm.resx">
+      <DependentUpon>NewUserForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ErosProjcetDLL\Project\ProjectNobet.resx">
+      <DependentUpon>ProjectNobet.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ErosProjcetDLL\Project\PropertyForm.resx">
+      <DependentUpon>PropertyForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ErosProjcetDLL\Project\RunAdminForm.resx">
+      <DependentUpon>RunAdminForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ErosProjcetDLL\Project\ToolForm.resx">
+      <DependentUpon>ToolForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ErosProjcetDLL\Project\ToolKitForm.resx">
+      <DependentUpon>ToolKitForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ErosProjcetDLL\Project\UresForm.resx">
+      <DependentUpon>UresForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ErosProjcetDLL\Project\数据分析.resx">
+      <DependentUpon>数据分析.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ErosProjcetDLL\UI\dss.resx">
+      <DependentUpon>dss.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ErosProjcetDLL\UI\Iamage\ImageList.resx">
+      <DependentUpon>ImageList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ErosProjcetDLL\UI\OpenFileSiez.resx">
+      <DependentUpon>OpenFileSiez.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ErosProjcetDLL\UI\PropertyGrid\ListStringEditorControl.resx">
+      <DependentUpon>ListStringEditorControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ErosProjcetDLL\UI\TabControl\TabControlEx.resx">
+      <DependentUpon>TabControlEx.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ProductionManagement\ProductionData.resx">
+      <DependentUpon>ProductionData.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ProductionManagement\UserProduction.resx">
+      <DependentUpon>UserProduction.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ProductionManagement\UserProductive.resx">
+      <DependentUpon>UserProductive.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Project\DebugF\CommandControl1.resx">
+      <DependentUpon>CommandControl1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Project\DebugF\DebugForm.resx">
+      <DependentUpon>DebugForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Project\DebugF\DllCon.resx">
+      <DependentUpon>DllCon.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Project\DebugF\IO\CylinderControl.resx">
+      <DependentUpon>CylinderControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Project\DebugF\IO\Data3D_UserControl.resx">
+      <DependentUpon>Data3D_UserControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Project\DebugF\IO\Form1C154DIDO.resx">
+      <DependentUpon>Form1C154DIDO.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Project\DebugF\IO\Local_variable_scale_Form.resx">
+      <DependentUpon>Local_variable_scale_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Project\DebugF\IO\MP_C154Form1.resx">
+      <DependentUpon>MP_C154Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Project\DebugF\IO\RunCodeUserControl.resx">
+      <DependentUpon>RunCodeUserControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Project\DebugF\IO\RunUserControl.resx">
+      <DependentUpon>RunUserControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Project\DebugF\IO\TrayControl.resx">
+      <DependentUpon>TrayControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Project\DebugF\IO\TrayDatas.resx">
+      <DependentUpon>TrayDatas.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Project\DebugF\IO\TrayDataUserControl.resx">
+      <DependentUpon>TrayDataUserControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Project\DebugF\PLCValuesUI.resx">
+      <DependentUpon>PLCValuesUI.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Project\DebugF\PLC\PLCDebug.resx">
+      <DependentUpon>PLCDebug.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Project\DebugF\TechnologyFile\TechnologyUserControl1.resx">
+      <DependentUpon>TechnologyUserControl1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Project\DebugF\UserInterfaceControl.resx">
+      <DependentUpon>UserInterfaceControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Project\DebugF\工艺库\AxisDPUserControl1.resx">
+      <DependentUpon>AxisDPUserControl1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Project\formula\ButtenModeUI.resx">
+      <DependentUpon>ButtenModeUI.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Project\formula\DataGuiVievModeUI.resx">
+      <DependentUpon>DataGuiVievModeUI.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Project\formula\FormulaControl.resx">
+      <DependentUpon>FormulaControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Project\formula\FormulaEditorControl.resx">
+      <DependentUpon>FormulaEditorControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Project\formula\FormulaForm.resx">
+      <DependentUpon>FormulaForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Project\formula\FormulaPrForm.resx">
+      <DependentUpon>FormulaPrForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Project\formula\JabilForm.resx">
+      <DependentUpon>JabilForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Project\formula\LinkDataForm1.resx">
+      <DependentUpon>LinkDataForm1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Project\formula\LinkVasetControl.resx">
+      <DependentUpon>LinkVasetControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Project\formula\MaterialContrsl.resx">
+      <DependentUpon>MaterialContrsl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Project\formula\MaterialUserControl1.resx">
+      <DependentUpon>MaterialUserControl1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Project\formula\SynchronizationForm.resx">
+      <DependentUpon>SynchronizationForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Project\formula\UserFormulaContrsl.resx">
+      <DependentUpon>UserFormulaContrsl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Project\FOVForm.resx">
+      <DependentUpon>FOVForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Project\LodingProject.resx">
+      <DependentUpon>LodingProject.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Project\MainForm1.en.resx">
+      <DependentUpon>MainForm1.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Project\MainForm1.resx">
+      <DependentUpon>MainForm1.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Project\MainForm1.zh-Hans.resx">
+      <DependentUpon>MainForm1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Project\NewProjectForm.resx">
+      <DependentUpon>NewProjectForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Project\ProcessControl\ManageProcess.resx">
+      <DependentUpon>ManageProcess.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Project\ProcessControl\PrControl.resx">
+      <DependentUpon>PrControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Project\ProcessControl\ProcessControl.resx">
+      <DependentUpon>ProcessControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Project\ProjectForm.resx">
+      <DependentUpon>ProjectForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Project\ProjectNodetControl.resx">
+      <DependentUpon>ProjectNodetControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Project\simulateQRForm.resx">
+      <DependentUpon>simulateQRForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Project\SimulateTrayMesForm.resx">
+      <DependentUpon>SimulateTrayMesForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources2.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Socket\DebugPLC\CommandControl1.resx">
+      <DependentUpon>CommandControl1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Socket\DebugPLC\DIDO\DIDOUserControl.resx">
+      <DependentUpon>DIDOUserControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Socket\DebugPLC\EnumTextUserControl1.resx">
+      <DependentUpon>EnumTextUserControl1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Socket\DebugPLC\InterfacePLCUserControl.resx">
+      <DependentUpon>InterfacePLCUserControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Socket\DebugPLC\InterfacePlcUserControl2.resx">
+      <DependentUpon>InterfacePlcUserControl2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Socket\DebugPLC\PLC\AxisControl.resx">
+      <DependentUpon>AxisControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Socket\DebugPLC\PLC\CylinderControl.resx">
+      <DependentUpon>CylinderControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Socket\DebugPLC\PLC\ListCyinderControl.resx">
+      <DependentUpon>ListCyinderControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Socket\DebugPLC\PLC\ListPLCIOUserControl1.resx">
+      <DependentUpon>ListPLCIOUserControl1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Socket\DebugPLC\PLC\Pf.resx">
+      <DependentUpon>Pf.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Socket\DebugPLC\PLC\PLCIOUserControl1.resx">
+      <DependentUpon>PLCIOUserControl1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Socket\DebugPLC\pop-UpWindow.resx">
+      <DependentUpon>pop-UpWindow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Socket\DebugPLC\Robot\Axis4PUserControl1.resx">
+      <DependentUpon>Axis4PUserControl1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Socket\DebugPLC\Robot\Axis6PUserControl.resx">
+      <DependentUpon>Axis6PUserControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Socket\DebugPLC\Robot\DebugRobot.resx">
+      <DependentUpon>DebugRobot.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Socket\DebugPLC\Robot\ExecnteControl.resx">
+      <DependentUpon>ExecnteControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Socket\DebugPLC\Robot\Execnte_Program_Control.resx">
+      <DependentUpon>Execnte_Program_Control.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Socket\DebugPLC\Robot\SetToolForm1.resx">
+      <DependentUpon>SetToolForm1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Socket\DebugPLC\Robot\SteppingControl.resx">
+      <DependentUpon>SteppingControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Socket\DebugPLC\Robot\TrayControl.resx">
+      <DependentUpon>TrayControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Socket\DebugPLC\Robot\UserRobotControl.resx">
+      <DependentUpon>UserRobotControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Socket\DebugPLC\UserControl1.resx">
+      <DependentUpon>UserControl1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Socket\ErosConLink\IDEnumUserControl1.resx">
+      <DependentUpon>IDEnumUserControl1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Socket\ErosConLink\LinkIDValueControl.resx">
+      <DependentUpon>LinkIDValueControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Socket\ErosConLink\LinkNameAddreControl.resx">
+      <DependentUpon>LinkNameAddreControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Socket\ErosConLink\LinkNameAddresControl.resx">
+      <DependentUpon>LinkNameAddresControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Socket\ErosConLink\LinkNameListValueNameUserControl1.resx">
+      <DependentUpon>LinkNameListValueNameUserControl1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Socket\ErosConLink\LinkNamesControl.resx">
+      <DependentUpon>LinkNamesControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Socket\ErosConLink\LinkName_ValuesNameUserControl.resx">
+      <DependentUpon>LinkName_ValuesNameUserControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Socket\ErosConLink\RS232ConF\RS232ConControl.resx">
+      <DependentUpon>RS232ConControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Socket\ErosUI\ErosNewFrom.resx">
+      <DependentUpon>ErosNewFrom.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Socket\ErosUI\retxtForm.resx">
+      <DependentUpon>retxtForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Socket\ErosUI\ToolForm.resx">
+      <DependentUpon>ToolForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Socket\ErosUI\UserInterfaceControl.resx">
+      <DependentUpon>UserInterfaceControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Socket\ErosUI\曲线窗口.resx">
+      <DependentUpon>曲线窗口.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Socket\LocalIPForm.resx">
+      <DependentUpon>LocalIPForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Socket\Modbus.resx">
+      <DependentUpon>Modbus.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Socket\ModbusTCPIP.resx">
+      <DependentUpon>ModbusTCPIP.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Socket\newSocketForm.resx">
+      <DependentUpon>newSocketForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Socket\SocketConnectForm.resx">
+      <DependentUpon>SocketConnectForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Socket\SocketServerForm.resx">
+      <DependentUpon>SocketServerForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Socket\Values.resx">
+      <DependentUpon>Values.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="vision\Calib\AutoCalibForm.resx">
+      <DependentUpon>AutoCalibForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="vision\Calib\AutoCalibUserControl.resx">
+      <DependentUpon>AutoCalibUserControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="vision\Calib\CalibForm.resx">
+      <DependentUpon>CalibForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="vision\Calib\CalibForm1.resx">
+      <DependentUpon>CalibForm1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="vision\Calib\CalidControl.resx">
+      <DependentUpon>CalidControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="vision\Calib\CoordinateControl.resx">
+      <DependentUpon>CoordinateControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="vision\Cams\CamControl.resx">
+      <DependentUpon>CamControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="vision\Cams\CamProUI.resx">
+      <DependentUpon>CamProUI.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="vision\Cams\DahuaCams.resx">
+      <DependentUpon>DahuaCams.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="vision\FormRestfDataIamge.resx">
+      <DependentUpon>FormRestfDataIamge.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="vision\HalconRunFile\Controls\CalibControls.resx">
+      <DependentUpon>CalibControls.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="vision\HalconRunFile\Controls\Color_DetectionUserControl.resx">
+      <DependentUpon>Color_DetectionUserControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="vision\HalconRunFile\Controls\Color_Dete_Control.resx">
+      <DependentUpon>Color_Dete_Control.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="vision\HalconRunFile\Controls\OvergildControl1.resx">
+      <DependentUpon>OvergildControl1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="vision\HalconRunFile\Controls\CPKForm1.resx">
+      <DependentUpon>CPKForm1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="vision\HalconRunFile\Controls\DrawContrlos.resx">
+      <DependentUpon>DrawContrlos.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="vision\HalconRunFile\Controls\dynamicParameter.resx">
+      <DependentUpon>dynamicParameter.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="vision\HalconRunFile\Controls\ElementMeasureControl1.resx">
+      <DependentUpon>ElementMeasureControl1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="vision\HalconRunFile\Controls\ForImageForm1.resx">
+      <DependentUpon>ForImageForm1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="vision\HalconRunFile\Controls\HalconRunProgram.resx">
+      <DependentUpon>HalconRunProgram.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="vision\HalconRunFile\Controls\HsvUserControl.resx">
+      <DependentUpon>HsvUserControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="vision\HalconRunFile\Controls\ImageForm1.resx">
+      <DependentUpon>ImageForm1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="vision\HalconRunFile\Controls\ListObjHalcon.resx">
+      <DependentUpon>ListObjHalcon.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="vision\HalconRunFile\Controls\MeasureConTrolEx.resx">
+      <DependentUpon>MeasureConTrolEx.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="vision\HalconRunFile\Controls\MeasureMletUserControlcs.resx">
+      <DependentUpon>MeasureMletUserControlcs.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="vision\HalconRunFile\Controls\ModelControl.resx">
+      <DependentUpon>ModelControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="vision\HalconRunFile\Controls\ObjDataGr.resx">
+      <DependentUpon>ObjDataGr.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="vision\HalconRunFile\Controls\OCRTextModeUserContro.resx">
+      <DependentUpon>OCRTextModeUserContro.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="vision\HalconRunFile\Controls\VisionContainerControl.resx">
+      <DependentUpon>VisionContainerControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="vision\HalconRunFile\PCBFile\CapacitianceControl.resx">
+      <DependentUpon>CapacitianceControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="vision\HalconRunFile\PCBFile\ICPintControl.resx">
+      <DependentUpon>ICPintControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="vision\HalconRunFile\PCBFile\PCBAControl.resx">
+      <DependentUpon>PCBAControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="vision\HalconRunFile\Controls\Pint_Round_brushControl.resx">
+      <DependentUpon>Pint_Round_brushControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="vision\HalconRunFile\Controls\PinUserControl1.resx">
+      <DependentUpon>PinUserControl1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="vision\HalconRunFile\Controls\PretreatmentUserControl.resx">
+      <DependentUpon>PretreatmentUserControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="vision\HalconRunFile\Controls\QRCodeControl1.resx">
+      <DependentUpon>QRCodeControl1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="vision\HalconRunFile\Controls\ResultUserControl.resx">
+      <DependentUpon>ResultUserControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="vision\HalconRunFile\Controls\RGBHSViMAGE.resx">
+      <DependentUpon>RGBHSViMAGE.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="vision\HalconRunFile\Controls\ThresholdControls.resx">
+      <DependentUpon>ThresholdControls.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="vision\HalconRunFile\Controls\Vision2UserControl.resx">
+      <DependentUpon>Vision2UserControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="vision\HalconRunFile\Controls\VisionUserC.resx">
+      <DependentUpon>VisionUserC.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="vision\HalconRunFile\Controls\VisionUserControl.resx">
+      <DependentUpon>VisionUserControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="vision\HalconRunFile\Controls\Welding_Spot_Control1.resx">
+      <DependentUpon>Welding_Spot_Control1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="vision\HalconRunFile\Controls\Wire_Solder_Control.resx">
+      <DependentUpon>Wire_Solder_Control.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="vision\HalconRunFile\Controls\算子表.resx">
+      <DependentUpon>算子表.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="vision\HalconRunFile\PCBFile\RectangleCapacitanceControl1.resx">
+      <DependentUpon>RectangleCapacitanceControl1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="vision\HalconRunFile\RunProgramFile\CalculateUserControl.resx">
+      <DependentUpon>CalculateUserControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="vision\HalconRunFile\RunProgramFile\Select_obj_type.resx">
+      <DependentUpon>Select_obj_type.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="vision\HalconRunFile\RunProgramFile\ThresholdControl.resx">
+      <DependentUpon>ThresholdControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="vision\ImageRsetData.resx">
+      <DependentUpon>ImageRsetData.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="vision\LibraryForm1.resx">
+      <DependentUpon>LibraryForm1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="vision\LibraryFormAdd.resx">
+      <DependentUpon>LibraryFormAdd.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="vision\PMRunControl1.resx">
+      <DependentUpon>PMRunControl1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="vision\RestObjImage.resx">
+      <DependentUpon>RestObjImage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="vision\RsetListObjForm.resx">
+      <DependentUpon>RsetListObjForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="vision\ValueMaxMinContrl.resx">
+      <DependentUpon>ValueMaxMinContrl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="vision\VisionUserControl1.resx">
+      <DependentUpon>VisionUserControl1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="vision\VisonForm1.resx">
+      <DependentUpon>VisonForm1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="vision\VisonRsoertUI.resx">
+      <DependentUpon>VisonRsoertUI.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="Iamge\HalconDemo1_TemporaryKey.pfx" />
+    <Fakes Include="ErosProjcetDLL\Fakes\NPOI.fakes" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <None Include="Web References\cnshah0tis01\Reference.map" />
+    <None Include="Web References\cnshah0tis01\TIS.wsdl" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\64_bit.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\accept.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\add.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\address_books.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\advanced.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\alar.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\alarm-clock-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\applications.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\archive-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\archive-vector1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\archive.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\attachment.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\back-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\back.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\back_alt.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bookmark-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\box-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\brush.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\burn.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\calculator.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\calculator1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\calendar.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\cash.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\charge-battery-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\chart.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\clear-shopping-cart-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\clock-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\color.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\comment.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\comments.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\computer.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\computer_on.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\contacts-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\copy-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\copy_doc.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\credit-card-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\credit_card.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\cut.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\delete_archive.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\desktop_2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\document-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\document.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\down-arrow-alt-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\down-arrow-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\down-left-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\down-right-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\down-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\down_alt.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\download-cloud-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\download-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\download.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\drop-down-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\edit-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\edit-vector1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\edit.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\edit1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ekisho_deep_ocean_hd1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\email.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\exclamation.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\exit.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\flag-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\folder-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\folder.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\folder_smart.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\folder1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\forward-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\forward.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\forward_all.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\forward_alt.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\forward_button.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\forward_button_white.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\fully-charged-battery-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\generalpreferences.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\gift-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\globe-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\globe.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\graphite_computer_on.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\graphite_desktop.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\graphite_globe.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\group-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\heart.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\heineken.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\help-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\help.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\help1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\high-battery-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\high-volume-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\home-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\home.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ichat.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\idea-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\inbox-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\info-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\info.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\info1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\install.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\intel.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\intel_2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\invisible-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\invisible-vector1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\iphone.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\key-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\keyboard.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\left-arrow-alt-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\left-arrow-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\left-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\library_bookmarked.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\like-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\link-broken-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\link-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\link.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\lock-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\lock.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\lock1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\LOGO.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\low-battery-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\low-volume-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mail.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\map.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\medium-battery-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\medium-volume-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\megaphone-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\message-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\micro-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\minus-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\minus.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\minus_white.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\money-box-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\money-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\monitor.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\moon_2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\moon_3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\movie-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\movies.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\movies_alt.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\music-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\music-video-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\music.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\music_2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\music1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mute-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\near-me-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\network.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\new_archive.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\new_doc.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\new_mail.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\news-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\next.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\nokida.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\notebook.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\open_alt.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\opened-folder-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pause.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\phone-alt-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\phone-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\phone.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\photo-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\picture-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\picture.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\picture_cast.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\play.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\plus-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\plus.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\podcast.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\price-tag-euro-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\price-tag-pound-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\price-tag-usd-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\price-tag-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\print-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\print.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\public.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\put-in-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\put-out-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\record.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\recycle-sign-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\recycle_bin.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\refresh.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\reload-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\remove.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\remove1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\rewind_button.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\rewind_button_white.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\right-arrow-alt-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\right-arrow-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\right-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\rss.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\rss_alt.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\rss1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\sale-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\search-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\search.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\search1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\security.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\send.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\sent-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\server.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\settings-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\settings-wrench-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\settings-wrench-vector1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\settings.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\shared-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\shopping-bag-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\shopping-cart-empty-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\shopping-cart-loaded-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\shopping_cart.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\smiley.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\smiley_sad.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\speech-bubble-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\splash_green.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\star-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\star.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\star1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\stop.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\stop_2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\stop_alt.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\stopwatch-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\sun.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\sun_2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\terminal.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\TextFile1.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\thumb-down-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\thumb-up-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\timer-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\tones-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\tools.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\trash-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\trash.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\trash_full.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\tv-show-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\tv-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\tv-vector1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\unarchive.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\universal.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\unlock-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\unread_mail.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\up-arrow-alt-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\up-arrow-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\up-left-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\up-list-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\up-right-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\up-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\up_alt.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\update-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\upload-cloud-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\upload-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\upload.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\user-female-alt-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\user-female-circle-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\user-female-full-circle-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\user-female-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\user-male-alt-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\user-male-circle-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\user-male-full-circle-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\user-male-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\user.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\user1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\users.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\video-camera-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\visible-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\wallet-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\warning.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\window.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\zoom-in-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\zoom-out-vector.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\zoom_in.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\zoom_out.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Iamge\favicon-20180531010245196.ico" />
+    <Content Include="Iamge\favicon-20180531010639581.ico" />
+    <Content Include="Iamge\笔头.jpg" />
+    <None Include="ErosProjcetDLL\Resources\LOGO.jpg" />
+    <None Include="ErosProjcetDLL\Resources\nokida.png" />
+    <None Include="ErosProjcetDLL\Resources\user-male-circle-vector.png" />
+    <Content Include="Logo.ico" />
+    <Content Include="Web References\cnshah0tis01\TIS.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.5.2">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.5.2 %28x86 和 x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Dll\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

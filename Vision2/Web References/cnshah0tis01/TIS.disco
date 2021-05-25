@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<discovery xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.xmlsoap.org/disco/">
+  <contractRef ref="http://cnshah0tis01/MES-TIS/TIS.asmx?wsdl" docRef="http://cnshah0tis01/MES-TIS/TIS.asmx" xmlns="http://schemas.xmlsoap.org/disco/scl/" />
+  <soap address="http://cnshah0tis01/MES-TIS/TIS.asmx" xmlns:q1="http://jabil.com/GMS/MES_TIS" binding="q1:MES_TISSoap" xmlns="http://schemas.xmlsoap.org/disco/soap/" />
+  <soap address="http://cnshah0tis01/MES-TIS/TIS.asmx" xmlns:q2="http://jabil.com/GMS/MES_TIS" binding="q2:MES_TISSoap12" xmlns="http://schemas.xmlsoap.org/disco/soap/" />
+</discovery>

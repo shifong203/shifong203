@@ -1,0 +1,562 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://jabil.com/GMS/MES_TIS" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://jabil.com/GMS/MES_TIS" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://jabil.com/GMS/MES_TIS">
+      <s:element name="GetVersion">
+        <s:complexType />
+      </s:element>
+      <s:element name="GetVersionResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetVersionResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="OKToTest">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CustomerName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Division" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="SerialNumber" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="AssemblyNumber" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="TesterName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="ProcessStep" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="OKToTestResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="OKToTestResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="OKToTestLinkMaterial">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CustomerName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Division" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="LinkMaterialSerialNumber" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="AssemblyNumber" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="TesterName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="ProcessStep" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="OKToTestLinkMaterialResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="OKToTestLinkMaterialResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetPanelSerializeResult">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CustomerName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Division" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="PanelSerialNumber" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetPanelSerializeResultResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetPanelSerializeResultResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="LookupCustAssy">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SerialNumber" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CustomerName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Division" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="LookupCustAssyResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="LookupCustAssyResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetCurrentRouteStep">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SerialNumber" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetCurrentRouteStepResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetCurrentRouteStepResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetTestDataFormats">
+        <s:complexType />
+      </s:element>
+      <s:element name="GetTestDataFormatsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetTestDataFormatsResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ProcessTestData">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="TestData" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="DataFormat" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ProcessTestDataResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ProcessTestDataResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ProcessTestDataV2">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="TestData" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="DataFormat" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="StoreMeasurementsOffsite" type="s:boolean" />
+            <s:element minOccurs="1" maxOccurs="1" name="JemsDatabase" type="s:boolean" />
+            <s:element minOccurs="0" maxOccurs="1" name="SqlServer" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Database" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ProcessTestDataV2Response">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ProcessTestDataV2Result" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetTestHistory">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SerialNumber" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CustomerName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Division" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetTestHistoryResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetTestHistoryResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetLastTestResult">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SerialNumber" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CustomerName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Division" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="ProcessStep" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetLastTestResultResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetLastTestResultResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="OkToTest_Breakout">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CustomerName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Division" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="SerialNumber" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="AssemblyNumber" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="TesterName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="ProcessStep" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="BreakOutFullPanel" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="OkToTest_BreakoutResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="OkToTest_BreakoutResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="GetVersionSoapIn">
+    <wsdl:part name="parameters" element="tns:GetVersion" />
+  </wsdl:message>
+  <wsdl:message name="GetVersionSoapOut">
+    <wsdl:part name="parameters" element="tns:GetVersionResponse" />
+  </wsdl:message>
+  <wsdl:message name="OKToTestSoapIn">
+    <wsdl:part name="parameters" element="tns:OKToTest" />
+  </wsdl:message>
+  <wsdl:message name="OKToTestSoapOut">
+    <wsdl:part name="parameters" element="tns:OKToTestResponse" />
+  </wsdl:message>
+  <wsdl:message name="OKToTestLinkMaterialSoapIn">
+    <wsdl:part name="parameters" element="tns:OKToTestLinkMaterial" />
+  </wsdl:message>
+  <wsdl:message name="OKToTestLinkMaterialSoapOut">
+    <wsdl:part name="parameters" element="tns:OKToTestLinkMaterialResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetPanelSerializeResultSoapIn">
+    <wsdl:part name="parameters" element="tns:GetPanelSerializeResult" />
+  </wsdl:message>
+  <wsdl:message name="GetPanelSerializeResultSoapOut">
+    <wsdl:part name="parameters" element="tns:GetPanelSerializeResultResponse" />
+  </wsdl:message>
+  <wsdl:message name="LookupCustAssySoapIn">
+    <wsdl:part name="parameters" element="tns:LookupCustAssy" />
+  </wsdl:message>
+  <wsdl:message name="LookupCustAssySoapOut">
+    <wsdl:part name="parameters" element="tns:LookupCustAssyResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetCurrentRouteStepSoapIn">
+    <wsdl:part name="parameters" element="tns:GetCurrentRouteStep" />
+  </wsdl:message>
+  <wsdl:message name="GetCurrentRouteStepSoapOut">
+    <wsdl:part name="parameters" element="tns:GetCurrentRouteStepResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetTestDataFormatsSoapIn">
+    <wsdl:part name="parameters" element="tns:GetTestDataFormats" />
+  </wsdl:message>
+  <wsdl:message name="GetTestDataFormatsSoapOut">
+    <wsdl:part name="parameters" element="tns:GetTestDataFormatsResponse" />
+  </wsdl:message>
+  <wsdl:message name="ProcessTestDataSoapIn">
+    <wsdl:part name="parameters" element="tns:ProcessTestData" />
+  </wsdl:message>
+  <wsdl:message name="ProcessTestDataSoapOut">
+    <wsdl:part name="parameters" element="tns:ProcessTestDataResponse" />
+  </wsdl:message>
+  <wsdl:message name="ProcessTestDataV2SoapIn">
+    <wsdl:part name="parameters" element="tns:ProcessTestDataV2" />
+  </wsdl:message>
+  <wsdl:message name="ProcessTestDataV2SoapOut">
+    <wsdl:part name="parameters" element="tns:ProcessTestDataV2Response" />
+  </wsdl:message>
+  <wsdl:message name="GetTestHistorySoapIn">
+    <wsdl:part name="parameters" element="tns:GetTestHistory" />
+  </wsdl:message>
+  <wsdl:message name="GetTestHistorySoapOut">
+    <wsdl:part name="parameters" element="tns:GetTestHistoryResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetLastTestResultSoapIn">
+    <wsdl:part name="parameters" element="tns:GetLastTestResult" />
+  </wsdl:message>
+  <wsdl:message name="GetLastTestResultSoapOut">
+    <wsdl:part name="parameters" element="tns:GetLastTestResultResponse" />
+  </wsdl:message>
+  <wsdl:message name="OkToTest_BreakoutSoapIn">
+    <wsdl:part name="parameters" element="tns:OkToTest_Breakout" />
+  </wsdl:message>
+  <wsdl:message name="OkToTest_BreakoutSoapOut">
+    <wsdl:part name="parameters" element="tns:OkToTest_BreakoutResponse" />
+  </wsdl:message>
+  <wsdl:portType name="MES_TISSoap">
+    <wsdl:operation name="GetVersion">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns the version of the MES-TIS software.</wsdl:documentation>
+      <wsdl:input message="tns:GetVersionSoapIn" />
+      <wsdl:output message="tns:GetVersionSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="OKToTest">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Determines if the assembly can be tested.</wsdl:documentation>
+      <wsdl:input message="tns:OKToTestSoapIn" />
+      <wsdl:output message="tns:OKToTestSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="OKToTestLinkMaterial">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Determines if the assembly can be tested for Link Material Serial Number.</wsdl:documentation>
+      <wsdl:input message="tns:OKToTestLinkMaterialSoapIn" />
+      <wsdl:output message="tns:OKToTestLinkMaterialSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetPanelSerializeResult">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Retrieves all penalized serial number information when panel serial number scanned.</wsdl:documentation>
+      <wsdl:input message="tns:GetPanelSerializeResultSoapIn" />
+      <wsdl:output message="tns:GetPanelSerializeResultSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="LookupCustAssy">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Look up assembly information based on the given serial number and customer/division.</wsdl:documentation>
+      <wsdl:input message="tns:LookupCustAssySoapIn" />
+      <wsdl:output message="tns:LookupCustAssySoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetCurrentRouteStep">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get current route step information based on the given serial number.</wsdl:documentation>
+      <wsdl:input message="tns:GetCurrentRouteStepSoapIn" />
+      <wsdl:output message="tns:GetCurrentRouteStepSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetTestDataFormats">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns a list of file formats supported by the MES Parser.</wsdl:documentation>
+      <wsdl:input message="tns:GetTestDataFormatsSoapIn" />
+      <wsdl:output message="tns:GetTestDataFormatsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ProcessTestData">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Processes test data as the MES Parser would.</wsdl:documentation>
+      <wsdl:input message="tns:ProcessTestDataSoapIn" />
+      <wsdl:output message="tns:ProcessTestDataSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ProcessTestDataV2">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Processes test data as the MES Parser would. Set StoreMeasurementsOffsite to true to store measurement data in an offsite (non-MES) data store. Set JemsDatabase to true if storing into the MES Jems system; otherwise set to false.</wsdl:documentation>
+      <wsdl:input message="tns:ProcessTestDataV2SoapIn" />
+      <wsdl:output message="tns:ProcessTestDataV2SoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetTestHistory">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns the test history for a serial number.</wsdl:documentation>
+      <wsdl:input message="tns:GetTestHistorySoapIn" />
+      <wsdl:output message="tns:GetTestHistorySoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetLastTestResult">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns the test history for a serial number.</wsdl:documentation>
+      <wsdl:input message="tns:GetLastTestResultSoapIn" />
+      <wsdl:output message="tns:GetLastTestResultSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="OkToTest_Breakout">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Determines if the assembly can be tested.</wsdl:documentation>
+      <wsdl:input message="tns:OkToTest_BreakoutSoapIn" />
+      <wsdl:output message="tns:OkToTest_BreakoutSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="MES_TISSoap" type="tns:MES_TISSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="GetVersion">
+      <soap:operation soapAction="http://jabil.com/GMS/MES_TIS/GetVersion" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OKToTest">
+      <soap:operation soapAction="http://jabil.com/GMS/MES_TIS/OKToTest" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OKToTestLinkMaterial">
+      <soap:operation soapAction="http://jabil.com/GMS/MES_TIS/OKToTestLinkMaterial" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetPanelSerializeResult">
+      <soap:operation soapAction="http://jabil.com/GMS/MES_TIS/GetPanelSerializeResult" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="LookupCustAssy">
+      <soap:operation soapAction="http://jabil.com/GMS/MES_TIS/LookupCustAssy" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCurrentRouteStep">
+      <soap:operation soapAction="http://jabil.com/GMS/MES_TIS/GetCurrentRouteStep" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetTestDataFormats">
+      <soap:operation soapAction="http://jabil.com/GMS/MES_TIS/GetTestDataFormats" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ProcessTestData">
+      <soap:operation soapAction="http://jabil.com/GMS/MES_TIS/ProcessTestData" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ProcessTestDataV2">
+      <soap:operation soapAction="http://jabil.com/GMS/MES_TIS/ProcessTestDataV2" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetTestHistory">
+      <soap:operation soapAction="http://jabil.com/GMS/MES_TIS/GetTestHistory" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetLastTestResult">
+      <soap:operation soapAction="http://jabil.com/GMS/MES_TIS/GetLastTestResult" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OkToTest_Breakout">
+      <soap:operation soapAction="http://jabil.com/GMS/MES_TIS/OkToTest_Breakout" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="MES_TISSoap12" type="tns:MES_TISSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="GetVersion">
+      <soap12:operation soapAction="http://jabil.com/GMS/MES_TIS/GetVersion" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OKToTest">
+      <soap12:operation soapAction="http://jabil.com/GMS/MES_TIS/OKToTest" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OKToTestLinkMaterial">
+      <soap12:operation soapAction="http://jabil.com/GMS/MES_TIS/OKToTestLinkMaterial" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetPanelSerializeResult">
+      <soap12:operation soapAction="http://jabil.com/GMS/MES_TIS/GetPanelSerializeResult" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="LookupCustAssy">
+      <soap12:operation soapAction="http://jabil.com/GMS/MES_TIS/LookupCustAssy" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCurrentRouteStep">
+      <soap12:operation soapAction="http://jabil.com/GMS/MES_TIS/GetCurrentRouteStep" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetTestDataFormats">
+      <soap12:operation soapAction="http://jabil.com/GMS/MES_TIS/GetTestDataFormats" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ProcessTestData">
+      <soap12:operation soapAction="http://jabil.com/GMS/MES_TIS/ProcessTestData" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ProcessTestDataV2">
+      <soap12:operation soapAction="http://jabil.com/GMS/MES_TIS/ProcessTestDataV2" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetTestHistory">
+      <soap12:operation soapAction="http://jabil.com/GMS/MES_TIS/GetTestHistory" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetLastTestResult">
+      <soap12:operation soapAction="http://jabil.com/GMS/MES_TIS/GetLastTestResult" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OkToTest_Breakout">
+      <soap12:operation soapAction="http://jabil.com/GMS/MES_TIS/OkToTest_Breakout" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="MES_TIS">
+    <wsdl:port name="MES_TISSoap" binding="tns:MES_TISSoap">
+      <soap:address location="http://cnshah0tis01/MES-TIS/TIS.asmx" />
+    </wsdl:port>
+    <wsdl:port name="MES_TISSoap12" binding="tns:MES_TISSoap12">
+      <soap12:address location="http://cnshah0tis01/MES-TIS/TIS.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

@@ -1,0 +1,15 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="NokidaE.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="运行程序地址" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="运行模式" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="Vision2_0_cnshah0tis01_MES_TIS" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">http://cnshah0tis01/MES-TIS/TIS.asmx</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
