@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using Vision2.vision;
 
 namespace Vision2.Project.DebugF.IO
 {
@@ -473,12 +474,12 @@ namespace Vision2.Project.DebugF.IO
                 //HWindID2.SetImaage(vision.Vision.GetRunNameVision("下相机").Image());
 
                 vision.Vision.Gen_arrow_contour_xld(out HalconDotNet.HObject hObject, 0, 0, 0, 100);
-                HWindID2.HalconResult.AddObj(hObject, vision.HalconRunFile.RunProgramFile.RunProgram.ColorResult.green);
+                HWindID2.HalconResult.AddObj(hObject, ColorResult.green);
                 HWindID2.HalconResult.AddImageMassage(10, 110, "x");
                 vision.Vision.Gen_arrow_contour_xld(out HalconDotNet.HObject hObject22, 0, 0, 100, 0);
                 HWindID2.HalconResult.AddImageMassage(100, 10, "y");
 
-                HWindID2.HalconResult.AddObj(hObject22, vision.HalconRunFile.RunProgramFile.RunProgram.ColorResult.yellow);
+                HWindID2.HalconResult.AddObj(hObject22, ColorResult.yellow);
                 MatrixC.Calculate(HWindID2);
                 HWindID2.ShowImage();
             }

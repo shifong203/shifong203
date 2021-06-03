@@ -760,7 +760,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 HOperatorSet.GenCrossContourXld(out HObject hObject, PinTTD.Rows, PinTTD.Columns, 120, 0);
                 HOperatorSet.GenRectangle2(out HObject hObject1, PinTTD.Rows, PinTTD.Columns, HTuple.TupleGenConst(PinTTD.Columns.Length, 0), HTuple.TupleGenConst(PinTTD.Columns.Length, PinTTD.PinHeightExternal), HTuple.TupleGenConst(PinTTD.Columns.Length, PinTTD.PinHeightExternal));
                 halconRun.AddOBJ(hObject);
-                halconRun.AddOBJ(hObject1, RunProgram.ColorResult.blue);
+                halconRun.AddOBJ(hObject1, ColorResult.blue);
                 halconRun.ShowObj();
 
             }
@@ -781,7 +781,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 HOperatorSet.GenCrossContourXld(out HObject hObject, PinTTD.Rows, PinTTD.Columns, 120, 0);
                 HOperatorSet.GenRectangle2(out HObject hObject1, PinTTD.Rows, PinTTD.Columns, HTuple.TupleGenConst(PinTTD.Columns.Length, 0), HTuple.TupleGenConst(PinTTD.Columns.Length, PinTTD.PinHeightExternal), HTuple.TupleGenConst(PinTTD.Columns.Length, PinTTD.PinHeightExternal));
                 halconRun.AddOBJ(hObject);
-                halconRun.AddOBJ(hObject1, RunProgram.ColorResult.blue);
+                halconRun.AddOBJ(hObject1, ColorResult.blue);
                 halconRun.ShowObj();
             }
             catch (Exception)

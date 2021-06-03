@@ -498,8 +498,8 @@ namespace Vision2.Project.DebugF.IO
                             HalconDotNet.HOperatorSet.GenCircle(out HalconDotNet.HObject hObject1, point.Y, point.X, 10);
                             HalconDotNet.HOperatorSet.GenCrossContourXld(out HalconDotNet.HObject hObjectxs, point.Y, point.X, 10, 0);
 
-                            HWindID2.HalconResult.AddObj(hObject1.ConcatObj(hObjectxs), vision.HalconRunFile.RunProgramFile.RunProgram.ColorResult.yellow);
-                            HWindID2.HalconResult.AddImageMassage(point.Y, point.X, "Mk1", vision.HalconRunFile.RunProgramFile.RunProgram.ColorResult.green);
+                            HWindID2.HalconResult.AddObj(hObject1.ConcatObj(hObjectxs), ColorResult.yellow);
+                            HWindID2.HalconResult.AddImageMassage(point.Y, point.X, "Mk1",ColorResult.green);
                         }
                     }
                     catch (Exception ex)
@@ -539,8 +539,8 @@ namespace Vision2.Project.DebugF.IO
                         {
                             HalconDotNet.HOperatorSet.GenCircle(out HalconDotNet.HObject hObject1, point.Y, point.X, 10);
                             HalconDotNet.HOperatorSet.GenCrossContourXld(out HalconDotNet.HObject hObjectxs, point.Y, point.X, 10, 0);
-                            HWindID2.HalconResult.AddObj(hObject1.ConcatObj(hObjectxs), vision.HalconRunFile.RunProgramFile.RunProgram.ColorResult.yellow);
-                            HWindID2.HalconResult.AddImageMassage(point.Y, point.X, MatrixC.PointNameEnd, vision.HalconRunFile.RunProgramFile.RunProgram.ColorResult.green);
+                            HWindID2.HalconResult.AddObj(hObject1.ConcatObj(hObjectxs), ColorResult.yellow);
+                            HWindID2.HalconResult.AddImageMassage(point.Y, point.X, MatrixC.PointNameEnd, ColorResult.green);
                         }
 
                     }

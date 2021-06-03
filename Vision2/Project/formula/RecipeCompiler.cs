@@ -332,6 +332,13 @@ namespace Vision2.Project.formula
                         ProductEX[item.Key] = productEX;
                     }
                 }
+                else
+                {
+                    if (!ProductEX.ContainsKey(item.Key))
+                    {
+                        ProductEX.Add(item.Key, new formula.ProductEX());
+                    }
+                }
               
             }
             Produc = keyValuePairs;

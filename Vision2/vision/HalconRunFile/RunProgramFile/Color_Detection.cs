@@ -63,7 +63,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             public string Name { get; set; }
 
             [Description(""), Category("图像通道"), DisplayName("通道"),]
-            public Vision.ImageTypeObj ImageType { get; set; }
+            public ImageTypeObj ImageType { get; set; }
 
 
             [Description(""), Category("显示"), DisplayName("显示中心"),]
@@ -198,9 +198,9 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 HObject hObjectH = new HObject();
                 HObject hObjectS = new HObject();
                 HObject hObjectV = new HObject();
-                if (H_enabled) hObjectH = Threshold_H.Threshold(halcon.GetImageOBJ(Vision.ImageTypeObj.H));
-                if (S_enabled) hObjectS = Threshold_S.Threshold(halcon.GetImageOBJ(Vision.ImageTypeObj.S));
-                if (V_enabled) hObjectV = Threshold_V.Threshold(halcon.GetImageOBJ(Vision.ImageTypeObj.V));
+                if (H_enabled) hObjectH = Threshold_H.Threshold(halcon.GetImageOBJ(ImageTypeObj.H));
+                if (S_enabled) hObjectS = Threshold_S.Threshold(halcon.GetImageOBJ(ImageTypeObj.S));
+                if (V_enabled) hObjectV = Threshold_V.Threshold(halcon.GetImageOBJ(ImageTypeObj.V));
                 if (H_enabled && S_enabled)
                 {
                     HOperatorSet.Intersection(hObject, hObjectH, out hObjectH);

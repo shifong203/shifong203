@@ -85,12 +85,12 @@ namespace Vision2.vision.HalconRunFile.PCBFile
                     HOperatorSet.Connection(hObject12, out hObject12);
                     if (debug != 0)
                     {
-                        halcon.AddOBJ(hObject12, RunProgram.ColorResult.blue);
+                        halcon.AddOBJ(hObject12, ColorResult.blue);
                     }
                         HOperatorSet.SelectShape(hObject12, out hObject12, "area", "and", iCPint.HPAreaMin, 99999999);
                     if (hObject12.CountObj() > 0)
                     {
-                        halcon.AddOBJ(hObject12, RunProgram.ColorResult.red);
+                        halcon.AddOBJ(hObject12, ColorResult.red);
                         ErrNumber++;
                     }
                     HOperatorSet.Threshold(hObject2, out hObject1, iCPint.PintMin, iCPint.PintMax);
@@ -99,8 +99,8 @@ namespace Vision2.vision.HalconRunFile.PCBFile
                     if (debug != 0)
                     {
                         halcon.AddMessage("角度" + phi.TupleDeg());
-                        halcon.AddOBJ(hObject1, RunProgram.ColorResult.red);
-                        halcon.AddOBJ(hObject12, RunProgram.ColorResult.red);
+                        halcon.AddOBJ(hObject1, ColorResult.red);
+                        halcon.AddOBJ(hObject12, ColorResult.red);
                     }
                     HOperatorSet.SelectShape(hObject1, out HObject hObject3, "area", "and", iCPint.PintAreaMin, 99999999);
                     HOperatorSet.AreaCenter(hObject3, out HTuple area, out HTuple row3, out HTuple column3);
@@ -171,7 +171,7 @@ namespace Vision2.vision.HalconRunFile.PCBFile
                         }
                         if (debug != 0)
                         {
-                            halcon.AddOBJ(hObject3, RunProgram.ColorResult.yellow);
+                            halcon.AddOBJ(hObject3, ColorResult.yellow);
                             halcon.AddMessage("数量"+ length11.Length+ "长度" + length11.TupleMean() + "宽度" + length22.TupleMean() + "距离" + DistanceS.TupleMean());
                             DistanceS.Append(0);
                             halcon.AddMessageIamge(row4, column4, Indetx+ "长度" + length11 + "宽度" + length22 + "距离" + DistanceS);
@@ -270,7 +270,7 @@ namespace Vision2.vision.HalconRunFile.PCBFile
 
         public Threshold_Min_Max PintThreshold_Min_Max = new Threshold_Min_Max();
 
-        public Vision.ImageTypeObj ImageTypeObj { get; set; }
+        public ImageTypeObj ImageTypeObj { get; set; }
 
         [Category(""), DisplayName("高度"), Description("")]
         public double Heiath{ get; set;}= 100;
@@ -442,17 +442,17 @@ namespace Vision2.vision.HalconRunFile.PCBFile
                 ziPoints[i].PintZi = hObject12;
                 HOperatorSet.ReduceDomain(V, hObject1, out HObject hObject2);
                 HOperatorSet.ReduceDomain(V, hObject12, out HObject hObject23);
-                halcon.AddOBJ(hObject12, RunProgram.ColorResult.blue);
-                halcon.AddOBJ(hObject1, RunProgram.ColorResult.blue);
+                halcon.AddOBJ(hObject12, ColorResult.blue);
+                halcon.AddOBJ(hObject1, ColorResult.blue);
                 HOperatorSet.Threshold(hObject23, out hObject12, HanPMin, HanPMax);
                 HOperatorSet.Connection(hObject12, out hObject12);
                 HOperatorSet.SelectShape(hObject12, out hObject12, "area", "and", 200, 999999);
 
-                halcon.AddOBJ(hObject12, RunProgram.ColorResult.red);
+                halcon.AddOBJ(hObject12, ColorResult.red);
                 HOperatorSet.Threshold(hObject2, out hObject1, PintMin, PintMax);
                 HOperatorSet.Connection(hObject1, out hObject1);
                 HOperatorSet.OpeningCircle(hObject1, out hObject1, 3.5);
-                halcon.AddOBJ(hObject1, RunProgram.ColorResult.red);
+                halcon.AddOBJ(hObject1, ColorResult.red);
                 HOperatorSet.SelectShape(hObject1, out HObject hObject3, "area", "and", 450, 999999);
                 HOperatorSet.AreaCenter(hObject3, out HTuple area, out HTuple row3, out HTuple column3);
                 HOperatorSet.GenCrossContourXld(out HObject cross, row3, column3, 10, 0);
@@ -465,7 +465,7 @@ namespace Vision2.vision.HalconRunFile.PCBFile
                 else HOperatorSet.SortRegion(hObject3, out hObject3, "first_point", "true", "row");
                 HOperatorSet.AreaCenter(hObject3, out area, out row3, out column3);
                 HOperatorSet.SmallestRectangle2(hObject3, out HTuple row4, out HTuple column4, out HTuple phi4, out HTuple length11, out HTuple length22);
-                halcon.AddOBJ(hObject3, RunProgram.ColorResult.yellow);
+                halcon.AddOBJ(hObject3, ColorResult.yellow);
                 Rows.Add(row4);
                 Cols.Add(column4);
                 Phis.Add(phi4);

@@ -19,7 +19,7 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             RunProgram = run;
             HalconRun = run.GetPThis() as HalconRun;
-            toolStripComboBox1.Items.AddRange(Enum.GetNames(typeof(Vision.ImageTypeObj)));
+            toolStripComboBox1.Items.AddRange(Enum.GetNames(typeof(ImageTypeObj)));
             TrackBar trackBar = (TrackBar)toolStripTrackBar1.Control;
             trackBar.Maximum = 200;
             trackBar.Value = (int)RunProgram.Circl_Rire;
@@ -373,7 +373,7 @@ namespace Vision2.vision.HalconRunFile.Controls
             try
             {
                
-                HWindI.SetImaage(HalconRun.GetImageOBJ((Vision.ImageTypeObj)Enum.Parse(typeof(Vision.ImageTypeObj), 
+                HWindI.SetImaage(HalconRun.GetImageOBJ((ImageTypeObj)Enum.Parse(typeof(ImageTypeObj), 
                     toolStripComboBox1.SelectedItem.ToString())));
             }
             catch (Exception ex)

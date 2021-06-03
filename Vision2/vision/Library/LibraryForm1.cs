@@ -2,6 +2,8 @@
 using System.Windows.Forms;
 using System.IO;
 using System.Text;
+using Vision2.vision.HalconRunFile.RunProgramFile;
+using System.Collections.Generic;
 
 namespace Vision2.vision
 {
@@ -13,7 +15,7 @@ namespace Vision2.vision
             toolStripCheckbox1.GetBase().Checked = true;
         }
 
-        public  static string PathStr = ErosProjcetDLL.Project.ProjectINI.In.ProjectPathRun +"\\Library\\Vision\\";
+        //public  static string PathStr = ErosProjcetDLL.Project.ProjectINI.In.ProjectPathRun +"\\Library\\Vision\\";
         private void LibraryForm1_Load(object sender, EventArgs e)
         {
             try
@@ -25,29 +27,32 @@ namespace Vision2.vision
                 MessageBox.Show(ex.Message);
             }
         }
+
+    
+
         public void UPData()
         {
             try
             {
-                Directory.CreateDirectory(PathStr);
-                string[] files = Directory.GetDirectories(PathStr);
+                //PathStr = ErosProjcetDLL.Project.ProjectINI.In.ProjectPathRun + "\\Library\\Vision\\"+Project.formula.Product.ProductionName + "\\";
+                Directory.CreateDirectory(Library.LibraryBasics. PathStr);
+                string[] files = Directory.GetDirectories(Library.LibraryBasics.PathStr);
                 treeView1.Nodes.Clear();
                 TreeNode treeNode= treeView1.Nodes.Add("视觉库");
+
                 for (int i = 0; i < files.Length; i++)
                 {
                     treeNode.Nodes.Add(Path.GetFileNameWithoutExtension(files[i]));
                 }
-                //StringBuilder staSET = new StringBuilder(100);
                 string staSET = "                                                          ";
-
-                ErosProjcetDLL.Excel.Npoi.GetPrivateProfileString("视觉库", null, "", staSET, 500, PathStr + "\\Library.ini");
+                ErosProjcetDLL.Excel.Npoi.GetPrivateProfileString("视觉库", null, "", staSET, 500, Library.LibraryBasics.RunPath + "\\Library.ini");
                 string[] vs = staSET.ToString().Split('\0');
                 StringBuilder stdt = new StringBuilder(100);
                 for (int i = 0; i < vs.Length; i++)
                 {
                     if (vs[i].Trim()!="")
                     {
-                        ErosProjcetDLL.Excel.Npoi.GetPrivateProfileString("视觉库", vs[i], "", stdt, 500, PathStr + "\\Library.ini");
+                        ErosProjcetDLL.Excel.Npoi.GetPrivateProfileString("视觉库", vs[i], "", stdt, 500, Library.LibraryBasics.RunPath + "\\Library.ini");
                     }
                 }
             }
@@ -67,6 +72,17 @@ namespace Vision2.vision
             try
             {
                 groupBox1.Visible = toolStripCheckbox1.GetBase().Checked;
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            try
+            {
+
             }
             catch (Exception)
             {

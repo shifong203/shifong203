@@ -10,7 +10,7 @@ using Vision2.ErosProjcetDLL.Project;
 using Vision2.ErosProjcetDLL.UI.PropertyGrid;
 using Vision2.vision.HalconRunFile.Controls;
 using static Vision2.vision.HalconRunFile.RunProgramFile.HalconRun;
-
+using static Vision2.vision.Vision;
 
 namespace Vision2.vision.HalconRunFile.RunProgramFile
 {
@@ -34,39 +34,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             DrawObj.GenEmptyObj();
             //ImageRoi.GenEmptyObj();
         }
-        public enum RGBHSVEnum
-        {
-            R = 0,
-            G = 1,
-            B = 2,
-            H = 3,
-            S = 4,
-            V = 5,
-            黑白 = 6,
-        }
-        public enum ColorResult
-        {
-            red = 1,
-            yellow = 2,
-            green = 0,
-            blue = 3,
-            black = 4,
-            white = 5,
-            gray = 6,
-            cyan = 7,
-            magenta = 8,
-            coral = 9,
-            pink = 10,
-            goldenrod = 11,
-            orange = 12,
-            gold = 13,
-            navy = 14,
-            turquoise = 15,
-            khaki = 16,
-            violet = 17,
-            firebrick = 18,
 
-        }
         /// <summary>
         /// 子类集合，
         /// </summary>
@@ -133,7 +101,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         /// <summary>
         /// 选择图像类型
         /// </summary>
-        public Vision.ImageTypeObj ImageTypeOb { get; set; }
+        public ImageTypeObj ImageTypeOb { get; set; }
 
         /// <summary>
         /// 
@@ -203,7 +171,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 {
                     if (IsOpen_image)
                     {
-                        HOperatorSet.GrayOpeningShape(image, out HObject hObject1, "circle", Median_imageVa, "mirrored");
+                        HOperatorSet.GrayOpeningShape(image, out HObject hObject1, 30, 30, "octagon");
                         HOperatorSet.SubImage(image, hObject1,out image,Sub_Mult, Sub_Add);
                     }
                 }

@@ -22,7 +22,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                     listBox1.Items.Add(i + 1);
                 }
                 comboBox1.Items.Clear();
-                comboBox1.Items.AddRange(Enum.GetNames(typeof(Vision.ImageTypeObj)));
+                comboBox1.Items.AddRange(Enum.GetNames(typeof(ImageTypeObj)));
                 comboBox1.SelectedItem = overgild.ImageTypeOb.ToString();
                 numericUpDown1.Value = (decimal)overgild.ErosinCircle;
                 numericUpDown4.Value = (decimal)overgild.ThresSelectMin;
@@ -105,7 +105,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 {
                     return;
                 }
-                overgild.ImageTypeOb = (Vision.ImageTypeObj)Enum.Parse(typeof(Vision.ImageTypeObj),
+                overgild.ImageTypeOb = (ImageTypeObj)Enum.Parse(typeof(ImageTypeObj),
                 comboBox1.SelectedItem.ToString());
                 overgild.ThresSelectMin =(byte) numericUpDown4.Value;
                 overgild.ErosinCircle = (double)numericUpDown1.Value;

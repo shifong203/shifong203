@@ -46,9 +46,9 @@ namespace Vision2.vision.Cams
                 HOperatorSet.GetCalibDataObservPoints(calibDataID, 0, 0, LisImage.Count - 1, out HTuple rows, out HTuple Cols, out HTuple index, out HTuple pose);
                 HOperatorSet.GenCircle(out HObject Circle, rows, Cols, HTuple.TupleGenConst(rows.Length, 2));
                 vision.Calib.AutoCalibPoint.Disp3DCoordSystem(StartParameters, pose, 0.5, out HObject x, out HObject y, out HObject z);
-                HWindI.HalconResult.AddObj(x, HalconRunFile.RunProgramFile.RunProgram.ColorResult.red);
-                HWindI.HalconResult.AddObj(y, HalconRunFile.RunProgramFile.RunProgram.ColorResult.green);
-                HWindI.HalconResult.AddObj(z, HalconRunFile.RunProgramFile.RunProgram.ColorResult.blue);
+                HWindI.HalconResult.AddObj(x, ColorResult.red);
+                HWindI.HalconResult.AddObj(y, ColorResult.green);
+                HWindI.HalconResult.AddObj(z,ColorResult.blue);
                 HWindI.HalconResult.AddObj(Circle);
                 HWindI.HalconResult.AddObj(hObject, "green");
                 HWindI.ShowImage();
@@ -73,9 +73,9 @@ namespace Vision2.vision.Cams
                     HOperatorSet.GetCalibDataObservPoints(calibDataID, 0, 0, i, out HTuple rows, out HTuple Cols, out HTuple index, out HTuple pose);
                     HOperatorSet.GenCircle(out HObject Circle, rows, Cols, HTuple.TupleGenConst(rows.Length, 2));
                     vision.Calib.AutoCalibPoint.Disp3DCoordSystem(StartParameters, pose, 0.5, out HObject x, out HObject y, out HObject z);
-                    HWindI.HalconResult.AddObj(x, HalconRunFile.RunProgramFile.RunProgram.ColorResult.red);
-                    HWindI.HalconResult.AddObj(y, HalconRunFile.RunProgramFile.RunProgram.ColorResult.green);
-                    HWindI.HalconResult.AddObj(z, HalconRunFile.RunProgramFile.RunProgram.ColorResult.blue);
+                    HWindI.HalconResult.AddObj(x, ColorResult.red);
+                    HWindI.HalconResult.AddObj(y,ColorResult.green);
+                    HWindI.HalconResult.AddObj(z, ColorResult.blue);
                     HWindI.HalconResult.AddObj(Circle);
                     HWindI.HalconResult.AddObj(hObject, "green");
                     HWindI.ShowImage();
@@ -153,9 +153,9 @@ namespace Vision2.vision.Cams
                 HOperatorSet.GetCalibDataObservPoints(calibDataID, 0, 0, listBox1.SelectedIndex, out HTuple rows, out HTuple Cols, out HTuple index, out HTuple pose);
                 HOperatorSet.GenCircle(out HObject Circle, rows, Cols, HTuple.TupleGenConst(rows.Length, 2));
                 vision.Calib.AutoCalibPoint.Disp3DCoordSystem(StartParameters, pose, 0.5, out HObject x, out HObject y, out HObject z);
-                HWindI.HalconResult.AddObj(x, HalconRunFile.RunProgramFile.RunProgram.ColorResult.red);
-                HWindI.HalconResult.AddObj(y, HalconRunFile.RunProgramFile.RunProgram.ColorResult.green);
-                HWindI.HalconResult.AddObj(z, HalconRunFile.RunProgramFile.RunProgram.ColorResult.blue);
+                HWindI.HalconResult.AddObj(x, ColorResult.red);
+                HWindI.HalconResult.AddObj(y,ColorResult.green);
+                HWindI.HalconResult.AddObj(z, ColorResult.blue);
                 HWindI.HalconResult.AddObj(Circle);
                 HWindI.HalconResult.AddObj(hObject, "green");
                 HWindI.ShowImage();

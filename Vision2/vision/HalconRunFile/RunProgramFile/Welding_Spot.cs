@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Forms;
 using Vision2.vision.HalconRunFile.Controls;
+using static Vision2.vision.Vision;
 
 namespace Vision2.vision.HalconRunFile.RunProgramFile
 {
@@ -206,7 +207,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             /// <param name="hwV"></param>
             /// <returns></returns>
             public bool Solder_joint_inspection(Welding_Spot welding_Spo, HalconRun Halcon, out bool is_Conglutination,
-                out bool is_less_defend,out HTuple areas, HWindID hwH = null, RGBHSVEnum hSVRGB = RGBHSVEnum.R, int runID = 0)
+                out bool is_less_defend,out HTuple areas, HWindID hwH = null, ImageTypeObj hSVRGB = ImageTypeObj.R, int runID = 0)
             {
                 is_less_defend = is_Conglutination = false;
                 areas = new HTuple();
@@ -242,24 +243,24 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     {
                         switch (hSVRGB)
                         {
-                            case RGBHSVEnum.R:
+                            case ImageTypeObj.R:
                                 hwH.SetImaage(ImageR);
                                 break;
-                            case RGBHSVEnum.G:
+                            case ImageTypeObj.G:
                                 hwH.SetImaage(ImageG);
                                 break;
-                            case RGBHSVEnum.B:
+                            case ImageTypeObj.B:
                                 hwH.SetImaage(ImageB);
                                 break;
-                            case RGBHSVEnum.H:
+                            case ImageTypeObj.H:
                                 hwH.SetImaage(H); 
                                 hwH.HalconResult.AddObj(hObject);
                                 break;
-                            case RGBHSVEnum.S:
+                            case ImageTypeObj.S:
                                 hwH.SetImaage(S);
                                 hwH.HalconResult.AddObj(hObjectS);
                                 break;
-                            case RGBHSVEnum.V:
+                            case ImageTypeObj.V:
                                 hwH.SetImaage(V);
                                 hwH.HalconResult.AddObj(hObjectV);
                                 break;
@@ -308,25 +309,25 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     {
                         switch (hSVRGB)
                         {
-                            case RGBHSVEnum.R:
+                            case ImageTypeObj.R:
                                 hwH.SetImaage(ImageR);
                                 break;
-                            case RGBHSVEnum.G:
+                            case ImageTypeObj.G:
                                 hwH.SetImaage(ImageG);
                                 break;
-                            case RGBHSVEnum.B:
+                            case ImageTypeObj.B:
                                 hwH.SetImaage(ImageB);
                                 hwH.HalconResult.AddObj(hObjectB);
                                 break;
-                            case RGBHSVEnum.H:
+                            case ImageTypeObj.H:
                                 hwH.SetImaage(H);
                                 hwH.HalconResult.AddObj(hObjectHCompute);
                                 break;
-                            case RGBHSVEnum.S:
+                            case ImageTypeObj.S:
                                 hwH.SetImaage(S);
                                 hwH.HalconResult.AddObj(hObjectSCompute);
                                 break;
-                            case RGBHSVEnum.V:
+                            case ImageTypeObj.V:
                                 hwH.SetImaage(V);
                                 hwH.HalconResult.AddObj(hObjectVCompute);
                                 break;
@@ -361,25 +362,25 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     {
                         switch (hSVRGB)
                         {
-                            case RGBHSVEnum.R:
+                            case ImageTypeObj.R:
                                 hwH.SetImaage(ImageR);
                                 break;
-                            case RGBHSVEnum.G:
+                            case ImageTypeObj.G:
                                 hwH.SetImaage(ImageG);
                                 break;
-                            case RGBHSVEnum.B:
+                            case ImageTypeObj.B:
                                 hwH.SetImaage(ImageB);
                                 hwH.HalconResult.AddObj(hObjectB);
                                 break;
-                            case RGBHSVEnum.H:
+                            case ImageTypeObj.H:
                                 hwH.SetImaage(H);
                                 hwH.HalconResult.AddObj(hObjectH1);
                                 break;
-                            case RGBHSVEnum.S:
+                            case ImageTypeObj.S:
                                 hwH.SetImaage(S);
                                 hwH.HalconResult.AddObj(hObjectS1);
                                 break;
-                            case RGBHSVEnum.V:
+                            case ImageTypeObj.V:
                                 hwH.SetImaage(V);
                                 hwH.HalconResult.AddObj(hObjectV1);
                                 break;

@@ -5,6 +5,7 @@ using Vision2.Project.Mes;
 using ErosSocket.DebugPLC.Robot;
 using static Vision2.vision.HalconRunFile.RunProgramFile.RunProgram;
 using Vision2.Project.formula;
+using static Vision2.vision.Vision;
 
 namespace Vision2.vision.HalconRunFile.RunProgramFile
 {
@@ -632,9 +633,33 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             {
                 HObject.Dispose();
             }
-
-
         }
+    }
+
+    public class OneOdata
+    {
+        public HObject ROI = new HObject();
+        public HObject NGROI = new HObject();
+        public OneOdata()
+        {
+            NGROI.GenEmptyObj();
+            ROI.GenEmptyObj();
+        }
+        /// <summary>
+        /// NG选项
+        /// </summary>
+        public string NGText;
+        /// <summary>
+        /// 复判缺陷
+        /// </summary>
+        public string RestText = "";
+
+        public List<string> RestStrings = new List<string>();
+
+        public bool OK;
+
+        public bool Done;
+
     }
     /// <summary>
     /// 单个元件
@@ -648,9 +673,9 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         {
             NGROI.GenEmptyObj();
         }
-
         public DataMinMax dataMinMax = new DataMinMax();
 
+        public List<OneOdata> oneOdatas = new List<OneOdata>();
 
         public bool OK;
 
@@ -665,9 +690,6 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         /// 复判缺陷
         /// </summary>
         public string RestText = "";
-        /// <summary>
-        /// 复判集合选项
-        /// </summary>
 
         public List<string> RestStrings = new List<string>();
 

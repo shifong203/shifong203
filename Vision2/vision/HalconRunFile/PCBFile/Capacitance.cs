@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Vision2.vision.HalconRunFile.RunProgramFile;
+using static Vision2.vision.Vision;
 
 namespace Vision2.vision.HalconRunFile.PCBFile
 {
@@ -57,7 +58,7 @@ namespace Vision2.vision.HalconRunFile.PCBFile
 
         public bool IsRoi { get; set; }
 
-        public Vision.ImageTypeObj ImageTypeObj { get; set; }
+        public ImageTypeObj ImageTypeObj { get; set; }
         public Select_shape_Min_Max Select_Shape_Min_Max { get; set; } = new Select_shape_Min_Max();
 
         public virtual Control GetControl(HalconRun run)
@@ -89,10 +90,10 @@ namespace Vision2.vision.HalconRunFile.PCBFile
                     }
                     HOperatorSet.Connection(Thresholdt2, out Thresholdt2);
                     HObject hObject2 = Select_Shape_Min_Max.select_shape(Thresholdt2);
-                    halcon.AddOBJ(hObject2, RunProgram.ColorResult.yellow);
+                    halcon.AddOBJ(hObject2, ColorResult.yellow);
                     HOperatorSet.Union1(hObject2, out hObject2);
                     HOperatorSet.AreaCenter(hObject2, out HTuple area2, out HTuple row2, out HTuple colu2);
-                    if (row2.Length==0) halcon.AddOBJ(this.TestingRoi, RunProgram.ColorResult.red);
+                    if (row2.Length==0) halcon.AddOBJ(this.TestingRoi, ColorResult.red);
                     else
                     {
                             HOperatorSet.AngleLx(row, column, row2, colu2, out HTuple angle);
@@ -104,17 +105,17 @@ namespace Vision2.vision.HalconRunFile.PCBFile
                             Vision.Gen_arrow_contour_xld(out HObject hoarrow, row, column, row2, colu2);
                             if (Angle<AngleMin || Angle>AngleMax)
                             {
-                                halcon.AddOBJ(this.TestingRoi, RunProgram.ColorResult.red); ErrNumber++;
+                                halcon.AddOBJ(this.TestingRoi, ColorResult.red); ErrNumber++;
                             }
                             else
                             {
-                                if (IsRoi) halcon.AddOBJ(this.TestingRoi, RunProgram.ColorResult.blue);
+                                if (IsRoi) halcon.AddOBJ(this.TestingRoi, ColorResult.blue);
                             }
-                            halcon.AddOBJ(hoarrow, RunProgram.ColorResult.blue);
+                            halcon.AddOBJ(hoarrow, ColorResult.blue);
                             if (IsText) halcon.AddMessageIamge(row, column, Angle);
                     }
                 }
-                else halcon.AddOBJ(this.TestingRoi, RunProgram.ColorResult.red); ErrNumber++;
+                else halcon.AddOBJ(this.TestingRoi, ColorResult.red); ErrNumber++;
                 if (ErrNumber!=0)
                 {
                     RsetBool = false;

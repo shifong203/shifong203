@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using static Vision2.vision.Vision;
 
 namespace Vision2.vision.HalconRunFile.RunProgramFile
 {
@@ -329,27 +330,27 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         int OKtE = 0;
                         if (Dic_Measure.Keys_Measure.ContainsKey(XAxisName))
                         {
-                            Dic_Measure.Keys_Measure[XAxisName].color = RunProgram.ColorResult.yellow.ToString();
+                            Dic_Measure.Keys_Measure[XAxisName].color = ColorResult.yellow.ToString();
                             if (!Dic_Measure.Keys_Measure[XAxisName].Run(halcon,oneResultOBj)) OKtE++;
                             XaxisRow = Dic_Measure.Keys_Measure[XAxisName].OutRows;
                             XaxisCol = Dic_Measure.Keys_Measure[XAxisName].OutCols;
                             if (Dic_Measure.Keys_Measure.ContainsKey(X2AxisName))
                             {
-                                Dic_Measure.Keys_Measure[X2AxisName].color = RunProgram.ColorResult.yellow.ToString();
+                                Dic_Measure.Keys_Measure[X2AxisName].color = ColorResult.yellow.ToString();
                                 if (!Dic_Measure.Keys_Measure[X2AxisName].Run(halcon, oneResultOBj)) OKtE++;
                             }
                         }
-                        Dic_Measure.Keys_Measure[XAxisName].color = RunProgram.ColorResult.yellow.ToString();
-                        Dic_Measure.Keys_Measure[YAxisName].color = RunProgram.ColorResult.blue.ToString();
+                        Dic_Measure.Keys_Measure[XAxisName].color = ColorResult.yellow.ToString();
+                        Dic_Measure.Keys_Measure[YAxisName].color = ColorResult.blue.ToString();
                         if (Dic_Measure.Keys_Measure.ContainsKey(YAxisName))
                         {
-                            Dic_Measure.Keys_Measure[YAxisName].color = RunProgram.ColorResult.yellow.ToString();
+                            Dic_Measure.Keys_Measure[YAxisName].color = ColorResult.yellow.ToString();
                             if (!Dic_Measure.Keys_Measure[YAxisName].Run(halcon, oneResultOBj)) OKtE++;
                             YaxisRow = Dic_Measure.Keys_Measure[YAxisName].OutRows;
                             YaxisCol = Dic_Measure.Keys_Measure[YAxisName].OutCols;
                             if (Dic_Measure.Keys_Measure.ContainsKey(Y2AxisName))
                             {
-                                Dic_Measure.Keys_Measure[Y2AxisName].color = RunProgram.ColorResult.yellow.ToString();
+                                Dic_Measure.Keys_Measure[Y2AxisName].color = ColorResult.yellow.ToString();
                                 if (!Dic_Measure.Keys_Measure[Y2AxisName].Run(halcon, oneResultOBj)) OKtE++;
                             }
                         }

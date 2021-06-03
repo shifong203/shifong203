@@ -19,7 +19,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         public ThresholdControl()
         {
             InitializeComponent();
-            Column1.Items.AddRange(Enum.GetNames(typeof(Vision.ImageTypeObj)));
+            Column1.Items.AddRange(Enum.GetNames(typeof(ImageTypeObj)));
         }
         bool isChanged;
         
@@ -61,7 +61,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 for (int i = 0; i < dataGridView1.Rows.Count; i++)
                 {
                     Threshold_Min_Max threshold_Min_Max = new Threshold_Min_Max();
-                    threshold_Min_Max.ImageTypeObj = (Vision.ImageTypeObj)Enum.Parse(typeof(Vision.ImageTypeObj),
+                    threshold_Min_Max.ImageTypeObj = (ImageTypeObj)Enum.Parse(typeof(ImageTypeObj),
                         dataGridView1.Rows[i].Cells[0].EditedFormattedValue.ToString());
                     threshold_Min_Max.Min =byte.Parse( dataGridView1.Rows[i].Cells[1].Value.ToString());
                     threshold_Min_Max.Max = byte.Parse(dataGridView1.Rows[i].Cells[2].Value.ToString());
@@ -106,7 +106,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             {
             int DET=    dataGridView1.Rows.Add();
                 isChanged = true;
-                dataGridView1.Rows[DET].Cells[0].Value = Vision.ImageTypeObj.Image3.ToString();
+                dataGridView1.Rows[DET].Cells[0].Value = ImageTypeObj.Image3.ToString();
                 dataGridView1.Rows[DET].Cells[1].Value = 1;
                 dataGridView1.Rows[DET].Cells[2].Value = 100;
                 dataGridView1.Rows[DET].Cells[3].Value = true;

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Windows.Forms;
 using Vision2.vision.HalconRunFile.RunProgramFile;
 using static Vision2.vision.HalconRunFile.RunProgramFile.RunProgram;
+using static Vision2.vision.Vision;
 
 namespace Vision2.vision.HalconRunFile.Controls
 {
@@ -106,7 +107,7 @@ namespace Vision2.vision.HalconRunFile.Controls
             Cursor = Cursors.Default;
             Halcon.Drawing = false;
         }
-        RGBHSVEnum RGBHSVEnum = RGBHSVEnum.R;
+        ImageTypeObj RGBHSVEnum = ImageTypeObj.R;
         void SetProgram(sbyte id)
         {
             try
@@ -545,7 +546,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 {
                     return;
                 }
-                RGBHSVEnum = (RGBHSVEnum)Enum.Parse(typeof(RGBHSVEnum), listBox3.SelectedItem.ToString());
+                RGBHSVEnum = (ImageTypeObj)Enum.Parse(typeof(ImageTypeObj), listBox3.SelectedItem.ToString());
                 if (tabControl2.SelectedIndex == 2)
                 {
                     SetProgram(6);

@@ -12,7 +12,7 @@ namespace Vision2.vision.HalconRunFile.Controls
         public ThresholdControls()
         {
             InitializeComponent();
-            comboBox1.Items.AddRange(Enum.GetNames(typeof(Vision.ImageTypeObj)));
+            comboBox1.Items.AddRange(Enum.GetNames(typeof(ImageTypeObj)));
         }
         public ThresholdControls(Threshold_Min_Max threshold_Min_) : this()
         {
@@ -50,7 +50,7 @@ namespace Vision2.vision.HalconRunFile.Controls
             }
             try
             {
-                threshold_Min_1.ImageTypeObj = (Vision.ImageTypeObj)Enum.Parse(typeof(Vision.ImageTypeObj), comboBox1.SelectedItem.ToString());
+                threshold_Min_1.ImageTypeObj = (ImageTypeObj)Enum.Parse(typeof(ImageTypeObj), comboBox1.SelectedItem.ToString());
                 threshold_Min_1.Max =(byte) numericUpDownThrMax.Value;
                 threshold_Min_1.Min = (byte)numericUpDownThrMin.Value;
                 evValue?.Invoke(threshold_Min_1);
@@ -63,7 +63,7 @@ namespace Vision2.vision.HalconRunFile.Controls
 
         private void ThresholdControls_Load(object sender, System.EventArgs e)
         {
-            comboBox1.Items.AddRange(Enum.GetNames(typeof(Vision.ImageTypeObj)));
+            comboBox1.Items.AddRange(Enum.GetNames(typeof(ImageTypeObj)));
         }
         Threshold_Min_Max threshold_Min_1;
 

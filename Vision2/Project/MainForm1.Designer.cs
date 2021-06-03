@@ -58,8 +58,8 @@
             this.隐藏工具ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.窗口模式ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.库管理ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.SaveAll = new System.Windows.Forms.ToolStripButton();
             this.tsButton4 = new Vision2.ErosProjcetDLL.UI.ToolStrip.TSButton();
+            this.SaveAll = new System.Windows.Forms.ToolStripButton();
             this.ToolSripButtonHelp = new System.Windows.Forms.ToolStripDropDownButton();
             this.镜头信息ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.版本信息ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -271,8 +271,8 @@
             this.toolStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripPictureBox1,
             this.toolStripDropDownButton1,
-            this.SaveAll,
             this.tsButton4,
+            this.SaveAll,
             this.ToolSripButtonHelp});
             this.toolStrip2.Location = new System.Drawing.Point(0, 0);
             this.toolStrip2.Name = "toolStrip2";
@@ -378,16 +378,6 @@
             this.库管理ToolStripMenuItem.Text = "库管理";
             this.库管理ToolStripMenuItem.Click += new System.EventHandler(this.库管理ToolStripMenuItem_Click);
             // 
-            // SaveAll
-            // 
-            this.SaveAll.Image = ((System.Drawing.Image)(resources.GetObject("SaveAll.Image")));
-            this.SaveAll.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.SaveAll.Name = "SaveAll";
-            this.SaveAll.Size = new System.Drawing.Size(119, 54);
-            this.SaveAll.Text = "保存";
-            this.SaveAll.Visible = false;
-            this.SaveAll.Click += new System.EventHandler(this.SaveAll_Click);
-            // 
             // tsButton4
             // 
             this.tsButton4.Font = new System.Drawing.Font("宋体", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
@@ -399,6 +389,17 @@
             this.tsButton4.Text = "信息窗口";
             this.tsButton4.Click += new System.EventHandler(this.tsButton4_Click);
             // 
+            // SaveAll
+            // 
+            this.SaveAll.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SaveAll.Image = ((System.Drawing.Image)(resources.GetObject("SaveAll.Image")));
+            this.SaveAll.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.SaveAll.Name = "SaveAll";
+            this.SaveAll.Size = new System.Drawing.Size(98, 54);
+            this.SaveAll.Text = "保存";
+            this.SaveAll.Visible = false;
+            this.SaveAll.Click += new System.EventHandler(this.SaveAll_Click);
+            // 
             // ToolSripButtonHelp
             // 
             this.ToolSripButtonHelp.BackColor = System.Drawing.SystemColors.ActiveCaption;
@@ -407,13 +408,13 @@
             this.ToolSripButtonHelp.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.镜头信息ToolStripMenuItem,
             this.版本信息ToolStripMenuItem});
-            this.ToolSripButtonHelp.Font = new System.Drawing.Font("宋体", 21.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.ToolSripButtonHelp.Font = new System.Drawing.Font("宋体", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.ToolSripButtonHelp.ForeColor = System.Drawing.Color.Black;
             this.ToolSripButtonHelp.Image = ((System.Drawing.Image)(resources.GetObject("ToolSripButtonHelp.Image")));
             this.ToolSripButtonHelp.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.ToolSripButtonHelp.Name = "ToolSripButtonHelp";
             this.ToolSripButtonHelp.ShowDropDownArrow = false;
-            this.ToolSripButtonHelp.Size = new System.Drawing.Size(149, 54);
+            this.ToolSripButtonHelp.Size = new System.Drawing.Size(118, 54);
             this.ToolSripButtonHelp.Text = "F1帮助";
             this.ToolSripButtonHelp.Click += new System.EventHandler(this.ToolSripButtonHelp_Click);
             this.ToolSripButtonHelp.MouseMove += new System.Windows.Forms.MouseEventHandler(this.ToolSripButtonHelp_MouseMove);
@@ -422,7 +423,7 @@
             // 
             this.镜头信息ToolStripMenuItem.Font = new System.Drawing.Font("宋体", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.镜头信息ToolStripMenuItem.Name = "镜头信息ToolStripMenuItem";
-            this.镜头信息ToolStripMenuItem.Size = new System.Drawing.Size(232, 26);
+            this.镜头信息ToolStripMenuItem.Size = new System.Drawing.Size(229, 26);
             this.镜头信息ToolStripMenuItem.Text = "镜头信息";
             this.镜头信息ToolStripMenuItem.Click += new System.EventHandler(this.镜头信息ToolStripMenuItem_Click);
             // 
@@ -430,7 +431,7 @@
             // 
             this.版本信息ToolStripMenuItem.Font = new System.Drawing.Font("宋体", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.版本信息ToolStripMenuItem.Name = "版本信息ToolStripMenuItem";
-            this.版本信息ToolStripMenuItem.Size = new System.Drawing.Size(232, 26);
+            this.版本信息ToolStripMenuItem.Size = new System.Drawing.Size(229, 26);
             this.版本信息ToolStripMenuItem.Text = "版本信息V2.151";
             this.版本信息ToolStripMenuItem.Click += new System.EventHandler(this.版本信息ToolStripMenuItem_Click);
             // 

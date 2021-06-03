@@ -12,6 +12,7 @@ using Vision2.ErosProjcetDLL.Project;
 using Vision2.ErosProjcetDLL.UI.PropertyGrid;
 using Vision2.vision.HalconRunFile.Controls;
 using static Vision2.vision.HalconRunFile.RunProgramFile.Color_Detection;
+using static Vision2.vision.Vision;
 
 namespace Vision2.vision.HalconRunFile.RunProgramFile
 {

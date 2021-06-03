@@ -225,7 +225,10 @@ namespace Vision2.Project.formula
             try
             {
                 isUP = true;
-                comboBox2.SelectedIndex = DebugCompiler.GetThis().LinkSeelpTyoe;
+                if (DebugCompiler.GetThis().LinkSeelpTyoe<3)
+                {
+                    comboBox2.SelectedIndex = DebugCompiler.GetThis().LinkSeelpTyoe;
+                }
                 if (!RecipeCompiler.Instance.ProductEX.ContainsKey(Product.ProductionName))
                 {
                     RecipeCompiler.Instance.ProductEX.Add(Product.ProductionName, new ProductEX());
@@ -412,7 +415,7 @@ namespace Vision2.Project.formula
             catch (Exception ex)
             {
 
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.StackTrace+ ex.Message);
             }
 
         }
@@ -1572,23 +1575,27 @@ namespace Vision2.Project.formula
         {
             try
             {
-                StaticAddQRCode(textBox1.Text);
+                timer1.Interval = 500;
+                if (!timer1.Enabled)
+                {
+                    timer1.Start();
+                }
             }
             catch (Exception ex)
             {
             }
         }
 
-        private void textBox2_TextChanged(object sender, EventArgs e)
+    
+
+        private void timer1_Tick(object sender, EventArgs e)
         {
-            try
+            if (textBox1.Text.Length >= numericUpDown1.Value)
             {
-                RecipeCompiler.Instance.MesDa.ResCode = "";
-                //StaticAddQRCode(textBox1.Text);
+                StaticAddQRCode(textBox1.Text);
+                textBox1.Text = "";
             }
-            catch (Exception ex)
-            {
-            }
+
         }
     }
 }

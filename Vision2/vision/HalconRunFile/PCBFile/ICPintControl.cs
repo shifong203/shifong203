@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Vision2.vision.HalconRunFile.RunProgramFile;
+using static Vision2.vision.Vision;
 
 namespace Vision2.vision.HalconRunFile.PCBFile
 {
@@ -139,7 +140,7 @@ namespace Vision2.vision.HalconRunFile.PCBFile
                 ziPoint.PintRun(halcon.GetImageOBJ(ICPintT.Threshold_Min_Max.ImageTypeObj),
                     ICPintT.homMat2D, halcon, ICPintT, halcon.GetdataVale(), out HObject errDobj, out HObject obj,1);
 
-                halcon.AddOBJ(errDobj, RunProgram.ColorResult.yellow);
+                halcon.AddOBJ(errDobj, ColorResult.yellow);
                 halcon.AddOBJ(obj);
                 halcon.ShowObj();
                 propertyGrid1.SelectedObject = ziPoint;

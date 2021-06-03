@@ -11,7 +11,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             Max = 255;
         }
         public bool Enabled = true;
-        public Vision.ImageTypeObj ImageTypeObj;
+        public ImageTypeObj ImageTypeObj;
         public byte Min { get; set; }
 
         public byte Max { get; set; } = 255;

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using static Vision2.vision.HalconRunFile.RunProgramFile.RunProgram;
+using static Vision2.vision.Vision;
 
 namespace Vision2.vision.HalconRunFile.Controls
 {

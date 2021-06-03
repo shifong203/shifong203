@@ -1096,6 +1096,7 @@
     <Compile Include="vision\HalconRunFile\PCBFile\RectangleCapacitanceControl1.Designer.cs">
       <DependentUpon>RectangleCapacitanceControl1.cs</DependentUpon>
     </Compile>
+    <Compile Include="vision\Library\LibraryBasics.cs" />
     <Compile Include="vision\OneResultOBj.cs" />
     <Compile Include="vision\FormRestfDataIamge.cs">
       <SubType>Form</SubType>
@@ -1357,16 +1358,16 @@
       <DependentUpon>ImageRsetData.cs</DependentUpon>
     </Compile>
     <Compile Include="vision\Interface_Vision_Control.cs" />
-    <Compile Include="vision\LibraryForm1.cs">
+    <Compile Include="vision\Library\LibraryForm1.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="vision\LibraryForm1.Designer.cs">
+    <Compile Include="vision\Library\LibraryForm1.Designer.cs">
       <DependentUpon>LibraryForm1.cs</DependentUpon>
     </Compile>
-    <Compile Include="vision\LibraryFormAdd.cs">
+    <Compile Include="vision\Library\LibraryFormAdd.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="vision\LibraryFormAdd.Designer.cs">
+    <Compile Include="vision\Library\LibraryFormAdd.Designer.cs">
       <DependentUpon>LibraryFormAdd.cs</DependentUpon>
     </Compile>
     <Compile Include="vision\PMRunControl1.cs">
@@ -1943,10 +1944,10 @@
     <EmbeddedResource Include="vision\ImageRsetData.resx">
       <DependentUpon>ImageRsetData.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="vision\LibraryForm1.resx">
+    <EmbeddedResource Include="vision\Library\LibraryForm1.resx">
       <DependentUpon>LibraryForm1.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="vision\LibraryFormAdd.resx">
+    <EmbeddedResource Include="vision\Library\LibraryFormAdd.resx">
       <DependentUpon>LibraryFormAdd.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="vision\PMRunControl1.resx">

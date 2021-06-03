@@ -244,7 +244,7 @@ namespace Vision2.ErosProjcetDLL.Project
             Dic_Project_Path.Add("AppRun1", "\\AppRun1");
             this.RunName = "AppRun1";
         }
-        public const string ProjietPath = "C:\\Vision2\\";
+        public static string ProjietPath = "C:\\Vision2\\";
 
         ///// <summary>
         ///// 

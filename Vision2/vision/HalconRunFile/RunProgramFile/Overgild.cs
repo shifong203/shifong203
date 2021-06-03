@@ -5,6 +5,7 @@ using System.ComponentModel.Composition;
 using System.Windows.Forms;
 using HalconDotNet;
 using Vision2.ErosProjcetDLL.UI.PropertyGrid;
+using static Vision2.vision.Vision;
 
 namespace Vision2.vision.HalconRunFile.RunProgramFile
 {
@@ -85,24 +86,24 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             {
             }
         }
-        public HObject GetImageOBJ(Vision.ImageTypeObj imageType)
+        public HObject GetImageOBJ(ImageTypeObj imageType)
         {
 
             switch (imageType)
             {
-                case Vision.ImageTypeObj.Gray:
+                case ImageTypeObj.Gray:
                     return Gray;
-                case Vision.ImageTypeObj.R:
+                case ImageTypeObj.R:
                     return R;
-                case Vision.ImageTypeObj.G:
+                case ImageTypeObj.G:
                     return G;
-                case Vision.ImageTypeObj.B:
+                case ImageTypeObj.B:
                     return B;
-                case Vision.ImageTypeObj.H:
+                case ImageTypeObj.H:
                     return H;
-                case Vision.ImageTypeObj.S:
+                case ImageTypeObj.S:
                     return S;
-                case Vision.ImageTypeObj.V:
+                case ImageTypeObj.V:
                     return V;
             }
             return Gray;
@@ -315,7 +316,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
 
 
             [Description(""), Category("图像通道"), DisplayName("通道"),]
-            public Vision.ImageTypeObj ImageType { get; set; }
+            public ImageTypeObj ImageType { get; set; }
             [Description(""), Category("通道灰度"), DisplayName("最小灰度"),]
             public byte ThresSelectMin { get; set; } = 100;
 

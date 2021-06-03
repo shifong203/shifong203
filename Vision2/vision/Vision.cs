@@ -31,24 +31,48 @@ using ErosSocket.DebugPLC.Robot;
 
 namespace Vision2.vision
 {
+    public enum ImageTypeObj
+    {
+        Image3 = 0,
+        Gray = 1,
+        R = 2,
+        G = 3,
+        B = 4,
+        H = 5,
+        S = 6,
+        V = 7,
+    }
+
+    public enum ColorResult
+    {
+        red = 1,
+        yellow = 2,
+        green = 0,
+        blue = 3,
+        black = 4,
+        white = 5,
+        gray = 6,
+        cyan = 7,
+        magenta = 8,
+        coral = 9,
+        pink = 10,
+        goldenrod = 11,
+        orange = 12,
+        gold = 13,
+        navy = 14,
+        turquoise = 15,
+        khaki = 16,
+        violet = 17,
+        firebrick = 18,
+
+    }
     [Serializable]
     /// <summary>
     /// 视觉常用方法
     /// </summary>
     public class Vision : ProjectObj, ProjectNodet.IClickNodeProject
     {
-        public enum ImageTypeObj
-        {
-             Image3=0,
-             Gray=1,
-             R=2,
-             G=3,
-             B=4,
-             H=5,
-             S=6,
-             V=7,
-        }
-
+    
         public override string FileName => "Vision";
         public override string Text { get; set; } = "视觉";
         public override string SuffixName => ".vision";
@@ -135,7 +159,7 @@ namespace Vision2.vision
         public int DilationRectangle1 { get; set; } = 300;
 
         [Description("ROI颜色。"), Category("结果区域"), DisplayName("ROI颜色")]
-        public RunProgram.ColorResult ROIColr { get; set; } =RunProgram.ColorResult.blue;
+        public ColorResult ROIColr { get; set; } = ColorResult.blue;
 
         [DescriptionAttribute("单位转换比例。"), Category("数据"), DisplayName("单位比例")]
         public int Transform { get; set; } = 1;
@@ -1280,18 +1304,6 @@ namespace Vision2.vision
             }
         }
 
-        public void AddLibrary(RunProgram runProgram )
-        {
-            try
-            {
-
-
-            }
-            catch (Exception)
-            {
-            }
-        }
-
         public static  void SetFont(HTuple window)
         {
             try
@@ -1783,6 +1795,34 @@ namespace Vision2.vision
         }
 
 
+
+        #region 视觉库  
+        public void AddLibrary(RunProgram runProgram)
+        {
+            try
+            {
+                if (!Vision.Instance.ListLibrary.ContainsKey(runProgram.Name))
+                {
+                    Vision.Instance.ListLibrary.Add(runProgram.Name, runProgram.GetType().ToString());
+                }
+                if (!DicLibraryVision.ContainsKey(runProgram.Name))
+                {
+                    DicLibraryVision.Add(runProgram.Name, runProgram);
+                }
+                ErosProjcetDLL.Excel.Npoi.WritePrivateProfileString("视觉库", runProgram.Name, runProgram.GetType().ToString(), ProjectINI.In.ProjectPathRun + "\\Library\\Vision\\Library.ini");
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        Dictionary<string, RunProgram> DicLibraryVision = new Dictionary<string, RunProgram>();
+        ///// <summary>
+        ///// 产品数据
+        ///// </summary>
+        //DataVale Detfet;
+        public Dictionary<string, string> ListLibrary { get; set; } = new Dictionary<string, string>();
+      #endregion
         [Browsable(false)]
         ///<summary>
         /// 运行相机参数
@@ -1795,11 +1835,13 @@ namespace Vision2.vision
         /// 3D标定
         /// </summary>
         public Dictionary<string, Calib.AutoCalibPoint> DicCalib3D { get; set; } = new Dictionary<string, Calib.AutoCalibPoint>();
+
+
         [Browsable(false)]
         public List<string> ListHalconName { get; set; } = new List<string>();
         [Browsable(false)]
         /// <summary>
-        /// 空间键值
+        /// 坐标
         /// </summary>
         public Dictionary<string, Coordinate> DicCoordinate { get; set; } = new Dictionary<string, Coordinate>();
 
@@ -1934,11 +1976,7 @@ namespace Vision2.vision
         public static DataVale OneProductVale = new DataVale();
 
         public static TrayRobot TraydataVale = new TrayRobot();
-        ///// <summary>
-        ///// 产品数据
-        ///// </summary>
-        //DataVale Detfet;
-        public Dictionary<string, string> ListLibrary{ get; set; } = new Dictionary<string, string>();
+    
 
 
         /// <summary>
@@ -4315,13 +4353,15 @@ namespace Vision2.vision
             try
             {
                 int ds = xld.CountObj();
-                for (int i = 0; i < ds; i++)
-                {
-                    HOperatorSet.SelectObj(xld, out HObject hObject1, i + 1);
-                    HOperatorSet.GetContourXld(hObject1, out HTuple row, out HTuple col);
-                    HOperatorSet.GenRegionPolygon(out HObject hObject2, row, col);
-                    hObject = hObject.ConcatObj(hObject2);
-                }
+                HOperatorSet.GenRegionContourXld(xld, out hObject, "filled");
+                //for (int i = 0; i < ds; i++)
+                //{
+                //    HOperatorSet.SelectObj(xld, out HObject hObject1, i + 1);
+
+                //    HOperatorSet.GetContourXld(hObject1, out HTuple row, out HTuple col);
+                //    HOperatorSet.GenRegionPolygon(out HObject hObject2, row, col);
+                //    hObject = hObject.ConcatObj(hObject2);
+                //}
             }
             catch (Exception ex)
             {

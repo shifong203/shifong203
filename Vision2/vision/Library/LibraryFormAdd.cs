@@ -38,17 +38,17 @@ namespace Vision2.vision
                             StringBuilder stdt = new StringBuilder(100);
                             try
                                 {
-                                   ErosProjcetDLL.Excel.Npoi.GetPrivateProfileString("视觉库", name, "", stdt, 500, LibraryForm1.PathStr + "\\Library.ini");
+                                   ErosProjcetDLL.Excel.Npoi.GetPrivateProfileString("视觉库", name, "", stdt, 500, Library.LibraryBasics.PathStr + "\\Library.ini");
                                     string ntype = stdt.ToString();     /*item.Value.Split('.')[item.Value.Split('.').Length - 1];*/
                                         dynamic obj = assembly.CreateInstance(/*halcon.GetType().Namespace + "." +*/ ntype); // 创建类的实例                            
                                         if (obj != null)
                                         {
-                                            runProgram = obj.UpSatrt<RunProgram>(LibraryForm1.PathStr   + name + "\\" + name);
+                                            runProgram = obj.UpSatrt<RunProgram>(Library.LibraryBasics.PathStr + name + "\\" + name);
                                         }
                                         else
                                         {
                                             obj = assembly.CreateInstance(ntype); // 创建类的实例     
-                                            runProgram = obj.UpSatrt<RunProgram>(LibraryForm1.PathStr  + name + "\\" + name);
+                                            runProgram = obj.UpSatrt<RunProgram>(Library.LibraryBasics.PathStr + name + "\\" + name);
                                         }
                                         runProgram.SetPThis(halcon);
                                         //runProgram.Name = item.Key;
@@ -68,17 +68,17 @@ namespace Vision2.vision
                             StringBuilder stdt = new StringBuilder(100);
                             try
                             {
-                                ErosProjcetDLL.Excel.Npoi.GetPrivateProfileString("视觉库", name, "", stdt, 500, LibraryForm1.PathStr + "\\Library.ini");
+                                ErosProjcetDLL.Excel.Npoi.GetPrivateProfileString("视觉库", name, "", stdt, 500, Library.LibraryBasics.PathStr + "\\Library.ini");
                                 string ntype = stdt.ToString();     /*item.Value.Split('.')[item.Value.Split('.').Length - 1];*/
                                 dynamic obj = assembly.CreateInstance(/*halcon.GetType().Namespace + "." +*/ ntype); // 创建类的实例                            
                                 if (obj != null)
                                 {
-                                    runProgram = obj.UpSatrt<RunProgram>(LibraryForm1.PathStr + name + "\\" + name);
+                                    runProgram = obj.UpSatrt<RunProgram>(Library.LibraryBasics.PathStr + name + "\\" + name);
                                 }
                                 else
                                 {
                                     obj = assembly.CreateInstance(ntype); // 创建类的实例     
-                                    runProgram = obj.UpSatrt<RunProgram>(LibraryForm1.PathStr + name + "\\" + name);
+                                    runProgram = obj.UpSatrt<RunProgram>(Library.LibraryBasics.PathStr + name + "\\" + name);
                                 }
                                 runProgram.SetPThis(halcon);
                                 halcon.GetRunProgram()[checkedListBox1.Items[i].ToString()] = runProgram;
@@ -110,8 +110,8 @@ namespace Vision2.vision
         {
             try
             {
-                Directory.CreateDirectory(LibraryForm1. PathStr);
-                string[] files = Directory.GetDirectories(LibraryForm1.PathStr);
+                Directory.CreateDirectory(Library.LibraryBasics.PathStr);
+                string[] files = Directory.GetDirectories(Library.LibraryBasics.PathStr);
                 checkedListBox1.Items.Clear();
                 //TreeNode treeNode = treeView1.Nodes.Add("视觉库");
                 for (int i = 0; i < files.Length; i++)
@@ -121,14 +121,14 @@ namespace Vision2.vision
                 //StringBuilder staSET = new StringBuilder(100);
                 string staSET = "                                                          ";
 
-                ErosProjcetDLL.Excel.Npoi.GetPrivateProfileString("视觉库", null, "", staSET, 500, LibraryForm1. PathStr + "\\Library.ini");
+                ErosProjcetDLL.Excel.Npoi.GetPrivateProfileString("视觉库", null, "", staSET, 500, Library.LibraryBasics.PathStr + "\\Library.ini");
                 string[] vs = staSET.ToString().Split('\0');
                 StringBuilder stdt = new StringBuilder(100);
                 for (int i = 0; i < vs.Length; i++)
                 {
                     if (vs[i].Trim() != "")
                     {
-                        ErosProjcetDLL.Excel.Npoi.GetPrivateProfileString("视觉库", vs[i], "", stdt, 500, LibraryForm1. PathStr + "\\Library.ini");
+                        ErosProjcetDLL.Excel.Npoi.GetPrivateProfileString("视觉库", vs[i], "", stdt, 500, Library.LibraryBasics.PathStr + "\\Library.ini");
                     }
                 }
             }

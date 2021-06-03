@@ -42,6 +42,15 @@ namespace Vision2
                 Application.SetCompatibleTextRenderingDefault(false);
                 string curPath = System.Environment.CurrentDirectory;
                 string basePath = Path.GetDirectoryName(System.AppDomain.CurrentDomain.BaseDirectory);
+                if (!System.IO.Directory.Exists(ProjectINI.ProjietPath))
+                {
+                    ProjectINI.ProjietPath = "C:\\Vision2\\";
+                    if (!System.IO.Directory.Exists(ProjectINI.In.ProjectPathRun))
+                    {
+                        MessageBox.Show("缺少项目文件");
+                        return;
+                    }
+                }
                 try
                 {
                     Application.Run(new Project.LodingProject());

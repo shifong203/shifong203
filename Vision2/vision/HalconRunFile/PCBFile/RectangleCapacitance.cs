@@ -100,7 +100,7 @@ namespace Vision2.vision.HalconRunFile.PCBFile
                     HOperatorSet.AreaCenter(hObject3, out HTuple areaDt, out HTuple row2,out HTuple column2);
                     //HOperatorSet.ErosionCircle(hObject3, out hObject3, 1);
                     HOperatorSet.OpeningCircle(hObject3, out hObject3, 5);
-                    halcon.AddOBJ(hObject3,RunProgram.ColorResult.yellow);
+                    halcon.AddOBJ(hObject3,ColorResult.yellow);
                     if (this.IntCapcitanceMinx.RaSetValeu(length12) != 0)
                     {
                         ErrNumber++;
@@ -128,8 +128,8 @@ namespace Vision2.vision.HalconRunFile.PCBFile
                 else
                 {
                     ErrNumber++;
-                    halcon.AddOBJ(TestingRoi, RunProgram.ColorResult.blue);
-                    halcon.AddOBJ(hObject, RunProgram.ColorResult.red);
+                    halcon.AddOBJ(TestingRoi, ColorResult.blue);
+                    halcon.AddOBJ(hObject, ColorResult.red);
                     if (debugId != 0)
                     {
            

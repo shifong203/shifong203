@@ -8,6 +8,7 @@ using Vision2.ErosProjcetDLL.Project;
 using Vision2.vision.HalconRunFile.RunProgramFile;
 using static Vision2.vision.HalconRunFile.RunProgramFile.Color_Detection;
 using static Vision2.vision.HalconRunFile.RunProgramFile.RunProgram;
+using static Vision2.vision.Vision;
 
 namespace Vision2.vision.HalconRunFile.Controls
 {
@@ -28,7 +29,7 @@ namespace Vision2.vision.HalconRunFile.Controls
             propertyGrid2 .SelectedObject= model;
             Updata(model);
             comboBox2.Items.Clear();
-            comboBox2.Items.AddRange(Enum.GetNames(typeof(Vision.ImageTypeObj)));
+            comboBox2.Items.AddRange(Enum.GetNames(typeof(ImageTypeObj)));
             hWindID.Initialize(hWindowControl2);
         }
 
@@ -821,7 +822,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 {
                     return;
                 }
-                _Classify.ImageType = (Vision.ImageTypeObj)Enum.Parse(typeof(Vision.ImageTypeObj),
+                _Classify.ImageType = (ImageTypeObj)Enum.Parse(typeof(ImageTypeObj),
                    comboBox2.SelectedItem.ToString());
                 _Classify.EnbleSelect = checkBox8.Checked;
                 _Classify.Enble = checkBox3.Checked;
@@ -1004,9 +1005,9 @@ namespace Vision2.vision.HalconRunFile.Controls
                     {
                         Name = sd,
                         Color_ID = (byte)(_Model.ColorDic.Count + 1),
-                        threshold_Min_Maxes = new List<Threshold_Min_Max> { new Threshold_Min_Max() { ImageTypeObj=Vision.ImageTypeObj.H,
-                              },new Threshold_Min_Max(){ ImageTypeObj=Vision.ImageTypeObj.S,},
-                        new Threshold_Min_Max(){ ImageTypeObj=Vision.ImageTypeObj.V} }
+                        threshold_Min_Maxes = new List<Threshold_Min_Max> { new Threshold_Min_Max() { ImageTypeObj=ImageTypeObj.H,
+                              },new Threshold_Min_Max(){ ImageTypeObj=ImageTypeObj.S,},
+                        new Threshold_Min_Max(){ ImageTypeObj=ImageTypeObj.V} }
                     }); 
                     listBox2.Items.Add(sd);
                 }
@@ -1129,7 +1130,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 }
                 else
                 {
-                    hWindID.SetImaage(halcon.GetImageOBJ((Vision.ImageTypeObj)Enum.Parse(typeof(Vision.ImageTypeObj), listBox3.SelectedItem.ToString())));
+                    hWindID.SetImaage(halcon.GetImageOBJ((ImageTypeObj)Enum.Parse(typeof(ImageTypeObj), listBox3.SelectedItem.ToString())));
                 }
                 hWindID.SetPerpetualPart(row - 100, col1 - 100, row2 + 100, col2 + 100);
                 hWindID.SetDraw(checkBox9.Checked);

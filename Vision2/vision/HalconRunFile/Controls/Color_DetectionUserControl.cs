@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using Vision2.vision.HalconRunFile.RunProgramFile;
 using static Vision2.vision.HalconRunFile.RunProgramFile.Color_Detection;
 using static Vision2.vision.HalconRunFile.RunProgramFile.RunProgram;
+using static Vision2.vision.Vision;
 
 namespace Vision2.vision.HalconRunFile.Controls
 {
@@ -63,7 +64,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 listBox1.Items.Add(item);
             }
             comboBox1.Items.Clear();
-            comboBox1.Items.AddRange(Enum.GetNames(typeof(Vision.ImageTypeObj)));
+            comboBox1.Items.AddRange(Enum.GetNames(typeof(ImageTypeObj)));
 
         }
         public HalconRun halcon;
@@ -81,7 +82,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                     color_Classify.H_enabled = false;
                     color_Classify.threshold_Min_Maxes.Add(new Threshold_Min_Max()
                     {
-                        ImageTypeObj = Vision.ImageTypeObj.H,
+                        ImageTypeObj = ImageTypeObj.H,
                         Min = color_Classify.Threshold_H.Min,
                         Max = color_Classify.Threshold_H.Max,
                     }); 
@@ -91,7 +92,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                     color_Classify.V_enabled = false;
                     color_Classify.threshold_Min_Maxes.Add(new Threshold_Min_Max()
                     {
-                        ImageTypeObj = Vision.ImageTypeObj.V,
+                        ImageTypeObj = ImageTypeObj.V,
                         Min = color_Classify.Threshold_V.Min,
                         Max = color_Classify.Threshold_V.Max,
                     }); ;
@@ -101,7 +102,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                     color_Classify.S_enabled = false;
                     color_Classify.threshold_Min_Maxes.Add(new Threshold_Min_Max()
                     {
-                        ImageTypeObj = Vision.ImageTypeObj.S,
+                        ImageTypeObj = ImageTypeObj.S,
                         Min = color_Classify.Threshold_S.Min,
                         Max = color_Classify.Threshold_S.Max,
                     }); ;
@@ -140,7 +141,7 @@ namespace Vision2.vision.HalconRunFile.Controls
             {
                 _Classify = color_Classify;
                 halcon.HobjClear();
-                _Classify.ImageType = (Vision.ImageTypeObj)Enum.Parse(typeof(Vision.ImageTypeObj), comboBox1.SelectedItem.ToString());
+                _Classify.ImageType = (ImageTypeObj)Enum.Parse(typeof(ImageTypeObj), comboBox1.SelectedItem.ToString());
                 _Classify.EnbleSelect = checkBox3.Checked;
                 _Classify.IsColt = checkBox5.Checked;
                 _Classify.ISSelecRoiFillUP = checkBox4.Checked;
@@ -271,9 +272,9 @@ namespace Vision2.vision.HalconRunFile.Controls
                     Color_detection.keyColor.Add(sd, new Color_Detection.Color_classify() {
                         Name = sd,
                         Color_ID = (byte)(Color_detection.keyColor.Count + 1),
-                        threshold_Min_Maxes = new List<Threshold_Min_Max> { new Threshold_Min_Max() { ImageTypeObj=Vision.ImageTypeObj.H,
-                    },new Threshold_Min_Max(){ ImageTypeObj=Vision.ImageTypeObj.S,},
-                        new Threshold_Min_Max(){ ImageTypeObj=Vision.ImageTypeObj.V} }
+                        threshold_Min_Maxes = new List<Threshold_Min_Max> { new Threshold_Min_Max() { ImageTypeObj=ImageTypeObj.H,
+                    },new Threshold_Min_Max(){ ImageTypeObj=ImageTypeObj.S,},
+                        new Threshold_Min_Max(){ ImageTypeObj=ImageTypeObj.V} }
                     }) ;
                     listBox1.Items.Add(sd);
                 }
@@ -460,7 +461,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 }
                 else
                 {
-                    hWindID.SetImaage(halcon.GetImageOBJ((Vision.ImageTypeObj)Enum.Parse(typeof(Vision.ImageTypeObj), listBox2.SelectedItem.ToString())));
+                    hWindID.SetImaage(halcon.GetImageOBJ((ImageTypeObj)Enum.Parse(typeof(ImageTypeObj), listBox2.SelectedItem.ToString())));
                 }
                 groupBox3.Text = listBox2.SelectedItem.ToString();
                 hWindID.SetPerpetualPart(row-100, col1-100, row2+100, col2+100);

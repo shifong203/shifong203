@@ -6,6 +6,7 @@ using System.Linq;
 using System.Windows.Forms;
 using Vision2.vision.HalconRunFile.RunProgramFile;
 using static Vision2.vision.HalconRunFile.RunProgramFile.RunProgram;
+using static Vision2.vision.Vision;
 
 namespace Vision2.vision.HalconRunFile.Controls
 {
@@ -31,6 +32,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 propertyGrid1.SelectedObject = Code.One_QR;
                 checkBox2.Checked = Code.Is2D;
                 comboBox2.SelectedIndex = Code.DiscernType;
+            
                 HWindID.Initialize(hWindowControl1);
                 HWindID.SetImaage(halcon.Image());
                 numericUpDown18.Maximum = 9999;
@@ -87,7 +89,6 @@ namespace Vision2.vision.HalconRunFile.Controls
                 trackBar5.Value = Code.SeleImageRangeMin;
                 checkBox1.Checked = Code.IsMedian_image;
                 checkBox7.Checked = Code.IsOpen_image;
-
                 numericUpDown20.Value = (decimal)Code.Sub_Mult;
                 numericUpDown21.Value = (decimal)Code.Sub_Add;
                 numericUpDown19.Value =(decimal) Code.Median_imageVa;
@@ -190,6 +191,8 @@ namespace Vision2.vision.HalconRunFile.Controls
         }
         public void GetP()
         {
+
+            comboBox4.SelectedIndex = Code.QRCOntEn;
             numericUpDown4.Value = Code.XNumber;
             numericUpDown5.Value = Code.YNumber;
             numericUpDown6.Value = Code.XInterval;
@@ -306,26 +309,17 @@ namespace Vision2.vision.HalconRunFile.Controls
             }
         }
 
-        private void button7_Click(object sender, EventArgs e)
-        {
-            button7.Enabled = false;
-            //halcon.StratThread();
-        }
-
-        private void button6_Click_1(object sender, EventArgs e)
-        {
-            button7.Enabled = true;
-            halcon.Stop();
-        }
-
+     
 
         private void button9_Click(object sender, EventArgs e)
         {
             try
             {
+                Code.Watch.Restart();
                 HObject image = Code.GetEmset(halcon.Image());
+                Code.Watch.Stop();
                 HWindID.SetImaage(image);
-
+                HWindID.HalconResult.AddMeassge("运行时间" + Code.Watch.ElapsedMilliseconds);
                 HWindID.ShowImage();
             }
             catch (Exception)
@@ -535,7 +529,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 {
                     return;
                 }
-                  string dante=      ((Control)sender).Text;
+                string dante=      ((Control)sender).Text;
                 string DAET = ((Control)sender).Name;
                 Code.ISCont = (int)numericUpDown10.Value;
                 Code.TrayNumber = (int)numericUpDown16.Value;
@@ -549,7 +543,6 @@ namespace Vision2.vision.HalconRunFile.Controls
                 {
                     Code.TrayIDS.RemoveRange(Code.TrayNumber, Code.TrayIDS.Count - Code.TrayNumber);
                 }
-
                 if (Code.TrayNumber > 0)
                 {
                     if (dataGridView2.Rows.Count < Code.IDValue)
@@ -660,31 +653,13 @@ namespace Vision2.vision.HalconRunFile.Controls
 
         }
 
-        private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            Code.DiscernType = comboBox2.SelectedIndex;
-        }
+       
 
         private void button10_Click_1(object sender, EventArgs e)
         {
 
 
         }
-
-        private void button11_Click_1(object sender, EventArgs e)
-        {
-            try
-            {
-                halcon.HobjClear();
-                Code.SrotCode(halcon);
-
-            }
-            catch (Exception)
-            {
-            }
-        }
-
-
 
         private void numericUpDown17_ValueChanged(object sender, EventArgs e)
         {
@@ -703,8 +678,11 @@ namespace Vision2.vision.HalconRunFile.Controls
             }
             halcon.HobjClear();
             Code.MatrixType = (int)comboBox3.SelectedIndex;
-            Code.SrotCode(halcon);
-            halcon.ShowObj();
+            if (Code.DiscernType==1)
+            {
+                Code.SrotCode(halcon);
+                halcon.ShowObj();
+            }
         }
 
         private void dataGridView2_CurrentCellChanged(object sender, EventArgs e)
@@ -787,11 +765,12 @@ namespace Vision2.vision.HalconRunFile.Controls
             try
             {
                 HOperatorSet.GenRectangle1(out HObject hObject3, Code.Rows - Code.Height, Code.Cols - Code.Height, Code.Rows + Code.Height, Code.Cols + Code.Height);
-
                 HObject hObject = RunProgram.DragMoveOBJS(halcon, hObject3);
                 HOperatorSet.AreaCenter(hObject,  out HTuple area, out HTuple rows, out HTuple colus);
                 Code.Rows = rows;
                 Code.Cols = colus;
+                halcon.HobjClear();
+                Code.SrotCode(halcon);
             }
             catch (Exception)
             {
@@ -838,6 +817,76 @@ namespace Vision2.vision.HalconRunFile.Controls
             catch (Exception)
             {
             }
+        }
+
+        private void button13_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                HOperatorSet.GenRectangle1(out HObject hObject3, Code.Rows - Code.Height, Code.Cols - Code.Height, Code.Rows + Code.Height, Code.Cols + Code.Height);
+                HOperatorSet.Union1(hObject3, out hObject3);
+                HObject hObject = RunProgram.DragMoveOBJ(halcon, hObject3);
+                HOperatorSet.Connection(hObject, out hObject);
+                HOperatorSet.AreaCenter(hObject, out HTuple area, out HTuple rows, out HTuple colus);
+                Code.Rows = rows;
+                Code.Cols = colus;
+                halcon.HobjClear();
+                Code.SrotCode(halcon);
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        private void toolStripButton2_Click(object sender, EventArgs e)
+        {
+            if (toolStripButton2.Text== "开始实时识别")
+            {
+                toolStripButton2.Text = "停止";
+                //halcon.StratThread();
+            }
+            else
+            {
+                toolStripButton2.Text = "开始实时识别";
+                halcon.Stop();
+            }
+       
+        }
+
+        private void toolStripButton3_Click(object sender, EventArgs e)
+        {
+            halcon.HobjClear();
+            Code.SrotCode(halcon);
+        }
+
+        private void toolStripButton4_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                HOperatorSet.GenRectangle1(out HObject hObject3, Code.Rows - Code.Height, Code.Cols - Code.Height, Code.Rows + Code.Height, Code.Cols + Code.Height);
+                HObject hObject = RunProgram.DragMoveOBJ(halcon, hObject3);
+                HOperatorSet.AreaCenter(hObject, out HTuple area, out HTuple rows, out HTuple colus);
+                Code.Rows = rows;
+                Code.Cols = colus;
+            }
+            catch (Exception ex)
+            {
+            }
+        }
+ 
+     
+
+        private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Code.DiscernType = comboBox2.SelectedIndex;
+        }
+        private void comboBox4_SelectedIndexChanged_1(object sender, EventArgs e)
+        {
+            if (isCheave)
+            {
+                return;
+            }
+            Code.QRCOntEn = (int)comboBox4.SelectedIndex;
         }
     }
 }

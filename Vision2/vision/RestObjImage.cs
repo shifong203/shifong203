@@ -27,7 +27,7 @@ namespace Vision2.vision
         public int MaxNumber = 0;
 
 
-        HWindID HWindIDt;
+      
         public static RestObjImage RestObjImageFrom
         {
             get
@@ -106,11 +106,7 @@ namespace Vision2.vision
                     HWindd = new HWindID();
                     HWindd.Initialize(hWindowControl1);
                 }
-                if (HWindIDt == null)
-                {
-                    HWindIDt = new HWindID();
-                    HWindIDt.Initialize(hWindowControl2);
-                }
+             
                     if (!trayImage.OK)
                     {
                         if (!trayImage.Done)
@@ -138,7 +134,7 @@ namespace Vision2.vision
                         }
                     }
                 label3.Text = RecipeCompiler.Instance.GetSPC();
-                HWindIDt.ShowImage();
+        
             }
             catch (Exception ex)
             {
@@ -205,17 +201,7 @@ namespace Vision2.vision
                 }
             }
             label4.Text = PatText;
-            try
-            {
-                string nareName = "";
-                string[] datas = nareName.Split('.');
-                if (datas[0]!="")
-                {
-                    HWindIDt.SetImaage(RecipeCompiler.GetProductEX().Key_Navigation_Picture[datas[0]].GetHObject());
-                    HWindIDt.HalconResult.AddObj(RecipeCompiler.GetProductEX().Key_Navigation_Picture[datas[0]].KeyRoi[datas[1]]);
-                }
-            }
-            catch (Exception ex) {     }
+    
             try
             {
                 if (Vision.Instance.RestT)
@@ -246,15 +232,15 @@ namespace Vision2.vision
                             HOperatorSet.SmallestRectangle1(hObject1, out HTuple row1, out HTuple col1, out HTuple row2, out HTuple clo2);
                             if (row1.Length != 0)
                             {
-                                    HOperatorSet.AreaCenter(hObject1, out HTuple area, out HTuple row, out HTuple col);
-                                    HOperatorSet.GenContourPolygonXld(out HObject hObject, new HTuple(row, row), new HTuple(new HTuple(0), col1));
-                                    HOperatorSet.GenContourPolygonXld(out HObject hObject2, new HTuple(new HTuple(0), row1), new HTuple(col, col));
-                                    HOperatorSet.GenContourPolygonXld(out HObject hObject3, new HTuple(new HTuple(row), row), new HTuple(clo2, wid));
-                                    HOperatorSet.GenContourPolygonXld(out HObject hObject4, new HTuple(new HTuple(row2), hei), new HTuple(col, col));
-                                    HWindd.HalconResult.SetCross(hObject.ConcatObj(hObject2).ConcatObj(hObject3).ConcatObj(hObject4));
-                                    double d = (double)wid / (double)hei;
-                                    hWindowControl3.HalconWindow.SetPart(row1 - (200*1),col1 -(200 * d), row2 + (200 * 1), clo2 + (200 * d));
-                                    hWindowControl4.HalconWindow.SetPart(row1 - (200*1),col1 -(200 * d), row2 + (200 * 1), clo2 + (200 * d));
+                                 HOperatorSet.AreaCenter(hObject1, out HTuple area, out HTuple row, out HTuple col);
+                                 HOperatorSet.GenContourPolygonXld(out HObject hObject, new HTuple(row, row), new HTuple(new HTuple(0), col1));
+                                 HOperatorSet.GenContourPolygonXld(out HObject hObject2, new HTuple(new HTuple(0), row1), new HTuple(col, col));
+                                 HOperatorSet.GenContourPolygonXld(out HObject hObject3, new HTuple(new HTuple(row), row), new HTuple(clo2, wid));
+                                 HOperatorSet.GenContourPolygonXld(out HObject hObject4, new HTuple(new HTuple(row2), hei), new HTuple(col, col));
+                                 HWindd.HalconResult.SetCross(hObject.ConcatObj(hObject2).ConcatObj(hObject3).ConcatObj(hObject4));
+                                 double d = (double)wid / (double)hei;
+                                 hWindowControl3.HalconWindow.SetPart(row1 - (200*1),col1 -(200 * d), row2 + (200 * 1), clo2 + (200 * d));
+                                 hWindowControl4.HalconWindow.SetPart(row1 - (200*1),col1 -(200 * d), row2 + (200 * 1), clo2 + (200 * d));
                             }
                             else
                             {
@@ -283,9 +269,8 @@ namespace Vision2.vision
                 }
             }
             catch (Exception ex)
-             {
+            {
             }
-            HWindIDt.ShowImage();
             HWindd.ShowImage();
         }
         /// <summary>

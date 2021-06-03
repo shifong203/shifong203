@@ -240,12 +240,12 @@ namespace Vision2.vision
                     {
                         if (item.Key!=item2.Key)
                         {
-                            HWind.HalconResult.AddObj(item2.Value.XLd, HalconRunFile.RunProgramFile.RunProgram.ColorResult.green);
+                            HWind.HalconResult.AddObj(item2.Value.XLd,ColorResult.green);
                         }
                     }
                     hWindowControl2.HalconWindow.ClearWindow();
                     hWindowControl3.HalconWindow.ClearWindow();
-                    HWind.HalconResult.AddObj(item.Value.XLd, HalconRunFile.RunProgramFile.RunProgram.ColorResult.yellow);
+                    HWind.HalconResult.AddObj(item.Value.XLd, ColorResult.yellow);
                     ReseDone = true;
                     HOperatorSet.AreaCenter(item.Value.XLd, out HTuple area, out HTuple row, out HTuple col);
                     HOperatorSet.GenContourPolygonXld(out HObject hObject, new HTuple(row, row), new HTuple(new HTuple(0), col1));

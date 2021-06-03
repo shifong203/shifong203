@@ -409,10 +409,10 @@ namespace Vision2.vision
                     default:
                         return;
                 }
-                hWindID.HalconResult.AddObj(hObjectY, RunProgram.ColorResult.red);
-                hWindID.HalconResult.AddObj(hObjectX, RunProgram.ColorResult.green);
-                hWindID.HalconResult.AddImageMassage(hTuplX, hTuply, "X+", RunProgram.ColorResult.green);
-                hWindID.HalconResult.AddImageMassage(hTupl2X, hTupl2Y, "Y+", RunProgram.ColorResult.red);
+                hWindID.HalconResult.AddObj(hObjectY, ColorResult.red);
+                hWindID.HalconResult.AddObj(hObjectX, ColorResult.green);
+                hWindID.HalconResult.AddImageMassage(hTuplX, hTuply, "X+", ColorResult.green);
+                hWindID.HalconResult.AddImageMassage(hTupl2X, hTupl2Y, "Y+", ColorResult.red);
                 //HOperatorSet.SetColor(halcon.hWindowHalcon(), "red");
                 //HOperatorSet.DispObj(hObjectY, halcon.hWindowHalcon());
                 //HOperatorSet.SetColor(halcon.hWindowHalcon(), "green");

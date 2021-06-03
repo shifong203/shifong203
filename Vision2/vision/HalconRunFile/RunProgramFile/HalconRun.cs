@@ -24,6 +24,7 @@ using static Vision2.Project.formula.UserFormulaContrsl;
 using ErosSocket.DebugPLC.Robot;
 using static Vision2.vision.HalconRunFile.RunProgramFile.HalconRun;
 using static Vision2.vision.HalconRunFile.RunProgramFile.RunProgram;
+using static Vision2.vision.Vision;
 
 namespace Vision2.vision.HalconRunFile.RunProgramFile
 {
@@ -405,17 +406,13 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                             List<string> list = (sender as ToolStripItem).Tag as List<string>;
                             for (int i = 0; i < list.Count; i++)
                             {
-                                this.ListRun[list[i]].SaveThis(ErosProjcetDLL.Project.ProjectINI.In.ProjectPathRun + "\\Library\\Vision\\");
-                                if (!Vision.Instance. ListLibrary.ContainsKey(list[i]))
-                                {
-                                    Vision.Instance.ListLibrary.Add(list[i], this.ListRun[list[i]].GetType().ToString());
-                                }
-                                ErosProjcetDLL.Excel.Npoi.WritePrivateProfileString("视觉库", list[i], this.ListRun[list[i]].GetType().ToString(), ProjectINI.In.ProjectPathRun + "\\Library\\Vision\\Library.ini");
+                                this.ListRun[list[i]].SaveThis(Library.LibraryBasics.PathStr);
+                                Vision.Instance.AddLibrary(this.ListRun[list[i]]);
+                             
                             }
                         }
                         else
                         {
-
                         }
                     }
                     catch (Exception)
@@ -940,26 +937,26 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             {
             }
         }
-        public HObject GetImageOBJ( Vision.ImageTypeObj imageType)
+        public HObject GetImageOBJ( ImageTypeObj imageType)
         {
         
             switch (imageType)
             {
-                case Vision.ImageTypeObj.Image3:
+                case ImageTypeObj.Image3:
                     return imag;
-                case Vision.ImageTypeObj.Gray:
+                case ImageTypeObj.Gray:
                     return Gray;
-                case Vision.ImageTypeObj.R:
+                case ImageTypeObj.R:
                     return R;
-                case Vision.ImageTypeObj.G:
+                case ImageTypeObj.G:
                     return G;
-                case Vision.ImageTypeObj.B:
+                case ImageTypeObj.B:
                     return B;
-                case Vision.ImageTypeObj.H:
+                case ImageTypeObj.H:
                     return H;
-                case Vision.ImageTypeObj.S:
+                case ImageTypeObj.S:
                     return S;
-                case Vision.ImageTypeObj.V:
+                case ImageTypeObj.V:
                     return V;
             }
             return imag;
