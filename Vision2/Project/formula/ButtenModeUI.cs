@@ -17,10 +17,10 @@ namespace Vision2.Project.formula
         {
             try
             {
-                dataVales.GetDataVales()[0].Done = true;
-                dataVales.GetDataVales()[0].AutoOK = true;
-                dataVales.GetDataVales()[0].OK = true;
-                RecipeCompiler.AlterNumber(true, dataVales.GetDataVales()[0].ResuOBj[0].RunID - 1);
+                dataVales.GetTrayData().GetDataVales()[0].Done = true;
+                dataVales.GetTrayData().GetDataVales()[0].AutoOK = true;
+                dataVales.GetTrayData().GetDataVales()[0].OK = true;
+                //RecipeCompiler.AlterNumber(true, dataVales.GetTrayData().GetDataVales()[0].ResuOBj[0].RunID - 1);
 
                 if (RecipeCompiler.Instance.GetMes() != null)
                 {
@@ -39,10 +39,10 @@ namespace Vision2.Project.formula
         {
             try
             {
-                dataVales.GetDataVales()[0].Done = true;
-                dataVales.GetDataVales()[0].AutoOK = false;
+                dataVales.GetTrayData().GetDataVales()[0].Done = true;
+                dataVales.GetTrayData().GetDataVales()[0].AutoOK = false;
                 //dataVales[0].RsetOK = false;
-                RecipeCompiler.AlterNumber(true, dataVales.GetDataVales()[0].ResuOBj[0].RunID - 1);
+                //RecipeCompiler.AlterNumber(true, dataVales.GetTrayData().GetDataVales()[0].ResuOBj[0].RunID - 1);
 
                 if (RecipeCompiler.Instance.GetMes() != null)
                 {

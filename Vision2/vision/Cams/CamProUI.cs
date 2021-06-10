@@ -46,11 +46,11 @@ namespace Vision2.vision.Cams
                 HOperatorSet.GetCalibDataObservPoints(calibDataID, 0, 0, LisImage.Count - 1, out HTuple rows, out HTuple Cols, out HTuple index, out HTuple pose);
                 HOperatorSet.GenCircle(out HObject Circle, rows, Cols, HTuple.TupleGenConst(rows.Length, 2));
                 vision.Calib.AutoCalibPoint.Disp3DCoordSystem(StartParameters, pose, 0.5, out HObject x, out HObject y, out HObject z);
-                HWindI.HalconResult.AddObj(x, ColorResult.red);
-                HWindI.HalconResult.AddObj(y, ColorResult.green);
-                HWindI.HalconResult.AddObj(z,ColorResult.blue);
-                HWindI.HalconResult.AddObj(Circle);
-                HWindI.HalconResult.AddObj(hObject, "green");
+                HWindI.OneResIamge.AddObj(x, ColorResult.red);
+                HWindI.OneResIamge.AddObj(y, ColorResult.green);
+                HWindI.OneResIamge.AddObj(z,ColorResult.blue);
+                HWindI.OneResIamge.AddObj(Circle);
+                HWindI.OneResIamge.AddObj(hObject, "green");
                 HWindI.ShowImage();
 
             }
@@ -73,24 +73,24 @@ namespace Vision2.vision.Cams
                     HOperatorSet.GetCalibDataObservPoints(calibDataID, 0, 0, i, out HTuple rows, out HTuple Cols, out HTuple index, out HTuple pose);
                     HOperatorSet.GenCircle(out HObject Circle, rows, Cols, HTuple.TupleGenConst(rows.Length, 2));
                     vision.Calib.AutoCalibPoint.Disp3DCoordSystem(StartParameters, pose, 0.5, out HObject x, out HObject y, out HObject z);
-                    HWindI.HalconResult.AddObj(x, ColorResult.red);
-                    HWindI.HalconResult.AddObj(y,ColorResult.green);
-                    HWindI.HalconResult.AddObj(z, ColorResult.blue);
-                    HWindI.HalconResult.AddObj(Circle);
-                    HWindI.HalconResult.AddObj(hObject, "green");
+                    HWindI.OneResIamge.AddObj(x, ColorResult.red);
+                    HWindI.OneResIamge.AddObj(y,ColorResult.green);
+                    HWindI.OneResIamge.AddObj(z, ColorResult.blue);
+                    HWindI.OneResIamge.AddObj(Circle);
+                    HWindI.OneResIamge.AddObj(hObject, "green");
                     HWindI.ShowImage();
 
                 }
                 HOperatorSet.CalibrateCameras(calibDataID, out HTuple error);
                 HOperatorSet.GetCalibData(calibDataID, "camera", 0, "params", out CamParam);
-                HWindI.HalconResult.Massage = new HTuple();
-                HWindI.HalconResult.AddMeassge("标定误差结果:" + error.TupleString("5.4f") + "px");
-                HWindI.HalconResult.AddMeassge("焦距:" + (CamParam.TupleSelect(1) * 1000).TupleString("5.2f") + "mm");
-                HWindI.HalconResult.AddMeassge("畸变:" + (CamParam.TupleSelect(2)).TupleString("2.2f"));
-                HWindI.HalconResult.AddMeassge("Cx:" + CamParam[5]);
-                HWindI.HalconResult.AddMeassge("Cy:" + CamParam[6]);
-                HWindI.HalconResult.AddMeassge("Sx:" + (CamParam.TupleSelect(3) * 1000000).TupleString("5.2f") + "um");
-                HWindI.HalconResult.AddMeassge("Sy:" + (CamParam.TupleSelect(4) * 1000000).TupleString("5.2f") + "um");
+                HWindI.OneResIamge.Massage = new HTuple();
+                HWindI.OneResIamge.AddMeassge("标定误差结果:" + error.TupleString("5.4f") + "px");
+                HWindI.OneResIamge.AddMeassge("焦距:" + (CamParam.TupleSelect(1) * 1000).TupleString("5.2f") + "mm");
+                HWindI.OneResIamge.AddMeassge("畸变:" + (CamParam.TupleSelect(2)).TupleString("2.2f"));
+                HWindI.OneResIamge.AddMeassge("Cx:" + CamParam[5]);
+                HWindI.OneResIamge.AddMeassge("Cy:" + CamParam[6]);
+                HWindI.OneResIamge.AddMeassge("Sx:" + (CamParam.TupleSelect(3) * 1000000).TupleString("5.2f") + "um");
+                HWindI.OneResIamge.AddMeassge("Sy:" + (CamParam.TupleSelect(4) * 1000000).TupleString("5.2f") + "um");
                 Cam.Kappa = Math.Round(CamParam.TupleSelect(2).D, 2);
                 Cam.Focal = Math.Round(CamParam.TupleSelect(1).D * 1000, 2);
 
@@ -153,11 +153,11 @@ namespace Vision2.vision.Cams
                 HOperatorSet.GetCalibDataObservPoints(calibDataID, 0, 0, listBox1.SelectedIndex, out HTuple rows, out HTuple Cols, out HTuple index, out HTuple pose);
                 HOperatorSet.GenCircle(out HObject Circle, rows, Cols, HTuple.TupleGenConst(rows.Length, 2));
                 vision.Calib.AutoCalibPoint.Disp3DCoordSystem(StartParameters, pose, 0.5, out HObject x, out HObject y, out HObject z);
-                HWindI.HalconResult.AddObj(x, ColorResult.red);
-                HWindI.HalconResult.AddObj(y,ColorResult.green);
-                HWindI.HalconResult.AddObj(z, ColorResult.blue);
-                HWindI.HalconResult.AddObj(Circle);
-                HWindI.HalconResult.AddObj(hObject, "green");
+                HWindI.OneResIamge.AddObj(x, ColorResult.red);
+                HWindI.OneResIamge.AddObj(y,ColorResult.green);
+                HWindI.OneResIamge.AddObj(z, ColorResult.blue);
+                HWindI.OneResIamge.AddObj(Circle);
+                HWindI.OneResIamge.AddObj(hObject, "green");
                 HWindI.ShowImage();
             }
             catch (Exception ex)

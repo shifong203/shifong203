@@ -43,7 +43,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 pint_Round_BrushControl.FillArea = (double)numericUpDown9.Value;
                 pint_Round_BrushControl.Threshold_MinG.Min = (byte)numericUpDown6.Value;
                 pint_Round_BrushControl.Threshold_MinG.Max = (byte)numericUpDown5.Value;
-                pint_Round_BrushControl.Run(pint_Round_BrushControl.GetPThis()  , pint_Round_BrushControl.GetPThis().GetdataVale(), id);
+                pint_Round_BrushControl.Run(pint_Round_BrushControl.GetPThis()  , pint_Round_BrushControl.GetPThis().GetOneImageR(), id);
                 Halcon.ShowObj();
       
             }

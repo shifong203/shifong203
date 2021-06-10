@@ -149,7 +149,7 @@ namespace Vision2.vision.HalconRunFile.Controls
             {
            
                 halcon.HobjClear();
-                overgild.Run(halcon, halcon.GetdataVale());
+                overgild.Run(halcon, halcon.GetOneImageR());
                 overgild.ModeOBj = overgild.SelecRoi;
                 halcon.AddOBJ(overgild.ModeOBj);
                 halcon.ShowObj();

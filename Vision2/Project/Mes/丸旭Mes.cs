@@ -171,8 +171,8 @@ namespace Vision2.Project.Mes
                 string Mest = "";
                 string jtvales = "";
                 string name = "";
-                QrCode = dataVale.TrayIDQR;
-                if (dataVale.OK)
+                QrCode = dataVale.GetTrayData().TrayIDQR;
+                if (dataVale.GetTrayData().OK)
                 {
                     reset = "OK";
                 }
@@ -182,24 +182,28 @@ namespace Vision2.Project.Mes
                 }
                 ListText.Add(Product.ProductionName + "," + QRCODE + "," + reset + "," + UserFormulaContrsl.timeStrStrat + "," + timeStr + "," + name + "," + jtvales + "," + NG1 + "," + Mest);
                 QrCode = "";
-                foreach (var item in dataVale.GetDataVales())
+                foreach (var item in dataVale.GetTrayData().GetDataVales())
                 {
-                    for (int i = 0; i < item.ResuOBj.Count; i++)
+                    foreach (var itemDT in item.GetNGCompData().DicOnes)
                     {
-                        name = item.ResuOBj[i].RunName;
-                        if (!item.ResuOBj[i].OK)
-                        {
-                            reset = "NG";
-                            if (item.ResuOBj[i].OK)
-                            {
-                                NG1 = "OK";
-                            }
-                            reset = "";
-                            jtvales = item.ResuOBj[i].NGObj[0].NGText;
-                            ListText.Add("," + QrCode + "," + reset + ", , ," + name + "," + jtvales + "," + NG1);
-                            name = "";
-                            NG1 = "";
-                        }
+
+                    //}
+                    //for (int i = 0; i < item.GetNGCompData().DicOnes.Count; i++)
+                    //{
+                        //name = itemDT.Key;
+                        //if (!itemDT.OK)
+                        //{
+                        //    reset = "NG";
+                        //    if (item.ResuOBj[i].OK)
+                        //    {
+                        //        NG1 = "OK";
+                        //    }
+                        //    reset = "";
+                        //    //jtvales = item.ResuOBj[i].CantOBJ.NGText;
+                        //    ListText.Add("," + QrCode + "," + reset + ", , ," + name + "," + jtvales + "," + NG1);
+                        //    name = "";
+                        //    NG1 = "";
+                        //}
                     }
                 }
                 //foreach (var item in dataVale.GetDataVales())

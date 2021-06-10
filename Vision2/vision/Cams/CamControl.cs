@@ -167,8 +167,8 @@ namespace Vision2.vision.Cams
 
                 Halcon.UPStart();
                 Halcon.Image(Cam.GetImage());
-                Halcon.EndChanged();
-                // halcon.GetResultOBj().AddMeassge(Cam.RunTime + "ms");
+                Halcon.EndChanged(Halcon.GetOneImageR());
+                // halcon.GetOneImageR().AddMeassge(Cam.RunTime + "ms");
                 Halcon.ShowObj();
             }
             catch (Exception ex)

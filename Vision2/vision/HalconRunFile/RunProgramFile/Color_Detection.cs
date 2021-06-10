@@ -302,7 +302,6 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     {
                         HOperatorSet.DilationRectangle1(hObjectROI, out HObject hObject1, Vision.Instance.DilationRectangle1, Vision.Instance.DilationRectangle1);
                         oneResultOBj.AddNGOBJ(RunPa.Name, Name, hObject1, Color_region);
-                        //oneResultOBj.AddNGOBJ(new OneRObj() { NGText = RunPa.Name + "." + this.Name, ComponentID = this.Name, ROI = hObject1, NGROI = Color_region });
                     }
                     halcon.AddMessage(RunPa.Name + "."+this.Name + ":" + Color_ID + Name + "数量" + Color_region.CountObj());
                     NGNumber++;
@@ -343,7 +342,8 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     }
                 }
                 catch (Exception)
-                {}
+                {
+                }
             }
             return ResltBool;
         }

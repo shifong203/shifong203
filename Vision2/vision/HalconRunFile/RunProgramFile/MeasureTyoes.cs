@@ -98,7 +98,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     }
                     min = halcon.GetCaliConstMM(min);
                     //halcon.AddOBJ(  xld,  this.color );
-                    halcon.GetResultOBj().AddImageMassage(outRows.TupleInt(), outcols.TupleInt(), this.Name + "=" + min.TupleString("0.3f"), ColorResult.green);
+                    halcon.GetOneImageR().AddImageMassage(outRows.TupleInt(), outcols.TupleInt(), this.Name + "=" + min.TupleString("0.3f"), ColorResult.green);
                     outRows.Append(rowt);
                     outcols.Append(colt);
                     HOperatorSet.GenContourPolygonXld(out HObject hObject2, outRows, outcols);

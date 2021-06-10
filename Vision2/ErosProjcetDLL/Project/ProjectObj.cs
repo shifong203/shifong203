@@ -199,7 +199,7 @@ namespace Vision2.ErosProjcetDLL.Project
         /// <param name="exception"></param>
         public void LogErr(string message, Exception exception)
         {
-            LogErr(message + ":" + exception.Message);
+            LogErr(message + ":" + exception.Message+ exception.StackTrace);
         }
         /// <summary>
         /// 载入错误信息

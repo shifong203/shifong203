@@ -138,7 +138,7 @@ namespace Vision2.vision.HalconRunFile.PCBFile
             
 
                 ziPoint.PintRun(halcon.GetImageOBJ(ICPintT.Threshold_Min_Max.ImageTypeObj),
-                    ICPintT.homMat2D, halcon, ICPintT, halcon.GetdataVale(), out HObject errDobj, out HObject obj,1);
+                    ICPintT.homMat2D, halcon, ICPintT, halcon.GetOneImageR(), out HObject errDobj, out HObject obj,1);
 
                 halcon.AddOBJ(errDobj, ColorResult.yellow);
                 halcon.AddOBJ(obj);

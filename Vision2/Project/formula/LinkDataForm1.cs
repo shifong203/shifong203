@@ -495,7 +495,7 @@ namespace Vision2.Project.formula
         {
             try
             {
-                DebugF.DebugCompiler.GetTrayDataUserControl().WriatTary(ProcessControl.ProcessUser.GetThis().ExcelPath + "\\", "{文件名= [newtime]-[trayid];}", DebugF.DebugCompiler.GetTrayDataUserControl().GetTrayEx(), out string err);
+                DebugF.DebugCompiler.GetTrayDataUserControl().WriatTary(ProcessControl.ProcessUser.GetThis().ExcelPath + "\\", "{文件名= [newtime]-[trayid];}", DebugF.DebugCompiler.GetTrayDataUserControl().GetTrayEx().GetTrayData(), out string err);
             }
             catch (Exception ex)
             {

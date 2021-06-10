@@ -4,6 +4,9 @@ using System.Windows.Forms;
 
 namespace ErosSocket.DebugPLC.Robot
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public partial class TrayControl : UserControl
     {
         Vision2.vision.HWindID hWindID;
@@ -81,12 +84,12 @@ namespace ErosSocket.DebugPLC.Robot
 
                     HOperatorSet.SetPart(hWindowControl1.HalconWindow, 0, 0, lieng + 200, cl1 + 50);
 
-                    HObject hObject5 = TrayRobot.GenArrowContourXld(20, 20, 100, 20, 10, 20);
-                    HObject hObject6 = TrayRobot.GenArrowContourXld(20, 20, 20, 100, 10, 20);
+                  Vision2.vision.Vision .Gen_arrow_contour_xld(out HObject hObject5 ,20, 20, 100, 20, 10, 20);
+                    Vision2.vision.Vision.Gen_arrow_contour_xld(out HObject hObject6, 20, 20, 20, 100, 10, 20);
 
                     hWindowControl1.HalconWindow.ClearWindow();
-                    TrayRobot.Disp_message(hWindowControl1.HalconWindow, "X", 100, 20);
-                    TrayRobot.Disp_message(hWindowControl1.HalconWindow, "Y", 20, 100);
+                    Vision2.vision.Vision.Disp_message(hWindowControl1.HalconWindow, "X", 100, 20);
+                    Vision2.vision.Vision.Disp_message(hWindowControl1.HalconWindow, "Y", 20, 100);
                     hWindowControl1.HalconWindow.SetColor("red");
                     HOperatorSet.DispObj(hObject5, hWindowControl1.HalconWindow);
 
@@ -107,10 +110,10 @@ namespace ErosSocket.DebugPLC.Robot
                     HOperatorSet.DispObj(hObject, hWindowControl1.HalconWindow);
                     HOperatorSet.GenCrossContourXld(out hObject, tray.P4.X, tray.P4.Y, 10, 0);
                     HOperatorSet.DispObj(hObject, hWindowControl1.HalconWindow);
-                    TrayRobot.Disp_message(hWindowControl1.HalconWindow, "1", tray.P1.X.Value, tray.P1.Y.Value);
-                    TrayRobot.Disp_message(hWindowControl1.HalconWindow, "2", tray.P2.X.Value, tray.P2.Y.Value);
-                    TrayRobot.Disp_message(hWindowControl1.HalconWindow, "3", tray.P3.X.Value, tray.P3.Y.Value);
-                    TrayRobot.Disp_message(hWindowControl1.HalconWindow, "4", tray.P4.X.Value, tray.P4.Y.Value);
+                    Vision2.vision.Vision.Disp_message(hWindowControl1.HalconWindow, "1", tray.P1.X.Value, tray.P1.Y.Value);
+                    Vision2.vision.Vision.Disp_message(hWindowControl1.HalconWindow, "2", tray.P2.X.Value, tray.P2.Y.Value);
+                    Vision2.vision.Vision.Disp_message(hWindowControl1.HalconWindow, "3", tray.P3.X.Value, tray.P3.Y.Value);
+                    Vision2.vision.Vision.Disp_message(hWindowControl1.HalconWindow, "4", tray.P4.X.Value, tray.P4.Y.Value);
                 }
 
             }
@@ -163,13 +166,13 @@ namespace ErosSocket.DebugPLC.Robot
 
                 //HOperatorSet.SetPart(hWindowControl1.HalconWindow, 0, 0, lieng * 1, cl1 * 1);
 
-                HObject hObject5 = TrayRobot.GenArrowContourXld(20, 20, 100, 20, 10, 20);
-                HObject hObject6 = TrayRobot.GenArrowContourXld(20, 20, 20, 100, 10, 20);
+              Vision2.vision.Vision.Gen_arrow_contour_xld(out HObject hObject5 ,20, 20, 100, 20, 10, 20);
+                Vision2.vision.Vision.Gen_arrow_contour_xld(out HObject hObject6, 20, 20, 20, 100, 10, 20);
 
                 hWindowControl1.HalconWindow.ClearWindow();
 
-                TrayRobot.Disp_message(hWindowControl1.HalconWindow, "X", 100, 20);
-                TrayRobot.Disp_message(hWindowControl1.HalconWindow, "Y", 20, 100, false, "green");
+                Vision2.vision.Vision.Disp_message(hWindowControl1.HalconWindow, "X", 100, 20);
+                Vision2.vision.Vision.Disp_message(hWindowControl1.HalconWindow, "Y", 20, 100, false, "green");
                 hWindowControl1.HalconWindow.SetColor("red");
                 HOperatorSet.DispObj(hObject5, hWindowControl1.HalconWindow);
 
@@ -194,7 +197,7 @@ namespace ErosSocket.DebugPLC.Robot
                     int dt = dataGridView3.Rows.Add();
                     dataGridView3.Rows[dt].Cells[0].Value = tray.ListX.TupleSelect(i2).TupleString("0.02f");
                     dataGridView3.Rows[dt].Cells[1].Value = tray.ListY.TupleSelect(i2).TupleString("0.02f");
-                    TrayRobot.Disp_message(hWindowControl1.HalconWindow, i2 + 1, tray.ListX[i2], tray.ListY[i2], false, "red", "true");
+                    Vision2.vision.Vision.Disp_message(hWindowControl1.HalconWindow, i2 + 1, tray.ListX[i2], tray.ListY[i2], false, "red", "true");
                 }
             }
             catch (Exception ex)
@@ -334,7 +337,7 @@ namespace ErosSocket.DebugPLC.Robot
                         int dt = dataGridView3.Rows.Add();
                         dataGridView3.Rows[dt].Cells[0].Value = tray.ListX.TupleSelect(i2).TupleString("0.02f");
                         dataGridView3.Rows[dt].Cells[1].Value = tray.ListY.TupleSelect(i2).TupleString("0.02f");
-                        TrayRobot.Disp_message(hWindowControl1.HalconWindow, i2, tray.ListX[i2], tray.ListY[i2], false, "red", "true");
+                        Vision2.vision.Vision.Disp_message(hWindowControl1.HalconWindow, i2, tray.ListX[i2], tray.ListY[i2], false, "red", "true");
                     }
                 }
 
@@ -408,12 +411,12 @@ namespace ErosSocket.DebugPLC.Robot
 
                 HOperatorSet.SetPart(hWindowControl1.HalconWindow, 0, 0, lieng + 200, cl1 + 50);
 
-                HObject hObject5 = TrayRobot.GenArrowContourXld(20, 20, 100, 20, 10, 20);
-                HObject hObject6 = TrayRobot.GenArrowContourXld(20, 20, 20, 100, 10, 20);
+             Vision2.vision.Vision.Gen_arrow_contour_xld(out HObject hObject5 , 20, 20, 100, 20, 10, 20);
+                Vision2.vision.Vision.Gen_arrow_contour_xld(out HObject hObject6, 20, 20, 20, 100, 10, 20);
 
                 hWindowControl1.HalconWindow.ClearWindow();
-                TrayRobot.Disp_message(hWindowControl1.HalconWindow, "X", 100, 20);
-                TrayRobot.Disp_message(hWindowControl1.HalconWindow, "Y", 20, 100);
+                Vision2.vision.Vision.Disp_message(hWindowControl1.HalconWindow, "X", 100, 20);
+                Vision2.vision.Vision.Disp_message(hWindowControl1.HalconWindow, "Y", 20, 100);
                 hWindowControl1.HalconWindow.SetColor("red");
                 HOperatorSet.DispObj(hObject5, hWindowControl1.HalconWindow);
 
@@ -434,10 +437,10 @@ namespace ErosSocket.DebugPLC.Robot
                 HOperatorSet.DispObj(hObject, hWindowControl1.HalconWindow);
                 HOperatorSet.GenCrossContourXld(out hObject, tray.P4.X, tray.P4.Y, 10, 0);
                 HOperatorSet.DispObj(hObject, hWindowControl1.HalconWindow);
-                TrayRobot.Disp_message(hWindowControl1.HalconWindow, "1", tray.P1.X.Value, tray.P1.Y.Value);
-                TrayRobot.Disp_message(hWindowControl1.HalconWindow, "2", tray.P2.X.Value, tray.P2.Y.Value);
-                TrayRobot.Disp_message(hWindowControl1.HalconWindow, "3", tray.P3.X.Value, tray.P3.Y.Value);
-                TrayRobot.Disp_message(hWindowControl1.HalconWindow, "4", tray.P4.X.Value, tray.P4.Y.Value);
+                Vision2.vision.Vision.Disp_message(hWindowControl1.HalconWindow, "1", tray.P1.X.Value, tray.P1.Y.Value);
+                Vision2.vision.Vision.Disp_message(hWindowControl1.HalconWindow, "2", tray.P2.X.Value, tray.P2.Y.Value);
+                Vision2.vision.Vision.Disp_message(hWindowControl1.HalconWindow, "3", tray.P3.X.Value, tray.P3.Y.Value);
+                Vision2.vision.Vision.Disp_message(hWindowControl1.HalconWindow, "4", tray.P4.X.Value, tray.P4.Y.Value);
             }
             catch (Exception)
             {

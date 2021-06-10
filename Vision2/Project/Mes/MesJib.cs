@@ -50,7 +50,7 @@ namespace Vision2.Project.Mes
         public bool ReadMes(out string resetMesString)
         {
 
-            return ReadMes(DebugCompiler.GetThis().DDAxis.GetTrayInxt(0).GetDataVales()[0].PanelID, out resetMesString);
+            return ReadMes(DebugCompiler.GetThis().DDAxis.GetTrayInxt(0).GetTrayData().GetDataVales()[0].PanelID, out resetMesString);
         }
 
         public void WrietMes(UserFormulaContrsl userFormulaContrsl, string QRCODE, string Product_Name)
@@ -85,9 +85,11 @@ namespace Vision2.Project.Mes
             List<string> dat = new List<string>();
             dat.Add(DebugCompiler.GetThis().DDAxis.StartTime.ToString("HH:mm:ss"));
             dat.Add(DateTime.Now.ToString("HH:mm:ss"));
-            if (DebugF.IO.TrayDataUserControl.GetTray()!=null)
+
+            TrayRobot trayRobot = DebugF.IO.TrayDataUserControl.GetTray();
+            if (trayRobot != null)
             {
-                if (DebugF.IO.TrayDataUserControl.GetTray().OK)
+                if (DebugF.IO.TrayDataUserControl.GetTray().GetTrayData().OK)
                 {
                     dat.Add("OK");
                 }
@@ -97,20 +99,22 @@ namespace Vision2.Project.Mes
                 }
             }
             ErosProjcetDLL.Excel.Npoi.AddWriteCSV(pathEx, dat.ToArray());
-            if (DebugF.IO.TrayDataUserControl.GetTray() != null)
+            if (trayRobot != null)
             {
+                TrayData trayData = trayRobot.GetTrayData();
 
-      
-                for (int i = 0; i < DebugF.IO.TrayDataUserControl.GetTray().GetDataVales().Count; i++)
+
+                for (int i = 0; i < trayData.GetDataVales().Count; i++)
             {
-                if (DebugF.IO.TrayDataUserControl.GetTray().GetDataVales()[i] != null)
+                if (trayData.GetDataVales()[i] != null)
                 {
-                    if (DebugF.IO.TrayDataUserControl.GetTray().GetDataVales()[i].PanelID != null && DebugF.IO.TrayDataUserControl.GetTray().GetDataVales()[i].PanelID != "")
+                    if (trayData.GetDataVales()[i].PanelID != null && trayData.GetDataVales()[i].PanelID != "")
                     {
-                        sn = DebugF.IO.TrayDataUserControl.GetTray().GetDataVales()[i].PanelID;
+                        sn = trayData.GetDataVales()[i].PanelID;
                         if (sn == null || sn == "")
                         {
-                            ErosProjcetDLL.Project.AlarmListBoxt.AddAlarmText(new ErosProjcetDLL.Project.AlarmText.alarmStruct() { Name = "ID未读取", Text = "ID未读取到" });
+                            ErosProjcetDLL.Project.AlarmListBoxt.AddAlarmText(new ErosProjcetDLL.Project.AlarmText.alarmStruct() 
+                            { Name = "ID未读取", Text = "ID未读取到" });
                         }
                         else
                         {
@@ -118,7 +122,7 @@ namespace Vision2.Project.Mes
                             dat = new List<string>();
                             dat.Add("");
                             dat.Add((i + 1).ToString());
-                            if (DebugF.IO.TrayDataUserControl.GetTray().GetDataVales()[i].OK)
+                            if (trayData.GetDataVales()[i].OK)
                             {
                                 ListText[5] = "TP";
                                 dat.Add("OK");
@@ -132,7 +136,7 @@ namespace Vision2.Project.Mes
                             //ListText[6] = RecipeCompiler.Instance.MesDatat.CRD + (i + 1);
                             string paht = ProcessControl.ProcessUser.GetThis().ExcelPath + "//" + sn + DateTime.Now.ToString(" yyyy-MM-dd-HH-mm-ss");
                             ErosProjcetDLL.Excel.Npoi.WriteF(paht, ListText, ".txt");
-                            List<double> valuse = DebugF.IO.TrayDataUserControl.GetTray().GetDataVales()[i].Data as List<double>;
+                            List<double> valuse = trayData.GetDataVales()[i].Data as List<double>;
                             if (valuse != null)
                             {
                                 for (int j = 0; j < valuse.Count; j++)
@@ -205,14 +209,14 @@ namespace Vision2.Project.Mes
                 dat.Add("NG");
             }
             dat.Add(data.PanelID);
-            foreach (var item in data.DataMin_Max)
-            {
-               dat.Add(item.Value.ComponentName + "");
-                for (int i2 = 0; i2 < item.Value.Reference_Name.Count; i2++)
-                {
-                    dat.Add(item.Value.Reference_Name[i2] + ":" + item.Value.Reference_ValueMin[i2] + ">" + item.Value.ValueStrs + "<" + item.Value.Reference_ValueMax);
-                }
-            }
+            //foreach (var item in data.DataMin_Max)
+            //{
+            //   dat.Add(item.Value.ComponentName + "");
+            //    for (int i2 = 0; i2 < item.Value.Reference_Name.Count; i2++)
+            //    {
+            //        dat.Add(item.Value.Reference_Name[i2] + ":" + item.Value.Reference_ValueMin[i2] + ">" + item.Value.ValueStrs + "<" + item.Value.Reference_ValueMax);
+            //    }
+            //}
             ErosProjcetDLL.Excel.Npoi.AddWriteCSV(pathEx, dat.ToArray());
             string paht = ProcessControl.ProcessUser.GetThis().ExcelPath + "//" + data.PanelID + DateTime.Now.ToString(" yyyy-MM-dd-HH-mm-ss");
             ErosProjcetDLL.Excel.Npoi.WriteF(paht, ListText, ".txt");
@@ -228,7 +232,7 @@ namespace Vision2.Project.Mes
             try
             {
 
-                ErosSocket.DebugPLC.Robot.TrayRobot tray = datas as ErosSocket.DebugPLC.Robot.TrayRobot;
+               TrayData tray = datas as TrayData;
                 if (tray != null)
                 {
                     List<string> ListText = new List<string>();
@@ -277,7 +281,8 @@ namespace Vision2.Project.Mes
                                 sn = tray.GetDataVales()[i].PanelID;
                                 if (sn == null || sn == "")
                                 {
-                                    ErosProjcetDLL.Project.AlarmListBoxt.AddAlarmText(new ErosProjcetDLL.Project.AlarmText.alarmStruct() { Name = "ID未读取", Text = "ID未读取到" });
+                                    ErosProjcetDLL.Project.AlarmListBoxt.AddAlarmText(
+                                        new ErosProjcetDLL.Project.AlarmText.alarmStruct() { Name = "ID未读取", Text = "ID未读取到" });
                                 }
                                 else
                                 {
@@ -305,7 +310,7 @@ namespace Vision2.Project.Mes
                                     //    dat.Add("");
                                     //}
                                     dat.Add(sn);
-                                    RecipeCompiler.AddOKNumber(DebugF.IO.TrayDataUserControl.GetTray().GetDataVales()[i].OK);
+                                    RecipeCompiler.AddOKNumber(tray.GetDataVales()[i].OK);
                  
                                     string paht = ProcessControl.ProcessUser.GetThis().ExcelPath + "//" + sn + DateTime.Now.ToString(" yyyy-MM-dd-HH-mm-ss");
                                     ErosProjcetDLL.Excel.Npoi.WriteF(paht, ListText, ".txt");

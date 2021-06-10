@@ -45,8 +45,8 @@ namespace Vision2.vision.HalconRunFile.Controls
             try
             {
                 halcon.UPStart();
-                halcon.ShowVision(_Model.Name, halcon.GetdataVale());
-                halcon.EndChanged();
+                halcon.ShowVision(_Model.Name, halcon.GetOneImageR());
+                halcon.EndChanged(halcon.GetOneImageR());
                 numOrX.Text = _Model.OriginX.TupleString(".3f");
                 numOrY.Text = _Model.OriginY.TupleString(".3f");
                 numOrU.Text = _Model.OriginU.TupleDeg().TupleString("0.03f");
@@ -626,7 +626,7 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             try
             {
-                _Model.Variation_Model.RunPa(halcon, halcon.GetdataVale(), _Model, _Model.MRModelHomMat.HomMat,HWi1);
+                _Model.Variation_Model.RunPa(halcon, halcon.GetOneImageR(), _Model, _Model.MRModelHomMat.HomMat,HWi1);
             }
             catch (Exception ex)
             {
@@ -754,7 +754,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 }
                 List<HTuple> hTuples = new List<HTuple>();
                 hTuples.Add(_Model.MRModelHomMat.HomMat[d]);
-                _Model.Variation_Model.RunPa(halcon, halcon.GetdataVale(), _Model, hTuples, HWi1);
+                _Model.Variation_Model.RunPa(halcon, halcon.GetOneImageR(), _Model, hTuples, HWi1);
                 d++;
             }
             catch (Exception ex)
@@ -837,7 +837,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 _Classify.Color_ID = (byte)numericUpDown9.Value;
                 _Classify.ISFillUp = checkBox10.Checked;
                 _Classify.ClosingCircleValue = (double)numericUpDown11.Value;
-                _Classify.Classify(halcon, halcon.GetdataVale(), _Classify.DrawObj, _Model, out HObject hObject,  this.hObjects);
+                _Classify.Classify(halcon, halcon.GetOneImageR(), _Classify.DrawObj, _Model, out HObject hObject,  this.hObjects);
                 halcon.AddOBJ(hObject);
                 halcon.ShowImage();
                 halcon.ShowObj();
@@ -878,7 +878,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 for (int i = 0; i < _Model.MRModelHomMat.NumberT; i++)
                 {
                     HOperatorSet.AffineTransRegion(_Classify.DrawObj, out HObject hObjectROI, _Model.MRModelHomMat.HomMat[i], "nearest_neighbor");
-                    _Classify.Classify(halcon, halcon.GetdataVale(), hObjectROI, _Model, out HObject hObject, hObjects);
+                    _Classify.Classify(halcon, halcon.GetOneImageR(), hObjectROI, _Model, out HObject hObject, hObjects);
                     halcon.AddOBJ(hObject);
                     HOperatorSet.AreaCenter(hObject, out HTuple area, out HTuple row, out HTuple column);
                     HOperatorSet.EllipticAxis(hObject, out HTuple ra, out HTuple rb, out HTuple phi);
@@ -970,7 +970,7 @@ namespace Vision2.vision.HalconRunFile.Controls
         private void button23_Click(object sender, EventArgs e)
         {
             halcon.HobjClear();
-            _Classify.Classify(halcon, halcon.GetdataVale(), _Classify.DrawObj, _Model, out HObject hObject, this.hObjects);
+            _Classify.Classify(halcon, halcon.GetOneImageR(), _Classify.DrawObj, _Model, out HObject hObject, this.hObjects);
             //_Classify.Classify(halcon, _Model, out HObject color);
             halcon.AddOBJ(hObject);
             halcon.ShowObj();
@@ -1134,8 +1134,8 @@ namespace Vision2.vision.HalconRunFile.Controls
                 }
                 hWindID.SetPerpetualPart(row - 100, col1 - 100, row2 + 100, col2 + 100);
                 hWindID.SetDraw(checkBox9.Checked);
-                hWindID.HalconResult.AddObj(_Classify.DrawObj, ColorResult.blue);
-                hWindID.HalconResult.AddObj(hObjects[listBox3.SelectedIndex]);
+                hWindID.OneResIamge.AddObj(_Classify.DrawObj, ColorResult.blue);
+                hWindID.OneResIamge.AddObj(hObjects[listBox3.SelectedIndex]);
                 hWindID.ShowObj();
 
             }

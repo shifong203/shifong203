@@ -35,7 +35,6 @@ namespace Vision2.vision.HalconRunFile.Controls
             
                 HWindID.Initialize(hWindowControl1);
                 HWindID.SetImaage(halcon.Image());
-                numericUpDown18.Maximum = 9999;
                 numericUpDown1.Value = Code.Emphasizefactor;
                 numericUpDown2.Value = Code.EmphasizeH;
                 numericUpDown3.Value = Code.EmphasizeW;
@@ -121,9 +120,9 @@ namespace Vision2.vision.HalconRunFile.Controls
             {
                 this.Cursor = Cursors.WaitCursor;
                 halcon.HobjClear();
-                halcon.ShowVision(Code.Name, halcon.GetdataVale());
+                halcon.ShowVision(Code.Name, halcon.GetOneImageR());
                 HWindID.ClearObj();
-                HWindID.HalconResult.HObjectRed = Code.XLD;
+                HWindID.OneResIamge.HObjectRed = Code.XLD;
                 HWindID.ShowImage();
                 //dataGridView2.Rows.Clear();
                 if (dataGridView2.Rows.Count< Code.IDValue)
@@ -319,7 +318,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 HObject image = Code.GetEmset(halcon.Image());
                 Code.Watch.Stop();
                 HWindID.SetImaage(image);
-                HWindID.HalconResult.AddMeassge("运行时间" + Code.Watch.ElapsedMilliseconds);
+                HWindID.OneResIamge.AddMeassge("运行时间" + Code.Watch.ElapsedMilliseconds);
                 HWindID.ShowImage();
             }
             catch (Exception)
@@ -371,7 +370,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 Code.EmphasizeH = (byte)numericUpDown2.Value;
                 Code.EmphasizeW = (byte)numericUpDown3.Value;
                 HObject image = Code.GetEmset(halcon.Image());
-                HWindID.HalconResult.Image = image;
+                HWindID.OneResIamge.Image = image;
                 HWindID.ShowImage();
             }
             catch (Exception ex)
@@ -604,61 +603,10 @@ namespace Vision2.vision.HalconRunFile.Controls
             }
             catch (Exception)
             {
-
             }
         }
-
-        private void numericUpDown18_ValueChanged(object sender, EventArgs e)
-        {
-            try
-            {
-                int row = int.Parse(numericUpDown18.Value.ToString());
-
-                for (int i = 0; i < Code.TrayIDS.Count; i++)
-                {
-                    int sd = i / Code.XNumber;
-                    int dt = i % Code.XNumber;
-                    if (checkBox6.Checked)
-                    {
-                        if (checkBox5.Checked)
-                        {
-                            Code.TrayIDS[i] = row - (sd * Vision2.Project.DebugF.IO.TrayDataUserControl.GetTray(Code.TrayIDNumber).YNumber) - dt;
-                        }
-                        else
-                        {
-                            Code.TrayIDS[i] = row - (sd * Vision2.Project.DebugF.IO.TrayDataUserControl.GetTray(Code.TrayIDNumber).YNumber) + dt;
-                        }
-                    }
-                    else
-                    {
-                        if (checkBox5.Checked)
-                        {
-                            Code.TrayIDS[i] = row + (sd * Vision2.Project.DebugF.IO.TrayDataUserControl.GetTray(Code.TrayIDNumber).YNumber) - dt;
-                        }
-                        else
-                        {
-                            Code.TrayIDS[i] = row + (sd * Vision2.Project.DebugF.IO.TrayDataUserControl.GetTray(Code.TrayIDNumber).YNumber) + dt;
-                        }
-                    }
-                    dataGridView2.Rows[i].Cells[1].Value = Code.TrayIDS[i];
-                    if (Code.IsEt.Count > i)
-                    {
-                        dataGridView2.Rows[i].Cells[2].Value = (Code.IsEt[i]);
-                    }
-                }
-            }
-            catch (Exception)
-            {
-            }
-
-        }
-
-       
-
         private void button10_Click_1(object sender, EventArgs e)
         {
-
-
         }
 
         private void numericUpDown17_ValueChanged(object sender, EventArgs e)
@@ -752,7 +700,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                     return;
                 }
                 HWindIDTS.SetImaage(images[listBox2.SelectedIndex]);
-                HWindIDTS.HalconResult.AddObj(OBJs[listBox2.SelectedIndex]);
+                HWindIDTS.OneResIamge.AddObj(OBJs[listBox2.SelectedIndex]);
                 HWindIDTS.ShowImage();
             }
             catch (Exception)
@@ -859,20 +807,7 @@ namespace Vision2.vision.HalconRunFile.Controls
             Code.SrotCode(halcon);
         }
 
-        private void toolStripButton4_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                HOperatorSet.GenRectangle1(out HObject hObject3, Code.Rows - Code.Height, Code.Cols - Code.Height, Code.Rows + Code.Height, Code.Cols + Code.Height);
-                HObject hObject = RunProgram.DragMoveOBJ(halcon, hObject3);
-                HOperatorSet.AreaCenter(hObject, out HTuple area, out HTuple rows, out HTuple colus);
-                Code.Rows = rows;
-                Code.Cols = colus;
-            }
-            catch (Exception ex)
-            {
-            }
-        }
+   
  
      
 
@@ -887,6 +822,50 @@ namespace Vision2.vision.HalconRunFile.Controls
                 return;
             }
             Code.QRCOntEn = (int)comboBox4.SelectedIndex;
+        }
+
+        private void 托盘编号叠加ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (dataGridView2.SelectedCells.Count>2)
+                {
+
+                    if (int.TryParse(dataGridView2.Rows[dataGridView2.SelectedCells[dataGridView2.SelectedCells.Count-1].RowIndex].Cells[1].Value.ToString(),out int strIndtd))
+                    {
+                        for (int i = dataGridView2.SelectedCells.Count-1; i >= 0; i--)
+                        {
+                            dataGridView2.Rows[dataGridView2.SelectedCells[i].RowIndex].Cells[1].Value = strIndtd++;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void 托盘编号递减ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (dataGridView2.SelectedCells.Count > 2)
+                {
+
+                    if (int.TryParse(dataGridView2.Rows[dataGridView2.SelectedCells[dataGridView2.SelectedCells.Count - 1].RowIndex].Cells[1].Value.ToString(), out int strIndtd))
+                    {
+                        for (int i = dataGridView2.SelectedCells.Count - 1; i >= 0; i--)
+                        {
+                            dataGridView2.Rows[dataGridView2.SelectedCells[i].RowIndex].Cells[1].Value = strIndtd++;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
     }
 }

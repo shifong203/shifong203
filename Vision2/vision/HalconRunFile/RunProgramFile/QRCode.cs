@@ -589,6 +589,10 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         /// </summary>
         public List<string> QRText = new List<string>();
         public List<int> TrayIDS { get; set; } = new List<int>();
+
+        /// <summary>
+        /// 托盘编号
+        /// </summary>
         public int TrayIDNumber { get; set; } = -1;
 
         /// <summary>
@@ -664,16 +668,6 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         this.GetPThis().AddMessage("第1次" + text.Length);
                     }
                     AddGreen(hObject1);
-                    if (DiscernType == 1)
-                    {
-                        //if (this.Rows != null)
-                        //{
-                        //    HOperatorSet.DilationCircle(hObject1, out HObject hObject4, Height/2);
-                        //    HOperatorSet.Connection(hObject4, out hObject2);
-                        //    HOperatorSet.Difference(hObject2, hObject4, out hObject2);
-                        //    HOperatorSet.SelectShape(hObject2, out hObject2, "area", "and", (this.Height * 2 * this.Height * 2) - 100, 9999999999999);
-                        //}
-                    }
                     try
                     {
                         hObject2 = hObject1;
@@ -900,10 +894,10 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             try
             {
                 QRText.Clear();
-                          //GenParamName = "stop_after_result_num";
+                GenParamName = "stop_after_result_num";
                 HObject hObject3;
                 hObject3 = this.GetEmset(halcon.Image());
-                SetDataProgram();
+                //SetDataProgram();
                 //SetParam(ID);
                 if (DiscernType == 2)
                 {
@@ -985,9 +979,12 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         }
                         else
                         {
-                            DebugCompiler.GetTrayDataUserControl().SetValue(this.QRText, this.TrayIDS);
+                            if (TrayIDNumber>=0)
+                            {
+                                DebugCompiler.GetTrayDataUserControl().GetTrayEx(TrayIDNumber).GetTrayData().SetPanleSN(this.QRText, this.TrayIDS);
+                            }
+                            //DebugCompiler.GetTrayDataUserControl().SetValue(this.QRText, this.TrayIDS);
                             halcon.SendMesage(this.QRText.ToArray());
-
                             if (IDValue == NumberInt)
                             {
                                 return true;
@@ -1109,14 +1106,24 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             }
             try
             {
-                HObject ImageRelation = this.DrawObj;
+          
+
                 string err = "";
                 HTuple row, colu, area;
+                HObject ImageRelation = new HObject();
+                ImageRelation = this.DrawObj;
+                HOperatorSet.AreaCenter(ImageRelation, out area, out row, out colu);
+      
+                if (area.Length==0)
+                {
+                    HOperatorSet.GenRectangle1(out ImageRelation, 0, 0, 10, 10);
+                }   
                 for (int i = 0; i < ThraQR; i++)
                 {
                     this.Watch.Restart();
                     HOperatorSet.Union1(ImageRelation, out hObjectCont);
                     HOperatorSet.Complement(hObjectCont, out hObjectCont);
+                    HOperatorSet.AreaCenter(hObjectCont, out area, out row, out colu);
                     HOperatorSet.ReduceDomain(image, hObjectCont, out image);
                     HOperatorSet.CropDomain(image, out image);
                     HTuple data = FindDatacode2d(image, ID, out hObject);
@@ -1226,8 +1233,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             {
 
                 HOperatorSet.CreateDataCode2dModel(this.SymbolType, new HTuple(), new HTuple(), out ID);
-                HOperatorSet.SetDataCode2dParam(this.ID, "default_parameters", CreateGenParamValue);
-
+                //HOperatorSet.SetDataCode2dParam(this.ID, "default_parameters", CreateGenParamValue);
                 this.SetDataProgram();
             }
             catch (Exception ex)
@@ -1240,12 +1246,9 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             try
             {
                 HOperatorSet.SetDataCode2dParam(this.ID, "timeout", timeout);
-     
                 HOperatorSet.SetDataCode2dParam(this.ID, "module_size_man", module_size_mam);
                 HOperatorSet.SetDataCode2dParam(this.ID, "module_size_min", module_size_min);
                 HOperatorSet.SetDataCode2dParam(this.ID, "polarity", isPolarity);
-         
-              
             }
             catch (Exception)
             {

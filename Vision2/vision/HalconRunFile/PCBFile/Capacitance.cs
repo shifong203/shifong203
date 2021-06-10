@@ -74,6 +74,7 @@ namespace Vision2.vision.HalconRunFile.PCBFile
             bool RsetBool = false;
             try
             {
+              
                 HOperatorSet.ReduceDomain(halcon.GetImageOBJ(ImageTypeObj), this.TestingRoi, out HObject hObject);
                 HOperatorSet.Threshold(hObject, out HObject Thresholdt, Periphery_ThreadMin, Periphery_ThreadMax);
                 HOperatorSet.Connection(Thresholdt, out Thresholdt);

@@ -69,7 +69,7 @@ namespace Vision2.vision.HalconRunFile.PCBFile
         {
             try
             {
-                Run.RunDebug(halcon, Run.GetRunProgram(), halcon.GetdataVale(),out HObject ERR,1);
+                Run.RunDebug(halcon, Run.GetRunProgram(), halcon.GetOneImageR(),out HObject ERR,1);
             }
             catch (Exception ex)
             {

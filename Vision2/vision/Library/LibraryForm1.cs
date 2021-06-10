@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using Vision2.vision.HalconRunFile.RunProgramFile;
 using System.Collections.Generic;
+using System.Drawing;
 
 namespace Vision2.vision
 {
@@ -39,10 +40,16 @@ namespace Vision2.vision
                 string[] files = Directory.GetDirectories(Library.LibraryBasics.PathStr);
                 treeView1.Nodes.Clear();
                 TreeNode treeNode= treeView1.Nodes.Add("视觉库");
-
+                foreach (var item in Vision.GetLibrary())
+                {
+                    TreeNode treeNodeLD = treeNode.Nodes.Add(item.Key);
+                    treeNodeLD.Tag = item.Value;
+                }
+                treeNode.ExpandAll();
+                TreeNode treeNodeTV= treeView1.Nodes.Add("全局库");
                 for (int i = 0; i < files.Length; i++)
                 {
-                    treeNode.Nodes.Add(Path.GetFileNameWithoutExtension(files[i]));
+                    treeNodeTV.Nodes.Add(Path.GetFileNameWithoutExtension(files[i]));
                 }
                 string staSET = "                                                          ";
                 ErosProjcetDLL.Excel.Npoi.GetPrivateProfileString("视觉库", null, "", staSET, 500, Library.LibraryBasics.RunPath + "\\Library.ini");
@@ -82,6 +89,17 @@ namespace Vision2.vision
         {
             try
             {
+
+
+                //Point ClickPoint = new Point(e.X, e.Y);
+                TreeNode CurrentNode = e.Node;
+                if (CurrentNode.Tag is RunProgram)
+                {
+                    RunProgram runProgram = CurrentNode.Tag   as RunProgram;
+                    tabPage1.Controls.Clear();
+                    tabPage1.Controls.Add(runProgram.GetControl());
+
+                }
 
             }
             catch (Exception)

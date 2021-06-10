@@ -9,7 +9,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         bool Drawing { get; set; }
 
         void Focus();
-        HObject Image(HObject hObject = null);
+        //HObject Image(HObject hObject = null);
 
     }
 }

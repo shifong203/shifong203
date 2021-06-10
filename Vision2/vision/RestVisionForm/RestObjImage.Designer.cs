@@ -36,10 +36,9 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.listBox1 = new System.Windows.Forms.ListBox();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column2 = new Vision2.ErosProjcetDLL.UI.DataGridViewF.DataGridViewComboEditBoxColumn();
+            this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.panel1 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
@@ -48,6 +47,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.restOneComUserControl1 = new Vision2.vision.RestVisionForm.RestOneComUserControl();
             this.panel3 = new System.Windows.Forms.Panel();
             this.trayDatas1 = new Vision2.Project.DebugF.IO.TrayDatas();
             this.hWindowControl4 = new HalconDotNet.HWindowControl();
@@ -57,7 +57,7 @@
             this.tsButton1 = new Vision2.ErosProjcetDLL.UI.ToolStrip.TSButton();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
-            this.dataGridViewComboEditBoxColumn1 = new Vision2.ErosProjcetDLL.UI.DataGridViewF.DataGridViewComboEditBoxColumn();
+            this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.groupBox1.SuspendLayout();
@@ -104,7 +104,8 @@
             this.button1.Location = new System.Drawing.Point(4, 3);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(142, 57);
-            this.button1.TabIndex = 1;
+            this.button1.TabIndex = 77;
+            this.button1.TabStop = false;
             this.button1.Text = "提交";
             this.button1.UseVisualStyleBackColor = false;
             this.button1.Click += new System.EventHandler(this.button1_Click);
@@ -138,7 +139,7 @@
             // 
             // tabPage1
             // 
-            this.tabPage1.Controls.Add(this.listBox1);
+            this.tabPage1.Controls.Add(this.restOneComUserControl1);
             this.tabPage1.Controls.Add(this.dataGridView1);
             this.tabPage1.Location = new System.Drawing.Point(4, 30);
             this.tabPage1.Name = "tabPage1";
@@ -147,15 +148,6 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "NG";
             this.tabPage1.UseVisualStyleBackColor = true;
-            // 
-            // listBox1
-            // 
-            this.listBox1.FormattingEnabled = true;
-            this.listBox1.ItemHeight = 20;
-            this.listBox1.Location = new System.Drawing.Point(38, 127);
-            this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(196, 164);
-            this.listBox1.TabIndex = 8;
             // 
             // dataGridView1
             // 
@@ -167,9 +159,10 @@
             this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView1.Location = new System.Drawing.Point(3, 3);
             this.dataGridView1.Name = "dataGridView1";
+            this.dataGridView1.ReadOnly = true;
             this.dataGridView1.RowTemplate.Height = 23;
             this.dataGridView1.Size = new System.Drawing.Size(348, 610);
-            this.dataGridView1.TabIndex = 7;
+            this.dataGridView1.TabIndex = 1;
             this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
             this.dataGridView1.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentDoubleClick);
             this.dataGridView1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.dataGridView1_MouseClick);
@@ -177,7 +170,7 @@
             // Column1
             // 
             this.Column1.FillWeight = 60F;
-            this.Column1.HeaderText = "名称";
+            this.Column1.HeaderText = "元件编号";
             this.Column1.Name = "Column1";
             this.Column1.ReadOnly = true;
             this.Column1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
@@ -185,8 +178,11 @@
             // Column2
             // 
             this.Column2.FillWeight = 500F;
-            this.Column2.HeaderText = "位号";
+            this.Column2.HeaderText = "缺陷";
             this.Column2.Name = "Column2";
+            this.Column2.ReadOnly = true;
+            this.Column2.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.Column2.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.Column2.Width = 200;
             // 
             // tabPage2
@@ -271,6 +267,14 @@
             this.panel2.Size = new System.Drawing.Size(1083, 874);
             this.panel2.TabIndex = 9;
             // 
+            // restOneComUserControl1
+            // 
+            this.restOneComUserControl1.Location = new System.Drawing.Point(194, 70);
+            this.restOneComUserControl1.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
+            this.restOneComUserControl1.Name = "restOneComUserControl1";
+            this.restOneComUserControl1.Size = new System.Drawing.Size(512, 538);
+            this.restOneComUserControl1.TabIndex = 9;
+            // 
             // panel3
             // 
             this.panel3.Controls.Add(this.trayDatas1);
@@ -324,7 +328,8 @@
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsButton1,
             this.toolStripButton1,
-            this.toolStripButton2});
+            this.toolStripButton2,
+            this.toolStripLabel1});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(1451, 25);
@@ -362,17 +367,15 @@
             this.toolStripButton2.Text = "取消提交";
             this.toolStripButton2.Click += new System.EventHandler(this.toolStripButton2_Click);
             // 
-            // dataGridViewComboEditBoxColumn1
+            // toolStripLabel1
             // 
-            this.dataGridViewComboEditBoxColumn1.HeaderText = "检测";
-            this.dataGridViewComboEditBoxColumn1.Items.AddRange(new object[] {
-            "OK"});
-            this.dataGridViewComboEditBoxColumn1.Name = "dataGridViewComboEditBoxColumn1";
-            this.dataGridViewComboEditBoxColumn1.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridViewComboEditBoxColumn1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.toolStripLabel1.Name = "toolStripLabel1";
+            this.toolStripLabel1.Size = new System.Drawing.Size(96, 22);
+            this.toolStripLabel1.Text = "toolStripLabel1";
             // 
             // dataGridViewTextBoxColumn1
             // 
+            this.dataGridViewTextBoxColumn1.FillWeight = 60F;
             this.dataGridViewTextBoxColumn1.HeaderText = "位号";
             this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
             this.dataGridViewTextBoxColumn1.ReadOnly = true;
@@ -380,10 +383,13 @@
             // 
             // dataGridViewTextBoxColumn2
             // 
+            this.dataGridViewTextBoxColumn2.FillWeight = 500F;
             this.dataGridViewTextBoxColumn2.HeaderText = "结果";
             this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
             this.dataGridViewTextBoxColumn2.ReadOnly = true;
+            this.dataGridViewTextBoxColumn2.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             this.dataGridViewTextBoxColumn2.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.dataGridViewTextBoxColumn2.Width = 200;
             // 
             // RestObjImage
             // 
@@ -446,12 +452,12 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ToolStripButton toolStripButton2;
         private Project.DebugF.IO.TrayDatas trayDatas1;
-        private ErosProjcetDLL.UI.DataGridViewF.DataGridViewComboEditBoxColumn dataGridViewComboEditBoxColumn1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
-        private ErosProjcetDLL.UI.DataGridViewF.DataGridViewComboEditBoxColumn Column2;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage1;
-        private System.Windows.Forms.ListBox listBox1;
         private System.Windows.Forms.TabPage tabPage2;
+        private RestVisionForm.RestOneComUserControl restOneComUserControl1;
+        private System.Windows.Forms.ToolStripLabel toolStripLabel1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
     }
 }

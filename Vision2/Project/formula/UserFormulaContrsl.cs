@@ -141,7 +141,7 @@ namespace Vision2.Project.formula
                                     try
                                     {
                                         HOperatorSet.GenRectangle2(out HObject hObject2, e.Y, e.X, 0, 2000, 2000);
-                                        HWind.HalconResult.AddObj(hObject2);
+                                        HWind.OneResIamge.AddObj(hObject2);
                                         HWind.ShowImage();
                                     }
                                     catch (Exception ex)
@@ -264,18 +264,18 @@ namespace Vision2.Project.formula
                 {
                     DebugCompiler.GetTrayDataUserControl().SetTray(DebugCompiler.GetThis().TrayCont);
                 }
-                RecipeCompiler.Instance.ResetDataS.Clear();
-                RecipeCompiler.Instance.ResetDataS.Product_Name = Product.ProductionName;
+                //RecipeCompiler.Instance.ResetDataS.Clear();
+                //RecipeCompiler.Instance.ResetDataS.Product_Name = Product.ProductionName;
                 try
                 {
                     runUControl1.Visible = DebugCompiler.GetThis().IsCtr;
-                    this.HWind.HalconResult.ClearAllObj();
+                    this.HWind.OneResIamge.ClearAllObj();
                     if (DebugCompiler.GetThis().ListMatrix.Count > 0)
                     {
                         MatrixC = DebugCompiler.GetThis().ListMatrix[0];
                         foreach (var item in RecipeCompiler.GetProductEX().Key_Navigation_Picture)
                         {
-                            HWind.HalconResult.Image = RecipeCompiler.GetProductEX().Key_Navigation_Picture[item.Key].GetHObject();
+                            HWind.OneResIamge.Image = RecipeCompiler.GetProductEX().Key_Navigation_Picture[item.Key].GetHObject();
                             break;
                         }
                         if (MatrixC != null)
@@ -287,7 +287,7 @@ namespace Vision2.Project.formula
                         {
                             HWind.ImageRowStrat = 0;
                             HWind.ImageColStrat = 0;
-                            HWind.SetImaage(HWind.HalconResult.Image);
+                            HWind.SetImaage(HWind.OneResIamge.Image);
                         }
                         else
                         {
@@ -297,8 +297,16 @@ namespace Vision2.Project.formula
                                 MatrixC.Calculate();
                                 HWind.HeigthImage = MatrixC.ImageHeith;
                                 HWind.WidthImage = MatrixC.ImageWidth;
-                                MatrixC.FillIamge();
-                                HWind.SetImaage(HWind.HalconResult.Image);
+                                try
+                                {
+                                    MatrixC.FillIamge();
+                                }
+                                catch (Exception ex)
+                                {
+                                  AlarmText.AddTextNewLine("导航图加载错误:未创建" + ex.Message);
+                                }
+                    
+                                HWind.SetImaage(HWind.OneResIamge.Image);
                             }
                         }
                     }
@@ -363,7 +371,7 @@ namespace Vision2.Project.formula
                         trayDataUserControl.BringToFront();
                         trayDataUserControl.Dock = DockStyle.Fill;
                         trayDataUserControl.Visible = true;
-                        trayDataUserControl.SetTray(DebugCompiler.GetThis().DDAxis.ListTray[DebugCompiler.GetThis().TrayCont]);
+                        trayDataUserControl.SetTray(DebugCompiler.GetThis().DDAxis.ListTray[DebugCompiler.GetThis().TrayCont].GetTrayData());
                         break;
                     case RecipeCompiler.EnumUpDataType.复判按钮:
                         label3.Visible = true;
@@ -669,7 +677,7 @@ namespace Vision2.Project.formula
                     {
                         if (DebugCompiler.GetThis().DDAxis.GetTrayInxt(i) != null)
                         {
-                            DebugCompiler.GetThis().DDAxis.GetTrayInxt(i).RestValue();
+                            DebugCompiler.GetThis().DDAxis.GetTrayInxt(i).GetTrayData().RestValue();
                         }
                     }
                 }
@@ -852,6 +860,9 @@ namespace Vision2.Project.formula
             }));
 
         }
+        /// <summary>
+        /// 数据结果集合
+        /// </summary>
         public class DataReseltBase
         {
             public string Name { get; set; }
@@ -928,7 +939,7 @@ namespace Vision2.Project.formula
                     //OK = text.OK,
                 };
 
-                //dataVale.Result = vision.Vision.GetRunNameVision(text.Name).GetResultOBj();
+                //dataVale.Result = vision.Vision.GetRunNameVision(text.Name).GetOneImageR();
                 //dataVales.Add(dataVale);
                 if (text.OK)
                 {
@@ -1159,10 +1170,10 @@ namespace Vision2.Project.formula
                     }
                     text.ListReselt.Clear();
                 }
-                if (Vision.Instance.IsShowImage)
-                {
-                    Vision.GetObj().OK = isChat;
-                }
+                //if (Vision.Instance.IsShowImage)
+                //{
+                //    Vision.GetObj().OK = isChat;
+                //}
             }
             catch (Exception ex)
             {
@@ -1184,7 +1195,7 @@ namespace Vision2.Project.formula
                 This.label4.Text = "产品码:" + ProcessControl.ProcessUser.QRCode;
                 if (DebugF.IO.TrayDataUserControl.GetTray() != null)
                 {
-                    DebugF.IO.TrayDataUserControl.GetTray().TrayIDQR = ProcessControl.ProcessUser.QRCode;
+                    DebugF.IO.TrayDataUserControl.GetTray().GetTrayData().TrayIDQR = ProcessControl.ProcessUser.QRCode;
                 }
                 if (RecipeCompiler.Instance.SetTrageDoneNmae != "")
                 {
@@ -1419,7 +1430,7 @@ namespace Vision2.Project.formula
                 {
                     try
                     {
-                        HalconRun halcon = vision.Vision.GetRunNameVision();
+                        HalconRun halcon = Vision.GetRunNameVision();
                         halcon.HobjClear();
                         if (dataGridView1.Rows[e.RowIndex].Cells[0].Value == null)
                         {
@@ -1428,10 +1439,10 @@ namespace Vision2.Project.formula
                         HWindowControl control = halcon.GetHWindow().GetNmaeWindowControl(dataGridView1.Rows[e.RowIndex].Cells[0].Value.ToString());
                         if (control != null)
                         {
-                            HalconResult halconResult = control.Tag as HalconResult;
+                            OneResultOBj halconResult = control.Tag as OneResultOBj;
                             halcon.ShowImage(halconResult.Image);
                             halcon.SetResultOBj(halconResult);
-                            halcon.GetResultOBj().ShowAll(halcon.hWindowHalcon());
+                            halcon.GetOneImageR().ShowAll(halcon.hWindowHalcon());
                         }
                     }
                     catch (Exception)

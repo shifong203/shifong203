@@ -121,7 +121,7 @@ namespace Vision2.vision.HalconRunFile.Controls
             try
             {
                 halconRun.HobjClear();
-                measure.MeasureObj(halconRun, checkBox1.Checked, halconRun.GetdataVale());
+                measure.MeasureObj(halconRun, checkBox1.Checked, halconRun.GetOneImageR());
                 halconRun.AddOBJ(measure.MeasureHObj);
                 halconRun.ShowImage();
                 halconRun.ShowObj();

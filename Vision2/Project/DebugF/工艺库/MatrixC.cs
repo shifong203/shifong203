@@ -175,10 +175,10 @@ namespace Vision2.Project.DebugF.工艺库
                     Vision.GetRunNameVision(VisionName).GetCalib().GetPointXYtoRC(point.Y, point.X, out rows, out cols);
                     HOperatorSet.GenCircle(out HObject hObject1, rows, cols, disW);
                     HOperatorSet.GenCrossContourXld(out HObject hObjectxs, rows, cols, disW, 0);
-                    hWindID.HalconResult.AddObj(hObject1.ConcatObj(hObjectxs), ColorResult.yellow);
+                    hWindID.OneResIamge.AddObj(hObject1.ConcatObj(hObjectxs), ColorResult.yellow);
                     mark1Row = rows;
                     mark1Col = cols;
-                    hWindID.HalconResult.AddImageMassage(rows, cols, "MK1");
+                    hWindID.OneResIamge.AddImageMassage(rows, cols, "MK1");
                 }
                 point = DebugCompiler.GetThis().DDAxis.GetToPointFileProt(this.PointNameEnd);
                 if (point != null)
@@ -188,8 +188,8 @@ namespace Vision2.Project.DebugF.工艺库
                     mark2Row = rows;
                     mark2Col = cols;
                     HOperatorSet.GenCircle(out HObject hObject1, rows, cols, disW);
-                    hWindID.HalconResult.AddObj(hObject1.ConcatObj(hObjectxs), ColorResult.yellow);
-                    hWindID.HalconResult.AddImageMassage(rows, cols, "MK2");
+                    hWindID.OneResIamge.AddObj(hObject1.ConcatObj(hObjectxs), ColorResult.yellow);
+                    hWindID.OneResIamge.AddImageMassage(rows, cols, "MK2");
                 }
 
                 //hWindID.ShowImage();
@@ -286,17 +286,17 @@ namespace Vision2.Project.DebugF.工艺库
 
                 if (HWindID2 != null)
                 {
-                    HWindID2.HalconResult.ClearAllObj();
+                    HWindID2.OneResIamge.ClearAllObj();
                     ShowMark(HWindID2);
                     //HWindID2.HalconResult.AddObj(hObject, RunProgram.ColorResult.blue);
                     for (int i = 0; i < Rows.Length; i++)
                     {
-                        HWindID2.HalconResult.AddImageMassage(Rows[i], Cols[i], i + 1, ColorResult.blue);
+                        HWindID2.OneResIamge.AddImageMassage(Rows[i], Cols[i], i + 1, ColorResult.blue);
                     }
                 }
                 if (HWind != null)
                 {
-                    HWind.HalconResult.ClearAllObj();
+                    HWind.OneResIamge.ClearAllObj();
                     ShowMark(HWind);
 
                     HTuple rRow1 = mark1Row;
@@ -320,12 +320,12 @@ namespace Vision2.Project.DebugF.工艺库
                     HWind.ImageColStrat = rCol1.TupleInt() - (len1.TupleMult(0.10).TupleInt());
                     HWind.WidthImage = rCol2.TupleInt() + (len1.TupleMult(0.10).TupleInt());
                     HWind.HeigthImage = rCol2.TupleInt() + (len1.TupleMult(0.10).TupleInt());
-                    HWind.HalconResult.AddObj(HObjectRect1, ColorResult.yellow);
+                    HWind.OneResIamge.AddObj(HObjectRect1, ColorResult.yellow);
                     HWind.ShowImage();
                     //HWind.HalconResult.AddObj(hObject, RunProgram.ColorResult.blue);
                     for (int i = 0; i < Rows.Length; i++)
                     {
-                        HWind.HalconResult.AddImageMassage(Rows[i], Cols[i], i + 1, ColorResult.blue);
+                        HWind.OneResIamge.AddImageMassage(Rows[i], Cols[i], i + 1, ColorResult.blue);
                     }
                 }
 
@@ -363,19 +363,19 @@ namespace Vision2.Project.DebugF.工艺库
                 HOperatorSet.GenCrossContourXld(out HObject hObjectxs, point.Y, point.X, 10, 0);
                 if (hWindID != null)
                 {
-                    hWindID.HalconResult.ClearAllObj();
+                    hWindID.OneResIamge.ClearAllObj();
                     Vision.Gen_arrow_contour_xld(out HObject hObject, 0, 0, 0, 100);
-                    hWindID.HalconResult.AddObj(hObject, ColorResult.green);
-                    hWindID.HalconResult.AddImageMassage(10, 110, "x");
+                    hWindID.OneResIamge.AddObj(hObject, ColorResult.green);
+                    hWindID.OneResIamge.AddImageMassage(10, 110, "x");
                     vision.Vision.Gen_arrow_contour_xld(out HObject hObject22, 0, 0, 100, 0);
-                    hWindID.HalconResult.AddImageMassage(100, 10, "y");
-                    hWindID.HalconResult.AddObj(hObject22, ColorResult.yellow);
+                    hWindID.OneResIamge.AddImageMassage(100, 10, "y");
+                    hWindID.OneResIamge.AddObj(hObject22, ColorResult.yellow);
                     this.Calculate(hWindID);
                 }
                 if (Vision.GetRunNameVision(VisionName).ResultBool)
                 {
-                    hWindID.HalconResult.AddObj(hObject1.ConcatObj(hObjectxs), ColorResult.green);
-                    hWindID.HalconResult.AddImageMassage(point.Y, point.X, "Mark1", ColorResult.green);
+                    hWindID.OneResIamge.AddObj(hObject1.ConcatObj(hObjectxs), ColorResult.green);
+                    hWindID.OneResIamge.AddImageMassage(point.Y, point.X, "Mark1", ColorResult.green);
                     point = DebugCompiler.GetThis().DDAxis.GetToPointFileProt(Mark2Name);
                     if (DebugCompiler.GetThis().DDAxis.SetXYZ1Points(axisName, 10, point.X, point.Y, point.Z))
                     {
@@ -388,8 +388,8 @@ namespace Vision2.Project.DebugF.工艺库
                         {
                             if (hWindID != null)
                             {
-                                hWindID.HalconResult.AddObj(hObject1.ConcatObj(hObjectxs), ColorResult.yellow);
-                                hWindID.HalconResult.AddImageMassage(point.Y, point.X, "Mark2", ColorResult.green);
+                                hWindID.OneResIamge.AddObj(hObject1.ConcatObj(hObjectxs), ColorResult.yellow);
+                                hWindID.OneResIamge.AddImageMassage(point.Y, point.X, "Mark2", ColorResult.green);
                             }
                             return true;
                         }
@@ -397,8 +397,8 @@ namespace Vision2.Project.DebugF.工艺库
                         {
                             if (hWindID != null)
                             {
-                                hWindID.HalconResult.AddObj(hObject1.ConcatObj(hObjectxs), ColorResult.red);
-                                hWindID.HalconResult.AddImageMassage(point.Y, point.X, "Mark2", ColorResult.red);
+                                hWindID.OneResIamge.AddObj(hObject1.ConcatObj(hObjectxs), ColorResult.red);
+                                hWindID.OneResIamge.AddImageMassage(point.Y, point.X, "Mark2", ColorResult.red);
                             }
                             Vision.GetRunNameVision(VisionName).AddMessage("Mark2定位失败！");
                         }
@@ -408,8 +408,8 @@ namespace Vision2.Project.DebugF.工艺库
                 {
                     if (hWindID != null)
                     {
-                        hWindID.HalconResult.AddObj(hObject1.ConcatObj(hObjectxs), ColorResult.red);
-                        hWindID.HalconResult.AddImageMassage(point.Y, point.X, "Mark1", ColorResult.red);
+                        hWindID.OneResIamge.AddObj(hObject1.ConcatObj(hObjectxs), ColorResult.red);
+                        hWindID.OneResIamge.AddImageMassage(point.Y, point.X, "Mark1", ColorResult.red);
                     }
                     Vision.GetRunNameVision(VisionName).AddMessage("Mark1定位失败！");
                 }
@@ -454,13 +454,13 @@ namespace Vision2.Project.DebugF.工艺库
 
             if (hWindID != null)
             {
-                hWindID.HalconResult.ClearAllObj();
+                hWindID.OneResIamge.ClearAllObj();
                 Vision.Gen_arrow_contour_xld(out HObject hObject, 0, 0, 0, 100);
-                hWindID.HalconResult.AddObj(hObject, ColorResult.green);
-                hWindID.HalconResult.AddImageMassage(10, 110, "x");
+                hWindID.OneResIamge.AddObj(hObject, ColorResult.green);
+                hWindID.OneResIamge.AddImageMassage(10, 110, "x");
                 vision.Vision.Gen_arrow_contour_xld(out HObject hObject22, 0, 0, 100, 0);
-                hWindID.HalconResult.AddObj(hObject22, ColorResult.red);
-                hWindID.HalconResult.AddImageMassage(100, 10, "y");
+                hWindID.OneResIamge.AddObj(hObject22, ColorResult.red);
+                hWindID.OneResIamge.AddImageMassage(100, 10, "y");
             }
             if (axisName == null)
             {
@@ -487,8 +487,8 @@ namespace Vision2.Project.DebugF.工艺库
                         HOperatorSet.GenCircle(out HObject hObject1, yp, xp, 2);
                         if (hWindID != null)
                         {
-                            hWindID.HalconResult.AddObj(hObject1.ConcatObj(hObjectxs), ColorResult.yellow);
-                            hWindID.HalconResult.AddImageMassage(yp, xp, (i + 1), ColorResult.green);
+                            hWindID.OneResIamge.AddObj(hObject1.ConcatObj(hObjectxs), ColorResult.yellow);
+                            hWindID.OneResIamge.AddImageMassage(yp, xp, (i + 1), ColorResult.green);
                         }
                         System.Threading.Thread.Sleep(500);
                         Vision.GetRunNameVision(VisionName).Image(Vision.GetRunNameVision(VisionName).GetCam().GetImage());
@@ -518,32 +518,32 @@ namespace Vision2.Project.DebugF.工艺库
                 HOperatorSet.GenCrossContourXld(out HObject hObject, hRows, hCols, 20, 0);
                 Vision.GetRunNameVision(VisionName).GetCalib().GetPointRctoXY(hRows, hCols, out HTuple axisY, out HTuple axisX);
                 Vision.GetRunNameVision(VisionName).AddOBJ(hObject);
-                Vision.GetRunNameVision(VisionName).GetResultOBj().AddMeassge(Vision.GetRunNameVision(VisionName).GetCalib().GetMatHomString());
-                Vision.GetRunNameVision(VisionName).GetResultOBj().AddMeassge(Vision.GetRunNameVision(VisionName).GetCalib().GetRCMatHomString());
+                Vision.GetRunNameVision(VisionName).GetOneImageR().AddMeassge(Vision.GetRunNameVision(VisionName).GetCalib().GetMatHomString());
+                Vision.GetRunNameVision(VisionName).GetOneImageR().AddMeassge(Vision.GetRunNameVision(VisionName).GetCalib().GetRCMatHomString());
 
                 if (hXs.TupleSub(axisX).TupleAbs().TupleMax() < 0.05 && hYs.TupleSub(axisY).TupleAbs().TupleMax() < 0.05)
                 {
-                    Vision.GetRunNameVision(VisionName).GetResultOBj().AddMeassge("标定成功x误差:" + hXs.TupleSub(axisX).TupleAbs().TupleMax().TupleString("0.03f") + "y误差:" + hYs.TupleSub(axisY).TupleAbs().TupleMax().TupleString("0.003f"));
+                    Vision.GetRunNameVision(VisionName).GetOneImageR().AddMeassge("标定成功x误差:" + hXs.TupleSub(axisX).TupleAbs().TupleMax().TupleString("0.03f") + "y误差:" + hYs.TupleSub(axisY).TupleAbs().TupleMax().TupleString("0.003f"));
                 }
                 else
                 {
-                    Vision.GetRunNameVision(VisionName).GetResultOBj().AddMeassge("标定失败x误差:" + hXs.TupleSub(axisX).TupleAbs().TupleMax().TupleString("0.03f") + "y误差:" + hYs.TupleSub(axisY).TupleAbs().TupleMax().TupleString("0.003f"));
+                    Vision.GetRunNameVision(VisionName).GetOneImageR().AddMeassge("标定失败x误差:" + hXs.TupleSub(axisX).TupleAbs().TupleMax().TupleString("0.03f") + "y误差:" + hYs.TupleSub(axisY).TupleAbs().TupleMax().TupleString("0.003f"));
                 }
-                Vision.GetRunNameVision(VisionName).GetResultOBj().AddMeassge("机械差X（" + axisX + "/" + hXs + "=" + hXs.TupleSub(axisX) + "）;Y（"
+                Vision.GetRunNameVision(VisionName).GetOneImageR().AddMeassge("机械差X（" + axisX + "/" + hXs + "=" + hXs.TupleSub(axisX) + "）;Y（"
                    + axisY + "/" + hYs + "=" + hYs.TupleSub(axisY) + ")");
 
                 for (int i = 0; i < hRows.Length; i++)
                 {
-                    Vision.GetRunNameVision(VisionName).GetResultOBj().AddImageMassage(hRows[i], hCols[i], (i + 1));
+                    Vision.GetRunNameVision(VisionName).GetOneImageR().AddImageMassage(hRows[i], hCols[i], (i + 1));
                 }
 
                 if (hWindID != null)
                 {
-                    hWindID.HalconResult.AddMeassge(Vision.GetRunNameVision(VisionName).GetCalib().GetMatHomString());
-                    hWindID.HalconResult.AddMeassge(Vision.GetRunNameVision(VisionName).GetCalib().GetRCMatHomString());
+                    hWindID.OneResIamge.AddMeassge(Vision.GetRunNameVision(VisionName).GetCalib().GetMatHomString());
+                    hWindID.OneResIamge.AddMeassge(Vision.GetRunNameVision(VisionName).GetCalib().GetRCMatHomString());
 
                     HOperatorSet.GenCrossContourXld(out HObject hObjectxs, this.hYs, this.hXs, 5, HTuple.TupleGenConst(this.hXs.Length, 1));
-                    hWindID.HalconResult.AddObj(hObjectxs, ColorResult.yellow);
+                    hWindID.OneResIamge.AddObj(hObjectxs, ColorResult.yellow);
 
                 }
 
@@ -621,17 +621,17 @@ namespace Vision2.Project.DebugF.工艺库
                                 HOperatorSet.GenRectangle2(out hObject2, Rows[XS.Count - (asyncRestImage.RunID)] - (MaxRow), Cols[XS.Count - (asyncRestImage.RunID)] - (MaxCol), 0, disH, disW);
                                 if (HWind != null)
                                 {
-                                    HWind.HalconResult.AddObj(hObject2, ColorResult.yellow);
+                                    HWind.OneResIamge.AddObj(hObject2, ColorResult.yellow);
                                     HWind.ShowImage();
                                 }
                                 if (hWindID != null)
                                 {
-                                    hWindID.HalconResult.AddObj(hObject2, ColorResult.yellow);
+                                    hWindID.OneResIamge.AddObj(hObject2, ColorResult.yellow);
                                     if (asyncRestImage.RunID == XS.Count)
                                     {
 
                                         FillIamge(hWindID);
-                                        hWindID.HalconResult.AddMeassge(watchOut.ElapsedMilliseconds + "ms");
+                                        hWindID.OneResIamge.AddMeassge(watchOut.ElapsedMilliseconds + "ms");
                                     }
                                     hWindID.ShowImage();
                                 }
@@ -732,8 +732,8 @@ namespace Vision2.Project.DebugF.工艺库
             if (hWindID != null)
             {
                 hWindID.ClearObj();
-                hWindID.HalconResult.AddObj(hObject2, ColorResult.yellow);
-                hWindID.HalconResult.Image = hObject;
+                hWindID.OneResIamge.AddObj(hObject2, ColorResult.yellow);
+                hWindID.OneResIamge.Image = hObject;
                 hWindID.SetImaage(hObject);
                 hWindID.ShowImage();
             }
@@ -762,8 +762,8 @@ namespace Vision2.Project.DebugF.工艺库
                 HWind.ImageColStrat = rCol1.TupleInt() - (len1.TupleMult(0.10).TupleInt());
                 HWind.WidthImage = rCol2.TupleInt() + (len1.TupleMult(0.10).TupleInt());
                 HWind.HeigthImage = rCol2.TupleInt() + (len1.TupleMult(0.10).TupleInt());
-                HWind.HalconResult.AddObj(HObjectRect1, ColorResult.yellow);
-                HWind.HalconResult.Image = hObject;
+                HWind.OneResIamge.AddObj(HObjectRect1, ColorResult.yellow);
+                HWind.OneResIamge.Image = hObject;
                 HWind.ShowImage();
             }
 
@@ -815,8 +815,8 @@ namespace Vision2.Project.DebugF.工艺库
                     HOperatorSet.AffineTransPoint2d(hTuple1, originX, originY, out px, out py);
                     Vision.GetRunNameVision(VisionName).GetCalib().GetPointXYtoRC(py, px, out rowT, out colsT);
                     Vision.Gen_arrow_contour_xld(out HObject hObject22, row, col, rowT, colsT);
-                    hwind.HalconResult.AddObj(hObject, ColorResult.green);
-                    hwind.HalconResult.AddObj(hObject22, ColorResult.yellow);
+                    hwind.OneResIamge.AddObj(hObject, ColorResult.green);
+                    hwind.OneResIamge.AddObj(hObject22, ColorResult.yellow);
                 }
                 if (isHet)
                 {
@@ -843,8 +843,8 @@ namespace Vision2.Project.DebugF.工艺库
                         Cols.Append(colsT);
                         if (hwind != null)
                         {
-                            hwind.HalconResult.AddObj(hObject);
-                            hwind.HalconResult.AddImageMassage(rowT, colsT, (i2 + 1) + (i * YindexC));
+                            hwind.OneResIamge.AddObj(hObject);
+                            hwind.OneResIamge.AddImageMassage(rowT, colsT, (i2 + 1) + (i * YindexC));
                         }
                     }
                 }

@@ -254,15 +254,15 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                                 break;
                             case ImageTypeObj.H:
                                 hwH.SetImaage(H); 
-                                hwH.HalconResult.AddObj(hObject);
+                                hwH.OneResIamge.AddObj(hObject);
                                 break;
                             case ImageTypeObj.S:
                                 hwH.SetImaage(S);
-                                hwH.HalconResult.AddObj(hObjectS);
+                                hwH.OneResIamge.AddObj(hObjectS);
                                 break;
                             case ImageTypeObj.V:
                                 hwH.SetImaage(V);
-                                hwH.HalconResult.AddObj(hObjectV);
+                                hwH.OneResIamge.AddObj(hObjectV);
                                 break;
                             default:
                                 break;
@@ -317,19 +317,19 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                                 break;
                             case ImageTypeObj.B:
                                 hwH.SetImaage(ImageB);
-                                hwH.HalconResult.AddObj(hObjectB);
+                                hwH.OneResIamge.AddObj(hObjectB);
                                 break;
                             case ImageTypeObj.H:
                                 hwH.SetImaage(H);
-                                hwH.HalconResult.AddObj(hObjectHCompute);
+                                hwH.OneResIamge.AddObj(hObjectHCompute);
                                 break;
                             case ImageTypeObj.S:
                                 hwH.SetImaage(S);
-                                hwH.HalconResult.AddObj(hObjectSCompute);
+                                hwH.OneResIamge.AddObj(hObjectSCompute);
                                 break;
                             case ImageTypeObj.V:
                                 hwH.SetImaage(V);
-                                hwH.HalconResult.AddObj(hObjectVCompute);
+                                hwH.OneResIamge.AddObj(hObjectVCompute);
                                 break;
                             default:
                                 break;
@@ -370,19 +370,19 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                                 break;
                             case ImageTypeObj.B:
                                 hwH.SetImaage(ImageB);
-                                hwH.HalconResult.AddObj(hObjectB);
+                                hwH.OneResIamge.AddObj(hObjectB);
                                 break;
                             case ImageTypeObj.H:
                                 hwH.SetImaage(H);
-                                hwH.HalconResult.AddObj(hObjectH1);
+                                hwH.OneResIamge.AddObj(hObjectH1);
                                 break;
                             case ImageTypeObj.S:
                                 hwH.SetImaage(S);
-                                hwH.HalconResult.AddObj(hObjectS1);
+                                hwH.OneResIamge.AddObj(hObjectS1);
                                 break;
                             case ImageTypeObj.V:
                                 hwH.SetImaage(V);
-                                hwH.HalconResult.AddObj(hObjectV1);
+                                hwH.OneResIamge.AddObj(hObjectV1);
                                 break;
                             default:
                                 break;

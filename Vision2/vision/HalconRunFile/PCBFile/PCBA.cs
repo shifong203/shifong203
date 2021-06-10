@@ -30,14 +30,20 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 path = Path.GetDirectoryName(path);
                 foreach (var item in pCBA1.DicPCBType)
                 {
-                    if (item.Key!="")
+                    try
                     {
-                        dynamic obj = assembly.CreateInstance(item.Value); // 创建类的实例                            
-                        if (obj != null)
+                        if (item.Key!="")
                         {
-                            DictR.Add(item.Key, obj.UpSatrt<BPCBoJB>(path + "\\" + item.Key));
-                            DictR[item.Key].GetRunProgram(this);
+                            dynamic obj = assembly.CreateInstance(item.Value); // 创建类的实例                            
+                            if (obj != null)
+                            {
+                                DictR.Add(item.Key, obj.UpSatrt<BPCBoJB>(path + "\\" + item.Key));
+                                DictR[item.Key].GetRunProgram(this);
+                            }
                         }
+                    }
+                    catch (Exception ex)
+                    {
                     }
                 }
                 pCBA1.DictRoi = DictR;

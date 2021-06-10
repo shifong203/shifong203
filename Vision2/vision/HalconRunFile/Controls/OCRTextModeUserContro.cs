@@ -130,14 +130,14 @@ namespace Vision2.vision.HalconRunFile.Controls
                         if (hObject2 != null)
                         {
                             HWindID.SetImaage(hObject);
-                            HWindID.HalconResult.AddObj(hObject1);
-                            HWindID.HalconResult.AddObj(hObject4);
+                            HWindID.OneResIamge.AddObj(hObject1);
+                            HWindID.OneResIamge.AddObj(hObject4);
                             HOperatorSet.AreaCenter(hObject4, out HTuple area, out HTuple row, out HTuple column);
                             string textStr = "";
                             for (int i2 = 0; i2 < row.Length; i2++)
                             {
                                 textStr = text[i2].ToString();
-                                HWindID.HalconResult.AddImageMassage(row[i2] - 100, column[i2], textStr, ColorResult.blue, "true");
+                                HWindID.OneResIamge.AddImageMassage(row[i2] - 100, column[i2], textStr, ColorResult.blue, "true");
                             }
                         }
 

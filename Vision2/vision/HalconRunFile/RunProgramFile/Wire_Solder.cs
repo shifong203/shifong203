@@ -57,7 +57,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     {
                         if (listWelding[i].List3DName[j] >= 0)
                         {
-                            //halcon.GetResultOBj().AddData(Project.formula.RecipeCompiler.Instance.Data.GetMaxMinValue(listWelding[i].List3DName[j]));
+                            //halcon.GetOneImageR().AddData(Project.formula.RecipeCompiler.Instance.Data.GetMaxMinValue(listWelding[i].List3DName[j]));
                             if (!Project.formula.RecipeCompiler.Instance.Data.GetChet(listWelding[i].List3DName[j]))
                             {
                                 datStr.Append(Project.formula.RecipeCompiler.Instance.Data.ListDatV[listWelding[i].List3DName[j]].ComponentName);

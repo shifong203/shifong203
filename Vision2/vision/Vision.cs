@@ -72,130 +72,129 @@ namespace Vision2.vision
     /// </summary>
     public class Vision : ProjectObj, ProjectNodet.IClickNodeProject
     {
-    
-        public override string FileName => "Vision";
-        public override string Text { get; set; } = "视觉";
-        public override string SuffixName => ".vision";
-        public override string ProjectTypeName => "视觉程序";
-        public override string Name => "视觉";
-        public Vision()
-        {
-            try
-            {
-                TabPage.Text = TabPage.Name = this.Name;
-            }
-            catch (Exception)
-            {
+         #region  属性
+                public override string FileName => "Vision";
+                public override string Text { get; set; } = "视觉";
+                public override string SuffixName => ".vision";
+                public override string ProjectTypeName => "视觉程序";
+                public override string Name => "视觉";
+                public Vision()
+                {
+                    try
+                    {
+                        TabPage.Text = TabPage.Name = this.Name;
+                    }
+                    catch (Exception)
+                    {
 
-            }
-            this.Information = "视觉程序结构";
-        }
-        public static string GetFilePath()
-        {
-            return ProjectINI.In.ProjectPathRun + "\\" + _instance.FileName + "\\";
-        }
-        public static string VisionPath { get { return GetFilePath() + Product.ProductionName + "\\"; } }
+                    }
+                    this.Information = "视觉程序结构";
+                }
+                public static string GetFilePath()
+                {
+                    return ProjectINI.In.ProjectPathRun + "\\" + _instance.FileName + "\\";
+                }
+                public static string VisionPath { get { return GetFilePath() + Product.ProductionName + "\\"; } }
 
-        /// <summary>
-        /// 启用的视觉程序
-        /// </summary>
-        [Browsable(false)]
-        public Dictionary<string, bool> VisionPr = new Dictionary<string, bool>();
-        private TreeNode treeNodeRun = new TreeNode() { Name = "视觉程序", Text = "视觉程序" };
-        private TreeNode treeNodeDCams = new TreeNode() { Name = "dCams", Text = "本地相机" };
-        private TreeNode treeNodeCams = new TreeNode() { Name = "Cams", Text = "相机" };
-        private TreeNode treeNodeD = new TreeNode() { Name = "硬件库", Text = "硬件库" };
-        private TreeNode treeNodeCoonrdinates = new TreeNode() { Name = "坐标系", Text = "坐标系" };
-        private TreeNode treeNodeCoonrdinate3Ds = new TreeNode() { Name = "3D坐标系", Text = "3D坐标系" };
-        private TreeNode treeNodeVisionWindow = new TreeNode() { Name = "图像显示", Text = "图像显示" };
-        /// <summary>
-        /// 是否支持切换产品
-        /// </summary>
-        [DescriptionAttribute("是否支持切换产品。"), Category("产品"), DisplayName("是否支持产品")]
-        public bool ISPName { get; set; }
+                /// <summary>
+                /// 启用的视觉程序
+                /// </summary>
+                [Browsable(false)]
+                public Dictionary<string, bool> VisionPr = new Dictionary<string, bool>();
+                private TreeNode treeNodeRun = new TreeNode() { Name = "视觉程序", Text = "视觉程序" };
+                private TreeNode treeNodeDCams = new TreeNode() { Name = "dCams", Text = "本地相机" };
+                private TreeNode treeNodeCams = new TreeNode() { Name = "Cams", Text = "相机" };
+                private TreeNode treeNodeD = new TreeNode() { Name = "硬件库", Text = "硬件库" };
+                private TreeNode treeNodeCoonrdinates = new TreeNode() { Name = "坐标系", Text = "坐标系" };
+                private TreeNode treeNodeCoonrdinate3Ds = new TreeNode() { Name = "3D坐标系", Text = "3D坐标系" };
+                private TreeNode treeNodeVisionWindow = new TreeNode() { Name = "图像显示", Text = "图像显示" };
+                /// <summary>
+                /// 是否支持切换产品
+                /// </summary>
+                [DescriptionAttribute("是否支持切换产品。"), Category("产品"), DisplayName("是否支持产品")]
+                public bool ISPName { get; set; }
 
 
-        [Description("复判端口"), Category("远程复判"), DisplayName("复判端口")]
+                [Description("复判端口"), Category("远程复判"), DisplayName("复判端口")]
   
-        public int RsetPort { get; set; } = -1;
+                public int RsetPort { get; set; } = -1;
 
-        [Description("图像属性，"), Category("显示"), DisplayName("显示区域宽度")]
+                [Description("图像属性，"), Category("显示"), DisplayName("显示区域宽度")]
 
-        public int LineWidth { get; set; } = 1;
+                public int LineWidth { get; set; } = 1;
 
-        [Description("图像文本大小，"), Category("显示"), DisplayName("显示文本大小")]
+                [Description("图像文本大小，"), Category("显示"), DisplayName("显示文本大小")]
 
-        public int FontSize { get; set; } = 20;
-
-
-        [Description("图像文本大小，"), Category("显示"), DisplayName("显示文本大小")]
-        [TypeConverter(typeof(ErosConverter)), ErosConverter.ThisDropDownAttribute("", "微软雅黑", "宋体")]
-        public string Font { get; set; } = "微软雅黑";
+                public int FontSize { get; set; } = 20;
 
 
-        [Description("显示视觉窗口的方式，"), Category("显示"), DisplayName("图像显示模式")]
-        [TypeConverter(typeof(ErosConverter)), ErosConverter.ThisDropDownAttribute("", "平铺", "选项卡", "主副窗口")]
-        public string ControlsMode { get; set; } = "选项卡";
-
-        [DescriptionAttribute("单步模式下一步。"), Category("触发器"), DisplayName("下一步变量名")]
-        public string NextSetp { get; set; } = string.Empty;
+                [Description("图像文本大小，"), Category("显示"), DisplayName("显示文本大小")]
+                [TypeConverter(typeof(ErosConverter)), ErosConverter.ThisDropDownAttribute("", "微软雅黑", "宋体")]
+                public string Font { get; set; } = "微软雅黑";
 
 
+                [Description("显示视觉窗口的方式，"), Category("显示"), DisplayName("图像显示模式")]
+                [TypeConverter(typeof(ErosConverter)), ErosConverter.ThisDropDownAttribute("", "平铺", "选项卡", "主副窗口")]
+                public string ControlsMode { get; set; } = "选项卡";
 
-        [DescriptionAttribute("延时模式或完成模式。"), Category("触发器"), DisplayName("拍照完成或延时模式")]
-        public bool sTime { get; set; }
+                [DescriptionAttribute("单步模式下一步。"), Category("触发器"), DisplayName("下一步变量名")]
+                public string NextSetp { get; set; } = string.Empty;
 
-        [DescriptionAttribute("读取托盘ID编号的地址。"), Category("触发器"), DisplayName("托盘ID地址")]
-        [Editor(typeof(LinkName_ValuesNameUserControl.Editor), typeof(UITypeEditor))]
-        public string ReadIDName { get; set; } = string.Empty;
+                [DescriptionAttribute("延时模式或完成模式。"), Category("触发器"), DisplayName("拍照完成或延时模式")]
+                public bool sTime { get; set; }
 
-        [DescriptionAttribute("单个复判检测位置。"), Category("复判模式"), DisplayName("单个复判")]
-        /// <summary>
-        /// 复判单个位置
-        /// </summary>
-        public bool RestT { get; set; }
+                [DescriptionAttribute("读取托盘ID编号的地址。"), Category("触发器"), DisplayName("托盘ID地址")]
+                [Editor(typeof(LinkName_ValuesNameUserControl.Editor), typeof(UITypeEditor))]
+                public string ReadIDName { get; set; } = string.Empty;
 
-        [Description("结果区域膨胀。"), Category("结果区域"), DisplayName("膨胀区域")]
-        public int DilationRectangle1 { get; set; } = 300;
+                [DescriptionAttribute("单个复判检测位置。"), Category("复判模式"), DisplayName("单个复判")]
+                /// <summary>
+                /// 复判单个位置
+                /// </summary>
+                public bool RestT { get; set; }
 
-        [Description("ROI颜色。"), Category("结果区域"), DisplayName("ROI颜色")]
-        public ColorResult ROIColr { get; set; } = ColorResult.blue;
+                [Description("结果区域膨胀。"), Category("结果区域"), DisplayName("膨胀区域")]
+                public int DilationRectangle1 { get; set; } = 300;
 
-        [DescriptionAttribute("单位转换比例。"), Category("数据"), DisplayName("单位比例")]
-        public int Transform { get; set; } = 1;
+                [Description("ROI颜色。"), Category("结果区域"), DisplayName("ROI颜色")]
+                public ColorResult ROIColr { get; set; } = ColorResult.blue;
 
-        [DescriptionAttribute("小数位数。"), Category("数据"), DisplayName("小数位数")]
-        public int Decimal_point { get; set; } = 1;
+                [DescriptionAttribute("单位转换比例。"), Category("数据"), DisplayName("单位比例")]
+                public int Transform { get; set; } = 1;
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public int TrayID { get; set; }
+                [DescriptionAttribute("小数位数。"), Category("数据"), DisplayName("小数位数")]
+                public int Decimal_point { get; set; } = 1;
 
-        [DescriptionAttribute("光源控制器1通道。"), Category("光源控制"), DisplayName("1通道")]
-        public byte H1 { get; set; } = 255;
+                /// <summary>
+                /// 
+                /// </summary>
+                public int TrayID { get; set; }
 
-        [DescriptionAttribute("光源控制器1通道。"), Category("光源控制"), DisplayName("2通道")]
-        public byte H2 { get; set; } = 255;
+                [DescriptionAttribute("光源控制器1通道。"), Category("光源控制"), DisplayName("1通道")]
+                public byte H1 { get; set; } = 255;
 
-        [DescriptionAttribute("光源控制器1通道。"), Category("光源控制"), DisplayName("3通道")]
-        public byte H3 { get; set; } = 255;
+                [DescriptionAttribute("光源控制器1通道。"), Category("光源控制"), DisplayName("2通道")]
+                public byte H2 { get; set; } = 255;
 
-        [DescriptionAttribute("光源控制器1通道。"), Category("光源控制"), DisplayName("4通道")]
-        public byte H4 { get; set; } = 255;
+                [DescriptionAttribute("光源控制器1通道。"), Category("光源控制"), DisplayName("3通道")]
+                public byte H3 { get; set; } = 255;
 
-        public bool H1Off;
+                [DescriptionAttribute("光源控制器1通道。"), Category("光源控制"), DisplayName("4通道")]
+                public byte H4 { get; set; } = 255;
 
-        public bool H2Off;
+                public bool H1Off;
 
-        public bool H3Off;
+                public bool H2Off;
 
-        public bool H4Off;
+                public bool H3Off;
 
-        [Description("供应商光源控制方式，"), Category("光源控制"), DisplayName("控制器供应商")]
-        [TypeConverter(typeof(ErosConverter)), ErosConverter.ThisDropDownAttribute("", "浮根", "凯威", "")]
-        public string OffName { get; set; }
+                public bool H4Off;
 
+                [Description("供应商光源控制方式，"), Category("光源控制"), DisplayName("控制器供应商")]
+                [TypeConverter(typeof(ErosConverter)), ErosConverter.ThisDropDownAttribute("", "浮根", "凯威", "")]
+                public string OffName { get; set; }
+        public string Rs232Name { get; set; } = "COM1";
+        #endregion
         private string CheckChData()
         {
             string data = "S";
@@ -333,9 +332,9 @@ namespace Vision2.vision
 
         SerialPort SerialPort = new SerialPort();
 
-        public string Rs232Name { get; set; } = "COM1";
+     
 
-        System.IO.Ports.Parity Parity { get; set; } = Parity.Even;
+        Parity Parity { get; set; } = Parity.Even;
 
 
         SocketServer SoServer;
@@ -865,7 +864,7 @@ namespace Vision2.vision
         {
             try
             {
-                string prodName = Project.formula.Product.ProductionName;
+                string prodName = Product.ProductionName;
                 if (!this.ISPName)
                 {
                     prodName = "M1";
@@ -877,6 +876,7 @@ namespace Vision2.vision
                     //item.Value.Name = item.Key;
                     item.Value.SaveThis(path + "\\" + FileName + "\\" + prodName + "\\");
                 }
+                Library.LibraryBasics.SaveLibraryVision(Library.LibraryBasics.PathStr, DicLibraryVision);
                 ProjectINI.ClassToJsonSavePath(DicCoordinate, path + "\\" + FileName + "\\" + prodName + "\\CoordinateS");
                 base.SaveThis(path);
             }
@@ -975,6 +975,8 @@ namespace Vision2.vision
             }
             string listPath = path + "\\" + FileName + "\\" + productionName + "\\Halcon\\";
             List<string> list = new List<string>();
+            //DicLibraryVision.Clear();
+   
             UpReadThis(productionName);
             MainForm1.MainFormF.
             tabControl1.SelectedIndex = 1;
@@ -1070,10 +1072,12 @@ namespace Vision2.vision
                             trayDataUserControl.Dock = DockStyle.Fill;
                             ForImageFor.tabControl1.TabPages.Add(tabPage);
                             tabPage.Controls.Add(trayDataUserControl);
-                            ErosSocket.DebugPLC.Robot.TrayRobot     trayRobot = new ErosSocket.DebugPLC.Robot.TrayRobot();
+                            TrayRobot trayRobot = new TrayRobot();
                             trayRobot.XNumber = (sbyte)prestC.XNumber;
                             trayRobot.YNumber = (sbyte)prestC.YNumber;
+                            trayRobot.Clear();
                             trayDataUserControl.SetTray(trayRobot);
+
                             ForImageFor.keyValuePairs.Add(prestC.LineName,new FormRestfDataIamge.OBJData() { socket = socketR,prest1= prestC,trayDataUser= trayDataUserControl });
                             }));
                         }
@@ -1081,7 +1085,7 @@ namespace Vision2.vision
                        {
                             ForImageFor.keyValuePairs[prestC.LineName].trayDataUser.GetTrayEx().XNumber= (sbyte)prestC.XNumber;
                             ForImageFor.keyValuePairs[prestC.LineName].trayDataUser.GetTrayEx().YNumber = (sbyte)prestC.YNumber;
-                            ForImageFor.keyValuePairs[prestC.LineName].trayDataUser.GetTrayEx().RestValue();
+                            ForImageFor.keyValuePairs[prestC.LineName].trayDataUser.GetTrayEx().GetTrayData().RestValue();
                             ForImageFor.keyValuePairs[prestC.LineName].socket= socketR;
                             ForImageFor.keyValuePairs[prestC.LineName].prest1 = prestC;
                         }
@@ -1141,6 +1145,9 @@ namespace Vision2.vision
                                 Instance.ListHalconName.Add(Path.GetFileNameWithoutExtension(itmeName[i]));
                             }
                         }
+
+                        Vision.Instance.DicLibraryVision=   Library.LibraryBasics.ReadDic(Library.LibraryBasics.RunPath + nameP);
+               
                         for (int i = 0; i < Instance.ListHalconName.Count; i++)
                         {
                             if (Instance.ListHalconName[i] == null)
@@ -1378,7 +1385,7 @@ namespace Vision2.vision
                                     run.AddOBJ(Instance.DicCalib3D[files[0]].Get3DZ());
                                     run.AddShowObj(Instance.DicCalib3D[files[0]].GeT3d());
                                     run.AddMessage(Instance.DicCalib3D[files[0]].Errs);
-                                    run.EndChanged();
+                                    run.EndChanged(run.GetOneImageR());
                                 }
                             }
                         }
@@ -1540,7 +1547,7 @@ namespace Vision2.vision
                 halcon["autocalibCol"][intds] = halcon.MRModelHomMat.Col;
                 halcon["autocalibX"][intds] = Convert.ToDouble(datas[1]);
                 halcon["autocalibY"][intds] = Convert.ToDouble(datas[2]);
-                halcon.GetResultOBj().AddMeassge("机械坐标X" + halcon["autocalibX"] + ";Y" + halcon["autocalibY"]
+                halcon.GetOneImageR().AddMeassge("机械坐标X" + halcon["autocalibX"] + ";Y" + halcon["autocalibY"]
                    + "像素Col:" + halcon["autocalibCol"] + "Row:" + halcon["autocalibRow"]);
                 if (intds == 8)
                 {
@@ -1551,8 +1558,8 @@ namespace Vision2.vision
                     HOperatorSet.AffineTransPoint2d(HomMat, halcon["autocalibRow"], halcon["autocalibCol"], out HTuple axisY, out HTuple axisX);
                     //HOperatorSet.HomMat2dSlant(HomMat, new HTuple(180).TupleDeg(), "y", 0, 0, out HomMat);
                     //HOperatorSet.HomMat2dSlant(HomMat, new HTuple(180).TupleDeg(), "x", 0, 0, out HomMat);
-                    halcon.GetResultOBj().AddMeassge("转换矩阵" + HomMat);
-                    halcon.GetResultOBj().AddMeassge("机械差X（" + axisX + "-" + halcon["autocalibX"] + "=" + halcon["autocalibX"].TupleSub(axisX) + "）;Y（"
+                    halcon.GetOneImageR().AddMeassge("转换矩阵" + HomMat);
+                    halcon.GetOneImageR().AddMeassge("机械差X（" + axisX + "-" + halcon["autocalibX"] + "=" + halcon["autocalibX"].TupleSub(axisX) + "）;Y（"
                        + axisY + "-" + halcon["autocalibY"] + "=" + halcon["autocalibY"].TupleSub(axisY) + ")");
                     //this.CoordinatePXY.CoordHanMat2DXY = HomMat;
                     HOperatorSet.VectorToHomMat2d(halcon["autocalibX"], halcon["autocalibY"], halcon["autocalibCol"],
@@ -1562,7 +1569,7 @@ namespace Vision2.vision
                     //HOperatorSet.HomMat2dSlant(HomMat2, new HTuple(180).TupleDeg(), "x", 0, 0, out HomMat2);
                     HOperatorSet.AffineTransPoint2d(HomMat2, 0, 0, out axisX, out axisY);
                     HOperatorSet.GenCrossContourXld(out HObject cros, axisY, axisX, 50, 0);
-                    halcon.GetResultOBj().AddMeassge("机械原点row:" + axisY + ",col" + axisX);
+                    halcon.GetOneImageR().AddMeassge("机械原点row:" + axisY + ",col" + axisX);
                     hObject = hObject.ConcatObj(cros);
                     //if (halcon.KeyHObject.DirectoryHObject.ContainsKey("九点标定"))
                     //{
@@ -1797,6 +1804,11 @@ namespace Vision2.vision
 
 
         #region 视觉库  
+
+        public static Dictionary<string, RunProgram> GetLibrary()
+        {
+            return Vision.Instance.  DicLibraryVision;
+        }
         public void AddLibrary(RunProgram runProgram)
         {
             try
@@ -1895,38 +1907,7 @@ namespace Vision2.vision
         }
 
 
-        public void AddROBj(string name, HalconResult result, int runid = -0)
-        {
-            try
-            {
-
-                if (runid==0)
-                {
-                    OneProductVale.PanelID = ProcessUser.QRCode;
-                }
-                if (runid < 0)
-                {
-                    OneProductVale.ResuOBj.Add(new OneResultOBj());
-                }
-                else
-                {
-                    //if (Detfet.keyValuePairs[name].Count > runid)
-                    //{
-                    //    Detfet.keyValuePairs[name][runid] = result;
-                    //}
-                    //else
-                    //{
-                    //    Detfet.keyValuePairs[name].Add(result);
-                    //}
-                }
-
-            }
-            catch (Exception ex)
-            {
-                ErrLog(ex);
-            }
-        }
-
+    
         public static void ShowVisionResetForm(HalconRun  halcon=null)
         {
             try
@@ -1935,11 +1916,12 @@ namespace Vision2.vision
                 {
                     if (halcon!=null)
                     {
-                        RestObjImage.RestObjImageFrom.ShowImage(DebugCompiler.GetThis().DDAxis.GetTrayInxt(halcon.TrayID));
+
+                        RestObjImage.RestObjImageFrom.ShowImage(DebugCompiler.GetThis().DDAxis.GetTrayInxt(halcon.TrayID).QuntData());
                     }
                     else
                     {
-                        RestObjImage.RestObjImageFrom.ShowImage(Vision.TraydataVale);
+                        RestObjImage.RestObjImageFrom.ShowImage(TrayDataUserControl.GetTray().GetTrayData());
                     }
                     
                 }));
@@ -1949,17 +1931,7 @@ namespace Vision2.vision
             }
         }
 
-        public static DataVale GetObj()
-        {
-            return  OneProductVale;
-        }
-        /// <summary>
-        /// 清楚单个产品视觉数据
-        /// </summary>
-        public void OneProductValeClert()
-        {
-            OneProductVale = new DataVale();
-        }
+  
         /// <summary>
         /// 清楚视觉所有数据
         /// </summary>
@@ -1969,13 +1941,11 @@ namespace Vision2.vision
             {
                 item.Value.ListObjCler();
             }
-            OneProductValeClert();
-            TraydataVale.Clear(); 
         }
 
         public static DataVale OneProductVale = new DataVale();
 
-        public static TrayRobot TraydataVale = new TrayRobot();
+        //public static TrayRobot TraydataVale = new TrayRobot();
     
 
 

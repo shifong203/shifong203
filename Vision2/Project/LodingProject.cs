@@ -113,7 +113,7 @@ namespace Vision2.Project
 
                     this.Hide();
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                 }
             });

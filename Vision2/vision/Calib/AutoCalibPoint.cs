@@ -1714,9 +1714,9 @@ namespace Vision2.vision.Calib
                 Vision.Gen_arrow_contour_xld(out ho_ArrowsZ, hv_Row0, hv_Column0, hv_RowAxZ, hv_ColumnAxZ, hv_HeadLength, hv_HeadLength);
                 if (halconRun != null)
                 {
-                    halconRun.GetResultOBj().AddImageMassage(hv_RowAxX + 3, hv_ColumnAxX + 3, "X", ColorResult.red);
-                    halconRun.GetResultOBj().AddImageMassage(hv_RowAxY + 3, hv_ColumnAxY + 3, "Y", ColorResult.green);
-                    halconRun.GetResultOBj().AddImageMassage(hv_RowAxZ + 3, hv_ColumnAxZ + 3, "Z", ColorResult.yellow);
+                    halconRun.GetOneImageR().AddImageMassage(hv_RowAxX + 3, hv_ColumnAxX + 3, "X", ColorResult.red);
+                    halconRun.GetOneImageR().AddImageMassage(hv_RowAxY + 3, hv_ColumnAxY + 3, "Y", ColorResult.green);
+                    halconRun.GetOneImageR().AddImageMassage(hv_RowAxZ + 3, hv_ColumnAxZ + 3, "Z", ColorResult.yellow);
                 }
                 //  if (hv_WindowHandle != null)
                 //  {
@@ -1815,12 +1815,12 @@ namespace Vision2.vision.Calib
                 Vision.Gen_arrow_contour_xld(out ho_ArrowsZ, hv_Row0, hv_Column0, hv_RowAxZ, hv_ColumnAxZ, hv_HeadLength, hv_HeadLength);
                 if (halconRun != null)
                 {
-                    halconRun.GetResultOBj().AddObj(ho_ArrowsX, ColorResult.red);
-                    halconRun.GetResultOBj().AddObj(ho_ArrowsY, ColorResult.green);
-                    halconRun.GetResultOBj().AddObj(ho_ArrowsZ, ColorResult.yellow);
-                    halconRun.GetResultOBj().AddImageMassage(hv_RowAxX + 3, hv_ColumnAxX + 3, "X", ColorResult.red);
-                    halconRun.GetResultOBj().AddImageMassage(hv_RowAxY + 3, hv_ColumnAxY + 3, "Y", ColorResult.green);
-                    halconRun.GetResultOBj().AddImageMassage(hv_RowAxZ + 3, hv_ColumnAxZ + 3, "Z", ColorResult.yellow);
+                    halconRun.GetOneImageR().AddObj(ho_ArrowsX, ColorResult.red);
+                    halconRun.GetOneImageR().AddObj(ho_ArrowsY, ColorResult.green);
+                    halconRun.GetOneImageR().AddObj(ho_ArrowsZ, ColorResult.yellow);
+                    halconRun.GetOneImageR().AddImageMassage(hv_RowAxX + 3, hv_ColumnAxX + 3, "X", ColorResult.red);
+                    halconRun.GetOneImageR().AddImageMassage(hv_RowAxY + 3, hv_ColumnAxY + 3, "Y", ColorResult.green);
+                    halconRun.GetOneImageR().AddImageMassage(hv_RowAxZ + 3, hv_ColumnAxZ + 3, "Z", ColorResult.yellow);
                 }
             }
             catch (HalconException HDevExpDefaultException)

@@ -1,25 +1,25 @@
 ﻿using HalconDotNet;
 using System;
 using System.Collections.Generic;
-using Vision2.Project.Mes;
-using ErosSocket.DebugPLC.Robot;
-using static Vision2.vision.HalconRunFile.RunProgramFile.RunProgram;
-using Vision2.Project.formula;
-using static Vision2.vision.Vision;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Vision2.vision.HalconRunFile.RunProgramFile;
 
-namespace Vision2.vision.HalconRunFile.RunProgramFile
+namespace Vision2.vision
 {
     /// <summary>
-    /// 结果类
+    /// 单次拍照
     /// </summary>
-    public class HalconResult
+    public class OneResultOBj
     {
-        public HalconResult()
+        public OneResultOBj()
         {
+            Image = new HObject();
+            Image.GenEmptyObj();
             HObjectRed = new HObject();
             HObjectRed.GenEmptyObj();
             HObjectGreen = new HObject();
-
             HObjectGreen.GenEmptyObj();
             HObjectYellow = new HObject();
             HObjectYellow.GenEmptyObj();
@@ -30,11 +30,32 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             Colrrs = new HObject();
             Colrrs.GenEmptyObj();
         }
+
         HObject hObject = new HObject();
 
         public HTuple RowsData { get; set; } = new HTuple();
         public HTuple ColumnsData { get; set; } = new HTuple();
+        /// <summary>
+        /// 执行ID
+        /// </summary>
+        public int RunID { get; set; }
+        /// <summary>
+        /// 库ID
+        /// </summary>
+        public int LiyID { get; set; }
+        /// <summary>
+        /// 程序名
+        /// </summary>
+        public string RunName { get; set; }
+        public string NGMestage { get; set; } = "";
 
+        public HTuple Massage { get; set; } = new HTuple();
+        public HTuple OKMassage { get; set; } = new HTuple();
+        public HTuple NGMassage { get; set; } = new HTuple();
+
+        public bool IsMoveBool;
+
+        public bool IsXLDOrImage;
         ///// <summary>
         ///// 机器结果
         ///// </summary>
@@ -42,129 +63,81 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         {
             get
             {
-                for (int i = 0; i < ListNGObj.Count; i++)
+                foreach (var item in oneContOBJs.DicOnes)
                 {
-                    if (!ListNGObj[i].OK)
+                    if (!item.Value.OK)
                     {
                         return false;
                     }
                 }
                 return true;
-            } 
+            }
         }
-
-        /// <summary>
-        /// 结果集合
-        /// </summary>
-        public List<OneRObj> ListNGObj = new List<OneRObj>();
-
-        public bool IsMoveBool;
-
-        public bool IsXLDOrImage;
-
-        public class MassageText
+        public bool OK
         {
-            public List<HTuple> Rows = new List<HTuple>();
-            public List<HTuple> Columns = new List<HTuple>();
-            public List<HTuple> Massage = new List<HTuple>();
-            public string MassageBlute = "false";
-
-            public string color = "red";
-            public void ShowMassage(HTuple hWindowHalconID)
+            get
             {
-                for (int i = 0; i < Massage.Count; i++)
+                foreach (var item in oneContOBJs.DicOnes)
                 {
-                    if (Massage[i].Length != 0)
+                    if (!item.Value.OK)
                     {
-                        Vision.Disp_message(hWindowHalconID, Massage[i], Rows[i], Columns[i], false, color, MassageBlute);
+                        return false;
                     }
                 }
+                return true;
             }
-            public void AddImageMassage(HTuple rows, HTuple columns, HTuple Massage)
+            set
             {
-                if (columns.Length != Massage.Length)
+                if (value)
                 {
-                    Massage = HTuple.TupleGenConst(columns.Length, Massage);
+                    foreach (var item in oneContOBJs.DicOnes)
+                    {
+                        item.Value.OK = true;
+                    }
                 }
-                if (rows.Length == columns.Length && columns.Length == Massage.Length)
-                {
-                    this.color = color = "red";
-                    this.Rows.Add(rows);
-                    this.Columns.Add(columns);
-                    this.Massage.Add(Massage);
-                }
+                autoOk = value;
             }
         }
-
-
-        public string NGMestage { get; set; } = "";
+        bool autoOk;
         /// <summary>
-        /// 位名
+        /// 元件集合
         /// </summary>
-        public string PoxintID { get; set; } = "";
+        OneCompOBJs oneContOBJs = new OneCompOBJs();
         /// <summary>
-        /// 程序名
+        /// 关联元件集合
         /// </summary>
-        public string RunName { get; set; } = "";
-
-        /// <summary>
-        /// 程序号
-        /// </summary>
-        public int RunID { get; set; }
-
-        public int Heith;
-
-        public int Width;
-
-        public HObject HObjectRed { get; set; } 
-        public HObject Image { get; set; }
-        public HObject HObjectGreen { get; set; } = new HObject();
-
-        public HObject HObjectYellow { get; set; } = new HObject();
-        public HObject HObjectBlue { get; set; } = new HObject();
-
-        public MassageText MaRed { get; set; } = new MassageText();
-
-        public MassageText MaGreen { get; set; } = new MassageText();
-
-        public MassageText MaYellow { get; set; } = new MassageText();
-
-        public MassageText MaBlue { get; set; } = new MassageText();
-
-        public class Hobjt_Colro
+        /// <param name="oneContOB"></param>
+        /// <returns></returns>
+        public OneCompOBJs GetNgOBJS(OneCompOBJs oneContOB=null)
         {
-            public Hobjt_Colro(HObject hObject, HTuple color = null)
+            if (oneContOB != null)
             {
-                Object = hObject;
-                if (color == null)
-                {
-                    Color = "red";
-                }
-                else
-                {
-                    Color = color;
-                }
-
+                oneContOBJs = oneContOB;
             }
-            public HObject Object = new HObject();
-            public HTuple Color = new HTuple("red");
+            return oneContOBJs;
         }
 
-        List<Hobjt_Colro> ListHobj = new List<Hobjt_Colro>();
-
-        public void AddNGObj(OneRObj rObj)
+        public void ReadImage(string path)
         {
-            ListNGObj.Add(rObj);
+            HOperatorSet.ReadImage(out HObject hObject, path);
+            Image = hObject;
+
+        }
+        public void AddNGOBJ(OneRObj rObj)
+        {
+            if (!rObj.RestStrings.Contains(rObj.NGText))
+            {
+                rObj.RestStrings.Add(rObj.NGText);
+            }
+            oneContOBJs.AddNGCont(rObj);
         }
 
-        //public void AddData(DataMinMax maxMinValue)
-        //{
-        //    Data.Add(maxMinValue);
-        //}
-
-        public HTuple Massage { get; set; } = new HTuple();
-        public HTuple OKMassage { get; set; } = new HTuple();
-        public HTuple NGMassage { get; set; } = new HTuple();
+        public void AddNGOBJ(string component, string nGText, HObject roi,HObject err)
+        {
+            OneRObj rObj = new OneRObj() { NGText = nGText, ComponentID = component, ROI = roi, NGROI = err };
+            AddNGOBJ(rObj);
+        }
+  
         public void AddImageMassage(HTuple rows, HTuple columns, HTuple Massage, ColorResult color, string meblut = "false")
         {
             if (columns.Length > Massage.Length)
@@ -277,7 +250,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         {
             try
             {
-                if (hObject.CountObj()==0)
+                if (hObject.CountObj() == 0)
                 {
                     return;
                 }
@@ -309,10 +282,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         {
             Colrrs = hObject;
         }
-        //public void AddData(MaxMinValue maxMinValue)
-        //{
-        //    Data.Add(maxMinValue);
-        //}
+    
         public void AddObj(HObject hObject, HTuple color = null)
         {
             ListHobj.Add(new Hobjt_Colro(hObject, color));
@@ -336,7 +306,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             Colrrs = new HObject();
             Colrrs.GenEmptyObj();
             ListHobj.Clear();
-            ListNGObj.Clear();
+            oneContOBJs.DicOnes.Clear();
         }
         public void Dispose()
         {
@@ -438,7 +408,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             }
             catch (Exception ex)
             {
-                ErosProjcetDLL.Project.AlarmText.AddTextNewLine("HalconResult显示故障:"+ex.Message);
+                ErosProjcetDLL.Project.AlarmText.AddTextNewLine("HalconResult显示故障:" + ex.Message);
             }
         }
         /// <summary>
@@ -459,20 +429,23 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     HObject.GenEmptyObj();
                 }
                 //HSystem.SetSystem("flush_graphic", "false");
-     
-                for (int i = 0; i < ListNGObj.Count; i++)
+                foreach (var item in oneContOBJs.DicOnes)
                 {
-                    if (ListNGObj[i].ROI!=null)
+
+                    foreach (var itemtd in item.Value.oneRObjs)
                     {
-                        HOperatorSet.AreaCenter(ListNGObj[i].ROI, out HTuple area, out HTuple row, out HTuple column);
-                        if (row.Length == 1)
+                        if (itemtd.ROI != null)
                         {
-                            Vision.Disp_message(hWindowHalconID, ListNGObj[i].NGText, row, column, true, "red");
+                            HOperatorSet.AreaCenter(itemtd.ROI, out HTuple area, out HTuple row, out HTuple column);
+                            if (row.Length == 1)
+                            {
+                                Vision.Disp_message(hWindowHalconID, itemtd.NGText, row, column, true, "red");
+                            }
+                            HOperatorSet.SetColor(hWindowHalconID, "red");
+                            HOperatorSet.DispObj(itemtd.NGROI, hWindowHalconID);
+                            HOperatorSet.SetColor(hWindowHalconID, Vision.Instance.ROIColr.ToString());
+                            HOperatorSet.DispObj(itemtd.ROI, hWindowHalconID);
                         }
-                        HOperatorSet.SetColor(hWindowHalconID, "red");
-                        HOperatorSet.DispObj(ListNGObj[i].NGROI, hWindowHalconID);
-                        HOperatorSet.SetColor(hWindowHalconID, Vision.Instance.ROIColr.ToString());
-                        HOperatorSet.DispObj(ListNGObj[i].ROI, hWindowHalconID);
                     }
                 }
                 HOperatorSet.SetColor(hWindowHalconID, "green");
@@ -538,7 +511,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     MaBlue.ShowMassage(hWindowHalconID);
                     MaYellow.ShowMassage(hWindowHalconID);
                 }
-           
+
             }
             catch (Exception ex)
             {
@@ -627,93 +600,52 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
 
             }
         }
-        ~HalconResult()
+        public int Heith;
+
+        public int Width;
+
+        public HObject HObjectRed { get; set; }
+        public HObject Image { get; set; }
+        public HObject HObjectGreen { get; set; } = new HObject();
+
+        public HObject HObjectYellow { get; set; } = new HObject();
+        public HObject HObjectBlue { get; set; } = new HObject();
+
+        public MassageText MaRed { get; set; } = new MassageText();
+
+        public MassageText MaGreen { get; set; } = new MassageText();
+
+        public MassageText MaYellow { get; set; } = new MassageText();
+
+        public MassageText MaBlue { get; set; } = new MassageText();
+
+        public class Hobjt_Colro
         {
-            if (HObject != null)
+            public Hobjt_Colro(HObject hObject, HTuple color = null)
             {
-                HObject.Dispose();
+                Object = hObject;
+                if (color == null)
+                {
+                    Color = "red";
+                }
+                else
+                {
+                    Color = color;
+                }
+
             }
+            public HObject Object = new HObject();
+            public HTuple Color = new HTuple("red");
+        }
+
+        List<Hobjt_Colro> ListHobj = new List<Hobjt_Colro>();
+        ~OneResultOBj()
+        {
+            //if (HObject != null)
+            //{
+            //    HObject.Dispose();
+            //}
         }
     }
 
-    public class OneOdata
-    {
-        public HObject ROI = new HObject();
-        public HObject NGROI = new HObject();
-        public OneOdata()
-        {
-            NGROI.GenEmptyObj();
-            ROI.GenEmptyObj();
-        }
-        /// <summary>
-        /// NG选项
-        /// </summary>
-        public string NGText;
-        /// <summary>
-        /// 复判缺陷
-        /// </summary>
-        public string RestText = "";
-
-        public List<string> RestStrings = new List<string>();
-
-        public bool OK;
-
-        public bool Done;
-
-    }
-    /// <summary>
-    /// 单个元件
-    /// </summary>
-    public class OneRObj
-    {
-        public HObject ROI;
-
-        public HObject NGROI = new HObject();
-        public OneRObj()
-        {
-            NGROI.GenEmptyObj();
-        }
-        public DataMinMax dataMinMax = new DataMinMax();
-
-        public List<OneOdata> oneOdatas = new List<OneOdata>();
-
-        public bool OK;
-
-        public bool Done;
-
-        public string ComponentID { get; set; } = "";
-        /// <summary>
-        /// NG选项
-        /// </summary>
-        public string NGText;
-        /// <summary>
-        /// 复判缺陷
-        /// </summary>
-        public string RestText = "";
-
-        public List<string> RestStrings = new List<string>();
-
-        public void RAddOK()
-        {
-            if (ROI!=null)
-            {
-                ROI.GenEmptyObj();
-            }
-            if (NGROI != null)
-            {
-                NGROI.GenEmptyObj();
-            }
-            RestText = "OK";
-            OK = true;
-            Done = true;
-        }
-        public void RAddNG()
-        {
-            ROI.GenEmptyObj();
-            Done = true;
-            OK = false;
-        }
-
-
-    }
 }

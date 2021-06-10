@@ -255,7 +255,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                                     {
                                         halcon.AddMessageIamge(rowCent, columnCent, new HTuple(lengt).TupleString(".3") + "C", ColorResult.red);
                                         err++;
-                                        oneResultOBj.ADDRed(Name, NGText, ho_PinSort);
+                                        oneResultOBj.AddNGOBJ(Name, NGText, ho_PinSort, ho_PinSort);
                                     }
                                     else
                                     {
@@ -274,7 +274,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                                         ColMt.Append(lengt);
                                         if (lengt > ColumnMM + ToleranceMM || lengt < ColumnMM - ToleranceMM)
                                         {
-                                            oneResultOBj.ADDRed(Name, NGText, ho_PinSort);
+                                            oneResultOBj.AddNGOBJ(Name, NGText, ho_PinSort, ho_PinSort);
                                             halcon.AddMessageIamge(rowCent, columnCent, new HTuple(lengt).TupleString(".3") + "R", ColorResult.red);
                                             err++;
                                         }
@@ -415,8 +415,8 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     {
                         ColMt.Append(0);
                     }
-                    halcon.GetResultOBj().RowsData.Append(RowMt);
-                    halcon.GetResultOBj().ColumnsData.Append(ColMt);
+                    halcon.GetOneImageR().RowsData.Append(RowMt);
+                    halcon.GetOneImageR().ColumnsData.Append(ColMt);
                     if (ModeRow.Length > 0)
                     {
                         HOperatorSet.GenRectangle2(out hObjectTE, ModeRow, ModeColumn, 
@@ -569,7 +569,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 if (hObject.CountObj() != 0)
                 {
                     HOperatorSet.GenCircle(out HObject circle, row, column, radius * 2);
-                    oneResultOBj.ADDRed(this.Name,NGText,circle, hObject);
+                    oneResultOBj.AddNGOBJ(this.Name,NGText,circle, hObject);
                     //ADDRed(hObject);
                     return false;
                 }

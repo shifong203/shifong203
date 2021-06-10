@@ -8,7 +8,7 @@ namespace Vision2.vision.Cams
     {
 
         void OnCameraStatusChanged(string key);
-        void OnEnverIamge(string key, int runid, HObject iamge);
+        void OnEnverIamge(string key, int runid, OneResultOBj iamge);
         void OpenCam();
         void CloseCam();
         HObject GetImage();
@@ -18,7 +18,7 @@ namespace Vision2.vision.Cams
 
 
         void Straing(HalconRun halconRun);
-        event Action<string, HObject, int, bool> Swtr;
+        event Action<string, OneResultOBj, int, bool> Swtr;
 
         event Action<bool> LinkEnvet;
         //delegate void Sw(string key, HObject image, int runID, bool isSave = true);

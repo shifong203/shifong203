@@ -47,9 +47,11 @@
             this.遍历文件夹执行ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.导入XLDToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.生成二维码ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.模拟图像ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.测试图像ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.查看区域细节ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.填充或区域ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.清除序列ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripDropDownButton1 = new System.Windows.Forms.ToolStripDropDownButton();
             this.铺满ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -65,7 +67,7 @@
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.panel1 = new System.Windows.Forms.Panel();
             this.visionUserControl1 = new Vision2.vision.HalconRunFile.Controls.VisionUserControl();
-            this.清除序列ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.保存到产品文件夹ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip2.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -178,6 +180,7 @@
             // toolStripSplitButton1
             // 
             this.toolStripSplitButton1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.保存到产品文件夹ToolStripMenuItem,
             this.保存图片ToolStripMenuItem,
             this.截取屏幕ToolStripMenuItem,
             this.文件夹操作ToolStripMenuItem,
@@ -212,7 +215,8 @@
             this.删除文件ToolStripMenuItem,
             this.遍历文件夹执行ToolStripMenuItem,
             this.导入XLDToolStripMenuItem,
-            this.生成二维码ToolStripMenuItem});
+            this.生成二维码ToolStripMenuItem,
+            this.模拟图像ToolStripMenuItem});
             this.文件夹操作ToolStripMenuItem.Name = "文件夹操作ToolStripMenuItem";
             this.文件夹操作ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.文件夹操作ToolStripMenuItem.Text = "文件操作";
@@ -245,6 +249,13 @@
             this.生成二维码ToolStripMenuItem.Text = "生成二维码";
             this.生成二维码ToolStripMenuItem.Click += new System.EventHandler(this.生成二维码ToolStripMenuItem_Click);
             // 
+            // 模拟图像ToolStripMenuItem
+            // 
+            this.模拟图像ToolStripMenuItem.Name = "模拟图像ToolStripMenuItem";
+            this.模拟图像ToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            this.模拟图像ToolStripMenuItem.Text = "模拟图像";
+            this.模拟图像ToolStripMenuItem.Click += new System.EventHandler(this.模拟图像ToolStripMenuItem_Click);
+            // 
             // 测试图像ToolStripMenuItem
             // 
             this.测试图像ToolStripMenuItem.Name = "测试图像ToolStripMenuItem";
@@ -265,6 +276,13 @@
             this.填充或区域ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.填充或区域ToolStripMenuItem.Text = "填充";
             this.填充或区域ToolStripMenuItem.Click += new System.EventHandler(this.填充或区域ToolStripMenuItem_Click);
+            // 
+            // 清除序列ToolStripMenuItem
+            // 
+            this.清除序列ToolStripMenuItem.Name = "清除序列ToolStripMenuItem";
+            this.清除序列ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.清除序列ToolStripMenuItem.Text = "清除序列";
+            this.清除序列ToolStripMenuItem.Click += new System.EventHandler(this.清除序列ToolStripMenuItem_Click);
             // 
             // toolStripSeparator3
             // 
@@ -408,12 +426,12 @@
             this.visionUserControl1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.visionUserControl1_KeyDown);
             this.visionUserControl1.KeyUp += new System.Windows.Forms.KeyEventHandler(this.hWindowControl1_KeyUp);
             // 
-            // 清除序列ToolStripMenuItem
+            // 保存到产品文件夹ToolStripMenuItem
             // 
-            this.清除序列ToolStripMenuItem.Name = "清除序列ToolStripMenuItem";
-            this.清除序列ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.清除序列ToolStripMenuItem.Text = "清除序列";
-            this.清除序列ToolStripMenuItem.Click += new System.EventHandler(this.清除序列ToolStripMenuItem_Click);
+            this.保存到产品文件夹ToolStripMenuItem.Name = "保存到产品文件夹ToolStripMenuItem";
+            this.保存到产品文件夹ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.保存到产品文件夹ToolStripMenuItem.Text = "保存到产品文件夹";
+            this.保存到产品文件夹ToolStripMenuItem.Click += new System.EventHandler(this.保存到产品文件夹ToolStripMenuItem_Click);
             // 
             // Vision2UserControl
             // 
@@ -475,5 +493,7 @@
         private System.Windows.Forms.ToolStripButton toolStripButton4;
         private System.Windows.Forms.ToolStripMenuItem 填充或区域ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 清除序列ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 模拟图像ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 保存到产品文件夹ToolStripMenuItem;
     }
 }

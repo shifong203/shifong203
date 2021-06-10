@@ -211,7 +211,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         {
                             if (item.Value.Enabled)
                             {
-                                halcon.GetResultOBj().AddMeassge(item.Key + ":未测量到点");
+                                halcon.GetOneImageR().AddMeassge(item.Key + ":未测量到点");
                             }
                         }
                     }
@@ -233,14 +233,14 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                             rets++;
                         }
                     }
-                    halcon.GetResultOBj().AddMeassge(it + "." + "(" + datastr.TrimEnd(',') + ")");
+                    halcon.GetOneImageR().AddMeassge(it + "." + "(" + datastr.TrimEnd(',') + ")");
                     datastr = "";
                 }
                 //halcon.WriteData.Append(halcon["距离值1"]);
                 //halcon.WriteData.Append(halcon["距离值2"]);
                 halcon["NG数量"] = NG;
                 //halcon.SetDefault("0.5标准", 0.3);
-                halcon.GetResultOBj().AddMeassge(sd);
+                halcon.GetOneImageR().AddMeassge(sd);
                 halcon.SetDefault("0.4数量", 2);
                 if (!halcon["0.4数量"].TupleGreater(NG))
                 {
@@ -283,7 +283,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             NGRoi.GenEmptyObj();
             foreach (var item in this.Dic_Measure.Keys_Measure)
             {
-                NGRoi = NGRoi.ConcatObj(item.Value.MeasureObj(halcon,halcon.GetdataVale())._HObject);
+                NGRoi = NGRoi.ConcatObj(item.Value.MeasureObj(halcon,halcon.GetOneImageR())._HObject);
             }
             halcon.AddOBJ(NGRoi);
         }

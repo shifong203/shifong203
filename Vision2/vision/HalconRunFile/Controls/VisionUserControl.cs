@@ -89,7 +89,7 @@ namespace Vision2.vision.HalconRunFile.Controls
             {
 
             }
-            halcon.GetResultOBj().IsMoveBool = false;
+            halcon.GetOneImageR().IsMoveBool = false;
             meuseBool = false;
             halcon.ShowObj();
         }
@@ -149,7 +149,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 }
                 if (meuseBool)
                 {
-                    halcon.GetResultOBj().IsMoveBool = true;
+                    halcon.GetOneImageR().IsMoveBool = true;
                     double motionX, motionY;
                     motionX = ((e.X - stratX));
                     motionY = ((e.Y - stratY));

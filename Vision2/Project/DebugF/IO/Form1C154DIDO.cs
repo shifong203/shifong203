@@ -39,7 +39,7 @@ namespace Vision2.Project.DebugF.IO
                 HWindID2.Initialize(hWindowControl1);
                 HWindID2.HeigthImage = (int)numericUpDown3.Value;
                 HWindID2.WidthImage = (int)numericUpDown4.Value;
-                HWindID2.HalconResult = new vision.HalconRunFile.RunProgramFile.HalconResult();
+                HWindID2.OneResIamge = new OneResultOBj();
                 //HWindID2.SetImaage
                 listBox1.ContextMenuStrip = contextMenuStrip1;
                 this.didoUserControl1.setDODI(DebugCompiler.GetDoDi());
@@ -468,18 +468,18 @@ namespace Vision2.Project.DebugF.IO
             {
                 HWindID2.HeigthImage = (int)numericUpDown3.Value;
                 HWindID2.WidthImage = (int)numericUpDown4.Value;
-                HWindID2.HalconResult = new vision.HalconRunFile.RunProgramFile.HalconResult();
-                HWindID2.HalconResult.ClearAllObj();
+                HWindID2.OneResIamge = new OneResultOBj();
+                HWindID2.OneResIamge.ClearAllObj();
                 //ErosSocket.DebugPLC.PointFile point = DebugCompiler.GetThis().DDAxis.ToPointFile(comboBox2.SelectedItem.ToString());
                 //HWindID2.SetImaage(vision.Vision.GetRunNameVision("下相机").Image());
 
                 vision.Vision.Gen_arrow_contour_xld(out HalconDotNet.HObject hObject, 0, 0, 0, 100);
-                HWindID2.HalconResult.AddObj(hObject, ColorResult.green);
-                HWindID2.HalconResult.AddImageMassage(10, 110, "x");
+                HWindID2.OneResIamge.AddObj(hObject, ColorResult.green);
+                HWindID2.OneResIamge.AddImageMassage(10, 110, "x");
                 vision.Vision.Gen_arrow_contour_xld(out HalconDotNet.HObject hObject22, 0, 0, 100, 0);
-                HWindID2.HalconResult.AddImageMassage(100, 10, "y");
+                HWindID2.OneResIamge.AddImageMassage(100, 10, "y");
 
-                HWindID2.HalconResult.AddObj(hObject22, ColorResult.yellow);
+                HWindID2.OneResIamge.AddObj(hObject22, ColorResult.yellow);
                 MatrixC.Calculate(HWindID2);
                 HWindID2.ShowImage();
             }

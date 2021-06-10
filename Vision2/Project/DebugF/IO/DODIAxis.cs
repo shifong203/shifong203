@@ -1257,7 +1257,10 @@ namespace Vision2.Project.DebugF.IO
             Axis axisU = null;
             try
             {
-
+                if (RunCodeStr.IsSimulate)
+                {
+                    return true;
+                }
                 if (axisGrot == null || !axisGrot.ContainsKey(groupName))
                 {
                     throw new Exception(groupName + "轴组不存在！");
@@ -1270,6 +1273,7 @@ namespace Vision2.Project.DebugF.IO
                 {
                     axisU = GetAxisGrotNameEx(groupName, EnumAxisType.Udd);
                 }
+              
                 if ((axisU != null && !axisU.IsHome) && (axisZ != null && !axisZ.IsHome) && !axisX.IsHome && !axisY.IsHome)
                 {
                     ErosProjcetDLL.Project.AlarmListBoxt.AddAlarmText(new ErosProjcetDLL.Project.AlarmText.alarmStruct() { Name = groupName, Text = "未初始化" });
@@ -1824,6 +1828,11 @@ namespace Vision2.Project.DebugF.IO
                 DebugCompiler.GetThis().DDAxis.AxisGrot.Keys.CopyTo(liast, 0);
                 return new List<string>(liast);
             }
+        }
+        public string GetPointStr()
+        {
+            return  "轴组"+ AxisGrabName + ",名称" + Name + ",ID" + ID +",轨迹"+ isMove .ToString()+ ",X:" + X + ",Y" + Y + ",Z" + Z + ",U" + U+";";
+
         }
     }
 
@@ -2419,10 +2428,15 @@ namespace Vision2.Project.DebugF.IO
                 {
                     UResult = Motion.mAcm_SetU32Property(m_Axishand, (uint)PropertyID.CFG_AxSwMelEnable, 0);
                     UResult = Motion.mAcm_SetU32Property(m_Axishand, (uint)PropertyID.CFG_AxSwPelEnable, 0);
-                    UResult = Motion.mAcm_SetF64Property(m_Axishand, (uint)PropertyID.PAR_AxHomeVelLow, PAR_AxVelLow);
-                    UResult = Motion.mAcm_SetF64Property(m_Axishand, (uint)PropertyID.PAR_AxHomeVelHigh, PAR_AxVelHigh);
-                    UResult = Motion.mAcm_SetF64Property(m_Axishand, (uint)PropertyID.PAR_AxHomeAcc, PAR_AxAcc);
-                    UResult = Motion.mAcm_SetF64Property(m_Axishand, (uint)PropertyID.PAR_AxHomeDec, PAR_AxDec);
+                    UResult = Motion.mAcm_SetF64Property(m_Axishand, (uint)PropertyID.PAR_AxVelLow, PAR_AxVelLow);
+                    UResult = Motion.mAcm_SetF64Property(m_Axishand, (uint)PropertyID.PAR_AxVelHigh, PAR_AxVelHigh);
+                    UResult = Motion.mAcm_SetF64Property(m_Axishand, (uint)PropertyID.PAR_AxAcc, PAR_AxAcc);
+                    UResult = Motion.mAcm_SetF64Property(m_Axishand, (uint)PropertyID.PAR_AxDec, PAR_AxDec);
+
+                    //UResult = Motion.mAcm_SetF64Property(m_Axishand, (uint)PropertyID.PAR_AxHomeVelLow, PAR_AxVelLow);
+                    //UResult = Motion.mAcm_SetF64Property(m_Axishand, (uint)PropertyID.PAR_AxHomeVelHigh, PAR_AxVelHigh);
+                    //UResult = Motion.mAcm_SetF64Property(m_Axishand, (uint)PropertyID.PAR_AxHomeAcc, PAR_AxAcc);
+                    //UResult = Motion.mAcm_SetF64Property(m_Axishand, (uint)PropertyID.PAR_AxHomeDec, PAR_AxDec);
                     Thread.Sleep(200);
                     UResult = Motion.mAcm_AxHome(m_Axishand, HomeTepy, 1);
                     if (UResult != 0)
@@ -2481,7 +2495,7 @@ namespace Vision2.Project.DebugF.IO
                                 if (det == 1)
                                 {
                                     Thread.Sleep(1000);
-                                    //Motion.mAcm_AxSetCmdPosition(m_Axishand, 0);
+                                    Motion.mAcm_AxSetCmdPosition(m_Axishand, 0);
                                     //Motion.mAcm_AxSetActualPosition(m_Axishand, 0);
                                     UResult = Motion.mAcm_SetU32Property(m_Axishand, (uint)PropertyID.CFG_AxSwMelEnable, 1);
                                     UResult = Motion.mAcm_SetU32Property(m_Axishand, (uint)PropertyID.CFG_AxSwPelEnable, 1);

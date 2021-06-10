@@ -219,7 +219,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     {
                         HOperatorSet.SmallestRectangle1(Xld, out HTuple ROW1, out HTuple column1, out HTuple row2, out HTuple column2);
                         hWindID.SetPerpetualPart(ROW1, column1, row2, column2);
-                        hWindID.HalconResult.AddObj(hObject3, ColorResult.blue);
+                        hWindID.OneResIamge.AddObj(hObject3, ColorResult.blue);
                 
                 
                     }
@@ -259,12 +259,12 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                             HOperatorSet.HeightWidthRatio(hObject1, out HTuple height, out HTuple width, out HTuple cir);
                             HOperatorSet.SmallestCircle(hObject1, out HTuple row, out HTuple column, out HTuple radius);
                             HOperatorSet.AreaCenter(hObject1, out HTuple area, out  row, out  column);
-                            hWindID.HalconResult.AddImageMassage(row, column, "面积" + area.TupleString("0.3f") + "长" + ra.TupleString("0.3f") + "rb" + rb.TupleString("0.3f") + "高" +
+                            hWindID.OneResIamge.AddImageMassage(row, column, "面积" + area.TupleString("0.3f") + "长" + ra.TupleString("0.3f") + "rb" + rb.TupleString("0.3f") + "高" +
                             height.TupleString("0.3f") + "宽" + width.TupleString("0.3f") + "半径" + radius.TupleString("0.3f"));
-                            hWindID.HalconResult.AddImageMassage(row + 40, column, "MM:面积" + Math.Sqrt(halcon.GetCaliConstMM(area)).ToString("0.000") + "长" + halcon.GetCaliConstMM(ra).TupleString("0.3f")
+                            hWindID.OneResIamge.AddImageMassage(row + 40, column, "MM:面积" + Math.Sqrt(halcon.GetCaliConstMM(area)).ToString("0.000") + "长" + halcon.GetCaliConstMM(ra).TupleString("0.3f")
                                 + "rb" + halcon.GetCaliConstMM(rb).TupleString("0.3f") + "高" + halcon.GetCaliConstMM(height).TupleString("0.3f") + "宽" + halcon.GetCaliConstMM(width).TupleString("0.3f") +
                                 "半径" + halcon.GetCaliConstMM(radius).TupleString("0.3f"));
-                            hWindID.HalconResult.AddObj(hObject1,ColorResult.red);
+                            hWindID.OneResIamge.AddObj(hObject1,ColorResult.red);
                             hWindID.ShowObj();
                         }
                         HOperatorSet.Union1(hObject1, out hObject1);

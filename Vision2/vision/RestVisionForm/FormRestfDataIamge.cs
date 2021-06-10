@@ -220,9 +220,9 @@ namespace Vision2.vision
                 HWind.SetImaage(ImageNG);
                 foreach (var item in data.Key1Xld)
                 {
-                    HWind.HalconResult.ClearAllObj();
-                    HWind.HalconResult.AddMeassge(data.TrayID);
-                    HWind.HalconResult.AddMeassge(data.PaleSN);
+                    HWind.OneResIamge.ClearAllObj();
+                    HWind.OneResIamge.AddMeassge(data.TrayID);
+                    HWind.OneResIamge.AddMeassge(data.PaleSN);
                     numbt++;
                     HOperatorSet.SmallestRectangle1(item.Value.XLd, out HTuple row1, out HTuple col1, out HTuple row2, out HTuple col2);
                     OKFR = NGRF = false;
@@ -240,19 +240,19 @@ namespace Vision2.vision
                     {
                         if (item.Key!=item2.Key)
                         {
-                            HWind.HalconResult.AddObj(item2.Value.XLd,ColorResult.green);
+                            HWind.OneResIamge.AddObj(item2.Value.XLd,ColorResult.green);
                         }
                     }
                     hWindowControl2.HalconWindow.ClearWindow();
                     hWindowControl3.HalconWindow.ClearWindow();
-                    HWind.HalconResult.AddObj(item.Value.XLd, ColorResult.yellow);
+                    HWind.OneResIamge.AddObj(item.Value.XLd, ColorResult.yellow);
                     ReseDone = true;
                     HOperatorSet.AreaCenter(item.Value.XLd, out HTuple area, out HTuple row, out HTuple col);
                     HOperatorSet.GenContourPolygonXld(out HObject hObject, new HTuple(row, row), new HTuple(new HTuple(0), col1));
                     HOperatorSet.GenContourPolygonXld(out HObject hObject2, new HTuple(new HTuple(0), row1), new HTuple(col, col));
                     HOperatorSet.GenContourPolygonXld(out HObject hObject3, new HTuple(new HTuple(row), row), new HTuple(col2, width));
                     HOperatorSet.GenContourPolygonXld(out HObject hObject4, new HTuple(new HTuple(row2), height), new HTuple(col, col));
-                    HWind.HalconResult.SetCross(hObject.ConcatObj(hObject2).ConcatObj(hObject3).ConcatObj(hObject4));
+                    HWind.OneResIamge.SetCross(hObject.ConcatObj(hObject2).ConcatObj(hObject3).ConcatObj(hObject4));
                     HWind.ShowObj();
                     while (ReseDone)
                     {
@@ -316,7 +316,7 @@ namespace Vision2.vision
                 {
                     tsLst.Dequeue();
                 }
-                HWind.HalconResult.ClearAllObj();
+                HWind.OneResIamge.ClearAllObj();
                 HWind.ShowObj();
                 hWindowControl2.HalconWindow.ClearWindow();
                 hWindowControl3.HalconWindow.ClearWindow();
@@ -450,7 +450,7 @@ namespace Vision2.vision
                         {
                             HOperatorSet.ReadImage(out HObject hObject, keyValuePairs[listBox2.SelectedItem.ToString()].prest1.PCNamePath + keyValuePairs[listBox2.SelectedItem.ToString()].prest1.ImageModePath);
                             HWind.SetImaage(hObject);
-                            HWind.HalconResult.AddMeassge(watch.ElapsedMilliseconds);
+                            HWind.OneResIamge.AddMeassge(watch.ElapsedMilliseconds);
                             HWind.ShowObj();
                         }
                     }

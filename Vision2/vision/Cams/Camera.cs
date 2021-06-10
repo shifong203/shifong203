@@ -35,7 +35,7 @@ namespace Vision2.vision.Cams
 
         public CameraStatusChangedHandle CameraStatusChanged;
 
-        public event Action<string, HObject, int, bool> Swtr;
+        public event Action<string, OneResultOBj, int, bool> Swtr;
 
         public event Action<bool> LinkEnvet;
 
@@ -241,7 +241,7 @@ namespace Vision2.vision.Cams
             return null;
         }
 
-        public void OnEnverIamge(string key, int runid, HObject iamge)
+        public void OnEnverIamge(string key, int runid, OneResultOBj iamge)
         {
             this.Swtr.Invoke(key, iamge, runid, true);
         }

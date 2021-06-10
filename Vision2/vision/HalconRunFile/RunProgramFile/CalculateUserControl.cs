@@ -40,7 +40,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 return;
             }
             Halcon.HobjClear();
-            Calculate.Run(Halcon, Halcon.GetdataVale(), runid);
+            Calculate.Run(Halcon, Halcon.GetOneImageR(), runid);
             //Halcon.ShowImage();
             Halcon.ShowObj();
         }

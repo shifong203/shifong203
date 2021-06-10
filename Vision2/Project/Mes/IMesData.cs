@@ -163,8 +163,8 @@ namespace Vision2.Project.Mes
     //  }
 //}
         /// <summary>
-/// 单个产品信息
-/// </summary>
+        /// 单个产品信息
+        /// </summary>
         public class DataVale
         {
             /// <summary>
@@ -180,20 +180,7 @@ namespace Vision2.Project.Mes
             /// 托盘位号
             /// </summary>
             public int TrayLocation { get; set; }
-            /////// <summary>
-            /////// 附加结果
-            /////// </summary>
-            //public List<MaxMinValue> Data1 { get; set; } = new List<MaxMinValue>();
 
-            public HalconResult GetHalconResult(HalconResult halcon= null)
-            {
-                if (halcon != null)
-                {
-                    halconResult = halcon;
-                }
-                return halconResult;
-            }
-            HalconResult halconResult = new HalconResult();
             public List<double> Data
             {
                 get;
@@ -206,7 +193,21 @@ namespace Vision2.Project.Mes
             /// <summary>
             /// 完成
             /// </summary>
-            public bool Done { get; set; }
+            public bool Done {
+                get      {
+                     foreach (var item in ListCamsData)
+                {
+                    if (!item.Value.Done) return false;
+                }
+                     return true;     }
+                set        {
+                   foreach (var item in ListCamsData)
+                   {
+                    item.Value.Done = value;
+                    }     } }
+
+            public bool Null;
+
             /// <summary>
             /// 结果
             /// </summary>
@@ -214,30 +215,23 @@ namespace Vision2.Project.Mes
             {
                 get
                 {
-                    foreach (var item in ResuOBj)
+                    foreach (var item in ListCamsData)
                     {
-                        if (!item.OK) return false;
+                        if (!item.Value.OK) return false;
                     }
-               
-
-                
                     return true;
                 }
                 set
-                {
-                    if (value)
-                    {
-                        foreach (var item in ResuOBj)
+                {   if (value)
+                    {         
+                        foreach (var item in ListCamsData)
                         {
-                            item.OK = true;
-                        }
+                            item.Value.OK = true;
+                        }        }
+                    autoOk = value;     
                     }
-                    autoOk = value;
-                }
             }
-
             bool autoOk;
-
             /// <summary>
             /// NG数量
             /// </summary>
@@ -251,105 +245,222 @@ namespace Vision2.Project.Mes
                 get
                 {
                     int errNumber = 0;
-                    for (int i = 0; i < ResuOBj.Count; i++)
+                    foreach (var item in ListCamsData)
                     {
-                        for (int i2 = 0; i2 < ResuOBj[i].NGObj.Count; i2++)
-                        {
-                            if (!ResuOBj[i].NGObj[i2].OK) errNumber++;
-                        }
+                        errNumber = +item.Value.ErrJudNumber;
                     }
                     return errNumber;
                 }
             }
+           public Dictionary<string, OneCamData> ListCamsData = new Dictionary<string, OneCamData>();
 
-            /// <summary>
-            /// 
-            /// </summary>
-            public List<string> ListImage = new List<string>();
 
-            public List<HObject> ImageS = new List<HObject>();
-
-            /// <summary>
-            /// 拍照数据集合
-            /// </summary>
-            public List<OneResultOBj> ResuOBj = new List<OneResultOBj>();
-
-            public List<OneRObj> NGObj 
+        public OneCompOBJs GetNGCompData()
+        {
+            string data ="";
+            foreach (var item in ListCamsData)
             {
-                get 
+                data = item.Key;
+                if (!item.Value.Done)
                 {
-                    List<OneRObj> oneRs = new List<OneRObj>();
-                    for (int i = 0; i < ResuOBj.Count; i++)
-                    {
-           
-                           for (int i2 = 0; i2 < ResuOBj[i].NGObj.Count; i2++)
-                            { 
-                                  oneRs.Add(ResuOBj[i].NGObj[i2]);
-                                } } 
-                   return oneRs;
+                    return item.Value.NGObj;
                 }
             }
-            public HObject ImagePlus;
-        /////// <summary>
-        /////// 附加结果
-        /////// </summary>
-        public Dictionary<string, DataMinMax> DataMin_Max { get; set; } = new Dictionary<string, DataMinMax>();
-            public void AddOneComponent(DataMinMax dataMinMax)
+            return ListCamsData[data].NGObj;
+        }
+        public HObject GetNGImage()
+        {
+            foreach (var item in ListCamsData)
             {
-                if (!DataMin_Max.ContainsKey(dataMinMax.ComponentName))
+                if (!item.Value.Done)
                 {
-                    DataMin_Max.Add(dataMinMax.ComponentName, dataMinMax);
+                    return item.Value.ImagePlus;
                 }
-                else
+            }
+            foreach (var item in ListCamsData)
+            {
+                return item.Value.ImagePlus;
+            }
+            return null;
+        }
+        public string GetNGCamName()
+        {
+            foreach (var item in ListCamsData)
+            {
+                if (!item.Value.Done)
                 {
-
+                    return item.Key;
                 }
- 
+            }
+            return "";
+        }
+        public void AddCamsData(string runName,int runID,OneCamData oneCam)
+        {
+            if (!ListCamsData.ContainsKey(runName))
+            {
+                ListCamsData.Add(runName, oneCam);
+            }
+            else
+            {
+                ListCamsData[runName] = oneCam;
+            }
+        }
+        public void AddCamsData(string runName,HObject imagePalus)
+        {
+            if (!ListCamsData.ContainsKey(runName))
+            {
+                //ListCamsData.Add(runName, oneCam);
+            }
+            else
+            {
+                ListCamsData[runName].ImagePlus = imagePalus;
             }
         }
 
+        //List<OneCamData> ListCamsData = new List<OneCamData>();
         ///// <summary>
-        ///// 点位名称
+        ///// 拍照数据集合
         ///// </summary>
-        //public class MaxMinValue
-        //{
-        //    /// <summary>
-        //    /// 
-        //    /// </summary>
-        //    public double Value;
-        //    /// <summary>
-        //    /// 
-        //    /// </summary>
-        //    public double MaxValue;
-        //    /// <summary>
-        //    /// 
-        //    /// </summary>
-        //    public double MinValue;
-        //    /// <summary>
-        //    /// 复判结果
-        //    /// </summary>
-        //    public bool OK;
-        //    /// <summary>
-        //    /// OK
-        //    /// </summary>
-        //    public bool AutoOK { 
-        //    get {
-        //        if (MinValue > Value || MaxValue < Value)
-        //        {
-        //            return false;
-        //        }
-        //        return true;
-        //       }    }
-        //    /// <summary>
-        //    /// 名称
-        //    /// </summary>
-        //    public string Name;
-        //    /// <summary>
-        //    /// 位置号
-        //    /// </summary>
-        //    public string PositionName;
+        //public List<OneResultOBj> ResuOBj = new List<OneResultOBj>();
 
-        //}
+        //     OneContOBJs DicNGObj = new OneContOBJs();
+        //    //public Dictionary<string, OneRObj> DicNGObj = new Dictionary<string, OneRObj>();
+
+        //    public OneContOBJs NGObj 
+        //    {
+        //        get 
+        //        {
+        //             return DicNGObj;
+        //        }
+        //    }
+        }
+    /// <summary>
+    /// 单个拍摄面
+    /// </summary>
+    public class OneCamData
+    {
+        /// <summary>
+        /// 视觉程序名称
+        /// </summary>
+        public string RunVisionName;
+         /// <summary>
+         /// 单面集合是否OK
+         /// </summary>
+        public bool OK 
+        {
+            get {
+
+                foreach (var item in DicNGObj.DicOnes)
+                {
+                    if (!item.Value.OK)
+                    {
+                        return false;
+                    }
+                }
+                return true; 
+            
+            }
+            set {
+                foreach (var item in DicNGObj.DicOnes)
+                {
+                    item.Value.OK = value;
+                }
+            }
+        }
+        /// <summary>
+        /// 单面集合是否完成
+        /// </summary>
+        public bool Done 
+        {
+            get {
+                foreach (var item in NGObj.DicOnes)
+                {
+                    if (!item.Value.Done)
+                    {
+                        return false;
+                    }
+                }
+                return true;
+            }
+
+            set { }
+        }
+        /// <summary>
+        /// 软件判断是否OK
+        /// </summary>
+        public bool AutoOK
+        { get {
+                foreach (var item in NGObj.DicOnes)
+                {
+                    return false;
+                }
+                return true;
+            }
+        }
+        /// <summary>
+        /// 产品托盘穴位号
+        /// </summary>
+        public int TrayLocation;
+        /// <summary>
+        /// 产品SN
+        /// </summary>
+        public string PanelID;
+
+        /// <summary>
+        /// 误判数量
+        /// </summary>
+        public int ErrJudNumber
+        {
+            get {
+                return DicNGObj.DicOnes.Count;
+            }
+        }
+
+        /// <summary>
+        /// NG数量
+        /// </summary>
+        public int NGNumber
+        {
+            get
+            {
+                return DicNGObj.DicOnes.Count;
+            }
+        }
+        /// <summary>
+        /// 整合图片
+        /// </summary>
+        public HObject ImagePlus;
+
+        /// <summary>
+        /// 拍照数据集合
+        /// </summary>
+        public List<OneResultOBj> ResuOBj = new List<OneResultOBj>();
+        /// <summary>
+        /// NG元件
+        /// </summary>
+        OneCompOBJs DicNGObj = new OneCompOBJs();
+         /// <summary>
+         /// NG元件集合
+         /// </summary>
+        public OneCompOBJs NGObj
+        {
+            get
+            {
+                return DicNGObj;
+            }
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="oneContOBJs"></param>
+        public void SetOneContOBJ(OneCompOBJs oneContOBJs)
+        {
+            DicNGObj = oneContOBJs;
+        }
+
+
+    }
+
 
 
 }

@@ -35,6 +35,7 @@
             this.读取注册图像ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.注册图像ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.删除程序ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.打开注册文件夹ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dataGridViewHalcon = new System.Windows.Forms.DataGridView();
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -168,37 +169,45 @@
             this.打开程序ToolStripMenuItem,
             this.读取注册图像ToolStripMenuItem,
             this.注册图像ToolStripMenuItem,
-            this.删除程序ToolStripMenuItem});
+            this.删除程序ToolStripMenuItem,
+            this.打开注册文件夹ToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(149, 92);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(181, 136);
             // 
             // 打开程序ToolStripMenuItem
             // 
             this.打开程序ToolStripMenuItem.Name = "打开程序ToolStripMenuItem";
-            this.打开程序ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.打开程序ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.打开程序ToolStripMenuItem.Text = "添加程序";
             this.打开程序ToolStripMenuItem.Click += new System.EventHandler(this.打开程序ToolStripMenuItem_Click);
             // 
             // 读取注册图像ToolStripMenuItem
             // 
             this.读取注册图像ToolStripMenuItem.Name = "读取注册图像ToolStripMenuItem";
-            this.读取注册图像ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.读取注册图像ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.读取注册图像ToolStripMenuItem.Text = "读取注册图像";
             this.读取注册图像ToolStripMenuItem.Click += new System.EventHandler(this.读取注册图像ToolStripMenuItem_Click);
             // 
             // 注册图像ToolStripMenuItem
             // 
             this.注册图像ToolStripMenuItem.Name = "注册图像ToolStripMenuItem";
-            this.注册图像ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.注册图像ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.注册图像ToolStripMenuItem.Text = "注册图像";
             this.注册图像ToolStripMenuItem.Click += new System.EventHandler(this.注册图像ToolStripMenuItem_Click);
             // 
             // 删除程序ToolStripMenuItem
             // 
             this.删除程序ToolStripMenuItem.Name = "删除程序ToolStripMenuItem";
-            this.删除程序ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.删除程序ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.删除程序ToolStripMenuItem.Text = "删除程序";
             this.删除程序ToolStripMenuItem.Click += new System.EventHandler(this.删除程序ToolStripMenuItem_Click);
+            // 
+            // 打开注册文件夹ToolStripMenuItem
+            // 
+            this.打开注册文件夹ToolStripMenuItem.Name = "打开注册文件夹ToolStripMenuItem";
+            this.打开注册文件夹ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.打开注册文件夹ToolStripMenuItem.Text = "打开注册文件夹";
+            this.打开注册文件夹ToolStripMenuItem.Click += new System.EventHandler(this.打开注册文件夹ToolStripMenuItem_Click);
             // 
             // dataGridViewHalcon
             // 
@@ -1350,5 +1359,6 @@
         private System.Windows.Forms.DataGridViewButtonColumn dataGridViewButtonColumn1;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn4;
         private System.Windows.Forms.DataGridViewButtonColumn Column3;
+        private System.Windows.Forms.ToolStripMenuItem 打开注册文件夹ToolStripMenuItem;
     }
 }

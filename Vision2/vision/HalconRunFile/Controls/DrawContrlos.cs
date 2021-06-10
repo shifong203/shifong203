@@ -59,7 +59,7 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             try
             {
-                if (MessageBox.Show("是否清除绘制区", "确定清除绘制区", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                if (MessageBox.Show("是否清除掩模区", "确定清除掩模区", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
                     RunProgram.DrawObj = new HObject();
                     RunProgram.DrawObj.GenEmptyObj();
@@ -306,7 +306,7 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             try
             {
-                HalconRun.ShowVision(RunProgram.Name, HalconRun.GetdataVale());
+                HalconRun.ShowVision(RunProgram.Name, HalconRun.GetOneImageR());
 
             }
             catch (Exception ex)
@@ -323,13 +323,13 @@ namespace Vision2.vision.HalconRunFile.Controls
                 InterfaceVisionControl control = RunProgram .GetPInt() as InterfaceVisionControl;
                 if (control!=null)
                 {
-                    RunProgram.Run(HalconRun, HalconRun.GetdataVale(), 0);
+                    RunProgram.Run(HalconRun, HalconRun.GetOneImageR(), 0);
                     HalconRun.ShowObj();
                     //control.RunHProgram(HalconRun, 0, RunProgram.Name);
                 }
                 else
                 {
-                  RunProgram.GetPThis().RunHProgram(HalconRun, HalconRun.GetdataVale(), 0,RunProgram.Name);
+                  RunProgram.GetPThis().RunHProgram(HalconRun, HalconRun.GetOneImageR(), 0,RunProgram.Name);
                 }
 
                 //HalconRun.UPStart();

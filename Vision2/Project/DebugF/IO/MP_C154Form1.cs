@@ -91,7 +91,7 @@ namespace Vision2.Project.DebugF.IO
                 HWindID2.Initialize(hWindowControl1);
                 HWindID2.HeigthImage = (int)numericUpDown3.Value;
                 HWindID2.WidthImage = (int)numericUpDown4.Value;
-                HWindID2.HalconResult = new vision.HalconRunFile.RunProgramFile.HalconResult();
+                HWindID2.OneResIamge = new OneResultOBj();
 
                 listBox6.Items.Clear();
                 for (int it = 0; it < DebugCompiler.GetThis().ListMatrix.Count; it++)
@@ -498,8 +498,8 @@ namespace Vision2.Project.DebugF.IO
                             HalconDotNet.HOperatorSet.GenCircle(out HalconDotNet.HObject hObject1, point.Y, point.X, 10);
                             HalconDotNet.HOperatorSet.GenCrossContourXld(out HalconDotNet.HObject hObjectxs, point.Y, point.X, 10, 0);
 
-                            HWindID2.HalconResult.AddObj(hObject1.ConcatObj(hObjectxs), ColorResult.yellow);
-                            HWindID2.HalconResult.AddImageMassage(point.Y, point.X, "Mk1",ColorResult.green);
+                            HWindID2.OneResIamge.AddObj(hObject1.ConcatObj(hObjectxs), ColorResult.yellow);
+                            HWindID2.OneResIamge.AddImageMassage(point.Y, point.X, "Mk1",ColorResult.green);
                         }
                     }
                     catch (Exception ex)
@@ -539,8 +539,8 @@ namespace Vision2.Project.DebugF.IO
                         {
                             HalconDotNet.HOperatorSet.GenCircle(out HalconDotNet.HObject hObject1, point.Y, point.X, 10);
                             HalconDotNet.HOperatorSet.GenCrossContourXld(out HalconDotNet.HObject hObjectxs, point.Y, point.X, 10, 0);
-                            HWindID2.HalconResult.AddObj(hObject1.ConcatObj(hObjectxs), ColorResult.yellow);
-                            HWindID2.HalconResult.AddImageMassage(point.Y, point.X, MatrixC.PointNameEnd, ColorResult.green);
+                            HWindID2.OneResIamge.AddObj(hObject1.ConcatObj(hObjectxs), ColorResult.yellow);
+                            HWindID2.OneResIamge.AddImageMassage(point.Y, point.X, MatrixC.PointNameEnd, ColorResult.green);
                         }
 
                     }
@@ -807,9 +807,9 @@ namespace Vision2.Project.DebugF.IO
 
                     if (hObject.CountObj() != 0)
                     {
-                        HWindNt.HalconResult.AddObj(hObject);
+                        HWindNt.OneResIamge.AddObj(hObject);
                         HOperatorSet.AreaCenter(hObject, out HTuple area, out HTuple rows, out HTuple clos);
-                        HWindNt.HalconResult.AddImageMassage(rows, clos, listBox2.SelectedItem.ToString());
+                        HWindNt.OneResIamge.AddImageMassage(rows, clos, listBox2.SelectedItem.ToString());
                     }
 
                 }
@@ -872,9 +872,9 @@ namespace Vision2.Project.DebugF.IO
 
                     HalconDotNet.HOperatorSet.GenRectangle1(out HalconDotNet.HObject hObject, rows, cols, row2, cols2);
                     productEX.Key_Navigation_Picture[listBox3.SelectedItem.ToString()].KeyRoi[listBox2.SelectedItem.ToString()] = hObject;
-                    HWindNt.HalconResult.AddObj(hObject);
+                    HWindNt.OneResIamge.AddObj(hObject);
                     HalconDotNet.HOperatorSet.AreaCenter(hObject, out HalconDotNet.HTuple area, out rows, out HalconDotNet.HTuple clos);
-                    HWindNt.HalconResult.AddImageMassage(rows, clos, listBox2.SelectedItem.ToString());
+                    HWindNt.OneResIamge.AddImageMassage(rows, clos, listBox2.SelectedItem.ToString());
                     HWindNt.ShowImage();
                 }
                 else
@@ -1007,8 +1007,8 @@ namespace Vision2.Project.DebugF.IO
                     if (item.Value.IsInitialized())
                     {
                         HOperatorSet.AreaCenter(item.Value, out HalconDotNet.HTuple area, out HalconDotNet.HTuple rows, out HalconDotNet.HTuple clos);
-                        HWindNt.HalconResult.AddImageMassage(rows, clos, item.Key);
-                        HWindNt.HalconResult.AddObj(item.Value);
+                        HWindNt.OneResIamge.AddImageMassage(rows, clos, item.Key);
+                        HWindNt.OneResIamge.AddObj(item.Value);
                     }
                 }
                 HWindNt.ShowImage();

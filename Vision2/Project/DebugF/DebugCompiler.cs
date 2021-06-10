@@ -1036,9 +1036,9 @@ namespace Vision2.Project.DebugF
                 ErosSocket.DebugPLC.Robot.TrayRobot tray = JsonConvert.DeserializeObject<ErosSocket.DebugPLC.Robot.TrayRobot>(d.Remove(0, 4));
                 if (tray != null)
                 {
-                    DebugF.IO.TrayDataUserControl.SetStaticTray(tray);
+                    DebugF.IO.TrayDataUserControl.SetStaticTray(tray );
                     listTray.Add(tray);
-                    SimulateTrayMesForm.ShowMesabe("存在NG请复判!", tray);
+                    SimulateTrayMesForm.ShowMesabe("存在NG请复判!", tray.GetTrayData());
                     listTray.Remove(tray);
                 }
             }
@@ -1094,7 +1094,7 @@ namespace Vision2.Project.DebugF
                         TrayData.SetValue(liastStr);
                     }
                 }
-                TrayDataUserControl.GetTray().SetNumberValue(RecipeCompiler.Instance.Data.ListDatV);
+                TrayDataUserControl.GetTray().GetTrayData().SetNumberValue(RecipeCompiler.Instance.Data.ListDatV);
             }
             catch (Exception ex)
             {

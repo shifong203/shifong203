@@ -27,8 +27,8 @@ namespace Vision2.Project
         {
 
         }
-        ErosSocket.DebugPLC.Robot.TrayRobot trayRobot1;
-        public static void ShowMesabe(string text, ErosSocket.DebugPLC.Robot.TrayRobot trayRobot, bool await = false)
+        ErosSocket.DebugPLC.Robot.TrayData trayRobot1;
+        public static void ShowMesabe(string text, ErosSocket.DebugPLC.Robot.TrayData trayRobot, bool await = false)
         {
             try
             {
@@ -186,7 +186,7 @@ namespace Vision2.Project
                         bool IsCa = false;
                         string datd = checkedListBox1.Items[j].ToString();
                         int id = int.Parse(datd.Split(':')[0]) - 1;
-                        ErosSocket.DebugPLC.Robot.TrayRobot trayRobot = checkedListBox1.Tag as ErosSocket.DebugPLC.Robot.TrayRobot;
+                        ErosSocket.DebugPLC.Robot.TrayData trayRobot = checkedListBox1.Tag as ErosSocket.DebugPLC.Robot.TrayData;
                         if (trayRobot != null)
                         {
                             List<double> vs = trayRobot.GetDataVales()[id].Data as List<double>;
@@ -273,7 +273,7 @@ namespace Vision2.Project
             try
             {
 
-                ErosSocket.DebugPLC.Robot.TrayRobot trayRobot = checkedListBox1.Tag as ErosSocket.DebugPLC.Robot.TrayRobot;
+                ErosSocket.DebugPLC.Robot.TrayData trayRobot = checkedListBox1.Tag as ErosSocket.DebugPLC.Robot.TrayData;
                 for (int i = 0; i < checkedListBox1.Items.Count; i++)
                 {
                     string datd = checkedListBox1.Items[i].ToString();
@@ -306,7 +306,7 @@ namespace Vision2.Project
             try
             {
 
-                ErosSocket.DebugPLC.Robot.TrayRobot trayRobot = checkedListBox1.Tag as ErosSocket.DebugPLC.Robot.TrayRobot;
+                ErosSocket.DebugPLC.Robot.TrayData trayRobot = checkedListBox1.Tag as ErosSocket.DebugPLC.Robot.TrayData;
                 for (int i = 0; i < checkedListBox1.Items.Count; i++)
                 {
                     string datd = checkedListBox1.Items[i].ToString();

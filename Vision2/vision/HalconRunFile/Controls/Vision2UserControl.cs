@@ -20,6 +20,20 @@ namespace Vision2.vision.HalconRunFile.Controls
         }
         HalconRun halcon;
 
+        public void Setprat(int row,int col,int row2,int col2)
+        {
+            try
+            {
+               HOperatorSet.SetPart(halcon.hWindowHalcon(), row, col, row2, col2);
+               Rectangle rect = this.visionUserControl1.ImagePart;
+                rect.X = row;
+                rect.Y = col;
+            }
+            catch (Exception)
+            {
+            }
+         
+        }
         public void UPOneImage(OneResultOBj oneImage)
         {
             try
@@ -30,7 +44,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                     return;
                 }
                 string names = oneImage.RunID.ToString() + ":";
-                if (vision.Vision.GetSaveImageInfo(halcon.Name).ISImages)
+                if (Vision.GetSaveImageInfo(halcon.Name).ISImages)
                 {
                     if (panel2 == null)
                     {
@@ -38,10 +52,6 @@ namespace Vision2.vision.HalconRunFile.Controls
                         this.Controls.Add(panel2);
                     }
                     panel2.Update();
-                    //if (oneImage.RunID == 1)
-                    //{
-                    //    panel2.Controls.Clear();
-                    //}
                     if (halcon.RunName.Count >= oneImage.RunID)
                     {
                         if (halcon.RunName[oneImage.RunID - 1] == "")
@@ -61,7 +71,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                         groupBox2 = panel2.Controls["Image." + oneImage.RunID] as GroupBox;
 
                         hWindowControl2 = groupBox2.Controls[0] as HWindowControl;
-                        hWindowControl2.Tag = oneImage.HalconResult;
+                        hWindowControl2.Tag = oneImage;
                     }
                     else
                     {
@@ -69,7 +79,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                         groupBox2.Dock = DockStyle.Top;
                         hWindowControl2 = new HWindowControl();
                         hWindowControl2.HMouseDown += HWindowControl_HMouseDownD;
-                        hWindowControl2.Tag = oneImage.HalconResult;
+                        hWindowControl2.Tag = oneImage;
                         groupBox2.Text = groupBox2.Name = "Image." + oneImage.RunID;
                         if (halcon.RunName.Count > oneImage.RunID - 1)
                         {
@@ -89,49 +99,42 @@ namespace Vision2.vision.HalconRunFile.Controls
                     HSystem.SetSystem("flush_graphic", "false");
                     HOperatorSet.ClearWindow(hWindowControl2.HalconWindow);
                     HSystem.SetSystem("flush_graphic", "true");
-                    if (Vision.ObjectValided(oneImage.HalconResult.Image))
+                    if (Vision.ObjectValided(oneImage.Image))
                     {
-                        HOperatorSet.GetImageSize(oneImage.HalconResult.Image, out HTuple width, out HTuple heigth);
+                        HOperatorSet.GetImageSize(oneImage.Image, out HTuple width, out HTuple heigth);
                         HOperatorSet.SetPart(hWindowControl2.HalconWindow, 0, 0, heigth, width);
-                        HOperatorSet.DispObj(oneImage.HalconResult.Image, hWindowControl2.HalconWindow);
+                        HOperatorSet.DispObj(oneImage.Image, hWindowControl2.HalconWindow);
                     }
-                    HalconResult halconResult = hWindowControl2.Tag as HalconResult;
+                    OneResultOBj halconResult = hWindowControl2.Tag as OneResultOBj;
                     if (halconResult != null)
                     {
                         halconResult.ShowAll(hWindowControl2.HalconWindow);
                     }
                     panel2.Refresh();
                 }
-                else
-                {
-                    if (oneImage.HalconResult != null)
-                    {
-                        oneImage.HalconResult.Image.Dispose();
-                    }
-                }
-
                 void HWindowControl_HMouseDownD(object sender, HMouseEventArgs e)
                 {
                     try
                     {
+                        OneResultOBj oneResultOBj = (sender as HWindowControl).Tag as OneResultOBj;
                         //halcon.HobjClear();
-                        halcon.SetResultOBj((sender as HWindowControl).Tag as HalconResult);
-                        halcon.GetResultOBj().ShowAll(halcon.hWindowHalcon());
+                        halcon.SetResultOBj(oneResultOBj);
+                        halcon.GetOneImageR().ShowAll(halcon.hWindowHalcon());
                         if (e.Clicks == 2)
                         {
-                            halcon.Image(halcon.GetResultOBj().Image.Clone());
+                            halcon.Image(halcon.GetOneImageR().Image.Clone());
                         }
-                        HalconResult halconResultT = (sender as HWindowControl).Tag as HalconResult;
+                        //HalconResult halconResultT = (sender as HWindowControl).Tag as HalconResult;
                         HWindowControl hWindowControl = sender as HWindowControl;
-                        if (halconResultT != null)
+                        if (oneResultOBj != null)
                         {
-                            if (Vision.ObjectValided(halconResultT.Image))
+                            if (Vision.ObjectValided(oneResultOBj.Image))
                             {
-                                HOperatorSet.GetImageSize(halconResultT.Image, out HTuple width, out HTuple heigth);
+                                HOperatorSet.GetImageSize(oneResultOBj.Image, out HTuple width, out HTuple heigth);
                                 HOperatorSet.SetPart(hWindowControl.HalconWindow, 0, 0, heigth, width);
-                                HOperatorSet.DispObj(halconResultT.Image, hWindowControl.HalconWindow);
+                                HOperatorSet.DispObj(oneResultOBj.Image, hWindowControl.HalconWindow);
                             }
-                            halconResultT.ShowAll(hWindowControl.HalconWindow);
+                            oneResultOBj.ShowAll(hWindowControl.HalconWindow);
                         }
                     }
                     catch (Exception)
@@ -149,13 +152,13 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             panel2.Controls.Clear();
         }
-        public void UPImage(HalconResult HResult, int runid, Dictionary<string, bool> listResultBool)
+        public void UPImage(OneResultOBj HResult, int runid, Dictionary<string, bool> listResultBool)
         {
             try
             {
                 if (this.InvokeRequired)
                 {
-                    this.Invoke(new Action<HalconResult, int, Dictionary<string, bool>>(UPImage), HResult, runid, listResultBool);
+                    this.Invoke(new Action<OneResultOBj, int, Dictionary<string, bool>>(UPImage), HResult, runid, listResultBool);
                     return;
                 }
                 //HResult.Done = false;
@@ -231,7 +234,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                             HOperatorSet.SetPart(hWindowControl2.HalconWindow, 0, 0, heigth, width);
                             HOperatorSet.DispObj(HResult.Image, hWindowControl2.HalconWindow);
                         }
-                        HalconResult halconResult = hWindowControl2.Tag as HalconResult;
+                        OneResultOBj halconResult = hWindowControl2.Tag as OneResultOBj;
                         if (halconResult != null)
                         {
                             halconResult.ShowAll(hWindowControl2.HalconWindow);
@@ -250,17 +253,17 @@ namespace Vision2.vision.HalconRunFile.Controls
                     {
                         try
                         {
-                            halcon.HobjClear();
-                            halcon.SetResultOBj((sender as HWindowControl).Tag as HalconResult);
-                            halcon.GetResultOBj().ShowAll(halcon.hWindowHalcon());
-                            if (e.Clicks == 2)
-                            {
-                                halcon.Image(halcon.GetResultOBj().Image.Clone());
-                            }
-                            HalconResult halconResultT = (sender as HWindowControl).Tag as HalconResult;
+                            OneResultOBj halconResultT = (sender as HWindowControl).Tag as OneResultOBj;
                             HWindowControl hWindowControl = sender as HWindowControl;
                             if (halconResultT != null)
                             {
+                                halcon.HobjClear();
+                                halcon.SetResultOBj(halconResultT);
+                                halconResultT.ShowAll(halcon.hWindowHalcon());
+                                if (e.Clicks == 2)
+                                {
+                                    halcon.Image(halcon.GetOneImageR().Image.Clone());
+                                }
                                 if (Vision.ObjectValided(HResult.Image))
                                 {
                                     HOperatorSet.GetImageSize(HResult.Image, out HTuple width, out HTuple heigth);
@@ -585,14 +588,14 @@ namespace Vision2.vision.HalconRunFile.Controls
                 }
                 if (visionUserControl1.meuseBool)
                 {
-                    //halcon.GetResultOBj().ShowAll(visionUserControl1.HalconWindow);
+                    //halcon.GetOneImageR().ShowAll(visionUserControl1.HalconWindow);
                     return;
                 }
                 Application.DoEvents();
                 visionUserControl1.HalconWindow.GetMposition(out int rowi, out int coli, out int button1);
                 if (查看区域细节ToolStripMenuItem.Checked)
                 {
-                    halcon.GetResultOBj().ShowAll(visionUserControl1.HalconWindow, rowi, coli, 查看区域细节ToolStripMenuItem.Checked);
+                    halcon.GetOneImageR().ShowAll(visionUserControl1.HalconWindow, rowi, coli, 查看区域细节ToolStripMenuItem.Checked);
                 }
 
                 if (true)
@@ -722,17 +725,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 {
                     tcbRunType.SelectedIndex = 1;
                     if (Cambueys) return;
-                    //foreach (var item in Vision.GetHimageList())
-                    //{
-                    //    if (Vision.GetSaveImageInfo(item.Value.Name).ReadCamName == "")
-                    //    {
-                    //        item.Value.ThreadShowVision();
-                    //    }
-                    //    else
-                    //    {
-                    //        ErosSocket.ErosConLink.StaticCon.SetLingkValue(Vision.GetSaveImageInfo(item.Value.Name).ReadCamName, 1.ToString(), out ERR);
-                    //    }
-                    //}
+ 
                 }
                 else if (Keys.F7 == e.KeyCode)
                 {
@@ -769,7 +762,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                         {
                             Cambueys = true;
                             halcon.GetCam().Key = "One";
-                            halcon.ReadCamImage();
+                            halcon.ReadCamImage("One",0);
                             halcon.ShowImage();
                         }
                         catch (Exception)
@@ -1386,7 +1379,51 @@ namespace Vision2.vision.HalconRunFile.Controls
 
         private void 清除序列ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            panel2.Controls.Clear();
+            try
+            {
+                panel2.Controls.Clear();
+            }
+            catch (Exception)
+            {
+
+            }
+ 
+        }
+
+        private void 模拟图像ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            VisionSimulateForm1 visionSimulateForm1 = new VisionSimulateForm1();
+            visionSimulateForm1.Show();
+        }
+
+        private void 保存到产品文件夹ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (halcon == null)
+            {
+                MessageBox.Show("未关联执行程序");
+                return;
+            }
+            SaveFileDialog saveFile = new SaveFileDialog();
+            saveFile.Title = "请选择保存路径";      //文件框名称
+            saveFile.InitialDirectory = Vision.VisionPath + "Image\\";  //默认路径
+            //    openFileDialog.Filter = "图片文件|*.jpg;*.tif;*.tiff;*.gif;*.bmp;*.jpg;*.jpeg;*.jp2;*.png;*.pcx;*.pgm;*.ppm;*.pbm;*.xwd;*.ima;*.hobj";
+            saveFile.Filter = Vision.Instance.DicSaveType[halcon.Name].SaveImageType + "|*." +
+                Vision.Instance.DicSaveType[halcon.Name].SaveImageType + 
+                "|BMP|*.bmp|tif|*.tif|tiff|*.tiff|hobj|*.hobj|所有文件|*.*";   //筛选器
+            saveFile.ShowDialog();    //弹出对话框
+            string path = saveFile.FileName;
+            if (path == "") return;    //地址为空返回
+            try
+            {
+                string da = Path.GetFileName(path).Split('.')[1].ToLower();
+                Directory.CreateDirectory(Path.GetDirectoryName(path));
+                HOperatorSet.WriteImage(halcon.Image(), da, 0, path);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+
         }
     }
 }

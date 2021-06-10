@@ -121,11 +121,11 @@ namespace Vision2.vision
             if (e.KeyCode == Keys.ControlKey)
             {
                 WhidowAdd = false;
-                this.HalconResult.IsXLDOrImage = false;
+                this.OneResIamge.IsXLDOrImage = false;
             }
             else if (e.KeyCode == Keys.ShiftKey)
             {
-                this.HalconResult.IsXLDOrImage = false;
+                this.OneResIamge.IsXLDOrImage = false;
             }
         }
 
@@ -137,7 +137,7 @@ namespace Vision2.vision
             }
             else if (e.Shift)
             {
-                this.HalconResult.IsXLDOrImage = true;
+                this.OneResIamge.IsXLDOrImage = true;
             }
 
         }
@@ -215,7 +215,7 @@ namespace Vision2.vision
                 }
                 try
                 {
-                    HOperatorSet.GetGrayval(HalconResult.Image, e.Y, e.X, out HTuple Grey);
+                    HOperatorSet.GetGrayval(OneResIamge.Image, e.Y, e.X, out HTuple Grey);
                     if (Grey.Length == 3)
                     {
                         data += " RGB:" + Grey.TupleSelect(0).D.ToString("000") + "," + Grey.TupleSelect(1).D.ToString("000") + "," + Grey.TupleSelect(2).D.ToString("000");
@@ -309,26 +309,28 @@ namespace Vision2.vision
         {
             try
             {
-                if (HalconResult == null)
+                if (OneResIamge == null)
                 {
-                    HalconResult = new HalconRunFile.RunProgramFile.HalconResult();
+                    OneResIamge = new OneResultOBj();
                 }
-                HalconResult.Image = imaget;
-                HOperatorSet.GetImageSize(HalconResult.Image, out HTuple wi, out HTuple heit);
+                OneResIamge.Image = imaget;
+                HOperatorSet.GetImageSize(OneResIamge.Image, out HTuple wi, out HTuple heit);
                 if (wi.Length != 0)
                 {
                     WidthImage = wi;
                     HeigthImage = heit;
                 }
                 hWindowControl1.HalconWindow.SetPart(ImageRowStrat, ImageColStrat, HeigthImage, WidthImage);
-                hWindowControl1.HalconWindow.DispObj(HalconResult.Image);
+                hWindowControl1.HalconWindow.DispObj(OneResIamge.Image);
             }
             catch (Exception ex)
             {
             }
         }
-
-        public HalconRunFile.RunProgramFile.HalconResult HalconResult = new HalconRunFile.RunProgramFile.HalconResult();
+        /// <summary>
+        /// 
+        /// </summary>
+        public OneResultOBj OneResIamge = new OneResultOBj();
 
         HObject hObject;
 
@@ -336,7 +338,7 @@ namespace Vision2.vision
         {
             try
             {
-                HalconResult.ShowAll(hWindowControl1.HalconWindow);
+                OneResIamge.ShowAll(hWindowControl1.HalconWindow);
             }
             catch (Exception)
             {
@@ -346,7 +348,7 @@ namespace Vision2.vision
         {
             try
             {
-                HalconResult.ShowAll(hWindowControl1.HalconWindow);
+                OneResIamge.ShowAll(hWindowControl1.HalconWindow);
 
             }
             catch (Exception)
@@ -355,7 +357,7 @@ namespace Vision2.vision
         }
         public void ClearObj()
         {
-            HalconResult.ClearAllObj();
+            OneResIamge.ClearAllObj();
         }
     }
 }

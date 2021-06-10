@@ -679,7 +679,7 @@ namespace Vision2.vision.Cams
             {
                 if (this.CoordinateMeassage != Coordinate.Coordinate_Type.Hide)
                 {
-                    halcon.GetResultOBj().AddMeassge(this.Name + ":执行失败");
+                    halcon.GetOneImageR().AddMeassge(this.Name + ":执行失败");
                 }
                 Vision.TriggerSetup(this.NGName, true.ToString());
             }
@@ -795,8 +795,8 @@ namespace Vision2.vision.Cams
                     }
                 }
 
-                halcon.GetResultOBj().AddMeassge("整体清晰度:" + hTuple.ToString());
-                halcon.GetResultOBj().AddMeassge("最大清晰度:" + MaxTuple.ToString());
+                halcon.GetOneImageR().AddMeassge("整体清晰度:" + hTuple.ToString());
+                halcon.GetOneImageR().AddMeassge("最大清晰度:" + MaxTuple.ToString());
                 halcon.ShowMessage("上" + Tool.ToString(), Rab, halcon.Width / 2);
                 halcon.ShowMessage("下" + loot.ToString(), halcon.Height - Rab, halcon.Width / 2);
                 halcon.ShowMessage("左" + Lift.ToString(), halcon.Height / 2, Rab);
@@ -805,8 +805,8 @@ namespace Vision2.vision.Cams
             if (this.CoordinateMeassage == Coordinate.Coordinate_Type.PixelRC)
             {
                 hTuple = Vision.Evaluate_definition(halcon.Image());
-                halcon.GetResultOBj().AddMeassge("整体清晰度:" + hTuple.ToString());
-                halcon.GetResultOBj().AddMeassge("最大清晰度:" + MaxTuple.ToString());
+                halcon.GetOneImageR().AddMeassge("整体清晰度:" + hTuple.ToString());
+                halcon.GetOneImageR().AddMeassge("最大清晰度:" + MaxTuple.ToString());
                 if (MaxTuple.Length == 0)
                 {
                     MaxTuple = hTuple;
@@ -854,9 +854,9 @@ namespace Vision2.vision.Cams
                         Frame++;
                         HOperatorSet.CountSeconds(out HTuple SecondsCurrent);
                         fps = Frame / (SecondsCurrent - SecondsBegin);
-                        halcon.GetResultOBj().AddMeassge(fps.ToString("0.##") + "fps");
+                        halcon.GetOneImageR().AddMeassge(fps.ToString("0.##") + "fps");
                         //halcon.ShowObj();
-                        halcon.EndChanged();
+                        halcon.EndChanged(halcon.GetOneImageR());
                     }
                     catch (Exception)
                     {

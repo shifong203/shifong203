@@ -105,15 +105,15 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 //halconRun.AddOBJ( NGobjectColor._HObject);
                 if (distanceMM.Length > 0)
                 {
-                    halconRun.GetResultOBj().AddMeassge("平均胶宽:" + distanceMM.TupleMean().TupleString("0.03f") + "mm");
-                    halconRun.GetResultOBj().AddMeassge("最大胶宽:" + distanceMM.TupleMax().TupleString("0.03f") + "mm");
+                    halconRun.GetOneImageR().AddMeassge("平均胶宽:" + distanceMM.TupleMean().TupleString("0.03f") + "mm");
+                    halconRun.GetOneImageR().AddMeassge("最大胶宽:" + distanceMM.TupleMax().TupleString("0.03f") + "mm");
                     if (distanceMM.TupleRemove(distanceMM.TupleFind(0)).Length > 0)
                     {
-                        halconRun.GetResultOBj().AddMeassge("最小胶宽: " + distanceMM.TupleRemove(distanceMM.TupleFind(0)).TupleMin().TupleString("0.03f") + "mm");
+                        halconRun.GetOneImageR().AddMeassge("最小胶宽: " + distanceMM.TupleRemove(distanceMM.TupleFind(0)).TupleMin().TupleString("0.03f") + "mm");
                     }
                     else
                     {
-                        halconRun.GetResultOBj().AddMeassge("最小胶宽: 0mm");
+                        halconRun.GetOneImageR().AddMeassge("最小胶宽: 0mm");
                     }
                 }
             }
@@ -130,7 +130,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 bRet = false;
             }
 
-            halconRun.GetResultOBj().AddMeassge("测量数:" + (distance.TupleLength()
+            halconRun.GetOneImageR().AddMeassge("测量数:" + (distance.TupleLength()
                - _findFailcountIndex.TupleLength()) + " 总数:" + drawRows.TupleLength() + "  NG数:" + itet.ToString() +
                " 断胶:" + Onftint.ToString());
             return bRet;
@@ -223,7 +223,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
 
         public void ShowMeasure(HalconRun halcon)
         {
-            halcon.AddOBJ(this.MeasureObj(halcon , halcon.GetdataVale())._HObject);
+            halcon.AddOBJ(this.MeasureObj(halcon , halcon.GetOneImageR())._HObject);
             if (this.DrawRows != null && this.DrawRows.Length > 0)
             {
                 Vision.Disp_message(halcon.hWindowHalcon(), this.Name, this.DrawRows[0], this.DrawCols[0], false, "black", "true");
@@ -2047,7 +2047,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     this["DrawPhis"] = drawPhi;
                     break;
                 default:
-                    halcon.GetResultOBj().AddMeassge("未指定测量类型");
+                    halcon.GetOneImageR().AddMeassge("未指定测量类型");
                     break;
             }
             this["DrawRows"] = halcon.GetCaliConstMM(DrawRows);
@@ -2059,7 +2059,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             {
                 DrawHObject = hObject.Clone();
             }
-            this.GetObj(halcon, halcon.GetdataVale());
+            this.GetObj(halcon, halcon.GetOneImageR());
             return hObject;
         }
 
@@ -2218,7 +2218,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     HOperatorSet.DispObj(hObjectt, halcon.hWindowHalcon());
                     break;
                 default:
-                    halcon.GetResultOBj().AddMeassge("未指定测量类型");
+                    halcon.GetOneImageR().AddMeassge("未指定测量类型");
                     break;
             }
             halcon.Drawing = false;
@@ -2226,7 +2226,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             {
                 DrawHObject = hObject.Clone();
             }
-            this.GetObj(halcon,halcon.GetdataVale());
+            this.GetObj(halcon,halcon.GetOneImageR());
             return DrawHObject;
         }
 
@@ -2326,7 +2326,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             objectColor.HobjectColot = this.color;
             if (!Enabled)
             {
-                halcon.GetResultOBj().AddMeassge(this.Name + "未启用测量");
+                halcon.GetOneImageR().AddMeassge(this.Name + "未启用测量");
                 return objectColor;
             }
             switch (measure_Type)
@@ -2428,7 +2428,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         halcon.AddOBJ(timeobj);
                         if (timeobj.CountObj() == 0)
                         {
-                            halcon.GetResultOBj().AddMeassge(this.Name + ":" + "筛选值过大,未能找到区域");
+                            halcon.GetOneImageR().AddMeassge(this.Name + ":" + "筛选值过大,未能找到区域");
                             goto end;
                         }
 
@@ -2544,11 +2544,11 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     }
                     catch (Exception ex)
                     {
-                        halcon.GetResultOBj().AddMeassge(this.Name + ex.Message);
+                        halcon.GetOneImageR().AddMeassge(this.Name + ex.Message);
                     }
                     break;
                 default:
-                    halcon.GetResultOBj().AddMeassge(this.Name + "未指定的测量类型:" + this.Measure_Type.ToString());
+                    halcon.GetOneImageR().AddMeassge(this.Name + "未指定的测量类型:" + this.Measure_Type.ToString());
                     break;
             }
             this["row"] = this.outCentreRow;
@@ -2592,7 +2592,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         return MeasureObj(halcon, halcon.GetHomdeMobel(this.HomName), oneResultOBj);
                     }
                 }
-                halcon.GetResultOBj().AddMeassge("缺少彷射参数");
+                halcon.GetOneImageR().AddMeassge("缺少彷射参数");
 
                 return new ObjectColor();
             }
@@ -2996,7 +2996,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             }
             catch (Exception ex)
             {
-                halcon.GetResultOBj().AddMeassge("测量错误:" + ex.Message);
+                halcon.GetOneImageR().AddMeassge("测量错误:" + ex.Message);
             }
             return line;
         }
@@ -3139,7 +3139,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         //    }
                         //    else
                         //    {
-                        //         halcon.GetResultOBj().AddMeassge(this.Name + "测量错误XLD点数量不同");
+                        //         halcon.GetOneImageR().AddMeassge(this.Name + "测量错误XLD点数量不同");
                         //    }
                         //}
 
@@ -3154,7 +3154,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             }
             catch (Exception ex)
             {
-                halcon.GetResultOBj().AddMeassge(this.Name + "测量错误:" + ex.Message);
+                halcon.GetOneImageR().AddMeassge(this.Name + "测量错误:" + ex.Message);
             }
             return line;
         }

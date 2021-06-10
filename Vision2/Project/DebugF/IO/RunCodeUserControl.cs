@@ -27,7 +27,7 @@ namespace Vision2.Project.DebugF.IO
                 CheckBox checkBox = toolStripCheckbox1.Control as CheckBox;
                 if (checkBox != null)
                 {
-                    checkBox.Checked = codeStr.IsSimulate;
+                    checkBox.Checked = RunCodeStr.IsSimulate;
                 }
                 if (!codeStr.Single_step)
                 {
@@ -82,7 +82,7 @@ namespace Vision2.Project.DebugF.IO
                     richTextBox2.SelectionColor = Color.Black;
                 }
 
-                richTextBox2.AppendText("行:" + (runErr.RowIndx + 1) + "状态:" + runErr.ErrStr + (runErr.StepRunTime / 1000.0).ToString("0.000S") + Environment.NewLine);
+                richTextBox2.AppendText("行:" + (runErr.RowIndx + 1) + "状态:" + runErr.RunState +"时间:"+ (runErr.StepRunTime / 1000.0).ToString("0.000S") +"错误:"+runErr.ErrStr + Environment.NewLine);
                 ////toolStripStatusLabel1.Text = "行:" + runErr.RowIndx;
                 toolStripStatusLabel2.Text = (codeStr.RunTime).ToString("0.000S");
                 TimeStr[runErr.RowIndx] = runErr.StepRunTime + "ms";
@@ -398,7 +398,7 @@ namespace Vision2.Project.DebugF.IO
             CheckBox checkBox = toolStripCheckbox1.Control as CheckBox;
             if (checkBox != null)
             {
-                codeStr.IsSimulate = checkBox.Checked;
+                RunCodeStr.IsSimulate = checkBox.Checked;
             }
         }
 

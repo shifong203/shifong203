@@ -318,11 +318,11 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
   
                 if (IsDisObj)
                 {
-                    oneResultOBj.HalconResult.AddObj(HObjectGreen, ColorResult.green);
+                  oneResultOBj.AddObj(HObjectGreen, ColorResult.green);
                 }
-                oneResultOBj.HalconResult.AddObj(HObjectYellow, ColorResult.yellow);
+                oneResultOBj.AddObj(HObjectYellow, ColorResult.yellow);
 
-                oneResultOBj.HalconResult.AddObj(HObjectBule, ColorResult.blue);
+                oneResultOBj.AddObj(HObjectBule, ColorResult.blue);
                 if (ResltBool)
                 {
                     if (this.OKName.Contains(","))
@@ -339,7 +339,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 {
                     if (this.CoordinateMeassage != Coordinate.Coordinate_Type.Hide)
                     {
-                        oneResultOBj.HalconResult.AddMeassge(this.Name + ":执行失败");
+                        oneResultOBj.AddMeassge(this.Name + ":执行失败");
                     }
                     if (this.NGName.Contains(","))
                     {

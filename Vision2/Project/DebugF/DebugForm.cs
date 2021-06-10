@@ -1771,9 +1771,9 @@ namespace Vision2.Project.DebugF
 
                         if (hObject.CountObj() != 0)
                         {
-                            HWindNt.HalconResult.AddObj(hObject);
+                            HWindNt.OneResIamge.AddObj(hObject);
                             HOperatorSet.AreaCenter(hObject, out HTuple area, out HTuple rows, out HTuple clos);
-                            HWindNt.HalconResult.AddImageMassage(rows, clos, listBox2.SelectedItem.ToString());
+                            HWindNt.OneResIamge.AddImageMassage(rows, clos, listBox2.SelectedItem.ToString());
                         }
                     }
                     HWindNt.ShowImage();
@@ -1799,8 +1799,8 @@ namespace Vision2.Project.DebugF
                             HOperatorSet.AreaCenter(item.Value, out HalconDotNet.HTuple area, out HalconDotNet.HTuple rows, out HalconDotNet.HTuple clos);
                             if (area.Length!=0)
                             {
-                                HWindNt.HalconResult.AddImageMassage(rows, clos, item.Key);
-                                HWindNt.HalconResult.AddObj(item.Value);
+                                HWindNt.OneResIamge.AddImageMassage(rows, clos, item.Key);
+                                HWindNt.OneResIamge.AddObj(item.Value);
                             }
                           
                         }
@@ -1944,9 +1944,9 @@ namespace Vision2.Project.DebugF
 
                         HalconDotNet.HOperatorSet.GenRectangle1(out HalconDotNet.HObject hObject, rows, cols, row2, cols2);
                         productEX.Key_Navigation_Picture[listBox3.SelectedItem.ToString()].KeyRoi[listBox2.SelectedItem.ToString()] = hObject;
-                        HWindNt.HalconResult.AddObj(hObject);
+                        HWindNt.OneResIamge.AddObj(hObject);
                         HalconDotNet.HOperatorSet.AreaCenter(hObject, out HalconDotNet.HTuple area, out rows, out HalconDotNet.HTuple clos);
-                        HWindNt.HalconResult.AddImageMassage(rows, clos, listBox2.SelectedItem.ToString());
+                        HWindNt.OneResIamge.AddImageMassage(rows, clos, listBox2.SelectedItem.ToString());
                         HWindNt.ShowImage();
                     }
                     else

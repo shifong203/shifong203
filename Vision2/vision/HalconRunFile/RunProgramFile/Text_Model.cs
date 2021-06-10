@@ -291,7 +291,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                                 }
                                 else
                                 {
-                                    oneResultOBj. ADDRed( this.Name,NGText, hObject2, hObject4);
+                                    oneResultOBj. AddNGOBJ( this.Name,NGText, hObject2, hObject4);
                                     errNumer++;
                                 }
                             }
@@ -302,7 +302,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                                     if (ModeText != text)
                                     {
                                         errNumer++;
-                                        oneResultOBj.ADDRed(Name,NGText, hObject2, hObject4);
+                                        oneResultOBj.AddNGOBJ(Name,NGText, hObject2, hObject4);
                                     }
                                     else
                                     {

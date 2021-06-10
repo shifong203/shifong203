@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using Vision2.Project.formula;
 using Vision2.Project.Mes;
+using static ErosSocket.DebugPLC.Robot.TrayRobot;
 
 namespace ErosSocket.DebugPLC.Robot
 {
@@ -11,9 +12,13 @@ namespace ErosSocket.DebugPLC.Robot
     {
         void SetValue(int number, bool value, double? valueDouble = null);
         void SetValue(int number, DataVale dataVale);
-        void SetValue(int number, TrayRobot dataVale);
+        void SetValue(int number, TrayData dataVale);
+        void SetPanleSN(List<string> listSN, List<int> tryaid);
         void RestValue();
     }
+    /// <summary>
+    /// 
+    /// </summary>
     public class TrayRobot
     {
         public enum TrayDirectionEnum
@@ -25,116 +30,44 @@ namespace ErosSocket.DebugPLC.Robot
         }
         public TrayRobot()
         {
-  
+           
         }
         public TrayRobot(sbyte x, sbyte y)
         {
-            Product_Name = Product.ProductionName;
             XNumber = x;
             YNumber = y;
-            NGLocation = new List<int>();
-            dataVales1 = new List<DataVale>(new DataVale[XNumber * YNumber]);
         }
-        public bool Done {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// NG位置
-        /// </summary>
-        public List<int> NGLocation = new List<int>();
-        /// <summary>
-        /// 产品名称
-        /// </summary>
-        public string Product_Name { get; set; }
-   
 
         [DescriptionAttribute("起点位置四个角落，并根据横向或竖向共8种排列方式。"), Category("排列"), DisplayName("起点位置")]
         public TrayDirectionEnum TrayDirection { get; set; }
 
-        [DescriptionAttribute("托盘ID。"), Category("结果"), DisplayName("托盘ID")]
-        public string TrayIDQR { get; set; } = "";
+
         [DescriptionAttribute("横向Fales或竖向Ture。"), Category("排列"), DisplayName("横向或竖向")]
         public bool HorizontallyORvertically { get; set; }
+
+        /// <summary>
+        /// 托盘名称
+        /// </summary>
         public string Name { get; set; }
-        [DescriptionAttribute("X方向数量。"), Category("排列"), DisplayName("X方向数量")]
-        public sbyte XNumber { get; set; }
-        [DescriptionAttribute("Y方向数量。"), Category("排列"), DisplayName("Y方向数量")]
-        public sbyte YNumber { get; set; }
 
         [DescriptionAttribute("X2方向数量。"), Category("排列"), DisplayName("X2方向数量")]
 
         public sbyte X2Number { get; set; }
         [DescriptionAttribute("Y2方向数量。"), Category("排列"), DisplayName("Y2方向数量")]
         public sbyte Y2Number { get; set; }
-        /// <summary>
-        /// 数量
-        /// </summary>
 
-        [DescriptionAttribute("穴位数量。"), Category("排列"), DisplayName("总数量")]
-        
-        public int Count
-        {
-            get
-            {
-                if (Is8Point)
-                {
-                    return XNumber * YNumber + X2Number * Y2Number; ;
-                }
-                return XNumber * YNumber;
-            }
-        }
-
-        List<DataVale> dataVales1;
-        public List<DataVale> GetDataVales(List<DataVale> dataVales=null)
-        {
-            if (dataVales!=null)
-            {
-                dataVales1 = dataVales;
-            }
-            return dataVales1;
-        }
-
-        public HObject ImagePlus;
-
-        [DescriptionAttribute("判断整盘结果信息，托盘ID，穴位ID，穴位数据等。"), Category("结果"), DisplayName("整盘是否OK")]
-        public bool OK
-        {
-            get
-            {
-                try
-                {
-                    if (DebugComp.GetThis().TrayID)
-                    {
-                        if (TrayIDQR == null || TrayIDQR == "")
-                        {
-                            return false;
-                        }
-                    }
-                    if (GetDataVales() != null)
-                    {
-                        for (int i = 0; i < GetDataVales().Count; i++)
-                        {
-
-                            if (GetDataVales()[i] == null || !GetDataVales()[i].OK)
-                            {
-                                return false;
-                            }
-                        }
-                    }
-                    return true;
-                }
-                catch (Exception)
-                {
-                }
-                return false;
-            }
-        }
-        [DescriptionAttribute("使用8点位。"), Category("位置"), DisplayName("使用8点位")]
-        public bool Is8Point { get; set; }
+        [DescriptionAttribute("X方向数量。"), Category("排列"), DisplayName("X方向数量")]
+        public sbyte XNumber { get; set; }
+        [DescriptionAttribute("Y方向数量。"), Category("排列"), DisplayName("Y方向数量")]
+        public sbyte YNumber { get; set; }
         [DescriptionAttribute("结果状态。"), Category("数据"), DisplayName("托盘产品数量")]
         public List<sbyte> bitW { get; set; } = new List<sbyte>();
+
+
+
+        [DescriptionAttribute("使用8点位。"), Category("位置"), DisplayName("使用8点位")]
+        public bool Is8Point { get; set; }
+       
 
         [DescriptionAttribute("托盘位置。"), Category("数据"), DisplayName("托盘位置")]
         public int Number
@@ -144,15 +77,21 @@ namespace ErosSocket.DebugPLC.Robot
             set
             {
                 number = value;
-                //string data = number.ToString();
-                //for (int i = 0; i < bitW.Count; i++)
-                //{
-                //    data += "," + bitW[i].ToString();
-                //}
-                //System.IO.File.WriteAllText(Vision2.ErosProjcetDLL.Project.ProjectINI.TempPath + Name + "Tray.txt", data);
             }
         }
         int number;
+
+        ITrayRobot trayRobots;
+
+        public void AddTary(ITrayRobot trayRobot)
+        {
+            trayRobots = trayRobot;
+        }
+        public ITrayRobot GetITrayRobot()
+        {
+            return trayRobots;
+        }
+
         /// <summary>
         /// 读取托盘文件
         /// </summary>
@@ -178,14 +117,23 @@ namespace ErosSocket.DebugPLC.Robot
 
         public virtual void Clear()
         {
-            Done = false;
-            NGLocation = new List<int>();
             number = 1;
-            TrayIDQR = "";
-            if (dataVales1 != null)
+            TrayDataS = new TrayData(this);
+            //NGLocation = new List<int>();
+            //TrayIDQR = "";
+            //if (dataVales1 != null)
+            //{
+            //    dataVales1.Clear();
+            //    dataVales1 = new List<DataVale>(new DataVale[XNumber * YNumber]);
+            //}
+        }
+
+        [DescriptionAttribute("穴位数量。"), Category("排列"), DisplayName("总数量")]
+        public int Count
+        {
+            get
             {
-                dataVales1.Clear();
-                dataVales1 = new List<DataVale>(new DataVale[XNumber * YNumber]);
+                return XNumber * YNumber;
             }
         }
         public PointFile P1 { get; set; }
@@ -206,6 +154,35 @@ namespace ErosSocket.DebugPLC.Robot
 
         public HTuple ListX { get; set; }
         public HTuple ListY { get; set; }
+
+        public TrayData GetTrayData(TrayData data=null)
+        {
+            if (data!=null)
+            {
+                TrayDataS = data;
+                TrayDataS.TrayDirection = this.TrayDirection;
+                TrayDataS.XNumber = XNumber;
+                TrayDataS.YNumber = YNumber;
+                TrayDataS.HorizontallyORvertically = HorizontallyORvertically;
+            }
+            if (TrayDataS==null)
+            {
+                TrayDataS = new TrayData(this);
+            }
+            TrayDataS.AddTary(trayRobots);
+            return TrayDataS;
+        }
+
+        public TrayData QuntData()
+        {
+            TrayData tray = TrayDataS;
+            TrayDataS = new TrayData(this);
+            TrayDataS.RestValue();
+            return tray;
+        }
+
+
+        TrayData TrayDataS ;
         PointFile[] pointFiles;
         public PointFile GetPoint(int number)
         {
@@ -224,8 +201,6 @@ namespace ErosSocket.DebugPLC.Robot
             }
             return null;
         }
-
-
         public List<PointFile> GetPoints()
         {
             List<PointFile> pointFi = new List<PointFile>();
@@ -369,109 +344,18 @@ namespace ErosSocket.DebugPLC.Robot
             }
 
         }
+       
+        
+        /// <summary>
+        /// 
+        /// </summary>
         TrayControl TrayControl;
         public void SetControl(TrayControl trayControl)
         {
             TrayControl = trayControl;
         }
  
-        public void AddTary(ITrayRobot trayRobot)
-        {
-            if (!trayRobots.Contains(trayRobot))
-            {
-                trayRobots.Add(trayRobot);
-            }
-        }
-        public void RestValue()
-        {
-              for (int i = 0; i < trayRobots.Count; i++)
-            {
-                if (trayRobots[i] != null)
-                {
-                    trayRobots[i].RestValue();
-                }
-            }
-        }
 
-        List<ITrayRobot> trayRobots = new List<ITrayRobot>();
-        public void SetNumberValue(int number, bool value, double? valueDouble)
-        {
-            for (int i = 0; i < trayRobots.Count; i++)
-            {
-                if (trayRobots[i] != null)
-                {
-                    trayRobots[i].SetValue(number, value, valueDouble);
-                }
-            }
-        }
-        public void SetNumberValue(int number, DataVale dataVale)
-        {
-            for (int i = 0; i < trayRobots.Count; i++)
-            {
-                if (trayRobots[i] != null)
-                {
-                    trayRobots[i].SetValue(number, dataVale);
-                }
-            }
-        }
-
-        public void SetNumberValue(int number, TrayRobot TrayResetD)
-        {
-            for (int i = 0; i < trayRobots.Count; i++)
-            {
-                if (trayRobots[i] != null)
-                {
-                    trayRobots[i].SetValue(number, TrayResetD);
-                }
-            }
-        }
-        public void SetNumberValue(int number, bool Vaules)
-        {
-            for (int i = 0; i < trayRobots.Count; i++)
-            {
-                if (trayRobots[i] != null)
-                {
-                    trayRobots[i].SetValue(number, Vaules);
-                }
-            }
-        }
-
-
-        public void SetNumberValue(List<DataMinMax> dataMins,int number=0)
-        {
-            if (number!=0)
-            {
-                Number = number;
-            }
-            for (int i = 0; i < dataMins.Count; i++)
-            {
-                this.dataVales1[Number-1].AddOneComponent(dataMins[i]);
-            }
-            SetNumberValue(Number, this.dataVales1[Number - 1]);
-        }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="d"></param>
-        public void UPsetTrayNumbar(int d)
-        {
-            try
-            {
-
-                d = d - 1;
-                int rowt = d / XNumber;
-                int colt = d % XNumber;
-                bitW[d] = 1;
-                Number = (sbyte)d + 1;
-                if (TrayControl != null)
-                {
-                    TrayControl.UPsetTrayNumbar(d + 1);
-                }
-            }
-            catch (Exception)
-            {
-            }
-        }
         public void Calculate(out HTuple listx, out HTuple listy, HWindow hawindid = null)
         {
             listx = new HTuple();
@@ -479,8 +363,8 @@ namespace ErosSocket.DebugPLC.Robot
             try
             {
                 Is8Point = false;
-                bitW = new List<sbyte> { };
-                bitW.AddRange(new sbyte[XNumber * YNumber]);
+                //bitW = new List<sbyte> { };
+                //bitW.AddRange(new sbyte[XNumber * YNumber]);
                 HOperatorSet.GenRegionLine(out HObject hObject1, P1.X, P1.Y, P2.X, P2.Y);
                 HOperatorSet.GenRegionLine(out HObject hObject2, P2.X, P2.Y, P3.X, P3.Y);
                 HOperatorSet.GenRegionLine(out HObject hObject3, P3.X, P3.Y, P4.X, P4.Y);
@@ -500,9 +384,9 @@ namespace ErosSocket.DebugPLC.Robot
                 bitW.Clear();
                 sbyte[] vs = new sbyte[listx.Length];
                 bitW.AddRange(vs);
-                dataVales1 = new List<DataVale>();
-                dataVales1.AddRange(new DataVale[listx.Length]);
-
+                TrayDataS.XNumber = XNumber;
+                TrayDataS.YNumber = YNumber;
+                TrayDataS.Clear();
                 for (int i = 0; i < listx.Length; i++)
                 {
                     listx[i] = Math.Round(listx.TupleSelect(i).D);
@@ -543,238 +427,6 @@ namespace ErosSocket.DebugPLC.Robot
 
         }
 
-        public static void Disp_message(HTuple hv_WindowHandle, HTuple hv_String,
-             double hv_Row = 20, double hv_Column = 20, bool hv_CoordSystem = false, string hv_Color = "red", string hv_Box = "false")
-        {
-            // Local control variables
-            if (hv_Box == null)
-            {
-                hv_Box = "";
-            }
-            if (hv_Color == null)
-            {
-                hv_Color = "yellow";
-            }
-            if (hv_Column == null)
-            {
-                hv_Column = 20;
-            }
-            if (hv_Row == null)
-            {
-                hv_Row = 20;
-            }
-            HTuple hv_Red, hv_Green, hv_Blue, hv_Row1Part;
-            HTuple hv_Column1Part, hv_Row2Part, hv_Column2Part, hv_RowWin;
-            HTuple hv_ColumnWin, hv_WidthWin, hv_HeightWin, hv_MaxAscent;
-            HTuple hv_MaxDescent, hv_MaxWidth, hv_MaxHeight, hv_R1 = new HTuple();
-            HTuple hv_C1 = new HTuple(), hv_FactorRow = new HTuple(), hv_FactorColumn = new HTuple();
-            HTuple hv_Width = new HTuple(), hv_Index = new HTuple(), hv_Ascent = new HTuple();
-            HTuple hv_Descent = new HTuple(), hv_W = new HTuple(), hv_H = new HTuple();
-            HTuple hv_FrameHeight = new HTuple(), hv_FrameWidth = new HTuple();
-            HTuple hv_R2 = new HTuple(), hv_C2 = new HTuple(), hv_DrawMode = new HTuple();
-            HTuple hv_Exception = new HTuple(), hv_CurrentColor = new HTuple();
-
-            HTuple hv_Color_COPY_INP_TMP = hv_Color;
-            HTuple hv_Column_COPY_INP_TMP = hv_Column;
-            HTuple hv_Row_COPY_INP_TMP = hv_Row;
-            HTuple hv_String_COPY_INP_TMP = hv_String.Clone();
-
-            HOperatorSet.GetRgb(hv_WindowHandle, out hv_Red, out hv_Green, out hv_Blue);
-            HOperatorSet.GetPart(hv_WindowHandle, out hv_Row1Part, out hv_Column1Part, out hv_Row2Part,
-                out hv_Column2Part);
-            HOperatorSet.GetWindowExtents(hv_WindowHandle, out hv_RowWin, out hv_ColumnWin,
-                out hv_WidthWin, out hv_HeightWin);
-            HOperatorSet.SetPart(hv_WindowHandle, 0, 0, hv_HeightWin - 1, hv_WidthWin - 1);
-            //
-            //default settings
-            if ((int)(new HTuple(hv_Row_COPY_INP_TMP.TupleEqual(-1))) != 0)
-            {
-                hv_Row_COPY_INP_TMP = 12;
-            }
-            if ((int)(new HTuple(hv_Column_COPY_INP_TMP.TupleEqual(-1))) != 0)
-            {
-                hv_Column_COPY_INP_TMP = 12;
-            }
-            if ((int)(new HTuple(hv_Color_COPY_INP_TMP.TupleEqual(new HTuple()))) != 0)
-            {
-                hv_Color_COPY_INP_TMP = "";
-            }
-            //
-            hv_String_COPY_INP_TMP = ((("" + hv_String_COPY_INP_TMP) + "")).TupleSplit("\n");
-            try
-            {
-                //Estimate extentions of text depending on font size.
-                HOperatorSet.GetFontExtents(hv_WindowHandle, out hv_MaxAscent, out hv_MaxDescent,
-                   out hv_MaxWidth, out hv_MaxHeight);
-                if (hv_CoordSystem)
-                {
-                    hv_R1 = hv_Row_COPY_INP_TMP.Clone();
-                    hv_C1 = hv_Column_COPY_INP_TMP.Clone();
-                }
-                else
-                {
-                    //transform image to window coordinates
-                    hv_FactorRow = (1.0 * hv_HeightWin) / ((hv_Row2Part - hv_Row1Part) + 1);
-                    hv_FactorColumn = (1.0 * hv_WidthWin) / ((hv_Column2Part - hv_Column1Part) + 1);
-                    hv_R1 = ((hv_Row_COPY_INP_TMP - hv_Row1Part) + 0.5) * hv_FactorRow;
-                    hv_C1 = ((hv_Column_COPY_INP_TMP - hv_Column1Part) + 0.5) * hv_FactorColumn;
-                }
-                //
-                //display text box depending on text size
-                if (hv_Box == "true")
-                {
-                    //calculate box extents
-                    hv_String_COPY_INP_TMP = (" " + hv_String_COPY_INP_TMP) + " ";
-                    hv_Width = new HTuple();
-                    for (hv_Index = 0; (int)hv_Index <= (int)((new HTuple(hv_String_COPY_INP_TMP.TupleLength()
-                        )) - 1); hv_Index = (int)hv_Index + 1)
-                    {
-                        HOperatorSet.GetStringExtents(hv_WindowHandle, hv_String_COPY_INP_TMP.TupleSelect(
-                            hv_Index), out hv_Ascent, out hv_Descent, out hv_W, out hv_H);
-                        hv_Width = hv_Width.TupleConcat(hv_W);
-                    }
-                    hv_FrameHeight = hv_MaxHeight * (new HTuple(hv_String_COPY_INP_TMP.TupleLength()
-                        ));
-                    hv_FrameWidth = (((new HTuple(0)).TupleConcat(hv_Width))).TupleMax();
-                    hv_R2 = hv_R1 + hv_FrameHeight;
-                    hv_C2 = hv_C1 + hv_FrameWidth;
-                    //display rectangles
-                    HOperatorSet.GetDraw(hv_WindowHandle, out hv_DrawMode);
-                    HOperatorSet.SetDraw(hv_WindowHandle, "fill");
-                    HOperatorSet.SetColor(hv_WindowHandle, "light gray");
-                    HOperatorSet.DispRectangle1(hv_WindowHandle, hv_R1 + 3, hv_C1 + 3, hv_R2 + 3, hv_C2 + 3);
-                    HOperatorSet.SetColor(hv_WindowHandle, "white");
-                    HOperatorSet.DispRectangle1(hv_WindowHandle, hv_R1, hv_C1, hv_R2, hv_C2);
-                    HOperatorSet.SetDraw(hv_WindowHandle, hv_DrawMode);
-                }
-                else
-                {
-                    //hv_Exception = "Wrong value of control parameter Box";
-                }
-                //Write text.
-                for (hv_Index = 0; (int)hv_Index <= (int)((new HTuple(hv_String_COPY_INP_TMP.TupleLength()
-                    )) - 1); hv_Index = (int)hv_Index + 1)
-                {
-                    hv_CurrentColor = hv_Color_COPY_INP_TMP.TupleSelect(hv_Index % (new HTuple(hv_Color_COPY_INP_TMP.TupleLength()
-                        )));
-                    if ((int)((new HTuple(hv_CurrentColor.TupleNotEqual(""))).TupleAnd(new HTuple(hv_CurrentColor.TupleNotEqual(
-                        "auto")))) != 0)
-                    {
-                        HOperatorSet.SetColor(hv_WindowHandle, hv_CurrentColor);
-                    }
-                    else
-                    {
-                        HOperatorSet.SetRgb(hv_WindowHandle, hv_Red, hv_Green, hv_Blue);
-                    }
-                    hv_Row_COPY_INP_TMP = hv_R1 + (hv_MaxHeight * hv_Index);
-                    HOperatorSet.SetTposition(hv_WindowHandle, hv_Row_COPY_INP_TMP, hv_C1);
-                    HOperatorSet.WriteString(hv_WindowHandle, hv_String_COPY_INP_TMP.TupleSelect(
-                        hv_Index));
-                }
-                //reset changed window settings
-                HOperatorSet.SetRgb(hv_WindowHandle, hv_Red, hv_Green, hv_Blue);
-                HOperatorSet.SetPart(hv_WindowHandle, hv_Row1Part, hv_Column1Part, hv_Row2Part,
-                    hv_Column2Part);
-
-                return;
-            }
-            catch (Exception ex)
-            {
-                //MessageBox.Show(ex.Message);
-            }
-        }
-        /// <summary>
-        /// 绘制箭头
-        /// </summary>
-        /// <param name="hv_Row1"></param>
-        /// <param name="hv_Column1"></param>
-        /// <param name="hv_Row2"></param>
-        /// <param name="hv_Column2"></param>
-        /// <param name="hv_HeadLength"></param>
-        /// <param name="hv_HeadWidth"></param>
-        /// <returns></returns>
-        public static HObject GenArrowContourXld(HTuple hv_Row1, HTuple hv_Column1,
-        HTuple hv_Row2, HTuple hv_Column2, HTuple hv_HeadLength, HTuple hv_HeadWidth)
-        {
-            // Stack for temporary objects
-            HObject[] OTemp = new HObject[20];
-
-            // Local iconic variables
-
-            HObject ho_TempArrow = null;
-
-            // Local control variables
-
-            HTuple hv_Length = null, hv_ZeroLengthIndices = null;
-            HTuple hv_DR = null, hv_DC = null, hv_HalfHeadWidth = null;
-            HTuple hv_RowP1 = null, hv_ColP1 = null, hv_RowP2 = null;
-            HTuple hv_ColP2 = null, hv_Index = null;
-            // Initialize local and output iconic variables
-            HObject ho_Arrow = new HObject();
-            HOperatorSet.GenEmptyObj(out ho_Arrow);
-            HOperatorSet.GenEmptyObj(out ho_TempArrow);
-
-            ho_Arrow.Dispose();
-            HOperatorSet.GenEmptyObj(out ho_Arrow);
-            //
-            //Calculate the arrow length
-            HOperatorSet.DistancePp(hv_Row1, hv_Column1, hv_Row2, hv_Column2, out hv_Length);
-            //
-            //Mark arrows with identical start and end point
-            //(set Length to -1 to avoid division-by-zero exception)
-            hv_ZeroLengthIndices = hv_Length.TupleFind(0);
-            if ((int)(new HTuple(hv_ZeroLengthIndices.TupleNotEqual(-1))) != 0)
-            {
-                if (hv_Length == null)
-                    hv_Length = new HTuple();
-                hv_Length[hv_ZeroLengthIndices] = -1;
-            }
-            //
-            //Calculate auxiliary variables.
-            hv_DR = (1.0 * (hv_Row2 - hv_Row1)) / hv_Length;
-            hv_DC = (1.0 * (hv_Column2 - hv_Column1)) / hv_Length;
-            hv_HalfHeadWidth = hv_HeadWidth / 2.0;
-            //
-            //Calculate end points of the arrow head.
-            hv_RowP1 = (hv_Row1 + ((hv_Length - hv_HeadLength) * hv_DR)) + (hv_HalfHeadWidth * hv_DC);
-            hv_ColP1 = (hv_Column1 + ((hv_Length - hv_HeadLength) * hv_DC)) - (hv_HalfHeadWidth * hv_DR);
-            hv_RowP2 = (hv_Row1 + ((hv_Length - hv_HeadLength) * hv_DR)) - (hv_HalfHeadWidth * hv_DC);
-            hv_ColP2 = (hv_Column1 + ((hv_Length - hv_HeadLength) * hv_DC)) + (hv_HalfHeadWidth * hv_DR);
-            //
-            //Finally create output XLD contour for each input point pair
-            for (hv_Index = 0; (int)hv_Index <= (int)((new HTuple(hv_Length.TupleLength())) - 1); hv_Index = (int)hv_Index + 1)
-            {
-                if ((int)(new HTuple(((hv_Length.TupleSelect(hv_Index))).TupleEqual(-1))) != 0)
-                {
-                    //Create_ single points for arrows with identical start and end point
-                    ho_TempArrow.Dispose();
-                    HOperatorSet.GenContourPolygonXld(out ho_TempArrow, hv_Row1.TupleSelect(hv_Index),
-                        hv_Column1.TupleSelect(hv_Index));
-                }
-                else
-                {
-                    //Create arrow contour
-                    ho_TempArrow.Dispose();
-                    HOperatorSet.GenContourPolygonXld(out ho_TempArrow, ((((((((((hv_Row1.TupleSelect(
-                        hv_Index))).TupleConcat(hv_Row2.TupleSelect(hv_Index)))).TupleConcat(
-                        hv_RowP1.TupleSelect(hv_Index)))).TupleConcat(hv_Row2.TupleSelect(hv_Index)))).TupleConcat(
-                        hv_RowP2.TupleSelect(hv_Index)))).TupleConcat(hv_Row2.TupleSelect(hv_Index)),
-                        ((((((((((hv_Column1.TupleSelect(hv_Index))).TupleConcat(hv_Column2.TupleSelect(
-                        hv_Index)))).TupleConcat(hv_ColP1.TupleSelect(hv_Index)))).TupleConcat(
-                        hv_Column2.TupleSelect(hv_Index)))).TupleConcat(hv_ColP2.TupleSelect(
-                        hv_Index)))).TupleConcat(hv_Column2.TupleSelect(hv_Index)));
-                }
-                {
-                    HObject ExpTmpOutVar_0;
-                    HOperatorSet.ConcatObj(ho_Arrow, ho_TempArrow, out ExpTmpOutVar_0);
-                    ho_Arrow.Dispose();
-                    ho_Arrow = ExpTmpOutVar_0;
-                }
-            }
-            ho_TempArrow.Dispose();
-            return ho_Arrow;
-        }
-
         public TrayControl GetControl()
         {
             return new TrayControl(this);
@@ -788,7 +440,229 @@ namespace ErosSocket.DebugPLC.Robot
             }
             return AxisSPD;
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="d"></param>
+        public void UPsetTrayNumbar(int d)
+        {
+            try
+            {
+                d = d - 1;
+                int rowt = d / XNumber;
+                int colt = d % XNumber;
+                bitW[d] = 1;
+                Number = (sbyte)d + 1;
+                if (TrayControl != null)
+                {
+                    TrayControl.UPsetTrayNumbar(d + 1);
+                }
+            }
+            catch (Exception)
+            {
+            }
+        }
+    }
+
+    public class TrayData
+    {
+        public TrayData( TrayRobot trayRobot)
+        {
+            XNumber = trayRobot. XNumber;
+            YNumber = trayRobot.YNumber;
+            TrayDirection = trayRobot.TrayDirection;
+            HorizontallyORvertically = trayRobot.HorizontallyORvertically;
+            AddTary(trayRobot.GetITrayRobot());
+            Clear();
+        }
+        ITrayRobot trayRobots;
+        public void AddTary(ITrayRobot trayRobot)
+        {
+            trayRobots = trayRobot;
+
+        }
+        [DescriptionAttribute("起点位置四个角落，并根据横向或竖向共8种排列方式。"), Category("排列"), DisplayName("起点位置")]
+        public TrayDirectionEnum TrayDirection { get; set; }
+
+
+        [DescriptionAttribute("横向Fales或竖向Ture。"), Category("排列"), DisplayName("横向或竖向")]
+        public bool HorizontallyORvertically { get; set; }
+
+   
+        [DescriptionAttribute("X方向数量。"), Category("排列"), DisplayName("X方向数量")]
+        public sbyte XNumber { get; set; }
+        [DescriptionAttribute("Y方向数量。"), Category("排列"), DisplayName("Y方向数量")]
+        public sbyte YNumber { get; set; }
+        [DescriptionAttribute("结果状态。"), Category("数据"), DisplayName("托盘产品数量")]
+        public List<sbyte> bitW { get; set; } = new List<sbyte>();
+
+        [DescriptionAttribute("判断整盘结果信息，托盘ID，穴位ID，穴位数据等。"), Category("结果"), DisplayName("整盘是否OK")]
+        public bool OK
+        {
+            get
+            {
+                try
+                {
+                    if (DebugComp.GetThis().TrayID)
+                    {
+                        if (TrayIDQR == null || TrayIDQR == "")
+                        {
+                            return false;
+                        }
+                    }
+                    if (GetDataVales() != null)
+                    {
+                        for (int i = 0; i < GetDataVales().Count; i++)
+                        {
+
+                            if (GetDataVales()[i] == null || !GetDataVales()[i].OK)
+                            {
+                                return false;
+                            }
+                        }
+                    }
+                    return true;
+                }
+                catch (Exception)
+                {
+                }
+                return false;
+            }
+        }
+
+        public bool Done
+        {
+            get
+            {
+                if (dataVales1 != null)
+                {
+                    for (int i = 0; i < dataVales1.Count; i++)
+                    {
+                        if (dataVales1[i] != null)
+                        {
+                            if (!dataVales1[i].Done)
+                            {
+                                return false;
+                            }
+                        }
+                    }
+                }
+                return true;
+            }
+        }
+
+        /// <summary>
+        /// NG位置
+        /// </summary>
+        public List<int> NGLocation = new List<int>();
+        /// <summary>
+        /// 产品名称
+        /// </summary>
+        public string Product_Name { get; set; }
+        [DescriptionAttribute("托盘ID。"), Category("结果"), DisplayName("托盘ID")]
+        public string TrayIDQR { get; set; } = "";
+
+        [DescriptionAttribute("托盘位置。"), Category("数据"), DisplayName("托盘位置")]
+        public int Number
+        {
+            get ;
+            set ;
+        }
+        [DescriptionAttribute("穴位数量。"), Category("排列"), DisplayName("总数量")]
+        public int Count
+        {
+            get
+            {
+                   return XNumber * YNumber ;
+            }
+        }
+        List<DataVale> dataVales1;
+        public List<DataVale> GetDataVales(List<DataVale> dataVales = null)
+        {
+            if (dataVales != null)
+            {
+                dataVales1 = dataVales;
+            }
+            return dataVales1;
+        }
+
+        public HObject ImagePlus;
+
+        public void RestValue()
+        {
+            if (trayRobots!=null)
+            {
+                trayRobots.RestValue();
+            }
+    
+        }
+
+        /// <summary>
+        /// 清除数据
+        /// </summary>
+        public void Clear()
+        {
+            dataVales1 = new List<DataVale>(new DataVale[XNumber * YNumber]);
+            for (int i = 0; i < dataVales1.Count; i++)
+            {
+                dataVales1[i] = new DataVale();
+            }
+        }
+        public void SetNumberValue(int number, bool value, double? valueDouble)
+        {
+             trayRobots.SetValue(number, value, valueDouble);
+        }
+        public void SetPanleSN(List<string> listSN, List<int> tryaid)
+        {
+            trayRobots.SetPanleSN(listSN, tryaid);
+        }
+        public void SetNumberValue(int number, DataVale dataVale)
+        {
+           trayRobots.SetValue(number, dataVale);
+        }
+
+        public void SetNumberValue(int number, TrayData TrayResetD)
+        {
+            trayRobots.SetValue(number, TrayResetD);
+        }
+        public void SetNumberValue(int number, bool Vaules)
+        {
+           trayRobots.SetValue(number, Vaules);
+        }
+        public void SetNumberValue(List<DataMinMax> dataMins, int number = 0)
+        {
+            if (number != 0)
+            {
+                Number = number;
+            }
+            //for (int i = 0; i < dataMins.Count; i++)
+            //{
+            //    this.GetDataVales()[Number - 1].AddOneComponent(dataMins[i]);
+            //}
+            SetNumberValue(Number, this.GetDataVales()[Number - 1]);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="d"></param>
+        public void UPsetTrayNumbar(int d)
+        {
+            try
+            {
+                d = d - 1;
+                int rowt = d / XNumber;
+                int colt = d % XNumber;
+                bitW[d] = 1;
+                Number = (sbyte)d + 1;
+            }
+            catch (Exception)
+            {
+            }
+        }
+
 
     }
+
 
 }

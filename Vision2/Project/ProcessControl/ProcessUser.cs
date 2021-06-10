@@ -54,7 +54,7 @@ namespace Vision2.Project.ProcessControl
                 {
                     UserFormulaContrsl.This.label6.Text = "历史码:";
                 }
-                vision.Vision.OneProductVale.PanelID = value;
+                //vision.Vision.OneProductVale.PanelID = value;
                 qrCode = value;
             }
         }

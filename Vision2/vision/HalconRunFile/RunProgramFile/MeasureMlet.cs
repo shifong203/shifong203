@@ -110,7 +110,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         {
                             halcon.keyValuePairs1.Add(this.Name + "", lengtMM);
                         }
-                        halcon.GetResultOBj().AddImageMassage(this.Dic_Measure.Keys_Measure[MeasureName2].OutCentreRow,
+                        halcon.GetOneImageR().AddImageMassage(this.Dic_Measure.Keys_Measure[MeasureName2].OutCentreRow,
                             this.Dic_Measure.Keys_Measure[MeasureName2].OutCentreCol, this.Name + "=" + lengtMM.TupleString("0.3f"), ColorResult.blue);
                         this["垂足mm"] = lengtMM;
                         if (!rest) return false;
@@ -133,7 +133,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         halcon.AddShowObj(pointxld);
                         this["LengtRow"] = this[name1[1]].TupleSub(this.ScaleMM( halcon.GetCaliConstMM(measure1[name1[1]])));
                         this["LengtCol"] = this["Col"].TupleSub(this.ScaleMM(halcon.GetCaliConstMM(measure1["col"])));
-                        halcon.GetResultOBj().AddImageMassage(measure1[name1[1]], measure1["col"], "r:" + this["LengtRow"].TupleString("0.3f") + " c:" + this["LengtCol"].TupleString("0.3f"), ColorResult.green);
+                        halcon.GetOneImageR().AddImageMassage(measure1[name1[1]], measure1["col"], "r:" + this["LengtRow"].TupleString("0.3f") + " c:" + this["LengtCol"].TupleString("0.3f"), ColorResult.green);
                         halcon.SendMesage("GoLengt", this["LengtRow"].TupleString("0.3f"), this["LengtCol"].TupleString("0.3f"));
 
                         return OK;

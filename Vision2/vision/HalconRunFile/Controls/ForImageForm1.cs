@@ -82,7 +82,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                                     continue;
                                 }
                                 if (halcon.ReadImage(dataGridView1.Rows[i].Cells[0].Value.ToString()))
-                                    halcon.CamImageEvent(numericUpDown1.Value.ToString(), halcon.Image().Clone(), (int)numericUpDown1.Value, false);
+                                    halcon.CamImageEvent(numericUpDown1.Value.ToString(), halcon.GetOneImageR(), (int)numericUpDown1.Value, false);
                                 this.Invoke(new Action(() =>
                                 {
                                     progressBar1.Value = i;
@@ -212,8 +212,7 @@ namespace Vision2.vision.HalconRunFile.Controls
 
                 {
                     halcon.ReadImage(dataGridView1.Rows[e.RowIndex].Cells[0].Value.ToString());
-
-                    halcon.CamImageEvent(halcon.RunIDStr[(int)numericUpDown1.Value - 1], halcon.Image().Clone(), (int)numericUpDown1.Value, false);
+                    halcon.CamImageEvent(halcon.RunIDStr[(int)numericUpDown1.Value - 1], halcon.GetOneImageR(), (int)numericUpDown1.Value, false);
                     dataGridView1.Rows[e.RowIndex].Cells[1].Value = halcon.Result;
                     //dataGridView1.Rows[e.RowIndex].Cells[2].Value = halcon.Message;
                 }

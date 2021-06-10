@@ -228,7 +228,7 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             try
             {
-                measure.Run(HalconRun, HalconRun.GetdataVale());
+                measure.Run(HalconRun, HalconRun.GetOneImageR());
                 double vaet=    (double) numericUpDown5.Value / measure.ValuePP;
                 DialogResult dialogResult= MessageBox.Show("校准值:"+vaet +"="+ numericUpDown5.Value+"/" + measure.ValuePP, "校准完成!点击YES完成校准", MessageBoxButtons.YesNo);
                 if (dialogResult==DialogResult.Yes) measure.Scale = vaet;

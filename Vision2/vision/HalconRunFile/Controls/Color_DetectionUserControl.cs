@@ -28,7 +28,7 @@ namespace Vision2.vision.HalconRunFile.Controls
             {
                 halcon.HobjClear();
 
-                _Classify.Classify(halcon,halcon.GetdataVale(),  _Classify.DrawObj,
+                _Classify.Classify(halcon,halcon.GetOneImageR(),  _Classify.DrawObj,
                     Color_detection, out HObject hObject,
                     hObjects);
         
@@ -156,7 +156,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 _Classify.COlorES = button3.BackColor;
                 _Classify.ISFillUp = checkBox1.Checked;
                 _Classify.ClosingCircleValue = (double)numericUpDown3.Value;
-                _Classify.Classify(halcon, halcon.GetdataVale(),  _Classify.DrawObj,   Color_detection, out HObject hObject, hObjects);
+                _Classify.Classify(halcon, halcon.GetOneImageR(),  _Classify.DrawObj,   Color_detection, out HObject hObject, hObjects);
                 halcon.AddOBJ(hObject);
                 halcon.ShowImage();
                 halcon.ShowObj();
@@ -220,7 +220,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 {
                     listBox2.Items.Add(_Classify.threshold_Min_Maxes[i].ImageTypeObj);
                 }
-                _Classify.Classify(halcon, halcon.GetdataVale(), _Classify.DrawObj, Color_detection, out HObject hObject,
+                _Classify.Classify(halcon, halcon.GetOneImageR(), _Classify.DrawObj, Color_detection, out HObject hObject,
                 this.hObjects);
                 listBox2.SelectedIndex = 0;
                 hWindID.ShowImage();
@@ -466,8 +466,8 @@ namespace Vision2.vision.HalconRunFile.Controls
                 groupBox3.Text = listBox2.SelectedItem.ToString();
                 hWindID.SetPerpetualPart(row-100, col1-100, row2+100, col2+100);
                 hWindID.SetDraw(checkBox2.Checked);
-                hWindID.HalconResult.AddObj(_Classify.DrawObj,ColorResult.blue);
-                hWindID.HalconResult.AddObj(hObjects[listBox2.SelectedIndex]);
+                hWindID.OneResIamge.AddObj(_Classify.DrawObj,ColorResult.blue);
+                hWindID.OneResIamge.AddObj(hObjects[listBox2.SelectedIndex]);
                 hWindID.ShowObj();
 
             }

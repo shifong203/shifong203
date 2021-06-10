@@ -153,7 +153,10 @@ namespace Vision2.Project.formula
             不显示 = 3,
             弹出复判按钮 = 4,
         }
-        public TrayRobot ResetDataS { get; set; } /*= new TrayResetData()*/
+        /// <summary>
+        /// 
+        /// </summary>
+        //public TrayRobot ResetDataS { get; set; } /*= new TrayResetData()*/
 
         public IMesData GetMes(IMesData mesDataT = null)
         {

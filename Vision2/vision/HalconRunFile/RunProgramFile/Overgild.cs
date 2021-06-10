@@ -235,7 +235,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 RunListOvergil[id].RunPa(halcon, this, out HObject hObject1);
                     if (hObject1.CountObj() != 0)
                     {
-                        oneResultOBj.ADDRed(this.Name,RunListOvergil[id].ErrText,hObject1);
+                        oneResultOBj.AddNGOBJ(this.Name,RunListOvergil[id].ErrText,hObject1, hObject1);
                     }
                 
             }

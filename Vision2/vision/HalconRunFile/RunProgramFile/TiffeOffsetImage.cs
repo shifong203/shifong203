@@ -46,7 +46,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
 
 
         [DescriptionAttribute("单张图像缩放比例。"), Category("图像"), DisplayName("缩放比例")]
-        public double ZoomImageSize { get; set; }
+        public double ZoomImageSize { get; set; } = 1;
         [DescriptionAttribute("图像宽。"), Category("图像"), DisplayName("整图像宽")]
         public int WidthI { get; set; }
 
@@ -97,6 +97,10 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         public void SetTiffeOff()
         {
             Imgaes = new HObject[ImageNumberROW * ImageNumberCol];
+            if (ZoomImageSize==0)
+            {
+                ZoomImageSize = 1;
+            }
             HOperatorSet.GenImageConst(out hObjectT, "byte", ImageWidthI / ZoomImageSize, ImageHeightI / ZoomImageSize);
             if (ImageByteT)
             {

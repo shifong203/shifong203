@@ -50,27 +50,21 @@ namespace Vision2.vision
                     HWindIDt.Initialize(hWindowControl2);
                 }
                 this.label4.Text = "";
-                if (dat.ResuOBj != null)
+                if (dat.GetNGCompData() != null)
                 {
                     dat.OK = true;
-                    foreach (var item in dat.ResuOBj)
+                    //foreach (var item in dat.ResuOBj)
+                    //{
+                    //    foreach (var itemT in item.CantOBJ)
+                    //    {
+                    //        if (trayDataVales.Count() != 0)
+                    //        {
+                    //            itemT.Value.OK = true;
+                    //        }
+                    //    }
+                    //}
+                    if (dat.GetNGCompData() != null && !dat.OK)
                     {
-                        for (int i = 0; i < item.NGObj.Count; i++)
-                        {
-                            //dat.Data1.AddRange(new MaxMinValue (){ item.NGObj[i].);
-                            if (trayDataVales.Count() != 0)
-                            {
-                                item.NGObj[i].OK = true;
-                            }
-                            //if (!item.NGObj[i].ResultBool)
-                            //{
-                            //    dat.OK = false;
-                            //}
-                        }
-                    }
-                    if (dat.ResuOBj != null && !dat.OK)
-                    {
-
                         if (!trayDataVales.Contains(dat))
                         {
                             RecipeCompiler.AddOKNumber(false);
@@ -126,19 +120,19 @@ namespace Vision2.vision
                 hWindowControl1.Height = panel2.Height;
             }
             label4.Text = "SN:" + data.PanelID + Environment.NewLine +
-               "相机:" + HWindd.HalconResult.RunName + "." + HWindd.HalconResult.RunID + Environment.NewLine
-                   + "NG信息:" + HWindd.HalconResult.NGMestage;
-            if (HWindd.HalconResult.PoxintID != "")
+               "相机:" + HWindd.OneResIamge.RunName + "." + HWindd.OneResIamge.RunID + Environment.NewLine
+                   + "NG信息:" + HWindd.OneResIamge.NGMestage;
+            if (HWindd.OneResIamge.RunName != "")
             {
-                label4.Text += ";位号:" + HWindd.HalconResult.PoxintID + Environment.NewLine;
+                label4.Text += ";位号:" + HWindd.OneResIamge.RunName + Environment.NewLine;
             }
             try
             {
                 HWindIDt.ClearObj();
-                string nareName = Vision.GetRunNameVision(HWindd.HalconResult.RunName).ReNmae[HWindd.HalconResult.RunID - 1];
+                string nareName = Vision.GetRunNameVision(HWindd.OneResIamge.RunName).ReNmae[HWindd.OneResIamge.RunID - 1];
                 string[] datas = nareName.Split('.');
                 HWindIDt.SetImaage(RecipeCompiler.GetProductEX().Key_Navigation_Picture[datas[0]].GetHObject());
-                HWindIDt.HalconResult.AddObj(RecipeCompiler.GetProductEX().Key_Navigation_Picture[datas[0]].KeyRoi[datas[1]]);
+                HWindIDt.OneResIamge.AddObj(RecipeCompiler.GetProductEX().Key_Navigation_Picture[datas[0]].KeyRoi[datas[1]]);
             }
             catch (Exception ex)
             {
@@ -172,32 +166,31 @@ namespace Vision2.vision
                                         this.Invoke(new Action(() =>
                                         {
                                             this.Text = "复判窗口剩余:" + trayDataVales.Count;
-                                            if (data.ImagePlus != null)
+                                            if (data.GetNGImage() != null)
                                             {
-                                                HWindd.SetImaage(data.ImagePlus);
+                                                HWindd.SetImaage(data.GetNGImage());
                                             }
                                             dataGridView1.Rows.Clear();
-                                            foreach (var item in data.ResuOBj)
+                                            foreach (var item in data.GetNGCompData().DicOnes)
                                             {
-                                                for (int i = 0; i < item.NGObj.Count; i++)
-                                                {
-                                                    if (!item.NGObj[i].OK)
+                                            
+                                                    if (!item.Value.OK)
                                                     {
                                                         int dt = dataGridView1.Rows.Add();
-                                                        dataGridView1.Rows[dt].Cells[0].Value = item.RunName + ":" + item.RunID;
-                                                        dataGridView1.Rows[dt].Cells[0].Tag = item.NGObj[i];
-                                                        dataGridView1.Rows[dt].Cells[1].Value = item.NGObj[i].NGText;
+                                                        //dataGridView1.Rows[dt].Cells[0].Value = item.Value + ":" + item.RunID;
+                                                        //dataGridView1.Rows[dt].Cells[0].Tag = itemt.Value;
+                                                        //dataGridView1.Rows[dt].Cells[1].Value = itemt.Value.NGText;
                                                     }
-                                                }
+                                                
                                             }
                                             string[] datStr = dataGridView1.Rows[0].Cells[0].Value.ToString().Split(':');
-                                            HalconResult halconResult = dataGridView1.Rows[0].Cells[0].Tag as HalconResult;
+                                            OneResultOBj halconResult = dataGridView1.Rows[0].Cells[0].Tag as OneResultOBj;
                                             dataGridView1.Rows[det].DefaultCellStyle.BackColor = Color.Yellow;
                                             label1.Text = "NG";
                                             int idnxet = int.Parse(datStr[1]) - 1;
                                             label1.BackColor = Color.Red;
                                             HWindd.SetImaage(halconResult.Image);
-                                            HWindd.HalconResult = halconResult;
+                                            HWindd.OneResIamge = halconResult;
                                             UpData();
                                             ErosProjcetDLL.UI.UICon.SwitchToThisWindow(RestObjImage.RestObjImageFrom.Handle, true);
                                             RestObjImage.RestObjImageFrom.Show();
