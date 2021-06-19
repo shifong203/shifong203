@@ -101,8 +101,8 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     bRet = false;
                 }
                 //ObjectColor NGobjectColor = new ObjectColor(NGSegments, "rad");
-                halconRun.AddOBJ(NGSegments, ColorResult.red);
-                //halconRun.AddOBJ( NGobjectColor._HObject);
+                halconRun.AddObj(NGSegments, ColorResult.red);
+                //halconRun.AddObj( NGobjectColor._HObject);
                 if (distanceMM.Length > 0)
                 {
                     halconRun.GetOneImageR().AddMeassge("平均胶宽:" + distanceMM.TupleMean().TupleString("0.03f") + "mm");
@@ -223,7 +223,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
 
         public void ShowMeasure(HalconRun halcon)
         {
-            halcon.AddOBJ(this.MeasureObj(halcon , halcon.GetOneImageR())._HObject);
+            halcon.AddObj(this.MeasureObj(halcon , halcon.GetOneImageR())._HObject);
             if (this.DrawRows != null && this.DrawRows.Length > 0)
             {
                 Vision.Disp_message(halcon.hWindowHalcon(), this.Name, this.DrawRows[0], this.DrawCols[0], false, "black", "true");
@@ -243,8 +243,8 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             {
                 HOperatorSet.GenCrossContourXld(out HObject hObject, this.OutRows, this.OutCols, 10, 0);
                 HOperatorSet.GenCrossContourXld(out HObject hObject2, this.OutCentreRow, this.OutCentreCol, 10, 0);
-                halcon.AddOBJ(hObject);
-                halcon.AddOBJ(hObject2);
+                halcon.AddObj(hObject);
+                halcon.AddObj(hObject2);
                 halcon.ShowImage();
                 halcon.ShowObj();
             }
@@ -257,7 +257,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             try
             {
                 HOperatorSet.GenCrossContourXld(out HObject hObject, this.OutCentreRow, this.OutCentreCol, 20, 0);
-                halcon.AddOBJ(hObject);
+                halcon.AddObj(hObject);
             }
             catch (Exception)
             {
@@ -272,7 +272,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             try
             {
                 HOperatorSet.GenCrossContourXld(out HObject hObject, this["拟合点Rows"], this["拟合点Columns"], 30, 0);
-                halcon.AddOBJ(hObject);
+                halcon.AddObj(hObject);
             }
             catch (Exception)
             {
@@ -292,26 +292,22 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         /// </summary>
         /// <param name="halcon"></param>
         /// <returns></returns>
-        public override bool RunHProgram(HalconRun halcon, OneResultOBj oneResultOBj, int id, string name = null)
+        public override bool RunHProgram(  OneResultOBj oneResultOBj, out List<OneRObj> oneRObjs, int runID = 0)
         {
-
+            oneRObjs = new List<OneRObj>();
             try
             {
-                this.SetPThis(halcon);
-                ObjectColor objectColor = this.MeasureObj(halcon, oneResultOBj);
+                this.SetPThis(oneResultOBj.GetHalcon());
+                ObjectColor objectColor = this.MeasureObj(oneResultOBj.GetHalcon(), oneResultOBj);
                 if (objectColor._HObject.CountObj() > 0)
                 {
                     return true;
                 }
-
             }
-            catch (Exception)
-
-            {
-            }
+            catch (Exception)     { }
             return false;
         }
-        public override Control GetControl()
+        public override Control GetControl(HalconRun halcon)
         {
             HalconRun halconRun = this.GetPThis() as HalconRun;
             MeasureConTrolEx measureConTrolEx = new MeasureConTrolEx(halconRun, this);
@@ -1952,7 +1948,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     HOperatorSet.GenCrossContourXld(out HObject hObjectd, rosc, colCen, 10, phi);
                     hObject = hObject.ConcatObj(hObjectd);
                 }
-                halcon.AddOBJ(hObject);
+                halcon.AddObj(hObject);
                 if (this.DrawRows != null && this.DrawRows.Length > 0)
                 {
                     Vision.Disp_message(halcon.hWindowHalcon(), this.Name, this.DrawRows[0], this.DrawCols[0]);
@@ -1964,7 +1960,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             }
             catch (Exception ex)
             {
-                halcon.ErrLog("显示测量错误:" + this.Name, ex);
+                halcon.LogErr("显示测量错误:" + this.Name, ex);
             }
         }
 
@@ -2245,7 +2241,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             }
             catch (Exception ex)
             {
-                halcon.ErrLog("修改点错误：" + this.Name, ex);
+                halcon.LogErr("修改点错误：" + this.Name, ex);
             }
             return new HObject();
         }
@@ -2335,7 +2331,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     objectColor._HObject = MeasureObjCilcre(image, halcon);
                     if (this.IsDisObj)
                     {
-                        //halcon.AddOBJ(objectColor._HObject.ConcatObj(KeyHObject["拟合圆的中心点"]));
+                        //halcon.AddObj(objectColor._HObject.ConcatObj(KeyHObject["拟合圆的中心点"]));
                     }
                     break;
                 case MeasureType.Pake:
@@ -2400,7 +2396,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                             dins / 2 + sHeigth, dins2);
                             hObjectt = hObjectt.ConcatObj(roet2.ConcatObj(roet3));
                         }
-                        halcon.AddOBJ(hObjectt);
+                        halcon.AddObj(hObjectt);
                         //objectColor._HObject = hObjectt;
 
                         HOperatorSet.Union1(hObjectt, out hObjectt);
@@ -2421,11 +2417,11 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
 
                         HOperatorSet.SelectShape(timeobj, out timeobj, "width", "and",
              5, 999999);
-                        halcon.AddOBJ(timeobj);
+                        halcon.AddObj(timeobj);
                         HOperatorSet.ClosingCircle(timeobj, out timeobj, this["ClosingCircle"].D);
                         HOperatorSet.OpeningCircle(timeobj, out timeobj, this["OpeningCircle"].D);
 
-                        halcon.AddOBJ(timeobj);
+                        halcon.AddObj(timeobj);
                         if (timeobj.CountObj() == 0)
                         {
                             halcon.GetOneImageR().AddMeassge(this.Name + ":" + "筛选值过大,未能找到区域");
@@ -2471,7 +2467,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
 
                         //        HOperatorSet.Emphasize(timeobj, out timeobj, 6, 5, 4);
                         //halcon.SetDefault("Debug", 1, true);
-                        halcon.AddOBJ(timeobj);
+                        halcon.AddObj(timeobj);
                         halcon.SetDefault("MEs", "null", true);
                         if (halcon["MEs"] == "null")
                         {
@@ -2502,7 +2498,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                             this["Distance"] = new HTuple();
                             HOperatorSet.EdgesSubPix(timeobj, out hObject3, "canny", this["Sigma"], this["SubPixMin"], this["SubPixMax"]);
                             HOperatorSet.SegmentContoursXld(hObject3, out hObject3, "lines_ellipses", 10, 0.1, 2);
-                            halcon.AddOBJ(hObject3);
+                            halcon.AddObj(hObject3);
 
 
                             this.SetDefault("FitClippingLength", 0, true);
@@ -2518,15 +2514,15 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                                 HOperatorSet.UnionCotangentialContoursXld(hObject3, out hObject3, this["FitClippingLength"], this["FitLength"],
                                 this["MaxTangAngle"].TupleRad(), this["MaxDist"], this["MaxDistPerp"], this["MaxOverlap"], "attr_forget");
                             }
-                            halcon.AddOBJ(hObject3);
+                            halcon.AddObj(hObject3);
 
                             HOperatorSet.SelectShapeXld(hObject3, out hObject3, "contlength", "and", this["SelectContlengthMin"], 200000);
-                            halcon.AddOBJ(hObject3);
+                            halcon.AddObj(hObject3);
 
                             Measuring_xld(hObject3, DrawRows, drawCols, DrawRows2, DrawCols2, hv_LeftMeasureAngles, this.Measure_Heigth, out outRows,
                                out outCols, out outRows2, out outCols2, out distance, out HObject hObject, out NGRoi, out HObject itmexl);
-                            halcon.AddOBJ(hObject);
-                            halcon.AddOBJ(itmexl);
+                            halcon.AddObj(hObject);
+                            halcon.AddObj(itmexl);
                         }
                     end:
                         this["distance"] = this.distance;
@@ -2535,7 +2531,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         HTuple cols = OutCols.TupleConcat(outCols2);
                         cols = cols.TupleRemove(cols.TupleFind(0));
                         HOperatorSet.GenCrossContourXld(out HObject LeftMeasureRectangles, rows, cols, 40, 0);
-                        halcon.AddOBJ(LeftMeasureRectangles);
+                        halcon.AddObj(LeftMeasureRectangles);
 
                         HOperatorSet.ConcatObj(objectColor._HObject, NGRoi.ConcatObj(LeftMeasureRectangles), out objectColor._HObject);
                         this["距离mm"] = halcon.GetCaliConstMM(this.distance);
@@ -2555,7 +2551,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             this["col"] = this.OutCentreCol;
             if (this.IsDisObj)
             {
-                halcon.AddOBJ(objectColor._HObject,this.color);
+                halcon.AddObj(objectColor._HObject,this.color);
 
             }
             MeasureHObj = objectColor._HObject;
@@ -2720,7 +2716,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             }
             catch (Exception ex)
             {
-                halcon.ErrLog("测量" + this.Name + "错误:", ex);
+                halcon.LogErr("测量" + this.Name + "错误:", ex);
             }
             return TMeasureObj(image, halcon , oneResultOBj);
         }
@@ -2758,7 +2754,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 if (IsRadius)
                 {
                     this["半径MM"] = halcon.GetCalib().SetCet(hvRadius);
-                    halcon.AddMessageIamge(hvRow_Center, hvCol_Center, "半径:" + this["半径MM"]);
+                    halcon.AddImageMassage(hvRow_Center, hvCol_Center, "半径:" + this["半径MM"]);
                 }
                 this["开始角度"] = hvStartPhi.TupleDeg();
                 this["结束角度"] = hvEndPhi.TupleDeg();
@@ -2868,8 +2864,8 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                             oneResultOBj.AddNGOBJ( this.Name,  "超差" + MLineM, hObject1, hObject1 );
                             if (IsDisObj)
                             {
-                                halcon.AddMessageIamge(OutCentreRow, outCentreCol, this.Name + ".超差" + distMM.TupleMax());
-                                halcon.AddOBJ(cross,ColorResult.red);
+                                halcon.AddImageMassage(OutCentreRow, outCentreCol, this.Name + ".超差" + distMM.TupleMax());
+                                halcon.AddObj(cross,ColorResult.red);
                             }
                         }
                    
@@ -2880,7 +2876,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             }
             catch (Exception ex)
             {
-                halcon.ErrLog(ex);
+                halcon.LogErr(ex);
             }
             return line;
         }
@@ -2946,7 +2942,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 this["拟合点Columns"] = outCols;
                 if (IsRadius)
                 {
-                    halcon.AddMessage(halcon.GetCaliConstMM(distance));
+                    halcon.AddMeassge(halcon.GetCaliConstMM(distance));
                 }
                 this["测量距离mm"] = halcon.GetCaliConstMM(distance);
                 HOperatorSet.GenCrossContourXld(out line, OutRows, OutCols, 10, 0);
@@ -3150,7 +3146,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         break;
                 }
                 hObjectdt.Dispose();
-                halcon.AddOBJ(hObjectdts);
+                halcon.AddObj(hObjectdts);
             }
             catch (Exception ex)
             {

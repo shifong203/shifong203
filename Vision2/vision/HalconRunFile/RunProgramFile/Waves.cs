@@ -13,7 +13,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
     public class Waves : RunProgram
     {
 
-        public override Control GetControl()
+        public override Control GetControl( HalconRun halconRun)
         {
             return null;
         }
@@ -141,8 +141,9 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         /// </summary>
         /// <param name="hImage"></param>
         /// <returns></returns>
-        public override bool RunHProgram(HalconRun halcon, OneResultOBj oneResultOBj, int runid = 0, string nmae = null)
+        public override bool RunHProgram( OneResultOBj oneResultOBj, out List<OneRObj> oneRObjs, int runID = 0)
         {
+            oneRObjs = new List<OneRObj>();
             try
             {
                 hv_ColProj1 = new HTuple();
@@ -179,8 +180,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 {
                     hTuple = new HTuple();
                     HOperatorSet.TupleGenConst(8, 0.0, out hTuple);
-                    halcon["距离值" + i] = hTuple;
-
+                    this["距离值" + i] = hTuple;
                 }
                 HTuple DistanceMin1S = new HTuple();
                 int NG = 0;
@@ -198,69 +198,73 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         {
                             d = Vision2.ErosProjcetDLL.Project.ProjectINI.GetStrReturnToInt(item.Value.Name);
                             dt = Vision2.ErosProjcetDLL.Project.ProjectINI.GetStrReturnInt(item.Value.Name);
-                            halcon["距离值" + d][dt - 1] = item.Value.Distance.TupleSelect(0).TupleMult(halcon.CoordinatePXY.Scale);
-                            if (item.Value.Distance.TupleMult(halcon.CoordinatePXY.Scale).D >= halcon["0.4标准"].D)
+                            this["距离值" + d][dt - 1] = item.Value.Distance.TupleSelect(0).TupleMult(oneResultOBj.CoordinatePXY.Scale);
+                            if (item.Value.Distance.TupleMult(oneResultOBj.CoordinatePXY.Scale).D >= this["0.4标准"].D)
                             {
                                 NG++;
-                                halcon.AddMessageIamge(item.Value.OutRows[0], item.Value.OutCols[0], d + "." + dt);
+                                oneResultOBj.AddImageMassage(item.Value.OutRows[0], item.Value.OutCols[0], d + "." + dt);
                                 HOperatorSet.GenCircle(out HObject circle, item.Value.OutRows[0], item.Value.OutCols[0], item.Value.Distance[0]);
-                                halcon.AddOBJ(circle);
+                                oneResultOBj.AddObj(circle);
                             }
                         }
                         else
                         {
                             if (item.Value.Enabled)
                             {
-                                halcon.GetOneImageR().AddMeassge(item.Key + ":未测量到点");
+                                oneResultOBj.AddMeassge(item.Key + ":未测量到点");
                             }
                         }
                     }
                     catch (Exception ex)
                     {
                         this.ErrBool = true;
-                        halcon.ErrLog(this.Name + item.Key, ex);
+                        this.LogErr(this.Name + item.Key, ex);
                     }
                 }
                 int rets = 0;
                 string datastr = "";
                 for (int it = 1; it < 26; it++)
                 {
-                    for (int i = 0; i < halcon["距离值" + it].Length; i++)
+                    for (int i = 0; i < this["距离值" + it].Length; i++)
                     {
-                        datastr += (i + 1) + ":" + halcon["距离值" + it].TupleSelect(i).TupleString("0.3f") + ",";
-                        if (halcon["距离值" + it].TupleSelect(i).TupleEqual(0))
+                        datastr += (i + 1) + ":" + this["距离值" + it].TupleSelect(i).TupleString("0.3f") + ",";
+                        if (this["距离值" + it].TupleSelect(i).TupleEqual(0))
                         {
                             rets++;
                         }
                     }
-                    halcon.GetOneImageR().AddMeassge(it + "." + "(" + datastr.TrimEnd(',') + ")");
+                    oneResultOBj.AddMeassge(it + "." + "(" + datastr.TrimEnd(',') + ")");
                     datastr = "";
                 }
                 //halcon.WriteData.Append(halcon["距离值1"]);
                 //halcon.WriteData.Append(halcon["距离值2"]);
-                halcon["NG数量"] = NG;
+                this["NG数量"] = NG;
                 //halcon.SetDefault("0.5标准", 0.3);
-                halcon.GetOneImageR().AddMeassge(sd);
-                halcon.SetDefault("0.4数量", 2);
-                if (!halcon["0.4数量"].TupleGreater(NG))
+                oneResultOBj.AddMeassge(sd);
+                this.SetDefault("0.4数量", 2);
+                if (!this["0.4数量"].TupleGreater(NG))
                 {
-                    halcon["0.4结果"] = "NG";
+                    this["0.4结果"] = "NG";
                 }
                 else
                 {
-                    halcon["0.4结果"] = "OK";
+                    this["0.4结果"] = "OK";
                 }
-                if (halcon["0.4结果"].ToString().Contains("OK") && halcon["0.2结果"].ToString().Contains("OK"))
+                if (this["0.4结果"].ToString().Contains("OK") && this["0.2结果"].ToString().Contains("OK"))
                 {
-                    halcon.Result = "OK";
+                   
+                    //oneResultOBj.Result = "OK";
                 }
                 else
                 {
-                    halcon.Result = "NG";
+                    NGNumber++;
+                    /*    halcon.Result = "NG"*/
+                    ;
                 }
-                if (rets == (halcon["距离值1"].Length + halcon["距离值2"].Length))
+                if (rets == (this["距离值1"].Length + this["距离值2"].Length))
                 {
-                    halcon.Result = "NG";
+                    NGNumber++;
+                    //halcon.Result = "NG";
                 }
 
                 return true;
@@ -268,7 +272,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             }
             catch (Exception ex)
             {
-                halcon.ErrLog(this.Name, ex);
+                this.LogErr(this.Name, ex);
                 return false;
             }
         }
@@ -285,7 +289,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             {
                 NGRoi = NGRoi.ConcatObj(item.Value.MeasureObj(halcon,halcon.GetOneImageR())._HObject);
             }
-            halcon.AddOBJ(NGRoi);
+            halcon.AddObj(NGRoi);
         }
 
 

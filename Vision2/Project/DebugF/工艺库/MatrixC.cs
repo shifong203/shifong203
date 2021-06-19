@@ -400,7 +400,7 @@ namespace Vision2.Project.DebugF.工艺库
                                 hWindID.OneResIamge.AddObj(hObject1.ConcatObj(hObjectxs), ColorResult.red);
                                 hWindID.OneResIamge.AddImageMassage(point.Y, point.X, "Mark2", ColorResult.red);
                             }
-                            Vision.GetRunNameVision(VisionName).AddMessage("Mark2定位失败！");
+                            Vision.GetRunNameVision(VisionName).GetOneImageR().AddMeassge("Mark2定位失败！");
                         }
                     }
                 }
@@ -411,7 +411,7 @@ namespace Vision2.Project.DebugF.工艺库
                         hWindID.OneResIamge.AddObj(hObject1.ConcatObj(hObjectxs), ColorResult.red);
                         hWindID.OneResIamge.AddImageMassage(point.Y, point.X, "Mark1", ColorResult.red);
                     }
-                    Vision.GetRunNameVision(VisionName).AddMessage("Mark1定位失败！");
+                    Vision.GetRunNameVision(VisionName).GetOneImageR().AddMeassge("Mark1定位失败！");
                 }
                 Vision.GetRunNameVision(VisionName).ShowObj();
             }
@@ -440,7 +440,7 @@ namespace Vision2.Project.DebugF.工艺库
                 }
                 else
                 {
-                    Vision.GetRunNameVision(VisionName).AddMessage("Mark定位失败！");
+                    Vision.GetRunNameVision(VisionName).GetOneImageR().AddMeassge("Mark定位失败！");
                     Vision.GetRunNameVision(VisionName).ShowObj();
                 }
             }
@@ -504,7 +504,7 @@ namespace Vision2.Project.DebugF.工艺库
                         }
                         else
                         {
-                            Vision.GetRunNameVision(VisionName).AddMessage("Mark定位失败！");
+                            Vision.GetRunNameVision(VisionName).GetOneImageR().AddMeassge("Mark定位失败！");
                             Vision.GetRunNameVision(VisionName).ShowObj();
                         }
                     }
@@ -517,7 +517,7 @@ namespace Vision2.Project.DebugF.工艺库
                 //HOperatorSet.VectorToHomMat2d(hRows, hCols,    hYs, hXs, out HTuple HomMat);
                 HOperatorSet.GenCrossContourXld(out HObject hObject, hRows, hCols, 20, 0);
                 Vision.GetRunNameVision(VisionName).GetCalib().GetPointRctoXY(hRows, hCols, out HTuple axisY, out HTuple axisX);
-                Vision.GetRunNameVision(VisionName).AddOBJ(hObject);
+                Vision.GetRunNameVision(VisionName).AddObj(hObject);
                 Vision.GetRunNameVision(VisionName).GetOneImageR().AddMeassge(Vision.GetRunNameVision(VisionName).GetCalib().GetMatHomString());
                 Vision.GetRunNameVision(VisionName).GetOneImageR().AddMeassge(Vision.GetRunNameVision(VisionName).GetCalib().GetRCMatHomString());
 
@@ -613,11 +613,11 @@ namespace Vision2.Project.DebugF.工艺库
                     if (DebugCompiler.GetThis().DDAxis.SetXYZ1Points(axisName, 10, XS[i], YS[i], point.Z))
                     {
                         System.Threading.Thread.Sleep(DebugCompiler.GetThis().MarkWait);
-                        Vision.GetRunNameVision(VisionName).AsysReadCamImage("", (i + 1), asyncRestImage =>
+                        Vision.GetRunNameVision(VisionName).AsysReadCamImage(0, (i + 1), asyncRestImage =>
                         {
                             try
                             {
-                                iMAGES[asyncRestImage.RunID - 1] = asyncRestImage.iamgel;
+                                iMAGES[asyncRestImage.RunID - 1] = asyncRestImage.Image;
                                 HOperatorSet.GenRectangle2(out hObject2, Rows[XS.Count - (asyncRestImage.RunID)] - (MaxRow), Cols[XS.Count - (asyncRestImage.RunID)] - (MaxCol), 0, disH, disW);
                                 if (HWind != null)
                                 {

@@ -1068,16 +1068,26 @@ namespace Vision2.Project.DebugF
         {
             try
             {
+                int trayID = 1;
+                int DataNumber = 0;
                 List<string> liastStr = new List<string>();
                 if (dataStr.Contains(";"))
                 {
                     string[] dataVat = dataStr.Trim(';').Split(';');
-                    for (int i = 0; i < dataVat.Length; i++)
+                    int.TryParse(dataVat[0], out  trayID);
+                    int.TryParse(dataVat[1], out  DataNumber);
+                    string[] dataStrTd = new string[dataVat.Length - 2];
+                    Array.Copy(dataVat,2, dataStrTd,0, dataStrTd.Length);
+                    if (DataNumber==1)
                     {
-                        if (dataVat[i]!="")
+                        RecipeCompiler.Instance.Data.Clear();
+                    }
+                    for (int i = 0; i < dataStrTd.Length; i++)
+                    {
+                        if (dataStrTd[i]!="")
                         {
                             liastStr = new List<string>();
-                            liastStr.AddRange(dataVat[i].Trim(',').Split(','));
+                            liastStr.AddRange(dataStrTd[i].Trim(',').Split(','));
                             RecipeCompiler.Instance.Data.AddData(i, liastStr);
                         }
                     }
@@ -1094,7 +1104,10 @@ namespace Vision2.Project.DebugF
                         TrayData.SetValue(liastStr);
                     }
                 }
-                TrayDataUserControl.GetTray().GetTrayData().SetNumberValue(RecipeCompiler.Instance.Data.ListDatV);
+                if (DataNumber == RecipeCompiler.Instance.DataNumber)
+                {
+                    TrayDataUserControl.GetTray().GetTrayData().SetNumberValue(RecipeCompiler.Instance.Data.ListDatV, trayID);
+                }
             }
             catch (Exception ex)
             {

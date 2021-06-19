@@ -23,7 +23,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         {
             return "2.5焊线检测";
         }
-        public override Control GetControl()
+        public override Control GetControl( HalconRun halconRun)
         {
             return new Wire_Solder_Control(this);
         }
@@ -33,15 +33,16 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             return base.ReadThis<Wire_Solder>(PATH);
         }
 
-        public override bool RunHProgram(HalconRun halcon, OneResultOBj oneResultOBj, int runID = 0,string name=null)
+        public override bool RunHProgram( OneResultOBj oneResultOBj,out List<OneRObj> oneRObjs, int runID = 0)
         {
-            return RunP(halcon, runID);
+            oneRObjs = new List<OneRObj>();
+            return RunP(oneResultOBj, runID);
         }
 
         public Threshold_Min_Max thresholdV_2 { get; set; } = new Threshold_Min_Max();
 
 
-        public bool RunP(HalconRun halcon, int runID = 0, HTuple visionUserControlH = null, HTuple visionUserControlS = null,
+        public bool RunP(OneResultOBj halcon, int runID = 0, HTuple visionUserControlH = null, HTuple visionUserControlS = null,
             HTuple visionUserControlV = null, HTuple hwindRgb = null)
         {
             int err = 0;
@@ -61,17 +62,17 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                             if (!Project.formula.RecipeCompiler.Instance.Data.GetChet(listWelding[i].List3DName[j]))
                             {
                                 datStr.Append(Project.formula.RecipeCompiler.Instance.Data.ListDatV[listWelding[i].List3DName[j]].ComponentName);
-                                halcon.AddOBJ(listWelding[i].HObject, ColorResult.red);
+                                halcon.AddObj(listWelding[i].HObject, ColorResult.red);
                                 err++;
                             }
                         }
                     }
                     if (datStr.Length != 0)
                     {
-                        halcon.AddMessageIamge(rows + 60, colus, datStr, ColorResult.red);
+                        halcon.AddImageMassage(rows + 60, colus, datStr, ColorResult.red);
                     }
                 }
-                HOperatorSet.ReduceDomain(halcon.Image(), DrawObj, out HObject hObject);
+                HOperatorSet.ReduceDomain(halcon.Image, DrawObj, out HObject hObject);
                 HOperatorSet.Decompose3(hObject, out HObject image1, out HObject image2, out HObject image3);
                 HOperatorSet.TransFromRgb(image1, image2, image3, out image1, out image2, out image3, "hsv");
 
@@ -101,7 +102,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
 
                 for (int i = 0; i < listWelding.Count; i++)
                 {
-                    //halcon.AddOBJ(listWelding[i].HObject, ColorResult.green);
+                    //halcon.AddObj(listWelding[i].HObject, ColorResult.green);
                     itmesOBJ = itmesOBJ.ConcatObj(listWelding[i].HObject);
                 }
 
@@ -165,11 +166,11 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     HOperatorSet.SmallestRectangle2(hObject51, out HTuple row1_s, out HTuple column1_s, out HTuple phi1_s, out HTuple length1_s, out HTuple length2_s);
                     if (runID > 2)
                     {
-                        halcon.AddMessageIamge(row1_s, column1_s, "1宽:" + (length2_s * 2).TupleString("0.1f"));
+                        halcon.AddImageMassage(row1_s, column1_s, "1宽:" + (length2_s * 2).TupleString("0.1f"));
                     }
 
                     HOperatorSet.GenRectangle2(out hObject51, row1_s, column1_s, phi1_s, length1_s, length2_s);
-                    //halcon.AddOBJ(hObject51, ColorResult.Red);
+                    //halcon.AddObj(hObject51, ColorResult.Red);
 
 
                     HOperatorSet.Intersection(hObject52, hObject1, out hObject52);
@@ -179,10 +180,10 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     HOperatorSet.SmallestRectangle2(hObject52, out row1_s, out column1_s, out phi1_s, out length1_s, out length2_s);
                     if (runID > 2)
                     {
-                        halcon.AddMessageIamge(row1_s, column1_s, "2宽:" + (length2_s * 2).TupleString("0.1f"));
+                        halcon.AddImageMassage(row1_s, column1_s, "2宽:" + (length2_s * 2).TupleString("0.1f"));
                     }
                     HOperatorSet.GenRectangle2(out hObject51, row1_s, column1_s, phi1_s, length1_s, length2_s);
-                    //halcon.AddOBJ(hObject51, ColorResult.Red);
+                    //halcon.AddObj(hObject51, ColorResult.Red);
 
                     HOperatorSet.Intersection(hObject53, hObject1, out hObject53);
                     HOperatorSet.Connection(hObject53, out hObject53);
@@ -192,10 +193,10 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     if (runID > 2)
                     {
 
-                        halcon.AddMessageIamge(row1_s, column1_s, "3宽:" + (length2_s * 2).TupleString("0.1f"));
+                        halcon.AddImageMassage(row1_s, column1_s, "3宽:" + (length2_s * 2).TupleString("0.1f"));
                     }
                     HOperatorSet.GenRectangle2(out hObject51, row1_s, column1_s, phi1_s, length1_s, length2_s);
-                    //halcon.AddOBJ(hObject51, ColorResult.Red);
+                    //halcon.AddObj(hObject51, ColorResult.Red);
                     HOperatorSet.Intersection(hObject54, hObject1, out hObject54);
                     HOperatorSet.Connection(hObject54, out hObject54);
                     HOperatorSet.AreaCenter(hObject54, out area, out row35, out hTuple2);
@@ -204,10 +205,10 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     HOperatorSet.SmallestRectangle2(hObject54, out row1_s, out column1_s, out phi1_s, out length1_s, out length2_s);
                     if (runID > 2)
                     {
-                        halcon.AddMessageIamge(row1_s, column1_s, "4宽:" + (length2_s * 2).TupleString("0.1f"));
+                        halcon.AddImageMassage(row1_s, column1_s, "4宽:" + (length2_s * 2).TupleString("0.1f"));
                     }
                     HOperatorSet.GenRectangle2(out hObject51, row1_s, column1_s, phi1_s, length1_s, length2_s);
-                    //halcon.AddOBJ(hObject51, ColorResult.Red);
+                    //halcon.AddObj(hObject51, ColorResult.Red);
                 }
 
                 for (int i = 0; i < lengt2MaxGre.Length; i++)
@@ -237,15 +238,15 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         {
                             HOperatorSet.AreaCenter(listWelding[indexs[i2]].HObject, out HTuple area, out HTuple rows1, out HTuple columns1);
                             HOperatorSet.GenCircle(out HObject circle, rows1, columns1, 30);
-                            halcon.AddOBJ(circle, ColorResult.red);
-                            halcon.AddMessageIamge(rows1, columns1, "short circuit", ColorResult.red);
+                            halcon.AddObj(circle, ColorResult.red);
+                            halcon.AddImageMassage(rows1, columns1, "short circuit", ColorResult.red);
                             rowstCi.Append(rows1);
                             err++;
                             ColumnstCi.Append(columns1);
                         }
                         HOperatorSet.GenContourPolygonXld(out HObject hObject4, rowstCi, ColumnstCi);
-                        halcon.AddOBJ(hObject4, ColorResult.red);
-                        halcon.AddOBJ(hObject1.SelectObj(i + 1), ColorResult.yellow);
+                        halcon.AddObj(hObject4, ColorResult.red);
+                        halcon.AddObj(hObject1.SelectObj(i + 1), ColorResult.yellow);
                     }
                     else if (indexs.Length == 1)
                     {
@@ -257,32 +258,32 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         if (phidoub > MaxDeg)
                         {
                             ResltBool = false;
-                            halcon.AddMessageIamge(rows1, columns1, "deg:" + phidoub.ToString("0.00°"), ColorResult.red);
+                            halcon.AddImageMassage(rows1, columns1, "deg:" + phidoub.ToString("0.00°"), ColorResult.red);
                         }
                         else if (runID > 2)
                         {
-                            halcon.AddMessageIamge(rows1, columns1, "deg:" + phidoub.ToString("0.00°"));
+                            halcon.AddImageMassage(rows1, columns1, "deg:" + phidoub.ToString("0.00°"));
                         }
                         if (length2R2 * 2 >= MaxLength2)
                         {
                             ResltBool = false;
-                            halcon.AddMessageIamge(rows1 + 50, columns1 + 40, "宽:" + (length2R2 * 2), ColorResult.red);
+                            halcon.AddImageMassage(rows1 + 50, columns1 + 40, "宽:" + (length2R2 * 2), ColorResult.red);
                         }
                         else if (runID > 2)
                         {
-                            halcon.AddMessageIamge(rows1 + 50, columns1 + 40, "宽:" + (length2R2 * 2));
+                            halcon.AddImageMassage(rows1 + 50, columns1 + 40, "宽:" + (length2R2 * 2));
                         }
 
                         if (length2R2 * 2 >= MaxLength2 || phidoub > MaxDeg)
                         {
                             ResltBool = false;
-                            halcon.AddOBJ(seleOBJ2, ColorResult.red);
+                            halcon.AddObj(seleOBJ2, ColorResult.red);
                         }
                         else if (runID > 2)
                         {
-                            halcon.AddOBJ(seleOBJ2, ColorResult.blue);
+                            halcon.AddObj(seleOBJ2, ColorResult.blue);
                         }
-                        halcon.AddOBJ(hObject1.SelectObj(i + 1), ColorResult.yellow);
+                        halcon.AddObj(hObject1.SelectObj(i + 1), ColorResult.yellow);
                     }
                     else
                     {
@@ -293,7 +294,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             }
             catch (Exception ex)
             {
-                halcon.AddMessage(ex.Message);
+                halcon.AddMeassge(ex.Message);
             }
             if (err != 0)
             {
@@ -381,9 +382,9 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     HOperatorSet.AreaCenter(hObject51, out HTuple area2, out HTuple row35, out HTuple hTuple2);
                     HOperatorSet.SelectShape(hObject51, out hObject51, "area", "and", area2.TupleMax().TupleSub(1), 9999999999);
                     HOperatorSet.SmallestRectangle2(hObject51, out HTuple row1_s, out HTuple column1_s, out HTuple phi1_s, out HTuple length1_s, out HTuple length2_s);
-                    halcon.AddMessageIamge(row1_s, column1_s, "1宽:" + (length2_s * 2).TupleString("0.1f"));
+                    halcon.AddImageMassage(row1_s, column1_s, "1宽:" + (length2_s * 2).TupleString("0.1f"));
                     HOperatorSet.GenRectangle2(out hObject51, row1_s, column1_s, phi1_s, length1_s, length2_s);
-                    //halcon.AddOBJ(hObject51, ColorResult.Red);
+                    //halcon.AddObj(hObject51, ColorResult.Red);
 
 
                     HOperatorSet.Intersection(hObject52, hObject1, out hObject52);
@@ -391,24 +392,24 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     HOperatorSet.AreaCenter(hObject52, out area, out row35, out hTuple2);
                     HOperatorSet.SelectShape(hObject52, out hObject52, "area", "and", area.TupleMax().TupleSub(1), 9999999999);
                     HOperatorSet.SmallestRectangle2(hObject52, out row1_s, out column1_s, out phi1_s, out length1_s, out length2_s);
-                    halcon.AddMessageIamge(row1_s, column1_s, "2宽:" + (length2_s * 2).TupleString("0.1f"));
+                    halcon.AddImageMassage(row1_s, column1_s, "2宽:" + (length2_s * 2).TupleString("0.1f"));
                     HOperatorSet.GenRectangle2(out hObject51, row1_s, column1_s, phi1_s, length1_s, length2_s);
-                    //halcon.AddOBJ(hObject51, ColorResult.Red);
+                    //halcon.AddObj(hObject51, ColorResult.Red);
 
                     HOperatorSet.Intersection(hObject53, hObject1, out hObject53);
                     HOperatorSet.Connection(hObject53, out hObject53);
                     HOperatorSet.AreaCenter(hObject53, out area, out row35, out hTuple2);
                     HOperatorSet.SelectShape(hObject53, out hObject53, "area", "and", area.TupleMax().TupleSub(1), 9999999999);
                     HOperatorSet.SmallestRectangle2(hObject53, out row1_s, out column1_s, out phi1_s, out length1_s, out length2_s);
-                    halcon.AddMessageIamge(row1_s, column1_s, "3宽:" + (length2_s * 2).TupleString("0.1f"));
+                    halcon.AddImageMassage(row1_s, column1_s, "3宽:" + (length2_s * 2).TupleString("0.1f"));
                     HOperatorSet.GenRectangle2(out hObject51, row1_s, column1_s, phi1_s, length1_s, length2_s);
-                    //halcon.AddOBJ(hObject51, ColorResult.Red);
+                    //halcon.AddObj(hObject51, ColorResult.Red);
                     HOperatorSet.Intersection(hObject54, hObject1, out hObject54);
                     HOperatorSet.Connection(hObject54, out hObject54);
                     HOperatorSet.AreaCenter(hObject54, out area, out row35, out hTuple2);
                     HOperatorSet.SelectShape(hObject54, out hObject54, "area", "and", area.TupleMax().TupleSub(1), 9999999999);
                     HOperatorSet.SmallestRectangle2(hObject54, out row1_s, out column1_s, out phi1_s, out length1_s, out length2_s);
-                    halcon.AddMessageIamge(row1_s, column1_s, "4宽:" + (length2_s * 2).TupleString("0.1f"));
+                    halcon.AddImageMassage(row1_s, column1_s, "4宽:" + (length2_s * 2).TupleString("0.1f"));
                     HOperatorSet.GenRectangle2(out hObject51, row1_s, column1_s, phi1_s, length1_s, length2_s);
 
                 }

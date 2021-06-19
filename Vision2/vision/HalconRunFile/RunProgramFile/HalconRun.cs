@@ -111,16 +111,16 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         /// 添加子程序
         /// </summary>
         public delegate void DelegateAddRun(HalconRun halcon,RunProgram runProgram);
-        public class iMAGERun
-        {
-            public HObject iamgel;
-            public int RunID;
+        //public class iMAGERun
+        //{
+        //    public HObject iamgel;
+        //    public int RunID;
 
-        }
+        //}
         /// <summary>
         /// 异步采图完成
         /// </summary>
-        public delegate void AsyncRestImage(iMAGERun iamge);
+        public delegate void AsyncRestImage(OneResultOBj iamge);
 
         /// <summary>
         /// 显示集合委托
@@ -907,7 +907,6 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 {
                     ImageHdt(hObject);
                 }
-
                 if (GetOneImageR().Image != null)
                 {
                     //imag.Dispose();
@@ -924,7 +923,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         HObject S;
         HObject V;
         HObject Gray;
-       void ImageHdt (HObject hObject)
+      public   void ImageHdt (HObject hObject)
         {
             try
             {
@@ -942,7 +941,12 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         }
         public HObject GetImageOBJ( ImageTypeObj imageType)
         {
-        
+
+
+            if (R == null)
+            {
+                ImageHdt(GetOneImageR().Image);
+            }
             switch (imageType)
             {
                 case ImageTypeObj.Image3:
@@ -1097,6 +1101,13 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             this.SetDefault("OKNumber", 0, true);
             this.SetDefault("NGNumber", 0, true);
             string dss = ProjectINI.In.ProjectPathRun + "\\item\\" + this.Name;
+            if (Directory.Exists(Vision.VisionPath + "\\Image\\"))
+            {
+                var files = Directory.GetFiles(Vision.VisionPath + "\\Image\\", "*.*", SearchOption.AllDirectories)
+                        .Where(s => s.EndsWith(".bmp") || s.EndsWith(".jpg"));
+              
+                this.ReadImage(files.ToArray()[0].ToString());
+            }
             SetExposureTime();
             ObjName = "结果区域";
             WhidowAdd = true;
@@ -1253,10 +1264,10 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         /// </summary>
         private float RunMaxID;
 
-        /// <summary>
-        /// 执行完成标志
-        /// </summary>
-        private bool threadOK;
+        ///// <summary>
+        ///// 执行完成标志
+        ///// </summary>
+        //private bool threadOK;
         [DescriptionAttribute("执行状态。"), Category("执行状态"), DisplayName("程序执行中"), Browsable(false)]
         public bool Buys { get { return buys; } }
         /// <summary>
@@ -1318,7 +1329,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
 
         bool strating;
 
-        Thread ThreadSatrReadCam;
+        //Thread ThreadSatrReadCam;
 
         #endregion
 
@@ -1502,50 +1513,50 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         #endregion
         #region 错误管理
 
-        /// <summary>
-        /// 写入错误日志
-        /// </summary>
-        /// <param name="ex"></param>
-        public void ErrLog(Exception ex)
-        {
-        statrt:
-            try
-            {
-                ErrLog("未指定名的错误：", ex);
-            }
-            catch (Exception)
-            {
-                goto statrt;
-            }
-        }
+        ///// <summary>
+        ///// 写入错误日志
+        ///// </summary>
+        ///// <param name="ex"></param>
+        //public void LogErr(Exception ex)
+        //{
+        //    statrt:
+        //    try
+        //    {
+        //        LogErr("未指定名的错误：", ex);
+        //    }
+        //    catch (Exception)
+        //    {
+        //        goto statrt;
+        //    }
+        //}
+
+        ///// <summary>
+        ///// 写入错误日志
+        ///// </summary>
+        ///// <param name="ex"></param>
+        //public void LogErr(string name, Exception ex)
+        //{
+        //   statrt:
+        //    try
+        //    {
+        //        if (ProjectINI.In.Run_Mode == ProjectINI.RunMode.Debug)
+        //        {
+        //            Vision2.ErosProjcetDLL.Project.AlarmText.LogErr(name + "，错误信息：" + ex.Message, this.Name);
+        //        }
+        //        Vision2.ErosProjcetDLL.Project.AlarmText.AddTextNewLine(this.Name + "," + name + "，错误信息：" + ex.Message);
+        //        logNet.WriteException(name, ex);
+        //    }
+        //    catch (Exception)
+        //    {
+        //        goto statrt;
+        //    }
+        //}
 
         /// <summary>
         /// 写入错误日志
         /// </summary>
         /// <param name="ex"></param>
-        public void ErrLog(string name, Exception ex)
-        {
-        statrt:
-            try
-            {
-                if (ProjectINI.In.Run_Mode == ProjectINI.RunMode.Debug)
-                {
-                    Vision2.ErosProjcetDLL.Project.AlarmText.LogErr(name + "，错误信息：" + ex.Message, this.Name);
-                }
-                Vision2.ErosProjcetDLL.Project.AlarmText.AddTextNewLine(this.Name + "," + name + "，错误信息：" + ex.Message);
-                logNet.WriteException(name, ex);
-            }
-            catch (Exception)
-            {
-                goto statrt;
-            }
-        }
-
-        /// <summary>
-        /// 写入错误日志
-        /// </summary>
-        /// <param name="ex"></param>
-        public void ErrLog(string name, string ex)
+        public void LogErr(string name, string ex)
         {
         statrt:
             try
@@ -1665,17 +1676,17 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         /// </summary>
         /// <param name="hObject"></param>
         /// <param name="colorResult"></param>
-        public void AddOBJ(HObject hObject, ColorResult colorResult = ColorResult.green)
+        public void AddObj(HObject hObject, ColorResult colorResult = ColorResult.green)
         {
             this.OneImage.AddObj(hObject, colorResult);
         }
-        public void AddOBJ(HObject hObject, HTuple corolH)
+        public void AddObj(HObject hObject, HTuple corolH)
         {
             this.OneImage.AddObj(hObject, corolH);
         }
-        public void AddOBJ(ObjectColor objectColor)
+        public void AddObj(ObjectColor objectColor)
         {
-            AddOBJ(objectColor._HObject, objectColor.HobjectColot);
+            AddObj(objectColor._HObject, objectColor.HobjectColot);
         }
         /// <summary>
         /// 传递区域并显示结果区域
@@ -1683,14 +1694,14 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         /// <param name="hObject"></param>
         public void AddShowObj(HObject hObject)
         {
-            this.AddOBJ(hObject);
+            this.AddObj(hObject);
             this.ShowObj();
         }
         object look = new object();
         /// <summary>
         /// 显示自己的图片
         /// </summary>
-        public void ShowImage()
+        public void ShowImage(bool fill=false)
         {
             lock (look)
             {
@@ -1699,9 +1710,9 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     HSystem.SetSystem("flush_graphic", "false");
                     HOperatorSet.ClearWindow(this.hWindowHalcon());
                     HSystem.SetSystem("flush_graphic", "true");
-                    if (Vision.ObjectValided(this.OneImage.Image))
+                    if (Vision.IsObjectValided(this.OneImage.Image))
                     {
-                        if (Width < 0 && WhidowAdd)
+                        if (fill)
                         {
                             HOperatorSet.GetImageSize(OneImage.Image, out HTuple width, out HTuple heigth);
                             this.Width = width;
@@ -1743,7 +1754,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         /// <param name="image"></param>
         public void ShowImage(HObject imaget)
         {
-            if (Vision.ObjectValided(imaget))
+            if (Vision.IsObjectValided(imaget))
             {
                 Image(imaget);
                 HOperatorSet.GetImageSize(Image(), out HTuple width, out HTuple heigth);
@@ -1766,12 +1777,12 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             //ResultOBj.ShowAll(this.hWindowHalcon());
         }
 
-        public void AddMessageIamge(HTuple rows, HTuple columns, HTuple message, ColorResult colorResult = ColorResult.green, string but = "false")
+        public void AddImageMassage(HTuple rows, HTuple columns, HTuple message, ColorResult colorResult = ColorResult.green, string but = "false")
         {
             OneImage.AddImageMassage(rows, columns, message, colorResult, but);
         }
 
-        public void AddMessage(HTuple message)
+        public void AddMeassge(HTuple message)
         {
             OneImage.AddMeassge(message);
         }
@@ -1780,14 +1791,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         //    this.OneImage.NGObj.Add(rObj);
         //    this.halconResult.AddNGObj(rObj);
         //}
-        //public OneResultOBj GetOneImageR()
-        //{
-        //    if (OneImage == null)
-        //    {
-        //        OneImage = new OneResultOBj();
-        //    }
-        //    return OneImage;
-        //}
+  
         public void SetResultOBj(OneResultOBj result)
         {
             OneImage = result;
@@ -1798,9 +1802,21 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             if (message.Length != 0)
             {
                 this.OneImage.AddMeassge(message);
-
             }
         }
+        public OneResultOBj GetOneImageR()
+        {
+            if (OneImage == null)
+            {
+                OneImage = new OneResultOBj();
+            }
+            if (OneImage.GetHalcon()==null)
+            {
+                OneImage.GetHalcon(this);
+            }
+            return OneImage;
+        }
+        OneResultOBj OneImage = new OneResultOBj();
 
         /// <summary>
         /// 显示传递的OBJ
@@ -1915,18 +1931,18 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             }
             catch (Exception ex)
             {
-                this.ErrLog("採图错误", "採图失败");
+                this.LogErr("採图错误", "採图失败");
                 //this.Image().GenEmptyObj();
             }
             return false;
         }
         bool aysDone;
 
-        public void AsysReadCamImage(string keyt, int runid, AsyncRestImage asyncRestImage)
+        public void AsysReadCamImage(int liyID, int runid, AsyncRestImage asyncRestImage, OneResultOBj oneResultOBj = null)
         {
             if (aysDone)
             {
-                this.ErrLog("异步错误", "等待中");
+                this.LogErr("异步错误", "等待中");
             }
             int errN = 0;
             while (aysDone)
@@ -1940,7 +1956,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             }
             if (errN > 1000)
             {
-                this.ErrLog("异步结束" + runid, "等待超时");
+                this.LogErr("异步结束" + runid, "等待超时");
             }
             Thread thread = new Thread(() =>
             {
@@ -1950,29 +1966,30 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     if (this.GetCam() != null)
                     {
                         this.SetExposureTime();
-
-                        OneResultOBj oneResultOBj = new OneResultOBj();
-                      
-                        HObject imaget = this.GetCam().GetImage();
-                        if (imaget != null)
+                        if (oneResultOBj == null)
                         {
-                            oneResultOBj.Image = imaget;
-                            //oneResultOBj.Image=(this.GetCam().GetImage());
-                            //this.Image(imaget);
+                            HObject imaget = this.GetCam().GetImage();
+                            oneResultOBj = new OneResultOBj();
+                            if (imaget != null)
+                            {
+                                oneResultOBj.Image = imaget;
+                            }
+                            else
+                            {
+                                oneResultOBj.Image=this.GetCam().GetImage();
+                            }
                         }
-                        else
-                        {
-                            oneResultOBj.Image=(this.GetCam().GetImage());
-                        }                       
+                        oneResultOBj.RunID = runid;
+                        oneResultOBj.LiyID = liyID;
                         aysDone = false;
-                        asyncRestImage.Invoke(new iMAGERun() { iamgel = oneResultOBj.Image, RunID = runid });
+                        asyncRestImage.Invoke(oneResultOBj);
                         Vision.TriggerSetup(Vision.GetSaveImageInfo(this.Name).ReadCamOKName, "true");
-                        this.GetCam().OnEnverIamge(keyt, runid, oneResultOBj);
+                        this.GetCam().OnEnverIamge(liyID.ToString(), runid, oneResultOBj);
                     }
                 }
                 catch (Exception ex)
                 {
-                    this.ErrLog("异步错误", ex.Message);
+                    this.LogErr("异步错误", ex.Message);
                     //this.Image().GenEmptyObj();
                 }
                 aysDone = false;
@@ -1981,8 +1998,9 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             thread.Start();
         }
 
-        public bool RunHProgram(HalconRun halcon, OneResultOBj  oneResultOBj , int id=0, string name = null)
+        public  bool RunHProgram(  OneResultOBj oneResultOBj, out List<OneRObj> oneRObjs, int id = 0)
         {
+            oneRObjs = new List<OneRObj>();
             if (oneResultOBj == null)
             {
                 oneResultOBj = new OneResultOBj();
@@ -1991,7 +2009,22 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             this.UPStart();
             oneResultOBj.RunName = this.Name;
             oneResultOBj.RunID = id;
-            this.ShowVision(name, oneResultOBj);
+            this.ShowVision("1", oneResultOBj);
+            this.EndChanged(oneResultOBj);
+            this.ShowObj();
+            return false;
+        }
+        public bool  RunHProgram(OneResultOBj oneResultOBj,RunProgram runProgram)
+        {
+      
+            if (oneResultOBj == null)
+            {
+                oneResultOBj = new OneResultOBj();
+                this.SetResultOBj(oneResultOBj);
+            }
+            this.UPStart();
+            oneResultOBj.RunName = this.Name;
+            this.ShowVision(runProgram.Name, oneResultOBj);
             this.EndChanged(oneResultOBj);
             this.ShowObj();
             return false;
@@ -2071,15 +2104,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         }
         DateTime DateTimeImage;
         string Teype = "";
-        public OneResultOBj GetOneImageR()
-        {
-            if (OneImage==null)
-            {
-                OneImage =new  OneResultOBj();
-            }
-            return OneImage;
-        }
-        OneResultOBj OneImage = new OneResultOBj();
+    
         /// <summary>
         /// 相机面
         /// </summary>
@@ -2093,6 +2118,9 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         /// 单个产品参数
         /// </summary>
         DataVale OnePatrData;
+        /// <summary>
+        /// 托盘ID
+        /// </summary>
         public int TrayLocation;
 
         public TrayData GetTrayData()
@@ -2123,6 +2151,8 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     OneImageData = new OneResultOBj();
                     OneImageData.Image= OneImage.Image;
                 }
+                OneImageData.GetHalcon(this);
+                ImageHdt(OneImageData.Image);
                 int LiyID = 0;
                 OneImage = OneImageData;
                  HObject hObject = OneImageData.Image.Clone();
@@ -2233,7 +2263,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 {
                     this.TiffeOffsetImageEX.SetTiffeOff(hObject);
                 }
-                else if (this.TiffeOffsetImageEX.ISHomdeImage == 2)
+                else
                 {
                     this.TiffeOffsetImageEX.SetTiffeOff(OneImageData.Image);
                 }
@@ -2376,7 +2406,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                                                   out oneRObj.NGROI, hTuple, "nearest_neighbor");
                                             HOperatorSet.AffineTransRegion(itemd.ROI,
                                           out oneRObj.ROI, hTuple, "nearest_neighbor");
-                                            oneRObjs.AddNGCont( oneRObj);
+                                            oneRObjs.AddCont( oneRObj);
                                         }
                                         catch (Exception ex)
                                         { }
@@ -2423,6 +2453,9 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             thread.IsBackground = true;
             thread.Start();
         }
+        /// <summary>
+        /// 参数
+        /// </summary>
         public Dictionary<string, double> keyValuePairs1 = new Dictionary<string, double>();
         #endregion
         /// <summary>
@@ -2475,8 +2508,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         HOperatorSet.SetPart(this.hWindowHalcon(), 0, 0, Height - 1, Width - 1);
                         HOperatorSet.DispObj(this.GetOneImageR().Image, this.hWindowHalcon());
                     }
-
-                    //}
+                    //ProjectINI.SetTempPrjectDataINI(this.Name, "图片地址", path);
                     return true;
                 }
                 catch (Exception ex)
@@ -2500,6 +2532,10 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             }
             OneImage.NGMestage += key + ";";
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="RestBool"></param>
         public void AddTData(params Double[] RestBool)
         {
             string Data = "";
@@ -2549,7 +2585,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         {
             if (this.ListRun.ContainsKey(runName))
             {
-                if (this.ListRun[runName].Run(this, oneResultOBj))
+                if (this.ListRun[runName].Run( oneResultOBj))
                 {
                     this.Result = "OK";
                     SetCode(this.ListRun[runName].CDID, true);
@@ -2599,7 +2635,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                                 {
                                     Teype = item.Value.Type;
                                     //Thread thread = new Thread(() => {
-                                        if (!item.Value.Run(this, oneResultOBj))
+                                        if (!item.Value.Run( oneResultOBj))
                                         {
                                             intDr++;
                                         }
@@ -2621,7 +2657,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                             {
                                 if (ListRun.ContainsKey(itemStr[i2]))
                                 {
-                                    if (!ListRun[itemStr[i2]].Run(this, oneResultOBj))
+                                    if (!ListRun[itemStr[i2]].Run( oneResultOBj))
                                     {
                                         oneResultOBj.AddMeassge(itemStr[i2] + ":NG");
                                         intDr++;
@@ -2892,7 +2928,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
 
                     foreach (var item in detee)
                     {
-                        if (!item.Value.Run(this, oneResultOBj))
+                        if (!item.Value.Run(oneResultOBj))
                         {
                             this.Result = "NG";
                         }
@@ -2989,7 +3025,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             }
             catch (Exception ex)
             {
-                ErrLog("保存历史Save:", ex);
+                LogErr("保存历史Save:", ex);
             }
         }
         public void SaveDataExcel(string diyName, string[] ColumnNaem, string name, HTuple[] data)
@@ -3061,7 +3097,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             }
             catch (Exception ex)
             {
-                ErrLog("保存历史Save:", ex);
+                LogErr("保存历史Save:", ex);
             }
         }
         /// <summary>
@@ -3101,7 +3137,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 {
                     path += "\\" + DateTimeImage.ToString("HH时mm分ss秒") + finame;
                 }
-                if (Vision.ObjectValided(this.Image()))
+                if (Vision.IsObjectValided(this.Image()))
                 {
                     Directory.CreateDirectory(Path.GetDirectoryName(path));
 
@@ -3351,7 +3387,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         {
             if (Drawing)
             {
-                this.AddMessage("绘制中,请绘制结束");
+                this .GetOneImageR(). AddMeassge("绘制中,请绘制结束");
                 return new HObject();
             }
             this.Drawing = true;
@@ -3410,7 +3446,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 HOperatorSet.HomMat2dIdentity(out HTuple HomMat2DIdentity);
                 HOperatorSet.HomMat2dScale(HomMat2DIdentity, 40, 40, 0, 0, out HTuple HomMat2DScale);
                 HOperatorSet.AffineTransContourXld(contours, out contours, HomMat2DScale);
-                this.AddOBJ(contours);
+                this.AddObj(contours);
 
                 this.ShowImage();
 
@@ -4571,7 +4607,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         {
             try
             {
-                if (Vision.ObjectValided(image))
+                if (Vision.IsObjectValided(image))
                 {
                     Directory.CreateDirectory(Path.GetDirectoryName(finame));
                     HOperatorSet.WriteImage(image, this.SaveImageType, 0, finame);

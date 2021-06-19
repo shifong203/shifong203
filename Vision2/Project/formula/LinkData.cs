@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Vision2.Project.Mes;
-
+using Vision2.vision.HalconRunFile.RunProgramFile;
 namespace Vision2.Project.formula
 {
     public class LinkData
@@ -39,10 +39,10 @@ namespace Vision2.Project.formula
         }
         public void AddData(List<double> datas)
         {
-               AddOBJ(datas);
+               AddObj(datas);
                EventAddValue?.Invoke(ListDatV);
         }
-         public void AddOBJ( List<string> vaset  )
+         public void AddObj( List<string> vaset  )
          {
             int idex = 0;
             int idex2 = 0;
@@ -77,7 +77,7 @@ namespace Vision2.Project.formula
                 idex++;
             }
          }
-        public void AddOBJ(List<double> vaset)
+        public void AddObj(List<double> vaset)
         {
             int idex = 0;
             int idex2 = 0;
@@ -169,7 +169,7 @@ namespace Vision2.Project.formula
 
         public void AddData(double datas)
         {
-            AddOBJ(new List<double>() { datas });
+            AddObj(new List<double>() { datas });
             EventAddValue?.Invoke(ListDatV);
         }
         public void OnEnver()
@@ -665,12 +665,35 @@ namespace Vision2.Project.formula
             return vs;
         }
 
+
+        public  OneRObj GetOneRObj()
+        {
+            OneRObj oneRObj = new OneRObj()
+            {
+                NGText = RunNameOBJ,
+                ComponentID = ComponentName,
+                RestText = ComponentName,
+                RestStrings = Reference_Name,
+            };
+            if (RunNameOBJ != null && RunNameOBJ.Contains("."))
+            {
+                string[] vs =RunNameOBJ.Split('.');
+                if (vs.Length == 2)
+                {
+                    oneRObj.NGROI = RecipeCompiler.GetProductEX().Key_Navigation_Picture[vs[0]].KeyRoi[vs[1]].Clone();
+                    oneRObj.ROI = RecipeCompiler.GetProductEX().Key_Navigation_Picture[vs[0]].KeyRoi[vs[1]].Clone();
+                }
+            }
+            oneRObj.OK = GetRsetOK();
+            oneRObj.dataMinMax = this;
+            return oneRObj;
+        }
         /// <summary>
-        /// 
+        /// 轨迹区域名称
         /// </summary>
         public string RunNameOBJ { get; set; } = "";
         /// <summary>
-        /// 
+        /// 元件名称
         /// </summary>
         public string ComponentName { get; set; } = "";
 

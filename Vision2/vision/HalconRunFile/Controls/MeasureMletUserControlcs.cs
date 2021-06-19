@@ -76,7 +76,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 {
                     //Measure.Dic_Measure[listBox1.SelectedItem.ToString()].HomName = Measure.HomName;
                     measureConTrolEx1.Updata(measure.Dic_Measure[listBox1.SelectedItem.ToString()], HalconRun);
-                    HalconRun.AddOBJ(measure.Dic_Measure[listBox1.SelectedItem.ToString()].GetHamMatDraw());
+                    HalconRun.AddObj(measure.Dic_Measure[listBox1.SelectedItem.ToString()].GetHamMatDraw());
                     HalconRun.ShowObj();
                 }
 
@@ -228,7 +228,7 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             try
             {
-                measure.Run(HalconRun, HalconRun.GetOneImageR());
+                measure.Run( HalconRun.GetOneImageR());
                 double vaet=    (double) numericUpDown5.Value / measure.ValuePP;
                 DialogResult dialogResult= MessageBox.Show("校准值:"+vaet +"="+ numericUpDown5.Value+"/" + measure.ValuePP, "校准完成!点击YES完成校准", MessageBoxButtons.YesNo);
                 if (dialogResult==DialogResult.Yes) measure.Scale = vaet;

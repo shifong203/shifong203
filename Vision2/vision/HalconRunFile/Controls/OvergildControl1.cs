@@ -87,9 +87,9 @@ namespace Vision2.vision.HalconRunFile.Controls
                 overgild.GetPThis().HobjClear();
                 groupBox3.Text = listBox1.SelectedItem.ToString();
                 propertyGrid2.SelectedObject = overgild.RunListOvergil[listBox1.SelectedIndex];
-                overgild.RunSeleRoi(overgild.GetPThis(),1,out HalconDotNet.HObject err);
-                overgild.RunListOvergil[listBox1.SelectedIndex].RunPa(halcon, overgild, out HalconDotNet.HObject hObject);
-                halcon.AddOBJ(hObject);
+                overgild.RunSeleRoi(halcon.GetOneImageR(), 1,out HalconDotNet.HObject err);
+                overgild.RunListOvergil[listBox1.SelectedIndex].RunPa(halcon.GetOneImageR(), overgild, out HalconDotNet.HObject hObject);
+                halcon.AddObj(hObject);
                 overgild.GetPThis().ShowObj();
             }
             catch (System.Exception ex)
@@ -111,8 +111,8 @@ namespace Vision2.vision.HalconRunFile.Controls
                 overgild.ErosinCircle = (double)numericUpDown1.Value;
                overgild.ThresSelectMax = (byte)numericUpDown5.Value;
                 halcon.HobjClear();
-                overgild.RunSeleRoi(overgild.GetPThis(), 1, out HalconDotNet.HObject err);
-                halcon.AddOBJ(err);
+                overgild.RunSeleRoi(halcon.GetOneImageR(), 1, out HalconDotNet.HObject err);
+                halcon.AddObj(err);
                 overgild.GetPThis().ShowObj();
                 halcon.ShowObj();
             }
@@ -149,9 +149,9 @@ namespace Vision2.vision.HalconRunFile.Controls
             {
            
                 halcon.HobjClear();
-                overgild.Run(halcon, halcon.GetOneImageR());
+                overgild.Run( halcon.GetOneImageR());
                 overgild.ModeOBj = overgild.SelecRoi;
-                halcon.AddOBJ(overgild.ModeOBj);
+                halcon.AddObj(overgild.ModeOBj);
                 halcon.ShowObj();
 
             }

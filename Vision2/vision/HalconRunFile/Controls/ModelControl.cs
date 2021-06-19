@@ -87,7 +87,7 @@ namespace Vision2.vision.HalconRunFile.Controls
 
                     HOperatorSet.ThresholdSubPix(hObject2, out hObject2, trackBar1.Value);
                     HOperatorSet.SelectContoursXld(hObject2, out hObject2, "contour_length", trackBar2.Value, 999999, -0.5, 0.5);
-                    halcon.AddOBJ(hObject2);
+                    halcon.AddObj(hObject2);
                     _Model.Create_Scaled_Shap_Model_Xld(halcon, hObject2);
                 }
                 numOrX.Text = _Model.OriginX.TupleString(".2f");
@@ -164,7 +164,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 string ds = System.IO.Path.GetDirectoryName(ProjectINI.In.ProjectPathRun);
                 _Model.UpSatrt<ModelVision>(ds + "\\" + _Model.Name);
                 halcon.ShowImage();
-                halcon.AddOBJ(_Model.OrignXLD);
+                halcon.AddObj(_Model.OrignXLD);
                 Updata(_Model);
                 halcon.ShowObj();
             }
@@ -193,14 +193,14 @@ namespace Vision2.vision.HalconRunFile.Controls
             //halcon.ShowVision(_Model.Name);
             //HOperatorSet.DrawPointMod(halcon.hWindowHalcon(), halcon.MRModelHomMat.Row, halcon.MRModelHomMat.Col, out HTuple hTupler, out HTuple hTupleC);
             //HOperatorSet.GenCrossContourXld(out HObject hObject, hTupler, hTupleC, 20, 0);
-            //halcon.AddOBJ(hObject);
+            //halcon.AddObj(hObject);
         }
 
         private void button11_Click(object sender, EventArgs e)
         {
             try
             {
-                halcon.AddOBJ(_Model.OrignXLD.Clone());
+                halcon.AddObj(_Model.OrignXLD.Clone());
                 halcon.ShowObj();
             }
             catch (Exception ex)
@@ -213,7 +213,7 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             try
             {
-                halcon.AddOBJ(_Model.ROIModeXLD.Clone());
+                halcon.AddObj(_Model.ROIModeXLD.Clone());
                 halcon.ShowObj();
             }
             catch (Exception)
@@ -332,7 +332,7 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             try
             {
-                halcon.AddOBJ(_Model.AOIObj.Clone());
+                halcon.AddObj(_Model.AOIObj.Clone());
             }
             catch (Exception ex)
             {
@@ -363,7 +363,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                     _Model.OriginXAdd = hTupleC - _Model.OriginX;
                     _Model.OriginYAdd = hTupler - _Model.OriginY;
                     //_Model.ROIModeXLD = _Model.ROIModeXLD.ConcatObj(hObject);
-                    halcon.AddOBJ(_Model.ROIModeXLD.Clone());
+                    halcon.AddObj(_Model.ROIModeXLD.Clone());
                     return hObject;
                 }
             }
@@ -413,9 +413,9 @@ namespace Vision2.vision.HalconRunFile.Controls
 
                 halcon.HobjClear();
                 _Model.Create_ModelRegr = RunProgram.DrawModOBJ(halcon, HalconRun.EnumDrawType.Rectangle2, _Model.Create_ModelRegr);
-                halcon.AddOBJ(_Model.DrawObj, ColorResult.blue);
+                halcon.AddObj(_Model.DrawObj, ColorResult.blue);
                 halcon.ShowObj();
-                halcon.AddOBJ(_Model.Create_ModelRegr, ColorResult.yellow);
+                halcon.AddObj(_Model.Create_ModelRegr, ColorResult.yellow);
                 if (comboBox3.SelectedItem.ToString() == "二值化区域")
                 {
                     HObject hObject = _Model.Create_ModelRegr;
@@ -427,7 +427,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                     HOperatorSet.ReduceDomain(halcon.Image(), hObject, out HObject hObject2);
                     HOperatorSet.ThresholdSubPix(hObject2, out hObject2, 30);
                     HOperatorSet.SelectContoursXld(hObject2, out hObject2, "contour_length", 50, 999999, -0.5, 0.5);
-                    halcon.AddOBJ(hObject2);
+                    halcon.AddObj(hObject2);
                 }
 
                 halcon.ShowObj();
@@ -443,22 +443,25 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             try
             {
-                if (comboBox3.SelectedItem.ToString() == "二值化区域")
+                if (comboBox3.SelectedItem.ToString() != "二值化区域")
                 {
                     halcon.HobjClear();
-                    label4.Text = "阈值" + trackBar1.Value.ToString();
+                    //label4.Text = "阈值" + trackBar1.Value.ToString();
                     label5.Text = "最小轮廓长度" + trackBar2.Value.ToString();
                     HObject hObject = _Model.Create_ModelRegr;
                     if (_Model.DrawObj.IsInitialized())
                     {
                         HOperatorSet.Difference(hObject, _Model.DrawObj, out hObject);
-                        halcon.AddOBJ(_Model.DrawObj, ColorResult.blue);
+                        halcon.AddObj(_Model.DrawObj, ColorResult.blue);
                     }
-                    halcon.AddOBJ(_Model.Create_ModelRegr, ColorResult.yellow);
+                    halcon.AddObj(_Model.Create_ModelRegr, ColorResult.yellow);
                     HOperatorSet.ReduceDomain(halcon.Image(), hObject, out HObject hObject2);
-                    HOperatorSet.ThresholdSubPix(hObject2, out hObject2, trackBar1.Value);
-                    HOperatorSet.SelectContoursXld(hObject2, out hObject2, "contour_length", trackBar2.Value, 999999, -0.5, 0.5);
-                    halcon.AddOBJ(hObject2);
+
+                    HOperatorSet.InspectShapeModel(hObject2, out HObject modeImages, out HObject modeRegions, (int)numericUpDown2.Value, trackBar1.Value);
+
+                    //HOperatorSet.ThresholdSubPix(hObject2, out hObject2, trackBar1.Value);
+                    //HOperatorSet.SelectContoursXld(hObject2, out hObject2, "contour_length", trackBar2.Value, 999999, -0.5, 0.5);
+                    halcon.AddObj(modeRegions);
                     halcon.ShowObj();
                 }
             }
@@ -472,16 +475,18 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             if (!isChe)
             {
-                if (comboBox3.SelectedItem.ToString() == "二值化区域")
-                {
-                    trackBar1.Enabled = true;
-                    trackBar2.Enabled = true;
-                }
-                else
-                {
-                    trackBar1.Enabled = false;
-                    trackBar2.Enabled = false;
-                }
+                trackBar1.Enabled = true;
+                trackBar2.Enabled = true;
+                //if (comboBox3.SelectedItem.ToString() == "二值化区域")
+                //{
+                //    trackBar1.Enabled = true;
+                //    trackBar2.Enabled = true;
+                //}
+                //else
+                //{
+                //    //trackBar1.Enabled = false;
+                //    //trackBar2.Enabled = false;
+                //}
             }
         }
 
@@ -626,7 +631,7 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             try
             {
-                _Model.Variation_Model.RunPa(halcon, halcon.GetOneImageR(), _Model, _Model.MRModelHomMat.HomMat,HWi1);
+                _Model.Variation_Model.RunPa( halcon.GetOneImageR(), _Model, _Model.MRModelHomMat.HomMat,HWi1);
             }
             catch (Exception ex)
             {
@@ -754,7 +759,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 }
                 List<HTuple> hTuples = new List<HTuple>();
                 hTuples.Add(_Model.MRModelHomMat.HomMat[d]);
-                _Model.Variation_Model.RunPa(halcon, halcon.GetOneImageR(), _Model, hTuples, HWi1);
+                _Model.Variation_Model.RunPa( halcon.GetOneImageR(), _Model, hTuples, HWi1);
                 d++;
             }
             catch (Exception ex)
@@ -800,7 +805,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                     return;
                 }
                 Get_Pragram(_Classify);
-                halcon.AddOBJ(_Classify.DrawObj, ColorResult.coral);
+                halcon.AddObj(_Classify.DrawObj, ColorResult.coral);
                 halcon.ShowObj();
             }
             catch (Exception)
@@ -837,8 +842,8 @@ namespace Vision2.vision.HalconRunFile.Controls
                 _Classify.Color_ID = (byte)numericUpDown9.Value;
                 _Classify.ISFillUp = checkBox10.Checked;
                 _Classify.ClosingCircleValue = (double)numericUpDown11.Value;
-                _Classify.Classify(halcon, halcon.GetOneImageR(), _Classify.DrawObj, _Model, out HObject hObject,  this.hObjects);
-                halcon.AddOBJ(hObject);
+                _Classify.Classify( halcon.GetOneImageR(), _Classify.DrawObj, _Model, out HObject hObject,  this.hObjects);
+                halcon.AddObj(hObject);
                 halcon.ShowImage();
                 halcon.ShowObj();
             }
@@ -878,8 +883,8 @@ namespace Vision2.vision.HalconRunFile.Controls
                 for (int i = 0; i < _Model.MRModelHomMat.NumberT; i++)
                 {
                     HOperatorSet.AffineTransRegion(_Classify.DrawObj, out HObject hObjectROI, _Model.MRModelHomMat.HomMat[i], "nearest_neighbor");
-                    _Classify.Classify(halcon, halcon.GetOneImageR(), hObjectROI, _Model, out HObject hObject, hObjects);
-                    halcon.AddOBJ(hObject);
+                    _Classify.Classify( halcon.GetOneImageR(), hObjectROI, _Model, out HObject hObject, hObjects);
+                    halcon.AddObj(hObject);
                     HOperatorSet.AreaCenter(hObject, out HTuple area, out HTuple row, out HTuple column);
                     HOperatorSet.EllipticAxis(hObject, out HTuple ra, out HTuple rb, out HTuple phi);
                     //HOperatorSet.SmallestRectangle2(hObject, out row, out column, out HTuple  phi2,out HTuple length1,out  HTuple length2);
@@ -890,9 +895,9 @@ namespace Vision2.vision.HalconRunFile.Controls
                     {
                         id = HTuple.TupleGenConst(area.Length, _Classify.Color_ID);
                         //halcon.AddMessage("ID:" + id + "面积:" + area + "长度:" + ra + "宽度:" + rb + "角度:" + phi.TupleDeg());
-                        halcon.AddMessageIamge(row, column, "面积" + area.TupleString("0.3f") + "ra" + ra.TupleString("0.3f") + "rb" + rb.TupleString("0.3f") + "高" +
+                        halcon.GetOneImageR().AddImageMassage(row, column, "面积" + area.TupleString("0.3f") + "ra" + ra.TupleString("0.3f") + "rb" + rb.TupleString("0.3f") + "高" +
                             height.TupleString("0.3f") + "宽" + width.TupleString("0.3f") + "半径" + radius.TupleString("0.3f"));
-                        halcon.AddMessageIamge(row + 40, column, "MM:面积" + Math.Sqrt(halcon.GetCaliConstMM(area)).ToString("0.000") + "ra" + halcon.GetCaliConstMM(ra).TupleString("0.3f")
+                        halcon.GetOneImageR().AddImageMassage(row + 40, column, "MM:面积" + Math.Sqrt(halcon.GetCaliConstMM(area)).ToString("0.000") + "ra" + halcon.GetCaliConstMM(ra).TupleString("0.3f")
                             + "rb" + halcon.GetCaliConstMM(rb).TupleString("0.3f") + "高" + halcon.GetCaliConstMM(height).TupleString("0.3f") + "宽" + halcon.GetCaliConstMM(width).TupleString("0.3f") +
                             "半径" + halcon.GetCaliConstMM(radius).TupleString("0.3f"));
                     }
@@ -919,7 +924,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 halcon.HobjClear();
 
                 _Classify.DrawObj = RunProgram.DrawHObj(halcon, _Classify.DrawObj);
-                    halcon.AddOBJ(_Classify.DrawObj, ColorResult.pink);
+                    halcon.AddObj(_Classify.DrawObj, ColorResult.pink);
               
             }
             catch (Exception)
@@ -944,7 +949,7 @@ namespace Vision2.vision.HalconRunFile.Controls
 
                 _Classify.DrawObj = RunProgram.DrawRmoveObj(halcon, _Classify.DrawObj);
         
-              halcon.AddOBJ(_Classify.DrawObj, ColorResult.pink);
+              halcon.AddObj(_Classify.DrawObj, ColorResult.pink);
                 
             }
             catch (Exception)
@@ -970,9 +975,9 @@ namespace Vision2.vision.HalconRunFile.Controls
         private void button23_Click(object sender, EventArgs e)
         {
             halcon.HobjClear();
-            _Classify.Classify(halcon, halcon.GetOneImageR(), _Classify.DrawObj, _Model, out HObject hObject, this.hObjects);
+            _Classify.Classify( halcon.GetOneImageR(), _Classify.DrawObj, _Model, out HObject hObject, this.hObjects);
             //_Classify.Classify(halcon, _Model, out HObject color);
-            halcon.AddOBJ(hObject);
+            halcon.AddObj(hObject);
             halcon.ShowObj();
         }
 
@@ -1110,7 +1115,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 }
                 if (_Classify.SeleRoi == null || _Classify.SeleRoi.IsInitialized())
                 {
-                    halcon.AddOBJ(_Classify.SeleRoi, ColorResult.pink);
+                    halcon.AddObj(_Classify.SeleRoi, ColorResult.pink);
                 }
             }
             catch (Exception)

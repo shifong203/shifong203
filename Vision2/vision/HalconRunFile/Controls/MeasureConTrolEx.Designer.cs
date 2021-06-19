@@ -183,6 +183,7 @@
             this.checkBox1.TabIndex = 54;
             this.checkBox1.Text = "使用防射";
             this.checkBox1.UseVisualStyleBackColor = true;
+            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox2_CheckedChanged);
             // 
             // groupBox1
             // 

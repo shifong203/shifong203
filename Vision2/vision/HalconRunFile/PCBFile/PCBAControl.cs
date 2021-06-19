@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualBasic;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -29,7 +30,7 @@ namespace Vision2.vision.HalconRunFile.Controls
             {
                 string name = Interaction.InputBox("请输入新名称", "创建电容", "电容c1", 100, 100);
                 string dsts = name;
-                BPCBoJB bPCBoJB = null;
+                RunProgram bPCBoJB = null;
                 if (PCBAT.GetDicPCBA().ContainsKey(dsts))
                 {
                      int ds = ProjectINI.GetStrReturnInt(name, out dsts);
@@ -42,7 +43,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                     {
                         string jsonStr = JsonConvert.SerializeObject(PCBAT.GetDicPCBA()[name]);
                         object DA = JsonConvert.DeserializeObject(jsonStr, PCBAT.GetDicPCBA()[name].GetType());
-                        bPCBoJB = DA as BPCBoJB;
+                        bPCBoJB = DA as RunProgram;
                     }
                     else   return;    
                 }
@@ -134,11 +135,11 @@ namespace Vision2.vision.HalconRunFile.Controls
                                 tabPage1.Controls.Add(control);
                                 control.Dock = DockStyle.Fill;
                                 halcon.HobjClear();
-                                BPCBoJB bPCBoJB=     CurrentNode.Tag as BPCBoJB;
+                                RunProgram bPCBoJB =     CurrentNode.Tag as RunProgram;
                                 propertyGrid1.SelectedObject = bPCBoJB;
                                 bPCBoJB.GetRunProgram(PCBAT);
-                                bPCBoJB.Run(halcon, PCBAT, halcon.GetOneImageR(), out HalconDotNet.HObject hObject);
-                                //halcon.AddOBJ(bPCBoJB.TestingRoi);
+                                bPCBoJB.RunHProgram( halcon.GetOneImageR(),out List<OneRObj> oneRObj);
+                                //halcon.AddObj(bPCBoJB.TestingRoi);
                                 halcon.ShowObj();
                             }
                         }
@@ -158,7 +159,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 string name = Interaction.InputBox("请输入新名称", "创建电容", "IC芯片", 100, 100);
                 string dsts = name;
                 if (name == "") return;
-                BPCBoJB bPCBoJB = null;
+                RunProgram bPCBoJB = null;
                 if (PCBAT.GetDicPCBA().ContainsKey(dsts))
                 {
                     int ds = ProjectINI.GetStrReturnInt(name, out dsts);
@@ -173,7 +174,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                     {
                         string jsonStr = JsonConvert.SerializeObject(PCBAT.GetDicPCBA()[name]);
                         object DA = JsonConvert.DeserializeObject(jsonStr, PCBAT.GetDicPCBA()[name].GetType());
-                        bPCBoJB = DA as BPCBoJB;
+                        bPCBoJB = DA as RunProgram;
                     }
                     else
                     {
@@ -200,7 +201,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 stret:
                 string name = Interaction.InputBox("请输入新名称", dsts, CurrentNode.Text, 100, 100);
                 if (name=="")   return;
-                BPCBoJB bPCBoJB = CurrentNode.Tag as BPCBoJB;
+                RunProgram bPCBoJB = CurrentNode.Tag as RunProgram;
                 if (PCBAT.GetDicPCBA().ContainsKey(name))
                 {
                     DialogResult dr = MessageBox.Show(name + ":已存在!请重新输入", "请重新输入", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
@@ -226,7 +227,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 string name = Interaction.InputBox("请输入新名称", "创建矩形电容", "电容1", 100, 100);
                 string dsts = name;
                 if (name == "") return;
-                BPCBoJB bPCBoJB = null;
+                RunProgram bPCBoJB = null;
                 if (PCBAT.GetDicPCBA().ContainsKey(dsts))
                 {
                     int ds = ProjectINI.GetStrReturnInt(name, out dsts);
@@ -241,7 +242,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                     {
                         string jsonStr = JsonConvert.SerializeObject(PCBAT.GetDicPCBA()[name]);
                         object DA = JsonConvert.DeserializeObject(jsonStr, PCBAT.GetDicPCBA()[name].GetType());
-                        bPCBoJB = DA as BPCBoJB;
+                        bPCBoJB = DA as RunProgram;
                     }
                     else
                     {
@@ -257,6 +258,11 @@ namespace Vision2.vision.HalconRunFile.Controls
             {
                 MessageBox.Show(ex.Message);
             }
+
+        }
+
+        private void toolStripButton1_Click(object sender, EventArgs e)
+        {
 
         }
     }

@@ -1,4 +1,5 @@
 ﻿using System.Windows.Forms;
+using Vision2.Project.formula;
 
 namespace Vision2.ErosProjcetDLL.Project
 {
@@ -32,9 +33,24 @@ namespace Vision2.ErosProjcetDLL.Project
 
         private void AlarmForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            this.Hide();
+            try
+            {
+                UserFormulaContrsl.This.tabControl1.TabPages.Add(UserFormulaContrsl.This.tabPage4);
+                UserFormulaContrsl.This.tabPage4.Controls.Add(AlarmForm.AlarmFormThis);
+                AlarmForm.AlarmFormThis.TopLevel = false;
+                AlarmForm.AlarmFormThis.FormBorderStyle = FormBorderStyle.None;
+                AlarmForm.AlarmFormThis.Dock = DockStyle.Fill;
+                AlarmForm.AlarmFormThis.Show();
+            }
+            catch (System.Exception)
+            {  }
             e.Cancel = true;//拦截，不响应操作
             return;
+        }
+
+        private void AlarmForm_Load(object sender, System.EventArgs e)
+        {
+
         }
     }
 }

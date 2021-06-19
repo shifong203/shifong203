@@ -49,6 +49,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
     public class OneRObj
     {
         public HObject ROI;
+
         public HObject NGROI = new HObject();
         public OneRObj()
         {
@@ -102,24 +103,31 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 NGROI.GenEmptyObj();
             }
             RestText = "OK";
+         
             OK = true;
             Done = true;
         }
-        public void RAddNG()
+        public void RAddNG(string restText)
         {
-            ROI.GenEmptyObj();
+            if (ROI != null)
+            {
+                ROI.GenEmptyObj();
+            }
+            if (NGROI != null)
+            {
+                NGROI.GenEmptyObj();
+            }
+            RestText = restText;
             Done = true;
             OK = false;
         }
-
-
     }
     /// <summary>
     /// 元件集合
     /// </summary>
     public class OneCompOBJs
     {
-        public void AddNGCont(OneRObj oneRObj)
+        public void AddCont(OneRObj oneRObj)
         {
             if (!DicOnes.ContainsKey(oneRObj.ComponentID))
             {
@@ -127,6 +135,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             }
             DicOnes[oneRObj.ComponentID].oneRObjs.Add(oneRObj);
         }
+  
         public Dictionary<string, OneComponent> DicOnes = new Dictionary<string, OneComponent>();
        /// <summary>
        /// 单个元件缺陷集合
@@ -173,14 +182,16 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
 
                 get
                 {
+                    string data = "";
                     foreach (var item in oneRObjs)
                     {
                         if (!item.Done)
                         {
                             return item.NGText;
                         }
+                        data += item.NGText + ";";
                     }
-                    return "";
+                    return data;
                 }
 
             }
@@ -207,14 +218,16 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             {
                 get
                 {
+                    string data = "";
                     foreach (var item in oneRObjs)
                     {
                         if (!item.Done)
                         {
                             return item.RestText;
                         }
+                        data += item.RestText + ";";
                     }
-                    return "";
+                    return data;
                 }
             }
             public HObject NGROI {
@@ -252,9 +265,10 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 {
                     if (!item.Done)
                     {
-                        item.OK = true;
-                        item.RestText = "OK";
-                        item.Done = true;
+                        item.RAddOK();
+                        //item.OK = true;
+                        //item.RestText = "OK";
+                        //item.Done = true;
                         break;
                     }
                 }
@@ -266,9 +280,10 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 {
                     if (!item.Done)
                     {
-                        item.OK = false;
-                        item.RestText = restText;
-                        item.Done = true;
+                        item.RAddNG(restText);
+                        //item.OK = false;
+                        //item.RestText = restText;
+                        //item.Done = true;
                         break;
                     }
                 }

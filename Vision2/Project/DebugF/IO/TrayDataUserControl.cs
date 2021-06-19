@@ -9,6 +9,7 @@ using Vision2.Project.Mes;
 using Vision2.vision.HalconRunFile.RunProgramFile;
 using  ErosSocket.DebugPLC.Robot;
 using Vision2.vision;
+using static Vision2.vision.HalconRunFile.RunProgramFile.OneCompOBJs;
 
 namespace Vision2.Project.DebugF.IO
 {
@@ -17,7 +18,7 @@ namespace Vision2.Project.DebugF.IO
         public TrayDataUserControl()
         {
             InitializeComponent();
-            ErosProjcetDLL.UI.DataGridViewF.StCon.AddCon(dataGridView1);
+            //ErosProjcetDLL.UI.DataGridViewF.StCon.AddCon(dataGridView1);
             ErosProjcetDLL.UI.DataGridViewF.StCon.AddCon(dataGridView2);
         }
          vision.HWindID HWi ;
@@ -700,7 +701,7 @@ namespace Vision2.Project.DebugF.IO
         {
             try
             {
-                RecipeCompiler.Instance.Data.AddOBJ(values);
+                RecipeCompiler.Instance.Data.AddObj(values);
                 MainForm1.MainFormF.Invoke(new Action(() =>
                 {
                     if (this.Controls.Find(tray.Number.ToString(), false).Length != 0)
@@ -1137,58 +1138,45 @@ namespace Vision2.Project.DebugF.IO
                     {
                         panel1.Location = new Point(100, 100);
                     }
-                    dataGridView1.Visible = true;
                     panel1.Visible = true;
-                    //dataGridView1.Rows.Clear();
+                 
                     if (!this.Controls.Contains(panel1))
                     {
                         this.Controls.Add(panel1);
                         panel1.BringToFront();
                     }
                     toolStripLabel1.Text = "N:" + control.Name + ";SN:" + dataObj.PanelID;
-                    //if (dataObj.DataMin_Max.Count!=0)
-                    //{
-                    //    if (dataGridView1.Rows.Count< dataObj.DataMin_Max.Count)
-                    //    {
-                    //        dataGridView1.Rows.Add(dataObj.DataMin_Max.Count- dataGridView1.Rows.Count);
-                    //    }
-                    //    int i = 0;
-                    //    foreach (var item in dataObj.DataMin_Max)
-                    //    {
-                    //        try
-                    //        {
-                    //            dataGridView1.Rows[i].Cells[0].Tag = item.Value;
-                    //             dataGridView1.Rows[i].Cells[0].Style.BackColor = Color.White;
-                    //            if (dataObj.DataMin_Max.Count > i)
-                    //            {
-                    //                dataGridView1.Rows[i].Cells[0].Value = item.Value.ComponentName;
-                    //            }
-                    //            string data = "";
-                    //            for (int i2 = 0; i2 < item.Value.ValueStrs.Count; i2++)
-                    //            {
-                    //                data += item.Value.ValueStrs[i2]+",";
-                    //            }
-                    //            dataGridView1.Rows[i].Cells[1].Value = data;
-                  
-                    //            if (!item.Value.GetRsetOK())
-                    //            {
-                    //                dataGridView1.Rows[i].Cells[0].Style.BackColor = Color.Red;
-                    //            }
-                    //        }
-                    //        catch (Exception ex)
-                    //        {   }
-                    //        i++;
-                    //    }
-                    //}
                     if (dataObj!=null)
                     {
+                        //dataGridView1.Rows.Clear();
+                        treeView1.Nodes.Clear();
                         foreach (var item in dataObj.ListCamsData)
                         {
-                            HWi.SetImaage(item.Value.ImagePlus);
-                            break;
-                        }
-               
-                     
+                           TreeNode treeNode=  treeView1.Nodes.Add(item.Key);
+                            treeNode.Tag = item.Value;
+                            treeNode.ImageIndex = 0;
+                            foreach (var itemd in item.Value.NGObj.DicOnes)
+                            {
+
+                                TreeNode treeNode1= treeNode.Nodes.Add(itemd.Key);
+                                if (itemd.Value.OK)
+                                {
+                                    treeNode1.ImageIndex = 6;
+                                }
+                                else
+                                {
+                                    treeNode1.ImageIndex = 7;
+                                }
+                          
+                                treeNode1.Tag = itemd.Value;
+                            }
+                            treeNode.Expand();
+                         }
+                           foreach (var item in dataObj.ListCamsData)
+                           {
+                                HWi.SetImaage(item.Value.ImagePlus);
+                                break;
+                            }
                             if (dataObj.OK)
                             {
                                 control.BackColor = Color.Green;
@@ -1197,15 +1185,13 @@ namespace Vision2.Project.DebugF.IO
                             {
                                 control.BackColor = Color.Red;
                             }
-                            //HWi.SetImaage(dataObj.ImagePlus);
-                        
                     }
                 }
                 if (DebugCompiler.EquipmentStatus == ErosSocket.ErosConLink.EnumEquipmentStatus.运行中)
                 {
                     return;
                 }
-                HalconRun halcon = vision.Vision.GetRunNameVision();
+                HalconRun halcon = Vision.GetRunNameVision();
                 if (halcon != null)
                 {
                     halcon.HobjClear();
@@ -1440,9 +1426,7 @@ namespace Vision2.Project.DebugF.IO
                             }
 
                         }
-
                     }
-
                 }));
             }
             catch (Exception ex)
@@ -1451,45 +1435,48 @@ namespace Vision2.Project.DebugF.IO
             }
         }
 
-
-        private void dataGridView1_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
-        {
-                try
-                {
-                    dataGridView2.Visible = true;
-                    dataGridView2.Location = new Point(150, 100);
-                    dataGridView2.Rows.Clear();
-                    DataMinMax da = dataGridView1.Rows[e.RowIndex].Cells[0].Tag as DataMinMax;
-                    if (da!=null)
-                    {
-                        dataGridView2.Rows.Add(da.Reference_Name.Count);
-                        for (int i = 0; i < da.Reference_Name.Count; i++)
-                        {
-                            dataGridView2.Rows[i].Cells[0].Value = da.Reference_Name[i];
-                            if (da.ValueStrs.Count>i)
-                            {
-                                dataGridView2.Rows[i].Cells[1].Value = da.ValueStrs[i];
-                            }
-                            dataGridView2.Rows[i].Cells[2].Value = da.Reference_ValueMin[i];
-                            dataGridView2.Rows[i].Cells[3].Value = da.Reference_ValueMax[i];
-                        }
-                        if (da.ValueStrs.Count > dataGridView2.Rows.Count)
-                        {
-                           dataGridView2.Rows.Add(da.ValueStrs.Count -da.Reference_Name.Count);
-                            for (int i = da.Reference_Name.Count; i < da.ValueStrs.Count; i++)
-                            {
-                                dataGridView2.Rows[i].Cells[1].Value = da.ValueStrs[i];
-                            }
-                         }
-                    }
-                    dataGridView2.BringToFront();
-                    dataGridView2.Show();
-                }
-                catch (Exception)
-                {
-                }
+        //private void dataGridView1_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
+        //{
+        //        try
+        //        {
+        //            dataGridView2.Visible = true;
+        //            dataGridView2.Location = new Point(150, 100);
+        //            dataGridView2.Rows.Clear();
+        //            DataMinMax da = dataGridView1.Rows[e.RowIndex].Cells[0].Tag as DataMinMax;
+        //            if (da!=null)
+        //            {
+        //            if (da.Reference_Name.Count==0)
+        //            {
+        //                return;
+        //            }
+        //                dataGridView2.Rows.Add(da.Reference_Name.Count);
+        //                for (int i = 0; i < da.Reference_Name.Count; i++)
+        //                {
+        //                    dataGridView2.Rows[i].Cells[0].Value = da.Reference_Name[i];
+        //                    if (da.ValueStrs.Count>i)
+        //                    {
+        //                        dataGridView2.Rows[i].Cells[1].Value = da.ValueStrs[i];
+        //                    }
+        //                    dataGridView2.Rows[i].Cells[2].Value = da.Reference_ValueMin[i];
+        //                    dataGridView2.Rows[i].Cells[3].Value = da.Reference_ValueMax[i];
+        //                }
+        //                if (da.ValueStrs.Count > dataGridView2.Rows.Count)
+        //                {
+        //                   dataGridView2.Rows.Add(da.ValueStrs.Count -da.Reference_Name.Count);
+        //                    for (int i = da.Reference_Name.Count; i < da.ValueStrs.Count; i++)
+        //                    {
+        //                        dataGridView2.Rows[i].Cells[1].Value = da.ValueStrs[i];
+        //                    }
+        //                 }
+        //            }
+        //            dataGridView2.BringToFront();
+        //            dataGridView2.Show();
+        //        }
+        //        catch (Exception)
+        //        {
+        //        }
        
-        }
+        //}
 
         private void dataGridView1_CellMouseMove(object sender, DataGridViewCellMouseEventArgs e)
         {
@@ -1510,7 +1497,121 @@ namespace Vision2.Project.DebugF.IO
             }
         }
 
-      
-       
+        private void treeView1_MouseDown(object sender, MouseEventArgs e)
+        {
+            try
+            {
+                //Point ClickPoint = new Point(e.X, e.Y);
+                //TreeNode CurrentNode = treeView1.GetNodeAt(ClickPoint);
+                //if (CurrentNode != null)
+                //{
+                 
+                //    if (CurrentNode.Tag is OneCamData)
+                //    {
+                //        OneCamData oneCamData = CurrentNode.Tag as OneCamData;
+                //    }
+                //    else if (CurrentNode.Tag is OneComponent)
+                //    {
+                //        OneComponent oneCamData = CurrentNode.Tag as OneComponent;
+                //        dataGridView2.Visible = true;
+                //        dataGridView2.Location = new Point(150, 100);
+                //        dataGridView2.Rows.Clear();
+                //        DataMinMax da = oneCamData.oneRObjs[0].dataMinMax;
+                //        if (da != null)
+                //        {
+                //            if (da.Reference_Name.Count == 0)
+                //            {
+                //                return;
+                //            }
+                //            dataGridView2.Rows.Add(da.Reference_Name.Count);
+                //            for (int i = 0; i < da.Reference_Name.Count; i++)
+                //            {
+                //                dataGridView2.Rows[i].Cells[0].Value = da.Reference_Name[i];
+                //                if (da.ValueStrs.Count > i)
+                //                {
+                //                    dataGridView2.Rows[i].Cells[1].Value = da.ValueStrs[i];
+                //                }
+                //                dataGridView2.Rows[i].Cells[2].Value = da.Reference_ValueMin[i];
+                //                dataGridView2.Rows[i].Cells[3].Value = da.Reference_ValueMax[i];
+                //            }
+                //            if (da.ValueStrs.Count > dataGridView2.Rows.Count)
+                //            {
+                //                dataGridView2.Rows.Add(da.ValueStrs.Count - da.Reference_Name.Count);
+                //                for (int i = da.Reference_Name.Count; i < da.ValueStrs.Count; i++)
+                //                {
+                //                    dataGridView2.Rows[i].Cells[1].Value = da.ValueStrs[i];
+                //                }
+                //            }
+                //        }
+                //        dataGridView2.BringToFront();
+                //        dataGridView2.Show();
+
+                //    }
+                 
+                //}
+                
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            try
+            {              
+                TreeNode CurrentNode =  e.Node;
+                if (CurrentNode != null)
+                {
+
+                    if (CurrentNode.Tag is OneCamData)
+                    {
+                        OneCamData oneCamData = CurrentNode.Tag as OneCamData;
+                    }
+                    else if (CurrentNode.Tag is OneComponent)
+                    {
+                        OneComponent oneCamData = CurrentNode.Tag as OneComponent;
+                        dataGridView2.Visible = true;
+                        dataGridView2.Location = new Point(150, 100);
+                        dataGridView2.Rows.Clear();
+                        DataMinMax da = oneCamData.oneRObjs[0].dataMinMax;
+                        if (da != null)
+                        {
+                            if (da.Reference_Name.Count == 0)
+                            {
+                                return;
+                            }
+                            dataGridView2.Rows.Add(da.Reference_Name.Count);
+                            for (int i = 0; i < da.Reference_Name.Count; i++)
+                            {
+                                dataGridView2.Rows[i].Cells[0].Value = da.Reference_Name[i];
+                                if (da.ValueStrs.Count > i)
+                                {
+                                    dataGridView2.Rows[i].Cells[1].Value = da.ValueStrs[i];
+                                }
+                                dataGridView2.Rows[i].Cells[2].Value = da.Reference_ValueMin[i];
+                                dataGridView2.Rows[i].Cells[3].Value = da.Reference_ValueMax[i];
+                            }
+                            if (da.ValueStrs.Count > dataGridView2.Rows.Count)
+                            {
+                                dataGridView2.Rows.Add(da.ValueStrs.Count - da.Reference_Name.Count);
+                                for (int i = da.Reference_Name.Count; i < da.ValueStrs.Count; i++)
+                                {
+                                    dataGridView2.Rows[i].Cells[1].Value = da.ValueStrs[i];
+                                }
+                            }
+                        }
+                        dataGridView2.BringToFront();
+                        dataGridView2.Show();
+
+                    }
+
+                }
+
+            }
+            catch (Exception)
+            {
+            }
+        }
     }
 }

@@ -5,6 +5,8 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using Vision2.Project;
+using Vision2.Project.formula;
 
 namespace Vision2.ErosProjcetDLL.Project
 {
@@ -886,23 +888,33 @@ namespace Vision2.ErosProjcetDLL.Project
 
         private void toolStripButton3_Click(object sender, EventArgs e)
         {
-            SplitContainer de = this.Parent.Parent as SplitContainer;
-            if (de != null)
+            try
             {
-                de.Panel2MinSize = 40;
-                de.Panel2Collapsed = true;
-            }
-            if (toolStripButton3.Checked)
-            {
-                toolStripButton3.Checked = false;
-                this.Height = this.toolStrip1.Height;
-            }
-            else
-            {
-                toolStripButton3.Checked = true;
-                this.Height = this.toolStrip1.Height + 200;
-            }
+                MainForm1.MainFormF.splitContainer3.Panel2Collapsed = true;
+                if (MainForm1.MainFormF.Controls.Contains(AlarmForm.AlarmFormThis))
+                {
+                       UserFormulaContrsl.This.tabControl1.TabPages.Add(UserFormulaContrsl.This.tabPage4);
+                       UserFormulaContrsl.This.tabPage4.Controls.Add(AlarmForm.AlarmFormThis);
+                        AlarmForm.AlarmFormThis.TopLevel = false;
+                        AlarmForm.AlarmFormThis.FormBorderStyle = FormBorderStyle.None;
+                        AlarmForm.AlarmFormThis.Dock = DockStyle.Fill;
+                        AlarmForm.AlarmFormThis.Show();
 
+                }
+                else
+                {
+                   
+                    UserFormulaContrsl.This.tabControl1.TabPages.Remove(UserFormulaContrsl.This.tabPage4);
+                    MainForm1.MainFormF.Controls.Add(AlarmForm.AlarmFormThis);
+                    AlarmForm.AlarmFormThis.BringToFront();
+                    AlarmForm.AlarmFormThis.Dock = DockStyle.None;
+                    AlarmForm.AlarmFormThis.FormBorderStyle = FormBorderStyle.Fixed3D;
+                    AlarmForm.AlarmFormThis.TopMost = true;
+                    AlarmForm.AlarmFormThis.Show();
+                }
+            }
+            catch (Exception ex)
+            { }
 
         }
 
@@ -932,6 +944,26 @@ namespace Vision2.ErosProjcetDLL.Project
             {
             }
 
+        }
+
+        private void toolStripButton2_Click(object sender, EventArgs e)
+        {
+            try
+            {
+
+                UserFormulaContrsl.This.tabControl1.TabPages.Remove(UserFormulaContrsl.This.tabPage4);
+                MainForm1.MainFormF. splitContainer3.Panel2Collapsed = false;
+                MainForm1.MainFormF.splitContainer3.Panel2. Controls.Add(AlarmForm.AlarmFormThis);
+                AlarmForm.AlarmFormThis.BringToFront();
+                AlarmForm.AlarmFormThis.Dock = DockStyle.Fill;
+                AlarmForm.AlarmFormThis.FormBorderStyle = FormBorderStyle.None;
+                AlarmForm.AlarmFormThis.TopMost = false;
+                AlarmForm.AlarmFormThis.Show();
+            }
+            catch (Exception)
+            {
+            }
+       
         }
     }
 

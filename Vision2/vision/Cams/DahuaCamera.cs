@@ -355,13 +355,13 @@ namespace Vision2.vision.Cams
                     }
                     try
                     {
-                        IGrabbedRawData frame;
+                        IFrameRawData frame;
+                           //IGrabbedRawData frame;
                         if (ID.Contains("SONY"))
                         {
                             dahuaCam.TriggerSet.ExecuteSoftwareTrigger();
                             dahuaCam.TriggerSet.Start();
                         }
-                   
                         if (dahuaCam.WaitForFrameTriggerReady(out frame, 1000))
                         {
                             //黑白图像
@@ -369,7 +369,7 @@ namespace Vision2.vision.Cams
                             {
                                 int nRGB = RGBFactory.EncodeLen(frame.Width, frame.Height, false);
                                 IntPtr pData = Marshal.AllocHGlobal(nRGB);
-                                Marshal.Copy(frame.Image, 0, pData, frame.ImageSize);
+                                Marshal.Copy(frame.GrabResult.Image, 0, pData, frame.GrabResult.ImageSize);
                                 HOperatorSet.GenImage1Extern(out ho_image2, "byte", frame.Width, frame.Height, (HTuple)pData, 0);
                                 Marshal.FreeHGlobal(pData);
                             }
@@ -378,7 +378,7 @@ namespace Vision2.vision.Cams
                             {
                                 int nRGB = RGBFactory.EncodeLen(frame.Width, frame.Height, true);
                                 IntPtr pData = Marshal.AllocHGlobal(nRGB);
-                                RGBFactory.ToRGB(frame.Image, frame.Width, frame.Height, true, frame.PixelFmt, pData, nRGB);
+                                RGBFactory.ToRGB(frame.GrabResult.Image, frame.Width, frame.Height, true, frame.GrabResult.PixelFmt, pData, nRGB);
                                 HOperatorSet.GenImageInterleaved(out ho_image2, (HTuple)pData, "bgr", frame.Width, frame.Height, 0, "byte", frame.Width, frame.Height, 0, 0, 8, 0);
                                 Marshal.FreeHGlobal(pData);
                             }
@@ -392,6 +392,7 @@ namespace Vision2.vision.Cams
                             {
                                 Vision.TriggerSetup(this.FlashLampName, false.ToString());
                             }
+                            frame.Dispose();
                             return ho_image2;
                         }
                         else
@@ -434,7 +435,7 @@ namespace Vision2.vision.Cams
                     {
                         halconRun.HobjClear();
                         halconRun.Image(this.GetImage());
-                        halconRun.AddMessage("采图时间:" + RunTime);
+                        halconRun.AddMeassge("采图时间:" + RunTime);
                         halconRun.ShowObj();
                     }
                     catch (Exception)

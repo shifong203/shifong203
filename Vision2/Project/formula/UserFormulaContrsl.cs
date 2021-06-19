@@ -25,8 +25,6 @@ namespace Vision2.Project.formula
             InitializeComponent();
             This = this;
 
-            MainForm1.MainFormF.CycleEven += ThreadUP;
-            Up();
         }
 
         public static UserFormulaContrsl This;
@@ -85,6 +83,7 @@ namespace Vision2.Project.formula
                 HWind.Initialize(hWindowControl1);
 
                 hWindowControl1.MouseClick += HWindowControl1_MouseClick;
+                MainForm1.MainFormF.CycleEven += ThreadUP;
             }
             catch (Exception)
             {
@@ -136,7 +135,7 @@ namespace Vision2.Project.formula
                             if (DebugCompiler.GetThis().DDAxis.SetXYZ1Points(axisName, 10, xs, ys, null))
                             {
                                 Thread.Sleep(DebugCompiler.GetThis().MarkWait);
-                                Vision.GetRunNameVision(MatrixC.VisionName).AsysReadCamImage("", 1, asyncRestImage =>
+                                Vision.GetRunNameVision(MatrixC.VisionName).AsysReadCamImage(1, 1, asyncRestImage =>
                                 {
                                     try
                                     {
@@ -154,12 +153,10 @@ namespace Vision2.Project.formula
                         catch (Exception)
                         {
                         }
-
                     });
                     thread.IsBackground = true;
                     thread.Start();
                 }
-
             }
             catch (Exception ex)
             {
@@ -191,6 +188,11 @@ namespace Vision2.Project.formula
             try
             {
                 isUP = true;
+                //tabPage4.Controls.Add(AlarmForm.AlarmFormThis);
+                //AlarmForm.AlarmFormThis.TopLevel = false;
+                //AlarmForm.AlarmFormThis.FormBorderStyle = FormBorderStyle.None;
+                //AlarmForm.AlarmFormThis.Dock = DockStyle.Fill;
+                //AlarmForm.AlarmFormThis.Show();
                 string selesname = "";
                 if (comboBox1.SelectedItem != null)
                 {
@@ -206,17 +208,14 @@ namespace Vision2.Project.formula
                 {
                     comboBox1.SelectedItem = selesname;
                 }
-
-
                 isUP = false;
-
             }
             catch (Exception ex)
             {
             }
         }
         bool isUP;
-          DebugF.工艺库.MatrixC MatrixC;
+        DebugF.工艺库.MatrixC MatrixC;
         /// <summary>
         /// 刷新目标参数
         /// </summary>
@@ -224,6 +223,10 @@ namespace Vision2.Project.formula
         {
             try
             {
+               
+                 
+  
+                Up();
                 isUP = true;
                 if (DebugCompiler.GetThis().LinkSeelpTyoe<3)
                 {
@@ -371,7 +374,9 @@ namespace Vision2.Project.formula
                         trayDataUserControl.BringToFront();
                         trayDataUserControl.Dock = DockStyle.Fill;
                         trayDataUserControl.Visible = true;
+                     
                         trayDataUserControl.SetTray(DebugCompiler.GetThis().DDAxis.ListTray[DebugCompiler.GetThis().TrayCont].GetTrayData());
+                        //DebugCompiler.GetThis().DDAxis.ListTray[DebugCompiler.GetThis().TrayCont].AddTary(trayDataUserControl);
                         break;
                     case RecipeCompiler.EnumUpDataType.复判按钮:
                         label3.Visible = true;

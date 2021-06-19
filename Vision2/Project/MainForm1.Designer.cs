@@ -58,7 +58,6 @@
             this.隐藏工具ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.窗口模式ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.库管理ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsButton4 = new Vision2.ErosProjcetDLL.UI.ToolStrip.TSButton();
             this.SaveAll = new System.Windows.Forms.ToolStripButton();
             this.ToolSripButtonHelp = new System.Windows.Forms.ToolStripDropDownButton();
             this.镜头信息ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -103,9 +102,9 @@
             this.toolStripLeft.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.toolStripLeft.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripButton1});
-            this.toolStripLeft.Location = new System.Drawing.Point(0, 57);
+            this.toolStripLeft.Location = new System.Drawing.Point(0, 51);
             this.toolStripLeft.Name = "toolStripLeft";
-            this.toolStripLeft.Size = new System.Drawing.Size(57, 554);
+            this.toolStripLeft.Size = new System.Drawing.Size(57, 560);
             this.toolStripLeft.TabIndex = 1;
             this.toolStripLeft.Text = "toolStrip2";
             this.toolStripLeft.MouseLeave += new System.EventHandler(this.toolStripLeft_MouseLeave);
@@ -174,7 +173,7 @@
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.Location = new System.Drawing.Point(57, 57);
+            this.splitContainer1.Location = new System.Drawing.Point(57, 51);
             this.splitContainer1.Name = "splitContainer1";
             // 
             // splitContainer1.Panel1
@@ -189,7 +188,7 @@
             this.splitContainer1.Panel2.Controls.Add(this.panel2);
             this.splitContainer1.Panel2.Controls.Add(this.userInterfaceControl1);
             this.splitContainer1.Panel2.Paint += new System.Windows.Forms.PaintEventHandler(this.splitContainer1_Panel2_Paint);
-            this.splitContainer1.Size = new System.Drawing.Size(1408, 554);
+            this.splitContainer1.Size = new System.Drawing.Size(1408, 560);
             this.splitContainer1.SplitterDistance = 1114;
             this.splitContainer1.SplitterWidth = 1;
             this.splitContainer1.TabIndex = 7;
@@ -205,8 +204,8 @@
             // splitContainer3.Panel1
             // 
             this.splitContainer3.Panel1.Controls.Add(this.tabControl1);
-            this.splitContainer3.Size = new System.Drawing.Size(1114, 554);
-            this.splitContainer3.SplitterDistance = 383;
+            this.splitContainer3.Size = new System.Drawing.Size(1114, 560);
+            this.splitContainer3.SplitterDistance = 387;
             this.splitContainer3.TabIndex = 1;
             // 
             // tabControl1
@@ -215,7 +214,7 @@
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1114, 383);
+            this.tabControl1.Size = new System.Drawing.Size(1114, 387);
             this.tabControl1.TabIndex = 0;
             // 
             // panel2
@@ -223,7 +222,7 @@
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel2.Location = new System.Drawing.Point(0, 98);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(293, 456);
+            this.panel2.Size = new System.Drawing.Size(293, 462);
             this.panel2.TabIndex = 2;
             // 
             // userInterfaceControl1
@@ -257,7 +256,7 @@
             // 
             this.toolStripCheckbox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.toolStripCheckbox2.Name = "toolStripCheckbox2";
-            this.toolStripCheckbox2.Size = new System.Drawing.Size(111, 54);
+            this.toolStripCheckbox2.Size = new System.Drawing.Size(111, 48);
             this.toolStripCheckbox2.Text = "直通模式";
             this.toolStripCheckbox2.Click += new System.EventHandler(this.toolStripCheckbox2_Click);
             // 
@@ -271,12 +270,11 @@
             this.toolStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripPictureBox1,
             this.toolStripDropDownButton1,
-            this.tsButton4,
             this.SaveAll,
             this.ToolSripButtonHelp});
             this.toolStrip2.Location = new System.Drawing.Point(0, 0);
             this.toolStrip2.Name = "toolStrip2";
-            this.toolStrip2.Size = new System.Drawing.Size(659, 57);
+            this.toolStrip2.Size = new System.Drawing.Size(659, 51);
             this.toolStrip2.TabIndex = 2;
             this.toolStrip2.Text = "toolStrip2";
             // 
@@ -301,7 +299,7 @@
             this.toolStripDropDownButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripDropDownButton1.Image")));
             this.toolStripDropDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripDropDownButton1.Name = "toolStripDropDownButton1";
-            this.toolStripDropDownButton1.Size = new System.Drawing.Size(102, 54);
+            this.toolStripDropDownButton1.Size = new System.Drawing.Size(102, 48);
             this.toolStripDropDownButton1.Text = "工具";
             // 
             // 打开目录文件夹ToolStripMenuItem1
@@ -378,24 +376,13 @@
             this.库管理ToolStripMenuItem.Text = "库管理";
             this.库管理ToolStripMenuItem.Click += new System.EventHandler(this.库管理ToolStripMenuItem_Click);
             // 
-            // tsButton4
-            // 
-            this.tsButton4.Font = new System.Drawing.Font("宋体", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.tsButton4.Image = ((System.Drawing.Image)(resources.GetObject("tsButton4.Image")));
-            this.tsButton4.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsButton4.IsCher = false;
-            this.tsButton4.Name = "tsButton4";
-            this.tsButton4.Size = new System.Drawing.Size(133, 54);
-            this.tsButton4.Text = "信息窗口";
-            this.tsButton4.Click += new System.EventHandler(this.tsButton4_Click);
-            // 
             // SaveAll
             // 
             this.SaveAll.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SaveAll.Image = ((System.Drawing.Image)(resources.GetObject("SaveAll.Image")));
             this.SaveAll.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.SaveAll.Name = "SaveAll";
-            this.SaveAll.Size = new System.Drawing.Size(98, 54);
+            this.SaveAll.Size = new System.Drawing.Size(98, 48);
             this.SaveAll.Text = "保存";
             this.SaveAll.Visible = false;
             this.SaveAll.Click += new System.EventHandler(this.SaveAll_Click);
@@ -414,7 +401,7 @@
             this.ToolSripButtonHelp.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.ToolSripButtonHelp.Name = "ToolSripButtonHelp";
             this.ToolSripButtonHelp.ShowDropDownArrow = false;
-            this.ToolSripButtonHelp.Size = new System.Drawing.Size(118, 54);
+            this.ToolSripButtonHelp.Size = new System.Drawing.Size(118, 48);
             this.ToolSripButtonHelp.Text = "F1帮助";
             this.ToolSripButtonHelp.Click += new System.EventHandler(this.ToolSripButtonHelp_Click);
             this.ToolSripButtonHelp.MouseMove += new System.Windows.Forms.MouseEventHandler(this.ToolSripButtonHelp_MouseMove);
@@ -441,7 +428,7 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1465, 57);
+            this.panel1.Size = new System.Drawing.Size(1465, 51);
             this.panel1.TabIndex = 1;
             // 
             // splitContainer2
@@ -457,7 +444,7 @@
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.toolStrip4);
-            this.splitContainer2.Size = new System.Drawing.Size(1465, 57);
+            this.splitContainer2.Size = new System.Drawing.Size(1465, 51);
             this.splitContainer2.SplitterDistance = 659;
             this.splitContainer2.TabIndex = 5;
             // 
@@ -479,7 +466,7 @@
             this.toolStripLabel7});
             this.toolStrip4.Location = new System.Drawing.Point(0, 0);
             this.toolStrip4.Name = "toolStrip4";
-            this.toolStrip4.Size = new System.Drawing.Size(802, 57);
+            this.toolStrip4.Size = new System.Drawing.Size(802, 51);
             this.toolStrip4.TabIndex = 3;
             this.toolStrip4.Text = "toolStrip4";
             this.toolStrip4.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.toolStrip4_ItemClicked);
@@ -492,7 +479,7 @@
             this.tsButton6.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsButton6.IsCher = false;
             this.tsButton6.Name = "tsButton6";
-            this.tsButton6.Size = new System.Drawing.Size(96, 54);
+            this.tsButton6.Size = new System.Drawing.Size(96, 48);
             this.tsButton6.Text = "退出";
             this.tsButton6.Click += new System.EventHandler(this.button2_Click);
             // 
@@ -504,7 +491,7 @@
             this.tsButton5.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsButton5.IsCher = false;
             this.tsButton5.Name = "tsButton5";
-            this.tsButton5.Size = new System.Drawing.Size(96, 54);
+            this.tsButton5.Size = new System.Drawing.Size(96, 48);
             this.tsButton5.Text = "登录";
             this.tsButton5.Click += new System.EventHandler(this.tsButton5_Click);
             // 
@@ -515,7 +502,7 @@
             this.tsButton7.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsButton7.IsCher = false;
             this.tsButton7.Name = "tsButton7";
-            this.tsButton7.Size = new System.Drawing.Size(96, 54);
+            this.tsButton7.Size = new System.Drawing.Size(96, 48);
             this.tsButton7.Text = "门锁";
             this.tsButton7.Visible = false;
             this.tsButton7.Click += new System.EventHandler(this.tsButton3_Click);
@@ -526,7 +513,7 @@
             this.toolStripButton2.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton2.Image")));
             this.toolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton2.Name = "toolStripButton2";
-            this.toolStripButton2.Size = new System.Drawing.Size(96, 54);
+            this.toolStripButton2.Size = new System.Drawing.Size(96, 48);
             this.toolStripButton2.Text = "光栅";
             this.toolStripButton2.Visible = false;
             // 
@@ -535,14 +522,14 @@
             this.toolStripLabel6.BackColor = System.Drawing.Color.White;
             this.toolStripLabel6.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.toolStripLabel6.Name = "toolStripLabel6";
-            this.toolStripLabel6.Size = new System.Drawing.Size(52, 54);
+            this.toolStripLabel6.Size = new System.Drawing.Size(52, 48);
             this.toolStripLabel6.Text = "急停";
             this.toolStripLabel6.Visible = false;
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 57);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 51);
             // 
             // toolStripLabel5
             // 
@@ -550,14 +537,14 @@
             this.toolStripLabel5.BackgroundImage = global::Vision2.Properties.Resources.tv_vector;
             this.toolStripLabel5.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.toolStripLabel5.Name = "toolStripLabel5";
-            this.toolStripLabel5.Size = new System.Drawing.Size(72, 54);
+            this.toolStripLabel5.Size = new System.Drawing.Size(72, 48);
             this.toolStripLabel5.Text = "门检测";
             this.toolStripLabel5.Visible = false;
             // 
             // toolStripLabel7
             // 
             this.toolStripLabel7.Name = "toolStripLabel7";
-            this.toolStripLabel7.Size = new System.Drawing.Size(92, 54);
+            this.toolStripLabel7.Size = new System.Drawing.Size(92, 48);
             this.toolStripLabel7.Text = "内存使用";
             // 
             // notifyIcon1
@@ -641,7 +628,6 @@
         private System.Windows.Forms.ToolStripMenuItem 查看电气图纸ToolStripMenuItem;
         private System.Windows.Forms.ToolStripButton SaveAll;
         private System.Windows.Forms.ToolStripDropDownButton ToolSripButtonHelp;
-        private Vision2.ErosProjcetDLL.UI.ToolStrip.TSButton tsButton4;
         private System.Windows.Forms.ToolStrip toolStrip4;
         private Vision2.ErosProjcetDLL.UI.ToolStrip.TSButton tsButton6;
         private Vision2.ErosProjcetDLL.UI.ToolStrip.TSButton tsButton5;
@@ -661,7 +647,6 @@
         private System.Windows.Forms.ToolStripMenuItem 拆分ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 隐藏工具ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 打开目录文件夹ToolStripMenuItem1;
-        private System.Windows.Forms.SplitContainer splitContainer3;
         private System.Windows.Forms.Timer timer100;
         private System.Windows.Forms.Timer timer500;
         private System.Windows.Forms.ToolStripMenuItem 窗口模式ToolStripMenuItem;
@@ -672,5 +657,6 @@
         private System.Windows.Forms.ToolStripMenuItem 镜头信息ToolStripMenuItem;
         private System.Windows.Forms.ToolStripLabel toolStripLabel8;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        public System.Windows.Forms.SplitContainer splitContainer3;
     }
 }

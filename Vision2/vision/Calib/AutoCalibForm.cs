@@ -453,15 +453,15 @@ namespace Vision2.vision.Calib
                          out HTuple hvENdPhi, out HTuple porder, out HTuple hvAngle);
                 HOperatorSet.GenCrossContourXld(out HObject hObject2, rows, col, 60, 0);
                 HOperatorSet.GenCrossContourXld(out HObject hObject1, rowCenter, colCenter, 100, 0);
-                Halcon.AddOBJ(hObject2);
-                Halcon.AddOBJ(hObject);
-                Halcon.AddOBJ(hObject1);
+                Halcon.AddObj(hObject2);
+                Halcon.AddObj(hObject);
+                Halcon.AddObj(hObject1);
                 HOperatorSet.GenContourPolygonXld(out HObject hObject3, new HTuple(rowCenter, rows[rows.Length - 1]),
                     new HTuple(colCenter, col[col.Length - 1]));
-                Halcon.AddOBJ(hObject3);
+                Halcon.AddObj(hObject3);
                 HOperatorSet.GenContourPolygonXld(out HObject hObject5, new HTuple(rowCenter, rowCenter),
                 new HTuple(colCenter, col[col.Length - 1]));
-                Halcon.AddOBJ(hObject5);
+                Halcon.AddObj(hObject5);
                 Halcon.ShowObj();
 
                 HOperatorSet.AffineTransPixel(item.CoordHanMat2DXY, colCenter, rowCenter, out HTuple qx1, out HTuple qy1);

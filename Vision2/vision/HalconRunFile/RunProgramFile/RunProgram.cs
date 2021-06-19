@@ -14,6 +14,8 @@ using static Vision2.vision.Vision;
 
 namespace Vision2.vision.HalconRunFile.RunProgramFile
 {
+
+   
     [Serializable]
     /// <summary>
     /// 程序接口
@@ -84,7 +86,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         public Control GetThisControl()
         {
             Panel panel = new Panel();
-            Control control = GetControl();
+            Control control = GetControl(this.Pthis);
             if (control != null)
             {
                 control.Dock = DockStyle.Fill;
@@ -107,7 +109,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         /// 
         /// </summary>
         /// <returns></returns>
-        public abstract Control GetControl();
+        public abstract Control GetControl(HalconRun halconRun);
         [Category("图像预处理"), DisplayName("maskWidth宽度"), Description("Emphasize预处理宽度")]
         public byte EmphasizeW { get; set; } = 7;
         [Category("图像预处理"), DisplayName("maskHeight高度"), Description("Emphasize预处理高度")]
@@ -138,26 +140,34 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         [Category("图像预处理"), DisplayName("减阈值"), Description("预处理模式，sub_image")]
         public double Sub_Add { get; set; } = 10;
 
-        public HObject GetEmset(HObject hObject)
+        public virtual  HObject  GetEmset(HObject hObject,HTuple homat2d=null)
         {
             HObject image = hObject;
+            HObject aoiobj = AOIObj;
+            HObject drawobj = DrawObj;
             try
             {
-                if (AOIObj.IsInitialized() && AOIObj.CountObj() >= 1)
+                if (aoiobj.IsInitialized() && aoiobj.CountObj() >= 1)
                 {
-                    HOperatorSet.ReduceDomain(image, AOIObj, out image);
+                    if (homat2d != null)
+                    {
+                        HOperatorSet.AffineTransRegion(aoiobj, out aoiobj, homat2d, "nearest_neighbor");
+                    }
+                     HOperatorSet.ReduceDomain(image, aoiobj, out image);
                 }
-      
-                if (DrawObj != null&& DrawObj.IsInitialized() && DrawObj.CountObj() >= 1)
+                if (drawobj != null&& drawobj.IsInitialized() && drawobj.CountObj() >= 1)
                 {
-                    HOperatorSet.Complement(DrawObj, out HObject hObject1);
+                    if (homat2d != null)
+                    {
+                        HOperatorSet.AffineTransRegion(drawobj, out drawobj, homat2d, "nearest_neighbor");
+                    }
+                    HOperatorSet.Complement(drawobj, out HObject hObject1);
                     HOperatorSet.ReduceDomain(image, hObject1, out image);
                 }
                 if (IsImage_range) Vision.Scale_image_range(image, out image, SeleImageRangeMin, SeleImageRangeMax);
                 try
                 {
                     if (IsEmphasize) HOperatorSet.Emphasize(image, out image, EmphasizeW, EmphasizeH, Emphasizefactor);
-
                 }
                 catch (Exception)       { }
                 try
@@ -176,11 +186,6 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     }
                 }
                 catch (Exception)      { }
-                //try
-                //{
-                //    if (IsMedian_image) HOperatorSet.MedianImage(image, out image, "circle", Median_imageVa, "mirrored");
-                //}
-                //catch (Exception) { }
             }
             catch (Exception)
             {
@@ -278,14 +283,17 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         /// </summary>
         /// <param name="halcon"></param>
         /// <returns></returns>
-        public bool Run(HalconRun halcon,OneResultOBj oneResultOBj ,int runid = 0)
+        public bool Run(OneResultOBj oneResultOBj,int runid = 0, AoiObj aoiObj = null)
         {
-            if (!Vision.ObjectValided(halcon.Image()))
+            if (!Vision.IsObjectValided(oneResultOBj.Image))
             {
                 return false;
             }
-            Watch.Restart();
-            this.SetPThis(halcon);
+            if (runid!=0)
+            {
+                oneResultOBj.ClearAllObj();
+            }
+      
             try
             {
                 ResltBool = true;
@@ -302,26 +310,15 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 HObjectYellow.GenEmptyObj();
                 HObjectBule.GenEmptyObj();
                 this.NGNumber = 0;
-                ResltBool = RunHProgram(halcon, oneResultOBj,  runid);
-                if (ISCompound)
-                {
-                    if (halcon.TrayRestData.CompoundReseltBool.ContainsKey(this.Name))
-                    {
-                        halcon.TrayRestData.CompoundReseltBool[this.Name] = ResltBool;
-                    }
-                    else
-                    {
-                        halcon.TrayRestData.CompoundReseltBool.Add(this.Name, ResltBool);
-                    }
-                }
+                Watch.Restart();
+                ResltBool = RunHProgram( oneResultOBj,out List<OneRObj> oneRObj,  runid);
+                Watch.Stop();
                 Dictionary<string, HTuple> sdd = this.SetData();
-  
                 if (IsDisObj)
                 {
                   oneResultOBj.AddObj(HObjectGreen, ColorResult.green);
                 }
                 oneResultOBj.AddObj(HObjectYellow, ColorResult.yellow);
-
                 oneResultOBj.AddObj(HObjectBule, ColorResult.blue);
                 if (ResltBool)
                 {
@@ -354,10 +351,82 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             catch (Exception ex)
             {
                 this.ErrBool = true;
-                halcon.ErrLog(this.Name + ",执行错误:", ex);
+                this.LogErr(this.Name + ",执行错误:", ex);
                 ResltBool = false;
             }
+ 
+            return ResltBool;
+        }
+        public bool RunHom2D( OneResultOBj oneResultOBj, HTuple hoame2d, int runid = 0)
+        {
+            if (!Vision.IsObjectValided(oneResultOBj.Image))
+            {
+                return false;
+            }
+            Watch.Restart();
+            //this.SetPThis(halcon);
+            try
+            {
+                ResltBool = true;
+                this.ErrBool = false;
+                this.ClerItem();
+                if (NGRoi != null)
+                {
+                    NGRoi.GenEmptyObj();
+                }
+                HObjectGreen = new HObject();
+                HObjectBule = new HObject();
+                HObjectYellow = new HObject();
+                HObjectGreen.GenEmptyObj();
+                HObjectYellow.GenEmptyObj();
+                HObjectBule.GenEmptyObj();
+                this.NGNumber = 0;
+                ResltBool = RunHProgram( oneResultOBj, out List<OneRObj> oneRObj, runid);
+                if (ISCompound)
+                {
+                 
+                }
+                Dictionary<string, HTuple> sdd = this.SetData();
+                if (IsDisObj)
+                {
+                    oneResultOBj.AddObj(HObjectGreen, ColorResult.green);
+                }
+                oneResultOBj.AddObj(HObjectYellow, ColorResult.yellow);
+                oneResultOBj.AddObj(HObjectBule, ColorResult.blue);
+                if (ResltBool)
+                {
+                    if (this.OKName.Contains(","))
+                    {
 
+                        ErosSocket.ErosConLink.StaticCon.SetLinkAddressValue(this.OKName, true);
+                    }
+                    else
+                    {
+                        ErosSocket.ErosConLink.StaticCon.SetLingkValue(this.OKName, true.ToString(), out string err);
+                    }
+                }
+                else
+                {
+                    if (this.CoordinateMeassage != Coordinate.Coordinate_Type.Hide)
+                    {
+                        oneResultOBj.AddMeassge(this.Name + ":执行失败");
+                    }
+                    if (this.NGName.Contains(","))
+                    {
+                        ErosSocket.ErosConLink.StaticCon.SetLinkAddressValue(this.NGName, true);
+                    }
+                    else
+                    {
+                        ErosSocket.ErosConLink.StaticCon.SetLingkValue(this.NGName, true.ToString(), out string err);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                this.ErrBool = true;
+                this.LogErr(this.Name + ",执行错误:", ex);
+                ResltBool = false;
+            }
             Watch.Stop();
             return ResltBool;
         }
@@ -374,7 +443,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         /// 执行程序
         /// </summary>
         /// <param name="halcon">程序主体</param>
-        public abstract bool RunHProgram(HalconRun halcon, OneResultOBj oneResultOBj, int runID = 0,string name = null);
+        public abstract bool RunHProgram( OneResultOBj oneResultOBj, out List< OneRObj> oneRObj , int runID = 0 );
 
         public abstract RunProgram UpSatrt<T>(string path);
         /// <summary>
@@ -396,6 +465,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             }
             else
             {
+                AlarmText.AddTextNewLine("读取失败:" + Path);
                 return null;
             }
             RunProgram runProgram = tshi as RunProgram;
@@ -442,12 +512,25 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 item.Value.SetPThis(pthis);
             }
         }
+
         HalconRun Pthis;
+
+        public RunProgram GetRunProgram(RunProgram run = null)
+        {
+            if (run != null)
+            {
+                RunProgramT = run;
+            }
+            return RunProgramT;
+        }
+        RunProgram RunProgramT;
+  
         InterfaceVisionControl InterfaceVisionControl;
         public void SetPd(InterfaceVisionControl pthis)
         {
             InterfaceVisionControl = pthis;
         }
+
         public InterfaceVisionControl GetPInt()
         {
             return InterfaceVisionControl;
@@ -519,15 +602,15 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         /// <summary>
         /// 返回程序中指定的仿射集合,未找到或未定义仿射返回Null,
         /// </summary>
-        /// <param name="halcon"></param>
+        /// <param name="oneobj"></param>
         /// <returns></returns>
-        public List<HTuple> GetHomMatList(HalconRun halcon)
+        public List<HTuple> GetHomMatList(OneResultOBj oneobj)
         {
             if (this.HomName != "")
             {
-                if (halcon.GDicModelR().ContainsKey(this.HomName))
+                if (oneobj.GetHalcon().GDicModelR().ContainsKey(this.HomName))
                 {
-                    return halcon.GDicModelR()[this.HomName].HomMat;
+                    return oneobj.GetHalcon().GDicModelR()[this.HomName].HomMat;
                 }
                 return new List<HTuple>();
             }
@@ -650,7 +733,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         HOperatorSet.DispObj(HalconRun.Image(), HalconRun.hWindowHalcon());
                         HOperatorSet.SetSystem("flush_graphic", "true");
                         //HOperatorSet.SetSystem("flush_graphic", "true");
-                        if (!Vision.ObjectValided(drawObj))
+                        if (!Vision.IsObjectValided(drawObj))
                         {
                             drawObj = new HObject();
                             drawObj.GenEmptyObj();
@@ -719,6 +802,120 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             return drawObj;
         }
         /// <summary>
+        /// 绘制区域
+        /// </summary>
+        /// <param name="HalconRun"></param>
+        /// <param name="drawObj"></param>
+        /// <param name="enumDrawType"></param>
+        /// <returns></returns>
+        public static HObject DrawHobj(HalconRun HalconRun, HObject drawObj, HalconRun.EnumDrawType enumDrawType)
+        {
+            try
+            {
+                HalconRun.Focus();
+                HTuple hv_Button = null;
+                HTuple hv_Row = null, hv_Column = null;
+
+                HalconRun.DrawType = 2;
+                HalconRun.DrawErasure = false;
+                HOperatorSet.SetDraw(HalconRun.hWindowHalcon(), "fill");
+                HObject brush_region_affine = new HObject();
+                if (HalconRun.Drawing)
+                {
+                    MessageBox.Show("当前绘制中,请结束绘制");
+                    return drawObj;
+                }
+                HObject final_region = new HObject();
+              
+                HalconRun.Drawing = true;
+                HOperatorSet.SetColor(HalconRun.hWindowHalcon(), Color.Red.Name.ToLower());
+
+                hv_Button = 0;
+                // 4为鼠标右键
+                while (hv_Button != 4)
+                {
+                    //一直在循环,需要让halcon控件也响应事件,不然到时候跳出循环,之前的事件会一起爆发触发,
+                    Application.DoEvents();
+                    try
+                    {
+                        HOperatorSet.SetSystem("flush_graphic", "false");
+                        HOperatorSet.ClearWindow(HalconRun.hWindowHalcon());
+
+                        HOperatorSet.GetMposition(HalconRun.hWindowHalcon(), out hv_Row, out hv_Column, out hv_Button);
+                        HObject hObject = new HObject();
+
+
+                        HOperatorSet.DispObj(HalconRun.Image(), HalconRun.hWindowHalcon());
+                        HOperatorSet.SetSystem("flush_graphic", "true");
+                        //HOperatorSet.SetSystem("flush_graphic", "true");
+                        if (!Vision.IsObjectValided(drawObj))
+                        {
+                            drawObj = new HObject();
+                            drawObj.GenEmptyObj();
+                        }
+                        if (hv_Button == 1)
+                        {
+
+                            //HOperatorSet.SetSystem("flush_graphic", "true");
+                            switch (enumDrawType)
+                            {
+                                case HalconRun.EnumDrawType.Region:
+                                    HOperatorSet.DrawRegion(out hObject, HalconRun.hWindowHalcon());
+                                    hv_Button = 4;
+                                    break;
+                                case HalconRun.EnumDrawType.Circle:
+                                    HOperatorSet.DrawCircle(HalconRun.hWindowHalcon(), out hv_Row, out hv_Column,out HTuple roww2);
+                                    HOperatorSet.GenCircle(out hObject, hv_Row, hv_Column, roww2);
+
+                                    break;
+                                case HalconRun.EnumDrawType.Rectangle1:
+                                    HOperatorSet.DrawRectangle1(HalconRun.hWindowHalcon(), out hv_Row, out hv_Column, out HTuple row2, out HTuple col2);
+                                    HOperatorSet.GenRectangle1(out hObject, hv_Row, hv_Column, row2, col2);
+                                    break;
+                                case HalconRun.EnumDrawType.Rectangle2:
+                                    HOperatorSet.DrawRectangle2(HalconRun.hWindowHalcon(),out hv_Row, out hv_Column, out HTuple phi, out HTuple leng1, out HTuple leng2);
+                                    HOperatorSet.GenRectangle2(out hObject, hv_Row, hv_Column, phi, leng1, leng2);
+                                    break;
+                                case HalconRun.EnumDrawType.Ellipes:
+                                    HOperatorSet.DrawEllipse(HalconRun.hWindowHalcon(), out HTuple row, out HTuple column, out HTuple phit, out HTuple radius1, out HTuple radius2);
+                                    HOperatorSet.GenEllipse(out hObject, hv_Row, hv_Column, phit, radius1, radius2);
+                                    break;
+                                default:
+                                    HalconRun.Drawing = false;
+                                    Vision.Disp_message(HalconRun.hWindowHalcon(), "未选择绘制类型，已取消绘制！");
+                                    return drawObj;
+                            }
+                            HOperatorSet.SetColor(HalconRun.hWindowHalcon(), "red");
+                            HOperatorSet.DispObj(hObject, HalconRun.hWindowHalcon());
+                            HOperatorSet.SetColor(HalconRun.hWindowHalcon(), "#b2222270");
+                            drawObj = hObject;
+                            HOperatorSet.DispObj(drawObj, HalconRun.hWindowHalcon());
+                        }
+                        else
+                        {
+                            HOperatorSet.GenCircle(out hObject, hv_Row, hv_Column, Circl_Rire);
+                            HOperatorSet.SetColor(HalconRun.hWindowHalcon(), "#b2222270");
+                            HOperatorSet.DispObj(drawObj, HalconRun.hWindowHalcon());
+                            HOperatorSet.SetColor(HalconRun.hWindowHalcon(), "red");
+                            HOperatorSet.DispObj(hObject, HalconRun.hWindowHalcon());
+                        }
+                    }
+                    catch (HalconException ex)
+                    {
+                        hv_Button = 0;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+            }
+            HalconRun.Drawing = false;
+            HOperatorSet.SetDraw(HalconRun.hWindowHalcon(), "margin");
+            HalconRun.DrawErasure = false;
+            return drawObj;
+        }
+
+        /// <summary>
         /// 绘制
         /// </summary>
         /// <param name="halconRun"></param>
@@ -762,7 +959,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         HOperatorSet.DispObj(halconRun.Image(), halconRun.hWindowHalcon());
                         HOperatorSet.SetSystem("flush_graphic", "true");
                         //HOperatorSet.SetSystem("flush_graphic", "true");
-                        if (!Vision.ObjectValided(drawObj))
+                        if (!Vision.IsObjectValided(drawObj))
                         {
                             drawObj = new HObject();
                             drawObj.GenEmptyObj();
@@ -885,7 +1082,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         HOperatorSet.DispObj(Image, hWindowHalconID);
                         HOperatorSet.SetSystem("flush_graphic", "true");
                         //HOperatorSet.SetSystem("flush_graphic", "true");
-                        if (!Vision.ObjectValided(drawObj))
+                        if (!Vision.IsObjectValided(drawObj))
                         {
                             drawObj = new HObject();
                             drawObj.GenEmptyObj();
@@ -1000,7 +1197,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         HObject hObject = new HObject();
                         HOperatorSet.SetSystem("flush_graphic", "true");
                         HOperatorSet.DispObj(HalconRun.Image(), HalconRun.hWindowHalcon());
-                        if (!Vision.ObjectValided(drawObj))
+                        if (!Vision.IsObjectValided(drawObj))
                         {
                             drawObj = new HObject();
                             drawObj.GenEmptyObj();
@@ -1106,8 +1303,8 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
     
 
                     HOperatorSet.SetColor(halconRun.hWindowHalcon(), Color.Red.Name.ToLower());
-                    halconRun.AddMessage("右键点击区域开始移动，右键结束移动");
-                    halconRun.AddOBJ(hObject);
+                    halconRun.AddMeassge("右键点击区域开始移动，右键结束移动");
+                    halconRun.AddObj(hObject);
                     halconRun.ShowObj();
                     halconRun.Focus();
                     hv_Button = 0;
@@ -1122,8 +1319,8 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                             if (hv_Button == 4)
                             {
                                 halconRun.HobjClear();
-                                halconRun.AddMessage("结束移动");
-                                halconRun.AddOBJ(hObject);
+                                halconRun.AddMeassge("结束移动");
+                                halconRun.AddObj(hObject);
                                 halconRun.ShowObj();
                                 halconRun.Drawing = false;
                                 return hObject;
@@ -1160,8 +1357,8 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                             else  if(MoveFlag)
                             {
                                 halconRun.HobjClear();
-                                halconRun.AddMessage("右键点击区域开始移动，右键结束移动");
-                                halconRun.AddOBJ(hObject);
+                                halconRun.AddMeassge("右键点击区域开始移动，右键结束移动");
+                                halconRun.AddObj(hObject);
                                 halconRun.ShowObj();
                                 hObject1 = hObject;
                                 MoveFlag = false;
@@ -1224,8 +1421,8 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     HObject hObject2 = new HObject();
                     hObject1 = hObject.Clone();
                     HOperatorSet.SetColor(halconRun.hWindowHalcon(), Color.Red.Name.ToLower());
-                    halconRun.AddMessage("右键点击区域开始移动，右键结束移动");
-                    halconRun.AddOBJ(hObject);
+                    halconRun.AddMeassge("右键点击区域开始移动，右键结束移动");
+                    halconRun.AddObj(hObject);
                     halconRun.ShowObj();
                     halconRun.Focus();
                     hv_Button = 0;
@@ -1240,8 +1437,8 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                             if (hv_Button == 4)
                             {
                                 halconRun.HobjClear();
-                                halconRun.AddMessage("结束移动");
-                                halconRun.AddOBJ(hObject);
+                                halconRun.AddMeassge("结束移动");
+                                halconRun.AddObj(hObject);
                                 halconRun.ShowObj();
                                 halconRun.Drawing = false;
                                 return hObject;
@@ -1282,8 +1479,8 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                             else if (MoveFlag)
                             {
                                 halconRun.HobjClear();
-                                halconRun.AddMessage("右键点击区域开始移动，右键结束移动");
-                                halconRun.AddOBJ(hObject);
+                                halconRun.AddMeassge("右键点击区域开始移动，右键结束移动");
+                                halconRun.AddObj(hObject);
                                 halconRun.ShowObj();
                                 hObject1 = hObject;
                                 MoveFlag = false;
@@ -1393,7 +1590,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     }
                     HOperatorSet.GenEllipse(out hObject, hv_RowA[0], hv_ColumnA[0], hv_Phi[0], hv_Length1[0], hv_Length2[0]);
                 }
-                halcon.AddOBJ(hObject);
+                halcon.AddObj(hObject);
                 halcon.ShowObj();
                 //HOperatorSet.DispObj(hObject, halcon.hWindowHalcon());
             }

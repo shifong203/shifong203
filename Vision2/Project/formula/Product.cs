@@ -9,6 +9,7 @@ using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 using Vision2.ErosProjcetDLL.Excel;
+using Vision2.ErosProjcetDLL.Project;
 using Vision2.ErosProjcetDLL.UI.PropertyGrid;
 using static ErosSocket.ErosConLink.SocketClint;
 
@@ -587,6 +588,7 @@ namespace Vision2.Project.formula
             string das = name;
             string newNmae = "";
             string mesage = "修改程序名";
+            
             if (ValuePairs.ContainsKey(name))
             {
                 newNmae = name;
@@ -893,9 +895,7 @@ namespace Vision2.Project.formula
                 {
                     nameP = fileName;
                 }
-
                 string[] dataNames = new string[] { };
-
                 if (File.Exists(nameP))
                 {
                     dataNames = File.ReadAllLines(nameP);
@@ -907,10 +907,7 @@ namespace Vision2.Project.formula
                     {
                         dataNames = File.ReadAllLines(nameP);
                     }
-
                 }
-
-
                 //System.Data.DataTable dataTable = Npoi.ReadExcelFile(nameP + "\\" + name + ".txt", "产品信息");
                 if (dataNames == null)
                 {
@@ -930,7 +927,6 @@ namespace Vision2.Project.formula
                     {
                         Product product = new Product(false);
                         product.Name = item;
-
                         for (int i = 0; i < Product.GetListLinkNames.Count; i++)
                         {
                             if (Product.GetListLinkNames[i] == "" || Product.listLinkNames.Contains(Product.GetListLinkNames[i]))
@@ -969,13 +965,11 @@ namespace Vision2.Project.formula
                 {
                     ValuePairs = RecipeCompiler.Instance.Produc;
                 }
-
                 err += "产品信息读取完成;";
                 string pathT = Path.GetDirectoryName(fileName);
                 System.Data.DataTable dataTable3 = Npoi.ReadExcelFile(pathT + "\\产品配方管理\\M1.xls", "参数信息");
                 Dictionary<string, Product> keyValuePairsT = new Dictionary<string, Product>();
                 Product product2 = new Product(false);
-
                 product2.Name = "M1";
                 if (dataTable3 == null)
                 {
@@ -983,7 +977,6 @@ namespace Vision2.Project.formula
                 else
                 {
                     product2.Parameter_Dic = new ParameterDic();
-
                     for (int i = 5; i < dataTable3.Columns.Count; i++)
                     {
                         product2.Parameter_Dic.ParameterMap.Add(dataTable3.Columns[i].ColumnName, new Dictionary<string, string>());
@@ -994,17 +987,9 @@ namespace Vision2.Project.formula
                         {
                             string[] st;
                             if (item1[3].ToString().Contains(','))
-                            {
-                                st = item1[3].ToString().Split(',');
-                            }
-                            else
-                            {
-                                st = new string[] { "", "" };
-                            }
-
-
+                            {  st = item1[3].ToString().Split(','); }
+                            else {  st = new string[] { "", "" };   }
                             product2.Parameter_Dic.SetKet(item1[0].ToString(), item1[1].ToString(), item1[2].ToString(), st[0], st[1], item1[4].ToString());
-
                             for (int i = 5; i < dataTable3.Columns.Count; i++)
                             {
                                 if (product2.Parameter_Dic.ParameterMap[dataTable3.Columns[i].ColumnName].ContainsKey(item1[0].ToString()))
@@ -1018,10 +1003,7 @@ namespace Vision2.Project.formula
                             }
                         }
                         catch (Exception ex)
-                        {
-
-                        }
-
+                        {  }
                     }
                     keyValuePairsT.Add(product2.Name, product2);
                 }
@@ -1035,7 +1017,6 @@ namespace Vision2.Project.formula
                         Product.ProductionName = dataNames[dataNames.Length-1];
                     }
                 }
-
                 return true;
             }
             catch (Exception ex)

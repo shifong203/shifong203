@@ -4,10 +4,15 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using Vision2.Project.formula;
 using Vision2.Project.Mes;
+using Vision2.vision.HalconRunFile.RunProgramFile;
 using static ErosSocket.DebugPLC.Robot.TrayRobot;
 
 namespace ErosSocket.DebugPLC.Robot
 {
+    /// <summary>
+    /// 
+    /// </summary>
+ 
     public interface ITrayRobot
     {
         void SetValue(int number, bool value, double? valueDouble = null);
@@ -82,11 +87,19 @@ namespace ErosSocket.DebugPLC.Robot
         int number;
 
         ITrayRobot trayRobots;
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="trayRobot"></param>
         public void AddTary(ITrayRobot trayRobot)
         {
             trayRobots = trayRobot;
+            TrayDataS.AddTary(trayRobots);
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public ITrayRobot GetITrayRobot()
         {
             return trayRobots;
@@ -186,19 +199,26 @@ namespace ErosSocket.DebugPLC.Robot
         PointFile[] pointFiles;
         public PointFile GetPoint(int number)
         {
-            if (pointFiles == null)
+            try
             {
-                Calculate(out HTuple listx, out HTuple listY);
-                ListX = listx;
-                ListY = listY;
-                bitW = new List<sbyte>();
-                bitW.AddRange(new sbyte[pointFiles.Length]);
+                if (pointFiles == null)
+                {
+                    Calculate(out HTuple listx, out HTuple listY);
+                    ListX = listx;
+                    ListY = listY;
+                    bitW = new List<sbyte>();
+                    bitW.AddRange(new sbyte[pointFiles.Length]);
+                }
+                if (pointFiles.Length > number - 1)
+                {
+                    pointFiles[number - 1].Z = P1.Z;
+                    return pointFiles[number - 1];
+                }
             }
-            if (pointFiles.Length > number - 1)
+            catch (Exception)
             {
-                pointFiles[number - 1].Z = P1.Z;
-                return pointFiles[number - 1];
             }
+      
             return null;
         }
         public List<PointFile> GetPoints()
@@ -635,10 +655,14 @@ namespace ErosSocket.DebugPLC.Robot
             {
                 Number = number;
             }
-            //for (int i = 0; i < dataMins.Count; i++)
-            //{
-            //    this.GetDataVales()[Number - 1].AddOneComponent(dataMins[i]);
-            //}
+            if (Number <=0)
+            {
+                Number = 1;
+            }
+            for (int i = 0; i < dataMins.Count; i++)
+            {
+                this.GetDataVales()[Number - 1].AddCamOBj("上相机" , dataMins[i].GetOneRObj());
+            }
             SetNumberValue(Number, this.GetDataVales()[Number - 1]);
         }
 

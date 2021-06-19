@@ -61,11 +61,10 @@
       <HintPath>Dll\AdvMotAPI.dll</HintPath>
     </Reference>
     <Reference Include="AmphenolMES">
-      <HintPath>..\..\项目\yuefan\安费诺\Omega-WF2  AOI对接接口文件及说明\20.12-21-V01\AmphenolMES.dll</HintPath>
+      <HintPath>bin\Debug\x64\AmphenolMES.dll</HintPath>
     </Reference>
-    <Reference Include="halcondotnet, Version=19.11.0.0, Culture=neutral, PublicKeyToken=4973bed59ddbf2b8, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files\MVTec\HALCON-20.11-Steady\bin\dotnet35\halcondotnet.dll</HintPath>
+    <Reference Include="halcondotnet">
+      <HintPath>bin\Debug\x64\halcondotnet.dll</HintPath>
     </Reference>
     <Reference Include="HslCommunication">
       <HintPath>Dll\HslCommunication.dll</HintPath>
@@ -1089,6 +1088,13 @@
       <DependentUpon>Color_Dete_Control.cs</DependentUpon>
     </Compile>
     <Compile Include="vision\HalconRunFile\PCBFile\CapacitanceMinMaxV.cs" />
+    <Compile Include="vision\HalconRunFile\PCBFile\PCBAEX.cs" />
+    <Compile Include="vision\HalconRunFile\PCBFile\PCBLibraryForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\PCBFile\PCBLibraryForm.Designer.cs">
+      <DependentUpon>PCBLibraryForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="vision\HalconRunFile\PCBFile\RectangleCapacitance.cs" />
     <Compile Include="vision\HalconRunFile\PCBFile\RectangleCapacitanceControl1.cs">
       <SubType>UserControl</SubType>
@@ -1097,6 +1103,7 @@
       <DependentUpon>RectangleCapacitanceControl1.cs</DependentUpon>
     </Compile>
     <Compile Include="vision\Library\LibraryBasics.cs" />
+    <Compile Include="vision\Library\LibraryVisionBase.cs" />
     <Compile Include="vision\RestVisionForm\OneResultOBj.cs" />
     <Compile Include="vision\RestVisionForm\FormRestfDataIamge.cs">
       <SubType>Form</SubType>
@@ -1212,7 +1219,6 @@
     <Compile Include="vision\HalconRunFile\Controls\VisionContainerControl.Designer.cs">
       <DependentUpon>VisionContainerControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="vision\HalconRunFile\PCBFile\BPCBoJB.cs" />
     <Compile Include="vision\HalconRunFile\PCBFile\Capacitance.cs" />
     <Compile Include="vision\HalconRunFile\PCBFile\CapacitianceControl.cs">
       <SubType>UserControl</SubType>
@@ -1427,6 +1433,12 @@
     </Compile>
     <Compile Include="vision\Zazaniao.cs" />
     <Compile Include="Web References\cnshah0tis01\Reference.cs" />
+    <Compile Include="捷普\MForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="捷普\MForm.Designer.cs">
+      <DependentUpon>MForm.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="ConClass\OnManagementForm.resx">
       <DependentUpon>OnManagementForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -1833,6 +1845,9 @@
     <EmbeddedResource Include="vision\Cams\DahuaCams.resx">
       <DependentUpon>DahuaCams.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="vision\HalconRunFile\PCBFile\PCBLibraryForm.resx">
+      <DependentUpon>PCBLibraryForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="vision\RestVisionForm\FormRestfDataIamge.resx">
       <DependentUpon>FormRestfDataIamge.cs</DependentUpon>
     </EmbeddedResource>
@@ -1988,6 +2003,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="vision\VisonRsoertUI.resx">
       <DependentUpon>VisonRsoertUI.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="捷普\MForm.resx">
+      <DependentUpon>MForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Iamge\HalconDemo1_TemporaryKey.pfx" />
     <Fakes Include="ErosProjcetDLL\Fakes\NPOI.fakes" />

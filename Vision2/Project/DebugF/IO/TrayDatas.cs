@@ -337,7 +337,7 @@ namespace Vision2.Project.DebugF.IO
 
                 MainForm1.MainFormF.Invoke(new Action(() =>
                 {
-                    for (int i = 0; i < dataVale.GetDataVales().Count; i++)
+                    for (int i = 0; i < dataVale.Count; i++)
                     {
                         string datStr = "";
                         DataVale data = dataVale.GetDataVales()[i];

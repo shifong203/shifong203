@@ -28,145 +28,12 @@ namespace Vision2.Project.Mes
         bool ReadMes(out string resetMesString);
 
     }
-    ///// <summary>
-    ///// 托盘类结果
-    ///// </summary>
-    //public class TrayResetData
-    //{
-    //public    TrayResetData(int x,int y)
-    //  {
-    //      Product_Name = Product.ProductionName;
-    //      OK = false;
-    //      XNumber = x;
-    //      YNumber = y;
 
-    //      PaneNumber = x * y;
-    //      NGLocation = new List<int>();
-    //      GetDataVales() = new List<DataVale>( new DataVale[XNumber* YNumber]);
-    //  }
-    //  /// <summary>
-    //  /// 产品名称
-    //  /// </summary>
-    //  public string Product_Name { get; set; }
-    //  /// <summary>
-    //  /// 托盘ID
-    //  /// </summary>
-    //  public string Tray_ID { get; set; }
-
-    //  /// <summary>
-    //  /// 整盘结果
-    //  /// </summary>
-    //  public bool OK { 
-    //      get {
-    //          for (int i = 0; i < GetDataVales().Count; i++)
-    //          {
-    //              if (GetDataVales()[i]!=null)
-    //              {
-    //                  if (!GetDataVales()[i].OK)
-    //                  {
-    //                      return false;
-    //                  }
-    //              }
-    //          }
-    //          return true; 
-    //      }
-
-    //      set {   }
-
-    //  }
-    //  /// <summary>
-    //  /// 产品数量
-    //  /// </summary>
-    //  public int PaneNumber { get; set; }
-
-    //  /// <summary>
-    //  /// NG数量
-    //  /// </summary>
-    //  public int NGNumber { get {
-    //          int ngNu = 0;
-    //          for (int i = 0; i < GetDataVales().Count; i++)
-    //          {
-    //              if (GetDataVales()[i] != null)
-    //              {
-    //                  if (!GetDataVales()[i].OK)
-    //                  {
-    //                      ngNu++;
-    //                  }
-    //              }
-    //          }
-    //          return ngNu;
-    //      } 
-    //  }
-    //  /// <summary>
-    //  /// X方向数量
-    //  /// </summary>
-    //  public int XNumber { get; set; }
-
-    //  /// <summary>
-    //  /// Y方向数量
-    //  /// </summary>
-    //  public int YNumber { get; set; }
-
-    //  /// <summary>
-    //  /// NG位置
-    //  /// </summary>
-    //  public List<int> NGLocation = new List<int>();
-
-    //  //public void AddPaneName(string name, bool isOK, double GetDataVales(), HalconDotNet.HObject XLD = null, HalconDotNet.HObject hObject = null)
-    //  //{
-    //  //    if (NewData != null)
-    //  //    {
-    //  //        NewData.Data1.Add(new MaxMinValue() { Name = name, AutoOK = isOK, ImageObj = hObject, XLD = XLD, PositionName = this.Product_Name, Value = GetDataVales() });
-    //  //    }
-    //  //}
-    //  /// <summary>
-    //  /// 结果集合
-    //  /// </summary>
-    //  /// <returns></returns>
-    //  public List<DataVale> GetDatas()
-    //  {
-    //      return GetDataVales();
-    //  }
-    //  /// <summary>
-    //  /// 多个产品信息
-    //  /// </summary>
-    //  public  List<DataVale> GetDataVales() = new List<DataVale>();
-    //  IMesData mesData;
-    //  public IMesData GetMes(IMesData mesDataT = null)
-    //  {
-    //      if (mesDataT != null)
-    //      {
-    //          mesData = mesDataT;
-    //      }
-    //      return mesData;
-    //  }
-    //  public virtual void ShowDolg()
-    //  {
-    //      vision.Vision.ShowVisionResetForm();
-    //  }
-    //  public void WritMes(UserFormulaContrsl userFormulaContrsl)
-    //  {
-    //      if (mesData != null)
-    //      {
-    //          mesData.WrietMes(userFormulaContrsl, Tray_ID, Product_Name);
-    //      }
-    //  }
-    //  public virtual void Clear()
-    //  {
-
-    //      NGLocation = new List<int>();
-    //      Tray_ID = "";
-    //      if (GetDataVales() != null)
-    //      {
-    //          GetDataVales().Clear();
-    //      }
-    //  }
-//}
         /// <summary>
         /// 单个产品信息
         /// </summary>
-        public class DataVale
-        {
+    public class DataVale
+    {
             /// <summary>
             /// 产品SN
             /// </summary>
@@ -252,7 +119,7 @@ namespace Vision2.Project.Mes
                     return errNumber;
                 }
             }
-           public Dictionary<string, OneCamData> ListCamsData = new Dictionary<string, OneCamData>();
+            public Dictionary<string, OneCamData> ListCamsData = new Dictionary<string, OneCamData>();
 
 
         public OneCompOBJs GetNGCompData()
@@ -317,23 +184,21 @@ namespace Vision2.Project.Mes
             }
         }
 
-        //List<OneCamData> ListCamsData = new List<OneCamData>();
-        ///// <summary>
-        ///// 拍照数据集合
-        ///// </summary>
-        //public List<OneResultOBj> ResuOBj = new List<OneResultOBj>();
-
-        //     OneContOBJs DicNGObj = new OneContOBJs();
-        //    //public Dictionary<string, OneRObj> DicNGObj = new Dictionary<string, OneRObj>();
-
-        //    public OneContOBJs NGObj 
-        //    {
-        //        get 
-        //        {
-        //             return DicNGObj;
-        //        }
-        //    }
+        public void AddCamOBj(string camName, OneRObj oneRObj)
+        {
+            if (ListCamsData.ContainsKey(camName))
+            {
+                if (!oneRObj.OK)
+                {
+                    ListCamsData[camName].AllCompObjs.AddCont(oneRObj);
+                }
+                else
+                {
+                    ListCamsData[camName].NGObj.AddCont(oneRObj);
+                }
+            }
         }
+   }
     /// <summary>
     /// 单个拍摄面
     /// </summary>
@@ -382,7 +247,6 @@ namespace Vision2.Project.Mes
                 }
                 return true;
             }
-
             set { }
         }
         /// <summary>
@@ -405,7 +269,6 @@ namespace Vision2.Project.Mes
         /// 产品SN
         /// </summary>
         public string PanelID;
-
         /// <summary>
         /// 误判数量
         /// </summary>
@@ -415,7 +278,6 @@ namespace Vision2.Project.Mes
                 return DicNGObj.DicOnes.Count;
             }
         }
-
         /// <summary>
         /// NG数量
         /// </summary>
@@ -435,6 +297,8 @@ namespace Vision2.Project.Mes
         /// 拍照数据集合
         /// </summary>
         public List<OneResultOBj> ResuOBj = new List<OneResultOBj>();
+
+
         /// <summary>
         /// NG元件
         /// </summary>
@@ -457,6 +321,11 @@ namespace Vision2.Project.Mes
         {
             DicNGObj = oneContOBJs;
         }
+         /// <summary>
+         /// 全部集合
+         /// </summary>
+        public OneCompOBJs  AllCompObjs= new OneCompOBJs();
+
 
 
     }

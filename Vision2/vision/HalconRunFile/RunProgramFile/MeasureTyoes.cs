@@ -97,13 +97,13 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         min = -min;
                     }
                     min = halcon.GetCaliConstMM(min);
-                    //halcon.AddOBJ(  xld,  this.color );
+                    //halcon.AddObj(  xld,  this.color );
                     halcon.GetOneImageR().AddImageMassage(outRows.TupleInt(), outcols.TupleInt(), this.Name + "=" + min.TupleString("0.3f"), ColorResult.green);
                     outRows.Append(rowt);
                     outcols.Append(colt);
                     HOperatorSet.GenContourPolygonXld(out HObject hObject2, outRows, outcols);
                     //halcon.SendMesage("Goto", min.TupleString("0.3f"));
-                    halcon.AddOBJ(xldd.ConcatObj(hObject.ConcatObj(hObject2)));
+                    halcon.AddObj(xldd.ConcatObj(hObject.ConcatObj(hObject2)));
                     hObject2.Dispose();
                     hObject.Dispose();
                     return true;
@@ -160,12 +160,12 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 //    {
                 //        halcon.AddMessageIamge(projectRow2, projectCol02, "夹角" + angleD.TupleString("0.2f") + "°距离" + DistM2.TupleString("0.4f"), ColorResult.red);
                 //        OK = false;
-                //        halcon.AddOBJ(contour3, ColorResult.red);
+                //        halcon.AddObj(contour3, ColorResult.red);
                 //    }
                 //    else
                 //    {
                 //        halcon.AddMessageIamge(projectRow2 - 60, projectCol02, "夹角" + angleD.TupleString("0.2f") + "°距离" + DistM2.TupleString("0.4f"));
-                //        halcon.AddOBJ(contour3);
+                //        halcon.AddObj(contour3);
                 //    }
                 //}
                 //if (SelePointName == "第一点" || SelePointName == "全部")
@@ -177,12 +177,12 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 //    {
                 //        halcon.AddMessageIamge(projectRow, projectCol0, "夹角" + angleD.TupleString("0.2f") + "°距离" + DistM.TupleString("0.4f"), ColorResult.red);
                 //        OK = false;
-                //        halcon.AddOBJ(contour1, ColorResult.red);
+                //        halcon.AddObj(contour1, ColorResult.red);
                 //    }
                 //    else
                 //    {
                 //        halcon.AddMessageIamge(projectRow - 60, projectCol0, "夹角" + angleD.TupleString("0.2f") + "°距离" + DistM.TupleString("0.4f"));
-                //        halcon.AddOBJ(contour1, ColorResult.yellow);
+                //        halcon.AddObj(contour1, ColorResult.yellow);
                 //    }
                 //}
                 //if (SelePointName == "中心点" || SelePointName == "全部")
@@ -192,15 +192,15 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 //    {
                 //        halcon.AddMessageIamge(projectRow3, projectCol03, "夹角" + angleD.TupleString("0.2f") + "°距离" + DistM3.TupleString("0.4f"), ColorResult.red);
                 //        OK = false;
-                //        halcon.AddOBJ(contour4, ColorResult.red);
+                //        halcon.AddObj(contour4, ColorResult.red);
                 //    }
                 //    else
                 //    {
-                //        halcon.AddOBJ(contour4, ColorResult.yellow);
+                //        halcon.AddObj(contour4, ColorResult.yellow);
                 //        halcon.AddMessageIamge(projectRow3 - 60, projectCol03, "夹角" + angleD.TupleString("0.2f") + "°距离" + DistM3.TupleString("0.4f"));
                 //    }
                 //}
-                //halcon.AddOBJ(corss, ColorResult.blue);
+                //halcon.AddObj(corss, ColorResult.blue);
                 //if (OK)
                 //{
                 //    return true;

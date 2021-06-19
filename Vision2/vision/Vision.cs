@@ -64,8 +64,15 @@ namespace Vision2.vision
         khaki = 16,
         violet = 17,
         firebrick = 18,
+    }
+    public class AoiObj
+    {
+        public HObject Aoi  = new HObject();
+
+        public HObject Drow  = new HObject();
 
     }
+
     [Serializable]
     /// <summary>
     /// 视觉常用方法
@@ -1145,9 +1152,7 @@ namespace Vision2.vision
                                 Instance.ListHalconName.Add(Path.GetFileNameWithoutExtension(itmeName[i]));
                             }
                         }
-
-                        Vision.Instance.DicLibraryVision=   Library.LibraryBasics.ReadDic(Library.LibraryBasics.RunPath + nameP);
-               
+                        Vision.Instance.DicLibraryVision= Library.LibraryBasics.ReadDic(Library.LibraryBasics.RunPath + nameP);
                         for (int i = 0; i < Instance.ListHalconName.Count; i++)
                         {
                             if (Instance.ListHalconName[i] == null)
@@ -1364,7 +1369,7 @@ namespace Vision2.vision
                                 run.UPStart();
                                 run.ReadCamSave(Calib.AutoCalibPoint.GetFileName() + files[0] + "\\" + files[2] + "\\" + files[4] + ".bmp");
                                 HTuple pos = run.GetRobotBaesPose();
-                                run.AddMessage(pos);
+                                run.GetOneImageR() .AddMeassge(pos);
                                 HOperatorSet.WritePose(pos, Calib.AutoCalibPoint.GetFileName() + files[0] + "\\" + files[2] + "\\" + files[4] + ".dat");
                                 if (Instance.DicCalib3D.ContainsKey(files[0]))
                                 {
@@ -1380,11 +1385,11 @@ namespace Vision2.vision
                                        int.Parse(files[4]), int.Parse(files[5]), run.hWindowHalcon(), pos, run.Image());
                                     }
                                     socket.Send("SaveCalib3dOK");
-                                    run.AddOBJ(Instance.DicCalib3D[files[0]].Get3DX());
-                                    run.AddOBJ(Instance.DicCalib3D[files[0]].Get3DY());
-                                    run.AddOBJ(Instance.DicCalib3D[files[0]].Get3DZ());
+                                    run.AddObj(Instance.DicCalib3D[files[0]].Get3DX());
+                                    run.AddObj(Instance.DicCalib3D[files[0]].Get3DY());
+                                    run.AddObj(Instance.DicCalib3D[files[0]].Get3DZ());
                                     run.AddShowObj(Instance.DicCalib3D[files[0]].GeT3d());
-                                    run.AddMessage(Instance.DicCalib3D[files[0]].Errs);
+                                    run.GetOneImageR().AddMeassge(Instance.DicCalib3D[files[0]].Errs);
                                     run.EndChanged(run.GetOneImageR());
                                 }
                             }
@@ -1580,7 +1585,7 @@ namespace Vision2.vision
                     //    halcon.KeyHObject.DirectoryHObject.Add("九点标定", new ObjectColor() { _HObject = hObject, });
                     //}
 
-                    halcon.AddOBJ(hObject.Clone());
+                    halcon.AddObj(hObject.Clone());
                     Coordinate coordinate = new Coordinate();
                     coordinate.Rows = halcon["autocalibRow"];
                     coordinate.Columns = halcon["autocalibCol"];
@@ -2201,7 +2206,7 @@ namespace Vision2.vision
         public static void Disp_message(HTuple hv_WindowHandle, HTuple hv_String,
           int hv_Row = 20, int hv_Column = 20)
         {
-            Disp_message(hv_WindowHandle, hv_String, hv_Row, hv_Column);
+            Disp_message(hv_WindowHandle, hv_String, hv_Row, hv_Column,false,"red","false");
         }
         /// <summary>
         /// 在窗口显示文本
@@ -2370,21 +2375,7 @@ namespace Vision2.vision
 
             }
         }
-        public static HObject Reduce_domain(HObject hObject, HObject readm)
-        {
-            try
-            {
-                HOperatorSet.ReduceDomain(hObject, readm, out HObject ImageReduced);
-                return ImageReduced;
-            }
-            catch (Exception)
-            {
-
-
-            }
-            return null;
-        }
-
+  
         /// <summary>
         /// 绘制直线
         /// </summary>
@@ -4151,7 +4142,7 @@ namespace Vision2.vision
         /// </summary>
         /// <param name="Obj"></param>
         /// <returns></returns>
-        public static bool ObjectValided(HObject Obj)
+        public static bool IsObjectValided(HObject Obj)
         {
             if (Obj == null || !Obj.IsInitialized())
             {
@@ -4243,7 +4234,7 @@ namespace Vision2.vision
             try
             {
                 //判断图像是否为空
-                if (!ObjectValided(Image))
+                if (!IsObjectValided(Image))
                 {
                     return;
                 }

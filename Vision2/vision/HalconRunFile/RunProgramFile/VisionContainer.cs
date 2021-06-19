@@ -22,7 +22,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
          /// </summary>
         public event DelegateAddRun UpHalconRunProgram;
 
-        public override Control GetControl()
+        public override Control GetControl(HalconRun halcon )
         {
             return new  VisionContainerControl(this);
         }
@@ -148,32 +148,33 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         }
 
         public Dictionary<string, bool> keyValues = new Dictionary<string, bool>();
-        public override bool RunHProgram(HalconRun halcon, OneResultOBj oneResultOBj,  int runID = 0,string name=null)
+        public override bool RunHProgram( OneResultOBj oneResultOBj, out List<OneRObj> oneRObjs, int runID = 0)
         {
+            oneRObjs = new List<OneRObj>();
             if (keyValues==null)
             {
                 keyValues = new Dictionary<string, bool>();
 
             }
             keyValues.Clear();
-            if (name!=null)
-            {
-                if (ListRun.ContainsKey(name))
-                {
-                    ListRun[name].RunHProgram(halcon, oneResultOBj,runID);
-                }
-            }
-            else
-            {
+            //if (name!=null)
+            //{
+            //    if (ListRun.ContainsKey(name))
+            //    {
+            //        ListRun[name].RunHProgram(halcon, oneResultOBj,runID);
+            //    }
+            //}
+            //else
+            //{
                 foreach (var item in ListRun)
                 {
-                    keyValues.Add(item.Key, item.Value.Run(halcon,oneResultOBj));
+                    keyValues.Add(item.Key, item.Value.Run(oneResultOBj));
                     if (!keyValues[item.Key])
                     {
                         ResltBool = false;
                     }
                 }
-            }
+            //}
             
         
             return ResltBool;

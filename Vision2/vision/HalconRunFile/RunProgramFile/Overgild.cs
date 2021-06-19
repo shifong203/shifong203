@@ -14,7 +14,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
     /// </summary>
     public class Overgild : RunProgram
     {
-        public override Control GetControl()
+        public override Control GetControl(HalconRun halcon )
         {
             return new Controls.OvergildControl1(this);
         }
@@ -114,31 +114,31 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         /// <param name="halcon"></param>
         /// <param name="id"></param>
         /// <param name="errRoi"></param>
-        public void RunSeleRoi(HalconRun halcon,int id,out HObject errRoi)
+        public void RunSeleRoi(OneResultOBj halcon,int id,out HObject errRoi)
         {
             errRoi = new HObject();
             errRoi.GenEmptyObj();
             try
             {
-                ImageHdt(halcon.Image());
-                HOperatorSet.Threshold(this.GetEmset(halcon.GetImageOBJ(ImageTypeOb)), out HObject hobj1, ThresSelectMin, ThresSelectMax);
+                ImageHdt(halcon.Image);
+                HOperatorSet.Threshold(this.GetEmset(halcon.GetHalcon().GetImageOBJ(ImageTypeOb)), out HObject hobj1, ThresSelectMin, ThresSelectMax);
                 HOperatorSet.Connection(hobj1, out hobj1);
                 HOperatorSet.SelectShape(hobj1, out HObject hObject, "area", "and", SelectMin, SelectMax);
                 HOperatorSet.FillUp(hObject, out hObject); 
                 if (id != 0)
                 {
-                    halcon.AddOBJ(hObject);
+                    halcon.AddObj(hObject);
                 }
                 HOperatorSet.ClosingCircle(hObject, out hObject,800);
                 HOperatorSet.SmallestRectangle2(hObject, out HTuple rowR, out HTuple colR, out HTuple phiR, out HTuple length1R, out HTuple length2R);
                 HOperatorSet.HomMat2dIdentity(out HTuple homMat);
-                HObject image = halcon.Image();
+                HObject image = halcon.Image;
                 HOperatorSet.GenRectangle2(out HObject rectangle2, rowR, colR, phiR, length1R - ChamferPhi, length2R);
                 HOperatorSet.GenRectangle2(out HObject rectangle3, rowR, colR, phiR, length1R, length2R - ChamferPhi);
                 HOperatorSet.Union1(rectangle3.ConcatObj(rectangle2), out rectangle3);
                 HOperatorSet.ErosionCircle(rectangle3, out rectangle3, ErosinCircle);
                 HOperatorSet.Union1(rectangle3.ConcatObj(hObject), out rectangle3);
-                HOperatorSet.ReduceDomain(halcon.GetImageOBJ(ImageTypeOb), rectangle3, out HObject hImage);
+                HOperatorSet.ReduceDomain(halcon.GetHalcon().GetImageOBJ(ImageTypeOb), rectangle3, out HObject hImage);
                 HOperatorSet.Threshold(hImage, out HObject errt, 0, 160);
                 HOperatorSet.ClosingCircle(errt, out errt, 5);
                 HOperatorSet.OpeningCircle(errt, out errt, 2);
@@ -147,14 +147,14 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 //HOperatorSet.DilationCircle(errt, out errt, 10);
                 if (id!=0)
                 {
-                    halcon.AddOBJ(rectangle3, ColorResult.yellow);
+                    halcon.AddObj(rectangle3, ColorResult.yellow);
                     HOperatorSet.AreaCenter(errt, out HTuple ate, out rowR, out colR );
                     if (rowR.Length!=0)
                     {
-                        halcon.AddMessageIamge(rowR, colR, ate);
+                        halcon.AddImageMassage(rowR, colR, ate);
                     }
                 }
-                halcon.AddOBJ(errt, ColorResult.red);
+                halcon.AddObj(errt, ColorResult.red);
                 HOperatorSet.ErosionCircle(hObject, out hObject, ErosinCircle);
                 SelecRoi = hObject;
                 HOperatorSet.ReduceDomain(image, hObject, out  hImage);
@@ -188,7 +188,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     if (area2.Length!=0)
                     {
                         HOperatorSet.Intensity(hObject5, hImage, out HTuple mean2, out deviation);
-                        //halcon.AddOBJ(hObject3, ColorResult.yellow);
+                        //halcon.AddObj(hObject3, ColorResult.yellow);
                         if (deviation.TupleMax()> Dicet)
                         {
                             HOperatorSet.SelectShape(hObject3, out hObject3, "area", "and", 10, area2.TupleMax() - 1);
@@ -197,7 +197,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                             {
                                 HOperatorSet.ClosingCircle(hObject3, out hObject3, 2);
                                 //HOperatorSet.Intensity(hObject3, hImage, out mean, out deviation);
-                                //halcon.AddOBJ(hObject3, ColorResult.blue);
+                                //halcon.AddObj(hObject3, ColorResult.blue);
                                 hObject7 = hObject7.ConcatObj(hObject5);
                                 hObject4 = hObject4.ConcatObj(hObject3);
                             }
@@ -209,13 +209,13 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 errRoi = hObject4;
    
                 HOperatorSet.Intensity(hObject7, hImage, out mean, out deviation);
-                //halcon.AddOBJ(hObject3,ColorResult.red);
+                //halcon.AddObj(hObject3,ColorResult.red);
                 HOperatorSet.AreaCenter(hObject7, out HTuple area, out HTuple row, out HTuple column);
                 if (id!=0)
                 {
-                    halcon.AddMessageIamge(row, column, mean + ":" + deviation);
+                    halcon.AddImageMassage(row, column, mean + ":" + deviation);
                 }
-                //halcon.AddOBJ(hObject);
+                //halcon.AddObj(hObject);
               
    
             }
@@ -223,16 +223,16 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             {
             }
         }
-        public void RunDebug(HalconRun halcon, OneResultOBj oneResultOBj, int id)
+        public void RunDebug( OneResultOBj oneResultOBj, int id)
         {
             try
             {
-                RunSeleRoi(halcon, id,out HObject errRoi);
+                RunSeleRoi(oneResultOBj, id,out HObject errRoi);
                 if (errRoi.CountObj() != 0)
                 {
-                    halcon.AddOBJ(errRoi, ColorResult.red);
+                    oneResultOBj.AddObj(errRoi, ColorResult.red);
                 }
-                RunListOvergil[id].RunPa(halcon, this, out HObject hObject1);
+                RunListOvergil[id].RunPa(oneResultOBj, this, out HObject hObject1);
                     if (hObject1.CountObj() != 0)
                     {
                         oneResultOBj.AddNGOBJ(this.Name,RunListOvergil[id].ErrText,hObject1, hObject1);
@@ -245,17 +245,18 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
 
         }
 
-        public override bool  RunHProgram(HalconRun halcon, OneResultOBj oneResultOBj, int id, string name = null)
+        public override bool RunHProgram( OneResultOBj oneResultOBj, out List<OneRObj> oneRObjs, int id = 0)
         {
+            oneRObjs = new List<OneRObj>();
             try
             {
                 
-                RunSeleRoi(halcon, id, out HObject errRoi);
-                //halcon.AddOBJ(SelecRoi);
+                RunSeleRoi(oneResultOBj, id, out HObject errRoi);
+                //halcon.AddObj(SelecRoi);
                 if (errRoi.CountObj() != 0)
                 {
                     this.NGNumber++;
-                    halcon.AddOBJ(errRoi, ColorResult.blue);
+                    oneResultOBj.AddObj(errRoi, ColorResult.blue);
                 }
                 if (isRoiComparison)
                 {
@@ -266,29 +267,29 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     HOperatorSet.AffineTransRegion(ModeOBj, out HObject hObject, home2d, "nearest_neighbor");
                     //if (id != 0)
                     //{
-                        halcon.AddOBJ(hObject, ColorResult.gold);
+                    oneResultOBj.AddObj(hObject, ColorResult.gold);
                     //}
                     HOperatorSet.Difference(SelecRoi, hObject, out hObject);
-                    halcon.AddOBJ(hObject, ColorResult.black);
+                    oneResultOBj.AddObj(hObject, ColorResult.black);
                     HOperatorSet.Connection(hObject, out hObject);
                     HOperatorSet.SelectShape(hObject, out hObject, "inner_radius", "and", ComparisonSelecMinR, 99999999);
 
                     HOperatorSet.DilationCircle(hObject, out hObject, 50);
-                    halcon.AddOBJ(hObject, ColorResult.firebrick);
+                    oneResultOBj.AddObj(hObject, ColorResult.firebrick);
                     //if (id!=0)
                     //{
-                    //    halcon.AddOBJ(ModeOBj, ColorResult.orange);
+                    //    halcon.AddObj(ModeOBj, ColorResult.orange);
                     //}
    
                 }
                 for (int i = 0; i < RunListOvergil.Count; i++)
                 {
-                    RunListOvergil[i].RunPa(halcon, this,out HObject hObject1);
+                    RunListOvergil[i].RunPa(oneResultOBj, this,out HObject hObject1);
     
                     if (hObject1.CountObj() != 0)
                     {
                         HOperatorSet.DilationCircle(hObject1, out HObject hObject, 50);
-                        //halcon.AddOBJ(hObject, ColorResult.firebrick);
+                        //halcon.AddObj(hObject, ColorResult.firebrick);
                         this.NGNumber++;
                         oneResultOBj.AddNGOBJ(this.Name, RunListOvergil[i].ErrText ,  hObject.Clone() , hObject1 );
                     }
@@ -338,10 +339,10 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             /// <param name="halcon"></param>
             /// <param name="overgild"></param>
             /// <param name="errObj"></param>
-            public void RunPa(HalconRun halcon,Overgild overgild,out HObject errObj)
+            public void RunPa(OneResultOBj halcon,Overgild overgild,out HObject errObj)
             {
                 errObj = new HObject();
-                //halcon.AddOBJ(overgild.SelecRoi);
+                //halcon.AddObj(overgild.SelecRoi);
                 HOperatorSet.ReduceDomain(overgild.GetImageOBJ(ImageType), overgild.SelecRoi, out HObject Himage);
                 HOperatorSet.Intensity(overgild.SelecRoi, overgild.GetImageOBJ(ImageType), out HTuple mean, out HTuple deviation);
                 HOperatorSet.AreaCenter(overgild.SelecRoi, out HTuple area, out HTuple row, out HTuple column);
@@ -367,10 +368,10 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 HOperatorSet.Intensity(errObj, overgild.GetImageOBJ(ImageType), out mean, out deviation);
                 HOperatorSet.AreaCenter(errObj, out area, out row, out column);
                 //HOperatorSet.AutoThreshold(Himage, out  errObj, 0);
-                //halcon.AddOBJ(errObj, ColorResult.blue);
+                //halcon.AddObj(errObj, ColorResult.blue);
                 if (mean.Length!=0)
                 {
-                    //halcon.AddOBJ(errObj, ColorResult.blue);
+                    //halcon.AddObj(errObj, ColorResult.blue);
                     //halcon.AddMessageIamge(row, column, mean + ":" + deviation);
                 }
             }

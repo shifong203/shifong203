@@ -132,7 +132,7 @@ namespace Vision2.ErosProjcetDLL.Project
         /// <param name="item">节点</param>
         /// <param name="key">键</param>
         /// <param name="data">值</param>
-        public static void SetTempPrjectData(string item,string key,string data)
+        public static void SetTempPrjectDataINI(string item,string key,string data)
         {
             try
             {
@@ -148,7 +148,7 @@ namespace Vision2.ErosProjcetDLL.Project
         /// <param name="item"></param>
         /// <param name="key"></param>
         /// <param name="data"></param>
-        public static void GetTempPrjectData(string item, string key,out string data)
+        public static void GetTempPrjectDataINI(string item, string key,out string data)
         {
             StringBuilder stringBuilder = new StringBuilder();
             data = "";

@@ -10,6 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using HalconDotNet;
+using Vision2.Project.DebugF;
 
 namespace Vision2.vision
 {
@@ -31,7 +32,7 @@ namespace Vision2.vision
             FolderBrowserDialog dialog = new FolderBrowserDialog();
                 if (TraversalExecutionPath == "")
                 {
-                    ErosProjcetDLL.Project.ProjectINI.GetTempPrjectData("视觉", "模拟文件夹地址",out  TraversalExecutionPath);
+                    ErosProjcetDLL.Project.ProjectINI.GetTempPrjectDataINI("视觉", "模拟文件夹地址",out  TraversalExecutionPath);
                     //TraversalExecutionPath = Vision.Instance.DicSaveType[Vision.GetRunNameVision().Name].SavePath;
                 }
                 if (System.IO.Directory.Exists(TraversalExecutionPath))
@@ -42,7 +43,7 @@ namespace Vision2.vision
                 System.Windows.Forms.DialogResult dialoge = Vision2.ErosProjcetDLL.UI.PropertyGrid.FolderBrowserLauncher.ShowFolderBrowser(dialog);
                 if (dialoge != System.Windows.Forms.DialogResult.OK) return;
                 TraversalExecutionPath = dialog.SelectedPath;
-                ErosProjcetDLL.Project.ProjectINI.SetTempPrjectData("视觉", "模拟文件夹地址", TraversalExecutionPath);
+                ErosProjcetDLL.Project.ProjectINI.SetTempPrjectDataINI("视觉", "模拟文件夹地址", TraversalExecutionPath);
 
                 this.Text = TraversalExecutionPath;
                 var det = Vision2.ErosProjcetDLL.FileCon.FileConStatic.GetFilesDicListPath(TraversalExecutionPath, ".bmp,.jpg");
@@ -160,30 +161,40 @@ namespace Vision2.vision
         {
             try
             {
-                foreach (var item in keyValuePath)
-                {
-                    for (int i = 0; i < item.Value.Count; i++)
+                Thread thread = new Thread(() => {
+
+                    foreach (var item in keyValuePath)
                     {
-                        foreach (var itemd in Vision.GetHimageList().Values)
+                        for (int i = 0; i < item.Value.Count; i++)
                         {
-                            if (item.Value[i].Contains(itemd.Name))
+                            foreach (var itemd in Vision.GetHimageList().Values)
                             {
-                                OneResultOBj oneResultOBj = new OneResultOBj();
-                                oneResultOBj.ReadImage(item.Value[i]);
-                                string name = Path.GetFileNameWithoutExtension(item.Value[i]);
-                                  int liID = ErosProjcetDLL.Project.ProjectINI.GetStrReturnInt(name);
-                                oneResultOBj.LiyID = liID;
-                                oneResultOBj .RunID= liID;
-                                  if (name.Contains('-'))
-                                  {
-                                      string dat = name.Split('-')[0];
-                                      oneResultOBj.RunID = ErosProjcetDLL.Project.ProjectINI.GetStrReturnInt(dat);
-                                  }
-                                 itemd.CamImageEvent(oneResultOBj);  
+                                if (item.Value[i].Contains(itemd.Name))
+                                {
+                                    OneResultOBj oneResultOBj = new OneResultOBj();
+                                    oneResultOBj.ReadImage(item.Value[i]);
+                                    string name = Path.GetFileNameWithoutExtension(item.Value[i]);
+                                    int liID = ErosProjcetDLL.Project.ProjectINI.GetStrReturnInt(name);
+                                    oneResultOBj.LiyID = liID;
+                                    oneResultOBj.RunID = liID;
+                                    if (name.Contains('-'))
+                                    {
+                                        string dat = name.Split('-')[0];
+                                        oneResultOBj.RunID = ErosProjcetDLL.Project.ProjectINI.GetStrReturnInt(dat);
+                                    }
+                                    Thread.Sleep(DebugCompiler.GetThis().MarkWait);
+                                    itemd.AsysReadCamImage(oneResultOBj.LiyID, oneResultOBj.RunID, asyncRestImage => { }, oneResultOBj);
+                                    Thread.Sleep(DebugCompiler.GetThis().CamWait);
+                                    //itemd.CamImageEvent(oneResultOBj);  
+                                }
                             }
                         }
                     }
-                }        
+                });
+                thread.IsBackground = true;
+                thread.Start();
+
+
             }
             catch (Exception ex)
             {

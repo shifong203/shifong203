@@ -107,6 +107,8 @@
             this.Controls.Add(this.richTextBox1);
             this.Controls.Add(this.panel1);
             this.KeyPreview = true;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "AlarmListBoxt";
             this.Text = "报警窗口";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.AlramListForm1_FormClosing);

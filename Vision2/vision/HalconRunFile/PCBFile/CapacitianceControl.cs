@@ -58,7 +58,7 @@ namespace Vision2.vision.HalconRunFile.PCBFile
         {
             try
             {
-                HOperatorSet.AreaCenter(cap.TestingRoi, out HTuple area, out HTuple row, out HTuple colu);
+                HOperatorSet.AreaCenter(cap.AOIObj, out HTuple area, out HTuple row, out HTuple colu);
                 if (row.Length==0)
                 {
                     row = 500;
@@ -67,8 +67,8 @@ namespace Vision2.vision.HalconRunFile.PCBFile
                 HOperatorSet.GenCircle(out HObject circle, row, colu, cap.Inside_Circle);
                 HOperatorSet.GenCircle(out HObject circle2, row, colu, cap.Periphery_Circle);
                 HOperatorSet.Union2(circle, circle2, out circle2);
-                cap.TestingRoi = circle2;
-                cap.TestingRoi = RunProgram.DragMoveOBJ(run, cap.TestingRoi);
+                cap.AOIObj = circle2;
+                cap.AOIObj = RunProgram.DragMoveOBJ(run, cap.AOIObj);
             }
             catch (Exception ex)
             {

@@ -37,18 +37,21 @@
             this.alarmText1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.alarmText1.Location = new System.Drawing.Point(0, 0);
             this.alarmText1.Name = "alarmText1";
-            this.alarmText1.Size = new System.Drawing.Size(556, 585);
+            this.alarmText1.Size = new System.Drawing.Size(923, 585);
             this.alarmText1.TabIndex = 0;
             // 
             // AlarmForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(556, 585);
+            this.ClientSize = new System.Drawing.Size(923, 585);
             this.Controls.Add(this.alarmText1);
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "AlarmForm";
             this.Text = "信息窗口";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.AlarmForm_FormClosing);
+            this.Load += new System.EventHandler(this.AlarmForm_Load);
             this.ResumeLayout(false);
 
         }

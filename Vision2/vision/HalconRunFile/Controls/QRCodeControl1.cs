@@ -396,9 +396,9 @@ namespace Vision2.vision.HalconRunFile.Controls
                     pointFile1[i].Y = Code.XCols[i];
                     pointFile1[i].X = Code.YRows[i];
                 }
-                halcon.AddMessageIamge(Code.YRows, Code.XCols, new HTuple("1", "2", "3", "4"), ColorResult.blue, "true");
+                halcon.GetOneImageR().AddImageMassage(Code.YRows, Code.XCols, new HTuple("1", "2", "3", "4"), ColorResult.blue, "true");
                 HOperatorSet.GenCrossContourXld(out HObject hObject, Code.YRows, Code.XCols, 70, 0);
-                halcon.AddOBJ(hObject);
+                halcon.AddObj(hObject);
                 numericUpDown8.Value = Code.YRows.TupleSelect(0).TupleInt();
                 numericUpDown9.Value = Code.XCols.TupleSelect(0).TupleInt();
                 ErosSocket.DebugPLC.Robot.TrayRobot.Calculate((sbyte)Code.XNumber, (sbyte)Code.YNumber, pointFile1[0], pointFile1[1], pointFile1[2], pointFile1[3], out pointFile1);
@@ -410,7 +410,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                     //    listBox1.Items.Add(i + 1);
                     //}
                     HOperatorSet.GenRectangle1(out hObject, pointFile1[i].X - Code.Height, pointFile1[i].Y - Code.Height, pointFile1[i].X + Code.Height, pointFile1[i].Y + Code.Height);
-                    halcon.AddOBJ(hObject);
+                    halcon.AddObj(hObject);
                     Code.Rows.Append(pointFile1[i].X);
                     Code.Cols.Append(pointFile1[i].Y);
                 }
@@ -466,7 +466,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                     pointFile1[i].X = hTuple;
                 }
                 HOperatorSet.GenCrossContourXld(out HObject hObject, Code.YRows, Code.XCols, 70, 0);
-                halcon.AddOBJ(hObject);
+                halcon.AddObj(hObject);
                 numericUpDown8.Value = Code.YRows.TupleSelect(0).TupleInt();
                 numericUpDown9.Value = Code.XCols.TupleSelect(0).TupleInt();
                 ErosSocket.DebugPLC.Robot.TrayRobot.Calculate((sbyte)Code.XNumber, (sbyte)Code.YNumber, pointFile1[0], pointFile1[1], pointFile1[2], pointFile1[3], out pointFile1);
@@ -475,7 +475,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 {
 
                     HOperatorSet.GenRectangle1(out hObject, pointFile1[i].X - Code.Height, pointFile1[i].Y - Code.Height, pointFile1[i].X + Code.Height, pointFile1[i].Y + Code.Height);
-                    halcon.AddOBJ(hObject);
+                    halcon.AddObj(hObject);
                     if (Code.Rows == null)
                     {
                         Code.Rows = new HTuple();
@@ -628,7 +628,7 @@ namespace Vision2.vision.HalconRunFile.Controls
             Code.MatrixType = (int)comboBox3.SelectedIndex;
             if (Code.DiscernType==1)
             {
-                Code.SrotCode(halcon);
+                Code.SrotCode(halcon.GetOneImageR());
                 halcon.ShowObj();
             }
         }
@@ -674,14 +674,14 @@ namespace Vision2.vision.HalconRunFile.Controls
                 HWindIDTS.ClearObj();
                 OBJs.Clear();
                 Code.GenParamName = "train";
-                Code.TrainQRCode(Code.GetEmset(halcon.Image()), halcon, out HObject hObject1, images, OBJs);
+                Code.TrainQRCode(Code.GetEmset(halcon.Image()), halcon.GetOneImageR(), out HObject hObject1, images, OBJs);
                 for (int i = 0; i < images.Count; i++)
                 {
                     listBox2.Items.Add(i+1);
                 }
                 listBox2.SelectedIndex = 0;
                 Code.GenParamName = name;
-                halcon.AddMessage(Code.DecodedDataString.ToString());
+                halcon.GetOneImageR().AddMeassge(Code.DecodedDataString.ToString());
                 halcon.ShowObj();
 
             }
@@ -718,7 +718,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 Code.Rows = rows;
                 Code.Cols = colus;
                 halcon.HobjClear();
-                Code.SrotCode(halcon);
+                Code.SrotCode(halcon.GetOneImageR());
             }
             catch (Exception)
             {
@@ -779,7 +779,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 Code.Rows = rows;
                 Code.Cols = colus;
                 halcon.HobjClear();
-                Code.SrotCode(halcon);
+                Code.SrotCode(halcon.GetOneImageR());
             }
             catch (Exception)
             {
@@ -804,7 +804,7 @@ namespace Vision2.vision.HalconRunFile.Controls
         private void toolStripButton3_Click(object sender, EventArgs e)
         {
             halcon.HobjClear();
-            Code.SrotCode(halcon);
+            Code.SrotCode(halcon.GetOneImageR());
         }
 
    

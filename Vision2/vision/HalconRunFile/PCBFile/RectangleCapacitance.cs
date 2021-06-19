@@ -12,25 +12,32 @@ using static Vision2.vision.HalconRunFile.PCBFile.ICPint;
 
 namespace Vision2.vision.HalconRunFile.PCBFile
 {
-    public class RectangleCapacitance : BPCBoJB, InterfacePCBA
+    public class RectangleCapacitance : RunProgram, InterfacePCBA
     {
-        public Control GetControl(HalconRun run)
+        public override Control GetControl(HalconRun run)
         {
             return new RectangleCapacitanceControl1(this, run);
         }
-        public void SaveThis(string path)
+   
+        public override RunProgram UpSatrt<T>(string path)
         {
-            HalconRun.ClassToJsonSavePath(this, path);
-        }
-        public override BPCBoJB UpSatrt<T>(string path)
-        {
-            BPCBoJB bPCBoJB = base.UpSatrt<RectangleCapacitance>(path);
+            RunProgram bPCBoJB = base.ReadThis<RectangleCapacitance>(path);
             if (bPCBoJB == null)
             {
                 bPCBoJB = this;
             }
             return bPCBoJB;
         }
+
+
+        public double ModeRow { get; set; }
+
+        public double ModeCol { get; set; }
+
+        public double outRow { get; set; }
+
+        public double outCol { get; set; }
+
 
         public Threshold_Min_Max Threshold_Min_M { get; set; } = new Threshold_Min_Max();
         public Threshold_Min_Max Threshold_Min_DP { get; set; } = new Threshold_Min_Max();
@@ -43,30 +50,25 @@ namespace Vision2.vision.HalconRunFile.PCBFile
         public CapacitanceMinMaxV IntCapcitanceMinx { get; set; } = new CapacitanceMinMaxV();
 
 
-
-
-        public override bool Run(HalconRun halcon, RunProgram run, OneResultOBj oneResultOBj, out HObject ErrRoi)
+        public override bool RunHProgram( OneResultOBj oneResultOBj, out List<OneRObj> oneRObjs, int runID = 0)
         {
-         
-
-           return  RunDebug(halcon, run, oneResultOBj,out  ErrRoi);
+            oneRObjs = new List<OneRObj>();
+            return RunDebug(oneResultOBj);
         }
-
-        public bool RunDebug(HalconRun halcon, RunProgram run, OneResultOBj oneResultOBj, out HObject ErrRoi, int debugId = 0)
+        public bool RunDebug( OneResultOBj oneResultOBj, int debugId = 0)
         {
-        
-            ErrNumber = 0;
-            ErrRoi = new HObject();
-            ErrRoi.GenEmptyObj();
+            NGRoi = new HObject();
+            NGRoi.GenEmptyObj();
             HObject hObject2 = new HObject();
+            hObject2.GenEmptyObj();
             bool RsetBool = false;
             try
             {
                 if (debugId != 0)
                 {
-                    halcon.HobjClear();
+                    oneResultOBj.ClearAllObj();
                 }
-                HOperatorSet.ReduceDomain(halcon.GetImageOBJ(Threshold_Min_M.ImageTypeObj), TestingRoi, out HObject imaget);
+                HOperatorSet.ReduceDomain(oneResultOBj .GetHalcon().GetImageOBJ(Threshold_Min_M.ImageTypeObj), AOIObj, out HObject imaget);
                 HObject hObject = Threshold_Min_M.Threshold(imaget);
                 HOperatorSet.Connection(hObject, out hObject);
                 HOperatorSet.AreaCenter(hObject, out HTuple area, out HTuple row, out HTuple column);
@@ -79,78 +81,90 @@ namespace Vision2.vision.HalconRunFile.PCBFile
 
                     HOperatorSet.Union1(hObject, out hObject);
                     HOperatorSet.FillUp(hObject, out hObject);
-                    HOperatorSet.ClosingCircle(hObject, out HObject hObject1, dist);
+                    HOperatorSet.ClosingRectangle1(hObject, out HObject hObject1, dist, dist);
                     HOperatorSet.AreaCenter(hObject1, out HTuple area2, out row, out column);
                     HOperatorSet.SmallestRectangle2(hObject1, out row, out column, out HTuple phi2, out HTuple length12, out HTuple length22);
                     HOperatorSet.GenRectangle2(out  hObject2, row, column, phi2, length12, length22);
-                    halcon.AddOBJ(hObject);
-                    length12 = halcon.GetCaliConstMM(length12);
-                    length22 = halcon.GetCaliConstMM(length22);
-                    length2 = halcon.GetCaliConstMM(length2);
-                    length1 = halcon.GetCaliConstMM(length1);
-                    area2 = Math.Sqrt( halcon.GetCaliConstMM(area2));
+                    oneResultOBj.AddObj(hObject);
+                    HOperatorSet.GenCrossContourXld(out HObject corss, row, column, length12/2, 0);
+                    outRow = row;
+                    outCol = column;
+                    HOperatorSet.DistancePp(outRow, outCol, ModeRow, ModeCol, out HTuple distfMM);
+                    distfMM = oneResultOBj.GetCaliConstMM(distfMM);
+                    if (this.IntCapcitanceMinx.SkewingSetValeu(distfMM) != 0)
+                    {
+                        NGNumber++;
+                    }
+                    oneResultOBj.AddObj(corss, ColorResult.yellow);
+                    length12 = oneResultOBj.GetCaliConstMM(length12);
+                    length22 = oneResultOBj.GetCaliConstMM(length22);
+                    length2 = oneResultOBj.GetCaliConstMM(length2);
+                    length1 = oneResultOBj.GetCaliConstMM(length1);
+                    area2 = Math.Sqrt(oneResultOBj.GetCaliConstMM(area2));
                     for (int i = 0; i < area.Length; i++)
                     {
-                        area[i] = Math.Sqrt(halcon.GetCaliConstMM(area.TupleSelect(i)));
+                        area[i] = Math.Sqrt(oneResultOBj.GetCaliConstMM(area.TupleSelect(i)));
                     }
                     //HOperatorSet.Union1()
                     HOperatorSet.Difference(hObject2, hObject, out HObject hObject3);
                     HObject hObject4  = Threshold_Min_DP.Threshold(imaget);
                     HOperatorSet.Intersection(hObject4, hObject3, out  hObject3);
+                    //hObject3= Rectang_select_Shape_Min_Max.select_shape(hObject3);
                     HOperatorSet.AreaCenter(hObject3, out HTuple areaDt, out HTuple row2,out HTuple column2);
                     //HOperatorSet.ErosionCircle(hObject3, out hObject3, 1);
                     HOperatorSet.OpeningCircle(hObject3, out hObject3, 5);
-                    halcon.AddOBJ(hObject3,ColorResult.yellow);
+          
+                    oneResultOBj.AddObj(hObject3,ColorResult.yellow);
                     if (this.IntCapcitanceMinx.RaSetValeu(length12) != 0)
                     {
-                        ErrNumber++;
+                        NGNumber++;
                     }
                     if (this.IntCapcitanceMinx.RbSetValeu(length22) != 0)
                     {
-                        ErrNumber++;
+                        NGNumber++;
                     }
                     if (this.IntCapcitanceMinx.AngleSetValeu(phi2) != 0)
                     {
-                        ErrNumber++;
+                        NGNumber++;
                     }
                     if (this.IntCapcitanceMinx.AreaSetValeu(areaDt) != 0)
                     {
-                        ErrNumber++;
+                        NGNumber++;
                     }
                     if (debugId != 0)
                     {
-                        halcon.AddMessageIamge(row, column, "长度" + length12 + "宽度" + length22+ "角度" + phi2.TupleDeg() + "面积" + area2);
-                        halcon.AddMessageIamge(rows, columns, "长度" + length1 + "宽度" + length2+ "角度" + phi.TupleDeg() + "面积" + area);
-                        halcon.AddOBJ(hObject);
-                        halcon.ShowObj();
+                        oneResultOBj.AddImageMassage(row, column, "长度" + length12 + "宽度" + length22+ "角度" + phi2.TupleDeg() + "面积" + area2);
+                        oneResultOBj.AddImageMassage(rows, columns, "长度" + length1 + "宽度" + length2+ "角度" + phi.TupleDeg() + "面积" + area);
+                        oneResultOBj.AddObj(hObject);
+                        oneResultOBj .GetHalcon().ShowObj();
                     }
                 }
                 else
                 {
-                    ErrNumber++;
-                    halcon.AddOBJ(TestingRoi, ColorResult.blue);
-                    halcon.AddOBJ(hObject, ColorResult.red);
+                    NGNumber++;
+                    oneResultOBj.AddObj(AOIObj, ColorResult.blue);
+                    oneResultOBj.AddObj(hObject, ColorResult.red);
                     if (debugId != 0)
                     {
-           
-                        halcon.AddMessageIamge(rows, columns, "长度" + length1 + "宽度" + length2 + "角度" + phi.TupleDeg() + "面积" + area);
-                        halcon.AddOBJ(hObject);
-                        halcon.ShowObj();
+
+                        oneResultOBj.AddImageMassage(rows, columns, "长度" + length1 + "宽度" + length2 + "角度" + phi.TupleDeg() + "面积" + area);
+                        oneResultOBj.AddObj(hObject);
+                        oneResultOBj.GetHalcon().ShowObj();
                     }
                 }
             }
             catch (Exception ex)
             {
             }
-            if (ErrNumber == 0)
+            if (NGNumber == 0)
             {
-                halcon.AddOBJ(hObject2);
+                oneResultOBj.AddObj(hObject2);
                 RsetBool = true;
             }
             else
             {
-                ErrRoi = ErrRoi.ConcatObj(hObject2);
-                oneResultOBj.AddNGOBJ(this.Name, "长度", TestingRoi.Clone(), ErrRoi);
+                NGRoi = NGRoi.ConcatObj(hObject2);
+                oneResultOBj.AddNGOBJ(this.Name, "长度", AOIObj, NGRoi);
             }
             return RsetBool;
         }

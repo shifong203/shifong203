@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using Vision2.ErosProjcetDLL.PLCUI;
 using Vision2.ErosProjcetDLL.Project;
 using Vision2.ErosProjcetDLL.UI;
+using Vision2.Project.formula;
 
 namespace Vision2.Project
 {
@@ -119,10 +120,8 @@ namespace Vision2.Project
             try
             {
                 ProjectINI.In.User.EventLog += User_EventLog;
-                splitContainer3.Panel2.Controls.Add(AlarmForm.AlarmFormThis);
-                AlarmForm.AlarmFormThis.FormBorderStyle = FormBorderStyle.None;
-                AlarmForm.AlarmFormThis.Dock = DockStyle.Fill;
-                AlarmForm.AlarmFormThis.Show();
+ 
+                //splitContainer3.Panel2Collapsed = true;
                 AlarmListBoxt.AlarmFormThis.Hide();
                 timer100.Start();
                 timer500.Start();
@@ -669,23 +668,7 @@ namespace Vision2.Project
 
         private void tsButton4_Click(object sender, EventArgs e)
         {
-            try
-            {
-                if (AlarmForm.AlarmFormThis.Visible)
-                {
-                    splitContainer3.Panel2Collapsed = true;
-                    AlarmForm.AlarmFormThis.Hide();
-                }
-                else
-                {
-                    splitContainer3.Panel2Collapsed = false;
-                    AlarmForm.AlarmFormThis.Show();
-                }
-            }
-            catch (Exception ex)
-            {
-
-            }
+       
 
         }
 

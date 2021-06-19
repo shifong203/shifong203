@@ -29,7 +29,7 @@ namespace Vision2.vision.HalconRunFile.Controls
             try
             {
                 halconRun.HobjClear();
-                halconRun.AddOBJ(measure.GetHamMatDraw());
+                halconRun.AddObj(measure.GetHamMatDraw());
                 halconRun.ShowImage();
                 halconRun.ShowObj();
             }
@@ -122,7 +122,7 @@ namespace Vision2.vision.HalconRunFile.Controls
             {
                 halconRun.HobjClear();
                 measure.MeasureObj(halconRun, checkBox1.Checked, halconRun.GetOneImageR());
-                halconRun.AddOBJ(measure.MeasureHObj);
+                halconRun.AddObj(measure.MeasureHObj);
                 halconRun.ShowImage();
                 halconRun.ShowObj();
             }
@@ -190,7 +190,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 hTupleCol.Append(measure.OutCols);
                 hTupleCol.Append(col);
                 HOperatorSet.GenContourPolygonXld(out HObject hObject, hTupleRow, hTupleCol);
-                halconRun.AddOBJ(hObject);
+                halconRun.AddObj(hObject);
                 halconRun.ShowImage();
                 halconRun.ShowObj();
             }
@@ -233,7 +233,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 return;
             }
             measure.Enabled = checkBox2.Checked;
-
+            measure.ISMatHat = checkBox1.Checked;
         }
 
         private void trackBar1_Scroll(object sender, EventArgs e)

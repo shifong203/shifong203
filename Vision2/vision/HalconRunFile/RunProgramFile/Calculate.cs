@@ -1,5 +1,6 @@
 ﻿using HalconDotNet;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Forms;
 
@@ -34,24 +35,25 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         Category("视觉参数"), DisplayName("二值化上限")]
         public byte thresholdHigh { get; set; } = 255;
 
-        public override bool RunHProgram(HalconRun halcon, OneResultOBj oneResultOBj, int id, string name = null)
+        public override bool RunHProgram( OneResultOBj oneResultOBj, out List<OneRObj> oneRObjs, int runID = 0)
         {
-
+            oneRObjs = new List<OneRObj>();
             try
             {
                 //HOperatorSet.EdgesImage(halcon.Image(), out HObject hObject1, out HObject hObject2, Filter,Alpha, NMS, Low, High);
-                HOperatorSet.Threshold(halcon.Image(), out HObject hObject1, thresholdLow, thresholdHigh);
+                HOperatorSet.Threshold(oneResultOBj.Image, out HObject hObject1, thresholdLow, thresholdHigh);
                 HOperatorSet.Connection(hObject1, out hObject1);
                 HOperatorSet.SelectShape(hObject1, out NGRoi, "height", "and", 30, 999999);
                 return true;
             }
             catch (Exception ex)
             {
-                halcon.ErrLog(this.Name, ex);
+                //halcon.ErrLog
+                this.LogErr(this.Name, ex);
             }
             return false;
         }
-        public override Control GetControl()
+        public override Control GetControl(HalconRun halcon)
         {
             return new CalculateUserControl(this);
         }

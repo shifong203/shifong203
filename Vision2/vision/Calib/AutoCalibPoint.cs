@@ -541,7 +541,8 @@ namespace Vision2.vision.Calib
         /// <param name="w"></param>
         /// <param name="halconRun">窗口句柄</param>
         /// <returns>成功返回true</returns>
-        public bool Run(CalibMode calibMode, HTuple rows, HTuple cols, HTuple toolInBasePose, out HTuple x, out HTuple y, out HTuple z, out HTuple u, out HTuple v, out HTuple w, HTuple phi = null, HalconRun halconRun = null)
+        public bool Run(CalibMode calibMode, HTuple rows, HTuple cols, HTuple toolInBasePose, out HTuple x, out HTuple y,
+            out HTuple z, out HTuple u, out HTuple v, out HTuple w, HTuple phi = null, HalconRun halconRun = null)
         {
             z = x = y = u = v = w = null;
             if (calibMode == CalibMode.移动放置)
@@ -648,7 +649,8 @@ namespace Vision2.vision.Calib
         /// <param name="w"></param>
         /// <param name="hWindID">窗口句柄</param>
         /// <returns>成功返回true</returns>
-        bool RunMode3(HTuple rows, HTuple cols, HTuple phi, HTuple toolInBasePose, out HTuple x, out HTuple y, out HTuple z, out HTuple u, out HTuple v, out HTuple w, HalconRun halconRun = null)
+        bool RunMode3(HTuple rows, HTuple cols, HTuple phi, HTuple toolInBasePose, out HTuple x, out HTuple y, out HTuple z,
+            out HTuple u, out HTuple v, out HTuple w, HalconRun halconRun = null)
         {
             z = x = y = u = v = w = 0;
             HOperatorSet.ImagePointsToWorldPlane(camParam, calibInCamPose, rows, cols, "m", out HTuple x0, out HTuple y0);

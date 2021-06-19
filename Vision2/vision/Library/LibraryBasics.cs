@@ -12,11 +12,11 @@ namespace Vision2.vision.Library
   public  class LibraryBasics
   {
 
-     public static string PathStr = ErosProjcetDLL.Project.ProjectINI.In.ProjectPathRun + "\\Library\\Vision\\" + Project.formula.Product.ProductionName + "\\";
+      public static string PathStr = ErosProjcetDLL.Project.ProjectINI.In.ProjectPathRun + "\\Library\\Vision\\" + Project.formula.Product.ProductionName + "\\";
 
-     public static string RunPath = ErosProjcetDLL.Project.ProjectINI.In.ProjectPathRun + "\\Library\\Vision\\";
+      public static string RunPath = ErosProjcetDLL.Project.ProjectINI.In.ProjectPathRun + "\\Library\\Vision\\";
       public static Dictionary<string, RunProgram> ReadDic(string paths)
-        {
+      {
             Dictionary<string, RunProgram> keyValuePairs = new Dictionary<string, RunProgram>();
             Assembly assembly = Assembly.GetExecutingAssembly(); // 获取当前程序集
             string staSET = "                                                          ";
@@ -30,6 +30,10 @@ namespace Vision2.vision.Library
                 {
                     ErosProjcetDLL.Excel.Npoi.GetPrivateProfileString("视觉库", vs[i], "", stdt, 500, paths + "\\Library.ini");
                     string taext= stdt.ToString();
+                    if (taext=="")
+                    {
+                        continue;
+                    }
                     string name = vs[i];
                     try
                     {
@@ -49,14 +53,14 @@ namespace Vision2.vision.Library
             }
             return keyValuePairs;
         }
-        public static void SaveLibraryVision(string path, Dictionary<string, RunProgram> dicLibrary)
-        {
+      public static void SaveLibraryVision(string path, Dictionary<string, RunProgram> dicLibrary)
+      {
             foreach (var item in dicLibrary)
             {
                 item.Value.SaveThis(path);
                 ErosProjcetDLL.Excel.Npoi.WritePrivateProfileString("视觉库", item.Value.Name, item.Value.GetType().ToString(), path + "\\Library.ini");
             }
-        }
+      }
 
 
     }

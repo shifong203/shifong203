@@ -115,12 +115,12 @@ namespace Vision2.vision.HalconRunFile.Controls
                     HObject image = new HObject();
                     image = text_Mode.GetEmset(halcon.Image());
 
-                    List<HTuple> listh = text_Mode.GetHomMatList(halcon);
+                    List<HTuple> listh = text_Mode.GetHomMatList(halcon.GetOneImageR());
                     for (int i = 0; i < listh.Count; i++)
                     {
                         HOperatorSet.AffineTransRegion(text_Mode.ListhObjects[listBox1.SelectedIndex], out HObject hObject2, listh[i], "nearest_neighbor");
                         HTuple home2d = listh[i];
-                        halcon.AddOBJ(hObject2);
+                        halcon.AddObj(hObject2);
                         HOperatorSet.HomMat2dRotate(home2d, text_Mode.Phi[listBox1.SelectedIndex], text_Mode.Row[listBox1.SelectedIndex], text_Mode.Column[listBox1.SelectedIndex], out home2d);
                         HOperatorSet.AffineTransImage(image, out HObject hObject3, home2d, "constant", "false");
                         HOperatorSet.AffineTransRegion(hObject2, out HObject hObject1, home2d, "nearest_neighbor");

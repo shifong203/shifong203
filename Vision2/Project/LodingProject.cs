@@ -94,21 +94,9 @@ namespace Vision2.Project
                     dss1.label1.Text = "载入完成;";
                     dss1.progressBar1.Value = 100;
                     Thread.Sleep(500);
-                    foreach (var item in vision.Vision.GetHimageList())
+                    foreach (var item in Vision.GetHimageList())
                     {
-                        try
-                        {
-                            if (System.IO.File.Exists(Application.StartupPath + "\\ImageD\\8.jpeg"))
-                            {
-                                //string[] ImageS = System.IO.Directory.GetFiles(Application.StartupPath + "\\ImageD\\.5.jpg");
-                                //Read_Image(out HObject hObject, Application.StartupPath + "\\ImageD\\.5.jpg");
-                                item.Value.ReadImage(Application.StartupPath + "\\ImageD\\8.jpeg");
-                            }
-                        }
-                        catch (Exception)
-                        {
-                        }
-                        item.Value.ShowImage();
+                        item.Value.ShowImage(true);
                     }
 
                     this.Hide();
@@ -296,7 +284,14 @@ namespace Vision2.Project
                     //MainForm1.MainFormF.Up();
                     debugCalss.SetUesrContrsl(MainForm1.MainFormF.userInterfaceControl1);
                 }
-
+                UserFormulaContrsl.This.tabControl1.TabPages.Remove(UserFormulaContrsl.This.tabPage4);
+                MainForm1.MainFormF.splitContainer3.Panel2Collapsed = false;
+                MainForm1.MainFormF.splitContainer3.Panel2.Controls.Add(AlarmForm.AlarmFormThis);
+                AlarmForm.AlarmFormThis.BringToFront();
+                AlarmForm.AlarmFormThis.Dock = DockStyle.Fill;
+                AlarmForm.AlarmFormThis.FormBorderStyle = FormBorderStyle.None;
+                AlarmForm.AlarmFormThis.TopMost = false;
+                AlarmForm.AlarmFormThis.Show();
                 System.GC.Collect();
                 //form.LoadEnd();
                 //UPForm1_EventShowObj(Vision.Instance.GetRunNameVision());

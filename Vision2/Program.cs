@@ -44,8 +44,8 @@ namespace Vision2
                 string basePath = Path.GetDirectoryName(System.AppDomain.CurrentDomain.BaseDirectory);
                 if (!System.IO.Directory.Exists(ProjectINI.ProjietPath))
                 {
-                    ProjectINI.ProjietPath = "C:\\Vision2\\";
-                    if (!System.IO.Directory.Exists(ProjectINI.In.ProjectPathRun))
+                    ProjectINI.ProjietPath = "D:\\Vision2\\";
+                    if (!System.IO.Directory.Exists(ProjectINI.ProjietPath))
                     {
                         MessageBox.Show("缺少项目文件");
                         return;

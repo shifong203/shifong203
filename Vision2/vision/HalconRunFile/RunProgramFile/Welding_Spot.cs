@@ -27,7 +27,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         {
             return "2.4_焊点识别";
         }
-        public override Control GetControl()
+        public override Control GetControl(HalconRun halcon )
         {
             return new Welding_Spot_Control1(this);
         }
@@ -95,14 +95,15 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         public byte NoNeedle_H_thr_min { get; set; }
         public double NoNeedle_area_min { get; set; }
 
-        public override bool RunHProgram(HalconRun halcon, OneResultOBj oneResultOBj, int id, string name = null)
+        public override bool RunHProgram( OneResultOBj oneResultOBj, out List<OneRObj> oneRObjs, int runID = 0)
         {
-
+            oneRObjs = new List<OneRObj>();
             List<bool> restle = new List<bool>();
             for (int i = 0; i < listWelding.Count; i++)
             {
+                //this.GetPThis().GetModelHaoMatRegion()
                 Dictionary<string, bool> keyValuePairs = new Dictionary<string, bool>();
-                restle.Add(listWelding[i].Solder_joint_inspection(this, halcon, out bool isConglutnation, out bool islessDefend, out HTuple areas));
+                restle.Add(listWelding[i].Solder_joint_inspection(this, oneResultOBj, out bool isConglutnation, out bool islessDefend, out HTuple areas));
 
                 string text = "";
                 for (int i2 = 0; i2 < areas.Length; i2++)
@@ -113,14 +114,14 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
 
                     }
                 }
-                halcon.TrayRestData.ListVerData.Add(text);
-                halcon.AddOBJ(halcon.GetModelHaoMatRegion(HomName, listWelding[i].HObject), ColorResult.green);
+                //halcon.TrayRestData.ListVerData.Add(text);
+                oneResultOBj.AddObj(this.GetPThis().GetModelHaoMatRegion(HomName, listWelding[i].HObject), ColorResult.green);
             }
             for (int i = 0; i < restle.Count; i++)
             {
                 if (restle[i])
                 {
-                    halcon.AddNGMessage("焊点");
+                    oneResultOBj.AddMeassge("焊点");
                     return false;
                 }
             }
@@ -206,17 +207,17 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             /// <param name="hwS"></param>
             /// <param name="hwV"></param>
             /// <returns></returns>
-            public bool Solder_joint_inspection(Welding_Spot welding_Spo, HalconRun Halcon, out bool is_Conglutination,
+            public bool Solder_joint_inspection(Welding_Spot welding_Spo, OneResultOBj Halcon, out bool is_Conglutination,
                 out bool is_less_defend,out HTuple areas, HWindID hwH = null, ImageTypeObj hSVRGB = ImageTypeObj.R, int runID = 0)
             {
                 is_less_defend = is_Conglutination = false;
                 areas = new HTuple();
-                HOperatorSet.ReduceDomain(Halcon.Image(), Halcon.GetModelHaoMatRegion(welding_Spo.HomName, HObject), out HObject hObjectImage);
+                HOperatorSet.ReduceDomain(Halcon.Image, Halcon.GetHalcon().GetModelHaoMatRegion(welding_Spo.HomName, HObject), out HObject hObjectImage);
                 HOperatorSet.SmallestRectangle1(hObjectImage, out HTuple row1, out HTuple column1, out HTuple row2, out HTuple column2);
                 HOperatorSet.CountChannels(hObjectImage, out HTuple htcon);
                 if (htcon != 3)
                 {
-                    Halcon.AddMessage("图像类型错误,需要3通道图像");
+                    Halcon.AddMeassge("图像类型错误,需要3通道图像");
                     return false;
                 }
                 HOperatorSet.Decompose3(hObjectImage, out HObject ImageR, out HObject ImageG, out HObject ImageB);
@@ -349,7 +350,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 HOperatorSet.FillUp(hObject2, out hObjectVCompute);
                 if (runID == 6)
                 {
-                    Halcon.AddOBJ(hObjectVCompute, ColorResult.yellow);
+                    Halcon.AddObj(hObjectVCompute, ColorResult.yellow);
                 }
                 HObject hObject4 = new HObject();
                 hObject4.GenEmptyObj();
@@ -396,7 +397,8 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 for (int i = 0; i < ListHObj.Count; i++)
                 {
                     string magetStr = (i + 1).ToString();
-                    HOperatorSet.AreaCenter(ListHObj[i], out HTuple area, out HTuple rowt, out HTuple columnt);
+                  HObject hObject10=       Halcon.GetHalcon().GetModelHaoMatRegion(welding_Spo.HomName, ListHObj[i]);
+                    HOperatorSet.AreaCenter(hObject10, out HTuple area, out HTuple rowt, out HTuple columnt);
                     if (rowt.Length == 0)
                     {
                         rowt = 0;
@@ -418,8 +420,8 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     if (runID == 3)
                     {
                         HOperatorSet.AreaCenter(hObject4, out area, out rowt, out columnt);
-                        Halcon.AddOBJ(hObject4, ColorResult.red);
-                        Halcon.AddMessageIamge(rowt + 50, columnt, "无针面积" + area, ColorResult.green);
+                        Halcon.AddObj(hObject4, ColorResult.red);
+                        Halcon.AddImageMassage(rowt + 50, columnt, "无针面积" + area, ColorResult.green);
                     }
                     HOperatorSet.SelectShape(hObject4, out hObject4, "area", "and", welding_Spo.H_sele_area_max, 999999);
                     //HOperatorSet.SelectShape(hObject4, out hObject4, "ra", "and", this.CiericRInt*2 , 999999);
@@ -432,16 +434,16 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         {
                             magetStr += "少针:" + area;
                         }
-                        Halcon.AddOBJ(hObject4, ColorResult.red);
+                        Halcon.AddObj(hObject4, ColorResult.red);
                     }
                     ///处理少捍
                     //HOperatorSet.Difference(hObOutCircle, hObIntCircle, out hObIntCircle);
                     HOperatorSet.Intersection(hObject1, hObject, out hObject4);
                     if (runID == 3)
                     {
-                        Halcon.AddOBJ(hObject4, ColorResult.yellow);
+                        Halcon.AddObj(hObject4, ColorResult.yellow);
                         HOperatorSet.AreaCenter(hObject4, out area, out HTuple rowtt, out HTuple columntt);
-                        Halcon.AddMessageIamge(rowtt + 100, columntt, "少焊面积" + area, ColorResult.red);
+                        Halcon.AddImageMassage(rowtt + 100, columntt, "少焊面积" + area, ColorResult.red);
                     }
                     HOperatorSet.SelectShape(hObject4, out hObject4, "area", "and", welding_Spo.H_sele_area_min, 999999);
                     HOperatorSet.Connection(hObject4, out hObject4);
@@ -453,9 +455,9 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         HOperatorSet.AreaCenter(hObject4, out area, out rowt, out columnt);
                         if (runID == 3)
                         {
-                            Halcon.AddMessageIamge(rowt + 140, columnt, "ra" + ra + "rb" + rb, ColorResult.green);
+                            Halcon.AddImageMassage(rowt + 140, columnt, "ra" + ra + "rb" + rb, ColorResult.green);
                             HOperatorSet.GenEllipse(out HObject hObject3, rowt, columnt, phi, ra, rb);
-                            Halcon.AddOBJ(hObject3, ColorResult.red);
+                            Halcon.AddObj(hObject3, ColorResult.red);
                         }
                         if (area.Length != 0)
                         {
@@ -480,12 +482,12 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     if (area > areat1 * 0.8)
                     {
                         magetStr += "无针";
-                        Halcon.AddOBJ(hObjectt1T, ColorResult.red);
+                        Halcon.AddObj(hObjectt1T, ColorResult.red);
                     }
                     //else if (area > areat1 * 0.2)
                     //{
                     //    magetStr += "空焊";
-                    //    Halcon.AddOBJ(hObjectt1T, ColorResult.Red);
+                    //    Halcon.AddObj(hObjectt1T, ColorResult.Red);
                     //}
                     HOperatorSet.Threshold(V, out HObject hObject6, 160, 255);
                     HOperatorSet.Intersection(hObIntCircle, hObject6, out hObject6);
@@ -501,11 +503,11 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     if (runID != 0)
                     {
                         HOperatorSet.AreaCenter(hObject6, out area, out rowt, out columnt);
-                        Halcon.AddOBJ(hObject6, ColorResult.red);
+                        Halcon.AddObj(hObject6, ColorResult.red);
                         HOperatorSet.Circularity(hObject6, out HTuple circ);
                         HOperatorSet.GenCrossContourXld(out HObject hObject9, rowt, columnt, 30, 0);
-                        Halcon.AddOBJ(hObject9, ColorResult.red);
-                        Halcon.AddMessageIamge(rowt + 20, columnt, "圆度" + circ, ColorResult.green);
+                        Halcon.AddObj(hObject9, ColorResult.red);
+                        Halcon.AddImageMassage(rowt + 20, columnt, "圆度" + circ, ColorResult.green);
                     }
                     HOperatorSet.DilationCircle(hObject6, out HObject hObject7, 50);
                     HOperatorSet.Difference(hObject7, hObject6, out hObject6);
@@ -516,7 +518,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     if (areaT2 > areaTd * 0.5)
                     {
                         is_less_defend = true;
-                        Halcon.AddOBJ(hObject6, ColorResult.red);
+                        Halcon.AddObj(hObject6, ColorResult.red);
                         magetStr += "爬焊";
                     }
                     if (rowt.Length == 1)
@@ -533,7 +535,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     }
                     else
                     {
-                        HOperatorSet.FillUp(ListHObj[i], out hObject6);
+                        HOperatorSet.FillUp(hObject10, out hObject6);
                     }
                     HOperatorSet.AreaCenter(hObject6, out areaT2, out row, out column);
                     ///溢焊处理
@@ -546,36 +548,36 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     HOperatorSet.AreaCenter(hObject5, out areaH, out row, out column);
                     if (runID != 0)
                     {
-                        Halcon.AddOBJ(hObject6, ColorResult.red);
-                        if (areaH != 0) Halcon.AddMessageIamge(row + 60, column, "溢焊面积" + areaH, ColorResult.green);
+                        Halcon.AddObj(hObject6, ColorResult.red);
+                        if (areaH != 0) Halcon.AddImageMassage(row + 60, column, "溢焊面积" + areaH, ColorResult.green);
                     }
                     if (areaH > welding_Spo.Overflow_Welding_Area)
                     {
-                        magetStr += "溢焊:" + areaH;  Halcon.AddOBJ(hObject5, ColorResult.red);    is_less_defend = true;
+                        magetStr += "溢焊:" + areaH;  Halcon.AddObj(hObject5, ColorResult.red);    is_less_defend = true;
                     }
                     if (magetStr.Length > 2)
                     {
                         HOperatorSet.AreaCenter(hObIntCircle, out area, out rowt, out columnt);
                         is_less_defend = true;
-                        Halcon.AddOBJ(hObject, ColorResult.red);
+                        Halcon.AddObj(hObject, ColorResult.red);
                         magetSText.Append(magetStr);
                     }
-                    else Halcon.AddOBJ(hObject, ColorResult.blue);
+                    else Halcon.AddObj(hObject, ColorResult.blue);
 
                     areas.Append(magetStr);
-                    Halcon.AddOBJ(hObject4, ColorResult.yellow);
+                    Halcon.AddObj(hObject4, ColorResult.yellow);
                 }
                 HOperatorSet.AreaCenter(this.HObject, out areaV, out row, out column);
                 if (magetSText.Length > 0)
                 {
                     if (welding_Spo.IsScdet)
                     {
-                        Halcon.AddMessageIamge(row + welding_Spo.DispRow, column + welding_Spo.DispCow, "NG", ColorResult.red);
+                        Halcon.AddImageMassage(row + welding_Spo.DispRow, column + welding_Spo.DispCow, "NG", ColorResult.red);
                     }
                     else
                     {
 
-                        Halcon.AddMessageIamge(row + welding_Spo.DispRow, column + welding_Spo.DispCow, magetSText.TupleInsert(0, "NG"), ColorResult.red);
+                        Halcon.AddImageMassage(row + welding_Spo.DispRow, column + welding_Spo.DispCow, magetSText.TupleInsert(0, "NG"), ColorResult.red);
                     }
                 }
                 else

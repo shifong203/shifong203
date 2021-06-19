@@ -1,5 +1,6 @@
 ﻿using HalconDotNet;
 using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 using Vision2.vision.HalconRunFile.RunProgramFile;
 
@@ -321,21 +322,8 @@ namespace Vision2.vision.HalconRunFile.Controls
             {
                 HalconRun.HobjClear();
                 InterfaceVisionControl control = RunProgram .GetPInt() as InterfaceVisionControl;
-                if (control!=null)
-                {
-                    RunProgram.Run(HalconRun, HalconRun.GetOneImageR(), 0);
-                    HalconRun.ShowObj();
-                    //control.RunHProgram(HalconRun, 0, RunProgram.Name);
-                }
-                else
-                {
-                  RunProgram.GetPThis().RunHProgram(HalconRun, HalconRun.GetOneImageR(), 0,RunProgram.Name);
-                }
-
-                //HalconRun.UPStart();
-                //HalconRun.ShowVision(RunProgram.Name);
-                //HalconRun.EndChanged();
-                //HalconRun.ShowObj();
+                HalconRun.RunHProgram(HalconRun.GetOneImageR(), RunProgram);
+                HalconRun.ShowObj();
             }
             catch (Exception ex)
             {

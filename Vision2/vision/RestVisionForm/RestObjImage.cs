@@ -96,18 +96,6 @@ namespace Vision2.vision
                         TrayImage = dataVale;
                     }
                     TrayImageTs.Enqueue(dataVale);
-
-                    //this.Text = "";
-                    for (int i = 0; i < TrayImage.Count; i++)
-                    {
-                        if (TrayImage.GetDataVales()[i].Done)
-                        {
-                            int dt = dataGridView1.Rows.Add();
-                            //objImageFrom.dataGridView1.Rows[dt].Cells[0].Value = TrayImage.GetDataVales()[i].ResuOBj[0].RunName;
-                            //objImageFrom.dataGridView1.Rows[dt].Cells[1].Value = TrayImage.GetDataVales()[i].ResuOBj[0].RunID;
-                            break;
-                        }
-                    }
                     label3.Text = RecipeCompiler.Instance.GetSPC();
                 }));
 
@@ -185,7 +173,6 @@ namespace Vision2.vision
             }
             hWindowControl1.Dock = DockStyle.Top;
             textBox1.Text = OneProductV.PanelID;
-           
             if (OneProductV != null)
             {
                 HWindd.OneResIamge.GetNgOBJS( OneProductV.GetNGCompData());
@@ -194,56 +181,77 @@ namespace Vision2.vision
             PatText = "托盘号:" + OneProductV.TrayLocation + "." +OneProductV.GetNGCamName()+ Environment.NewLine;
             if (Vision.Instance.RestT)
             {
+                int intd = 0;
+                foreach (TreeNode item in treeView1.Nodes)
+                {
+                    foreach (TreeNode itemdt in item.Nodes)
+                    {
+                        if (itemdt.Tag is OneComponent)
+                        {
+                            OneComponent oneComponent = itemdt.Tag as OneComponent;
+                            if (!oneComponent.Done)
+                            {
+                        
+                                OneRObjT = oneComponent;
+                                
+                                restOneComUserControl1.Location = new Point(itemdt.Bounds.X, itemdt.Bounds.Y+itemdt.Bounds.Height+2);
+                                restOneComUserControl1.Visible = true;
+                                restOneComUserControl1.BringToFront();
+                                restOneComUserControl1.UpData(OneRObjT);
+                                break;
+                            }
+                            else
+                            {
+                              
+                                if (oneComponent.OK)
+                                {
+                                    if (itemdt.ImageIndex != 3)
+                                    {
+                                        itemdt.ImageIndex = 3;
+                                    }
+                        
+                                }
+                                else
+                                {
+                                    itemdt.ImageIndex = 4;
+                                }
+                            }
+                        }
+                    }
+                    intd++;
+                }
                 if (!OneProductV.Done)
                 {
-                    int intd = 0;
-                    foreach (var item in OneProductV.GetNGCompData().DicOnes)
-                    {
-
-                        if (!item.Value.Done)
-                        {
-                            OneRObjT = item.Value;
-                   
-                            Rectangle rectangle = dataGridView1.GetCellDisplayRectangle(1, intd, false);
-                            Rectangle rectangle2 = dataGridView1.RectangleToScreen(rectangle);
-                            dataGridView1.Controls.Add(restOneComUserControl1);
-                            restOneComUserControl1.Location = new Point(rectangle.X, rectangle.Y);
-                            restOneComUserControl1.Visible = true;
-                            restOneComUserControl1.BringToFront();
-                            restOneComUserControl1.UpData(OneRObjT);
-                            break;
-                        }
-                        intd++;
-                    }
                 }
                 else
                 {
                     restOneComUserControl1.Visible = false;
                 }
 
-                dataGridView1.Rows.Clear();
+                //dataGridView1.Rows.Clear();
                 int idt = 0;
                 foreach (var item in OneProductV.GetNGCompData().DicOnes)
                 {
-                    int det=   dataGridView1.Rows.Add();
-                    dataGridView1.Rows[det].Cells[0].Value = item.Value.ComponentID;
-                    dataGridView1.Rows[det].Cells[1].Value = item.Value.NGText;
+                    //int det=   dataGridView1.Rows.Add();
+                    //dataGridView1.Rows[det].Cells[0].Value = item.Value.ComponentID;
+                    //dataGridView1.Rows[det].Cells[1].Value = item.Value.NGText;
                     if (item.Value.Done)
                     {
                         if (item.Value.OK)
                         {
-                            dataGridView1.Rows[det].DefaultCellStyle.BackColor = Color.Green;
+                            //dataGridView1.Rows[det].Cells[1].Value = item.Value.RestText;
+                            //dataGridView1.Rows[det].DefaultCellStyle.BackColor = Color.Green;
                         }
                         else
                         {
-                            dataGridView1.Rows[det].DefaultCellStyle.BackColor = Color.Red;
+                            //dataGridView1.Rows[det].DefaultCellStyle.BackColor = Color.Red;
                         }
                     }
                     else
                     {
                         if (!item.Value.OK)
                         {
-                            dataGridView1.Rows[det].DefaultCellStyle.BackColor = Color.Yellow;
+                            //dataGridView1.Rows[det].DefaultCellStyle.BackColor = Color.Yellow;
                         }
                     }
                 
@@ -365,10 +373,7 @@ namespace Vision2.vision
                     label1.Text = "NG";
                     label1.BackColor = Color.Red;
                 }
-                dataGridView1.Rows.Clear();
-                //RecipeCompiler.AlterNumber(OneProductV.OK);
-                //TrayImage.Done = true;
-
+                treeView1.Nodes.Clear();
                 UserFormulaContrsl.WeirtAll(TrayImage);
                 label3.Text = RecipeCompiler.Instance.GetSPC();
                 if (TrayImageTs.Count == 0)
@@ -394,7 +399,6 @@ namespace Vision2.vision
         {
             try
             {
-                ErosProjcetDLL.UI.DataGridViewF.StCon.AddCon(dataGridView1);
                 Thread thread = new Thread(() =>
                 {
                     try
@@ -408,8 +412,6 @@ namespace Vision2.vision
                                     if (TrayImageTs.Count != 0)
                                     {
                                         TrayImage = TrayImageTs.Dequeue();
-
-                                        //DebugCompiler.GetTrayDataUserControl().GetTrayEx().AddTary(trayDatas1);
                                         trayDatas1.SetTray(TrayImage);
                                         trayDatas1.UpDa();
                                         this.Invoke(new Action(() =>
@@ -422,7 +424,6 @@ namespace Vision2.vision
                                                 {
                                                     HWindd.SetImaage(TrayImage.ImagePlus);
                                                 }
-                                                dataGridView1.Rows.Clear();
                                                 foreach (var item in TrayImage.GetDataVales())
                                                 {
                                                     if (item.Done && item.OK)
@@ -431,19 +432,27 @@ namespace Vision2.vision
                                                     }
 
                                                         OneProductV = item;
-                 
-                                                        foreach (var itemd in OneProductV.GetNGCompData().DicOnes)
+                                                       treeView1.Nodes.Clear();
+
+                                                    foreach (var itemdt in OneProductV.ListCamsData)
+                                                    {
+                                                         TreeNode treeNode=    treeView1.Nodes.Add(itemdt.Key);
+                                                        treeNode.Tag = itemdt.Value;
+                                                        foreach (var itemdte in itemdt.Value.AllCompObjs.DicOnes)
                                                         {
-                                                            int dt = dataGridView1.Rows.Add();
-                                                            if (!itemd.Value.OK)
-                                                            {
-                                                                dataGridView1.Rows[dt].Cells[0].Value = itemd.Value.ComponentID;
-                                                                dataGridView1.Rows[dt].Cells[1].Value = itemd.Value.NGText;
-                                                                dataGridView1.Rows[dt].Cells[0].Tag = itemd.Value;
-                                                            }
+                                                            TreeNode treeNode1= treeNode.Nodes.Add(itemdte.Key);
+                                                            treeNode1.Tag = itemdte.Value; 
+                                                            treeNode1.ImageIndex = 6;
                                                         }
-                                                        break;
-                                                    
+                                                        foreach (var itemdte in itemdt.Value.NGObj.DicOnes)
+                                                        {
+                                                            TreeNode treeNode1 = treeNode.Nodes.Add(itemdte.Key);
+                                                            treeNode1.Tag = itemdte.Value;
+                                                            treeNode1.ImageIndex = 5;
+                                                        }
+                                                        treeNode.Expand();
+                                                    }
+                                                    break;
                                                 }
                                                 label1.Text = "NG";
                                                 label1.BackColor = Color.Red;
@@ -462,8 +471,7 @@ namespace Vision2.vision
                                             catch (Exception ex)
                                             {
                                                 ErosProjcetDLL.Project.AlarmText.AddTextNewLine("复判窗口:" + ex.StackTrace, Color.Red);
-                                            }
-                                                               
+                                            }      
                                         }));
                                     }
                                 }
@@ -480,31 +488,9 @@ namespace Vision2.vision
                         ErosProjcetDLL.Project.AlarmText.AddTextNewLine("复判窗口:" + ex.Message, Color.Red);
                     }
                 });
-                ;
+                
                 thread.IsBackground = true;
                 thread.Start();
-                //foreach (var itemd in OneProductV.GetNGCompData().DicOnes)
-                //{
-                //    if (!itemd.Value.)
-                //    {
-                //        OneRObj oneRObj = new OneRObj()
-                //        {
-                //            NGText = itemd.Value.RunNameOBJ,
-                //            ComponentID = itemd.Value.ComponentName,
-                //            RestText = itemd.Value.ComponentName,
-                //        };
-                //        if (itemd.Value.RunNameOBJ != null && itemd.Value.RunNameOBJ.Contains('.'))
-                //        {
-                //            string[] vs = itemd.Value.RunNameOBJ.Split('.');
-                //            if (vs.Length == 2)
-                //            {
-                //                oneRObj.NGROI = RecipeCompiler.GetProductEX().Key_Navigation_Picture[vs[0]].KeyRoi[vs[1]].Clone();
-                //                oneRObj.ROI = RecipeCompiler.GetProductEX().Key_Navigation_Picture[vs[0]].KeyRoi[vs[1]].Clone();
-                //            }
-                //        }
-                //        OneProductV.ResuOBj[0].AddNGOBJ(oneRObj);
-                //    }
-                //}
             }
             catch (Exception ex)
             {
@@ -530,7 +516,8 @@ namespace Vision2.vision
                         }
                         if (OneProductV.Done)
                         {
-                            dataGridView1.Rows.Clear();
+                            treeView1.Nodes.Clear();
+               
                             for (int i = 0; i < TrayImage.Count; i++)
                             {
                                 if (TrayImage.GetDataVales()[i]!=null)
@@ -542,16 +529,15 @@ namespace Vision2.vision
                                     if (!TrayImage.GetDataVales()[i].Done)
                                     {
                                         OneProductV = TrayImage.GetDataVales()[i];
-                                        foreach (var item in OneProductV.GetNGCompData().DicOnes)
+                                        foreach (var item in OneProductV.ListCamsData)
                                         {
-                                            int dt = dataGridView1.Rows.Add();
-                                            if (!item.Value.OK)
+                                             TreeNode treeNode=  treeView1.Nodes.Add(item.Key);
+                                            foreach (var itemdt in item.Value.NGObj.DicOnes)
                                             {
-                                                dataGridView1.Rows[dt].Cells[0].Value = item.Value.ComponentID;
-                                                dataGridView1.Rows[dt].Cells[1].Value = item.Value.NGText;
-                                                dataGridView1.Rows[dt].Cells[0].Tag = item.Value;
+                                                treeNode.Nodes.Add(itemdt.Key);
                                             }
                                         }
+                                   
                                         label1.Text = "NG";
                                         label1.BackColor = Color.Red;
                                         if (OneProductV.GetNGImage() != null)
@@ -673,14 +659,14 @@ namespace Vision2.vision
             try
             {
                 int i = 0;
-                foreach (var item in OneProductV.GetNGCompData().DicOnes)
-                {
-                    if (!item.Value.Done)
-                    {
-                        dataGridView1.Rows[i].DefaultCellStyle.BackColor = Color.White;
-                    }
-                    i++;
-                }
+                //foreach (var item in OneProductV.GetNGCompData().DicOnes)
+                //{
+                //    if (!item.Value.Done)
+                //    {
+                //        dataGridView1.Rows[i].DefaultCellStyle.BackColor = Color.White;
+                //    }
+                //    i++;
+                //}
                 UpData();
                 HWindd.ShowImage();
             }
@@ -777,11 +763,8 @@ namespace Vision2.vision
                 {
                     timer1.Start();
                     hWindowControl1.Focus();
-                    dataGridView1.Rows.Clear();
-                    //dataGridView2.Rows.Clear();
+                    //dataGridView1.Rows.Clear();
                     TrayImage.Clear();
-                    //TrayImage.Done = true;
-
                     if (TrayImageTs.Count == 0)
                     {
                         Thread thread = new Thread(() =>
@@ -799,34 +782,46 @@ namespace Vision2.vision
                         thread.Start();
                     }
                 }
-        
             }
             catch (Exception)
             {
-
             }
         }
 
         private void dataGridView1_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-    
         }
 
         private void dataGridView1_MouseClick(object sender, MouseEventArgs e)
         {
+        }
+
+        private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
+        {
             try
             {
-                //for (int i = 0; i < OneProductV.ResuOBj.Count; i++)
-                //{
-                //    if (!OneProductV.ResuOBj[i].Done)
-                //    {
-                //        dataGridView1.Rows[i].DefaultCellStyle.BackColor = Color.White;
-                //    }
-                //}
-                //UpData();
-                //HWindd.ShowImage();
+                try
+                {
+                    //int i = 0;
+                    //foreach (var item in OneProductV.GetNGCompData().DicOnes)
+                    //{
+                    //    if (!item.Value.Done)
+                    //    {
+                    //        dataGridView1.Rows[i].DefaultCellStyle.BackColor = Color.White;
+                    //    }
+                    //    i++;
+                    //}
+                    UpData();
+                    HWindd.ShowImage();
+                }
+                catch (Exception ex)
+                {
+                }
+
+
+
             }
-            catch (Exception ex)
+            catch (Exception)
             {
             }
         }

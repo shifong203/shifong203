@@ -31,6 +31,9 @@ namespace Vision2.vision
             Colrrs.GenEmptyObj();
         }
 
+        public Coordinate CoordinatePXY = new Coordinate();
+
+
         HObject hObject = new HObject();
 
         public HTuple RowsData { get; set; } = new HTuple();
@@ -129,7 +132,7 @@ namespace Vision2.vision
             {
                 rObj.RestStrings.Add(rObj.NGText);
             }
-            oneContOBJs.AddNGCont(rObj);
+            oneContOBJs.AddCont(rObj);
         }
 
         public void AddNGOBJ(string component, string nGText, HObject roi,HObject err)
@@ -194,7 +197,7 @@ namespace Vision2.vision
         public void AddImageMassage(HTuple rows, HTuple columns, HTuple Massage)
         {
             string meblut = "false";
-            ColorResult color = ColorResult.red;
+            ColorResult color = ColorResult.green;
             if (columns.Length > Massage.Length)
             {
                 Massage = HTuple.TupleGenConst(columns.Length, Massage);
@@ -291,7 +294,25 @@ namespace Vision2.vision
         {
             Massage.Append(massage);
         }
+        public HalconRun GetHalcon(HalconRun halcon=null)
+        {
+            if (halcon!=null)
+            {
+                Halcon = halcon;
 
+            }
+            return Halcon;
+        }
+        HalconRun Halcon;
+        public HTuple GetCaliConstMM(HTuple values)
+        {
+           return Halcon.GetCaliConstMM(values);
+        }
+
+        public HTuple GetCaliConstPx(HTuple values)
+        {
+            return Halcon.GetCaliConstPx(values);
+        }
         public void ClearAllObj()
         {
             HObjectYellow.GenEmptyObj();
@@ -382,7 +403,7 @@ namespace Vision2.vision
                 HSystem.SetSystem("flush_graphic", "false");
                 HOperatorSet.ClearWindow(hWindowHalconID);
 
-                if (Vision.ObjectValided(this.Image))
+                if (Vision.IsObjectValided(this.Image))
                 {
                     HOperatorSet.DispObj(Image, hWindowHalconID);
                 }
@@ -429,25 +450,7 @@ namespace Vision2.vision
                     HObject.GenEmptyObj();
                 }
                 //HSystem.SetSystem("flush_graphic", "false");
-                foreach (var item in oneContOBJs.DicOnes)
-                {
-
-                    foreach (var itemtd in item.Value.oneRObjs)
-                    {
-                        if (itemtd.ROI != null)
-                        {
-                            HOperatorSet.AreaCenter(itemtd.ROI, out HTuple area, out HTuple row, out HTuple column);
-                            if (row.Length == 1)
-                            {
-                                Vision.Disp_message(hWindowHalconID, itemtd.NGText, row, column, true, "red");
-                            }
-                            HOperatorSet.SetColor(hWindowHalconID, "red");
-                            HOperatorSet.DispObj(itemtd.NGROI, hWindowHalconID);
-                            HOperatorSet.SetColor(hWindowHalconID, Vision.Instance.ROIColr.ToString());
-                            HOperatorSet.DispObj(itemtd.ROI, hWindowHalconID);
-                        }
-                    }
-                }
+        
                 HOperatorSet.SetColor(hWindowHalconID, "green");
                 SelectOBJ(HObjectGreen, hWindowHalconID, rowi, coli, ismovet);
                 HOperatorSet.SetColor(hWindowHalconID, "yellow");
@@ -467,6 +470,25 @@ namespace Vision2.vision
                     SelectOBJ(ListHobj[i].Object, hWindowHalconID, rowi, coli, ismovet);
                 }
                 SelesShoOBJ(hWindowHalconID);
+                foreach (var item in oneContOBJs.DicOnes)
+                {
+
+                    foreach (var itemtd in item.Value.oneRObjs)
+                    {
+                        if (itemtd.ROI != null)
+                        {
+                            HOperatorSet.AreaCenter(itemtd.ROI, out HTuple area, out HTuple row, out HTuple column);
+                            if (row.Length == 1)
+                            {
+                                Vision.Disp_message(hWindowHalconID, itemtd.NGText, row, column, true, "red");
+                            }
+                            HOperatorSet.SetColor(hWindowHalconID, "red");
+                            HOperatorSet.DispObj(itemtd.NGROI, hWindowHalconID);
+                            HOperatorSet.SetColor(hWindowHalconID, Vision.Instance.ROIColr.ToString());
+                            HOperatorSet.DispObj(itemtd.ROI, hWindowHalconID);
+                        }
+                    }
+                }
                 if (Massage.Length != 0)
                 {
                     if (Massage.Length != 1 || Massage.ToString() != "")
@@ -584,7 +606,7 @@ namespace Vision2.vision
 
                 HSystem.SetSystem("flush_graphic", "false");
                 //Massage = new HTuple();
-                if (Vision.ObjectValided(image))
+                if (Vision.IsObjectValided(image))
                 {
                     HOperatorSet.GetImageSize(image, out HTuple Width, out HTuple Height);
                     HOperatorSet.SetPart(hWindowHalconID, 1, 1, Height - 1, Width - 1);
@@ -600,7 +622,8 @@ namespace Vision2.vision
 
             }
         }
-        public int Heith;
+
+        public int Height;
 
         public int Width;
 
@@ -626,7 +649,7 @@ namespace Vision2.vision
                 Object = hObject;
                 if (color == null)
                 {
-                    Color = "red";
+                    Color = "green";
                 }
                 else
                 {
@@ -635,7 +658,7 @@ namespace Vision2.vision
 
             }
             public HObject Object = new HObject();
-            public HTuple Color = new HTuple("red");
+            public HTuple Color = new HTuple("green");
         }
 
         List<Hobjt_Colro> ListHobj = new List<Hobjt_Colro>();

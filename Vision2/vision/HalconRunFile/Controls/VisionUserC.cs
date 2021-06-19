@@ -59,7 +59,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                     HObject.GenEmptyObj();
                     HSystem.SetSystem("flush_graphic", "false");
                     HOperatorSet.ClearWindow(this.hWindowHalconID);
-                    if (Vision.ObjectValided(this.Image()))
+                    if (Vision.IsObjectValided(this.Image()))
                     {
                         if (Width == null || Width < 0 && WhidowAdd)
                         {

@@ -97,7 +97,7 @@ namespace Vision2.vision
                 {
                     RunProgram runProgram = CurrentNode.Tag   as RunProgram;
                     tabPage1.Controls.Clear();
-                    tabPage1.Controls.Add(runProgram.GetControl());
+                    tabPage1.Controls.Add(runProgram.GetControl(Vision.GetRunNameVision()));
 
                 }
 

@@ -1,6 +1,7 @@
-﻿using Vision2.ErosProjcetDLL.Project;
+﻿using System.Collections.Generic;
+using Vision2.ErosProjcetDLL.Project;
 using Vision2.vision.HalconRunFile.RunProgramFile;
-
+using HalconDotNet;
 namespace Vision2.vision
 {
     /// <summary>
@@ -13,8 +14,8 @@ namespace Vision2.vision
 
         RunProgram ReadThis<T>(string Path);
 
-        bool Run(HalconRun halcon, OneResultOBj oneResultOBj, int runid = 0);
-        bool RunHProgram(HalconRun halcon, OneResultOBj oneResultOBj, int runID = 0, string name = null);
+        bool Run( OneResultOBj oneResultOBj,  int runid = 0, AoiObj aoiObj = null);
+        bool RunHProgram( OneResultOBj oneResultOBj,out List< OneRObj> oneRObj, int runID = 0);
 
         void Set_Item<T>(T run_Projet);
 

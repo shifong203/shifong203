@@ -29,15 +29,23 @@ namespace Vision2.vision.HalconRunFile.PCBFile
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.button1 = new System.Windows.Forms.Button();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.button2 = new System.Windows.Forms.Button();
+            this.button7 = new System.Windows.Forms.Button();
             this.button6 = new System.Windows.Forms.Button();
-            this.label10 = new System.Windows.Forms.Label();
             this.listBox1 = new System.Windows.Forms.ListBox();
-            this.label11 = new System.Windows.Forms.Label();
-            this.numericUpDown9 = new System.Windows.Forms.NumericUpDown();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.绘制区域ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.绘制焊脚区域ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.添加ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.删除ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.label10 = new System.Windows.Forms.Label();
             this.numericUpDown10 = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDown9 = new System.Windows.Forms.NumericUpDown();
+            this.label11 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.button5 = new System.Windows.Forms.Button();
             this.label9 = new System.Windows.Forms.Label();
@@ -53,12 +61,12 @@ namespace Vision2.vision.HalconRunFile.PCBFile
             this.label4 = new System.Windows.Forms.Label();
             this.numericUpDown4 = new System.Windows.Forms.NumericUpDown();
             this.numericUpDown6 = new System.Windows.Forms.NumericUpDown();
-            this.button7 = new System.Windows.Forms.Button();
-            this.select_obj_type1 = new Vision2.vision.HalconRunFile.RunProgramFile.Select_obj_type();
             this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
+            this.select_obj_type1 = new Vision2.vision.HalconRunFile.RunProgramFile.Select_obj_type();
             this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown9)).BeginInit();
+            this.contextMenuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown10)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown9)).BeginInit();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown8)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown7)).BeginInit();
@@ -69,7 +77,7 @@ namespace Vision2.vision.HalconRunFile.PCBFile
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(70, 45);
+            this.button1.Location = new System.Drawing.Point(70, 43);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(60, 33);
             this.button1.TabIndex = 1;
@@ -89,6 +97,7 @@ namespace Vision2.vision.HalconRunFile.PCBFile
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.button2);
             this.groupBox1.Controls.Add(this.button7);
             this.groupBox1.Controls.Add(this.button6);
             this.groupBox1.Controls.Add(this.listBox1);
@@ -101,20 +110,89 @@ namespace Vision2.vision.HalconRunFile.PCBFile
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupBox1.Location = new System.Drawing.Point(0, 0);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(446, 83);
+            this.groupBox1.Size = new System.Drawing.Size(446, 100);
             this.groupBox1.TabIndex = 22;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "引脚";
             // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(131, 34);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(68, 23);
+            this.button2.TabIndex = 38;
+            this.button2.Text = "焊盘信息";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // button7
+            // 
+            this.button7.Location = new System.Drawing.Point(70, 10);
+            this.button7.Name = "button7";
+            this.button7.Size = new System.Drawing.Size(60, 33);
+            this.button7.TabIndex = 37;
+            this.button7.Text = "移动焊脚区域";
+            this.button7.UseVisualStyleBackColor = true;
+            this.button7.Click += new System.EventHandler(this.button7_Click);
+            // 
             // button6
             // 
-            this.button6.Location = new System.Drawing.Point(134, 15);
+            this.button6.Location = new System.Drawing.Point(131, 11);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(68, 23);
             this.button6.TabIndex = 31;
-            this.button6.Text = "自动获取";
+            this.button6.Text = "针脚信息";
             this.button6.UseVisualStyleBackColor = true;
             this.button6.Click += new System.EventHandler(this.button6_Click);
+            // 
+            // listBox1
+            // 
+            this.listBox1.ContextMenuStrip = this.contextMenuStrip1;
+            this.listBox1.FormattingEnabled = true;
+            this.listBox1.ItemHeight = 12;
+            this.listBox1.Location = new System.Drawing.Point(0, 14);
+            this.listBox1.Name = "listBox1";
+            this.listBox1.Size = new System.Drawing.Size(68, 64);
+            this.listBox1.TabIndex = 23;
+            this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
+            // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.添加ToolStripMenuItem,
+            this.绘制焊脚区域ToolStripMenuItem,
+            this.绘制区域ToolStripMenuItem,
+            this.删除ToolStripMenuItem});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(149, 92);
+            // 
+            // 绘制区域ToolStripMenuItem
+            // 
+            this.绘制区域ToolStripMenuItem.Name = "绘制区域ToolStripMenuItem";
+            this.绘制区域ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.绘制区域ToolStripMenuItem.Text = "绘制焊盘区域";
+            this.绘制区域ToolStripMenuItem.Click += new System.EventHandler(this.绘制区域ToolStripMenuItem_Click);
+            // 
+            // 绘制焊脚区域ToolStripMenuItem
+            // 
+            this.绘制焊脚区域ToolStripMenuItem.Name = "绘制焊脚区域ToolStripMenuItem";
+            this.绘制焊脚区域ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.绘制焊脚区域ToolStripMenuItem.Text = "绘制焊脚区域";
+            this.绘制焊脚区域ToolStripMenuItem.Click += new System.EventHandler(this.绘制焊脚区域ToolStripMenuItem_Click);
+            // 
+            // 添加ToolStripMenuItem
+            // 
+            this.添加ToolStripMenuItem.Name = "添加ToolStripMenuItem";
+            this.添加ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.添加ToolStripMenuItem.Text = "添加";
+            this.添加ToolStripMenuItem.Click += new System.EventHandler(this.添加ToolStripMenuItem_Click);
+            // 
+            // 删除ToolStripMenuItem
+            // 
+            this.删除ToolStripMenuItem.Name = "删除ToolStripMenuItem";
+            this.删除ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.删除ToolStripMenuItem.Text = "删除";
+            this.删除ToolStripMenuItem.Click += new System.EventHandler(this.删除ToolStripMenuItem_Click);
             // 
             // label10
             // 
@@ -125,44 +203,6 @@ namespace Vision2.vision.HalconRunFile.PCBFile
             this.label10.Size = new System.Drawing.Size(28, 14);
             this.label10.TabIndex = 34;
             this.label10.Text = "Max";
-            // 
-            // listBox1
-            // 
-            this.listBox1.FormattingEnabled = true;
-            this.listBox1.ItemHeight = 12;
-            this.listBox1.Location = new System.Drawing.Point(0, 14);
-            this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(68, 64);
-            this.listBox1.TabIndex = 23;
-            this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
-            // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label11.Location = new System.Drawing.Point(310, 10);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(28, 14);
-            this.label11.TabIndex = 33;
-            this.label11.Text = "Min";
-            // 
-            // numericUpDown9
-            // 
-            this.numericUpDown9.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.numericUpDown9.Location = new System.Drawing.Point(365, 25);
-            this.numericUpDown9.Maximum = new decimal(new int[] {
-            255,
-            0,
-            0,
-            0});
-            this.numericUpDown9.Name = "numericUpDown9";
-            this.numericUpDown9.Size = new System.Drawing.Size(57, 23);
-            this.numericUpDown9.TabIndex = 32;
-            this.numericUpDown9.Value = new decimal(new int[] {
-            5,
-            0,
-            0,
-            0});
             // 
             // numericUpDown10
             // 
@@ -182,6 +222,34 @@ namespace Vision2.vision.HalconRunFile.PCBFile
             0,
             0});
             // 
+            // numericUpDown9
+            // 
+            this.numericUpDown9.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.numericUpDown9.Location = new System.Drawing.Point(365, 25);
+            this.numericUpDown9.Maximum = new decimal(new int[] {
+            255,
+            0,
+            0,
+            0});
+            this.numericUpDown9.Name = "numericUpDown9";
+            this.numericUpDown9.Size = new System.Drawing.Size(57, 23);
+            this.numericUpDown9.TabIndex = 32;
+            this.numericUpDown9.Value = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label11.Location = new System.Drawing.Point(310, 10);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(28, 14);
+            this.label11.TabIndex = 33;
+            this.label11.Text = "Min";
+            // 
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.select_obj_type1);
@@ -200,9 +268,9 @@ namespace Vision2.vision.HalconRunFile.PCBFile
             this.groupBox2.Controls.Add(this.numericUpDown4);
             this.groupBox2.Controls.Add(this.numericUpDown6);
             this.groupBox2.Dock = System.Windows.Forms.DockStyle.Top;
-            this.groupBox2.Location = new System.Drawing.Point(0, 83);
+            this.groupBox2.Location = new System.Drawing.Point(0, 100);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(446, 200);
+            this.groupBox2.Size = new System.Drawing.Size(446, 166);
             this.groupBox2.TabIndex = 23;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "芯片";
@@ -404,15 +472,13 @@ namespace Vision2.vision.HalconRunFile.PCBFile
             0});
             this.numericUpDown6.ValueChanged += new System.EventHandler(this.numericUpDown6_ValueChanged);
             // 
-            // button7
+            // propertyGrid1
             // 
-            this.button7.Location = new System.Drawing.Point(70, 11);
-            this.button7.Name = "button7";
-            this.button7.Size = new System.Drawing.Size(60, 33);
-            this.button7.TabIndex = 37;
-            this.button7.Text = "移动焊脚区域";
-            this.button7.UseVisualStyleBackColor = true;
-            this.button7.Click += new System.EventHandler(this.button7_Click);
+            this.propertyGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.propertyGrid1.Location = new System.Drawing.Point(0, 266);
+            this.propertyGrid1.Name = "propertyGrid1";
+            this.propertyGrid1.Size = new System.Drawing.Size(446, 275);
+            this.propertyGrid1.TabIndex = 39;
             // 
             // select_obj_type1
             // 
@@ -420,14 +486,6 @@ namespace Vision2.vision.HalconRunFile.PCBFile
             this.select_obj_type1.Name = "select_obj_type1";
             this.select_obj_type1.Size = new System.Drawing.Size(244, 136);
             this.select_obj_type1.TabIndex = 24;
-            // 
-            // propertyGrid1
-            // 
-            this.propertyGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.propertyGrid1.Location = new System.Drawing.Point(0, 283);
-            this.propertyGrid1.Name = "propertyGrid1";
-            this.propertyGrid1.Size = new System.Drawing.Size(446, 258);
-            this.propertyGrid1.TabIndex = 39;
             // 
             // ICPintControl
             // 
@@ -440,8 +498,9 @@ namespace Vision2.vision.HalconRunFile.PCBFile
             this.Size = new System.Drawing.Size(446, 541);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown9)).EndInit();
+            this.contextMenuStrip1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown10)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown9)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown8)).EndInit();
@@ -482,5 +541,11 @@ namespace Vision2.vision.HalconRunFile.PCBFile
         private System.Windows.Forms.Button button6;
         private System.Windows.Forms.Button button7;
         private System.Windows.Forms.PropertyGrid propertyGrid1;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem 添加ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 删除ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 绘制区域ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 绘制焊脚区域ToolStripMenuItem;
+        private System.Windows.Forms.Button button2;
     }
 }

@@ -95,10 +95,10 @@ namespace Vision2.vision.Calib
             try
             {
                 HOperatorSet.GenCrossContourXld(out HObject cross, _Coordinate.Rows, _Coordinate.Columns, 40, 0);
-                Vision.GetFocusRunHalcon().AddOBJ(cross);
+                Vision.GetFocusRunHalcon().AddObj(cross);
                 for (int i = 0; i < _Coordinate.Rows; i++)
                 {
-                    Vision.GetFocusRunHalcon().AddMessageIamge(_Coordinate.Rows.TupleSelect(i), _Coordinate.Columns.TupleSelect(i), (i + 1).ToString());
+                    Vision.GetFocusRunHalcon().GetOneImageR().AddImageMassage(_Coordinate.Rows.TupleSelect(i), _Coordinate.Columns.TupleSelect(i), (i + 1).ToString());
                 }
             }
             catch (Exception)

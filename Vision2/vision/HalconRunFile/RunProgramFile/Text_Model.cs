@@ -116,6 +116,8 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             }
             try
             {
+                //HOperatorSet.CreateDeepOcr(new HTuple(), new HTuple(), out HTuple deepOcrID);
+
                 HOperatorSet.CreateTextModelReader(Instance.CreateMode, Instance.FontName, out HTuple id);
                 this.Instance.ID = id;
                 HOperatorSet.ReadOcrClassMlp("Industrial_0-9A-Z_NoRej.omc", out OcrHandle);
@@ -141,10 +143,41 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             catch (Exception)
             {
             }
+
             try
             {
-                HOperatorSet.CreateTextModelReader(CreateMode, FontName, out HTuple id);
-                ID = id;
+                //HOperatorSet.CreateDeepOcr(new HTuple(), new HTuple(), out HTuple deepOcrID);
+                //HOperatorSet.QueryAvailableDlDevices(new HTuple("runtime", "runtime"), new HTuple("gpu", "cpu"),out HTuple DLDeviceHandles);
+                //if (DLDeviceHandles.Length==0)
+                //{
+                //    MessageBox.Show("没有找到支持的设备来继续这个示例。");
+                //}
+                ////将recognition_image_width设置为更大的值，以使示例在没有内存问题的情况下工作。
+                //try
+                //{
+                //    HOperatorSet.SetDeepOcrParam(deepOcrID, "recognition_image_width", 250);
+                //}
+                //catch (Exception) { }
+                //for (int i = 0; i < DLDeviceHandles.Length; i++)
+                //{
+                //    try
+                //    {
+                //        HOperatorSet.SetDeepOcrParam(deepOcrID, "device", DLDeviceHandles[i]);
+                //        break;
+                //    }
+                //    catch (Exception) {  }
+                //}
+                //try
+                //{
+                //    HOperatorSet.SetDeepOcrParam(deepOcrID, "recognition_image_width", 100);
+                //}
+                //catch (Exception) { }
+                //HOperatorSet.GetDeepOcrParam(deepOcrID, "recognition_alphabet", out HTuple hTupleRes);
+                //HOperatorSet.GetDeepOcrParam(deepOcrID, "detection_image_width", out HTuple hTupleWidth);
+                //HOperatorSet.GetDeepOcrParam(deepOcrID, "detection_image_height", out HTuple hTupleheight);
+
+                HOperatorSet.CreateTextModelReader(CreateMode, FontName, out HTuple deepOcrID);
+                ID = deepOcrID;
                 HOperatorSet.ReadOcrClassMlp("Industrial_0-9A-Z_NoRej.omc", out  OcrHandle);
             }
             catch (Exception EX)
@@ -242,7 +275,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             Length1[Intdex] = length1;
             Length2[Intdex] = length2;
             HOperatorSet.ReduceDomain(halcon.Image(), homObj, out HObject ImageReduced);
-            halcon.AddOBJ(homObj);
+            halcon.AddObj(homObj);
             return homObj;
         }
 
@@ -251,19 +284,20 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             halcon.HobjClear();
             for (int i = 0; i < this.ListhObjects.Count; i++)
             {
-                halcon.AddOBJ(this.ListhObjects[i]);
+                halcon.AddObj(this.ListhObjects[i]);
             }
             halcon.ShowObj();
         }
-        public override bool RunHProgram(HalconRun halcon, OneResultOBj oneResultOBj, int runid = 0,string name=null)
+        public override bool RunHProgram( OneResultOBj oneResultOBj, out List<OneRObj> oneRObjs, int runID = 0)
         {
+            oneRObjs = new List<OneRObj>();
             SetParam();
             ResultText = new HTuple();
             HObject image = new HObject();
             try
             {
-                image = GetEmset(halcon.Image());
-                List<HTuple> listh = this.GetHomMatList(halcon);
+                image = GetEmset(oneResultOBj.Image);
+                List<HTuple> listh = this.GetHomMatList(oneResultOBj);
                 int errNumer = 0;
                 string data = "";
                 for (int i2 = 0; i2 < ListhObjects.Count; i2++)
@@ -285,7 +319,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                             {
                                 if (text == Project.ProcessControl.ProcessUser.QRCode)
                                 {
-                                    halcon.AddOBJ(hObject2);
+                                    oneResultOBj.AddObj(hObject2);
                                     AddGreen(hObject4);
                                     errNumer = 0;
                                 }
@@ -306,7 +340,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                                     }
                                     else
                                     {
-                                        halcon.AddOBJ(hObject2);
+                                        oneResultOBj.AddObj(hObject2);
                                         AddGreen(hObject4);
                                     }
                                 }
@@ -325,7 +359,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 {
                     textStr = textStr + ResultText[i];
                 }
-                halcon.SendMesage("OCR", this.Name, textStr);
+                //halcon.SendMesage("OCR", this.Name, textStr);
                 if (errNumer == 0)
                 {
                     return true;
@@ -378,7 +412,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             HOperatorSet.ClearTextModel(ID);
         }
 
-        public override Control GetControl()
+        public override Control GetControl(HalconRun halcon)
         {
             HalconRun halconRun = this.GetPThis() as HalconRun;
             return new OCRTextModeUserContro(halconRun, this);
@@ -567,7 +601,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 Length2[Intdex] = length2;
 
                 HOperatorSet.ReduceDomain(halcon.Image(), homObj, out HObject ImageReduced);
-                halcon.AddOBJ(homObj);
+                halcon.AddObj(homObj);
                 return homObj;
             }
             /// <summary>

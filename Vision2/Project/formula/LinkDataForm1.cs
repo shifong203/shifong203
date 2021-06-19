@@ -766,7 +766,7 @@ namespace Vision2.Project.formula
               
                 int nuber = (int)numericUpDown2.Value;
                 Random rd = new Random();
-                string dataStr = "";
+                string dataStr = numericUpDown3.Value.ToString()+";"+ numericUpDown4.Value.ToString() + ";";
 
                 for (int ie = 0; ie < numericUpDown1.Value; ie++)
                 {
@@ -812,8 +812,8 @@ namespace Vision2.Project.formula
                 }
                 DebugF.DebugCompiler.DebugData(dataStr);
                 //DebugF.DebugCompiler.GetTrayDataUserControl().SetValue(vs);
-                DebugF.DebugCompiler.GetTrayDataUserControl().GetTrayEx().Number++;
-                numericUpDown3.Value = DebugF.DebugCompiler.GetTrayDataUserControl().GetTrayEx().Number;
+                //DebugF.DebugCompiler.GetTrayDataUserControl().GetTrayEx().Number++;
+                //numericUpDown3.Value = DebugF.DebugCompiler.GetTrayDataUserControl().GetTrayEx().Number;
                 //RecipeCompiler.Instance.Data.AddData(vs);
             }
             catch (Exception ex)

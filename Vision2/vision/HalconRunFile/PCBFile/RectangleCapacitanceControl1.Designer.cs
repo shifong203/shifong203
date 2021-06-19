@@ -33,17 +33,22 @@ namespace Vision2.vision.HalconRunFile.PCBFile
             this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
-            this.thresholdControls1 = new Vision2.vision.HalconRunFile.Controls.ThresholdControls();
-            this.select_obj_type1 = new Vision2.vision.HalconRunFile.RunProgramFile.Select_obj_type();
-            this.thresholdControls2 = new Vision2.vision.HalconRunFile.Controls.ThresholdControls();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.thresholdControls2 = new Vision2.vision.HalconRunFile.Controls.ThresholdControls();
+            this.select_obj_type1 = new Vision2.vision.HalconRunFile.RunProgramFile.Select_obj_type();
+            this.thresholdControls1 = new Vision2.vision.HalconRunFile.Controls.ThresholdControls();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
+            this.label1 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
+            this.groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.SuspendLayout();
             // 
             // button4
@@ -84,27 +89,6 @@ namespace Vision2.vision.HalconRunFile.PCBFile
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
-            // thresholdControls1
-            // 
-            this.thresholdControls1.Location = new System.Drawing.Point(1, 13);
-            this.thresholdControls1.Name = "thresholdControls1";
-            this.thresholdControls1.Size = new System.Drawing.Size(204, 24);
-            this.thresholdControls1.TabIndex = 7;
-            // 
-            // select_obj_type1
-            // 
-            this.select_obj_type1.Location = new System.Drawing.Point(1, 36);
-            this.select_obj_type1.Name = "select_obj_type1";
-            this.select_obj_type1.Size = new System.Drawing.Size(241, 97);
-            this.select_obj_type1.TabIndex = 6;
-            // 
-            // thresholdControls2
-            // 
-            this.thresholdControls2.Location = new System.Drawing.Point(6, 10);
-            this.thresholdControls2.Name = "thresholdControls2";
-            this.thresholdControls2.Size = new System.Drawing.Size(204, 24);
-            this.thresholdControls2.TabIndex = 8;
-            // 
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.select_obj_type1);
@@ -140,7 +124,7 @@ namespace Vision2.vision.HalconRunFile.PCBFile
             // 
             // tabPage2
             // 
-            this.tabPage2.Controls.Add(this.thresholdControls2);
+            this.tabPage2.Controls.Add(this.groupBox2);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
@@ -148,6 +132,67 @@ namespace Vision2.vision.HalconRunFile.PCBFile
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "元件错漏";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // thresholdControls2
+            // 
+            this.thresholdControls2.Location = new System.Drawing.Point(2, 15);
+            this.thresholdControls2.Name = "thresholdControls2";
+            this.thresholdControls2.Size = new System.Drawing.Size(204, 24);
+            this.thresholdControls2.TabIndex = 8;
+            // 
+            // select_obj_type1
+            // 
+            this.select_obj_type1.Location = new System.Drawing.Point(1, 36);
+            this.select_obj_type1.Name = "select_obj_type1";
+            this.select_obj_type1.Size = new System.Drawing.Size(241, 97);
+            this.select_obj_type1.TabIndex = 6;
+            // 
+            // thresholdControls1
+            // 
+            this.thresholdControls1.Location = new System.Drawing.Point(1, 13);
+            this.thresholdControls1.Name = "thresholdControls1";
+            this.thresholdControls1.Size = new System.Drawing.Size(204, 24);
+            this.thresholdControls1.TabIndex = 7;
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.label1);
+            this.groupBox2.Controls.Add(this.numericUpDown1);
+            this.groupBox2.Controls.Add(this.thresholdControls2);
+            this.groupBox2.Dock = System.Windows.Forms.DockStyle.Top;
+            this.groupBox2.Location = new System.Drawing.Point(3, 3);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(341, 100);
+            this.groupBox2.TabIndex = 9;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "电容灰度";
+            // 
+            // numericUpDown1
+            // 
+            this.numericUpDown1.Location = new System.Drawing.Point(60, 44);
+            this.numericUpDown1.Maximum = new decimal(new int[] {
+            9999999,
+            0,
+            0,
+            0});
+            this.numericUpDown1.Name = "numericUpDown1";
+            this.numericUpDown1.Size = new System.Drawing.Size(78, 21);
+            this.numericUpDown1.TabIndex = 10;
+            this.numericUpDown1.Value = new decimal(new int[] {
+            500,
+            0,
+            0,
+            0});
+            this.numericUpDown1.ValueChanged += new System.EventHandler(this.numericUpDown1_ValueChanged);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(6, 48);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(53, 12);
+            this.label1.TabIndex = 11;
+            this.label1.Text = "电容面积";
             // 
             // RectangleCapacitanceControl1
             // 
@@ -165,6 +210,9 @@ namespace Vision2.vision.HalconRunFile.PCBFile
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -182,5 +230,8 @@ namespace Vision2.vision.HalconRunFile.PCBFile
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.NumericUpDown numericUpDown1;
     }
 }

@@ -9,6 +9,42 @@ namespace Vision2.vision.HalconRunFile.PCBFile
 {
    public class CapacitanceMinMaxV
     {
+
+
+        [DisplayName("±值"), Description(""), Category("偏移")]
+        public double Positive_and_Negative  { get; set; } = 10;
+
+        //[DisplayName("标准值"), Description(""), Category("偏移")]
+        //public double Value { get; set; } = 10;
+
+        //[DisplayName("Min"), Description(""), Category("偏移")]
+        //public double Min { get; set; } = 10;
+
+        //[DisplayName("Max"), Description(""), Category("偏移")]
+        //public double Max { get; set; } = 100;
+
+        //[DisplayName("使用标准值"), Description("使用标准值=true,fales使用最大最小值"), Category("长度")]
+        //public bool PMBool { get; set; } = true;
+        [DisplayName("当前值"), Description(""), Category("偏移"), ReadOnly(true)]
+        public double SkewingValue { get; set; }
+
+        /// <summary>
+        /// 比较参数
+        /// </summary>
+        /// <param name="value">值</param>
+        /// <returns>0=OK,1=标准值NG，2SkewingSetValeu大于正负值NG</returns>
+        public int SkewingSetValeu(double value)
+        {
+            SkewingValue = value;
+            SkewingErr = true;
+                if (value > Positive_and_Negative)
+                {
+                    return 4;
+                }
+            SkewingErr = false;
+            return 0;
+        }
+
         //[Editor(typeof(pgu))]
         [DisplayName("±值"), Description(""), Category("长度")]
         public double PM { get; set; } = 10;
@@ -223,7 +259,7 @@ namespace Vision2.vision.HalconRunFile.PCBFile
         [DisplayName("Max"), Description(""), Category("面积")]
         public double AreaMax { get; set; } = 100;
 
-        [DisplayName("使用标准值"), Description("使用标准值=true,fales使用最大最小值"), Category("体积")]
+        [DisplayName("使用标准值"), Description("使用标准值=true,fales使用最大最小值"), Category("面积")]
         public bool AreaPMBool { get; set; } = true;
 
         [DisplayName("当前值"), Description(""), Category("面积"), ReadOnly(true)]
@@ -235,26 +271,26 @@ namespace Vision2.vision.HalconRunFile.PCBFile
         /// <returns>0=OK,1=标准值NG，2大于正负值NG</returns>
         public int AreaSetValeu(double value)
         {
-            VolumeValue = value;
+            AreaValue = value;
             AreaErr = true;
-            if (VolumePMBool)
+            if (AreaPMBool)
             {
-                if (value > VolumeCValue + VolumePM)
+                if (value > AreaCValue + AreaPM)
                 {
                     return 4;
                 }
-                else if (value < VolumeCValue - VolumePM)
+                else if (value < AreaCValue - AreaPM)
                 {
                     return 3;
                 }
             }
             else
             {
-                if (value > VolumeMax)
+                if (value > AreaMax)
                 {
                     return 2;
                 }
-                else if (value < VolumeMin)
+                else if (value < AreaMin)
                 {
                     return 1;
                 }
@@ -274,7 +310,7 @@ namespace Vision2.vision.HalconRunFile.PCBFile
         [DisplayName("Max"), Description(""), Category("角度")]
         public double AngleMax { get; set; } = 100;
 
-        [DisplayName("使用标准值"), Description("使用标准值=true,fales使用最大最小值"), Category("体积")]
+        [DisplayName("使用标准值"), Description("使用标准值=true,fales使用最大最小值"), Category("角度")]
         public bool AnglePMBool { get; set; } = true;
 
         [DisplayName("当前值"), Description(""), Category("角度"), ReadOnly(true)]
@@ -322,7 +358,8 @@ namespace Vision2.vision.HalconRunFile.PCBFile
 
         [Category("检测结果"), DisplayName("长度缺陷"), Description(""), ReadOnly(true)]
         public bool RaErr { get; set; }
-
+        [Category("检测结果"), DisplayName("偏移缺陷"), Description(""), ReadOnly(true)]
+        public bool SkewingErr { get; set; }
 
         [Category("检测结果"), DisplayName("宽度缺陷"), Description(""), ReadOnly(true)]
         public bool RbErr { get; set; }

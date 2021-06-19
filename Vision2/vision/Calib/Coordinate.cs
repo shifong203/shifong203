@@ -173,7 +173,7 @@ namespace Vision2.vision
             }
             catch (Exception ex)
             {
-                halcon.ErrLog(ex);
+                halcon.LogErr(ex);
             }
             return null;
         }
@@ -353,7 +353,7 @@ namespace Vision2.vision
             }
             catch (Exception ex)
             {
-                halcon.ErrLog(ex);
+                halcon.LogErr(ex);
             }
         }
         /// <summary>

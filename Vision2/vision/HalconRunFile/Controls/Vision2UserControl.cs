@@ -99,7 +99,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                     HSystem.SetSystem("flush_graphic", "false");
                     HOperatorSet.ClearWindow(hWindowControl2.HalconWindow);
                     HSystem.SetSystem("flush_graphic", "true");
-                    if (Vision.ObjectValided(oneImage.Image))
+                    if (Vision.IsObjectValided(oneImage.Image))
                     {
                         HOperatorSet.GetImageSize(oneImage.Image, out HTuple width, out HTuple heigth);
                         HOperatorSet.SetPart(hWindowControl2.HalconWindow, 0, 0, heigth, width);
@@ -128,7 +128,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                         HWindowControl hWindowControl = sender as HWindowControl;
                         if (oneResultOBj != null)
                         {
-                            if (Vision.ObjectValided(oneResultOBj.Image))
+                            if (Vision.IsObjectValided(oneResultOBj.Image))
                             {
                                 HOperatorSet.GetImageSize(oneResultOBj.Image, out HTuple width, out HTuple heigth);
                                 HOperatorSet.SetPart(hWindowControl.HalconWindow, 0, 0, heigth, width);
@@ -228,7 +228,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                         HSystem.SetSystem("flush_graphic", "false");
                         HOperatorSet.ClearWindow(hWindowControl2.HalconWindow);
                         HSystem.SetSystem("flush_graphic", "true");
-                        if (Vision.ObjectValided(HResult.Image))
+                        if (Vision.IsObjectValided(HResult.Image))
                         {
                             HOperatorSet.GetImageSize(HResult.Image, out HTuple width, out HTuple heigth);
                             HOperatorSet.SetPart(hWindowControl2.HalconWindow, 0, 0, heigth, width);
@@ -264,7 +264,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                                 {
                                     halcon.Image(halcon.GetOneImageR().Image.Clone());
                                 }
-                                if (Vision.ObjectValided(HResult.Image))
+                                if (Vision.IsObjectValided(HResult.Image))
                                 {
                                     HOperatorSet.GetImageSize(HResult.Image, out HTuple width, out HTuple heigth);
                                     HOperatorSet.SetPart(hWindowControl.HalconWindow, 0, 0, heigth, width);
@@ -337,7 +337,6 @@ namespace Vision2.vision.HalconRunFile.Controls
                 openFileDialog.Title = "请选择图片文件可多选";
                 openFileDialog.Multiselect = true;
                 openFileDialog.Filter = "图片文件|*.jpg;*.tif;*.tiff;*.gif;*.bmp;*.jpg;*.jpeg;*.jp2;*.png;*.pcx;*.pgm;*.ppm;*.pbm;*.xwd;*.ima;*.hobj";
-
                 if (!path.StartsWith(Vision.Instance.DicSaveType[halcon.Name].SavePath))
                 {
                 }
@@ -361,14 +360,11 @@ namespace Vision2.vision.HalconRunFile.Controls
                     toolStrip.Click += ToolStrip_Click;
                     toolStrip.PerformClick();
                 }
-
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
-
             }
-
         }
 
         void ToolStrip_Click(object sender, EventArgs e)
@@ -1075,22 +1071,21 @@ namespace Vision2.vision.HalconRunFile.Controls
                     MessageBox.Show("未关联执行程序");
                     return;
                 }
-                try
-                {
-                    //toolStripComboBox1.SelectedItem = halcon.Name;
-                    HOperatorSet.GetImageSize(halcon.Image(), out HTuple width, out HTuple heigth);
-                    halcon.Width = width;
-                    halcon.Height = heigth;
-                }
-                catch (Exception)
-                {
-                }
+                //try
+                //{
+                //    //toolStripComboBox1.SelectedItem = halcon.Name;
+                //    HOperatorSet.GetImageSize(halcon.Image(), out HTuple width, out HTuple heigth);
+                //    halcon.Width = width;
+                //    halcon.Height = heigth;
+                //}
+                //catch (Exception)
+                //{
+                //}
+                halcon.ShowImage(true);
                 HOperatorSet.SetPart(halcon.hWindowHalcon(), 0, 0, halcon.Height - 1, halcon.Width - 1);
                 System.Drawing.Rectangle rect = this.visionUserControl1.ImagePart;
                 rect.X = 0;
                 rect.Y = 0;
-                //this.visionUserControl1.ImagePart = rect;
-
                 halcon.ShowObj();
             }
             catch
@@ -1382,6 +1377,11 @@ namespace Vision2.vision.HalconRunFile.Controls
             try
             {
                 panel2.Controls.Clear();
+                if (!Vision.GetSaveImageInfo(halcon.Name).ISImages)
+                {
+                    panel2.Dispose();
+                }
+        
             }
             catch (Exception)
             {
@@ -1410,6 +1410,7 @@ namespace Vision2.vision.HalconRunFile.Controls
             saveFile.Filter = Vision.Instance.DicSaveType[halcon.Name].SaveImageType + "|*." +
                 Vision.Instance.DicSaveType[halcon.Name].SaveImageType + 
                 "|BMP|*.bmp|tif|*.tif|tiff|*.tiff|hobj|*.hobj|所有文件|*.*";   //筛选器
+            saveFile.FileName = halcon.Name + "拼图.jpg";
             saveFile.ShowDialog();    //弹出对话框
             string path = saveFile.FileName;
             if (path == "") return;    //地址为空返回
@@ -1424,6 +1425,24 @@ namespace Vision2.vision.HalconRunFile.Controls
                 MessageBox.Show(ex.Message);
             }
 
+        }
+
+        private void visionUserControl1_Load(object sender, EventArgs e)
+        {
+            try
+            {
+                halcon.ShowImage(true);
+                HOperatorSet.SetPart(halcon.hWindowHalcon(), 0, 0, halcon.Height - 1, halcon.Width - 1);
+                System.Drawing.Rectangle rect = this.visionUserControl1.ImagePart;
+                rect.X = 0;
+                rect.Y = 0;
+                halcon.ShowObj();
+            }
+            catch (Exception)
+            {
+
+            }
+    
         }
     }
 }

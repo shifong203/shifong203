@@ -40,6 +40,7 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.imageFielNumber = new System.Windows.Forms.ToolStripDropDownButton();
             this.toolStripSplitButton1 = new System.Windows.Forms.ToolStripSplitButton();
+            this.保存到产品文件夹ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.保存图片ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.截取屏幕ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.文件夹操作ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -67,7 +68,6 @@
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.panel1 = new System.Windows.Forms.Panel();
             this.visionUserControl1 = new Vision2.vision.HalconRunFile.Controls.VisionUserControl();
-            this.保存到产品文件夹ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip2.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -195,17 +195,24 @@
             this.toolStripSplitButton1.Text = "工具";
             this.toolStripSplitButton1.ButtonClick += new System.EventHandler(this.toolStripSplitButton1_ButtonClick);
             // 
+            // 保存到产品文件夹ToolStripMenuItem
+            // 
+            this.保存到产品文件夹ToolStripMenuItem.Name = "保存到产品文件夹ToolStripMenuItem";
+            this.保存到产品文件夹ToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            this.保存到产品文件夹ToolStripMenuItem.Text = "保存到产品文件夹";
+            this.保存到产品文件夹ToolStripMenuItem.Click += new System.EventHandler(this.保存到产品文件夹ToolStripMenuItem_Click);
+            // 
             // 保存图片ToolStripMenuItem
             // 
             this.保存图片ToolStripMenuItem.Name = "保存图片ToolStripMenuItem";
-            this.保存图片ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.保存图片ToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
             this.保存图片ToolStripMenuItem.Text = "保存图片";
             this.保存图片ToolStripMenuItem.Click += new System.EventHandler(this.保存图片ToolStripMenuItem_Click);
             // 
             // 截取屏幕ToolStripMenuItem
             // 
             this.截取屏幕ToolStripMenuItem.Name = "截取屏幕ToolStripMenuItem";
-            this.截取屏幕ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.截取屏幕ToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
             this.截取屏幕ToolStripMenuItem.Text = "截取屏幕";
             this.截取屏幕ToolStripMenuItem.Click += new System.EventHandler(this.截取屏幕ToolStripMenuItem_Click);
             // 
@@ -218,7 +225,7 @@
             this.生成二维码ToolStripMenuItem,
             this.模拟图像ToolStripMenuItem});
             this.文件夹操作ToolStripMenuItem.Name = "文件夹操作ToolStripMenuItem";
-            this.文件夹操作ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.文件夹操作ToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
             this.文件夹操作ToolStripMenuItem.Text = "文件操作";
             // 
             // 删除文件ToolStripMenuItem
@@ -259,28 +266,28 @@
             // 测试图像ToolStripMenuItem
             // 
             this.测试图像ToolStripMenuItem.Name = "测试图像ToolStripMenuItem";
-            this.测试图像ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.测试图像ToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
             this.测试图像ToolStripMenuItem.Text = "打开历史文件夹";
             this.测试图像ToolStripMenuItem.Click += new System.EventHandler(this.测试图像ToolStripMenuItem_Click);
             // 
             // 查看区域细节ToolStripMenuItem
             // 
             this.查看区域细节ToolStripMenuItem.Name = "查看区域细节ToolStripMenuItem";
-            this.查看区域细节ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.查看区域细节ToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
             this.查看区域细节ToolStripMenuItem.Text = "查看区域细节";
             this.查看区域细节ToolStripMenuItem.Click += new System.EventHandler(this.查看区域细节ToolStripMenuItem_Click);
             // 
             // 填充或区域ToolStripMenuItem
             // 
             this.填充或区域ToolStripMenuItem.Name = "填充或区域ToolStripMenuItem";
-            this.填充或区域ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.填充或区域ToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
             this.填充或区域ToolStripMenuItem.Text = "填充";
             this.填充或区域ToolStripMenuItem.Click += new System.EventHandler(this.填充或区域ToolStripMenuItem_Click);
             // 
             // 清除序列ToolStripMenuItem
             // 
             this.清除序列ToolStripMenuItem.Name = "清除序列ToolStripMenuItem";
-            this.清除序列ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.清除序列ToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
             this.清除序列ToolStripMenuItem.Text = "清除序列";
             this.清除序列ToolStripMenuItem.Click += new System.EventHandler(this.清除序列ToolStripMenuItem_Click);
             // 
@@ -309,42 +316,42 @@
             // 铺满ToolStripMenuItem
             // 
             this.铺满ToolStripMenuItem.Name = "铺满ToolStripMenuItem";
-            this.铺满ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.铺满ToolStripMenuItem.Size = new System.Drawing.Size(108, 22);
             this.铺满ToolStripMenuItem.Text = "100%";
             this.铺满ToolStripMenuItem.Click += new System.EventHandler(this.铺满ToolStripMenuItem_Click);
             // 
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(108, 22);
             this.toolStripMenuItem2.Text = "70%";
             this.toolStripMenuItem2.Click += new System.EventHandler(this.toolStripMenuItem2_Click);
             // 
             // toolStripMenuItem3
             // 
             this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(108, 22);
             this.toolStripMenuItem3.Text = "50%";
             this.toolStripMenuItem3.Click += new System.EventHandler(this.toolStripMenuItem3_Click);
             // 
             // toolStripMenuItem4
             // 
             this.toolStripMenuItem4.Name = "toolStripMenuItem4";
-            this.toolStripMenuItem4.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItem4.Size = new System.Drawing.Size(108, 22);
             this.toolStripMenuItem4.Text = "40%";
             this.toolStripMenuItem4.Click += new System.EventHandler(this.toolStripMenuItem4_Click);
             // 
             // toolStripMenuItem5
             // 
             this.toolStripMenuItem5.Name = "toolStripMenuItem5";
-            this.toolStripMenuItem5.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItem5.Size = new System.Drawing.Size(108, 22);
             this.toolStripMenuItem5.Text = "合适";
             this.toolStripMenuItem5.Click += new System.EventHandler(this.toolStripMenuItem5_Click);
             // 
             // 铺满ToolStripMenuItem1
             // 
             this.铺满ToolStripMenuItem1.Name = "铺满ToolStripMenuItem1";
-            this.铺满ToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            this.铺满ToolStripMenuItem1.Size = new System.Drawing.Size(108, 22);
             this.铺满ToolStripMenuItem1.Text = "铺满";
             this.铺满ToolStripMenuItem1.Click += new System.EventHandler(this.铺满ToolStripMenuItem1_Click);
             // 
@@ -423,15 +430,9 @@
             this.visionUserControl1.WindowSize = new System.Drawing.Size(942, 425);
             this.visionUserControl1.HMouseMove += new HalconDotNet.HMouseEventHandler(this.visionUserControl1_HMouseMove);
             this.visionUserControl1.HMouseDown += new HalconDotNet.HMouseEventHandler(this.visionUserControl1_HMouseDown);
+            this.visionUserControl1.Load += new System.EventHandler(this.visionUserControl1_Load);
             this.visionUserControl1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.visionUserControl1_KeyDown);
             this.visionUserControl1.KeyUp += new System.Windows.Forms.KeyEventHandler(this.hWindowControl1_KeyUp);
-            // 
-            // 保存到产品文件夹ToolStripMenuItem
-            // 
-            this.保存到产品文件夹ToolStripMenuItem.Name = "保存到产品文件夹ToolStripMenuItem";
-            this.保存到产品文件夹ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.保存到产品文件夹ToolStripMenuItem.Text = "保存到产品文件夹";
-            this.保存到产品文件夹ToolStripMenuItem.Click += new System.EventHandler(this.保存到产品文件夹ToolStripMenuItem_Click);
             // 
             // Vision2UserControl
             // 

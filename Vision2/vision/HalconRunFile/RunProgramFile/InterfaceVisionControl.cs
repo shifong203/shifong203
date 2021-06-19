@@ -7,14 +7,15 @@ using System.Windows.Forms;
 
 namespace Vision2.vision.HalconRunFile.RunProgramFile
 {
-      public    interface InterfaceVisionControl
+      public  interface InterfaceVisionControl
     {
         RunProgram AddListRun(string name, RunProgram run);
         ContextMenuStrip GetNewPrajetContextMenuStrip(string name);
          Dictionary<string, RunProgram> GetRunProgram();
          Dictionary<string, string> ListRunName { get; set; }
-         bool RunHProgram(HalconRun run, OneResultOBj oneResultOBj, int id =0,string name = null);
-    }
+         bool RunHProgram( OneResultOBj oneResultOBj,out List<OneRObj>  oneRObjs, int id =0);
+      
+        }
 
 
 }

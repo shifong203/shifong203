@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Vision2.vision.HalconRunFile.RunProgramFile;
+using static Vision2.vision.HalconRunFile.PCBFile.ICPint;
 using static Vision2.vision.Vision;
 
 namespace Vision2.vision.HalconRunFile.PCBFile
@@ -56,21 +57,23 @@ namespace Vision2.vision.HalconRunFile.PCBFile
         {
             try
             {
-                HOperatorSet.SmallestRectangle2(ICPintT.TestingRoi, out HTuple row, out HTuple colu,
-                    out HTuple phi, out HTuple lengt1, out HTuple lnegt2);
+                HOperatorSet.SmallestRectangle2(ICPintT.AOIObj, out HTuple row, out HTuple colu,
+                    out HTuple phi, out HTuple lengt1, out HTuple lengt2);
                 if (row.Length == 0)
                 {
-                    row = 500;
-                    colu = 500;
+                HOperatorSet.DrawRectangle2(halcon.hWindowHalcon(),  out row, out colu,
+                    out phi, out lengt1, out lengt2);
                 }
-                HOperatorSet.DrawRectangle2Mod(halcon.hWindowHalcon(), row, colu, ICPintT.Phi, ICPintT.Heiath, ICPintT.Watih, out row, out colu,
-                    out  phi, out  lengt1, out lnegt2);
-                ICPintT.Watih = lnegt2;
-                ICPintT.Heiath = lengt1;
+                else
+                {
+                    HOperatorSet.DrawRectangle2Mod(halcon.hWindowHalcon(), row, colu, ICPintT.Phi, lengt1, lengt2, out row, out colu,
+                    out phi, out lengt1, out lengt2);
+                }
+
                 ICPintT.Phi = phi;
-                HOperatorSet.GenRectangle2(out HObject circle, row, colu, ICPintT.Phi, ICPintT.Heiath, ICPintT.Watih);
-                ICPintT.TestingRoi = circle;
-                //ICPintT.TestingRoi = RunProgram.DragMoveOBJ(halcon, ICPintT.TestingRoi);
+                HOperatorSet.GenRectangle2(out HObject circle, row, colu, ICPintT.Phi, lengt1, lengt2);
+                ICPintT.AOIObj = circle;
+      
             }
             catch (Exception ex)
             {
@@ -135,13 +138,8 @@ namespace Vision2.vision.HalconRunFile.PCBFile
             {
                 halcon.HobjClear();
                 ziPoint = ICPintT.ziPoints[listBox1.SelectedIndex];
-            
-
                 ziPoint.PintRun(halcon.GetImageOBJ(ICPintT.Threshold_Min_Max.ImageTypeObj),
-                    ICPintT.homMat2D, halcon, ICPintT, halcon.GetOneImageR(), out HObject errDobj, out HObject obj,1);
-
-                halcon.AddOBJ(errDobj, ColorResult.yellow);
-                halcon.AddOBJ(obj);
+                    ICPintT.homMat2D,  ICPintT, halcon.GetOneImageR(), out HObject errDobj, out HObject obj,1);;
                 halcon.ShowObj();
                 propertyGrid1.SelectedObject = ziPoint;
             }
@@ -159,18 +157,79 @@ namespace Vision2.vision.HalconRunFile.PCBFile
         {
             try
             {
-                ICPintT.DebugP(halcon, ICPintT.GetRunProgram(), out HObject hObject);
-                listBox1.Items.Clear();
-                for (int i = 0; i < ICPintT.ziPoints.Count; i++)
-                {
-                    listBox1.Items.Add(i + 1);
-                }
+                halcon.HobjClear();
+                ziPoint = ICPintT.ziPoints[listBox1.SelectedIndex];
+                ziPoint.PintRun(halcon.GetImageOBJ(ICPintT.Threshold_Min_Max.ImageTypeObj),
+                    ICPintT.homMat2D, ICPintT, halcon.GetOneImageR(), out HObject errDobj, out HObject obj, 2);
+                //halcon.AddObj(errDobj, ColorResult.yellow);
+                //halcon.AddObj(obj);
+                halcon.ShowObj();
+                propertyGrid1.SelectedObject = ziPoint;
+
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
         }
-   
+
+        private void 添加ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                ICPintT. ziPoints.Add(new ZiPoint());
+                listBox1.Items.Add(listBox1.Items.Count);
+
+
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        private void 删除ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                ICPintT.ziPoints.RemoveAt(listBox1.SelectedIndex);
+                listBox1.Items.RemoveAt(listBox1.SelectedIndex);
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        private void 绘制区域ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                ziPoint.PintZi = RunProgram.DrawModOBJ(halcon, HalconRun.EnumDrawType.Rectangle2, ziPoint.PintZi);
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        private void 绘制焊脚区域ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                ziPoint.ICOBJ1 = RunProgram.DrawModOBJ(halcon, HalconRun.EnumDrawType.Rectangle2, ziPoint.ICOBJ1);
+       
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            halcon.HobjClear();
+            ziPoint = ICPintT.ziPoints[listBox1.SelectedIndex];
+            ziPoint.PintRun(halcon.GetImageOBJ(ICPintT.Threshold_Min_Max.ImageTypeObj),
+                ICPintT.homMat2D, ICPintT, halcon.GetOneImageR(), out HObject errDobj, out HObject obj, 3);
+            halcon.ShowObj();
+            propertyGrid1.SelectedObject = ziPoint;
+        }
     }
 }

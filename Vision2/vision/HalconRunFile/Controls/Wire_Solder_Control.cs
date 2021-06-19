@@ -85,13 +85,13 @@ namespace Vision2.vision.HalconRunFile.Controls
                 HOperatorSet.SetColor(visionUserControlS.HalconWindow, "green");
                 HOperatorSet.SetColor(visionUserControlV.HalconWindow, "green");
 
-                bool DWET = Wire_S.RunP(Halcon, runid, visionUserControl1.HalconWindow, visionUserControlS.HalconWindow, visionUserControlV.HalconWindow, visionUserControlRGB.HalconWindow);
+                bool DWET = Wire_S.RunP(Halcon.GetOneImageR(), runid, visionUserControl1.HalconWindow, visionUserControlS.HalconWindow, visionUserControlV.HalconWindow, visionUserControlRGB.HalconWindow);
                 HOperatorSet.AreaCenter(Wire.HObject, out HTuple area, out HTuple row, out HTuple column);
 
-                Halcon.AddMessageIamge(row + 200, column, listBoxPoints.SelectedIndex + 1, ColorResult.blue, "true");
+                Halcon.AddImageMassage(row + 200, column, listBoxPoints.SelectedIndex + 1, ColorResult.blue, "true");
                 //Wire.RunP(Halcon, Wire_S, hObject, hObject1);
-                Halcon.AddOBJ(Wire_S.DrawObj, ColorResult.yellow);
-                Halcon.AddOBJ(Wire.HObject);
+                Halcon.AddObj(Wire_S.DrawObj, ColorResult.yellow);
+                Halcon.AddObj(Wire.HObject);
                 Halcon.ShowImage();
                 Halcon.ShowObj();
             }
@@ -184,7 +184,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 {
                     Halcon.Drawing = true;
                     HOperatorSet.DragRegion1(Wire_S.AOIObj, out HObject hObject, Halcon.hWindowHalcon());
-                    Halcon.AddOBJ(hObject);
+                    Halcon.AddObj(hObject);
                     HOperatorSet.ReduceDomain(Halcon.Image(), hObject, out hObjectImage);
                     Wire_S.listWelding.Add(new Wire_Solder.Wire_S() { HObject = hObject, });
                     listBoxPoints.Items.Clear();
@@ -197,7 +197,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 }
                 else
                 {
-                    Halcon.AddMessage("未绘制添加区域");
+                    Halcon.AddMeassge("未绘制添加区域");
                 }
                 Halcon.ShowObj();
             }
@@ -214,7 +214,7 @@ namespace Vision2.vision.HalconRunFile.Controls
             {
                 Halcon.HobjClear();
                 Wire.HObject = RunProgram.DragMoveOBJ(Halcon, Wire.HObject);
-                Halcon.AddOBJ(Wire.HObject);
+                Halcon.AddObj(Wire.HObject);
                 Halcon.ShowObj();
             }
             catch (Exception)
@@ -304,7 +304,7 @@ namespace Vision2.vision.HalconRunFile.Controls
         private void button2_Click(object sender, EventArgs e)
         {
             Halcon.HobjClear();
-            Halcon.AddOBJ(Wire_S.DrawObj);
+            Halcon.AddObj(Wire_S.DrawObj);
             Halcon.ShowObj();
         }
 

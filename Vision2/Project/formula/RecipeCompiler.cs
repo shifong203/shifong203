@@ -180,12 +180,14 @@ namespace Vision2.Project.formula
         [TypeConverter(typeof(ErosSocket.ErosConLink.DicSocket.LinkNameConverter))]
         public string DataLinkName { get; set; } = "";
 
-
-
         [Description("分割,数据起点索引"), Category("通信数据"), DisplayName("数据起点索引")]
         public int DataLinkStrat { get; set; } = 0;
         [Description("数据起点"), Category("通信数据"), DisplayName("数据起点")]
         public int DataStrat { get; set; } = 0;
+
+        [Description("单个产品数据接受次数"), Category("通信数据"), DisplayName("数据次数")]
+        public int DataNumber { get; set; } = 2;
+
         public LinkData Data { get; set; } = new LinkData();
 
 
@@ -273,7 +275,6 @@ namespace Vision2.Project.formula
 
             Product.ReadExcelDic(ProjectINI.In.ProjectPathRun + "\\产品配方\\产品文件", out string err);
 
-
             if (RecipeCompiler.Instance.DPoint.Count != 0)
             {
                 foreach (var item in Product.GetThisP())
@@ -303,14 +304,7 @@ namespace Vision2.Project.formula
                 RecipeCompiler.Instance.DPoint = new Dictionary<string, List<XYZPoint>>();
             }
             string paths = ProjectINI.In.ProjectPathRun + "\\" + vision.Vision.Instance.FileName + "\\";
-            // foreach (var item in Produc)
-            //{
-            //    ProjectINI.ClassToJsonSavePath(item.Value, paths + item.Key + "\\配方参数");
-            //}
-            //foreach (var item in Instance.ProductEX)
-            //{
-            //    ProjectINI.ClassToJsonSavePath(item.Value, paths + item.Key + "\\产品参数");
-            //}
+   
             Dictionary<string, Dictionary<string, string>> keyValuePairs = new Dictionary<string, Dictionary<string, string>>();
 
             foreach (var item in Product.GetThisP())
@@ -323,7 +317,6 @@ namespace Vision2.Project.formula
                 {
                     keyValuePairs.Add(item.Key, item.Value);
                 }
-                
                 if (ProjectINI.ReadPathJsonToCalss(paths + item.Key + "\\产品参数", out ProductEX productEX))
                 {
                     if (!ProductEX.ContainsKey(item.Key))
@@ -342,7 +335,6 @@ namespace Vision2.Project.formula
                         ProductEX.Add(item.Key, new formula.ProductEX());
                     }
                 }
-              
             }
             Produc = keyValuePairs;
             if (ErosSocket.ErosConLink.StaticCon.GetSocketClint(RecipeCompiler.Instance.GetQRLinkNmae) != null)

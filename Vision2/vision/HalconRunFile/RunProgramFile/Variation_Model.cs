@@ -180,7 +180,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         {
             HOperatorSet.GetVariationModel(out  iamge, out  varImage, ID);
         }
-        public bool RunPa(HalconRun halcon  , OneResultOBj oneResultOBj,  RunProgram run,List<HTuple> hTuples,HWindID hWindID=null)
+        public bool RunPa( OneResultOBj oneResultOBj,  RunProgram run,List<HTuple> hTuples,HWindID hWindID=null)
         {
             int NGNumber = 0;
             try
@@ -198,7 +198,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 hObject.GenEmptyObj();
                 HObject hObjectRed = new HObject();
                 hObjectRed.GenEmptyObj();
-                HObject ImageTD = run.GetEmset(halcon.Image());
+                HObject ImageTD = run.GetEmset(oneResultOBj.Image);
                 for (int i = 0; i < hTuples.Count; i++)
                 {
                     HTuple home2d = hTuples[i];
@@ -261,9 +261,13 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                             HOperatorSet.AreaCenter(hObject1, out HTuple area, out  row, out  column);
                             hWindID.OneResIamge.AddImageMassage(row, column, "面积" + area.TupleString("0.3f") + "长" + ra.TupleString("0.3f") + "rb" + rb.TupleString("0.3f") + "高" +
                             height.TupleString("0.3f") + "宽" + width.TupleString("0.3f") + "半径" + radius.TupleString("0.3f"));
-                            hWindID.OneResIamge.AddImageMassage(row + 40, column, "MM:面积" + Math.Sqrt(halcon.GetCaliConstMM(area)).ToString("0.000") + "长" + halcon.GetCaliConstMM(ra).TupleString("0.3f")
-                                + "rb" + halcon.GetCaliConstMM(rb).TupleString("0.3f") + "高" + halcon.GetCaliConstMM(height).TupleString("0.3f") + "宽" + halcon.GetCaliConstMM(width).TupleString("0.3f") +
-                                "半径" + halcon.GetCaliConstMM(radius).TupleString("0.3f"));
+                            hWindID.OneResIamge.AddImageMassage(row + 40, column, "MM:面积" + 
+                                Math.Sqrt(oneResultOBj.GetCaliConstMM(area)).ToString("0.000") + "长" +
+                                oneResultOBj.GetCaliConstMM(ra).TupleString("0.3f")
+                                + "rb" + oneResultOBj.GetCaliConstMM(rb).TupleString("0.3f") + "高" +
+                                oneResultOBj.GetCaliConstMM(height).TupleString("0.3f") + "宽" +
+                                oneResultOBj.GetCaliConstMM(width).TupleString("0.3f") +
+                                "半径" + oneResultOBj.GetCaliConstMM(radius).TupleString("0.3f"));
                             hWindID.OneResIamge.AddObj(hObject1,ColorResult.red);
                             hWindID.ShowObj();
                         }

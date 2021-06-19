@@ -29,6 +29,18 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("节点2", 1, -2);
+            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("节点4");
+            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("节点5");
+            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("节点6");
+            System.Windows.Forms.TreeNode treeNode5 = new System.Windows.Forms.TreeNode("节点7");
+            System.Windows.Forms.TreeNode treeNode6 = new System.Windows.Forms.TreeNode("节点0", new System.Windows.Forms.TreeNode[] {
+            treeNode1,
+            treeNode2,
+            treeNode3,
+            treeNode4,
+            treeNode5});
+            System.Windows.Forms.TreeNode treeNode7 = new System.Windows.Forms.TreeNode("节点1");
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RestObjImage));
             this.hWindowControl1 = new HalconDotNet.HWindowControl();
             this.label4 = new System.Windows.Forms.Label();
@@ -36,9 +48,9 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.restOneComUserControl1 = new Vision2.vision.RestVisionForm.RestOneComUserControl();
+            this.treeView1 = new System.Windows.Forms.TreeView();
+            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.panel1 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
@@ -47,7 +59,6 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.restOneComUserControl1 = new Vision2.vision.RestVisionForm.RestOneComUserControl();
             this.panel3 = new System.Windows.Forms.Panel();
             this.trayDatas1 = new Vision2.Project.DebugF.IO.TrayDatas();
             this.hWindowControl4 = new HalconDotNet.HWindowControl();
@@ -63,7 +74,6 @@
             this.groupBox1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.panel1.SuspendLayout();
             this.panel4.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -140,7 +150,7 @@
             // tabPage1
             // 
             this.tabPage1.Controls.Add(this.restOneComUserControl1);
-            this.tabPage1.Controls.Add(this.dataGridView1);
+            this.tabPage1.Controls.Add(this.treeView1);
             this.tabPage1.Location = new System.Drawing.Point(4, 30);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
@@ -149,41 +159,61 @@
             this.tabPage1.Text = "NG";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
-            // dataGridView1
+            // restOneComUserControl1
             // 
-            this.dataGridView1.AllowUserToAddRows = false;
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.Column1,
-            this.Column2});
-            this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridView1.Location = new System.Drawing.Point(3, 3);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.ReadOnly = true;
-            this.dataGridView1.RowTemplate.Height = 23;
-            this.dataGridView1.Size = new System.Drawing.Size(348, 610);
-            this.dataGridView1.TabIndex = 1;
-            this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
-            this.dataGridView1.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentDoubleClick);
-            this.dataGridView1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.dataGridView1_MouseClick);
+            this.restOneComUserControl1.Location = new System.Drawing.Point(176, 147);
+            this.restOneComUserControl1.Margin = new System.Windows.Forms.Padding(5);
+            this.restOneComUserControl1.Name = "restOneComUserControl1";
+            this.restOneComUserControl1.Size = new System.Drawing.Size(512, 538);
+            this.restOneComUserControl1.TabIndex = 9;
             // 
-            // Column1
+            // treeView1
             // 
-            this.Column1.FillWeight = 60F;
-            this.Column1.HeaderText = "元件编号";
-            this.Column1.Name = "Column1";
-            this.Column1.ReadOnly = true;
-            this.Column1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.treeView1.Dock = System.Windows.Forms.DockStyle.Left;
+            this.treeView1.Font = new System.Drawing.Font("宋体", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.treeView1.ImageIndex = 0;
+            this.treeView1.ImageList = this.imageList1;
+            this.treeView1.Location = new System.Drawing.Point(3, 3);
+            this.treeView1.Name = "treeView1";
+            treeNode1.ImageIndex = 1;
+            treeNode1.Name = "节点2";
+            treeNode1.SelectedImageIndex = -2;
+            treeNode1.Text = "节点2";
+            treeNode2.ImageIndex = 2;
+            treeNode2.Name = "节点4";
+            treeNode2.Text = "节点4";
+            treeNode3.ImageIndex = 3;
+            treeNode3.Name = "节点5";
+            treeNode3.Text = "节点5";
+            treeNode4.ImageIndex = 5;
+            treeNode4.Name = "节点6";
+            treeNode4.Text = "节点6";
+            treeNode5.ImageIndex = 6;
+            treeNode5.Name = "节点7";
+            treeNode5.Text = "节点7";
+            treeNode6.Name = "节点0";
+            treeNode6.Text = "节点0";
+            treeNode7.Name = "节点1";
+            treeNode7.Text = "节点1";
+            this.treeView1.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
+            treeNode6,
+            treeNode7});
+            this.treeView1.SelectedImageIndex = 4;
+            this.treeView1.Size = new System.Drawing.Size(313, 610);
+            this.treeView1.TabIndex = 10;
+            this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
             // 
-            // Column2
+            // imageList1
             // 
-            this.Column2.FillWeight = 500F;
-            this.Column2.HeaderText = "缺陷";
-            this.Column2.Name = "Column2";
-            this.Column2.ReadOnly = true;
-            this.Column2.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.Column2.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.Column2.Width = 200;
+            this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
+            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
+            this.imageList1.Images.SetKeyName(0, "iphone-bk.png");
+            this.imageList1.Images.SetKeyName(1, "forward_alt.png");
+            this.imageList1.Images.SetKeyName(2, "back_alt.png");
+            this.imageList1.Images.SetKeyName(3, "tick.png");
+            this.imageList1.Images.SetKeyName(4, "tools.png");
+            this.imageList1.Images.SetKeyName(5, "cross.png");
+            this.imageList1.Images.SetKeyName(6, "accept.png");
             // 
             // tabPage2
             // 
@@ -266,14 +296,6 @@
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(1083, 874);
             this.panel2.TabIndex = 9;
-            // 
-            // restOneComUserControl1
-            // 
-            this.restOneComUserControl1.Location = new System.Drawing.Point(194, 70);
-            this.restOneComUserControl1.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
-            this.restOneComUserControl1.Name = "restOneComUserControl1";
-            this.restOneComUserControl1.Size = new System.Drawing.Size(512, 538);
-            this.restOneComUserControl1.TabIndex = 9;
             // 
             // panel3
             // 
@@ -414,7 +436,6 @@
             this.groupBox1.PerformLayout();
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel4.ResumeLayout(false);
             this.panel4.PerformLayout();
@@ -433,7 +454,6 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
@@ -457,7 +477,7 @@
         private System.Windows.Forms.TabPage tabPage2;
         private RestVisionForm.RestOneComUserControl restOneComUserControl1;
         private System.Windows.Forms.ToolStripLabel toolStripLabel1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
+        private System.Windows.Forms.TreeView treeView1;
+        private System.Windows.Forms.ImageList imageList1;
     }
 }

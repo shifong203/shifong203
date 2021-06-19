@@ -75,7 +75,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 if (welding_.DrawObj != null && welding_.DrawObj.CountObj() == 1)
                 {
                     HObject hObject = RunProgram.DragMoveOBJ(Halcon, welding_.DrawObj);
-                    Halcon.AddOBJ(hObject);
+                    Halcon.AddObj(hObject);
                     HOperatorSet.ReduceDomain(Halcon.Image(), hObject, out hObjectImage);
                     welding_.listWelding.Add(new Welding_Spot.WeldingCC() { HObject = hObject, });
                     listBox1.Items.Clear();
@@ -84,20 +84,20 @@ namespace Vision2.vision.HalconRunFile.Controls
                         listBox1.Items.Add(i + 1);
                     }
                     HOperatorSet.ReduceDomain(Halcon.Image(), WeldingCCT.HObject, out hObjectImage);
-                    if (WeldingCCT.Solder_joint_inspection(welding_, Halcon, out bool iscon, out bool isless, out HTuple areas, this.hWind))
+                    if (WeldingCCT.Solder_joint_inspection(welding_, Halcon.GetOneImageR(), out bool iscon, out bool isless, out HTuple areas, this.hWind))
                     {
-                        Halcon.AddOBJ(WeldingCCT.HObject);
+                        Halcon.AddObj(WeldingCCT.HObject);
                     }
                     else
                     {
-                        Halcon.AddOBJ(WeldingCCT.HObject, ColorResult.red);
+                        Halcon.AddObj(WeldingCCT.HObject, ColorResult.red);
                     }
 
                     Halcon.ShowImage();
                 }
                 else
                 {
-                    Halcon.AddMessage("未绘制添加区域");
+                    Halcon.AddMeassge("未绘制添加区域");
                 }
                 Halcon.ShowObj();
             }
@@ -187,13 +187,13 @@ namespace Vision2.vision.HalconRunFile.Controls
                 hWind.SetPerpetualPart(row1, column1, row2, column2);
                 hWind.SetImaage(hObjectImage);
                 hWind.ShowImage();
-                if (WeldingCCT.Solder_joint_inspection(welding_, Halcon, out bool iscon, out bool isless, out HTuple areas,hWind, RGBHSVEnum, id))
+                if (WeldingCCT.Solder_joint_inspection(welding_, Halcon.GetOneImageR(), out bool iscon, out bool isless, out HTuple areas,hWind, RGBHSVEnum, id))
                 {
-                    Halcon.AddOBJ(WeldingCCT.HObject);
+                    Halcon.AddObj(WeldingCCT.HObject);
                 }
                 else
                 {
-                    Halcon.AddOBJ(WeldingCCT.HObject, ColorResult.red);
+                    Halcon.AddObj(WeldingCCT.HObject, ColorResult.red);
                 }
          
                 Halcon.ShowObj();
@@ -312,7 +312,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                         while (hv_Button != 4)
                         {
                             Halcon.HobjClear();
-                            Halcon.AddMessage("绘制中，单击鼠标右键结束绘制");
+                            Halcon.AddMeassge("绘制中，单击鼠标右键结束绘制");
                             //一直在循环,需要让halcon控件也响应事件,不然到时候跳出循环,之前的事件会一起爆发触发,
                             Application.DoEvents();
                             try
@@ -327,31 +327,31 @@ namespace Vision2.vision.HalconRunFile.Controls
                                 for (int i = 0; i < WeldingCCT.ListHObj.Count(); i++)
                                 {
                                     HOperatorSet.AffineTransRegion(WeldingCCT.ListHObj[i], out HObject hObject2T, homMat2d, "nearest_neighbor");
-                                    Halcon.AddOBJ(hObject2T, ColorResult.blue);
+                                    Halcon.AddObj(hObject2T, ColorResult.blue);
                                     hObject2[i] = hObject2T;
                                 }
-                                Halcon.AddOBJ(hObject);
+                                Halcon.AddObj(hObject);
                                 HOperatorSet.ReduceDomain(Halcon.Image(), hObject, out HObject hObject1);
                                 Halcon.ShowImage();
                                 Halcon.ShowObj();
                                 HOperatorSet.ReduceDomain(Halcon.Image(), WeldingCCT.HObject, out hObjectImage);
-                                if (WeldingCCT.Solder_joint_inspection(welding_, Halcon, out bool iscon, out bool isless, out HTuple areas, hWind))
+                                if (WeldingCCT.Solder_joint_inspection(welding_, Halcon.GetOneImageR(), out bool iscon, out bool isless, out HTuple areas, hWind))
                                 {
-                                    Halcon.AddOBJ(WeldingCCT.HObject);
+                                    Halcon.AddObj(WeldingCCT.HObject);
                                 }
                                 else
                                 {
-                                    Halcon.AddOBJ(WeldingCCT.HObject, ColorResult.red);
+                                    Halcon.AddObj(WeldingCCT.HObject, ColorResult.red);
                                 }
                                 for (int i = 0; i < WeldingCCT.ListHObj.Count(); i++)
                                 {
-                                    Halcon.AddOBJ(WeldingCCT.ListHObj[i], ColorResult.blue);
+                                    Halcon.AddObj(WeldingCCT.ListHObj[i], ColorResult.blue);
                                 }
                                 if (hv_Button == 4)
                                 {
                                     WeldingCCT.ListHObj = hObject2;
                                     WeldingCCT.HObject = hObject;
-                                    Halcon.AddOBJ(hObject);
+                                    Halcon.AddObj(hObject);
                                 }
                             }
                             catch (HalconException ex)
@@ -367,7 +367,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 }
                 else
                 {
-                    Halcon.AddMessage("未绘制区域，无法调试");
+                    Halcon.AddMeassge("未绘制区域，无法调试");
                 }
                 Halcon.ShowImage();
                 Halcon.ShowObj();
@@ -476,7 +476,7 @@ namespace Vision2.vision.HalconRunFile.Controls
             try
             {
                 Halcon.HobjClear();
-                Halcon.AddOBJ(WeldingCCT.ListHObj[listBox2.SelectedIndex], ColorResult.red);
+                Halcon.AddObj(WeldingCCT.ListHObj[listBox2.SelectedIndex], ColorResult.red);
                 Halcon.ShowImage();
                 Halcon.ShowObj();
 

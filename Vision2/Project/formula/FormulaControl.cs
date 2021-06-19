@@ -206,7 +206,8 @@ namespace Vision2.Project.formula
                 string NewName = Product.AmendName(listBox1.SelectedItem.ToString());
                 if (NewName != "")
                 {
-                    string path = Vision2.ErosProjcetDLL.Project.ProjectINI.In.ProjectPathRun + "\\" + vision.Vision.Instance.FileName + "\\" + listBox1.SelectedItem.ToString();
+                    string path = Vision2.ErosProjcetDLL.Project.ProjectINI.In.ProjectPathRun + "\\" + vision.Vision.Instance.FileName + 
+                        "\\" + listBox1.SelectedItem.ToString();
                     Product.SaveDicExcel(Vision2.ErosProjcetDLL.Project.ProjectINI.In.ProjectPathRun + "\\产品配方\\产品文件");
                     if (!Directory.Exists(path))
                     {
@@ -216,10 +217,12 @@ namespace Vision2.Project.formula
                     {
                         if (MessageBox.Show("是否修改图像程序名？", NewName, MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
                         {
-                            string Newpath = Vision2.ErosProjcetDLL.Project.ProjectINI.In.ProjectPathRun + "\\" + vision.Vision.Instance.FileName + "\\" + NewName;
+                            string Newpath = Vision2.ErosProjcetDLL.Project.ProjectINI.In.ProjectPathRun + "\\" + 
+                                vision.Vision.Instance.FileName + "\\" + NewName;
                             Directory.Move(path, Newpath);
                         }
                     }
+
                     if (RecipeCompiler.Instance.ProductEX.ContainsKey(listBox1.SelectedItem.ToString()))
                     {
                         ProductEX xYZPoints = RecipeCompiler.Instance.ProductEX[listBox1.SelectedItem.ToString()];

@@ -2428,15 +2428,25 @@ namespace Vision2.Project.DebugF.IO
                 {
                     UResult = Motion.mAcm_SetU32Property(m_Axishand, (uint)PropertyID.CFG_AxSwMelEnable, 0);
                     UResult = Motion.mAcm_SetU32Property(m_Axishand, (uint)PropertyID.CFG_AxSwPelEnable, 0);
-                    UResult = Motion.mAcm_SetF64Property(m_Axishand, (uint)PropertyID.PAR_AxVelLow, PAR_AxVelLow);
-                    UResult = Motion.mAcm_SetF64Property(m_Axishand, (uint)PropertyID.PAR_AxVelHigh, PAR_AxVelHigh);
-                    UResult = Motion.mAcm_SetF64Property(m_Axishand, (uint)PropertyID.PAR_AxAcc, PAR_AxAcc);
-                    UResult = Motion.mAcm_SetF64Property(m_Axishand, (uint)PropertyID.PAR_AxDec, PAR_AxDec);
+                    if (HomeTepy>100)
+                    {
 
-                    //UResult = Motion.mAcm_SetF64Property(m_Axishand, (uint)PropertyID.PAR_AxHomeVelLow, PAR_AxVelLow);
-                    //UResult = Motion.mAcm_SetF64Property(m_Axishand, (uint)PropertyID.PAR_AxHomeVelHigh, PAR_AxVelHigh);
-                    //UResult = Motion.mAcm_SetF64Property(m_Axishand, (uint)PropertyID.PAR_AxHomeAcc, PAR_AxAcc);
-                    //UResult = Motion.mAcm_SetF64Property(m_Axishand, (uint)PropertyID.PAR_AxHomeDec, PAR_AxDec);
+                        UResult = Motion.mAcm_SetF64Property(m_Axishand, (uint)PropertyID.PAR_AxHomeVelLow, PAR_AxVelLow);
+                        UResult = Motion.mAcm_SetF64Property(m_Axishand, (uint)PropertyID.PAR_AxHomeVelHigh, PAR_AxVelHigh);
+                        UResult = Motion.mAcm_SetF64Property(m_Axishand, (uint)PropertyID.PAR_AxHomeAcc, PAR_AxAcc);
+                        UResult = Motion.mAcm_SetF64Property(m_Axishand, (uint)PropertyID.PAR_AxHomeDec, PAR_AxDec);
+
+                    }
+                    else
+                    {
+         
+                        UResult = Motion.mAcm_SetF64Property(m_Axishand, (uint)PropertyID.PAR_AxVelLow, PAR_AxVelLow);
+                        UResult = Motion.mAcm_SetF64Property(m_Axishand, (uint)PropertyID.PAR_AxVelHigh, PAR_AxVelHigh);
+                        UResult = Motion.mAcm_SetF64Property(m_Axishand, (uint)PropertyID.PAR_AxAcc, PAR_AxAcc);
+                        UResult = Motion.mAcm_SetF64Property(m_Axishand, (uint)PropertyID.PAR_AxDec, PAR_AxDec);
+                    }
+                
+
                     Thread.Sleep(200);
                     UResult = Motion.mAcm_AxHome(m_Axishand, HomeTepy, 1);
                     if (UResult != 0)
@@ -2495,8 +2505,10 @@ namespace Vision2.Project.DebugF.IO
                                 if (det == 1)
                                 {
                                     Thread.Sleep(1000);
-                                    Motion.mAcm_AxSetCmdPosition(m_Axishand, 0);
-                                    //Motion.mAcm_AxSetActualPosition(m_Axishand, 0);
+
+
+                                    UResult = Motion.mAcm_AxSetCmdPosition(m_Axishand, 0);
+                                    UResult = Motion.mAcm_AxSetActualPosition(m_Axishand, 0);
                                     UResult = Motion.mAcm_SetU32Property(m_Axishand, (uint)PropertyID.CFG_AxSwMelEnable, 1);
                                     UResult = Motion.mAcm_SetU32Property(m_Axishand, (uint)PropertyID.CFG_AxSwPelEnable, 1);
                                     UResult = Motion.mAcm_SetI32Property(m_Axishand, (uint)PropertyID.CFG_AxSwPelValue, (int)(this.PlusLimit * Scale * this.Ratio));
@@ -2505,6 +2517,8 @@ namespace Vision2.Project.DebugF.IO
                                     UResult = Motion.mAcm_SetU32Property(m_Axishand, (uint)PropertyID.CFG_AxSwMelReact, 0);
                                     AddSeelp();
                                     IsHome = true;
+                                    SetWPoint(HomePoint);
+                 
                                     Home = true;
                                     break;
                                 }

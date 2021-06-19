@@ -19,7 +19,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             return "2.6_颜色识别";
 
         }
-        public override Control GetControl()
+        public override Control GetControl(HalconRun halcon )
         {
             return new Color_DetectionUserControl(this);
         }
@@ -157,15 +157,15 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 {
                 }
             }
-            public bool Classify(HalconRun halcon, OneResultOBj oneResultOBj, HObject drawObj,RunProgram RunPa, out HObject Color_region,
+            public bool Classify(  OneResultOBj oneResultOBj, HObject drawObj,RunProgram RunPa, out HObject Color_region,
                  List<HObject> Listobjs=null)
             {
                 int NGNumber = 0;
-                Color_region = halcon.Image();
-                HOperatorSet.CountChannels(halcon.Image(), out HTuple htcon);
+                Color_region = oneResultOBj.Image;
+                HOperatorSet.CountChannels(oneResultOBj.Image, out HTuple htcon);
                 if (htcon != 3)
                 {
-                    halcon.AddMessage("图像类型错误,需要3通道图像");
+                    oneResultOBj.AddMeassge("图像类型错误,需要3通道图像");
                     return true;
                 }
                 HOperatorSet.GetImageSize(Color_region, out HTuple width, out HTuple height);
@@ -174,22 +174,22 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 HObject H = new HObject();
                 HObject S = new HObject();
                 HObject V = new HObject();
-                HObject hObject = drawObj;
-                HObject hObjectROI = drawObj;
-        
+      
+                HObject hObjectROI = oneResultOBj.GetHalcon().GetModelHaoMatRegion(RunPa.HomName, drawObj);
+                HObject hObject = oneResultOBj.GetHalcon().GetModelHaoMatRegion(RunPa.HomName, drawObj);
                 if (EnbleSelect)
                 {
-                    this.RunSeleRoi(RunPa.GetEmset(halcon.GetImageOBJ(ImageType)), 0,out   hObject);
+                    this.RunSeleRoi(RunPa.GetEmset(oneResultOBj.GetHalcon().GetImageOBJ(ImageType)), 0,out   hObject);
                     hObjectROI = hObject;
                     HOperatorSet.AreaCenter(hObjectROI, out HTuple area, out HTuple row, out HTuple column);
-                    halcon.AddOBJ(hObjectROI,ColorResult.blue);
+                    oneResultOBj.AddObj(hObjectROI,ColorResult.blue);
                 }
                 else
                 {
-                    if (drawObj != null && drawObj.IsInitialized()) { }
+                    if (hObjectROI != null && hObjectROI.IsInitialized()) { }
                     else
                     {
-                        HOperatorSet.GenRectangle1(out hObject, 0, 0, halcon.Height, halcon.Width);
+                        HOperatorSet.GenRectangle1(out hObject, 0, 0, oneResultOBj.GetHalcon().Height, oneResultOBj.GetHalcon().Width);
                         hObjectROI = hObject;
                     }
                 }
@@ -198,9 +198,9 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 HObject hObjectH = new HObject();
                 HObject hObjectS = new HObject();
                 HObject hObjectV = new HObject();
-                if (H_enabled) hObjectH = Threshold_H.Threshold(halcon.GetImageOBJ(ImageTypeObj.H));
-                if (S_enabled) hObjectS = Threshold_S.Threshold(halcon.GetImageOBJ(ImageTypeObj.S));
-                if (V_enabled) hObjectV = Threshold_V.Threshold(halcon.GetImageOBJ(ImageTypeObj.V));
+                if (H_enabled) hObjectH = Threshold_H.Threshold(oneResultOBj.GetHalcon().GetImageOBJ(ImageTypeObj.H));
+                if (S_enabled) hObjectS = Threshold_S.Threshold(oneResultOBj.GetHalcon().GetImageOBJ(ImageTypeObj.S));
+                if (V_enabled) hObjectV = Threshold_V.Threshold(oneResultOBj.GetHalcon().GetImageOBJ(ImageTypeObj.V));
                 if (H_enabled && S_enabled)
                 {
                     HOperatorSet.Intersection(hObject, hObjectH, out hObjectH);
@@ -236,7 +236,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 }
                 for (int i = 0; i < threshold_Min_Maxes.Count; i++)
                 {
-                    HOperatorSet.ReduceDomain(halcon.GetImageOBJ(threshold_Min_Maxes[i].ImageTypeObj), hObjectROI, out V);
+                    HOperatorSet.ReduceDomain(oneResultOBj.GetHalcon().GetImageOBJ(threshold_Min_Maxes[i].ImageTypeObj), hObjectROI, out V);
                     if (threshold_Min_Maxes[i].Enabled)
                     {
                        HObject hObject1= threshold_Min_Maxes[i].Threshold(V);
@@ -294,7 +294,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         Colorid = HTuple.TupleGenConst(area.Length, Color_ID);
                         if (RunPa.ISShowText)
                         {
-                            halcon.AddMessageIamge(row, column, Colorid + Name, ColorResult.yellow);
+                            oneResultOBj.AddImageMassage(row, column, Colorid + Name, ColorResult.yellow);
                         }
                         oneResultOBj.AddNGOBJ( RunPa.Name ,  Name,  hObject1, hObject2 );
                     }
@@ -303,7 +303,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         HOperatorSet.DilationRectangle1(hObjectROI, out HObject hObject1, Vision.Instance.DilationRectangle1, Vision.Instance.DilationRectangle1);
                         oneResultOBj.AddNGOBJ(RunPa.Name, Name, hObject1, Color_region);
                     }
-                    halcon.AddMessage(RunPa.Name + "."+this.Name + ":" + Color_ID + Name + "数量" + Color_region.CountObj());
+                    oneResultOBj.AddMeassge(RunPa.Name + "."+this.Name + ":" + Color_ID + Name + "数量" + Color_region.CountObj());
                     NGNumber++;
                 }
                 else if(IsColt)
@@ -311,7 +311,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     HOperatorSet.Connection(hObjectROI, out hObjectROI);
                     HOperatorSet.AreaCenter(hObjectROI, out HTuple area, out HTuple row, out HTuple column);
                     HOperatorSet.GenCrossContourXld(out HObject hObject1, row, column, 50, 0);
-                    halcon.AddOBJ(hObject1);
+                    oneResultOBj.AddObj(hObject1);
                 }
                 if (NGNumber!=0)
                 {
@@ -323,8 +323,9 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         //[DescriptionAttribute("是否在结果图像中显示文本。"), Category("结果显示"), DisplayName("显示文本")]
         //public bool ISShowText { get; set; }
 
-        public override bool RunHProgram(HalconRun halcon, OneResultOBj oneResultOBj, int id, string name = null)
+        public override bool RunHProgram( OneResultOBj oneResultOBj, out List<OneRObj> oneRObjs, int runID = 0)
         {
+            oneRObjs = new List<OneRObj>();
             foreach (var item in keyColor)
             {
                 try
@@ -334,14 +335,15 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         continue;
                     }
                     item.Value.Name = item.Key;
-                    if (!item.Value.Classify(halcon, oneResultOBj, item.Value.DrawObj,this, out HObject hObject))
+                    
+                    if (!item.Value.Classify( oneResultOBj, item.Value.DrawObj,this, out HObject hObject))
                     {
                         HOperatorSet.AreaCenter(hObject, out HTuple area, out HTuple row, out HTuple column);
                         HTuple Colorid = new HTuple();
                         ResltBool = false;
                     }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                 }
             }
