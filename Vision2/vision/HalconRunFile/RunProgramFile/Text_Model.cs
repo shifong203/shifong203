@@ -325,7 +325,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                                 }
                                 else
                                 {
-                                    oneResultOBj. AddNGOBJ( this.Name,NGText, hObject2, hObject4);
+                                    oneResultOBj. AddNGOBJ( this.Name,"字符与码不等", hObject2, hObject4);
                                     errNumer++;
                                 }
                             }
@@ -336,7 +336,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                                     if (ModeText != text)
                                     {
                                         errNumer++;
-                                        oneResultOBj.AddNGOBJ(Name,NGText, hObject2, hObject4);
+                                        oneResultOBj.AddNGOBJ(Name, "字符不同", hObject2, hObject4);
                                     }
                                     else
                                     {

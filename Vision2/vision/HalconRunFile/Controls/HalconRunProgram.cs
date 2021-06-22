@@ -223,6 +223,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 {
                     label4.Text = "FOV:" + halconRun.GetCam().FOV;
                 }
+                listBox1.Items.Clear();
 
           
                 propertyGrid2.SelectedObject = halconRun.TiffeOffsetImageEX;
@@ -1450,6 +1451,18 @@ namespace Vision2.vision.HalconRunFile.Controls
                 MessageBox.Show(ex.Message);
             }
          
+        }
+
+        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+
+
+            }
+            catch (Exception)
+            {
+            }
         }
     }
 }

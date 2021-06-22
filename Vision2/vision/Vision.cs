@@ -169,7 +169,11 @@ namespace Vision2.vision
                 [DescriptionAttribute("单位转换比例。"), Category("数据"), DisplayName("单位比例")]
                 public int Transform { get; set; } = 1;
 
-                [DescriptionAttribute("小数位数。"), Category("数据"), DisplayName("小数位数")]
+              [DescriptionAttribute("单位名称。"), Category("数据"), DisplayName("单位名称")]
+              [TypeConverter(typeof(ErosConverter)),
+              ErosConverter.ThisDropDownAttribute("",false, "mm", "inches", "px")]
+               public string TransformName { get; set; } = "mm";
+               [DescriptionAttribute("小数位数。"), Category("数据"), DisplayName("小数位数")]
                 public int Decimal_point { get; set; } = 1;
 
                 /// <summary>

@@ -36,27 +36,27 @@ namespace Vision2.vision.HalconRunFile.Controls
             Vision2.ErosProjcetDLL.UI.DataGridViewF.StCon.AddCon(dataGridView1);
         }
 
-        private void HalconRun_EventDoen(RunProgramFile.HalconRun halcon)
+        private void HalconRun_EventDoen(vision.OneResultOBj halcon)
         {
             try
             {
 
-                foreach (var item in halcon.keyValuePairs1)
-                {
-                    if (!dataGridView1.Columns.Contains(item.Key))
-                    {
-                        DataGridViewTextBoxColumn dataGridTextBoxColumn = new DataGridViewTextBoxColumn();
-                        dataGridTextBoxColumn.Name = item.Key;
-                        dataGridTextBoxColumn.HeaderText = dataGridTextBoxColumn.Name;
-                        dataGridTextBoxColumn.SortMode = DataGridViewColumnSortMode.NotSortable;
-                        dataGridView1.Columns.Add(dataGridTextBoxColumn);
-                    }
-                }
-                int de = dataGridView1.Rows.Add();
-                foreach (var item in halcon.keyValuePairs1)
-                {
-                    dataGridView1[item.Key, de].Value = item.Value.ToString();
-                }
+                //foreach (var item in halcon.keyValuePairs1)
+                //{
+                //    if (!dataGridView1.Columns.Contains(item.Key))
+                //    {
+                //        DataGridViewTextBoxColumn dataGridTextBoxColumn = new DataGridViewTextBoxColumn();
+                //        dataGridTextBoxColumn.Name = item.Key;
+                //        dataGridTextBoxColumn.HeaderText = dataGridTextBoxColumn.Name;
+                //        dataGridTextBoxColumn.SortMode = DataGridViewColumnSortMode.NotSortable;
+                //        dataGridView1.Columns.Add(dataGridTextBoxColumn);
+                //    }
+                //}
+                //int de = dataGridView1.Rows.Add();
+                //foreach (var item in halcon.keyValuePairs1)
+                //{
+                //    dataGridView1[item.Key, de].Value = item.Value.ToString();
+                //}
             }
             catch (Exception)
             {

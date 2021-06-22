@@ -143,6 +143,13 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         public class OneComponent
         {
             public List<OneRObj> oneRObjs = new List<OneRObj>();
+
+            public void AddNgObj(string ngText,string conam,HTuple restString,HObject roi,HObject NGerr,DataMinMax dataMinMax)
+            {
+                OneRObj oneRObj = new OneRObj() { NGText = NGText, ComponentID = conam, ROI =roi,NGROI = NGerr,dataMinMax= dataMinMax };
+                oneRObj.RestStrings.AddRange(restString.ToSArr());
+                oneRObjs.Add(oneRObj);
+            }
             public bool OK { get {
                     for (int i = 0; i < oneRObjs.Count; i++)
                     {
@@ -199,21 +206,23 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             public List<string> RestStrings {
                 get 
                 {
-                    List<string> vs = new List<string>();
-
+                    //List<string> vs = new List<string>();
                     foreach (var item in oneRObjs)
                     {
                         for (int i = 0; i < item.RestStrings.Count; i++)
                         {
-                            if (!vs.Contains(item.RestStrings[i]))
+                            if (!restStrings.Contains(item.RestStrings[i]))
                             {
-                                vs.Add(item.RestStrings[i]);
+                                restStrings.Add(item.RestStrings[i]);
                             }
                         }
                     }
-                    return vs;
+                    return restStrings;
                 }
+                set { restStrings = value; }
+
             }
+            List<string> restStrings = new List<string>();
             public string RestText
             {
                 get

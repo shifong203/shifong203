@@ -638,25 +638,41 @@ namespace Vision2.Project.formula
         {
             try
             {
+                iscavet = true;
+                int det = data.Reference_Name.Count;
                 data.Reference_Name.Add("点" + (data.Reference_Name.Count+1));
                 data.Reference_ValueMax.Add(10);
                 data.Reference_ValueMin.Add(0);
-                int d=       dataGridView2.Rows.Add();
-
-                dataGridView2.Rows[d].Cells[0].Value = data.Reference_Name[data.Reference_Name.Count - 1];
-                dataGridView2.Rows[d].Cells[1].Value = data.Reference_ValueMin[data.Reference_Name.Count - 1];
-                dataGridView2.Rows[d].Cells[3].Value = data.Reference_ValueMax[data.Reference_Name.Count - 1];
+                if (det >= dataGridView2.Rows.Count)
+                {
+                    det = dataGridView2.Rows.Add();
+                }
+                dataGridView2.Rows[det].Cells[0].Value = data.Reference_Name[data.Reference_Name.Count - 1];
+                dataGridView2.Rows[det].Cells[1].Value = data.Reference_ValueMin[data.Reference_Name.Count - 1];
+                dataGridView2.Rows[det].Cells[3].Value = data.Reference_ValueMax[data.Reference_Name.Count - 1];
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.StackTrace);
             }
+            iscavet = false;
         }
 
         private void 删除数据ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
             {
+                int d = dataGridView2.SelectedCells.Count;
+                for (int i = 0; i < d; i++)
+                {
+                    data.Reference_Name.RemoveAt(dataGridView2.SelectedCells[0].RowIndex);
+                    data.Reference_ValueMax.RemoveAt(dataGridView2.SelectedCells[0].RowIndex);
+                    data.Reference_ValueMin.RemoveAt(dataGridView2.SelectedCells[0].RowIndex);
+                dataGridView2.Rows.RemoveAt(dataGridView2.SelectedCells[0].RowIndex);
+
+                }
+    
+       
 
             }
             catch (Exception)
@@ -706,9 +722,8 @@ namespace Vision2.Project.formula
                 data = dataGridView1.Rows[e.RowIndex].Cells[0].Tag as DataMinMax;
                 if (data.Reference_Name.Count!=0)
                 {
-               
                     int cont = data.Reference_Name.Count;
-                    if (data.ValueStrs.Count > dataGridView2.Rows.Count)
+                    if (data.ValueStrs.Count > cont)
                     {
                         cont = data.ValueStrs.Count;
                     }

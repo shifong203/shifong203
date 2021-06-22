@@ -569,7 +569,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         /// <summary>
         /// 亚像素精度
         /// </summary>
-        public HTuple SubPixel = "ignore_color_polarity";// "least_squares_high";
+        public HTuple SubPixel = "least_squares_high";// "least_squares_high";ignore_color_polarity
         public RModelHomMat MRModelHomMat;
         /// <summary>
         /// 读取模板

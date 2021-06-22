@@ -838,7 +838,6 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                             ErosProjcetDLL.Project.AlarmText.AddTextNewLine("重复数量" + indexS.Length +":"+ indexS.ToString());
                         }
                     }
-
                     if (DiscernType == 0)
                     {
                         HOperatorSet.AreaCenter(hOQERoi, out area, out row, out colu);
@@ -850,11 +849,13 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         }
                         halcon.AddImageMassage(row, colu, index);
                     }
+
                 }
                 else
                 {
                     this.GetPThis().AddObj(hObject3, ColorResult.red);
                 }
+                QRText.Clear();
                 QRText .AddRange( textS.ToSArr());
                 string data = "";
                 for (int i = 0; i < QRText.Count; i++)

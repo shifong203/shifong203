@@ -10,6 +10,7 @@ using Vision2.ErosProjcetDLL.Project;
 using Vision2.ErosProjcetDLL.UI.PropertyGrid;
 using Vision2.vision.HalconRunFile.Controls;
 using static Vision2.vision.HalconRunFile.RunProgramFile.HalconRun;
+using static Vision2.vision.HalconRunFile.RunProgramFile.OneCompOBJs;
 using static Vision2.vision.Vision;
 
 namespace Vision2.vision.HalconRunFile.RunProgramFile
@@ -275,9 +276,11 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
 
         [DescriptionAttribute("是否在复判栏显示。"), Category("结果显示"), DisplayName("是否显示复判项")]
         public bool ISCompound { get; set; } = true;
-        [DescriptionAttribute("NG结果输出的变量名称。"), Category("结果显示"), DisplayName("结果NG文文本")]
-        public string NGText { get; set; } = string.Empty;
-
+        public OneComponent oneCompo = new OneComponent();
+        //[DescriptionAttribute("。"), Category("结果显示"), DisplayName("结果NG文本")]
+        //public string NGText { get; set; } = string.Empty;
+        [DescriptionAttribute("NG结果集合"), Category("结果显示"), DisplayName("结果NG文本集合")]
+        public HTuple NGTextS { get; set; } 
         /// <summary>
         /// 外部调用程序
         /// </summary>
@@ -293,7 +296,6 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             {
                 oneResultOBj.ClearAllObj();
             }
-      
             try
             {
                 ResltBool = true;
@@ -311,6 +313,9 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 HObjectBule.GenEmptyObj();
                 this.NGNumber = 0;
                 Watch.Restart();
+                oneCompo = new OneComponent();
+                //NGText = "";
+                NGTextS = new HTuple();
                 ResltBool = RunHProgram( oneResultOBj,out List<OneRObj> oneRObj,  runid);
                 Watch.Stop();
                 Dictionary<string, HTuple> sdd = this.SetData();

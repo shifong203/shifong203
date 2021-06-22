@@ -33,7 +33,8 @@ namespace Vision2.vision.HalconRunFile.Controls
             comboBox3.Items.AddRange(measure.Dic_Measure.Keys_Measure.Keys.ToArray());
             comboBox2.SelectedItem = measure.MeasureName1;
             comboBox3.SelectedItem = measure.MeasureName2;
-            comboBox1.SelectedItem = measure.MeasureMode;
+            comboBox1.SelectedItem = measure.MeasureMode.ToString();
+     
             HalconRun = measure.GetPThis();
             listBox1.Items.Clear();
             listBox1.Items.AddRange(measure.Dic_Measure.Keys_Measure.Keys.ToArray());

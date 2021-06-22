@@ -181,13 +181,21 @@ namespace Vision2.Project.formula
             {
             }
         }
-
-        DebugF.IO.TrayDatas trayDataUserControl;
+        捷普.MForm mForm;
+          DebugF.IO.TrayDatas trayDataUserControl;
         public void Up()
         {
             try
             {
                 isUP = true;
+                if (DebugCompiler.GetThis().DeviceName=="捷普测量1.0")
+                {
+                    if (mForm == null || mForm.IsDisposed)
+                    {
+                        mForm = new 捷普.MForm();
+                    }
+                    ErosProjcetDLL.UI.UICon.WindosFormerShow(ref mForm);
+                }
                 //tabPage4.Controls.Add(AlarmForm.AlarmFormThis);
                 //AlarmForm.AlarmFormThis.TopLevel = false;
                 //AlarmForm.AlarmFormThis.FormBorderStyle = FormBorderStyle.None;
@@ -510,6 +518,7 @@ namespace Vision2.Project.formula
                 synchronizationForm.ShowDialogSet(Product.GetListLinkNames.ToArray(), comboBox1.SelectedItem.ToString());
                 UPSetGetPargam();
                 toolStripLabel1.Text = "当前生产:" + Product.ProductionName;
+
             }
             catch (Exception ex)
             {

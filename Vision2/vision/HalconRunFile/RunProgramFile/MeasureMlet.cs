@@ -20,7 +20,9 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         public override bool RunHProgram( OneResultOBj oneResultOBj, out List<OneRObj> oneRObjs, int runID = 0)
         {
             oneRObjs = new List<OneRObj>();
+            OneRObj oneRObj = new OneRObj();
             bool OK = true;
+            oneResultOBj.AddNGOBJ(oneRObj);
             HObject image;
             //this.SetDefault("NG距离", 100, true);
             image = GetEmset(oneResultOBj.Image);
@@ -165,6 +167,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         Vision.Gen_arrow_contour_xld(out HObject contour4, dinRow3, dinCol3, projectRow3, projectCol03);
                         HObject corss = new HObject();
                         corss.GenEmptyObj();
+                        oneRObj.ComponentID = this.Name;
                         HTuple angleD = angle.TupleDeg();
                         this["夹角"] = angleD;
                         this["第1点P"] = dist;
@@ -184,6 +187,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         string massage = "";
                         if (SelePointName == "第一点" || SelePointName == "全部")
                         {
+                            oneRObj.dataMinMax.AddData("第一点", DistM, DistanceMin, DistanceMax);
                             massage =  DistM.TupleString("0.6f");
                             if (IsRadius)
                             {
@@ -213,14 +217,15 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         }
                         if (SelePointName == "中心点" || SelePointName == "全部")
                         {
-                            massage =  DistM3.TupleString("0.6f");
+                            oneRObj.dataMinMax.AddData("中心点", DistM2, DistanceMin, DistanceMax);
+                            massage = DistM2.TupleString("0.6f");
                             if (oneResultOBj.GetHalcon().keyValuePairs1.ContainsKey(this.Name + ".第2点"))
                             {
-                                oneResultOBj.GetHalcon().keyValuePairs1[this.Name + ".第2点"] = DistM3;
+                                oneResultOBj.GetHalcon().keyValuePairs1[this.Name + ".第2点"] = DistM2;
                             }
                             else
                             {
-                                oneResultOBj.GetHalcon().keyValuePairs1.Add(this.Name + ".第2点", DistM3);
+                                oneResultOBj.GetHalcon().keyValuePairs1.Add(this.Name + ".第2点", DistM2);
                             }
                             if (IsRadius)
                             {
@@ -242,9 +247,10 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         }
                         if (SelePointName == "结束点" || SelePointName == "全部")
                         {
+                            oneRObj.dataMinMax.AddData("结束点", DistM3, DistanceMin, DistanceMax);
                             HOperatorSet.GenCrossContourXld(out HObject corss2, new HTuple(projectRow2.D, dinRow2), new HTuple(projectCol02.D, dinCol2), 20, 0);
                             corss = corss.ConcatObj(corss2);
-                            massage = DistM2.TupleString("0.6f");
+                            massage = DistM3.TupleString("0.6f");
                             if (IsRadius)
                             {
                                 massage += "夹角" + angleD.TupleString("0.2f");
@@ -255,9 +261,9 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                             }
                             else
                             {
-                                oneResultOBj.GetHalcon().keyValuePairs1.Add(this.Name + ".第3点", DistM2);
+                                oneResultOBj.GetHalcon().keyValuePairs1.Add(this.Name + ".第3点", DistM3);
                             }
-                            if (angleD > AngleMax || angleD < AngleMin || DistM2 < DistanceMin || DistM2 > DistanceMax)
+                            if (angleD > AngleMax || angleD < AngleMin || DistM3 < DistanceMin || DistM3 > DistanceMax)
                             {
                                 oneResultOBj.AddImageMassage(projectRow2, projectCol02, massage, ColorResult.red);
                                 OK = false;
@@ -269,6 +275,10 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                                 oneResultOBj.AddObj(contour3);
                             }
                         }
+
+                       
+                
+
                         oneResultOBj.AddObj(corss, ColorResult.blue);
                         break;
                     case MeasureModeEnum.圆中心:
@@ -305,6 +315,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         return true;
                 }
             }
+ 
             return OK;
         }
 

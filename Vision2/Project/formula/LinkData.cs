@@ -807,7 +807,14 @@ namespace Vision2.Project.formula
             }
             return 0;
         }
-
+        public void AddData(string name,double value,double datamin,double datamxa)
+        {
+            Reference_Name.Add(name);
+            Reference_ValueMin.Add(datamin);
+            Reference_ValueMax.Add(datamxa);
+            ValueStrs.Add(value.ToString());
+            doubleV.Add(value);
+        }
         public void Clear()
         {
             ValueStrs.Clear();

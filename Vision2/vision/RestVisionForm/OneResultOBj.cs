@@ -120,6 +120,7 @@ namespace Vision2.vision
             return oneContOBJs;
         }
 
+
         public void ReadImage(string path)
         {
             HOperatorSet.ReadImage(out HObject hObject, path);
@@ -135,9 +136,20 @@ namespace Vision2.vision
             oneContOBJs.AddCont(rObj);
         }
 
-        public void AddNGOBJ(string component, string nGText, HObject roi,HObject err)
+        public void AddNGOBJ(string component, string nGText, HObject roi,HObject err,HTuple ngText=null)
         {
-            OneRObj rObj = new OneRObj() { NGText = nGText, ComponentID = component, ROI = roi, NGROI = err };
+
+            OneRObj rObj = new OneRObj() { NGText = nGText, ComponentID = component, ROI = roi, NGROI = err,};
+            if (ngText!=null)
+            {
+                for (int i = 0; i < ngText.Length; i++)
+                {
+                    if (!rObj.RestStrings.Contains(ngText[i]))
+                    {
+                        rObj.RestStrings.Add(ngText[i]);
+                    }
+                }
+            }
             AddNGOBJ(rObj);
         }
   

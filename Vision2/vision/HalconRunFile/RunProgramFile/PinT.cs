@@ -255,7 +255,8 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                                     {
                                         oneResultOBj.AddImageMassage(rowCent, columnCent, new HTuple(lengt).TupleString(".3") + "C", ColorResult.red);
                                         err++;
-                                        oneResultOBj.AddNGOBJ(Name, NGText, ho_PinSort, ho_PinSort);
+                                        //oneCompo.AddNgObj("", Name,r)
+                                        oneResultOBj.AddNGOBJ(Name, "偏移", ho_PinSort, ho_PinSort);
                                     }
                                     else
                                     {
@@ -274,7 +275,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                                         ColMt.Append(lengt);
                                         if (lengt > ColumnMM + ToleranceMM || lengt < ColumnMM - ToleranceMM)
                                         {
-                                            oneResultOBj.AddNGOBJ(Name, NGText, ho_PinSort, ho_PinSort);
+                                            oneResultOBj.AddNGOBJ(Name, "偏移", ho_PinSort, ho_PinSort);
                                             oneResultOBj.AddImageMassage(rowCent, columnCent, new HTuple(lengt).TupleString(".3") + "R", ColorResult.red);
                                             err++;
                                         }
@@ -601,7 +602,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 if (hObject.CountObj() != 0)
                 {
                     HOperatorSet.GenCircle(out HObject circle, row, column, radius * 2);
-                    oneResultOBj.AddNGOBJ(this.Name,NGText,circle, hObject);
+                    oneResultOBj.AddNGOBJ(this.Name,"异物",circle, hObject);
                     //ADDRed(hObject);
                     return false;
                 }

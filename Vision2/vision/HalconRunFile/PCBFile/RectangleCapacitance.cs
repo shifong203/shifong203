@@ -62,6 +62,9 @@ namespace Vision2.vision.HalconRunFile.PCBFile
             HObject hObject2 = new HObject();
             hObject2.GenEmptyObj();
             bool RsetBool = false;
+            HTuple Moderow = new HTuple();
+            HTuple Modecolumn = new HTuple();
+            HOperatorSet.AreaCenter(AOIObj, out HTuple area, out Moderow, out Modecolumn);
             try
             {
                 if (debugId != 0)
@@ -69,9 +72,10 @@ namespace Vision2.vision.HalconRunFile.PCBFile
                     oneResultOBj.ClearAllObj();
                 }
                 HOperatorSet.ReduceDomain(oneResultOBj .GetHalcon().GetImageOBJ(Threshold_Min_M.ImageTypeObj), AOIObj, out HObject imaget);
+           
                 HObject hObject = Threshold_Min_M.Threshold(imaget);
                 HOperatorSet.Connection(hObject, out hObject);
-                HOperatorSet.AreaCenter(hObject, out HTuple area, out HTuple row, out HTuple column);
+                HOperatorSet.AreaCenter(hObject, out  area, out HTuple  row, out  HTuple column);
                 hObject= select_Shape_Min_Max.select_shape(hObject);
                 HOperatorSet.SmallestRectangle2(hObject, out HTuple rows, out HTuple columns, out HTuple phi, out HTuple length1, out HTuple length2);
                 HOperatorSet.AreaCenter(hObject, out area, out rows, out columns);
@@ -93,7 +97,8 @@ namespace Vision2.vision.HalconRunFile.PCBFile
                     distfMM = oneResultOBj.GetCaliConstMM(distfMM);
                     if (this.IntCapcitanceMinx.SkewingSetValeu(distfMM) != 0)
                     {
-                        NGNumber++;
+                        NGTextS.Append("偏移");
+                           NGNumber++;
                     }
                     oneResultOBj.AddObj(corss, ColorResult.yellow);
                     length12 = oneResultOBj.GetCaliConstMM(length12);
@@ -117,18 +122,22 @@ namespace Vision2.vision.HalconRunFile.PCBFile
                     oneResultOBj.AddObj(hObject3,ColorResult.yellow);
                     if (this.IntCapcitanceMinx.RaSetValeu(length12) != 0)
                     {
+                        NGTextS.Append("长度");
                         NGNumber++;
                     }
                     if (this.IntCapcitanceMinx.RbSetValeu(length22) != 0)
                     {
+                        NGTextS.Append("宽度");
                         NGNumber++;
                     }
                     if (this.IntCapcitanceMinx.AngleSetValeu(phi2) != 0)
                     {
+                        NGTextS.Append("角度");
                         NGNumber++;
                     }
                     if (this.IntCapcitanceMinx.AreaSetValeu(areaDt) != 0)
                     {
+                        NGTextS.Append("面积");
                         NGNumber++;
                     }
                     if (debugId != 0)
@@ -141,6 +150,7 @@ namespace Vision2.vision.HalconRunFile.PCBFile
                 }
                 else
                 {
+                    NGTextS.Append("焊盘数量错误");
                     NGNumber++;
                     oneResultOBj.AddObj(AOIObj, ColorResult.blue);
                     oneResultOBj.AddObj(hObject, ColorResult.red);
@@ -155,6 +165,8 @@ namespace Vision2.vision.HalconRunFile.PCBFile
             }
             catch (Exception ex)
             {
+                NGTextS.Append( "执行错误;");
+                NGNumber++;
             }
             if (NGNumber == 0)
             {
@@ -163,8 +175,14 @@ namespace Vision2.vision.HalconRunFile.PCBFile
             }
             else
             {
-                NGRoi = NGRoi.ConcatObj(hObject2);
-                oneResultOBj.AddNGOBJ(this.Name, "长度", AOIObj, NGRoi);
+                oneResultOBj.AddImageMassage(Moderow, Modecolumn, NGTextS, ColorResult.red);
+;                NGRoi = NGRoi.ConcatObj(hObject2);
+                string ngt = "";
+                for (int i = 0; i < NGTextS.Length; i++)
+                {
+                    ngt += NGTextS[i] + ";";
+                }
+                oneResultOBj.AddNGOBJ(this.Name, ngt, AOIObj, NGRoi);
             }
             return RsetBool;
         }

@@ -1,6 +1,7 @@
 ﻿using Advantech.Motion;
 using ErosSocket.DebugPLC;
 using ErosSocket.DebugPLC.DIDO;
+using ErosSocket.ErosConLink;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -582,6 +583,7 @@ namespace Vision2.Project.DebugF.IO
                         EndTime = DateTime.Now;
                         MainForm1.MainFormF.toolStripLabel3.Text = "CT" + WatchT.ElapsedMilliseconds / 1000 / 60 + ":" + WatchT.ElapsedMilliseconds / 1000 % 60;
                         WatchT.Stop();
+                        Stop();
                     }
                     while (DebugCompiler.EquipmentStatus == ErosSocket.ErosConLink.EnumEquipmentStatus.暂停中)
                     {
@@ -604,6 +606,7 @@ namespace Vision2.Project.DebugF.IO
 
         public override bool Stop()
         {
+            DebugCompiler.EquipmentStatus = EnumEquipmentStatus.已停止;
             WatchT.Stop();
             HomeCodeT.Stop();
             RunCodeT.Stop();
@@ -619,6 +622,7 @@ namespace Vision2.Project.DebugF.IO
                 AxisS[i].Stop();
             }
             StopCodeT.Run();
+
             return false;
         }
         Thread thread;
@@ -2068,12 +2072,10 @@ namespace Vision2.Project.DebugF.IO
                     {
                         uint IOStatus = 0;
                         uint Result = Motion.mAcm_AxGetMotionIO(m_Axishand, ref IOStatus);
-
-                        IOBools = ErosSocket.ErosConLink.StaticCon.ConvertIntToBoolArray((int)IOStatus, 32);
+                        IOBools =StaticCon.ConvertIntToBoolArray((int)IOStatus, 32);
                         Positive_Limit = IOBools[2];
                         Negative_Limit = IOBools[3];
                         Origin_Limit = IOBools[4];
-
                         ushort IOStatust = 0;
                         Result = Motion.mAcm_AxGetState(m_Axishand, ref IOStatust);
                         StaratNn = IOStatust;
@@ -2081,8 +2083,6 @@ namespace Vision2.Project.DebugF.IO
                         Result = Motion.mAcm_AxGetActVelocity(m_Axishand, ref vaset);
                         Result = Motion.mAcm_AxGetCmdVelocity(m_Axishand, ref vaset);
                         SleepValue = vaset;
-
-
                         if (IOStatust == 4)
                         {
                             homeing = true;
@@ -2122,18 +2122,16 @@ namespace Vision2.Project.DebugF.IO
                             {
                                 errStr += "硬件负限位";
                             }
-                            Vision2.ErosProjcetDLL.Project.AlarmListBoxt.AddAlarmText(new Vision2.ErosProjcetDLL.Project.AlarmText.alarmStruct() { Name = this.Name + "轴故障", Text = errStr });
+                            ErosProjcetDLL.Project.AlarmListBoxt.AddAlarmText(new Vision2.ErosProjcetDLL.Project.AlarmText.alarmStruct() { Name = this.Name + "轴故障", Text = errStr });
                             IsError = true;
                         }
                         else
                         {
-                            Vision2.ErosProjcetDLL.Project.AlarmListBoxt.RomveAlarm(this.Name + "轴故障");
+                            ErosProjcetDLL.Project.AlarmListBoxt.RomveAlarm(this.Name + "轴故障");
                             IsError = false;
                         }
                         Result = Motion.mAcm_AxGetMotionStatus(m_Axishand, ref IOStatus);
-                        bools2 = ErosSocket.ErosConLink.StaticCon.ConvertIntToBoolArray((int)IOStatus, 32);
-                   
-                  
+                        bools2 = StaticCon.ConvertIntToBoolArray((int)IOStatus, 32);
                         IsMove = bools2[9];
                         isAddMove = bools2[8];
                         switch (IsGetPoint)
@@ -2435,11 +2433,9 @@ namespace Vision2.Project.DebugF.IO
                         UResult = Motion.mAcm_SetF64Property(m_Axishand, (uint)PropertyID.PAR_AxHomeVelHigh, PAR_AxVelHigh);
                         UResult = Motion.mAcm_SetF64Property(m_Axishand, (uint)PropertyID.PAR_AxHomeAcc, PAR_AxAcc);
                         UResult = Motion.mAcm_SetF64Property(m_Axishand, (uint)PropertyID.PAR_AxHomeDec, PAR_AxDec);
-
                     }
                     else
                     {
-         
                         UResult = Motion.mAcm_SetF64Property(m_Axishand, (uint)PropertyID.PAR_AxVelLow, PAR_AxVelLow);
                         UResult = Motion.mAcm_SetF64Property(m_Axishand, (uint)PropertyID.PAR_AxVelHigh, PAR_AxVelHigh);
                         UResult = Motion.mAcm_SetF64Property(m_Axishand, (uint)PropertyID.PAR_AxAcc, PAR_AxAcc);
@@ -2467,9 +2463,9 @@ namespace Vision2.Project.DebugF.IO
                         }
                         System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
                         watch.Start();
-                        bool Home = false;
+                        bool HomeDone = false;
 
-                        while (!Home || point != 0)
+                        while (!HomeDone || point != 0)
                         {
                             ushort det = 0;
                             UResult = Motion.mAcm_AxGetState(m_Axishand, ref det);
@@ -2479,10 +2475,10 @@ namespace Vision2.Project.DebugF.IO
                             {
                                 return;
                             }
+                            UResult = Motion.mAcm_AxGetMotionIO(m_Axishand, ref detInt);
+                            bool[] bools2 = StaticCon.ConvertIntToBoolArray((int)detInt, 32);
                             if (AxisType == EnumAxisType.Udd)
                             {
-                                UResult = Motion.mAcm_AxGetMotionIO(m_Axishand, ref detInt);
-                                bool[] bools2 = ErosSocket.ErosConLink.StaticCon.ConvertIntToBoolArray((int)detInt, 32);
                                 if (bools2[13])
                                 {
                                     UResult = Motion.mAcm_SetU32Property(m_Axishand, (uint)PropertyID.CFG_AxSwMelEnable, 1);
@@ -2491,12 +2487,17 @@ namespace Vision2.Project.DebugF.IO
                                     UResult = Motion.mAcm_SetI32Property(m_Axishand, (uint)PropertyID.CFG_AxSwMelValue, (int)(this.MinusLimit * Scale * this.Ratio));
                                     UResult = Motion.mAcm_SetU32Property(m_Axishand, (uint)PropertyID.CFG_AxSwPelReact, 0);
                                     UResult = Motion.mAcm_SetU32Property(m_Axishand, (uint)PropertyID.CFG_AxSwMelReact, 0);
-                                    AddSeelp();
                                     Thread.Sleep(1000);
+                                    AddSeelp();
                                      Motion.mAcm_AxSetCmdPosition(m_Axishand, 0);
                                      Motion.mAcm_AxSetActualPosition(m_Axishand, 0);
                                     IsHome = true;
-                                    Home = true;
+                                    HomeDone = true;
+                                    break;
+                                }
+                                else if(bools2[13])
+                                {
+                                    HomeDone = true;
                                     break;
                                 }
                             }
@@ -2505,8 +2506,6 @@ namespace Vision2.Project.DebugF.IO
                                 if (det == 1)
                                 {
                                     Thread.Sleep(1000);
-
-
                                     UResult = Motion.mAcm_AxSetCmdPosition(m_Axishand, 0);
                                     UResult = Motion.mAcm_AxSetActualPosition(m_Axishand, 0);
                                     UResult = Motion.mAcm_SetU32Property(m_Axishand, (uint)PropertyID.CFG_AxSwMelEnable, 1);
@@ -2518,12 +2517,10 @@ namespace Vision2.Project.DebugF.IO
                                     AddSeelp();
                                     IsHome = true;
                                     SetWPoint(HomePoint);
-                 
-                                    Home = true;
+                                    HomeDone = true;
                                     break;
                                 }
                             }
-
                             if (watch.ElapsedMilliseconds > HomeTime * 1000)
                             {
                                 homeing = false;

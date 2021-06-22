@@ -534,8 +534,13 @@ namespace Vision2.vision
                                              TreeNode treeNode=  treeView1.Nodes.Add(item.Key);
                                             foreach (var itemdt in item.Value.NGObj.DicOnes)
                                             {
-                                                treeNode.Nodes.Add(itemdt.Key);
+                                                TreeNode treeNode1= treeNode.Nodes.Add(itemdt.Key);
+                                                treeNode1.Tag = itemdt.Value;
+                                                treeNode1.ImageIndex = 6;
                                             }
+                                            treeNode.ImageIndex = 5;
+                                            treeNode.Expand();
+                                            treeNode.Tag = item.Value;
                                         }
                                    
                                         label1.Text = "NG";

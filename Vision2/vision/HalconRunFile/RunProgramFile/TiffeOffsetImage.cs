@@ -57,9 +57,9 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
 
 
         [DescriptionAttribute("单张图像宽。"), Category("图像"), DisplayName("图像宽")]
-        public int ImageWidthI { get; set; }
+        public int ImageWidthI { get; set; } = 6000;
         [DescriptionAttribute("单张图像高。"), Category("图像"), DisplayName("图像高")]
-        public int ImageHeightI { get; set; }
+        public int ImageHeightI { get; set; } = 4000;
 
         [DescriptionAttribute("false横向排序。"), Category("排列"), DisplayName("横或纵向")]
         public bool Vertical { get; set; }
@@ -96,16 +96,24 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         /// </summary>
         public void SetTiffeOff()
         {
-            Imgaes = new HObject[ImageNumberROW * ImageNumberCol];
-            if (ZoomImageSize==0)
+            try
             {
-                ZoomImageSize = 1;
+                Imgaes = new HObject[ImageNumberROW * ImageNumberCol];
+                if (ZoomImageSize == 0)
+                {
+                    ZoomImageSize = 1;
+                }
+                HOperatorSet.GenImageConst(out hObjectT, "byte", ImageWidthI / ZoomImageSize, ImageHeightI / ZoomImageSize);
+                if (ImageByteT)
+                {
+                    HOperatorSet.Compose3(hObjectT, hObjectT, hObjectT, out hObjectT);
+                }
             }
-            HOperatorSet.GenImageConst(out hObjectT, "byte", ImageWidthI / ZoomImageSize, ImageHeightI / ZoomImageSize);
-            if (ImageByteT)
+            catch (Exception)
             {
-                HOperatorSet.Compose3(hObjectT, hObjectT, hObjectT, out hObjectT);
+
             }
+  
 
         }
 
@@ -209,7 +217,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         /// 
         /// </summary>
         /// <returns></returns>
-        public HObject TiffeOffsetImage()
+        public HObject TiffeOffsetImage(string name="")
         {
             HObject hObject = new HObject();
             hObject.GenEmptyObj();
@@ -222,7 +230,6 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     Rows2 = HTuple.TupleGenConst(Imgaes.Length, -1);
                     Cols2 = HTuple.TupleGenConst(Imgaes.Length, -1);
                 }
-
                 for (int i = 0; i < Imgaes.Length; i++)
                 {
                     if (Imgaes[i] == null)
@@ -240,7 +247,8 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             }
             catch (Exception ex)
             {
-                ErosProjcetDLL.Project.AlarmText.AddTextNewLine("拼图失败，行:" + ex.StackTrace.Remove(0, ex.StackTrace.Length - 5) + ":" + ex.Message);
+
+                ErosProjcetDLL.Project.AlarmText.AddTextNewLine(name+ "拼图失败，行:" + ex.StackTrace.Remove(0, ex.StackTrace.Length - 5) + ":" + ex.Message);
             }
             return hObject;
         }

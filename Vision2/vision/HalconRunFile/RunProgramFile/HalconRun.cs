@@ -105,7 +105,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         /// <summary>
         /// 执行完成委托
         /// </summary>
-        public delegate void DelegateOK(HalconRun halcon);
+        public delegate void DelegateOK(OneResultOBj halcon);
 
         /// <summary>
         /// 添加子程序
@@ -1183,17 +1183,16 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             if (this.Result.Contains("OK"))
             {
                 this.TrayRestData.OK = true;
-                ResultOK();
+                ResultOK(oneResultOBj);
                 ResultBool = true;
                 TrayRestData.ListReselt.Add(true);
             }
             else
             {
-                ResultNG();
+                ResultNG(oneResultOBj);
                 TrayRestData.ListReselt.Add(false);
             }
             OneImage.OK = ResultBool;
-  
             TrayRestData.Name = this.Name;
             TrayRestData.MaxNumber = MaxRunID;
             //if (ResultO.NGMestage.Length != 0)
@@ -1202,7 +1201,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             //}
             Vision.TriggerSetup(Vision.GetSaveImageInfo(this.Name).RunDoneName, true.ToString());
             this.RunTimeI = watch.ElapsedMilliseconds;
-            OnEventDoen();
+            OnEventDoen(oneResultOBj);
             if (RunName.Count != 0 && RunName.Count >= runID && runID > 0)
             {
                 oneResultOBj.AddMeassge("ID" + runID + "," + RunName[(int)runID - 1] + ";" + watch.ElapsedMilliseconds + ",结果:" + this.Result);
@@ -1625,24 +1624,24 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         /// <summary>
         /// 执行完成事件
         /// </summary>
-        public void OnEventDoen()
+        public void OnEventDoen( OneResultOBj oneResultOBj)
         {
-            EventDoen?.Invoke(this);
+            EventDoen?.Invoke(oneResultOBj);
         }
         /// <summary>
         ///
         /// </summary>
-        public void OnEventOK()
+        public void OnEventOK(OneResultOBj oneResultOBj)
         {
-            EventOK?.Invoke(this);
+            EventOK?.Invoke(oneResultOBj);
         }
 
         /// <summary>
         ///
         /// </summary>
-        public void OnEventNG()
+        public void OnEventNG(OneResultOBj oneResultOBj)
         {
-            EventNG?.Invoke(this);
+            EventNG?.Invoke(oneResultOBj);
         }
 
         /// <summary>
@@ -2416,19 +2415,9 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         OneCamData.SetOneContOBJ(oneRObjs);
                     }
                    OnePatrData.PanelID = Project.ProcessControl.ProcessUser.QRCode;
-             
-                    HObject hObject= Vision.GetRunNameVision(this.Name).TiffeOffsetImageEX.TiffeOffsetImage();
-
+                   HObject hObject= Vision.GetRunNameVision(this.Name).TiffeOffsetImageEX.TiffeOffsetImage(this.Name);
                     OnePatrData.AddCamsData(this.Name, dataP.RunID, OneCamData);
                     OnePatrData.AddCamsData(this.Name, hObject);
-                    //if (dataP.GetNgOBJS().DicOnes.Count>0)
-                    //{
-                    //    dataP.AutoOK = okf;
-                    //}
-                    //else
-                    //{
-                    //    dataP.AutoOK = true;
-                    //}
                         UserFormulaContrsl.This.HWind.SetImaage(hObject);
                         if (isSave)
                         {
@@ -2436,11 +2425,6 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         }
                         if (trayRobotData!=null)
                         {
-                            //if (!OnePatrData.ListCamsData.ContainsKey(this.Name))
-                            //{
-                            //    OnePatrData.ListCamsData.Add(this.Name, dataP);
-                            //}
-                
                             trayRobotData.SetNumberValue(TrayLocation,trayRobotData);
                         }
                 }
@@ -3278,13 +3262,13 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         /// <summary>
         /// 执行OK触发输出
         /// </summary>
-        private void ResultOK()
+        private void ResultOK(OneResultOBj   oneResultOBj)
         {
             try
             {
                 try
                 {
-                    EventOK?.Invoke(this);
+                    EventOK?.Invoke(oneResultOBj);
                 }
                 catch (Exception) { }
                 StaticCon.SetLinkAddressValue(Vision.GetSaveImageInfo(this.Name).OKName, true);
@@ -3298,13 +3282,13 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         /// <summary>
         /// 执行NG方法
         /// </summary>
-        private void ResultNG()
+        private void ResultNG(OneResultOBj oneResultOBj)
         {
             try
             {
                 try
                 {
-                    EventNG?.Invoke(this);
+                    EventNG?.Invoke(oneResultOBj);
                 }
                 catch (Exception)  {  }
                 Vision.TriggerSetup(Vision.GetSaveImageInfo(this.Name).NGName, true.ToString());

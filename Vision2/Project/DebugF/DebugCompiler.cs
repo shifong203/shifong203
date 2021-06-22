@@ -615,7 +615,8 @@ namespace Vision2.Project.DebugF
 
         [DescriptionAttribute("设备类型。"), Category("设备标识"), DisplayName("设备类型")]
         [TypeConverter(typeof(ErosConverter)),
-          ErosConverter.ThisDropDown("", false, "", "环维水洗", "焊点V1.0", "焊线V1.0", "PinV1.0", "PinV2.0", "3D线体")]
+          ErosConverter.ThisDropDown("", false, "", "环维水洗", "焊点V1.0", "焊线V1.0", 
+            "PinV1.0", "PinV2.0", "3D线体", "捷普测量1.0")]
         public string DeviceName { get; set; } = "";
         /// <summary>
         /// 运行模式
