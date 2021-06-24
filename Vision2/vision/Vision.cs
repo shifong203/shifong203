@@ -1758,6 +1758,17 @@ namespace Vision2.vision
         [Browsable(false)]
         public Dictionary<string, SaveImageInfo> DicSaveType { get; set; } = new Dictionary<string, SaveImageInfo>();
 
+
+
+        [Browsable(false)]
+        public Dictionary<string, DrawBackSt> DicDrawbackNameS = new Dictionary<string,DrawBackSt>();
+
+        public class DrawBackSt
+        {
+            public List<string> DicDrawbackName = new List<string>();
+            public List<int> DicDrawbackIndex = new List<int>();
+        }
+
         [Category("运行参数"), DisplayName("执行程序名称"),
             TypeConverter(typeof(RunNameConverter))]
         public string RunNameVision

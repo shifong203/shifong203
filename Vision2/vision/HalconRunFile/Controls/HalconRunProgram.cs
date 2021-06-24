@@ -10,6 +10,8 @@ using Vision2.Project.formula;
 using Vision2.vision.HalconRunFile.RunProgramFile;
 using System.Threading;
 using Vision2.Project.DebugF;
+using Microsoft.VisualBasic;
+using static Vision2.vision.Vision;
 
 namespace Vision2.vision.HalconRunFile.Controls
 {
@@ -210,7 +212,11 @@ namespace Vision2.vision.HalconRunFile.Controls
             try
             {
                 Movable = true;
-
+                listBox1.Items.Clear();
+                foreach (var item in Vision.Instance.DicDrawbackNameS)
+                {
+                    listBox1.Items.Add(item.Key);
+                }
                 if (Vision.GetSaveImageInfo(halconRun.Name) == null)
                 {
                     Vision.Instance.DicSaveType.Add(halconRun.Name, new SaveImageInfo());
@@ -1453,15 +1459,109 @@ namespace Vision2.vision.HalconRunFile.Controls
          
         }
 
+        bool isChanged ; 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             try
             {
-
-
+                isChanged = true;
+                drawBackSt = Vision.Instance.DicDrawbackNameS[listBox1.SelectedItem.ToString()];
+                dataGridView4.Rows.Clear();
+                if (drawBackSt.DicDrawbackName.Count!=0)
+                {
+                    dataGridView4.Rows.Add(drawBackSt.DicDrawbackName.Count);
+                }
+           
+                for (int i = 0; i < drawBackSt.DicDrawbackName.Count; i++)
+                {
+                    dataGridView4.Rows[i].Cells[0].Value = drawBackSt.DicDrawbackIndex[i];
+                    dataGridView4.Rows[i].Cells[1].Value = drawBackSt.DicDrawbackName[i];
+                }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                MessageBox.Show(ex.Message);
+            }
+            isChanged = false;
+        }
+
+        private void 添加ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string name = Interaction.InputBox("请输入新名称", "缺陷类型", "缺陷1", 100, 100);
+                if (name!="")
+                {
+                    if (!Vision.Instance.DicDrawbackNameS.ContainsKey(name))
+                    {
+                        Vision.Instance.DicDrawbackNameS.Add(name, new DrawBackSt());
+                        listBox1.Items.Add(name);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+        DrawBackSt drawBackSt;
+        private void 删除ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (!Vision.Instance.DicDrawbackNameS.ContainsKey(listBox1.SelectedItem.ToString()))
+                {
+                    Vision.Instance.DicDrawbackNameS.Remove(listBox1.SelectedItem.ToString());
+                    listBox1.Items.RemoveAt(listBox1.SelectedIndex);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void dataGridView4_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            try
+            {
+                if (isChanged)
+                {
+                    return;
+                }
+                if (drawBackSt!=null)
+                {
+                    for (int i = 0; i < dataGridView4.Rows.Count; i++)
+                    {
+                        if (dataGridView4.Rows[i].Cells[0].Value!=null)
+                        {
+                            if (drawBackSt.DicDrawbackIndex.Count <= i)
+                            {
+                                drawBackSt.DicDrawbackIndex.Add(int.Parse(dataGridView4.Rows[i].Cells[0].Value.ToString()));
+                            }
+                            else
+                            {
+                                drawBackSt.DicDrawbackIndex[i] = int.Parse(dataGridView4.Rows[i].Cells[0].Value.ToString());
+                            }
+                        }
+                        if (dataGridView4.Rows[i].Cells[1].Value != null)
+                        {
+                            if (drawBackSt.DicDrawbackName.Count <= i)
+                            {
+                                drawBackSt.DicDrawbackName.Add(dataGridView4.Rows[i].Cells[1].Value.ToString());
+                            }
+                            else
+                            {
+                                drawBackSt.DicDrawbackName[i] = dataGridView4.Rows[i].Cells[1].Value.ToString();
+                            }
+                        }
+               
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
     }

@@ -10,7 +10,7 @@ namespace Vision2.Project.Mes
     public interface IMesData
     {
         void WrietMes(UserFormulaContrsl userFormulaContrsl, string QRCODE, string Product_Name);
-        void WrietMes(TrayRobot trayData, string Product_Name);
+        void WrietMes(TrayData trayData, string Product_Name);
         void WrietMes(DataVale trayData, string Product_Name);
         void WrietMesAll<T>(T data, string QRCODE, string Product_Name);
         /// <summary>
@@ -34,10 +34,20 @@ namespace Vision2.Project.Mes
         /// </summary>
     public class DataVale
     {
-            /// <summary>
-            /// 产品SN
-            /// </summary>
-            public string PanelID { get; set; } = "";
+            public void ResetOK()
+            {
+                OK = true;
+                Done = true;
+            }
+            public void ResetNG()
+            {
+                OK = false;
+                Done = true;
+            }
+           /// <summary>
+        /// 产品SN
+        /// </summary>
+           public string PanelID { get; set; } = "";
             /// <summary>
             /// 产品型号
             /// </summary>
@@ -247,7 +257,13 @@ namespace Vision2.Project.Mes
                 }
                 return true;
             }
-            set { }
+            set { 
+              foreach (var item in NGObj.DicOnes)
+                {
+                    item.Value.Done = true; 
+                }
+            
+            }
         }
         /// <summary>
         /// 软件判断是否OK

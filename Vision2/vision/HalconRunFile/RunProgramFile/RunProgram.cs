@@ -276,7 +276,11 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
 
         [DescriptionAttribute("是否在复判栏显示。"), Category("结果显示"), DisplayName("是否显示复判项")]
         public bool ISCompound { get; set; } = true;
-        public OneComponent oneCompo = new OneComponent();
+        public OneComponent GetOneComponent()
+        {
+            return oneCompo;
+        }
+         OneComponent oneCompo = new OneComponent();
         //[DescriptionAttribute("。"), Category("结果显示"), DisplayName("结果NG文本")]
         //public string NGText { get; set; } = string.Empty;
         [DescriptionAttribute("NG结果集合"), Category("结果显示"), DisplayName("结果NG文本集合")]
@@ -303,6 +307,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 this.ClerItem();
                 if (NGRoi != null)
                 {
+                    NGRoi = new HObject();
                     NGRoi.GenEmptyObj();
                 }
                 HObjectGreen = new HObject();

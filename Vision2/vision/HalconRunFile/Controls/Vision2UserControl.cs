@@ -162,130 +162,130 @@ namespace Vision2.vision.HalconRunFile.Controls
                     return;
                 }
                 //HResult.Done = false;
-                if (runid == 0)
-                {
-                    runid = 1;
-                }
-                string names = runid.ToString() + ":";
-                if (halcon.MaxRunID != 0)
-                {
-                    if (vision.Vision.GetSaveImageInfo(halcon.Name).ISImages)
-                    {
-                        if (panel2 == null)
-                        {
-                            panel2 = new Panel();
-                            this.Controls.Add(panel2);
-                        }
-                        panel2.Update();
-                        if (runid == 1)
-                        {
-                            panel2.Controls.Clear();
-                        }
-                        if (halcon.RunName.Count >= runid)
-                        {
-                            if (halcon.RunName[runid - 1] == "")
-                            {
-                            }
-                            names += halcon.RunName[runid - 1].ToString();
-                        }
-                        double sel = (double)halcon.Width / (double)halcon.Height;
-                        panel2.Width = (int)(halcon.Form2Heigth * sel);
-                        panel2.Dock = DockStyle.Right;
-                        panel2.AutoScroll = true;
-                        panel2.AutoScrollMinSize = new Size(20, 1000);
-                        HWindowControl hWindowControl2;
-                        GroupBox groupBox2;
-                        if (panel2.Controls.ContainsKey("Image." + runid))
-                        {
-                            groupBox2 = panel2.Controls["Image." + runid] as GroupBox;
+                //if (runid == 0)
+                //{
+                //    runid = 1;
+                //}
+                //string names = runid.ToString() + ":";
+                //if (halcon.MaxRunID != 0)
+                //{
+                //    if (vision.Vision.GetSaveImageInfo(halcon.Name).ISImages)
+                //    {
+                //        if (panel2 == null)
+                //        {
+                //            panel2 = new Panel();
+                //            this.Controls.Add(panel2);
+                //        }
+                //        panel2.Update();
+                //        if (runid == 1)
+                //        {
+                //            panel2.Controls.Clear();
+                //        }
+                //        if (halcon.RunName.Count >= runid)
+                //        {
+                //            if (halcon.RunName[runid - 1] == "")
+                //            {
+                //            }
+                //            names += halcon.RunName[runid - 1].ToString();
+                //        }
+                //        double sel = (double)halcon.Width / (double)halcon.Height;
+                //        panel2.Width = (int)(halcon.Form2Heigth * sel);
+                //        panel2.Dock = DockStyle.Right;
+                //        panel2.AutoScroll = true;
+                //        panel2.AutoScrollMinSize = new Size(20, 1000);
+                //        HWindowControl hWindowControl2;
+                //        GroupBox groupBox2;
+                //        if (panel2.Controls.ContainsKey("Image." + runid))
+                //        {
+                //            groupBox2 = panel2.Controls["Image." + runid] as GroupBox;
 
-                            hWindowControl2 = groupBox2.Controls[0] as HWindowControl;
-                            hWindowControl2.Tag = HResult;
-                        }
-                        else
-                        {
-                            groupBox2 = new GroupBox();
-                            groupBox2.Dock = DockStyle.Top;
-                            hWindowControl2 = new HWindowControl();
-                            hWindowControl2.HMouseDown += HWindowControl_HMouseDownD;
-                            hWindowControl2.Tag = HResult;
-                            groupBox2.Text = groupBox2.Name = "Image." + runid;
-                            if (halcon.RunName.Count > runid - 1)
-                            {
-                                hWindowControl2.Name = runid + ":" + halcon.RunName[runid - 1];
-                            }
-                            else
-                            {
-                                hWindowControl2.Name = runid + ":";
-                            }
-                            groupBox2.Height = halcon.Form2Heigth;
-                            hWindowControl2.Dock = DockStyle.Fill;
-                            groupBox2.Controls.Add(hWindowControl2);
-                            panel2.Controls.Add(groupBox2);
-                        }
-                        Vision.SetFont(hWindowControl2.HalconWindow);
-                        HOperatorSet.SetDraw(hWindowControl2.HalconWindow, "margin");
-                        HSystem.SetSystem("flush_graphic", "false");
-                        HOperatorSet.ClearWindow(hWindowControl2.HalconWindow);
-                        HSystem.SetSystem("flush_graphic", "true");
-                        if (Vision.IsObjectValided(HResult.Image))
-                        {
-                            HOperatorSet.GetImageSize(HResult.Image, out HTuple width, out HTuple heigth);
-                            HOperatorSet.SetPart(hWindowControl2.HalconWindow, 0, 0, heigth, width);
-                            HOperatorSet.DispObj(HResult.Image, hWindowControl2.HalconWindow);
-                        }
-                        OneResultOBj halconResult = hWindowControl2.Tag as OneResultOBj;
-                        if (halconResult != null)
-                        {
-                            halconResult.ShowAll(hWindowControl2.HalconWindow);
-                        }
-                        panel2.Refresh();
-                    }
-                    else
-                    {
-                        if (HResult != null)
-                        {
-                            HResult.Image.Dispose();
-                        }
-                    }
+                //            hWindowControl2 = groupBox2.Controls[0] as HWindowControl;
+                //            hWindowControl2.Tag = HResult;
+                //        }
+                //        else
+                //        {
+                //            groupBox2 = new GroupBox();
+                //            groupBox2.Dock = DockStyle.Top;
+                //            hWindowControl2 = new HWindowControl();
+                //            hWindowControl2.HMouseDown += HWindowControl_HMouseDownD;
+                //            hWindowControl2.Tag = HResult;
+                //            groupBox2.Text = groupBox2.Name = "Image." + runid;
+                //            if (halcon.RunName.Count > runid - 1)
+                //            {
+                //                hWindowControl2.Name = runid + ":" + halcon.RunName[runid - 1];
+                //            }
+                //            else
+                //            {
+                //                hWindowControl2.Name = runid + ":";
+                //            }
+                //            groupBox2.Height = halcon.Form2Heigth;
+                //            hWindowControl2.Dock = DockStyle.Fill;
+                //            groupBox2.Controls.Add(hWindowControl2);
+                //            panel2.Controls.Add(groupBox2);
+                //        }
+                //        Vision.SetFont(hWindowControl2.HalconWindow);
+                //        HOperatorSet.SetDraw(hWindowControl2.HalconWindow, "margin");
+                //        HSystem.SetSystem("flush_graphic", "false");
+                //        HOperatorSet.ClearWindow(hWindowControl2.HalconWindow);
+                //        HSystem.SetSystem("flush_graphic", "true");
+                //        if (Vision.IsObjectValided(HResult.Image))
+                //        {
+                //            HOperatorSet.GetImageSize(HResult.Image, out HTuple width, out HTuple heigth);
+                //            HOperatorSet.SetPart(hWindowControl2.HalconWindow, 0, 0, heigth, width);
+                //            HOperatorSet.DispObj(HResult.Image, hWindowControl2.HalconWindow);
+                //        }
+                //        OneResultOBj halconResult = hWindowControl2.Tag as OneResultOBj;
+                //        if (halconResult != null)
+                //        {
+                //            halconResult.ShowAll(hWindowControl2.HalconWindow);
+                //        }
+                //        panel2.Refresh();
+                //    }
+                //    else
+                //    {
+                //        if (HResult != null)
+                //        {
+                //            HResult.Image.Dispose();
+                //        }
+                //    }
                
-                    void HWindowControl_HMouseDownD(object sender, HMouseEventArgs e)
-                    {
-                        try
-                        {
-                            OneResultOBj halconResultT = (sender as HWindowControl).Tag as OneResultOBj;
-                            HWindowControl hWindowControl = sender as HWindowControl;
-                            if (halconResultT != null)
-                            {
-                                halcon.HobjClear();
-                                halcon.SetResultOBj(halconResultT);
-                                halconResultT.ShowAll(halcon.hWindowHalcon());
-                                if (e.Clicks == 2)
-                                {
-                                    halcon.Image(halcon.GetOneImageR().Image.Clone());
-                                }
-                                if (Vision.IsObjectValided(HResult.Image))
-                                {
-                                    HOperatorSet.GetImageSize(HResult.Image, out HTuple width, out HTuple heigth);
-                                    HOperatorSet.SetPart(hWindowControl.HalconWindow, 0, 0, heigth, width);
-                                    HOperatorSet.DispObj(HResult.Image, hWindowControl.HalconWindow);
-                                }
-                                halconResultT.ShowAll(hWindowControl.HalconWindow);
-                            }
-                        }
-                        catch (Exception)
-                        {
-                        }
-                    }
-                    Project.formula.UserFormulaContrsl.StaticAddResult(runid, names, halcon.TrayRestData);
-                }
-                else
-                {
-                    if (panel2 != null)
-                    {
-                        panel2.Dispose();
-                    }
-                }
+                //    void HWindowControl_HMouseDownD(object sender, HMouseEventArgs e)
+                //    {
+                //        try
+                //        {
+                //            OneResultOBj halconResultT = (sender as HWindowControl).Tag as OneResultOBj;
+                //            HWindowControl hWindowControl = sender as HWindowControl;
+                //            if (halconResultT != null)
+                //            {
+                //                halcon.HobjClear();
+                //                halcon.SetResultOBj(halconResultT);
+                //                halconResultT.ShowAll(halcon.hWindowHalcon());
+                //                if (e.Clicks == 2)
+                //                {
+                //                    halcon.Image(halcon.GetOneImageR().Image.Clone());
+                //                }
+                //                if (Vision.IsObjectValided(HResult.Image))
+                //                {
+                //                    HOperatorSet.GetImageSize(HResult.Image, out HTuple width, out HTuple heigth);
+                //                    HOperatorSet.SetPart(hWindowControl.HalconWindow, 0, 0, heigth, width);
+                //                    HOperatorSet.DispObj(HResult.Image, hWindowControl.HalconWindow);
+                //                }
+                //                halconResultT.ShowAll(hWindowControl.HalconWindow);
+                //            }
+                //        }
+                //        catch (Exception)
+                //        {
+                //        }
+                //    }
+                //    Project.formula.UserFormulaContrsl.StaticAddResult(runid, names, halcon.GetData());
+                //}
+                //else
+                //{
+                //    if (panel2 != null)
+                //    {
+                //        panel2.Dispose();
+                //    }
+                //}
             }
             catch (Exception ex)
             {

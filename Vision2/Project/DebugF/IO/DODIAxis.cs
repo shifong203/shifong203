@@ -416,6 +416,7 @@ namespace Vision2.Project.DebugF.IO
 
                         if (AlwaysIOInt.Value && !AlwaysIODot.Value)
                         {
+                            DebugCompiler.GetDoDi().WritDO(DebugCompiler.GetThis().OutFDEX, true);
                             if (DebugCompiler.GetThis().Modet != 1 || !AlwaysIOOut.Value)
                             {
                                 DebugCompiler.GetDoDi().WritDO(DebugCompiler.GetThis().To_Board_DO, false);
@@ -427,6 +428,7 @@ namespace Vision2.Project.DebugF.IO
                         }
                         else if (AlwaysIOInt.RunTime > DebugCompiler.GetThis().IntTime && !AlwaysIOOut.Value && !AlwaysIODot.Value)
                         {
+                            DebugCompiler.GetDoDi().WritDO(DebugCompiler.GetThis().OutFDEX, false);
                             runID = 2;
                             DebugCompiler.GetDoDi().WritDO(DebugCompiler.GetThis().To_Board_DO, true);
                             MoveAxisStop();
@@ -1007,6 +1009,40 @@ namespace Vision2.Project.DebugF.IO
 
         }
 
+        public void SetTray(int indxe,string x,string y)
+        {
+            try
+            {
+                if (ListTray == null)
+                {
+                    ListTray = new List<ErosSocket.DebugPLC.Robot.TrayRobot>();
+                }
+                if (ListTray.Count == 0)
+                {
+                    for (int i = 0; i < 15; i++)
+                    {
+                        ListTray.Add(new ErosSocket.DebugPLC.Robot.TrayRobot() { Name = i.ToString(), });
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i < 15; i++)
+                    {
+                        ListTray[i].Name = i.ToString();
+                    }
+                }
+                ListTray[indxe].XNumber = (sbyte)RunCodeStr.ToDoubleP(x);
+                ListTray[indxe].YNumber = (sbyte)RunCodeStr.ToDoubleP(y);
+                ListTray[indxe].bitW = new List<sbyte>();
+                ListTray[indxe].bitW.AddRange(new sbyte[ListTray[indxe].Count]);
+                ListTray[indxe].Clear();
+
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+        }
         public void SetTray(int name, string p1, string p2, string p3, string p4, string x, string y, string p5, string p6, string p7, string p8, string x2, string y2)
         {
             try

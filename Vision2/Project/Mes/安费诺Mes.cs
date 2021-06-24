@@ -109,7 +109,7 @@ namespace Vision2.Project.Mes
             }
         }
 
-        public void WrietMes(TrayRobot trayData, string Product_Name)
+        public void WrietMes(TrayData trayData, string Product_Name)
         {
      
         }

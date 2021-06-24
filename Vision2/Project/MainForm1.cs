@@ -503,10 +503,6 @@ namespace Vision2.Project
 
         private LandingForm landingForm = new LandingForm();
 
-
-
-
-
         private bool toolLeftVisible = false;
 
         private void toolStripButton1_Click(object sender, EventArgs e)

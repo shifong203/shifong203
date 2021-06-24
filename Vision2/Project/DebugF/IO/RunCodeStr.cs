@@ -1317,7 +1317,7 @@ namespace Vision2.Project.DebugF.IO
            
                 for (int i = 0; i < Cmas.Length; i++)
                 {
-                    threadDatas.Add(Cmas[i].Trim());
+                    threadDatas.Add(Cmas[i].Trim().Trim(','));
                     ThreadPool.QueueUserWorkItem(new WaitCallback(Call), threadDatas.ThreadDataS[i]);
                 }
                 while (!threadDatas.End)
@@ -1340,8 +1340,14 @@ namespace Vision2.Project.DebugF.IO
                     if (threadData!=null)
                 {
                     string[] tdat = threadData.Code.Split(',');
-                    int RunID = ToDoubleP(tdat[2]);
                     int LiayID = ToDoubleP(tdat[1]);
+                    int RunID = LiayID;
+                    if (tdat.Length>=3)
+                    {
+                        RunID = ToDoubleP(tdat[2]);
+                    }
+
+      
                     HalconRun halconRun = vision.Vision.GetRunNameVision(tdat[0]);
 
                     halconRun.GetCam().Key = RunID.ToString();
@@ -1754,21 +1760,28 @@ namespace Vision2.Project.DebugF.IO
                     int det = 0;
                     int.TryParse(imtey[1], out det);
                     det = (int)ToDoubleP(imtey[1]);
-                    int xNumber = (int)ToDoubleP(tdat[5]);
-                    int YNumber = (int)ToDoubleP(tdat[6]);
-                    if (tdat.Length == 13)
+                    if (tdat.Length==3)
                     {
-                        int x2Number = (int)ToDoubleP(tdat[11]);
-                        int Y2Number = (int)ToDoubleP(tdat[12]);
-                        DebugCompiler.GetThis().DDAxis.SetTray(det, tdat[1], tdat[2], tdat[3], tdat[4], xNumber.ToString(), YNumber.ToString(),
-                            tdat[7], tdat[8], tdat[9], tdat[10], x2Number.ToString(), Y2Number.ToString());
+                        int xNumber = (int)ToDoubleP(tdat[1]);
+                        int YNumber = (int)ToDoubleP(tdat[2]);
+                        DebugCompiler.GetThis().DDAxis.SetTray(det,  xNumber.ToString(), YNumber.ToString());
                     }
                     else
                     {
-                        DebugCompiler.GetThis().DDAxis.SetTray(det, tdat[1], tdat[2], tdat[3], tdat[4], xNumber.ToString(), YNumber.ToString());
+                        int xNumber = (int)ToDoubleP(tdat[5]);
+                        int YNumber = (int)ToDoubleP(tdat[6]);
+                        if (tdat.Length == 13)
+                        {
+                            int x2Number = (int)ToDoubleP(tdat[11]);
+                            int Y2Number = (int)ToDoubleP(tdat[12]);
+                            DebugCompiler.GetThis().DDAxis.SetTray(det, tdat[1], tdat[2], tdat[3], tdat[4], xNumber.ToString(), YNumber.ToString(),
+                                tdat[7], tdat[8], tdat[9], tdat[10], x2Number.ToString(), Y2Number.ToString());
+                        }
+                        else
+                        {
+                            DebugCompiler.GetThis().DDAxis.SetTray(det, tdat[1], tdat[2], tdat[3], tdat[4], xNumber.ToString(), YNumber.ToString());
+                        }
                     }
-
-
                 }
                 else if (imtey[0] == "axis")
                 {
@@ -2029,7 +2042,7 @@ namespace Vision2.Project.DebugF.IO
                 }
                 else if (imtey[0] == "ng")
                 {
-                    if (UserFormulaContrsl.NG)
+                    if (!UserFormulaContrsl.NG)
                     {
                         bool vat = true;
                         yutData = tdat[1].Split('=');
@@ -2046,14 +2059,14 @@ namespace Vision2.Project.DebugF.IO
                             }
                             if (!DebugCompiler.GetDoDi().WritDO(det, vat))
                             {
-                                runErr.ErrStr += "Do写入命令失败:" + text;
+                                runErr.ErrStr += "Do写入命令失败:" ;
                             }
                         }
                     }
                 }
                 else if (imtey[0] == "ok")
                 {
-                    if (UserFormulaContrsl.OKt)
+                    if (UserFormulaContrsl.NG)
                     {
                         bool vat = true;
                         yutData = tdat[1].Split('=');
@@ -2467,7 +2480,7 @@ namespace Vision2.Project.DebugF.IO
                     }
                     else if (imtey[1].ToLower().StartsWith("ok"))
                     {
-                        IFElseBool = UserFormulaContrsl.OKt;
+                        IFElseBool = UserFormulaContrsl.NG;
                     }
                     else if (imtey[1].ToLower().StartsWith("do"))
                     {
@@ -2910,6 +2923,7 @@ namespace Vision2.Project.DebugF.IO
             Watch.Stop();
             if (runErr.ErrStr != "")
             {
+                runErr.ErrStr += runErr.Code;
                 runErr.runCoStr = RunCoStr.执行错误;
                 runErr.Err = true;
             }

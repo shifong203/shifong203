@@ -545,6 +545,12 @@
     <Compile Include="Project\formula\ButtenModeUI.Designer.cs">
       <DependentUpon>ButtenModeUI.cs</DependentUpon>
     </Compile>
+    <Compile Include="Project\formula\DataButtenModeU.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Project\formula\DataButtenModeU.Designer.cs">
+      <DependentUpon>DataButtenModeU.cs</DependentUpon>
+    </Compile>
     <Compile Include="Project\formula\DataGuiVievModeUI.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -1609,6 +1615,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Project\formula\ButtenModeUI.resx">
       <DependentUpon>ButtenModeUI.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Project\formula\DataButtenModeU.resx">
+      <DependentUpon>DataButtenModeU.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Project\formula\DataGuiVievModeUI.resx">
       <DependentUpon>DataGuiVievModeUI.cs</DependentUpon>

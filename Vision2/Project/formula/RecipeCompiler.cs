@@ -341,7 +341,7 @@ namespace Vision2.Project.formula
             {
                 ErosSocket.ErosConLink.StaticCon.GetSocketClint(RecipeCompiler.Instance.GetQRLinkNmae).PassiveEvent += RecipeCompiler_PassiveEvent;
             }
-            userVisionManagement = new UserFormulaContrsl();
+            userVisionManagement = MainForm1.MainFormF.userFormulaContrsl1;
             AlarmText.LogWarning(Product.ProductionName, err);
             Data.Set();
             ErosSocket.ErosConLink.SocketClint socketClint = ErosSocket.ErosConLink.StaticCon.GetSocketClint(DataLinkName);

@@ -77,14 +77,24 @@ namespace ErosSocket.DebugPLC.Robot
         [DescriptionAttribute("托盘位置。"), Category("数据"), DisplayName("托盘位置")]
         public int Number
         {
-            get { return number; }
+            get {
+                if (TrayDataS==null)
+                {
+                    return 0;
+                }
+                return TrayDataS.Number;
+            }
 
             set
             {
-                number = value;
+                if (TrayDataS == null)
+                {
+                    return;
+                }
+                TrayDataS.Number = value;
             }
         }
-        int number;
+
 
         ITrayRobot trayRobots;
         /// <summary>
@@ -116,7 +126,7 @@ namespace ErosSocket.DebugPLC.Robot
                 {
                     string data = System.IO.File.ReadAllText(Vision2.ErosProjcetDLL.Project.ProjectINI.TempPath + Name + "Tray.txt");
                     string[] dataStrS = data.Split(',');
-                    number = int.Parse(dataStrS[0]);
+                    //number = int.Parse(dataStrS[0]);
                     for (int i = 1; i < dataStrS.Length; i++)
                     {
                         bitW[i] = sbyte.Parse(dataStrS[i]);
@@ -130,10 +140,10 @@ namespace ErosSocket.DebugPLC.Robot
 
         public virtual void Clear()
         {
-            number = 1;
+            //number = 1;
             TrayDataS = new TrayData(this);
-            //NGLocation = new List<int>();
-            //TrayIDQR = "";
+
+
             //if (dataVales1 != null)
             //{
             //    dataVales1.Clear();
@@ -194,7 +204,9 @@ namespace ErosSocket.DebugPLC.Robot
             return tray;
         }
 
-
+        /// <summary>
+        /// 参数
+        /// </summary>
         TrayData TrayDataS ;
         PointFile[] pointFiles;
         public PointFile GetPoint(int number)
@@ -488,14 +500,16 @@ namespace ErosSocket.DebugPLC.Robot
     {
         public TrayData( TrayRobot trayRobot)
         {
-            XNumber = trayRobot. XNumber;
-            YNumber = trayRobot.YNumber;
-            TrayDirection = trayRobot.TrayDirection;
-            HorizontallyORvertically = trayRobot.HorizontallyORvertically;
-            AddTary(trayRobot.GetITrayRobot());
+            tray1 = trayRobot;
+            AddTary(tray1.GetITrayRobot());
             Clear();
         }
+        TrayRobot tray1;
         ITrayRobot trayRobots;
+        public ITrayRobot GetITrayRobot()
+        {
+            return trayRobots;
+        }
         public void AddTary(ITrayRobot trayRobot)
         {
             trayRobots = trayRobot;
@@ -610,11 +624,12 @@ namespace ErosSocket.DebugPLC.Robot
 
         public void RestValue()
         {
+            Clear();
             if (trayRobots!=null)
             {
                 trayRobots.RestValue();
             }
-    
+        
         }
 
         /// <summary>
@@ -622,10 +637,18 @@ namespace ErosSocket.DebugPLC.Robot
         /// </summary>
         public void Clear()
         {
+            if (tray1!=null)
+            {
+                XNumber = tray1.XNumber;
+                YNumber = tray1.YNumber;
+                TrayDirection = tray1.TrayDirection;
+                HorizontallyORvertically = tray1.HorizontallyORvertically;
+            }
             dataVales1 = new List<DataVale>(new DataVale[XNumber * YNumber]);
             for (int i = 0; i < dataVales1.Count; i++)
             {
                 dataVales1[i] = new DataVale();
+                dataVales1[i].TrayLocation = (i + 1);
             }
         }
         public void SetNumberValue(int number, bool value, double? valueDouble)

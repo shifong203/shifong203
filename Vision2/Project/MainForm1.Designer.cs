@@ -76,6 +76,7 @@
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             this.timer100 = new System.Windows.Forms.Timer(this.components);
             this.timer500 = new System.Windows.Forms.Timer(this.components);
+            this.userFormulaContrsl1 = new Vision2.Project.formula.UserFormulaContrsl();
             this.toolStripLeft.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -85,6 +86,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).BeginInit();
             this.splitContainer3.Panel1.SuspendLayout();
             this.splitContainer3.SuspendLayout();
+            this.panel2.SuspendLayout();
             this.toolStrip2.SuspendLayout();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
@@ -189,7 +191,7 @@
             this.splitContainer1.Panel2.Controls.Add(this.userInterfaceControl1);
             this.splitContainer1.Panel2.Paint += new System.Windows.Forms.PaintEventHandler(this.splitContainer1_Panel2_Paint);
             this.splitContainer1.Size = new System.Drawing.Size(1408, 560);
-            this.splitContainer1.SplitterDistance = 1114;
+            this.splitContainer1.SplitterDistance = 1060;
             this.splitContainer1.SplitterWidth = 1;
             this.splitContainer1.TabIndex = 7;
             this.splitContainer1.SplitterMoving += new System.Windows.Forms.SplitterCancelEventHandler(this.splitContainer1_SplitterMoving);
@@ -204,7 +206,7 @@
             // splitContainer3.Panel1
             // 
             this.splitContainer3.Panel1.Controls.Add(this.tabControl1);
-            this.splitContainer3.Size = new System.Drawing.Size(1114, 560);
+            this.splitContainer3.Size = new System.Drawing.Size(1060, 560);
             this.splitContainer3.SplitterDistance = 387;
             this.splitContainer3.TabIndex = 1;
             // 
@@ -214,15 +216,16 @@
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1114, 387);
+            this.tabControl1.Size = new System.Drawing.Size(1060, 387);
             this.tabControl1.TabIndex = 0;
             // 
             // panel2
             // 
+            this.panel2.Controls.Add(this.userFormulaContrsl1);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel2.Location = new System.Drawing.Point(0, 98);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(293, 462);
+            this.panel2.Size = new System.Drawing.Size(347, 462);
             this.panel2.TabIndex = 2;
             // 
             // userInterfaceControl1
@@ -232,7 +235,7 @@
             this.userInterfaceControl1.Dock = System.Windows.Forms.DockStyle.Top;
             this.userInterfaceControl1.Location = new System.Drawing.Point(0, 0);
             this.userInterfaceControl1.Name = "userInterfaceControl1";
-            this.userInterfaceControl1.Size = new System.Drawing.Size(293, 98);
+            this.userInterfaceControl1.Size = new System.Drawing.Size(347, 98);
             this.userInterfaceControl1.TabIndex = 1;
             this.userInterfaceControl1.Load += new System.EventHandler(this.userInterfaceControl1_Load);
             // 
@@ -562,6 +565,16 @@
             this.timer500.Interval = 500;
             this.timer500.Tick += new System.EventHandler(this.timer500_Tick);
             // 
+            // userFormulaContrsl1
+            // 
+            this.userFormulaContrsl1.AutoScroll = true;
+            this.userFormulaContrsl1.AutoSize = true;
+            this.userFormulaContrsl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.userFormulaContrsl1.Location = new System.Drawing.Point(0, 0);
+            this.userFormulaContrsl1.Name = "userFormulaContrsl1";
+            this.userFormulaContrsl1.Size = new System.Drawing.Size(347, 462);
+            this.userFormulaContrsl1.TabIndex = 0;
+            // 
             // MainForm1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -595,6 +608,8 @@
             this.splitContainer3.Panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).EndInit();
             this.splitContainer3.ResumeLayout(false);
+            this.panel2.ResumeLayout(false);
+            this.panel2.PerformLayout();
             this.toolStrip2.ResumeLayout(false);
             this.toolStrip2.PerformLayout();
             this.panel1.ResumeLayout(false);
@@ -658,5 +673,6 @@
         private System.Windows.Forms.ToolStripLabel toolStripLabel8;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         public System.Windows.Forms.SplitContainer splitContainer3;
+        public formula.UserFormulaContrsl userFormulaContrsl1;
     }
 }

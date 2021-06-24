@@ -181,7 +181,7 @@ namespace Vision2.vision
             PatText = "托盘号:" + OneProductV.TrayLocation + "." +OneProductV.GetNGCamName()+ Environment.NewLine;
             if (Vision.Instance.RestT)
             {
-                int intd = 0;
+   
                 foreach (TreeNode item in treeView1.Nodes)
                 {
                     foreach (TreeNode itemdt in item.Nodes)
@@ -191,9 +191,7 @@ namespace Vision2.vision
                             OneComponent oneComponent = itemdt.Tag as OneComponent;
                             if (!oneComponent.Done)
                             {
-                        
                                 OneRObjT = oneComponent;
-                                
                                 restOneComUserControl1.Location = new Point(itemdt.Bounds.X, itemdt.Bounds.Y+itemdt.Bounds.Height+2);
                                 restOneComUserControl1.Visible = true;
                                 restOneComUserControl1.BringToFront();
@@ -202,14 +200,12 @@ namespace Vision2.vision
                             }
                             else
                             {
-                              
                                 if (oneComponent.OK)
                                 {
                                     if (itemdt.ImageIndex != 3)
                                     {
                                         itemdt.ImageIndex = 3;
                                     }
-                        
                                 }
                                 else
                                 {
@@ -218,7 +214,10 @@ namespace Vision2.vision
                             }
                         }
                     }
-                    intd++;
+                    if (!OneRObjT.Done)
+                    {
+                        break;
+                    }
                 }
                 if (!OneProductV.Done)
                 {
@@ -254,7 +253,6 @@ namespace Vision2.vision
                             //dataGridView1.Rows[det].DefaultCellStyle.BackColor = Color.Yellow;
                         }
                     }
-                
                     idt++;
                 }
             }

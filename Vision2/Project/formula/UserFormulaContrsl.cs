@@ -24,7 +24,6 @@ namespace Vision2.Project.formula
         {
             InitializeComponent();
             This = this;
-
         }
 
         public static UserFormulaContrsl This;
@@ -74,14 +73,14 @@ namespace Vision2.Project.formula
             }
         }
 
-        public HWindID HWind = new HWindID();
+        public HWindID HWind;
 
         private void UserFormulaContrsl_Load(object sender, EventArgs e)
         {
             try
             {
+                HWind = new HWindID();
                 HWind.Initialize(hWindowControl1);
-
                 hWindowControl1.MouseClick += HWindowControl1_MouseClick;
                 MainForm1.MainFormF.CycleEven += ThreadUP;
             }
@@ -231,9 +230,6 @@ namespace Vision2.Project.formula
         {
             try
             {
-               
-                 
-  
                 Up();
                 isUP = true;
                 if (DebugCompiler.GetThis().LinkSeelpTyoe<3)
@@ -266,15 +262,15 @@ namespace Vision2.Project.formula
                     }
                 }
 
-                if (DebugCompiler.GetThis().TrayCont < 0)
-                {
-                    MainForm1.MainFormF.tabControl1.TabPages.RemoveByKey("托盘状态");
-                }
-
-                if (DebugCompiler.GetThis().TrayCont >= 0)
-                {
-                    DebugCompiler.GetTrayDataUserControl().SetTray(DebugCompiler.GetThis().TrayCont);
-                }
+        
+                //if (DebugCompiler.GetThis().TrayCont >= 0)
+                //{
+                //    DebugCompiler.GetTrayDataUserControl().SetTray(DebugCompiler.GetThis().TrayCont);
+                //}
+                //else
+                //{
+                //    MainForm1.MainFormF.tabControl1.TabPages.RemoveByKey("托盘状态");
+                //}
                 //RecipeCompiler.Instance.ResetDataS.Clear();
                 //RecipeCompiler.Instance.ResetDataS.Product_Name = Product.ProductionName;
                 try
@@ -383,15 +379,27 @@ namespace Vision2.Project.formula
                         trayDataUserControl.Dock = DockStyle.Fill;
                         trayDataUserControl.Visible = true;
                      
-                        trayDataUserControl.SetTray(DebugCompiler.GetThis().DDAxis.ListTray[DebugCompiler.GetThis().TrayCont].GetTrayData());
-                        //DebugCompiler.GetThis().DDAxis.ListTray[DebugCompiler.GetThis().TrayCont].AddTary(trayDataUserControl);
+                        trayDataUserControl.SetTray(DebugCompiler.GetTray(DebugCompiler.GetThis().TrayCont).GetTrayData());
+                        DebugCompiler.GetTray(DebugCompiler.GetThis().TrayCont).AddTary(trayDataUserControl);
                         break;
                     case RecipeCompiler.EnumUpDataType.复判按钮:
                         label3.Visible = true;
                         button2.Visible = true;
-                        ButtenModeUI buttenModeUI = new ButtenModeUI();
-                        buttenModeUI.Dock = DockStyle.Fill;
-                        tabPage1.Controls.Add(buttenModeUI);
+                        ButtenModeUI buttenModeUI;
+                        if (!tabPage1.Controls.ContainsKey("buttenModeUI"))
+                        {
+                            buttenModeUI = new ButtenModeUI();
+                            buttenModeUI.Dock = DockStyle.Fill;
+                            tabPage1.Controls.Add(buttenModeUI);
+                        }
+                        else
+                        {
+                            buttenModeUI = tabPage1.Controls.Find("buttenModeUI",false)[0] as ButtenModeUI;
+                        }
+                   
+                        TrayData Traydata = DebugCompiler.GetTray(DebugCompiler.GetThis().TrayCont).GetTrayData();
+                        DebugCompiler.GetTray(DebugCompiler.GetThis().TrayCont).AddTary(buttenModeUI);
+                        buttenModeUI.SetTrayData(Traydata);
                         break;
                     case RecipeCompiler.EnumUpDataType.弹出复判按钮:
                         label3.Visible = true;
@@ -605,24 +613,9 @@ namespace Vision2.Project.formula
             }
         }
 
-        public static bool NG;
+        public static bool NG { get { return data.OK; } }
 
-        public static bool OKt
-        {
-            get
-            {
-                bool isNg = true;
-
-                for (int i = 0; i < This.ListOkNumber.Count; i++)
-                {
-                    if (!This.ListOkNumber[i])
-                    {
-                        return false;
-                    }
-                }
-                return isNg;
-            }
-        }
+   
 
         /// <summary>
         /// 获取结果数据
@@ -697,7 +690,7 @@ namespace Vision2.Project.formula
                 }
                 Vision.Instance.HObjCler();
                 dataVales.Clear(); ;
-                NG = false;
+          
                 UserFormulaContrsl.SetOK(0);
                 This.ListReslutMestTR.Clear();
                 This.ListOkNumber = new List<bool>();
@@ -913,7 +906,8 @@ namespace Vision2.Project.formula
         public int MAXt;
 
 
-        public static void StaticAddResult(int id, string name, DataReseltBase text)
+
+        public static void StaticAddResult(int id, string name, DataVale dataVale)
         {
             try
             {
@@ -934,35 +928,14 @@ namespace Vision2.Project.formula
                 }
                 int d = -10;
                 string iDETX = name.Split(':')[0];
-                if (!This.ReseltBase.ContainsKey(text.Name))
-                {
-                    This.ReseltBase.Add(text.Name, text);
-                }
-                else
-                {
-                    This.ReseltBase[text.Name] = text;
-                }
+
                 This.isUP = true;
-                if (DebugCompiler.GetThis().TrayCont>0)
-                {
 
-                }
-                DataVale dataVale = new DataVale()
+                if (dataVale.OK)
                 {
-                    //PanelID = ProcessControl.ProcessUser.QRCode,
-                    //OK = text.OK,
-                };
-
-                //dataVale.Result = vision.Vision.GetRunNameVision(text.Name).GetOneImageR();
-                //dataVales.Add(dataVale);
-                if (text.OK)
-                {
-                   // dataVale.Done = true;
-                   //dataVale.OK = true;
-                    //dataVale.RsetOK = true;
                     if (RecipeCompiler.Instance.TrayQRType == RecipeCompiler.TrayEnumType.一个流程一个产品)
                     {
-                        if (Vision.GetSaveImageInfo(text.Name).ISCount)
+                        if (Vision.GetSaveImageInfo(name).ISCount)
                         {
                             if (RecipeCompiler.Instance.GetMes() != null)
                             {
@@ -993,11 +966,11 @@ namespace Vision2.Project.formula
                                 break;
                             }
                         }
-                        if (d < 0 && !text.OK)
+                        if (d < 0 && !dataVale.OK)
                         {
                             d = This.dataGridView1.Rows.Add();
                         }
-                        if (!text.OK)
+                        if (!dataVale.OK)
                         {
                             This.dataGridView1.Rows[d].Cells[0].Value = name;
                         }
@@ -1006,16 +979,16 @@ namespace Vision2.Project.formula
                     {
                         if (RecipeCompiler.Instance.TrayQRType == RecipeCompiler.TrayEnumType.一个流程一个产品)
                         {
-                            if (Vision.GetSaveImageInfo(text.Name).ISCount)
+                            if (Vision.GetSaveImageInfo(name).ISCount)
                             {
                                 dataVales.Add(dataVale);
                             }
-                            if (text.OK)
+                            if (dataVale.OK)
                             {
                                 dataVale.Done = true;
                                 dataVale.OK = true;
                                 //dataVale.RsetOK = true;
-                                if (Vision.GetSaveImageInfo(text.Name).ISCount)
+                                if (Vision.GetSaveImageInfo(name).ISCount)
                                 {
                                     if (RecipeCompiler.Instance.GetMes() != null)
                                     {
@@ -1027,7 +1000,7 @@ namespace Vision2.Project.formula
                             }
                             else
                             {
-                                NG = true;
+                    
 
                             }
                         }
@@ -1036,8 +1009,8 @@ namespace Vision2.Project.formula
                 }
                 if (RecipeCompiler.Instance.UpDataType == RecipeCompiler.EnumUpDataType.托盘)
                 {
-                    This.trayDataUserControl.SetValue(id, text.OK);
-                    RecipeCompiler.AddOKNumber(text.OK);
+                    This.trayDataUserControl.SetValue(id, dataVale.OK);
+                    RecipeCompiler.AddOKNumber(dataVale.OK);
                     return;
                 }
                 if (This.ListReslutOK == null)
@@ -1047,27 +1020,27 @@ namespace Vision2.Project.formula
                 string listReslutS = name + "=";
                 Dictionary<string, bool> keyValuePairs = new Dictionary<string, bool>();
                 keyValuePairs.Clear();
-                if (text.ListVerData.Count > 0)
-                {
-                    This.ListReslutMestTR.Add(text.ListVerData[0]);
-                }
-                foreach (var item in text.CompoundReseltBool)
-                {
-                    if (!item.Value)
-                    {
-                        keyValuePairs.Add(item.Key, true);
-                    }
-                }
+                //if (text.ListVerData.Count > 0)
+                //{
+                //    This.ListReslutMestTR.Add(text.ListVerData[0]);
+                //}
+                //foreach (var item in dataVale.CompoundReseltBool)
+                //{
+                //    if (!item.Value)
+                //    {
+                //        keyValuePairs.Add(item.Key, true);
+                //    }
+                //}
                 if (keyValuePairs.ContainsKey("OK"))
                 {
-                    keyValuePairs["OK"] = text.OK;
+                    keyValuePairs["OK"] = dataVale.OK;
                 }
                 else
                 {
-                    keyValuePairs.Add("OK", text.OK);
+                    keyValuePairs.Add("OK", dataVale.OK);
                 }
-                bool isChat = text.OK;
-                if (!text.OK)
+                bool isChat = dataVale.OK;
+                if (!dataVale.OK)
                 {
                     if (RecipeCompiler.Instance.UpDataType == RecipeCompiler.EnumUpDataType.表格)
                     {
@@ -1150,19 +1123,19 @@ namespace Vision2.Project.formula
 
                 if (RecipeCompiler.Instance.TrayQRType == RecipeCompiler.TrayEnumType.一个流程一个产品)
                 {
-                    if (vision.Vision.GetSaveImageInfo(text.Name).ISCount)
+                    if (vision.Vision.GetSaveImageInfo(name).ISCount)
                     {
                         RecipeCompiler.AddOKNumber(id - 1, isChat);
                     }
                 }
-                else if (This.MAXt <= id && vision.Vision.GetSaveImageInfo(text.Name).ISCount)
+                else if (This.MAXt <= id && vision.Vision.GetSaveImageInfo(name).ISCount)
                 {
                     data = dataVales[0];
                     for (int i = 0; i < dataVales.Count; i++)
                     {
                         if (!dataVales[i].OK)
                         {
-                            text.OK = false;
+                            dataVale.OK = false;
                             break;
                         }
                     }
@@ -1171,7 +1144,7 @@ namespace Vision2.Project.formula
                     {
                         Vision.ShowVisionResetForm();
                     }
-                    if (text.OK)
+                    if (dataVale.OK)
                     {
                         if (RecipeCompiler.Instance.GetMes() != null)
                         {
@@ -1182,7 +1155,7 @@ namespace Vision2.Project.formula
 
                         }
                     }
-                    text.ListReselt.Clear();
+                    //text.ListReselt.Clear();
                 }
                 //if (Vision.Instance.IsShowImage)
                 //{
@@ -1568,6 +1541,15 @@ namespace Vision2.Project.formula
             Vision2.ErosProjcetDLL.UI.UICon.WindosFormerShow(ref linkDataForm1);
 
         }
+        public static DataVale GetDataVale(  DataVale dataD=null)
+        {
+            if (dataD != null)
+            {
+                data = dataD;
+            }
+            return data;
+        }
+        
         static DataVale data;
         static TrayRobot TrayReset ;
 

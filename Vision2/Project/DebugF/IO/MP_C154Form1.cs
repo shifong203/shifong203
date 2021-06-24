@@ -131,10 +131,10 @@ namespace Vision2.Project.DebugF.IO
                 {
                     tabControl1.TabPages.Remove(tabPage2);
                 }
-                if (DebugCompiler.GetThis().TrayCont < 0)
-                {
-                    tabControl1.TabPages.Remove(tabPage3);
-                }
+                //if (DebugCompiler.GetThis().TrayCont < 0)
+                //{
+                //    tabControl1.TabPages.Remove(tabPage3);
+                //}
             }
             catch (Exception ex)
             {

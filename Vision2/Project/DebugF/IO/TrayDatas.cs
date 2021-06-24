@@ -343,29 +343,42 @@ namespace Vision2.Project.DebugF.IO
                         DataVale data = dataVale.GetDataVales()[i];
                         if (data != null)
                         {
-                            Label label1 = this.Controls.Find(data.TrayLocation.ToString(), false)[0] as Label;
-                            if (label1 != null)
+                            Control[] controls = this.Controls.Find(data.TrayLocation.ToString(), false);
+                            if (controls.Length!=0)
                             {
-                                if (data.OK)
+                                Label label1 = controls[0] as Label;
+                                if (label1 != null)
                                 {
-                                    label1.BackColor = Color.Green;
+                                    if (data.Null)
+                                    {
+                                        if (data.OK)
+                                        {
+                                            label1.BackColor = Color.Green;
+                                        }
+                                        else
+                                        {
+                                            label1.BackColor = Color.Red;
+                                        }
+                                    }
+
+                                    datStr = (i + 1).ToString();
+                                    if (data.PanelID != null && data.PanelID.Length != 0)
+                                    {
+                                        if (data.PanelID.Length >= 6)
+                                        {
+                                            datStr += "SN:" + data.PanelID.Substring(data.PanelID.Length - 6);
+                                        }
+                                        else
+                                        {
+                                            datStr += "SN:" + data.PanelID;
+                                        }
+                                    }
+
+                                    label1.Text = datStr;
+                                    label1.Tag = data;
                                 }
-                                else
-                                {
-                                    label1.BackColor = Color.Red;
-                                }
-                                datStr = (i + 1).ToString();
-                                if (data.PanelID.Length >= 6)
-                                {
-                                    datStr += "SN:" + data.PanelID.Substring(data.PanelID.Length - 6);
-                                }
-                                else
-                                {
-                                    datStr += "SN:" + data.PanelID;
-                                }
-                                label1.Text = datStr;
-                                label1.Tag = data;
                             }
+                         
                         }
                     }
                 }));

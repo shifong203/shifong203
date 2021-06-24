@@ -34,8 +34,15 @@ namespace Vision2.ErosProjcetDLL.Project
                     iNI = new ProjectINI();
                     try
                     {
+                        if (!Directory.Exists(ProjectINI.ProjietPath))
+                        {
+                            ProjectINI.ProjietPath = "D:\\Vision2\\";
+                            if (!Directory.Exists(ProjectINI.ProjietPath))
+                            {
+                                MessageBox.Show("缺少项目文件");
+                            }
+                        }
                         ProjectINI.ReadPathJsonToCalss(iNI.ConstPathStr, out iNI);
-
                         iNI.UserName = iNI.UserDepartment = "";
                         iNI.UserRight = new List<string>();
                         string filename = Path.GetDirectoryName(In.ConstPathStr) + "\\LanguageRes.txt";
@@ -43,7 +50,7 @@ namespace Vision2.ErosProjcetDLL.Project
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show(ex.Message);
+                        MessageBox.Show("读取ProjectInI失败：" + ex.Message);
                     }
                 }
                 return iNI;

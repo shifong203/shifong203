@@ -2,58 +2,100 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 using Vision2.Project.Mes;
-
+using ErosSocket.DebugPLC.Robot;
 namespace Vision2.Project.formula
 {
-    public partial class ButtenModeUI : UserControl
+    public partial class ButtenModeUI : UserControl ,ITrayRobot
     {
         public ButtenModeUI()
         {
             InitializeComponent();
         }
-
-        static ErosSocket.DebugPLC.Robot.TrayRobot dataVales = new ErosSocket.DebugPLC.Robot.TrayRobot(3,1);
-        private void button10_Click(object sender, EventArgs e)
+        public void SetTrayData(TrayData trayData )
         {
+
+            dataVales = trayData;
             try
             {
-                dataVales.GetTrayData().GetDataVales()[0].Done = true;
-                dataVales.GetTrayData().GetDataVales()[0].AutoOK = true;
-                dataVales.GetTrayData().GetDataVales()[0].OK = true;
-                //RecipeCompiler.AlterNumber(true, dataVales.GetTrayData().GetDataVales()[0].ResuOBj[0].RunID - 1);
-
-                if (RecipeCompiler.Instance.GetMes() != null)
+                this.Controls.Clear();
+                for (int i = 0; i < dataVales.Count; i++)
                 {
-                    RecipeCompiler.Instance.GetMes().WrietMes(dataVales, Project.formula.Product.ProductionName);
+                    DataButtenModeU dataUi = new DataButtenModeU();
+                    dataUi.Name = (i + 1).ToString();
+                    dataUi.Dock = DockStyle.Top;
+                    this.Controls.Add(dataUi);
+                    dataUi.Set(dataVales.GetDataVales()[i]);
                 }
-
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                MessageBox.Show(ex.Message);
             }
-            button10.Enabled = false;
-            button6.Enabled = false;
+        }
+         TrayData dataVales;
+
+        public void SetValue(int number, bool value, double? valueDouble = null)
+        {
+      
         }
 
-        private void button6_Click(object sender, EventArgs e)
+        public void SetValue(int number, DataVale dataVale)
+        {
+
+        }
+
+        public void SetValue(int number, TrayData dataVale)
         {
             try
             {
-                dataVales.GetTrayData().GetDataVales()[0].Done = true;
-                dataVales.GetTrayData().GetDataVales()[0].AutoOK = false;
-                //dataVales[0].RsetOK = false;
-                //RecipeCompiler.AlterNumber(true, dataVales.GetTrayData().GetDataVales()[0].ResuOBj[0].RunID - 1);
-
-                if (RecipeCompiler.Instance.GetMes() != null)
+                for (int i = 0; i < dataVale.Count; i++)
                 {
-                    RecipeCompiler.Instance.GetMes().WrietMes(dataVales, Project.formula.Product.ProductionName);
+
+                  Control [] controls=   this.Controls.Find((i + 1).ToString(), false);
+                    if (controls.Length!=0)
+                    {
+                        DataButtenModeU dataUi = controls[0] as DataButtenModeU;
+                        dataUi.Name = (i + 1).ToString();
+
+                        dataUi.Set(dataVale.GetDataVales()[i]);
+                    }
                 }
+
             }
             catch (Exception)
             {
             }
-            button10.Enabled = false;
-            button6.Enabled = false;
+     
+        }
+
+        public void SetPanleSN(List<string> listSN, List<int> tryaid)
+        {
+          
+        }
+
+        public void RestValue()
+        {
+            try
+            {
+                this.Invoke(new MethodInvoker(() => {
+                    this.Controls.Clear();
+                    for (int i = 0; i < dataVales.Count; i++)
+                    {
+                        DataButtenModeU dataUi = new DataButtenModeU();
+                        dataUi.Name = (i + 1).ToString();
+                        dataUi.Dock = DockStyle.Top;
+                        this.Controls.Add(dataUi);
+                        dataUi.Set(dataVales.GetDataVales()[i]);
+                    }
+
+                }));
+
+          
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
     }
 }

@@ -113,8 +113,6 @@
             this.tabPage6 = new System.Windows.Forms.TabPage();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.dataGridView4 = new System.Windows.Forms.DataGridView();
-            this.Column17 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column16 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.label4 = new System.Windows.Forms.Label();
             this.tabPage9 = new System.Windows.Forms.TabPage();
@@ -141,6 +139,12 @@
             this.程序名 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.程序类型 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.contextMenuStrip4 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.添加ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.删除ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.Column17 = new Vision2.ErosProjcetDLL.UI.DataGridViewF.DataGridViewNumericUpDownColumn();
+            this.Column16 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.contextMenuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewHalcon)).BeginInit();
             this.tabControl1.SuspendLayout();
@@ -168,6 +172,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView4)).BeginInit();
             this.tabPage9.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).BeginInit();
+            this.contextMenuStrip4.SuspendLayout();
+            this.groupBox4.SuspendLayout();
             this.SuspendLayout();
             // 
             // contextMenuStrip1
@@ -1007,7 +1013,7 @@
             // tabPage6
             // 
             this.tabPage6.Controls.Add(this.groupBox3);
-            this.tabPage6.Controls.Add(this.label4);
+            this.tabPage6.Controls.Add(this.groupBox4);
             this.tabPage6.Location = new System.Drawing.Point(4, 30);
             this.tabPage6.Name = "tabPage6";
             this.tabPage6.Padding = new System.Windows.Forms.Padding(3);
@@ -1020,9 +1026,10 @@
             // 
             this.groupBox3.Controls.Add(this.dataGridView4);
             this.groupBox3.Controls.Add(this.listBox1);
-            this.groupBox3.Location = new System.Drawing.Point(15, 251);
+            this.groupBox3.Dock = System.Windows.Forms.DockStyle.Top;
+            this.groupBox3.Location = new System.Drawing.Point(3, 147);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(568, 297);
+            this.groupBox3.Size = new System.Drawing.Size(966, 297);
             this.groupBox3.TabIndex = 1;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "缺陷编译";
@@ -1037,23 +1044,13 @@
             this.dataGridView4.Location = new System.Drawing.Point(123, 26);
             this.dataGridView4.Name = "dataGridView4";
             this.dataGridView4.RowTemplate.Height = 23;
-            this.dataGridView4.Size = new System.Drawing.Size(442, 268);
+            this.dataGridView4.Size = new System.Drawing.Size(840, 268);
             this.dataGridView4.TabIndex = 1;
-            // 
-            // Column17
-            // 
-            this.Column17.HeaderText = "Code";
-            this.Column17.Name = "Column17";
-            this.Column17.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            // 
-            // Column16
-            // 
-            this.Column16.HeaderText = "缺陷类型";
-            this.Column16.Name = "Column16";
-            this.Column16.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.dataGridView4.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView4_CellValueChanged);
             // 
             // listBox1
             // 
+            this.listBox1.ContextMenuStrip = this.contextMenuStrip4;
             this.listBox1.Dock = System.Windows.Forms.DockStyle.Left;
             this.listBox1.FormattingEnabled = true;
             this.listBox1.ItemHeight = 20;
@@ -1067,11 +1064,11 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("宋体", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label4.Location = new System.Drawing.Point(20, 19);
+            this.label4.Location = new System.Drawing.Point(10, 30);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(151, 21);
+            this.label4.Size = new System.Drawing.Size(118, 21);
             this.label4.TabIndex = 0;
-            this.label4.Text = "FOV视场:00*00";
+            this.label4.Text = "视场:00*00";
             // 
             // tabPage9
             // 
@@ -1261,6 +1258,51 @@
             this.Column4.Name = "Column4";
             this.Column4.ReadOnly = true;
             // 
+            // contextMenuStrip4
+            // 
+            this.contextMenuStrip4.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.添加ToolStripMenuItem,
+            this.删除ToolStripMenuItem});
+            this.contextMenuStrip4.Name = "contextMenuStrip4";
+            this.contextMenuStrip4.Size = new System.Drawing.Size(101, 48);
+            // 
+            // 添加ToolStripMenuItem
+            // 
+            this.添加ToolStripMenuItem.Name = "添加ToolStripMenuItem";
+            this.添加ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.添加ToolStripMenuItem.Text = "添加";
+            this.添加ToolStripMenuItem.Click += new System.EventHandler(this.添加ToolStripMenuItem_Click);
+            // 
+            // 删除ToolStripMenuItem
+            // 
+            this.删除ToolStripMenuItem.Name = "删除ToolStripMenuItem";
+            this.删除ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.删除ToolStripMenuItem.Text = "删除";
+            this.删除ToolStripMenuItem.Click += new System.EventHandler(this.删除ToolStripMenuItem_Click);
+            // 
+            // groupBox4
+            // 
+            this.groupBox4.Controls.Add(this.label4);
+            this.groupBox4.Dock = System.Windows.Forms.DockStyle.Top;
+            this.groupBox4.Location = new System.Drawing.Point(3, 3);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(966, 144);
+            this.groupBox4.TabIndex = 2;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "FOV:";
+            // 
+            // Column17
+            // 
+            this.Column17.HeaderText = "Code";
+            this.Column17.Name = "Column17";
+            this.Column17.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            // 
+            // Column16
+            // 
+            this.Column16.HeaderText = "缺陷类型";
+            this.Column16.Name = "Column16";
+            this.Column16.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
             // HalconRunProgram
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -1301,11 +1343,13 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).EndInit();
             this.tabPage6.ResumeLayout(false);
-            this.tabPage6.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView4)).EndInit();
             this.tabPage9.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).EndInit();
+            this.contextMenuStrip4.ResumeLayout(false);
+            this.groupBox4.ResumeLayout(false);
+            this.groupBox4.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1419,8 +1463,12 @@
         private System.Windows.Forms.ToolStripMenuItem 打开注册文件夹ToolStripMenuItem;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.DataGridView dataGridView4;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column17;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column16;
         private System.Windows.Forms.ListBox listBox1;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip4;
+        private System.Windows.Forms.ToolStripMenuItem 添加ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 删除ToolStripMenuItem;
+        private System.Windows.Forms.GroupBox groupBox4;
+        private ErosProjcetDLL.UI.DataGridViewF.DataGridViewNumericUpDownColumn Column17;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column16;
     }
 }

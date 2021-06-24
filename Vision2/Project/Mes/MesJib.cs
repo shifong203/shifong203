@@ -190,7 +190,7 @@ namespace Vision2.Project.Mes
             string pathEx = ProcessControl.ProcessUser.GetThis().ExcelPath + "//历史数据//" + strTimed + ".csv";
             if (!File.Exists(pathEx))
             {
-                List<string> columnText = new List<string>() { "进站时间", "结束时间", "状态", "SN" };
+                List<string> columnText = new List<string>() { "进站时间", "结束时间", "状态", "SN" ,"托盘位"};
                 for (int i = 0; i < RecipeCompiler.Instance.Data.ListDatV.Count; i++)
                 {
                     columnText.Add(RecipeCompiler.Instance.Data.ListDatV[i].ComponentName);
@@ -209,6 +209,7 @@ namespace Vision2.Project.Mes
                 dat.Add("NG");
             }
             dat.Add(data.PanelID);
+            dat.Add(data.TrayLocation.ToString());
             //foreach (var item in data.DataMin_Max)
             //{
             //   dat.Add(item.Value.ComponentName + "");
@@ -222,7 +223,7 @@ namespace Vision2.Project.Mes
             ErosProjcetDLL.Excel.Npoi.WriteF(paht, ListText, ".txt");
         }
 
-        public void WrietMes(TrayRobot trayData, string Product_Name)
+        public void WrietMes(TrayData trayData, string Product_Name)
         {
 
         }

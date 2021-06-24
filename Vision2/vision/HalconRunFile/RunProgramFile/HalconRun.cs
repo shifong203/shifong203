@@ -2117,6 +2117,10 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         /// 单个产品参数
         /// </summary>
         DataVale OnePatrData;
+        public DataVale GetData()
+        {
+            return OnePatrData;
+        }
         /// <summary>
         /// 托盘ID
         /// </summary>
@@ -2168,9 +2172,13 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         //Vision.OneProductVale = new DataVale();
                         //dataP = Vision.OneProductVale;
                     }
-                    if (LiyID == 1)
+                    if (LiyID == 1 || this.PaleID==1)
                     {
-                        Vision.GetRunNameVision(this.Name).TiffeOffsetImageEX.TiffeClose();
+                        if (this.PaleID!=1)
+                        {
+                            Vision.GetRunNameVision(this.Name).TiffeOffsetImageEX.TiffeClose();
+                        }
+             
                         OneCamData = new OneCamData();
                     }
                 }
@@ -2237,8 +2245,11 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                             }
                             if (LiyID == 1)
                             {
-                                Vision.GetRunNameVision(this.Name).TiffeOffsetImageEX.TiffeClose();
-                            }
+                                if (this.PaleID != 1)
+                                {
+                                    Vision.GetRunNameVision(this.Name).TiffeOffsetImageEX.TiffeClose();
+                                }
+                             }
                         }
                         if (RunIDStr.Count >= LiyID)
                         {
@@ -2258,13 +2269,16 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     }
                 }
                 this.EndChanged(OneImageData, runID);
-                if (this.TiffeOffsetImageEX.ISHomdeImage==1)
+                if (this.PaleID != 1)
                 {
-                    this.TiffeOffsetImageEX.SetTiffeOff(hObject);
-                }
-                else
-                {
-                    this.TiffeOffsetImageEX.SetTiffeOff(OneImageData.Image);
+                    if (this.TiffeOffsetImageEX.ISHomdeImage == 1)
+                    {
+                        this.TiffeOffsetImageEX.SetTiffeOff(hObject);
+                    }
+                    else
+                    {
+                        this.TiffeOffsetImageEX.SetTiffeOff(OneImageData.Image);
+                    }
                 }
                 if (RunName.Count >= runID)
                 {
@@ -2274,11 +2288,17 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 {
                     OneCamData = new OneCamData();
                 }
+
                 OneCamData.ResuOBj.Add(OneImageData);
                 UPDa(OneImageData, isSave, hObject);
          
-                if (PaleMode && OneImageData.LiyID == this.PaleID)
+                if (PaleMode && OneImageData.LiyID%this.PaleID==0)
                 {
+                    if (Vision.GetSaveImageInfo(Name).ISCount)
+                    {
+                    
+                        RecipeCompiler.AddOKNumber(OnePatrData.OK);
+                    }
                     if (ProjectINI.AdminEnbt)
                     {
                         AlarmText.AddTextNewLine("已完成:" + runID + ":" + LiyID);
@@ -2379,7 +2399,6 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     OneCompOBJs oneRObjs = new OneCompOBJs();
                     for (int i = 0; i < OneCamData.ResuOBj.Count; i++)
                     {
-
                         HTuple rowsT = 0;
                         HTuple colsT = 0;
                         try
@@ -2390,7 +2409,6 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         catch (Exception ex)
                         {
                         }
-
                         if (OneCamData.ResuOBj[i].GetNgOBJS().DicOnes.Count>0)
                         {
                             HOperatorSet.HomMat2dTranslate(HomMat2D, rowsT, colsT, out HTuple hTuple);
@@ -2415,17 +2433,48 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         OneCamData.SetOneContOBJ(oneRObjs);
                     }
                    OnePatrData.PanelID = Project.ProcessControl.ProcessUser.QRCode;
-                   HObject hObject= Vision.GetRunNameVision(this.Name).TiffeOffsetImageEX.TiffeOffsetImage(this.Name);
-                    OnePatrData.AddCamsData(this.Name, dataP.RunID, OneCamData);
-                    OnePatrData.AddCamsData(this.Name, hObject);
+                    HObject hObject = dataP.Image;
+                    if (this.PaleID != 1)
+                    {
+                        hObject = Vision.GetRunNameVision(this.Name).TiffeOffsetImageEX.TiffeOffsetImage(this.Name);
+                    }
+                     OnePatrData.AddCamsData(this.Name, dataP.RunID, OneCamData);
+                     OnePatrData.AddCamsData(this.Name, hObject);
                         UserFormulaContrsl.This.HWind.SetImaage(hObject);
                         if (isSave)
                         {
-                            Vision.GetSaveImageInfo(this.Name).SaveImage(hObject, 0, "拼图", this.Name, DateTime.Now);
+                            if (this.PaleID != 1)
+                            {
+                                Vision.GetSaveImageInfo(this.Name).SaveImage(hObject, 0, "拼图", this.Name, DateTime.Now);
+                            }
                         }
                         if (trayRobotData!=null)
                         {
-                            trayRobotData.SetNumberValue(TrayLocation,trayRobotData);
+                            if (trayRobotData.GetITrayRobot()!=null)
+                            {
+                                OnePatrData.AutoOK = OnePatrData.OK;
+                                trayRobotData.SetNumberValue(TrayLocation, trayRobotData);
+                                if (Vision.GetSaveImageInfo(this.Name).ISCount)
+                                {
+                                    if (RecipeCompiler.Instance.TrayQRType == RecipeCompiler.TrayEnumType.一个流程一个产品)
+                                    {
+                                            if (OnePatrData.AutoOK)
+                                            {
+                                                if (RecipeCompiler.Instance.GetMes() != null)
+                                                {
+                                                    RecipeCompiler.Instance.GetMes().WrietMes(OnePatrData, Product.ProductionName);
+                                                }
+                                            }
+                                    UserFormulaContrsl.GetDataVale(OnePatrData);
+                                    }
+                                }
+                       
+                           }
+                            else
+                            {
+                                this.LogErr("未加载托盘"+ TrayID);
+                            }
+                   
                         }
                 }
                 catch (Exception ex)

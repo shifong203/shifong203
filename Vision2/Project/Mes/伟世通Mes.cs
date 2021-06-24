@@ -52,11 +52,11 @@ namespace Vision2.Project.Mes
             WrietMes(datas as DataVale, Product_Name);
         }
 
-        public void WrietMes(TrayRobot data, string Product_Name)
+        public void WrietMes(TrayData data, string Product_Name)
         {
-            for (int i = 0; i < data.GetTrayData().GetDataVales().Count; i++)
+            for (int i = 0; i < data.GetDataVales().Count; i++)
             {
-                WrietMes(data.GetTrayData().GetDataVales()[i], Product_Name);
+                WrietMes(data.GetDataVales()[i], Product_Name);
             }
   
         }

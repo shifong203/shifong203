@@ -41,6 +41,19 @@ namespace Vision2.Project.DebugF
             }
             return StaticThis;
         }
+
+        public static ErosSocket.DebugPLC.Robot.TrayRobot GetTray(int index)
+        {
+            if (index<0)
+            {
+                return null;
+            }
+            if (index > 16)
+            {
+                return null;
+            }
+            return  DebugCompiler.GetThis().DDAxis.ListTray[index];
+        }
         static DebugCompiler StaticThis;
         #region 继承重写方法
         private TreeNode treeNodeAlram = new TreeNode() { Name = "信息框", Text = "信息框" };
@@ -232,8 +245,6 @@ namespace Vision2.Project.DebugF
         [DescriptionAttribute("复位IO写1=0。"), Category("设备控制"), DisplayName("复位IO")]
         public byte RsetIOTyoe { get; set; } = 0;
 
-
-
         /// <summary>
         /// 设置速度
         /// </summary>
@@ -273,13 +284,8 @@ namespace Vision2.Project.DebugF
             {
             }
         }
-
         double MavValue { get; set; } = 500;
-
-
         double StrValue { get; set; } = 80;
-
-
         double AceValue { get; set; } = 400;
 
         double DceValue { get; set; } = 400;
@@ -631,13 +637,15 @@ namespace Vision2.Project.DebugF
         /// </summary>
         [DescriptionAttribute("。"), Category("设备硬件"), DisplayName("是否使用托盘")]
         public sbyte TrayCont { get; set; } = -1;
+    
+
         [DescriptionAttribute("。"), Category("设备硬件"), DisplayName("轴使能信号")]
         public sbyte Is_AxisEnble { get; set; } = -1;
         [DescriptionAttribute("。"), Category("设备硬件"), DisplayName("轴刹车信号")]
         public sbyte Is_braking { get; set; } = -1;
         [DescriptionAttribute("。"), Category("设备硬件"), DisplayName("使用软使能")]
         public bool Is_Sv { get; set; }
-        [Description("使用皮带线体控制"), Category("线体"), DisplayName("皮带线体")]
+        [Description("使用皮带线体控制"), Category("线体"), DisplayName("在线设备")]
         public bool IsCtr { get; 
             set; }
         /// <summary>
@@ -645,6 +653,9 @@ namespace Vision2.Project.DebugF
         /// </summary>
         [DescriptionAttribute("板卡IO输入。"), Category("线体"), DisplayName("进站检测")]
         public sbyte IntCDI { get; set; } = -1;
+
+        [DescriptionAttribute("板卡IO输出。"), Category("线体"), DisplayName("进站风枪")]
+        public sbyte OutFDEX { get; set; } = -1;
         [DescriptionAttribute("工位数量。"), Category("线体"), DisplayName("工位数")]
         public int Modet { get; set; } = 2;
 
@@ -745,6 +756,8 @@ namespace Vision2.Project.DebugF
         [TypeConverter(typeof(ErosConverter)),
         ErosConverter.ThisDropDown("ListCylinders", false, "")]
         public string RCylinder { get; set; } = "阻挡气缸";
+
+
         public DODIAxis DDAxis { get; set; } = new DODIAxis();
 
         static Run_project run_Project;
@@ -883,18 +896,18 @@ namespace Vision2.Project.DebugF
             }
             try
             {
-                if (TrayCont > 0)
-                {
-                    if (TrayData == null)
-                    {
-                        TrayData = new TrayDataUserControl();
-                        TrayData.Dock = DockStyle.Fill;
-                        TabPage tabPage = new TabPage();
-                        tabPage.Text = tabPage.Name = "托盘状态";
-                        tabPage.Controls.Add(TrayData);
-                        MainForm1.MainFormF.tabControl1.Controls.Add(tabPage);
-                    }
-                }
+                //if (TrayCont > 0)
+                //{
+                //    if (TrayData == null)
+                //    {
+                //        TrayData = new TrayDataUserControl();
+                //        TrayData.Dock = DockStyle.Fill;
+                //        TabPage tabPage = new TabPage();
+                //        tabPage.Text = tabPage.Name = "托盘状态";
+                //        tabPage.Controls.Add(TrayData);
+                //        MainForm1.MainFormF.tabControl1.Controls.Add(tabPage);
+                //    }
+                //}
 
                 //TrayData.SetTray(this.DDAxis.GetTrayInxt(int.Parse(Project.formula.Product.GetProd()["托盘编号"])));
                 if (StaticCon.GetSocketClint(RecipeCompiler.Instance.DataLinkName) != null)
