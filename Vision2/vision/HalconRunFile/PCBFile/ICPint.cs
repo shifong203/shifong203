@@ -109,18 +109,25 @@ namespace Vision2.vision.HalconRunFile.PCBFile
                     HOperatorSet.Threshold(HJImage, out HObject hObjectH2, iCPint.HanPMin, iCPint.HanPMax);
                     HOperatorSet.OpeningCircle(hObjectH2, out hObjectH2, 2);
                     HOperatorSet.Connection(hObjectH2, out HObject hObjectH1);
-              
                     if (debug != 0)
                     {
                         oneResultOBj.AddObj(hObjectH1, ColorResult.yellow);
                         oneResultOBj.AddObj(ROI, ColorResult.blue);
                     }
-                    HOperatorSet.SelectShape(hObjectH1, out hObjectH2, "area", "and", iCPint.HPAreaMin, 99999999);
+                    HOperatorSet.SelectShape(hObjectH1, out hObjectH2, "area", "and", iCPint.HPAreaMin, iCPint.HPAreaMax);
                     if (hObjectH2.CountObj() > 0)
                     {
+                        NGText += "焊盘错误:";
                         oneResultOBj.AddObj(hObjectH2, ColorResult.red);
                         ErrNumber++;
+                        if (debug == 3)
+                        {
+                            HOperatorSet.AreaCenter(hObjectH2, out HTuple aread, out HTuple row3d, out HTuple column3d);
+                            oneResultOBj.AddImageMassage(row3d, column3d, aread);
+                   
+                        }
                     }
+                 
                     HOperatorSet.Threshold(hObject2, out HObject hObject11, iCPint.PintMin, iCPint.PintMax);
                     HOperatorSet.OpeningCircle(hObject11, out hObject11, 2.5);
                     HOperatorSet.Connection(hObject11, out hObject11);
@@ -130,7 +137,7 @@ namespace Vision2.vision.HalconRunFile.PCBFile
                         oneResultOBj.AddObj(hObject1, ColorResult.blue);
                         oneResultOBj.AddObj(hObjectH2, ColorResult.blue);
                     }
-                    HOperatorSet.SelectShape(hObject11, out HObject hObject3, "area", "and", iCPint.PintAreaMin, 99999999);
+                    HOperatorSet.SelectShape(hObject11, out HObject hObject3, "area", "and", iCPint.PintAreaMin, iCPint.PintAreaMax);
                     HOperatorSet.AreaCenter(hObject3, out HTuple area, out HTuple row3, out HTuple column3);
                     HOperatorSet.GenCrossContourXld(out HObject cross, row3, column3, 10, 0);
                     //oneResultOBj.AddObj(cross, ColorResult.green);
@@ -184,6 +191,7 @@ namespace Vision2.vision.HalconRunFile.PCBFile
                         }
                         if (debug == 1)
                         {
+                            oneResultOBj.AddObj(hObject, ColorResult.blue);
                             oneResultOBj.AddImageMassage(rowh1, coluh1, areah1);
                             oneResultOBj.AddObj(hObject4,ColorResult.yellow);
                         }
@@ -407,10 +415,15 @@ namespace Vision2.vision.HalconRunFile.PCBFile
         [Category("焊脚检测区域"), DisplayName("针脚面积min"), Description("")]
         public double PintAreaMin { get; set; } = 400;
 
+        [Category("焊脚检测区域"), DisplayName("针脚面积max"), Description("")]
+        public double PintAreaMax { get; set; } = 999999;
+
         [Category("焊盘检测区域"), DisplayName("焊盘灰度Min"), Description("")]
         public byte HanPMin { get; set; } = 105;
         [Category("焊盘检测区域"), DisplayName("焊盘面积Min"), Description("")]
         public double HPAreaMin { get; set; } = 800;
+        [Category("焊盘检测区域"), DisplayName("焊盘面积Max"), Description("")]
+        public double HPAreaMax { get; set; } = 999999;
 
         [Category("焊盘检测区域"), DisplayName("焊盘灰度Max"), Description("")]
         public byte HanPMax { get; set; } = 255;
@@ -439,7 +452,7 @@ namespace Vision2.vision.HalconRunFile.PCBFile
         public HTuple homMat2D;
 
 
-        public override bool RunHProgram( OneResultOBj oneResultOBj, out List<OneRObj> oneRObjs, int runID = 0)
+        public override bool RunHProgram( OneResultOBj oneResultOBj, out List<OneRObj> oneRObjs, AoiObj aoiObj)
         {
             oneRObjs = new List<OneRObj>();
             HObject ErrDobj = new HObject();

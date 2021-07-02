@@ -532,7 +532,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                     }
                 }
 
-                while (_Model.MRModelHomMat.NumberT> _Model.DIPs.Count)
+                while (_Model.MRModelHomMat.NumberT< _Model.DIPs.Count)
                 {
                     _Model.DIPs.RemoveAt(_Model.DIPs.Count-1);
                 }
@@ -751,7 +751,7 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             try
             {
-                HWi1.ClearObj();
+                HWi1.HobjClear();
                 HWi1.SetImaage(halcon.Image());
                 if (_Model.MRModelHomMat.HomMat.Count<=d)
                 {
@@ -1127,7 +1127,7 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             try
             {
-                hWindID.ClearObj();
+                hWindID.HobjClear();
                 HOperatorSet.SmallestRectangle1(_Classify.DrawObj, out HTuple row, out HTuple col1, out HTuple row2, out HTuple col2);
                 if (listBox3.SelectedIndex == 0)
                 {

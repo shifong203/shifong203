@@ -245,13 +245,13 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
 
         }
 
-        public override bool RunHProgram( OneResultOBj oneResultOBj, out List<OneRObj> oneRObjs, int id = 0)
+        public override bool RunHProgram( OneResultOBj oneResultOBj, out List<OneRObj> oneRObjs, AoiObj aoiObj)
         {
             oneRObjs = new List<OneRObj>();
             try
             {
                 
-                RunSeleRoi(oneResultOBj, id, out HObject errRoi);
+                RunSeleRoi(oneResultOBj, aoiObj.DebugID, out HObject errRoi);
                 //halcon.AddObj(SelecRoi);
                 if (errRoi.CountObj() != 0)
                 {

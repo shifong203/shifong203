@@ -29,7 +29,7 @@ namespace Vision2.vision
         /// <summary>
         /// 产品集合
         /// </summary>
-        static Queue<DataVale> OneProductVS = new Queue<DataVale>();
+        static Queue<OneDataVale> OneProductVS = new Queue<OneDataVale>();
         /// <summary>
         /// 整盘集合
         /// </summary>
@@ -38,7 +38,7 @@ namespace Vision2.vision
         /// <summary>
         /// 单个产品
         /// </summary>
-        static DataVale OneProductV;
+        static OneDataVale OneProductV;
             
         /// <summary>
         /// 单个元件
@@ -299,7 +299,7 @@ namespace Vision2.vision
                             }
                             else
                             {
-                                hWindowControl4.HalconWindow.DispText( "为找到参考图片"+ OneProductV.GetNGCamName() , "window", 0, 0, "red", new HTuple(), new HTuple());
+                                hWindowControl4.HalconWindow.DispText( "未创建参考图片"+ OneProductV.GetNGCamName() , "window", 0, 0, "red", new HTuple(), new HTuple());
                             }
                             HOperatorSet.SelectObj(item.Value.NGROI, out HObject hObject1, 1);
                             hObject1 = Vision.XLD_To_Region(hObject1);

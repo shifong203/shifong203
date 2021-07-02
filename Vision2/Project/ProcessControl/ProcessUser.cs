@@ -58,7 +58,7 @@ namespace Vision2.Project.ProcessControl
                 qrCode = value;
             }
         }
-        static String qrCode;
+        static String qrCode = "";
 
         public string ExcelPath { get; set; } = Application.StartupPath;
         /// <summary>

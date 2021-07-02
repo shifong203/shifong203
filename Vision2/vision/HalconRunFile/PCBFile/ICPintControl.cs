@@ -224,12 +224,20 @@ namespace Vision2.vision.HalconRunFile.PCBFile
 
         private void button2_Click(object sender, EventArgs e)
         {
-            halcon.HobjClear();
-            ziPoint = ICPintT.ziPoints[listBox1.SelectedIndex];
-            ziPoint.PintRun(halcon.GetImageOBJ(ICPintT.Threshold_Min_Max.ImageTypeObj),
-                ICPintT.homMat2D, ICPintT, halcon.GetOneImageR(), out HObject errDobj, out HObject obj, 3);
-            halcon.ShowObj();
-            propertyGrid1.SelectedObject = ziPoint;
+            try
+            {
+                halcon.HobjClear();
+                ziPoint = ICPintT.ziPoints[listBox1.SelectedIndex];
+                ziPoint.PintRun(halcon.GetImageOBJ(ICPintT.Threshold_Min_Max.ImageTypeObj),
+                    ICPintT.homMat2D, ICPintT, halcon.GetOneImageR(), out HObject errDobj, out HObject obj, 3);
+                halcon.ShowObj();
+                propertyGrid1.SelectedObject = ziPoint;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+     
         }
     }
 }

@@ -37,7 +37,7 @@ namespace Vision2.vision.Cams
         {
             try
             {
-                HWindI.ClearObj();
+                HWindI.HobjClear();
                 LisImage.Add(Cam.GetImage());
                 listBox1.Items.Add(LisImage.Count);
                 HWindI.SetImaage(LisImage[LisImage.Count - 1]);
@@ -67,7 +67,7 @@ namespace Vision2.vision.Cams
 
                 for (int i = 0; i < LisImage.Count; i++)
                 {
-                    HWindI.ClearObj();
+                    HWindI.HobjClear();
                     HOperatorSet.FindCalibObject(LisImage[i], calibDataID, 0, 0, i, new HTuple(), new HTuple());
                     HOperatorSet.GetCalibDataObservContours(out HObject hObject, calibDataID, "caltab", 0, 0, i);
                     HOperatorSet.GetCalibDataObservPoints(calibDataID, 0, 0, i, out HTuple rows, out HTuple Cols, out HTuple index, out HTuple pose);
@@ -143,7 +143,7 @@ namespace Vision2.vision.Cams
         {
             try
             {
-                HWindI.ClearObj();
+                HWindI.HobjClear();
 
                 HWindI.SetImaage(LisImage[listBox1.SelectedIndex]);
                 Cam.Width = (int)HWindI.WidthImage;

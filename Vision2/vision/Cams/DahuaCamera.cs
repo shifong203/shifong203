@@ -345,7 +345,8 @@ namespace Vision2.vision.Cams
             {
                 int err = 0;
                 HObject ho_image2 = new HObject();
-                  ST:
+                ho_image2.GenEmptyObj();
+                ST:
                 if (dahuaCam != null)
                 {
                     if (!dahuaCam.IsOpen)
@@ -355,8 +356,7 @@ namespace Vision2.vision.Cams
                     }
                     try
                     {
-                        IFrameRawData frame;
-                           //IGrabbedRawData frame;
+                        IFrameRawData frame;//IGrabbedRawData frame;
                         if (ID.Contains("SONY"))
                         {
                             dahuaCam.TriggerSet.ExecuteSoftwareTrigger();
@@ -405,7 +405,6 @@ namespace Vision2.vision.Cams
                             {
                                 goto ST;
                             }
-                
                         }
                     }
                     catch (Exception ex)
@@ -413,6 +412,10 @@ namespace Vision2.vision.Cams
                         AlarmText.AddTextNewLine("采图错误" + ex.Message);
                         throw ex;
                     }
+                }
+                else
+                {
+                    ErosProjcetDLL.Project.AlarmText.AddTextNewLine("程序未关联相机"+this.name);
                 }
                 return ho_image2;
             }

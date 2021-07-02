@@ -1013,7 +1013,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         /// </summary>
         /// <param name="halcon"></param>
         /// <returns></returns>
-        public bool FindShapeModel(OneResultOBj halcon, string mode)
+        public bool FindShapeModel(OneResultOBj halcon, string mode,AoiObj aoiObj)
         {
             MRModelHomMat = new RModelHomMat();
             HTuple message = new HTuple();
@@ -1025,17 +1025,17 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             try
             {
                 HObject Image = halcon.Image;
-                if (AOIObj.IsInitialized())
+                if (aoiObj.Aoi.IsInitialized())
                 {
-                    HOperatorSet.AreaCenter(AOIObj, out HTuple area, out HTuple row, out HTuple column);
+                    HOperatorSet.AreaCenter(aoiObj.Aoi, out HTuple area, out HTuple row, out HTuple column);
                     //HOperatorSet.Difference(AOIObj, this.DrawObj, out HObject hObject);
-                    if (area > 100) HOperatorSet.ReduceDomain(halcon.Image, AOIObj, out Image);
+                    if (area > 100) HOperatorSet.ReduceDomain(halcon.Image, aoiObj.Aoi, out Image);
                     //halcon.Image(Image);
                     //return false  ;
                 }
                 else
                 {
-                    AOIObj.GenEmptyObj();
+                    aoiObj.Aoi.GenEmptyObj();
                 }
                 //几何定位
                 if (MaxScaelD == 1 && MinScaelD == 1)
@@ -1247,7 +1247,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         /// </summary>
         /// <param name="halcon">处理集合</param>
         /// <returns></returns>
-        public override bool RunHProgram( OneResultOBj oneResultOBj, out List<OneRObj> oneRObjs, int runID = 0)
+        public override bool RunHProgram( OneResultOBj oneResultOBj, out List<OneRObj> oneRObjs, AoiObj aoiObj)
         {
             oneRObjs = new List<OneRObj>();
             base.ClerItem();
@@ -1257,7 +1257,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             this.SetDefault("模板U");
             bool dst = true;
             Watch.Restart();
-            if (!this.FindShapeModel(oneResultOBj, this.Mode))
+            if (!this.FindShapeModel(oneResultOBj, this.Mode, aoiObj))
             {
                 NGNumber++;
             }

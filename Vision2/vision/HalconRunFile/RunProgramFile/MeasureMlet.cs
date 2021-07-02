@@ -17,13 +17,12 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         {
             return "2.7_测量";
         }
-        public override bool RunHProgram( OneResultOBj oneResultOBj, out List<OneRObj> oneRObjs, int runID = 0)
+        public override bool RunHProgram( OneResultOBj oneResultOBj, out List<OneRObj> oneRObjs, AoiObj aoiObj)
         {
             oneRObjs = new List<OneRObj>();
             OneRObj oneRObj = new OneRObj();
-            bool OK = true;
-            oneResultOBj.AddNGOBJ(oneRObj);
-            HObject image;
+            HObject hObjectRoi = new HObject();
+            bool OK = true;            HObject image;
             //this.SetDefault("NG距离", 100, true);
             image = GetEmset(oneResultOBj.Image);
             foreach (var item in Dic_Measure.Keys_Measure)
@@ -143,6 +142,18 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
 
                         return OK;
                     case MeasureModeEnum.线平行:
+
+
+                        HOperatorSet.LinePosition(measure1.DrawRows[0], measure1.DrawCols[0], measure1.DrawRows[1], measure1.DrawCols[1],
+                     out HTuple rocen, out HTuple colcen, out HTuple length, out HTuple phi);
+                        HOperatorSet.LinePosition(measure2.DrawRows[0], measure2.DrawCols[0], measure2.DrawRows[1], measure2.DrawCols[1],
+                        out HTuple rocen2, out HTuple colcen2, out HTuple length2, out HTuple phi2);
+                        HOperatorSet.LinePosition(rocen, colcen, rocen2, colcen2, out rocen2, out colcen2, out length2, out phi2);
+                        HOperatorSet.GenRectangle2(out hObjectRoi, rocen2, colcen2, phi2, length2 / 2 + 100, 100);
+          
+                        if (measure2.ResltBool ||measure1.ResltBool)
+                        {
+
                         double dinRow1, dinCol1, dinRow2, dinCol2 = 0;
                         double dinRow21, dinCol21, dinRow22, dinCol22 = 0;
                         dinRow1 = measure2.OutRows[0];
@@ -174,6 +185,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         this["第2点P"] = dist2;
                         this["第3点P"] = dist3;
                         ValuePP = dist2;
+                           
                         HTuple DistM = this.ScaleMM(oneResultOBj.GetCaliConstMM(dist));
                         HTuple DistM2 = this.ScaleMM(oneResultOBj.GetCaliConstMM(dist2)); 
                         HTuple DistM3 = this.ScaleMM(oneResultOBj.GetCaliConstMM(dist3));
@@ -188,7 +200,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         if (SelePointName == "第一点" || SelePointName == "全部")
                         {
                             oneRObj.dataMinMax.AddData("第一点", DistM, DistanceMin, DistanceMax);
-                            massage =  DistM.TupleString("0.6f");
+                            massage =  DistM.TupleString("0.6f")+Vision.Instance.TransformName;
                             if (IsRadius)
                             {
                                 massage += "夹角°" + angleD.TupleString("0.2f");
@@ -218,8 +230,8 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         if (SelePointName == "中心点" || SelePointName == "全部")
                         {
                             oneRObj.dataMinMax.AddData("中心点", DistM2, DistanceMin, DistanceMax);
-                            massage = DistM2.TupleString("0.6f");
-                            if (oneResultOBj.GetHalcon().keyValuePairs1.ContainsKey(this.Name + ".第2点"))
+                            massage = DistM2.TupleString("0.6f") + Vision.Instance.TransformName;
+                                if (oneResultOBj.GetHalcon().keyValuePairs1.ContainsKey(this.Name + ".第2点"))
                             {
                                 oneResultOBj.GetHalcon().keyValuePairs1[this.Name + ".第2点"] = DistM2;
                             }
@@ -250,8 +262,8 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                             oneRObj.dataMinMax.AddData("结束点", DistM3, DistanceMin, DistanceMax);
                             HOperatorSet.GenCrossContourXld(out HObject corss2, new HTuple(projectRow2.D, dinRow2), new HTuple(projectCol02.D, dinCol2), 20, 0);
                             corss = corss.ConcatObj(corss2);
-                            massage = DistM3.TupleString("0.6f");
-                            if (IsRadius)
+                            massage = DistM3.TupleString("0.6f") + Vision.Instance.TransformName;
+                                if (IsRadius)
                             {
                                 massage += "夹角" + angleD.TupleString("0.2f");
                             }
@@ -275,11 +287,9 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                                 oneResultOBj.AddObj(contour3);
                             }
                         }
-
-                       
-                
-
-                        oneResultOBj.AddObj(corss, ColorResult.blue);
+                            oneResultOBj.AddObj(corss, ColorResult.blue);
+                        }
+          
                         break;
                     case MeasureModeEnum.圆中心:
                         if (measure1 != null)
@@ -315,7 +325,13 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         return true;
                 }
             }
- 
+            if (!OK)
+            {
+                oneRObj.NGROI = hObjectRoi;
+                oneRObj.ROI = hObjectRoi;
+                oneRObj.NGText = this.Name;
+            }
+            oneResultOBj.AddNGOBJ(oneRObj);
             return OK;
         }
 

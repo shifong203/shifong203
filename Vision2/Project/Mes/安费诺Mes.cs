@@ -12,6 +12,8 @@ namespace Vision2.Project.Mes
     {
         AmphenolMES.mespublic mespubl = new mespublic();
 
+        public event IMesData.ResTMesd ResDoneEvent;
+
         public class 安费诺MesData
         {
 
@@ -82,7 +84,7 @@ namespace Vision2.Project.Mes
 
         }
 
-        public void WrietMes(DataVale data, string Product_Name)
+        public void WrietMes(OneDataVale data, string Product_Name)
         {
 
         }

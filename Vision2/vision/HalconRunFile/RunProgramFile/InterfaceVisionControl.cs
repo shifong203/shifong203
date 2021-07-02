@@ -13,7 +13,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         ContextMenuStrip GetNewPrajetContextMenuStrip(string name);
          Dictionary<string, RunProgram> GetRunProgram();
          Dictionary<string, string> ListRunName { get; set; }
-         bool RunHProgram( OneResultOBj oneResultOBj,out List<OneRObj>  oneRObjs, int id =0);
+         bool RunHProgram( OneResultOBj oneResultOBj,out List<OneRObj>  oneRObjs,AoiObj aoiObj);
       
         }
 

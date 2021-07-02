@@ -15,7 +15,7 @@ namespace Vision2.vision.HalconRunFile.PCBFile
     {
         public override Control GetControl(HalconRun halcon)
         {
-            return new PCBLibraryForm(this);
+            return new PCBBControl(this) {  };
             //return new PCBAControl(this);
         }
         public override RunProgram UpSatrt<T>(string path)
@@ -41,14 +41,14 @@ namespace Vision2.vision.HalconRunFile.PCBFile
         }
    
        public  Dictionary<string, Library.LibraryVisionBase> DictRoi { get; set; } = new Dictionary<string, Library.LibraryVisionBase>();
-       public override bool RunHProgram( OneResultOBj oneResultOBj, out List<OneRObj> oneRObjs , int id)
+       public override bool RunHProgram( OneResultOBj oneResultOBj, out List<OneRObj> oneRObjs , AoiObj aoiObj)
        {
             oneRObjs = new List<OneRObj>();
             Dictionary<string, bool> keyValue = new Dictionary<string, bool>();
             bool OK = true;
             foreach (var item in DictRoi)
             {
-                item.Value.Name = item.Key;
+                item.Value.Name = item.Key; 
                 bool rok = item.Value.Run( oneResultOBj);
                 if (!rok)
                 {

@@ -16,7 +16,7 @@ namespace ErosSocket.DebugPLC.Robot
     public interface ITrayRobot
     {
         void SetValue(int number, bool value, double? valueDouble = null);
-        void SetValue(int number, DataVale dataVale);
+        void SetValue(int number, OneDataVale dataVale);
         void SetValue(int number, TrayData dataVale);
         void SetPanleSN(List<string> listSN, List<int> tryaid);
         void RestValue();
@@ -104,7 +104,11 @@ namespace ErosSocket.DebugPLC.Robot
         public void AddTary(ITrayRobot trayRobot)
         {
             trayRobots = trayRobot;
-            TrayDataS.AddTary(trayRobots);
+            if (TrayDataS!=null)
+            {
+                TrayDataS.AddTary(trayRobots);
+            }
+       
         }
         /// <summary>
         /// 
@@ -140,15 +144,7 @@ namespace ErosSocket.DebugPLC.Robot
 
         public virtual void Clear()
         {
-            //number = 1;
             TrayDataS = new TrayData(this);
-
-
-            //if (dataVales1 != null)
-            //{
-            //    dataVales1.Clear();
-            //    dataVales1 = new List<DataVale>(new DataVale[XNumber * YNumber]);
-            //}
         }
 
         [DescriptionAttribute("穴位数量。"), Category("排列"), DisplayName("总数量")]
@@ -392,6 +388,7 @@ namespace ErosSocket.DebugPLC.Robot
         {
             listx = new HTuple();
             listy = new HTuple();
+            this.Clear();
             try
             {
                 Is8Point = false;
@@ -426,6 +423,8 @@ namespace ErosSocket.DebugPLC.Robot
                     pointFiles[i] = new PointFile();
                     pointFiles[i].X = double.Parse(listx.TupleSelect(i).ToString());
                     pointFiles[i].Y = double.Parse(listy.TupleSelect(i).ToString());
+                    pointFiles[i].Z = P1.Z;
+                    //pointFiles[i].z = P1.Z;
                 }
                 HOperatorSet.GenCrossContourXld(out HObject hObject, listx, listy, 10, 0);
                 if (hawindid != null)
@@ -438,6 +437,7 @@ namespace ErosSocket.DebugPLC.Robot
             }
             catch (Exception ex)
             {
+                throw (ex);
             }
             this.Number = 1;
         }
@@ -610,8 +610,8 @@ namespace ErosSocket.DebugPLC.Robot
                    return XNumber * YNumber ;
             }
         }
-        List<DataVale> dataVales1;
-        public List<DataVale> GetDataVales(List<DataVale> dataVales = null)
+        List<OneDataVale> dataVales1;
+        public List<OneDataVale> GetDataVales(List<OneDataVale> dataVales = null)
         {
             if (dataVales != null)
             {
@@ -644,10 +644,10 @@ namespace ErosSocket.DebugPLC.Robot
                 TrayDirection = tray1.TrayDirection;
                 HorizontallyORvertically = tray1.HorizontallyORvertically;
             }
-            dataVales1 = new List<DataVale>(new DataVale[XNumber * YNumber]);
+            dataVales1 = new List<OneDataVale>(new OneDataVale[XNumber * YNumber]);
             for (int i = 0; i < dataVales1.Count; i++)
             {
-                dataVales1[i] = new DataVale();
+                dataVales1[i] = new OneDataVale();
                 dataVales1[i].TrayLocation = (i + 1);
             }
         }
@@ -659,7 +659,7 @@ namespace ErosSocket.DebugPLC.Robot
         {
             trayRobots.SetPanleSN(listSN, tryaid);
         }
-        public void SetNumberValue(int number, DataVale dataVale)
+        public void SetNumberValue(int number, OneDataVale dataVale)
         {
            trayRobots.SetValue(number, dataVale);
         }
@@ -684,7 +684,7 @@ namespace ErosSocket.DebugPLC.Robot
             }
             for (int i = 0; i < dataMins.Count; i++)
             {
-                this.GetDataVales()[Number - 1].AddCamOBj("上相机" , dataMins[i].GetOneRObj());
+                this.GetDataVales()[Number - 1].AddCamOBj(RecipeCompiler.Instance.DataMCamName, dataMins[i].GetOneRObj());
             }
             SetNumberValue(Number, this.GetDataVales()[Number - 1]);
         }

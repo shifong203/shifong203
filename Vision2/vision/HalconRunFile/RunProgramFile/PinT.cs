@@ -173,7 +173,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         }
 
 
-        public override bool RunHProgram( OneResultOBj oneResultOBj, out List<OneRObj> oneRObjs, int id = 0)
+        public override bool RunHProgram( OneResultOBj oneResultOBj, out List<OneRObj> oneRObjs,AoiObj aoiObj)
         {
             oneRObjs = new List<OneRObj>();
             bool isOk = false;
@@ -209,7 +209,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 try
                 {
 
-                    CheckPin(oneResultOBj, FreiAmpImage, out rows, out columns, id);
+                    CheckPin(oneResultOBj, FreiAmpImage, out rows, out columns, aoiObj.DebugID);
 
                     HTuple rowCent, columnCent, phi, lengt;
                     DicHtuple.SortTuple(rows, columns, out HTuple rows2, out HTuple columns2);
@@ -231,7 +231,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                             oneResultOBj.AddMeassge("点数量错误" + rows.Length);
                             err++;
                         }
-                        if (id < 7)
+                        if (aoiObj.DebugID < 7)
                         {
                             for (int i = 0; i < rows.Length - 1; i++)
                             {
@@ -309,14 +309,14 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                             }
                             else
                             {
-                                if (id != 0 && id < 6)
+                                if (aoiObj.DebugID != 0 && aoiObj.DebugID < 6)
                                 {
                                     oneResultOBj.AddObj(hObjec);
                                 }
                                 RowMt.Append(DET);
                                 oneResultOBj.AddObj(hObjec);
                             }
-                            if (id != 0 && id < 6)
+                            if (aoiObj.DebugID != 0 && aoiObj.DebugID < 6)
                             {
                                 oneResultOBj.AddImageMassage(MRows[i], MColumns[i], DET.TupleString("0.02f"));
                             }
@@ -436,7 +436,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         ModeRow = rows;
                         ModeColumn = columns;
                     }
-                    if (id == 5)
+                    if (aoiObj.DebugID == 5)
                     {
                         return false;
                     }
@@ -461,7 +461,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 {
                     err++;
                 }
-                if (id == 7)
+                if (aoiObj.DebugID == 7)
                 {
                     oneResultOBj.AddObj(hObjectTE);
                     return false;
@@ -474,21 +474,21 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 {
                     oneResultOBj.AddMeassge("间距");
                 }
-                if (id != 0 && id < 8)
+                if (aoiObj.DebugID != 0 && aoiObj.DebugID < 8)
                 {
                     return false;
                 }
                 HObject imagetd = GetEmset(oneResultOBj.Image);
                 HOperatorSet.Difference(this.AOIObj, this.hObjectTE, out HObject hObject1);
-                if (id != 0 && id > 7)
+                if (aoiObj.DebugID != 0 && aoiObj.DebugID > 7)
                 {
                     oneResultOBj.AddObj(hObject1, ColorResult.blue);
                 }
                 HOperatorSet.ReduceDomain(imagetd, hObject1, out imagetd);
-                DeFilt(oneResultOBj, imagetd, id);
+                DeFilt(oneResultOBj, imagetd, aoiObj.DebugID);
                 HOperatorSet.FreiAmp(imagetd, out hObject1);
                 //HOperatorSet.ReduceDomain(hObject1, DrawObj, out ho_PinSort);
-                istBool = DeFilt2(oneResultOBj, oneResultOBj, hObject1, id);
+                istBool = DeFilt2(oneResultOBj, oneResultOBj, hObject1, aoiObj.DebugID);
             }
             catch (Exception ex)
             {

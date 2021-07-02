@@ -67,9 +67,20 @@ namespace Vision2.vision
     }
     public class AoiObj
     {
+
+        public AoiObj()
+        {
+
+        }
+        public AoiObj(int runid)
+        {
+            DebugID = runid;
+        }
         public HObject Aoi  = new HObject();
 
         public HObject Drow  = new HObject();
+
+        public int DebugID;
 
     }
 
@@ -167,7 +178,7 @@ namespace Vision2.vision
                 public ColorResult ROIColr { get; set; } = ColorResult.blue;
 
                 [DescriptionAttribute("单位转换比例。"), Category("数据"), DisplayName("单位比例")]
-                public int Transform { get; set; } = 1;
+                public double Transform { get; set; } = 1;
 
               [DescriptionAttribute("单位名称。"), Category("数据"), DisplayName("单位名称")]
               [TypeConverter(typeof(ErosConverter)),
@@ -181,171 +192,153 @@ namespace Vision2.vision
                 /// </summary>
                 public int TrayID { get; set; }
 
-                [DescriptionAttribute("光源控制器1通道。"), Category("光源控制"), DisplayName("1通道")]
-                public byte H1 { get; set; } = 255;
+           
+        [Description("供应商光源控制方式，"), Category("光源控制"), DisplayName("光源控制器数量")]
+        public int OffCont { get; set; } = 0;
 
-                [DescriptionAttribute("光源控制器1通道。"), Category("光源控制"), DisplayName("2通道")]
-                public byte H2 { get; set; } = 255;
-
-                [DescriptionAttribute("光源控制器1通道。"), Category("光源控制"), DisplayName("3通道")]
-                public byte H3 { get; set; } = 255;
-
-                [DescriptionAttribute("光源控制器1通道。"), Category("光源控制"), DisplayName("4通道")]
-                public byte H4 { get; set; } = 255;
-
-                public bool H1Off;
-
-                public bool H2Off;
-
-                public bool H3Off;
-
-                public bool H4Off;
-
-                [Description("供应商光源控制方式，"), Category("光源控制"), DisplayName("控制器供应商")]
-                [TypeConverter(typeof(ErosConverter)), ErosConverter.ThisDropDownAttribute("", "浮根", "凯威", "")]
-                public string OffName { get; set; }
-        public string Rs232Name { get; set; } = "COM1";
-        #endregion
-        private string CheckChData()
-        {
-            string data = "S";
-            if (H1Off)
-            {
-                data += H1.ToString("000") + "T";
-            }
-            else
-            {
-                data += H1.ToString("000") + "F";
-            }
-            if (H2Off)
-            {
-                data += H2.ToString("000") + "T";
-            }
-            else
-            {
-                data += H2.ToString("000") + "F";
-            }
-
-            if (H3Off)
-            {
-                data += H3.ToString("000") + "T";
-            }
-            else
-            {
-                data += H3.ToString("000") + "F";
-            }
-            if (H4Off)
-            {
-                data += H4.ToString("000") + "T";
-            }
-            else
-            {
-                data += H4.ToString("000") + "F";
-            }
-
-            return data + "C#";
-        }
-        public string CheckChKWData()
-        {
-            string data = "S";
-            if (H1Off)
-            {
-                data += H1.ToString("000") + "T";
-                SerialPort.Write("#1106411");
-
-            }
-            else
-            {
-                SerialPort.Write("#2106411");
-
-                data += H1.ToString("000") + "F";
-            }
-            Thread.Sleep(100);
-            if (H2Off)
-            {
-
-                SerialPort.Write("#1206412");
-                data += H2.ToString("000") + "T";
-            }
-            else
-            {
-                SerialPort.Write("#2106412");
-                data += H2.ToString("000") + "F";
-            }
-            Thread.Sleep(100);
-            if (H3Off)
-            {
-                SerialPort.Write("#1306413");
-                data += H3.ToString("000") + "T";
-            }
-            else
-            {
-                SerialPort.Write("#2106412");
-                data += H3.ToString("000") + "F";
-            }
-            Thread.Sleep(100);
-            if (H4Off)
-            {
-
-                SerialPort.Write("#1406414");
-                data += H4.ToString("000") + "T";
-            }
-            else
-            {
-                SerialPort.Write("#2106413");
-                data += H4.ToString("000") + "F";
-            }
-
-            return data;
-        }
-        public SerialPort GetSerPort()
-        {
-            return SerialPort;
-        }
-
-        public void SetHx()
-        {
-            if (OffName == "浮根")
-            {
-                SerialPort.Parity = Parity.None;
-                SerialPort.BaudRate = 19200;
-                SerialPort.StopBits = StopBits.One;
-            }
-            else
-            {
-                SerialPort.Parity = Parity.None;
-                SerialPort.BaudRate = 9600;
-                SerialPort.StopBits = StopBits.One;
-            }
-            if (!SerialPort.IsOpen)
-            {
-                SerialPort.PortName = Rs232Name;
-                SerialPort.Open();
-            }
-            if (OffName == "浮根")
-            {
-                SerialPort.Write(CheckChData() + "C#");
-            }
-            else
-            {
-                CheckChKWData();
-            }
-        }
-        public void SetOFF()
-        {
-            if (!SerialPort.IsOpen)
-            {
-                SerialPort.PortName = Rs232Name;
-                SerialPort.Open();
-            }
-            SerialPort.Write(CheckChData() + "C#");
-        }
-
-        SerialPort SerialPort = new SerialPort();
-
+        //[Description("供应商光源控制方式，"), Category("光源控制"), DisplayName("控制器供应商")]
+        //        [TypeConverter(typeof(ErosConverter)), ErosConverter.ThisDropDownAttribute("", "浮根", "凯威", "")]
+        //        public string OffName { get; set; }
+        //public string Rs232Name { get; set; } = "COM1";
      
+        #endregion
+        //private string CheckChData()
+        //{
+        //    string data = "S";
+        //    if (H1Off)
+        //    {
+        //        data += H1.ToString("000") + "T";
+        //    }
+        //    else
+        //    {
+        //        data += H1.ToString("000") + "F";
+        //    }
+        //    if (H2Off)
+        //    {
+        //        data += H2.ToString("000") + "T";
+        //    }
+        //    else
+        //    {
+        //        data += H2.ToString("000") + "F";
+        //    }
 
-        Parity Parity { get; set; } = Parity.Even;
+        //    if (H3Off)
+        //    {
+        //        data += H3.ToString("000") + "T";
+        //    }
+        //    else
+        //    {
+        //        data += H3.ToString("000") + "F";
+        //    }
+        //    if (H4Off)
+        //    {
+        //        data += H4.ToString("000") + "T";
+        //    }
+        //    else
+        //    {
+        //        data += H4.ToString("000") + "F";
+        //    }
+
+        //    return data + "C#";
+        //}
+
+        //public string CheckChKWData()
+        //{
+        //    string data = "S";
+        //    if (H1Off)
+        //    {
+        //        data += H1.ToString("000") + "T";
+        //        SerialPort.Write("#1106411");
+
+        //    }
+        //    else
+        //    {
+        //        SerialPort.Write("#2106411");
+
+        //        data += H1.ToString("000") + "F";
+        //    }
+        //    Thread.Sleep(100);
+        //    if (H2Off)
+        //    {
+
+        //        SerialPort.Write("#1206412");
+        //        data += H2.ToString("000") + "T";
+        //    }
+        //    else
+        //    {
+        //        SerialPort.Write("#2106412");
+        //        data += H2.ToString("000") + "F";
+        //    }
+        //    Thread.Sleep(100);
+        //    if (H3Off)
+        //    {
+        //        SerialPort.Write("#1306413");
+        //        data += H3.ToString("000") + "T";
+        //    }
+        //    else
+        //    {
+        //        SerialPort.Write("#2106412");
+        //        data += H3.ToString("000") + "F";
+        //    }
+        //    Thread.Sleep(100);
+        //    if (H4Off)
+        //    {
+
+        //        SerialPort.Write("#1406414");
+        //        data += H4.ToString("000") + "T";
+        //    }
+        //    else
+        //    {
+        //        SerialPort.Write("#2106413");
+        //        data += H4.ToString("000") + "F";
+        //    }
+
+        //    return data;
+        //}
+        //public void SetHx()
+        //{
+        //    if (OffName == "浮根")
+        //    {
+        //        SerialPort.Parity = Parity.None;
+        //        SerialPort.BaudRate = 19200;
+        //        SerialPort.StopBits = StopBits.One;
+        //    }
+        //    else
+        //    {
+        //        SerialPort.Parity = Parity.None;
+        //        SerialPort.BaudRate = 9600;
+        //        SerialPort.StopBits = StopBits.One;
+        //    }
+        //    if (!SerialPort.IsOpen)
+        //    {
+        //        SerialPort.PortName = Rs232Name;
+        //        SerialPort.Open();
+        //    }
+        //    if (OffName == "浮根")
+        //    {
+        //        SerialPort.Write(CheckChData() + "C#");
+        //    }
+        //    else
+        //    {
+        //        CheckChKWData();
+        //    }
+        //}
+        //public void SetOFF()
+        //{
+        //    if (!SerialPort.IsOpen)
+        //    {
+        //        SerialPort.PortName = Rs232Name;
+        //        SerialPort.Open();
+        //    }
+        //    SerialPort.Write(CheckChData() + "C#");
+        //}
+
+        LightSource[] serialPort ;
+        //SerialPort SerialPort = new SerialPort();
+
+        //SerialPortHelper[] serialPort;
+
+        //Parity Parity { get; set; } = Parity.Even;
 
 
         SocketServer SoServer;
@@ -968,7 +961,11 @@ namespace Vision2.vision
                 ProjectINI.ReadPathJsonToCalss(datpath, out visionf);
             }
             Vision.Instance = visionf;
-
+            serialPort = new LightSource[Vision.Instance.OffCont];
+            for (int i = 0; i < serialPort.Length; i++)
+            {
+                serialPort[i] = new LightSource(i);
+            }
             if (Vision.Instance.VisionPr.Count == 0)
             {
                 Vision.AddRunNames(new string[]
@@ -1613,9 +1610,6 @@ namespace Vision2.vision
         {
             try
             {
-
-
-
                 foreach (var item in Vision.Instance.Himagelist)
                 {
                     try
@@ -1926,8 +1920,6 @@ namespace Vision2.vision
             return null;
         }
 
-
-    
         public static void ShowVisionResetForm(HalconRun  halcon=null)
         {
             try
@@ -1950,8 +1942,6 @@ namespace Vision2.vision
             {
             }
         }
-
-  
         /// <summary>
         /// 清楚视觉所有数据
         /// </summary>
@@ -1963,12 +1953,10 @@ namespace Vision2.vision
             }
         }
 
-        public static DataVale OneProductVale = new DataVale();
+        public static OneDataVale OneProductVale = new OneDataVale();
 
         //public static TrayRobot TraydataVale = new TrayRobot();
     
-
-
         /// <summary>
         /// 独立显示复判
         /// </summary>

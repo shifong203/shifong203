@@ -103,7 +103,7 @@ namespace Vision2.vision.HalconRunFile.Controls
             
                 try
                 {
-                    HWindID.ClearObj();
+                    HWindID.HobjClear();
 
                     HWindID.GetHWindowControl().HalconWindow.ClearWindow();
 

@@ -69,7 +69,7 @@ namespace Vision2.vision
                     HWind.SetImaage(OBJDat.ImageMode);
                     HWind.ShowObj();
                     HOperatorSet.GetImageSize(OBJDat.ImageMode, out width, out height);
-                    HWind.ClearObj();
+                    HWind.HobjClear();
                     HWind.SetImaage(OBJDat.ImageMode);
                     this.Text = "线体:" + OBJDat.prest1.LineName + "产品:" + OBJDat.prest1.Name;
                 }
@@ -112,7 +112,7 @@ namespace Vision2.vision
                                     if (tsLst.Count!=0)
                                     {
                                         data = tsLst.Peek();
-                                        HWind.ClearObj();
+                                        HWind.HobjClear();
                                         if (!keyValuePairs[data.LinkName].ReadPCImage(keyValuePairs[data.LinkName].prest1.PCNamePath))
                                         {
                                             AddText(data.LinkName+":连接！"+data.ImagePath);

@@ -33,16 +33,16 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             return base.ReadThis<Wire_Solder>(PATH);
         }
 
-        public override bool RunHProgram( OneResultOBj oneResultOBj,out List<OneRObj> oneRObjs, int runID = 0)
+        public override bool RunHProgram( OneResultOBj oneResultOBj,out List<OneRObj> oneRObjs, AoiObj aoiObj)
         {
             oneRObjs = new List<OneRObj>();
-            return RunP(oneResultOBj, runID);
+            return RunP(oneResultOBj, aoiObj);
         }
 
         public Threshold_Min_Max thresholdV_2 { get; set; } = new Threshold_Min_Max();
 
 
-        public bool RunP(OneResultOBj halcon, int runID = 0, HTuple visionUserControlH = null, HTuple visionUserControlS = null,
+        public bool RunP(OneResultOBj halcon, AoiObj aoiObj, HTuple visionUserControlH = null, HTuple visionUserControlS = null,
             HTuple visionUserControlV = null, HTuple hwindRgb = null)
         {
             int err = 0;
@@ -88,7 +88,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
 
                 HOperatorSet.Threshold(image2, out HObject hObjectS2, S_threshold_min2, S_threshold_max2);
                 HOperatorSet.Threshold(image1, out HObject hObjectH2, H_threshold_min2, H_threshold_max2);
-                if (runID != 0)
+                if (aoiObj.DebugID != 0)
                 {
                     HOperatorSet.DispObj(image1, visionUserControlH);
                     HOperatorSet.DispObj(image2, visionUserControlS);
@@ -107,7 +107,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 }
 
                 HOperatorSet.Intersection(hObjectH2, hObjectS2, out HObject hObject3);
-                if (runID == 1)
+                if (aoiObj.DebugID == 1)
                 {
                     HOperatorSet.DispObj(hObjectH, visionUserControlH);
                     HOperatorSet.DispObj(hObjectS, visionUserControlS);
@@ -130,7 +130,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 HOperatorSet.FillUpShape(hObject1, out hObject1, "area", 0, 9999);
                 //HOperatorSet.OpeningCircle(hObject1, out hObject1, 20);
 
-                if (runID == 2)
+                if (aoiObj.DebugID == 2)
                 {
                     HOperatorSet.DispObj(hObjectH2, visionUserControlH);
                     HOperatorSet.DispObj(hObjectS2, visionUserControlS);
@@ -164,7 +164,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     HOperatorSet.AreaCenter(hObject51, out HTuple area2, out HTuple row35, out HTuple hTuple2);
                     HOperatorSet.SelectShape(hObject51, out hObject51, "area", "and", area2.TupleMax().TupleSub(1), 9999999999);
                     HOperatorSet.SmallestRectangle2(hObject51, out HTuple row1_s, out HTuple column1_s, out HTuple phi1_s, out HTuple length1_s, out HTuple length2_s);
-                    if (runID > 2)
+                    if (aoiObj.DebugID > 2)
                     {
                         halcon.AddImageMassage(row1_s, column1_s, "1宽:" + (length2_s * 2).TupleString("0.1f"));
                     }
@@ -178,7 +178,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     HOperatorSet.AreaCenter(hObject52, out area, out row35, out hTuple2);
                     HOperatorSet.SelectShape(hObject52, out hObject52, "area", "and", area.TupleMax().TupleSub(1), 9999999999);
                     HOperatorSet.SmallestRectangle2(hObject52, out row1_s, out column1_s, out phi1_s, out length1_s, out length2_s);
-                    if (runID > 2)
+                    if (aoiObj.DebugID > 2)
                     {
                         halcon.AddImageMassage(row1_s, column1_s, "2宽:" + (length2_s * 2).TupleString("0.1f"));
                     }
@@ -190,7 +190,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     HOperatorSet.AreaCenter(hObject53, out area, out row35, out hTuple2);
                     HOperatorSet.SelectShape(hObject53, out hObject53, "area", "and", area.TupleMax().TupleSub(1), 9999999999);
                     HOperatorSet.SmallestRectangle2(hObject53, out row1_s, out column1_s, out phi1_s, out length1_s, out length2_s);
-                    if (runID > 2)
+                    if (aoiObj.DebugID > 2)
                     {
 
                         halcon.AddImageMassage(row1_s, column1_s, "3宽:" + (length2_s * 2).TupleString("0.1f"));
@@ -203,7 +203,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     HOperatorSet.SelectShape(hObject54, out hObject54, "area", "and", area.TupleMax().TupleSub(1), 9999999999);
 
                     HOperatorSet.SmallestRectangle2(hObject54, out row1_s, out column1_s, out phi1_s, out length1_s, out length2_s);
-                    if (runID > 2)
+                    if (aoiObj.DebugID > 2)
                     {
                         halcon.AddImageMassage(row1_s, column1_s, "4宽:" + (length2_s * 2).TupleString("0.1f"));
                     }
@@ -260,7 +260,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                             ResltBool = false;
                             halcon.AddImageMassage(rows1, columns1, "deg:" + phidoub.ToString("0.00°"), ColorResult.red);
                         }
-                        else if (runID > 2)
+                        else if (aoiObj.DebugID > 2)
                         {
                             halcon.AddImageMassage(rows1, columns1, "deg:" + phidoub.ToString("0.00°"));
                         }
@@ -269,7 +269,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                             ResltBool = false;
                             halcon.AddImageMassage(rows1 + 50, columns1 + 40, "宽:" + (length2R2 * 2), ColorResult.red);
                         }
-                        else if (runID > 2)
+                        else if (aoiObj.DebugID > 2)
                         {
                             halcon.AddImageMassage(rows1 + 50, columns1 + 40, "宽:" + (length2R2 * 2));
                         }
@@ -279,7 +279,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                             ResltBool = false;
                             halcon.AddObj(seleOBJ2, ColorResult.red);
                         }
-                        else if (runID > 2)
+                        else if (aoiObj.DebugID > 2)
                         {
                             halcon.AddObj(seleOBJ2, ColorResult.blue);
                         }

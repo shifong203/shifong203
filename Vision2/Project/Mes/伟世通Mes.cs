@@ -7,6 +7,8 @@ namespace Vision2.Project.Mes
 {
     public class 伟世通Mes : IMesData
     {
+        public event IMesData.ResTMesd ResDoneEvent;
+
         public static void WeirtFlg(string path, string code, bool ok)
         {
             path = path + "//TestFlag//" + code + "_" + DateTime.Now.ToString("yyyyMMddHHmmss");
@@ -49,7 +51,7 @@ namespace Vision2.Project.Mes
 
         public void WrietMesAll<T>(T datas, string QrCode, string Product_Name)
         {
-            WrietMes(datas as DataVale, Product_Name);
+            WrietMes(datas as OneDataVale, Product_Name);
         }
 
         public void WrietMes(TrayData data, string Product_Name)
@@ -61,7 +63,7 @@ namespace Vision2.Project.Mes
   
         }
 
-        public void WrietMes( DataVale trayData, string Product_Name)
+        public void WrietMes( OneDataVale trayData, string Product_Name)
         {
             try
             {
@@ -83,7 +85,7 @@ namespace Vision2.Project.Mes
                     reset = "F";
                 }
                 ListText.Add("ObjectID=" + trayData.PanelID);
-                ListText.Add("StartTime=" + UserFormulaContrsl.timeStrStrat);
+                ListText.Add("StartTime=" + UserFormulaContrsl.timeStrStrat.ToString("yyyy-MM-dd HH:mm:ss"));
                 ListText.Add("TestSteps=0");
                 ListText.Add("No.   Test Item   Low Limit   Criterion High Limit Unit    P / F      Value");
                 ListText.Add("1	   焊点检查	   1	  GELE	  1	  BOOL	  " + reset + "   1");

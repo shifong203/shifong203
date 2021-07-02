@@ -395,6 +395,10 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="ErosProjcetDLL\UI\UIConcs.cs" />
+    <Compile Include="HtmlMaker\Form1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="HtmlMaker\Html.cs" />
     <Compile Include="ProductionManagement\ProductionData.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -1079,6 +1083,15 @@
     <Compile Include="vision\Cams\CamProUI.Designer.cs">
       <DependentUpon>CamProUI.cs</DependentUpon>
     </Compile>
+    <Compile Include="vision\Cams\LightSourceControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="vision\Cams\LightSourceControl.Designer.cs">
+      <DependentUpon>LightSourceControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="vision\Cams\SerialPortHelper.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="vision\Cams\DahuaCamera.cs" />
     <Compile Include="vision\Cams\DahuaCams.cs">
       <SubType>UserControl</SubType>
@@ -1095,6 +1108,12 @@
     </Compile>
     <Compile Include="vision\HalconRunFile\PCBFile\CapacitanceMinMaxV.cs" />
     <Compile Include="vision\HalconRunFile\PCBFile\PCBAEX.cs" />
+    <Compile Include="vision\HalconRunFile\PCBFile\PCBBControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\PCBFile\PCBBControl.Designer.cs">
+      <DependentUpon>PCBBControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="vision\HalconRunFile\PCBFile\PCBLibraryForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1439,11 +1458,23 @@
     </Compile>
     <Compile Include="vision\Zazaniao.cs" />
     <Compile Include="Web References\cnshah0tis01\Reference.cs" />
+    <Compile Include="捷普\DebugSele.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="捷普\DebugSele.Designer.cs">
+      <DependentUpon>DebugSele.cs</DependentUpon>
+    </Compile>
     <Compile Include="捷普\MForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="捷普\MForm.Designer.cs">
       <DependentUpon>MForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="捷普\OperatorFormShow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="捷普\OperatorFormShow.Designer.cs">
+      <DependentUpon>OperatorFormShow.cs</DependentUpon>
     </Compile>
     <EmbeddedResource Include="ConClass\OnManagementForm.resx">
       <DependentUpon>OnManagementForm.cs</DependentUpon>
@@ -1549,6 +1580,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ErosProjcetDLL\UI\TabControl\TabControlEx.resx">
       <DependentUpon>TabControlEx.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HtmlMaker\Form1.resx">
+      <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ProductionManagement\ProductionData.resx">
       <DependentUpon>ProductionData.cs</DependentUpon>
@@ -1854,6 +1888,12 @@
     <EmbeddedResource Include="vision\Cams\DahuaCams.resx">
       <DependentUpon>DahuaCams.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="vision\Cams\LightSourceControl.resx">
+      <DependentUpon>LightSourceControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="vision\HalconRunFile\PCBFile\PCBBControl.resx">
+      <DependentUpon>PCBBControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="vision\HalconRunFile\PCBFile\PCBLibraryForm.resx">
       <DependentUpon>PCBLibraryForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -2013,8 +2053,14 @@
     <EmbeddedResource Include="vision\VisonRsoertUI.resx">
       <DependentUpon>VisonRsoertUI.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="捷普\DebugSele.resx">
+      <DependentUpon>DebugSele.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="捷普\MForm.resx">
       <DependentUpon>MForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="捷普\OperatorFormShow.resx">
+      <DependentUpon>OperatorFormShow.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Iamge\HalconDemo1_TemporaryKey.pfx" />
     <Fakes Include="ErosProjcetDLL\Fakes\NPOI.fakes" />

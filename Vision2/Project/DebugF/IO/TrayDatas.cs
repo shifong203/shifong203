@@ -279,7 +279,7 @@ namespace Vision2.Project.DebugF.IO
             {
             }
         }
-        public void SetValue(int number, DataVale dataVale)
+        public void SetValue(int number, OneDataVale dataVale)
         {
             try
             {
@@ -302,7 +302,7 @@ namespace Vision2.Project.DebugF.IO
                             }
                             if (tray.GetDataVales()[number - 1] == null)
                             {
-                                tray.GetDataVales()[number - 1] = new DataVale();
+                                tray.GetDataVales()[number - 1] = new OneDataVale();
                             }
                             tray.GetDataVales()[number - 1].PanelID = dataVale.PanelID;
                             tray.GetDataVales()[number - 1] = dataVale;
@@ -340,7 +340,7 @@ namespace Vision2.Project.DebugF.IO
                     for (int i = 0; i < dataVale.Count; i++)
                     {
                         string datStr = "";
-                        DataVale data = dataVale.GetDataVales()[i];
+                        OneDataVale data = dataVale.GetDataVales()[i];
                         if (data != null)
                         {
                             Control[] controls = this.Controls.Find(data.TrayLocation.ToString(), false);
@@ -418,7 +418,7 @@ namespace Vision2.Project.DebugF.IO
                                 String DAT = tryaid[i].ToString();
                                 if (tray.GetDataVales()[tryaid[i] - 1] == null)
                                 {
-                                    tray.GetDataVales()[tryaid[i] - 1] = new DataVale();
+                                    tray.GetDataVales()[tryaid[i] - 1] = new OneDataVale();
                                 }
                                 tray.GetDataVales()[tryaid[i] - 1].PanelID = listSN[i];
 

@@ -25,8 +25,11 @@ namespace Vision2.Project.Mes
             }
         }
 
+        public event IMesData.ResTMesd ResDoneEvent;
+
         public bool ReadMes(string SerialNumber, out string resetMesString)
         {
+            bool OK = false;
             resetMesString = "";
             try
             {
@@ -34,22 +37,23 @@ namespace Vision2.Project.Mes
                 SerialNumber, RecipeCompiler.Instance.MesDatat.AssemblyNumber, RecipeCompiler.Instance.MesDatat.Testre_Name, RecipeCompiler.Instance.MesDatat.Test_Process);
                 if (!resetMesString.ToLower().Contains("pass"))
                 {
-                    Vision2.ErosProjcetDLL.Project.AlarmText.AddTextNewLine(resetMesString, Color.Red);
+                    ErosProjcetDLL.Project.AlarmText.AddTextNewLine(resetMesString, Color.Red);
                 }
                 else
                 {
-                    Vision2.ErosProjcetDLL.Project.AlarmText.AddTextNewLine(SerialNumber + ":" + resetMesString);
-                    return true;
+                    ErosProjcetDLL.Project.AlarmText.AddTextNewLine(SerialNumber + ":" + resetMesString);
+                    OK = true;
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                resetMesString =  "SN:"+SerialNumber + "读取失败:"  + ex.Message;
             }
-            return false;
+            ResDoneEvent?.Invoke(OK ,resetMesString);
+            return OK;
         }
         public bool ReadMes(out string resetMesString)
         {
-
             return ReadMes(DebugCompiler.GetThis().DDAxis.GetTrayInxt(0).GetTrayData().GetDataVales()[0].PanelID, out resetMesString);
         }
 
@@ -157,7 +161,7 @@ namespace Vision2.Project.Mes
 
         }
 
-        public void WrietMes(DataVale data, string Product_Name)
+        public void WrietMes(OneDataVale data, string Product_Name)
         {
 
             if (data.PanelID == null || data.PanelID == "")
@@ -168,26 +172,29 @@ namespace Vision2.Project.Mes
             List<string> ListText = new List<string>();
             RecipeCompiler.Instance.MesDatat.UserIDName = ErosProjcetDLL.Project.ProjectINI.In.UserName;
             RecipeCompiler.Instance.MesDatat.UserID = ErosProjcetDLL.Project.ProjectINI.In.UserID;
-            ListText.Add("S");
+            ListText.Add("S" + data.PanelID);
             ListText.Add("C" + RecipeCompiler.Instance.MesDatat.Customer);
+            ListText.Add("B" + RecipeCompiler.Instance.MesDatat.Customer);
             ListText.Add("I" + RecipeCompiler.Instance.MesDatat.DiviSion);
             ListText.Add("N" + RecipeCompiler.Instance.MesDatat.Testre_Name);
             ListText.Add("P" + RecipeCompiler.Instance.MesDatat.Test_Process);
-            ListText.Add("TF");
-            ListText.Add("O" + ErosProjcetDLL.Project.ProjectINI.In.UserName);
+            ListText.Add('s' + data.TrayLocation.ToString());
+            ListText.Add('D' + RecipeCompiler.Instance.MesDatat.Software_Document);
+            ListText.Add('R' + RecipeCompiler.Instance.MesDatat.Software_Revision);
+            ListText.Add('n' + RecipeCompiler.Instance.MesDatat.AssemblyNumber);
+            ListText.Add('r' + RecipeCompiler.Instance.MesDatat.Assembly_Revision);
+            ListText.Add('W' + RecipeCompiler.Instance.MesDatat.Firmware_Revision);
+          
+            if (data.OK) ListText.Add("TP");
+            else ListText.Add("TF");
+            ListText.Add("O" + ErosProjcetDLL.Project.ProjectINI.In.UserID);
+            ListText.Add("L" + RecipeCompiler.Instance.MesDatat.Line);
+            ListText.Add("p" + RecipeCompiler.Instance.MesDatat.Site);
             ListText.Add("[" + DebugCompiler.GetThis().DDAxis.StartTime.ToString("yyyy-MM-dd HH:mm:ss"));
             ListText.Add("]" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
-            ListText[0] = "S" + data.PanelID;
-            if (data.OK)
-            {
-                ListText[5] = "TP";
-            }
-            else
-            {
-                ListText[5] = "TF";
-            }
-            string strTimed = DateTime.Now.ToString("yyyy-MM-dd");
-            string pathEx = ProcessControl.ProcessUser.GetThis().ExcelPath + "//历史数据//" + strTimed + ".csv";
+        
+            string strTimed = data.EndTime.ToString(RecipeCompiler.Instance.MesDatat.FileTimeName);
+            string pathEx = ProcessControl.ProcessUser.GetThis().ExcelPath + "//历史数据//" + data.EndTime.ToString("yyyyMMdd") + ".csv";
             if (!File.Exists(pathEx))
             {
                 List<string> columnText = new List<string>() { "进站时间", "结束时间", "状态", "SN" ,"托盘位"};
@@ -210,17 +217,31 @@ namespace Vision2.Project.Mes
             }
             dat.Add(data.PanelID);
             dat.Add(data.TrayLocation.ToString());
-            //foreach (var item in data.DataMin_Max)
-            //{
-            //   dat.Add(item.Value.ComponentName + "");
-            //    for (int i2 = 0; i2 < item.Value.Reference_Name.Count; i2++)
-            //    {
-            //        dat.Add(item.Value.Reference_Name[i2] + ":" + item.Value.Reference_ValueMin[i2] + ">" + item.Value.ValueStrs + "<" + item.Value.Reference_ValueMax);
-            //    }
-            //}
+            foreach (var item in data.ListCamsData)
+            {
+                foreach (var itemd in item.Value.ResuOBj)
+                {
+                    foreach (var itemdt in itemd.GetNgOBJS().DicOnes)
+                    {
+                        foreach (var iteminde2 in itemdt.Value.oneRObjs)
+                        {
+                            for (int i = 0; i < iteminde2.dataMinMax.ValueStrs.Count; i++)
+                            {
+                                dat.Add(iteminde2.ComponentID+"="+ iteminde2.dataMinMax.ValueStrs[i]);
+                            }
+                        }
+                    }
+                }
+            }
             ErosProjcetDLL.Excel.Npoi.AddWriteCSV(pathEx, dat.ToArray());
-            string paht = ProcessControl.ProcessUser.GetThis().ExcelPath + "//" + data.PanelID + DateTime.Now.ToString(" yyyy-MM-dd-HH-mm-ss");
-            ErosProjcetDLL.Excel.Npoi.WriteF(paht, ListText, ".txt");
+           
+            string paht =   data.PanelID + strTimed;
+            if (ErosProjcetDLL.Project.ProjectINI.DebugMode)
+            {
+                paht = "DEBUG-" + paht;
+            }
+            ErosProjcetDLL.Excel.Npoi.WriteF(ProcessControl.ProcessUser.GetThis().ExcelPath +"\\历史数据\\" + DateTime.Now.ToString("yyyyMMdd") +"//" + paht, ListText, RecipeCompiler.Instance.Filet);
+            ErosProjcetDLL.Excel.Npoi.WriteF(ProcessControl.ProcessUser.GetThis().ExcelPath+ "//" + paht, ListText,RecipeCompiler.Instance.  Filet);
         }
 
         public void WrietMes(TrayData trayData, string Product_Name)
@@ -247,7 +268,7 @@ namespace Vision2.Project.Mes
                     ListText.Add("TF");
                     //ListText.Add(RecipeCompiler.Instance.MesDatat.CRD);
                     ListText.Add("O" + ErosProjcetDLL.Project.ProjectINI.In.UserName);
-                    ListText.Add("[" + DebugF.DebugCompiler.GetThis().DDAxis.StartTime.ToString("yyyy-MM-dd HH:mm:ss"));
+                    ListText.Add("[" + DebugCompiler.GetThis().DDAxis.StartTime.ToString("yyyy-MM-dd HH:mm:ss"));
                     ListText.Add("]" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
                     string sn = "";
                     string strTimed = DateTime.Now.ToString("yyyy-MM-dd");
@@ -301,20 +322,10 @@ namespace Vision2.Project.Mes
                                         ListText[5] = "TF";
                                         dat.Add("NG");
                                     }
-                                    //if (tray.GetDataVales()[i].OK)
-                                    //{
-                                    //    RecipeCompiler.AddRlsNumber();
-                                    //    dat.Add("OK");
-                                    //}
-                                    //else
-                                    //{
-                                    //    dat.Add("");
-                                    //}
                                     dat.Add(sn);
                                     RecipeCompiler.AddOKNumber(tray.GetDataVales()[i].OK);
-                 
                                     string paht = ProcessControl.ProcessUser.GetThis().ExcelPath + "//" + sn + DateTime.Now.ToString(" yyyy-MM-dd-HH-mm-ss");
-                                    ErosProjcetDLL.Excel.Npoi.WriteF(paht, ListText, ".txt");
+                                    ErosProjcetDLL.Excel.Npoi.WriteF(paht, ListText, RecipeCompiler.Instance.Filet);
                                     List<double> valuse = tray.GetDataVales()[i].Data as List<double>;
                                     if (valuse != null)
                                     {
@@ -331,9 +342,8 @@ namespace Vision2.Project.Mes
                 }
                 else
                 {
-                    DataVale data = datas as DataVale;
+                    OneDataVale data = datas as OneDataVale;
                     WrietMes(data, Product_Name);
-
                 }
             }
             catch (Exception ex)

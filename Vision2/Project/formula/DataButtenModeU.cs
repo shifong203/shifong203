@@ -17,8 +17,8 @@ namespace Vision2.Project.formula
             InitializeComponent();
             button6.Enabled = button10.Enabled = false;
         }
-        Mes.DataVale dataVale;
-        public void Set(Mes.DataVale data)
+        Mes.OneDataVale dataVale;
+        public void Set(Mes.OneDataVale data)
         {
             dataVale = data;
             groupBox1.Text = dataVale.TrayLocation.ToString();
@@ -63,6 +63,11 @@ namespace Vision2.Project.formula
         {
             try
             {
+                if (dataVale.PanelID=="")
+                {
+                    MessageBox.Show("SN未识别");
+                    return;
+                }
                 dataVale.ResetOK();
                 groupBox1.Text = dataVale.TrayLocation.ToString();
                 label1.Text = "OK" + "SN:" + dataVale.PanelID;
@@ -77,7 +82,6 @@ namespace Vision2.Project.formula
             {
                 MessageBox.Show(ex.Message);
             }
-
         }
 
         private void button6_Click(object sender, EventArgs e)

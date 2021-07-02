@@ -4,14 +4,17 @@ using Vision2.vision;
 using HalconDotNet;
 using Vision2.vision.HalconRunFile.RunProgramFile;
 using  ErosSocket.DebugPLC.Robot;
+using System;
 
 namespace Vision2.Project.Mes
 {
     public interface IMesData
     {
+        delegate void ResTMesd(bool ok, string mesRestStr);
+        event ResTMesd ResDoneEvent;
         void WrietMes(UserFormulaContrsl userFormulaContrsl, string QRCODE, string Product_Name);
         void WrietMes(TrayData trayData, string Product_Name);
-        void WrietMes(DataVale trayData, string Product_Name);
+        void WrietMes(OneDataVale trayData, string Product_Name);
         void WrietMesAll<T>(T data, string QRCODE, string Product_Name);
         /// <summary>
         /// 根据sn查询mes信息
@@ -29,11 +32,15 @@ namespace Vision2.Project.Mes
 
     }
 
-        /// <summary>
+    /// <summary>
         /// 单个产品信息
         /// </summary>
-    public class DataVale
+    public class OneDataVale
     {
+
+
+            public DateTime StrTime = DateTime.Now;
+            public DateTime EndTime ;
             public void ResetOK()
             {
                 OK = true;
@@ -47,7 +54,8 @@ namespace Vision2.Project.Mes
            /// <summary>
         /// 产品SN
         /// </summary>
-           public string PanelID { get; set; } = "";
+            public string PanelID { get; 
+            set; } = "";
             /// <summary>
             /// 产品型号
             /// </summary>
@@ -99,16 +107,15 @@ namespace Vision2.Project.Mes
                     return true;
                 }
                 set
-                {   if (value)
-                    {         
+                {       
                         foreach (var item in ListCamsData)
                         {
-                            item.Value.OK = true;
-                        }        }
-                    autoOk = value;     
+                            item.Value.OK = value;
+                        }     
+                     
                     }
             }
-            bool autoOk;
+      
             /// <summary>
             /// NG数量
             /// </summary>
@@ -236,6 +243,7 @@ namespace Vision2.Project.Mes
             
             }
             set {
+
                 foreach (var item in DicNGObj.DicOnes)
                 {
                     item.Value.OK = value;
@@ -342,6 +350,26 @@ namespace Vision2.Project.Mes
          /// </summary>
         public OneCompOBJs  AllCompObjs= new OneCompOBJs();
 
+        public OneCompOBJs GetAllCompOBJs()
+        {
+            try
+            {
+                foreach (var item in ResuOBj)
+                {
+                    foreach (var itemd in item.GetNgOBJS().DicOnes)
+                    {
+                        if (!AllCompObjs.DicOnes.ContainsKey(itemd.Key))
+                        {
+                            AllCompObjs.DicOnes.Add(itemd.Key, itemd.Value);
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+            }
+            return AllCompObjs;
+        }
 
 
     }

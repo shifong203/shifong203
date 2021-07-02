@@ -84,18 +84,14 @@ namespace Vision2.Project.DebugF.IO
 
                 richTextBox2.AppendText("行:" + (runErr.RowIndx + 1) + "状态:" + runErr.RunState +"时间:"+ (runErr.StepRunTime / 1000.0).ToString("0.000S") +"错误:"+runErr.ErrStr + Environment.NewLine);
                 ////toolStripStatusLabel1.Text = "行:" + runErr.RowIndx;
-                toolStripStatusLabel2.Text = (codeStr.RunTime).ToString("0.000S");
+                toolStripStatusLabel2.Text = (runErr.StepRunTime / 1000.0).ToString("0.000S");
+                toolStripStatusLabel4.Text = "总CT:"+codeStr.RunTime.ToString();
                 TimeStr[runErr.RowIndx] = runErr.StepRunTime + "ms";
                 //toolStripStatusLabel3.Text = "Time:" + runErr.StepRunTime + "ms";
                 showLineNoTime(runErr.RowIndx, panel3, runErr.StepRunTime + "ms");
                 showLineNo(codeStr.StepInt);
-                try
-                {
-
-                }
-                catch (Exception)
-                {
-                }
+                richTextBox2.SelectionStart = richTextBox2.Text.Length;
+                richTextBox2.ScrollToCaret();
             }
             catch (Exception)
             {

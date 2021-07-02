@@ -34,6 +34,7 @@ namespace Vision2
                     File.Copy(Application.StartupPath + "\\X64\\ThridLibray.dll", Application.StartupPath + "\\ThridLibray.dll", true);
                     File.Copy(Application.StartupPath + "\\X64\\CLIDelegate.dll", Application.StartupPath + "\\CLIDelegate.dll", true);
                 }
+                File.Copy(Application.StartupPath + "\\X64\\ICSharpCode.SharpZipLib.dll", Application.StartupPath + "\\ICSharpCode.SharpZipLib.dll", true);
                 Environment.SetEnvironmentVariable("PYLON_GIGE_HEARTBEAT", "300000" /*ms*/);
                 HOperatorSet.SetSystem("tsp_width", 900000000);
                 HOperatorSet.SetSystem("tsp_height", 900000000);

@@ -28,12 +28,10 @@ namespace Vision2.vision.HalconRunFile.Controls
                         visionUserC1.hWindwC.Image(Image);
                         break;
                     case "黑白":
-
                         visionUserC1.hWindwC.Image(BT);
                         break;
                     case "R":
                         visionUserC1.hWindwC.Image(R);
-
                         break;
                     case "G":
                         visionUserC1.hWindwC.Image(G);

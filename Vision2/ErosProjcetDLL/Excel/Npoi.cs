@@ -93,6 +93,16 @@ namespace Vision2.ErosProjcetDLL.Excel
         {
             DataTable dt = new DataTable();
             return ImportExcel(filePath, sheetName);
+        }     /// <summary>
+              /// 读取Excel表格指定的表单文件,64位软件读取时第一行数据作为列名；
+              /// </summary>
+              /// <param name="filePath">文件地址</param>
+              /// <param name="sheetName">表名</param>
+              /// <returns></returns>
+        public static DataTable ReadExcelFile(string filePath, int sheetSel)
+        {
+            DataTable dt = new DataTable();
+            return ImportExcel(filePath, sheetSel);
         }
 
         /// <summary>
@@ -135,6 +145,111 @@ namespace Vision2.ErosProjcetDLL.Excel
                 else
                     sheet = workbook.GetSheet(sheetName);
 
+                if (sheet == null)
+                    return null;
+                IEnumerator rows = sheet.GetRowEnumerator();
+                #region 获取表头
+                IRow headerRow = sheet.GetRow(0);
+                int cellCount = headerRow.LastCellNum;
+                for (int j = 0; j < cellCount; j++)
+                {
+                    ICell cell = headerRow.GetCell(j);
+                    if (cell != null)
+                    {
+                        dt.Columns.Add(cell.ToString());
+                    }
+                    else
+                    {
+                        dt.Columns.Add("");
+                    }
+                }
+                #endregion
+                #region 获取内容
+                for (int i = (sheet.FirstRowNum + 1); i <= sheet.LastRowNum; i++)
+                {
+                    IRow row = sheet.GetRow(i);
+                    DataRow dataRow = dt.NewRow();
+
+                    for (int j = row.FirstCellNum; j < cellCount; j++)
+                    {
+                        if (row.GetCell(j) != null)
+                        {
+                            //判断单元格是否为日期格式
+                            if (row.GetCell(j).CellType == NPOI.SS.UserModel.CellType.Numeric && HSSFDateUtil.IsCellDateFormatted(row.GetCell(j)))
+                            {
+                                if (row.GetCell(j).DateCellValue.Year >= 1970)
+                                {
+                                    dataRow[j] = row.GetCell(j).DateCellValue.ToString();
+                                }
+                                else
+                                {
+                                    dataRow[j] = row.GetCell(j).ToString();
+
+                                }
+                            }
+                            else
+                            {
+                                dataRow[j] = row.GetCell(j).ToString();
+                            }
+                        }
+                    }
+                    dt.Rows.Add(dataRow);
+                }
+                #endregion
+
+            }
+            catch (Exception ex)
+            {
+                dt = null;
+                ErosProjcetDLL.Project.AlarmText.AddTextNewLine(ex.Message);
+            }
+            finally
+            {
+                //if (stream != null)
+                //{
+                //    stream.Close();
+                //    stream.Dispose();
+                //}
+            }
+            return dt;
+        }
+
+        /// <summary>
+        /// 根据Excel格式读取Excel
+        /// </summary>
+        /// <param name="stream">文件流</param>
+        /// <param name="type">Excel格式枚举类型，xls/xlsx</param>
+        /// <param name="sheetName">表名，默认取第一张</param>
+        /// <returns>DataTable</returns>
+        private static DataTable ImportExcel(string filePath, int sheetSele)
+        {
+            if (!File.Exists(filePath))
+            {
+                return null;
+            }
+
+            Stream stream = File.OpenRead(filePath);
+            DataTable dt = new DataTable();
+            IWorkbook workbook;
+            try
+            {
+                //xls使用HSSFWorkbook类实现，xlsx使用XSSFWorkbook类实现
+                if (filePath.EndsWith(".xls"))
+                {
+                    //把xls文件中的数据写入wk中
+                    workbook = new HSSFWorkbook(stream);
+                }
+                else
+                {
+                    //把xlsx文件中的数据写入wk中
+                    workbook = new XSSFWorkbook(stream);
+                }
+
+                stream.Close();
+                stream.Dispose();
+                ISheet sheet = null;
+                //获取工作表 默认取第一张
+                 sheet = workbook.GetSheetAt(sheetSele);
                 if (sheet == null)
                     return null;
                 IEnumerator rows = sheet.GetRowEnumerator();

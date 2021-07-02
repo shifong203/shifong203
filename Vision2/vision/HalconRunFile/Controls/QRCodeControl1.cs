@@ -121,7 +121,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 this.Cursor = Cursors.WaitCursor;
                 halcon.HobjClear();
                 halcon.ShowVision(Code.Name, halcon.GetOneImageR());
-                HWindID.ClearObj();
+                HWindID.HobjClear();
                 HWindID.OneResIamge.HObjectRed = Code.XLD;
                 HWindID.ShowImage();
                 //dataGridView2.Rows.Clear();
@@ -671,7 +671,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 string name = Code.GenParamName;
                 listBox2.Items.Clear();
                 images.Clear();
-                HWindIDTS.ClearObj();
+                HWindIDTS.HobjClear();
                 OBJs.Clear();
                 Code.GenParamName = "train";
                 Code.TrainQRCode(Code.GetEmset(halcon.Image()), halcon.GetOneImageR(), out HObject hObject1, images, OBJs);

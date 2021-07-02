@@ -323,7 +323,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         //[DescriptionAttribute("是否在结果图像中显示文本。"), Category("结果显示"), DisplayName("显示文本")]
         //public bool ISShowText { get; set; }
 
-        public override bool RunHProgram( OneResultOBj oneResultOBj, out List<OneRObj> oneRObjs, int runID = 0)
+        public override bool RunHProgram( OneResultOBj oneResultOBj, out List<OneRObj> oneRObjs,AoiObj aoiObj)
         {
             oneRObjs = new List<OneRObj>();
             foreach (var item in keyColor)

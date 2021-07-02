@@ -75,7 +75,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             return base.ReadThis<Pin_Round_brush_needlecs>(path);
         }
 
-        public override bool RunHProgram( OneResultOBj oneResultOBj, out List<OneRObj> oneRObjs, int id = 0)
+        public override bool RunHProgram( OneResultOBj oneResultOBj, out List<OneRObj> oneRObjs, AoiObj aoiObj)
         {
             oneRObjs = new List<OneRObj>();
             try
@@ -87,7 +87,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 HObject image2 = this.GetEmset(oneResultOBj.Image);
                 HObject hObject = Threshold_Min_Max2.Threshold(image2);//铜圈灰度
                 HOperatorSet.ClosingCircle(hObject, out hObject, 5);
-                if (id == 1)
+                if (aoiObj.DebugID == 1)
                 {
                     oneResultOBj.AddObj(hObject);
                     return false;
@@ -97,16 +97,16 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 hObject = select_Shape_.select_shape(hObject);//铜圈赛选
                 HOperatorSet.AreaCenter(hObject, out HTuple area2, out HTuple row2, out HTuple column2);
                 HOperatorSet.GenCircle(out hObject, row2, column2, HTuple.TupleGenConst(row2.Length, ECircle));
-                if (id >= 3)
+                if (aoiObj.DebugID >= 3)
                 {
                     oneResultOBj.AddObj(hObject, ColorResult.blue);
                 }
                 HOperatorSet.GenCircle(out hObject3, row2, column2, HTuple.TupleGenConst(row2.Length, ECircleT));
-                if (id >= 5)
+                if (aoiObj.DebugID >= 5)
                 {
                     oneResultOBj.AddObj(hObject3, ColorResult.yellow);
                 }
-                if (id == 2)
+                if (aoiObj.DebugID == 2)
                 {
                     oneResultOBj.AddObj(hObject);
                     return false;
@@ -126,7 +126,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
 
                 HOperatorSet.GenCircle(out hObject, rows, columns, radius);
                 HOperatorSet.ErosionCircle(hObject, out hObject, 6);//获得铜孔区域
-                if (id == 3)
+                if (aoiObj.DebugID == 3)
                 {
                     oneResultOBj.AddObj(hObject);
                     return false;
@@ -134,7 +134,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 HOperatorSet.Union1(hObject, out hObject1);
                 HOperatorSet.ReduceDomain(image2, hObject1, out Imgetd);
                 hObject1 = Threshold_Min_Max3.Threshold(Imgetd);//铜针灰度
-                if (id == 4)
+                if (aoiObj.DebugID == 4)
                 {
                     oneResultOBj.AddObj(hObject1);
                     HOperatorSet.AreaCenter(hObject1, out HTuple area, out HTuple row, out HTuple column);
@@ -151,7 +151,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     HOperatorSet.DilationRectangle1(hObject, out HObject hObject4, 60,60);
                     oneResultOBj.AddObj(hObject4, ColorResult.red);
                 }
-                if (id == 5)
+                if (aoiObj.DebugID == 5)
                 {
                     oneResultOBj.AddObj(hObject);
                     return false;
@@ -161,13 +161,13 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 hObject1 = Threshold_MinG.Threshold(image2);//跪角灰度
                 HOperatorSet.Connection(hObject1, out hObject1);
 
-                if (id == 6)
+                if (aoiObj.DebugID == 6)
                 {
                     oneResultOBj.AddObj(hObject1);
                     return false;
                 }
                 hObject = select_Shape_arae2.select_shape(hObject1);
-                if (id == 7)
+                if (aoiObj.DebugID == 7)
                 {
                     oneResultOBj.AddObj(hObject);
                     return false;
@@ -178,13 +178,13 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 }
                 HOperatorSet.FillUp(hObject, out hObject);
                 HOperatorSet.Union1(hObject, out hObject);
-                if (id ==8)
+                if (aoiObj.DebugID == 8)
                 {
                     oneResultOBj.AddObj(hObject);
                     return false;
                 }
                 oneResultOBj.AddMeassge("孔数:"+row2.Length);
-                if (id == 9)
+                if (aoiObj.DebugID == 9)
                 {
                     Rows = row2;
                     Columns = column2;

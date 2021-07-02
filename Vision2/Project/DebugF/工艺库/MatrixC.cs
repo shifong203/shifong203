@@ -563,12 +563,12 @@ namespace Vision2.Project.DebugF.工艺库
                 int dcc = Xindxe * Yindxe;
                 if (hWindID != null)
                 {
-                    hWindID.ClearObj();
+                    hWindID.HobjClear();
                     watchOut.Restart();
                 }
                 if (HWind != null)
                 {
-                    HWind.ClearObj();
+                    HWind.HobjClear();
                     ShowMark(HWind);
                 }
                 if (axisName == null)
@@ -731,7 +731,7 @@ namespace Vision2.Project.DebugF.工艺库
             }
             if (hWindID != null)
             {
-                hWindID.ClearObj();
+                hWindID.HobjClear();
                 hWindID.OneResIamge.AddObj(hObject2, ColorResult.yellow);
                 hWindID.OneResIamge.Image = hObject;
                 hWindID.SetImaage(hObject);
@@ -739,7 +739,7 @@ namespace Vision2.Project.DebugF.工艺库
             }
             if (HWind != null)
             {
-                HWind.ClearObj();
+                HWind.HobjClear();
                 ShowMark(HWind);
                 HTuple rRow1 = mark1Row;
                 HTuple rRow2 = mark2Row;

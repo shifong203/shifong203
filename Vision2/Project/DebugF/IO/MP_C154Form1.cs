@@ -666,7 +666,7 @@ namespace Vision2.Project.DebugF.IO
                     toolStripLabel1.Text = listBox1.SelectedItem.ToString();
                     xYZPoints = RecipeCompiler.Instance.ProductEX[listBox1.SelectedItem.ToString()].DPoint;
 
-                    HWindNt.ClearObj();
+                    HWindNt.HobjClear();
                     listBox3.Items.AddRange(productEX.Key_Navigation_Picture.Keys.ToArray());
                     if (listBox3.Items.Count != 0)
                     {
@@ -800,7 +800,7 @@ namespace Vision2.Project.DebugF.IO
         {
             try
             {
-                HWindNt.ClearObj();
+                HWindNt.HobjClear();
                 if (productEX.Key_Navigation_Picture[listBox3.SelectedItem.ToString()].KeyRoi.ContainsKey(listBox2.SelectedItem.ToString()))
                 {
                     HObject hObject = productEX.Key_Navigation_Picture[listBox3.SelectedItem.ToString()].KeyRoi[listBox2.SelectedItem.ToString()];
@@ -851,7 +851,7 @@ namespace Vision2.Project.DebugF.IO
         {
             try
             {
-                HWindNt.ClearObj();
+                HWindNt.HobjClear();
 
                 if (productEX.Key_Navigation_Picture[listBox3.SelectedItem.ToString()].KeyRoi.ContainsKey(listBox2.SelectedItem.ToString()))
                 {
@@ -999,7 +999,7 @@ namespace Vision2.Project.DebugF.IO
             try
             {
                 listBox2.Items.Clear();
-                HWindNt.ClearObj();
+                HWindNt.HobjClear();
                 listBox2.Items.AddRange(productEX.Key_Navigation_Picture[listBox3.SelectedItem.ToString()].KeyRoi.Keys.ToArray());
                 HWindNt.SetImaage(productEX.Key_Navigation_Picture[listBox3.SelectedItem.ToString()].GetHObject());
                 foreach (var item in productEX.Key_Navigation_Picture[listBox3.SelectedItem.ToString()].KeyRoi)

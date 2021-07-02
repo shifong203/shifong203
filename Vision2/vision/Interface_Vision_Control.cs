@@ -14,8 +14,8 @@ namespace Vision2.vision
 
         RunProgram ReadThis<T>(string Path);
 
-        bool Run( OneResultOBj oneResultOBj,  int runid = 0, AoiObj aoiObj = null);
-        bool RunHProgram( OneResultOBj oneResultOBj,out List< OneRObj> oneRObj, int runID = 0);
+        bool Run( OneResultOBj oneResultOBj,   AoiObj aoiObj =null);
+        bool RunHProgram( OneResultOBj oneResultOBj,out List< OneRObj> oneRObj,AoiObj aoiObj);
 
         void Set_Item<T>(T run_Projet);
 

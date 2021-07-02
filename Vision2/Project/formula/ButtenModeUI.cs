@@ -39,7 +39,7 @@ namespace Vision2.Project.formula
       
         }
 
-        public void SetValue(int number, DataVale dataVale)
+        public void SetValue(int number, OneDataVale dataVale)
         {
 
         }

@@ -302,6 +302,40 @@ namespace Vision2.vision
         {
             ListHobj.Add(new Hobjt_Colro(hObject, color));
         }
+        public void AddNameOBJ(string  name, HObject hObject, HTuple colr=null)
+        {
+            try
+            {
+                if (Dick.ContainsKey(name))
+                {
+                    Dick[name]=new Hobjt_Colro(hObject, colr);
+                }
+                else
+                {
+                    Dick.Add(name, new Hobjt_Colro(hObject, colr));
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+        }
+        public void AddNameOBJ(string name, HObject hObject, ColorResult colr )
+        {
+            try
+            {
+                if (Dick.ContainsKey(name))
+                {
+                    Dick[name] = new Hobjt_Colro(hObject, colr.ToString());
+                }
+                else
+                {
+                    Dick.Add(name, new Hobjt_Colro(hObject, colr.ToString()));
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+        }
         public void AddMeassge(HTuple massage)
         {
             Massage.Append(massage);
@@ -340,6 +374,13 @@ namespace Vision2.vision
             Colrrs.GenEmptyObj();
             ListHobj.Clear();
             oneContOBJs.DicOnes.Clear();
+        }
+        public void ClearImageMassage()
+        {
+            MaGreen = new MassageText();
+            MaRed = new MassageText();
+            MaYellow = new MassageText();
+            MaBlue = new MassageText();
         }
         public void Dispose()
         {
@@ -481,10 +522,19 @@ namespace Vision2.vision
                     HOperatorSet.SetColor(hWindowHalconID, ListHobj[i].Color);
                     SelectOBJ(ListHobj[i].Object, hWindowHalconID, rowi, coli, ismovet);
                 }
+
+                foreach (var item in Dick)
+                {
+                    if (item.Value.Object == null)
+                    {
+                        break;
+                    }
+                    HOperatorSet.SetColor(hWindowHalconID, item.Value.Color);
+                    SelectOBJ(item.Value.Object, hWindowHalconID, rowi, coli, ismovet);
+                }
                 SelesShoOBJ(hWindowHalconID);
                 foreach (var item in oneContOBJs.DicOnes)
                 {
-
                     foreach (var itemtd in item.Value.oneRObjs)
                     {
                         if (itemtd.ROI != null)
@@ -579,7 +629,7 @@ namespace Vision2.vision
                 HOperatorSet.Convexity(HObject, out convexity);
                 HOperatorSet.Rectangularity(HObject, out Rectangularity);
                 hTuple = "X" + row + " Y" + colum + " 面积:" + ar + "高" + height + "宽" + width + "比例" + ratio + "圆度" + circularity
-   + Environment.NewLine + "紧密度" + compactness + "凸面" + convexity + "长方形" + Rectangularity;
+                + Environment.NewLine + "紧密度" + compactness + "凸面" + convexity + "长方形" + Rectangularity;
             }
             else if (classv[0] == "xld_cont")
             {
@@ -593,9 +643,7 @@ namespace Vision2.vision
             }
             try
             {
-
                 Vision.Disp_message(hWindowHalconID, hTuple, 120, 20, true, "red");
-
                 HOperatorSet.SetColor(hWindowHalconID, "#ff000040");
                 HOperatorSet.GenCrossContourXld(out HObject cross, row, colum, 20, 0);
                 HOperatorSet.DispObj(cross, hWindowHalconID);
@@ -672,7 +720,15 @@ namespace Vision2.vision
             public HObject Object = new HObject();
             public HTuple Color = new HTuple("green");
         }
-
+        public Dictionary<string, Hobjt_Colro> GetKeyHobj(Dictionary<string, Hobjt_Colro> keyValuePairs =null   )
+        {
+            if (keyValuePairs!=null)
+            {
+                Dick = keyValuePairs;
+            }
+            return Dick;
+        }
+        Dictionary<string, Hobjt_Colro> Dick = new Dictionary<string, Hobjt_Colro>();
         List<Hobjt_Colro> ListHobj = new List<Hobjt_Colro>();
         ~OneResultOBj()
         {

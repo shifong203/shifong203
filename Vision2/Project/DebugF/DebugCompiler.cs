@@ -232,8 +232,6 @@ namespace Vision2.Project.DebugF
         [DescriptionAttribute("。"), Category("设备状态"), DisplayName("初始化超时S")]
         public int HomeOutTime { get; set; } = 60;
 
-
-
         [Editor(typeof(LinkNameAddreControl.Editor), typeof(UITypeEditor))]
         [DescriptionAttribute("。"), Category("设备控制"), DisplayName("灯光控制")]
         public string LinklamplightName { get; set; } = "";
@@ -244,6 +242,9 @@ namespace Vision2.Project.DebugF
 
         [DescriptionAttribute("复位IO写1=0。"), Category("设备控制"), DisplayName("复位IO")]
         public byte RsetIOTyoe { get; set; } = 0;
+
+        [DescriptionAttribute("是否需要初始化失败。"), Category("设备控制"), DisplayName("是否需要初始化")]
+        public bool IsHomeIt { get; set; } = true;
 
         /// <summary>
         /// 设置速度
@@ -410,7 +411,10 @@ namespace Vision2.Project.DebugF
                         //Thread.Sleep(1200);
                     }
                 }
-
+                if ( !GetThis().IsHomeIt)
+                {
+                    DebugCompiler.ISHome = true;
+                }
                 if (DebugCompiler.ISHome)
                 {
                     EquipmentStatus = EnumEquipmentStatus.运行中;
@@ -424,7 +428,7 @@ namespace Vision2.Project.DebugF
                 }
                 else
                 {
-                    Vision2.ErosProjcetDLL.Project.AlarmListBoxt.AddAlarmText("未初始化设备", "");
+                    AlarmListBoxt.AddAlarmText("未初始化设备", "");
                 }
 
 
@@ -632,11 +636,7 @@ namespace Vision2.Project.DebugF
 
         [DescriptionAttribute("。"), Category("设备硬件"), DisplayName("板卡数量")]
         public byte Cont { get; set; } = 1;
-        /// <summary>
-        /// 托盘ID
-        /// </summary>
-        [DescriptionAttribute("。"), Category("设备硬件"), DisplayName("是否使用托盘")]
-        public sbyte TrayCont { get; set; } = -1;
+    
     
 
         [DescriptionAttribute("。"), Category("设备硬件"), DisplayName("轴使能信号")]
@@ -656,6 +656,8 @@ namespace Vision2.Project.DebugF
 
         [DescriptionAttribute("板卡IO输出。"), Category("线体"), DisplayName("进站风枪")]
         public sbyte OutFDEX { get; set; } = -1;
+        [DescriptionAttribute(""), Category("离线设备"), DisplayName("结束停机")]
+        public bool RunEndStop { get; set; } 
         [DescriptionAttribute("工位数量。"), Category("线体"), DisplayName("工位数")]
         public int Modet { get; set; } = 2;
 
@@ -815,11 +817,9 @@ namespace Vision2.Project.DebugF
         {
             if (TrayData == null)
             {
-
                 MainForm1.MainFormF.Invoke(new Action(() =>
                 {
                     TrayData = new TrayDataUserControl();
-
                     TrayData.Dock = DockStyle.Fill;
                     if (MainForm1.MainFormF.tabControl1.TabPages.ContainsKey("托盘状态"))
                     {
@@ -832,7 +832,6 @@ namespace Vision2.Project.DebugF
                         MainForm1.MainFormF.tabControl1.Controls.Add(tabPage);
                     }
                 }));
-
             }
             return TrayData;
         }
@@ -1070,6 +1069,10 @@ namespace Vision2.Project.DebugF
             try
             {
                 string dataStr = socket.GetEncoding().GetString(key);
+                if (true)
+                {
+
+                }
                 DebugData(dataStr);
             }
             catch (Exception ex)
@@ -1082,46 +1085,51 @@ namespace Vision2.Project.DebugF
         {
             try
             {
-                int trayID = 1;
-                int DataNumber = 0;
-                List<string> liastStr = new List<string>();
-                if (dataStr.Contains(";"))
+                if (RecipeCompiler.Instance.DataMinCont<dataStr.Length)
                 {
-                    string[] dataVat = dataStr.Trim(';').Split(';');
-                    int.TryParse(dataVat[0], out  trayID);
-                    int.TryParse(dataVat[1], out  DataNumber);
-                    string[] dataStrTd = new string[dataVat.Length - 2];
-                    Array.Copy(dataVat,2, dataStrTd,0, dataStrTd.Length);
-                    if (DataNumber==1)
+                    int trayID = 1;
+                    int DataNumber = 0;
+                    List<string> liastStr = new List<string>();
+                    if (dataStr.Contains(";"))
                     {
-                        RecipeCompiler.Instance.Data.Clear();
-                    }
-                    for (int i = 0; i < dataStrTd.Length; i++)
-                    {
-                        if (dataStrTd[i]!="")
+                        string[] dataVat = dataStr.Trim(';').Split(';');
+                        int.TryParse(dataVat[0], out trayID);
+                        int.TryParse(dataVat[1], out DataNumber);
+                        string[] dataStrTd = new string[dataVat.Length - 2];
+                        Array.Copy(dataVat, 2, dataStrTd, 0, dataStrTd.Length);
+                        if (DataNumber == 1)
                         {
-                            liastStr = new List<string>();
-                            liastStr.AddRange(dataStrTd[i].Trim(',').Split(','));
-                            RecipeCompiler.Instance.Data.AddData(i, liastStr);
+                            RecipeCompiler.Instance.Data.Clear();
+                        }
+                        for (int i = 0; i < dataStrTd.Length; i++)
+                        {
+                            if (dataStrTd[i] != "")
+                            {
+                                liastStr = new List<string>();
+                                liastStr.AddRange(dataStrTd[i].Trim(',').Split(','));
+                                RecipeCompiler.Instance.Data.AddData(i, liastStr);
+                            }
                         }
                     }
-                }
-                else
-                {
-                    liastStr.AddRange(dataStr.Trim(',').Split(','));
-                    if (liastStr.Count == 1)
+                    else
                     {
-                        TrayData.SetValue(double.Parse(liastStr[0]));
+                        liastStr.AddRange(dataStr.Trim(',').Split(','));
+                        if (liastStr.Count == 1)
+                        {
+                            TrayData.SetValue(double.Parse(liastStr[0]));
+                        }
+                        else if (liastStr.Count >= 1)
+                        {
+                            TrayData.SetValue(liastStr);
+                        }
                     }
-                    else if (liastStr.Count >= 1)
+                    if (DataNumber == RecipeCompiler.Instance.DataNumber)
                     {
-                        TrayData.SetValue(liastStr);
+                        TrayDataUserControl.GetTray().GetTrayData().SetNumberValue(RecipeCompiler.Instance.Data.ListDatV, trayID);
                     }
+
                 }
-                if (DataNumber == RecipeCompiler.Instance.DataNumber)
-                {
-                    TrayDataUserControl.GetTray().GetTrayData().SetNumberValue(RecipeCompiler.Instance.Data.ListDatV, trayID);
-                }
+
             }
             catch (Exception ex)
             {

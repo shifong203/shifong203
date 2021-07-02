@@ -378,9 +378,12 @@ namespace Vision2.Project.formula
                         trayDataUserControl.BringToFront();
                         trayDataUserControl.Dock = DockStyle.Fill;
                         trayDataUserControl.Visible = true;
-                     
-                        trayDataUserControl.SetTray(DebugCompiler.GetTray(DebugCompiler.GetThis().TrayCont).GetTrayData());
-                        DebugCompiler.GetTray(DebugCompiler.GetThis().TrayCont).AddTary(trayDataUserControl);
+                        if (RecipeCompiler.Instance.TrayCont>=0)
+                        {
+                            trayDataUserControl.SetTray(DebugCompiler.GetTray(RecipeCompiler.Instance.TrayCont).GetTrayData());
+                            DebugCompiler.GetTray(RecipeCompiler.Instance.TrayCont).AddTary(trayDataUserControl);
+                        }
+                        
                         break;
                     case RecipeCompiler.EnumUpDataType.复判按钮:
                         label3.Visible = true;
@@ -397,8 +400,8 @@ namespace Vision2.Project.formula
                             buttenModeUI = tabPage1.Controls.Find("buttenModeUI",false)[0] as ButtenModeUI;
                         }
                    
-                        TrayData Traydata = DebugCompiler.GetTray(DebugCompiler.GetThis().TrayCont).GetTrayData();
-                        DebugCompiler.GetTray(DebugCompiler.GetThis().TrayCont).AddTary(buttenModeUI);
+                        TrayData Traydata = DebugCompiler.GetTray(RecipeCompiler.Instance.TrayCont).GetTrayData();
+                        DebugCompiler.GetTray(RecipeCompiler.Instance.TrayCont).AddTary(buttenModeUI);
                         buttenModeUI.SetTrayData(Traydata);
                         break;
                     case RecipeCompiler.EnumUpDataType.弹出复判按钮:
@@ -668,7 +671,7 @@ namespace Vision2.Project.formula
                 MessageBox.Show(ex.Message);
             }
         }
-        public static string timeStrStrat = "";
+        public static DateTime timeStrStrat ;
         public static void ClearData()
         {
             try
@@ -907,7 +910,7 @@ namespace Vision2.Project.formula
 
 
 
-        public static void StaticAddResult(int id, string name, DataVale dataVale)
+        public static void StaticAddResult(int id, string name, OneDataVale dataVale)
         {
             try
             {
@@ -1177,7 +1180,7 @@ namespace Vision2.Project.formula
                 {
                     This.dataGridView1.Invoke(new Action<string, int>(StaticAddQRCode), datas, id);
                 }
-                timeStrStrat = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                timeStrStrat = DateTime.Now;
                 ProcessControl.ProcessUser.QRCode = datas;
                 This.label4.Text = "产品码:" + ProcessControl.ProcessUser.QRCode;
                 if (DebugF.IO.TrayDataUserControl.GetTray() != null)
@@ -1541,7 +1544,7 @@ namespace Vision2.Project.formula
             Vision2.ErosProjcetDLL.UI.UICon.WindosFormerShow(ref linkDataForm1);
 
         }
-        public static DataVale GetDataVale(  DataVale dataD=null)
+        public static OneDataVale GetDataVale(  OneDataVale dataD=null)
         {
             if (dataD != null)
             {
@@ -1550,10 +1553,11 @@ namespace Vision2.Project.formula
             return data;
         }
         
-        static DataVale data;
+        static OneDataVale data;
+
         static TrayRobot TrayReset ;
 
-        static List<DataVale> dataVales = new List<DataVale>();
+        static List<OneDataVale> dataVales = new List<OneDataVale>();
 
         private void comboBox2_SelectionChangeCommitted(object sender, EventArgs e)
         {

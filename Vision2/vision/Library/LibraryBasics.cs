@@ -43,7 +43,7 @@ namespace Vision2.vision.Library
                         {
                              obj = assembly.CreateInstance(ntype); // 创建类的实例    
                         }
-                        keyValuePairs.Add(ntype, obj.UpSatrt<RunProgram>(paths + "\\" + name + "\\" + name));
+                        keyValuePairs.Add(name, obj.UpSatrt<RunProgram>(paths + "\\" + name + "\\" + name));
                     }
                     catch (Exception ex)
                     {

@@ -21,7 +21,7 @@ namespace Vision2.Project.DebugF.IO
             //ErosProjcetDLL.UI.DataGridViewF.StCon.AddCon(dataGridView1);
             ErosProjcetDLL.UI.DataGridViewF.StCon.AddCon(dataGridView2);
         }
-         vision.HWindID HWi ;
+         HWindID HWi ;
 
         public void RaeaTary(string filePaht, string text, double outTime, out string runErr)
         {
@@ -403,9 +403,8 @@ namespace Vision2.Project.DebugF.IO
             if (tray != trayRobot)
             {
                 tray = trayRobot;
-                tray.AddTary(this);
             }
-
+            tray.AddTary(this);
             if (this.InvokeRequired)
             {
                 this.Invoke(new Action(() =>
@@ -415,19 +414,14 @@ namespace Vision2.Project.DebugF.IO
             }
             else
             {
-               
-                   AddRow();
-                
+                AddRow();
             }
-
-
         }
         public void SetTray(int trayRobot)
         {
             try
             {
                 tray = DebugCompiler.GetThis().DDAxis.ListTray[trayRobot];
-
                 tray.AddTary(this);
                 this.Invoke(new Action(() =>
                 {
@@ -483,7 +477,7 @@ namespace Vision2.Project.DebugF.IO
 
                                 if (tray.GetTrayData().GetDataVales()[i] == null)
                                 {
-                                    tray.GetTrayData().GetDataVales()[i] = new DataVale();
+                                    tray.GetTrayData().GetDataVales()[i] = new OneDataVale();
                                 }
                                 label1.label1.Text += "SN:" + tray.GetTrayData().GetDataVales()[i].PanelID;
                                 if (tray.GetTrayData().GetDataVales()[i].OK)
@@ -515,7 +509,7 @@ namespace Vision2.Project.DebugF.IO
                                 }
                                 if (tray.GetTrayData().GetDataVales()[tray.Number - 1] == null)
                                 {
-                                    tray.GetTrayData().GetDataVales()[tray.Number - 1] = new DataVale();
+                                    tray.GetTrayData().GetDataVales()[tray.Number - 1] = new OneDataVale();
                                 }
                                 label1.Tag = tray.GetTrayData().GetDataVales()[tray.Number - 1];
                             }
@@ -583,7 +577,7 @@ namespace Vision2.Project.DebugF.IO
                     TrayControl label1 = this.Controls.Find(number.ToString(), false)[0] as TrayControl;
                     if (tray.GetTrayData().GetDataVales()[number - 1] == null)
                     {
-                        tray.GetTrayData().GetDataVales()[number - 1] = new DataVale();
+                        tray.GetTrayData().GetDataVales()[number - 1] = new OneDataVale();
                     }
                     if (tray.GetTrayData().GetDataVales()[number - 1].Data is List<double>)
                     {
@@ -682,7 +676,7 @@ namespace Vision2.Project.DebugF.IO
                         TrayControl label1 = this.Controls.Find(tray.Number.ToString(), false)[0] as TrayControl;
                         if (tray.GetTrayData().GetDataVales()[tray.Number - 1] == null)
                         {
-                            tray.GetTrayData().GetDataVales()[tray.Number - 1] = new DataVale();
+                            tray.GetTrayData().GetDataVales()[tray.Number - 1] = new OneDataVale();
                         }
                         if (label1 != null)
                         {
@@ -709,7 +703,7 @@ namespace Vision2.Project.DebugF.IO
                         TrayControl label1 = this.Controls.Find(tray.Number.ToString(), false)[0] as TrayControl;
                         if (tray.GetTrayData().GetDataVales()[tray.Number - 1] == null)
                         {
-                            tray.GetTrayData().GetDataVales()[tray.Number - 1] = new DataVale();
+                            tray.GetTrayData().GetDataVales()[tray.Number - 1] = new OneDataVale();
                         }
                         if (label1 != null)
                         {
@@ -780,7 +774,7 @@ namespace Vision2.Project.DebugF.IO
                         TrayControl label1 = this.Controls.Find(tray.Number.ToString(), false)[0] as TrayControl;
                         if (tray.GetTrayData().GetDataVales()[tray.Number - 1] == null)
                         {
-                            tray.GetTrayData().GetDataVales()[tray.Number - 1] = new DataVale();
+                            tray.GetTrayData().GetDataVales()[tray.Number - 1] = new OneDataVale();
                         }
                         if (label1 != null)
                         {
@@ -828,7 +822,7 @@ namespace Vision2.Project.DebugF.IO
                                 String DAT = idS[i].ToString();
                                 if (tray.GetTrayData().GetDataVales()[idS[i] - 1] == null)
                                 {
-                                    tray.GetTrayData().GetDataVales()[idS[i] - 1] = new DataVale();
+                                    tray.GetTrayData().GetDataVales()[idS[i] - 1] = new OneDataVale();
                                 }
                                 tray.GetTrayData().GetDataVales()[idS[i] - 1].PanelID = values[i];
 
@@ -893,7 +887,7 @@ namespace Vision2.Project.DebugF.IO
                                 String DAT = tryaid[i].ToString();
                                 if (tray.GetTrayData().GetDataVales()[tryaid[i] - 1] == null)
                                 {
-                                    tray.GetTrayData().GetDataVales()[tryaid[i] - 1] = new DataVale();
+                                    tray.GetTrayData().GetDataVales()[tryaid[i] - 1] = new OneDataVale();
                                 }
                                 tray.GetTrayData().GetDataVales()[tryaid[i] - 1].PanelID = listSN[i];
 
@@ -1131,7 +1125,7 @@ namespace Vision2.Project.DebugF.IO
                     return;
                 }
                 dataGridView2.Visible = false;
-                DataVale dataObj = control.Parent.Tag as DataVale;
+                OneDataVale dataObj = control.Parent.Tag as OneDataVale;
                 if (dataObj != null)
                 {
                     if (!panel1.Visible)
@@ -1269,7 +1263,7 @@ namespace Vision2.Project.DebugF.IO
             }
         }
 
-        public void SetValue(int number, DataVale dataVale)
+        public void SetValue(int number, OneDataVale dataVale)
         {
             try
             {
@@ -1292,7 +1286,7 @@ namespace Vision2.Project.DebugF.IO
                                 }
                                 if (tray.GetTrayData().GetDataVales()[number-1] == null)
                                 {
-                                    tray.GetTrayData().GetDataVales()[number - 1] = new DataVale();
+                                    tray.GetTrayData().GetDataVales()[number - 1] = new OneDataVale();
                                 }
                                 tray.GetTrayData().GetDataVales()[number - 1].PanelID = dataVale.PanelID;
                                 tray.GetTrayData().GetDataVales()[number - 1] =dataVale;
@@ -1389,7 +1383,7 @@ namespace Vision2.Project.DebugF.IO
                     for (int i = 0; i < dataVale.GetDataVales().Count; i++)
                     {
                         string datStr = "";
-                        DataVale data = dataVale.GetDataVales()[i];
+                        OneDataVale data = dataVale.GetDataVales()[i];
                         if (data != null)
                         {
                             if (data.TrayLocation==0)

@@ -66,7 +66,7 @@ namespace Vision2.vision.HalconRunFile.PCBFile
             return new Cap(this, run);
         }
 
-        public override bool RunHProgram(  OneResultOBj oneResultOBj, out List<OneRObj> oneRObjs, int runID = 0)
+        public override bool RunHProgram(  OneResultOBj oneResultOBj, out List<OneRObj> oneRObjs,AoiObj aoiObj)
         {
             oneRObjs = new List<OneRObj>();
             HObject ErrRoi = new HObject();

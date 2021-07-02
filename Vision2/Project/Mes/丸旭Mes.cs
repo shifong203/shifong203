@@ -8,6 +8,8 @@ namespace Vision2.Project.Mes
 {
     public class 丸旭Mes : IMesData
     {
+        public event IMesData.ResTMesd ResDoneEvent;
+
         public bool ReadMes(string SerialNumber, out string resetMesString)
         {
             resetMesString = "";
@@ -106,7 +108,7 @@ namespace Vision2.Project.Mes
                 {
                     if (i == 0)
                     {
-                        ListText.Add(Product.ProductionName + "," + QRCODE + "," + reset + "," + UserFormulaContrsl.timeStrStrat + "," + timeStr + "," + name + "," + jtvales + "," + NG1 + "," + Mest);
+                        ListText.Add(Product.ProductionName + "," + QRCODE + "," + reset + "," + UserFormulaContrsl.timeStrStrat.ToString("yyyy-MM-dd HH:mm:ss") + "," + timeStr + "," + name + "," + jtvales + "," + NG1 + "," + Mest);
                     }
                     else
                     {
@@ -125,7 +127,7 @@ namespace Vision2.Project.Mes
             }
             if (userFormulaContrsl.dataGridView1.Rows.Count == 0)
             {
-                ListText.Add(product_Name + "," + QRCODE + "," + reset + "," + UserFormulaContrsl.timeStrStrat + "," + timeStr + ",,," + Mest);
+                ListText.Add(product_Name + "," + QRCODE + "," + reset + "," + UserFormulaContrsl.timeStrStrat.ToString("yyyy-MM-dd HH:mm:ss") + "," + timeStr + ",,," + Mest);
             }
             Vision2.ErosProjcetDLL.Excel.Npoi.WriteF(paht, ListText);
             if (ListText.Count == 1)
@@ -135,7 +137,7 @@ namespace Vision2.Project.Mes
 
         }
 
-        public void WrietMes(DataVale data, string Product_Name)
+        public void WrietMes(OneDataVale data, string Product_Name)
         {
 
         }
@@ -180,7 +182,7 @@ namespace Vision2.Project.Mes
                 {
                     reset = "NG";
                 }
-                ListText.Add(Product.ProductionName + "," + QRCODE + "," + reset + "," + UserFormulaContrsl.timeStrStrat + "," + timeStr + "," + name + "," + jtvales + "," + NG1 + "," + Mest);
+                ListText.Add(Product.ProductionName + "," + QRCODE + "," + reset + "," + UserFormulaContrsl.timeStrStrat.ToString("yyyy-MM-dd HH:mm:ss") + "," + timeStr + "," + name + "," + jtvales + "," + NG1 + "," + Mest);
                 QrCode = "";
                 foreach (var item in dataVale.GetTrayData().GetDataVales())
                 {

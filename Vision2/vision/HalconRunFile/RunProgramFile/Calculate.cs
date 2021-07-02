@@ -35,7 +35,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         Category("视觉参数"), DisplayName("二值化上限")]
         public byte thresholdHigh { get; set; } = 255;
 
-        public override bool RunHProgram( OneResultOBj oneResultOBj, out List<OneRObj> oneRObjs, int runID = 0)
+        public override bool RunHProgram( OneResultOBj oneResultOBj, out List<OneRObj> oneRObjs, AoiObj aoiObj)
         {
             oneRObjs = new List<OneRObj>();
             try

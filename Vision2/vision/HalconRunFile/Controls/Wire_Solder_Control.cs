@@ -85,7 +85,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 HOperatorSet.SetColor(visionUserControlS.HalconWindow, "green");
                 HOperatorSet.SetColor(visionUserControlV.HalconWindow, "green");
 
-                bool DWET = Wire_S.RunP(Halcon.GetOneImageR(), runid, visionUserControl1.HalconWindow, visionUserControlS.HalconWindow, visionUserControlV.HalconWindow, visionUserControlRGB.HalconWindow);
+                bool DWET = Wire_S.RunP(Halcon.GetOneImageR(), new AoiObj() { DebugID=runid}, visionUserControl1.HalconWindow, visionUserControlS.HalconWindow, visionUserControlV.HalconWindow, visionUserControlRGB.HalconWindow);
                 HOperatorSet.AreaCenter(Wire.HObject, out HTuple area, out HTuple row, out HTuple column);
 
                 Halcon.AddImageMassage(row + 200, column, listBoxPoints.SelectedIndex + 1, ColorResult.blue, "true");

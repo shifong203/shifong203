@@ -53,16 +53,16 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         [DescriptionAttribute("图像高。"), Category("图像"), DisplayName("整图像高")]
         public int HeightI { get; set; }
 
-
-
-
         [DescriptionAttribute("单张图像宽。"), Category("图像"), DisplayName("图像宽")]
         public int ImageWidthI { get; set; } = 6000;
         [DescriptionAttribute("单张图像高。"), Category("图像"), DisplayName("图像高")]
         public int ImageHeightI { get; set; } = 4000;
 
-        [DescriptionAttribute("false横向排序。"), Category("排列"), DisplayName("横或纵向")]
+        [DescriptionAttribute("false横向排序,图像第二张往右排序，True纵向图像第二张往下方排序"), Category("排列"), DisplayName("横或纵向")]
         public bool Vertical { get; set; }
+
+        [DescriptionAttribute("使用平铺=0，还是手动评图=1，自动评图。"), Category("排列"), DisplayName("使用平铺")]
+        public int IsFill { get; set; }
 
         [DescriptionAttribute("true=彩色。"), Category("图像"), DisplayName("彩色或黑白")]
         public bool ImageByteT { get; set; } = true;
@@ -243,7 +243,21 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     }
                 }
                 int d = hObject.CountObj();
-                HOperatorSet.TileImagesOffset(hObject, out hObject, Rows, Cols, Rows1, Cols1, Rows2, Cols2, WidthI, HeightI);
+                if (IsFill==0)
+                {
+                    if (Vertical)
+                    {
+                        HOperatorSet.TileImages(hObject, out hObject, ImageNumberCol, "vertical");
+                    }
+                    else
+                    {
+                        HOperatorSet.TileImages(hObject, out hObject, ImageNumberCol, "horizontal");
+                    }
+                }
+                else if (IsFill == 1)
+                {
+                    HOperatorSet.TileImagesOffset(hObject, out hObject, Rows, Cols, Rows1, Cols1, Rows2, Cols2, WidthI, HeightI);
+                }
             }
             catch (Exception ex)
             {

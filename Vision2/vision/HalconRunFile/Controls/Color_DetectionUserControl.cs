@@ -453,7 +453,7 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             try
             {
-                hWindID.ClearObj();
+                hWindID.HobjClear();
                 HOperatorSet.SmallestRectangle1(_Classify.DrawObj, out HTuple row, out HTuple col1, out HTuple row2, out HTuple col2);
                 if (listBox2.SelectedIndex==0)
                 {

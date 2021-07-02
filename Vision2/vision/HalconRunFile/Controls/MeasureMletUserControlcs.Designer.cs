@@ -50,14 +50,14 @@
             this.listBox2 = new System.Windows.Forms.ListBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.numericUpDown5 = new System.Windows.Forms.NumericUpDown();
+            this.button1 = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.measureConTrolEx1 = new Vision2.vision.HalconRunFile.Controls.MeasureConTrolEx();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
             this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.button1 = new System.Windows.Forms.Button();
-            this.numericUpDown5 = new System.Windows.Forms.NumericUpDown();
-            this.measureConTrolEx1 = new Vision2.vision.HalconRunFile.Controls.MeasureConTrolEx();
             this.dynamicParameter1 = new Vision2.vision.HalconRunFile.Controls.DynamicParameter();
             this.contextMenuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
@@ -66,11 +66,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown4)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown5)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown5)).BeginInit();
             this.SuspendLayout();
             // 
             // listBox1
@@ -349,6 +349,34 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "groupBox2";
             // 
+            // numericUpDown5
+            // 
+            this.numericUpDown5.DecimalPlaces = 3;
+            this.numericUpDown5.Location = new System.Drawing.Point(177, 143);
+            this.numericUpDown5.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.numericUpDown5.Name = "numericUpDown5";
+            this.numericUpDown5.Size = new System.Drawing.Size(85, 26);
+            this.numericUpDown5.TabIndex = 22;
+            this.numericUpDown5.Value = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(268, 143);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(64, 26);
+            this.button1.TabIndex = 21;
+            this.button1.Text = "校验";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // tabControl1
             // 
             this.tabControl1.Controls.Add(this.tabPage1);
@@ -374,6 +402,15 @@
             this.tabPage1.Text = "调试";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // measureConTrolEx1
+            // 
+            this.measureConTrolEx1.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.measureConTrolEx1.Location = new System.Drawing.Point(3, 433);
+            this.measureConTrolEx1.Margin = new System.Windows.Forms.Padding(4);
+            this.measureConTrolEx1.Name = "measureConTrolEx1";
+            this.measureConTrolEx1.Size = new System.Drawing.Size(763, 598);
+            this.measureConTrolEx1.TabIndex = 4;
+            // 
             // tabPage2
             // 
             this.tabPage2.Controls.Add(this.propertyGrid1);
@@ -390,7 +427,7 @@
             this.propertyGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.propertyGrid1.Location = new System.Drawing.Point(3, 3);
             this.propertyGrid1.Name = "propertyGrid1";
-            this.propertyGrid1.Size = new System.Drawing.Size(763, 1032);
+            this.propertyGrid1.Size = new System.Drawing.Size(763, 1028);
             this.propertyGrid1.TabIndex = 0;
             // 
             // tabPage3
@@ -404,49 +441,13 @@
             this.tabPage3.Text = "数据";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(268, 143);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(64, 26);
-            this.button1.TabIndex = 21;
-            this.button1.Text = "校验";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // numericUpDown5
-            // 
-            this.numericUpDown5.Location = new System.Drawing.Point(177, 143);
-            this.numericUpDown5.Maximum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-            this.numericUpDown5.Name = "numericUpDown5";
-            this.numericUpDown5.Size = new System.Drawing.Size(85, 26);
-            this.numericUpDown5.TabIndex = 22;
-            this.numericUpDown5.Value = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            // 
-            // measureConTrolEx1
-            // 
-            this.measureConTrolEx1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.measureConTrolEx1.Location = new System.Drawing.Point(3, 433);
-            this.measureConTrolEx1.Margin = new System.Windows.Forms.Padding(4);
-            this.measureConTrolEx1.Name = "measureConTrolEx1";
-            this.measureConTrolEx1.Size = new System.Drawing.Size(763, 598);
-            this.measureConTrolEx1.TabIndex = 4;
-            // 
             // dynamicParameter1
             // 
             this.dynamicParameter1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dynamicParameter1.Location = new System.Drawing.Point(3, 3);
             this.dynamicParameter1.Margin = new System.Windows.Forms.Padding(4);
             this.dynamicParameter1.Name = "dynamicParameter1";
-            this.dynamicParameter1.Size = new System.Drawing.Size(763, 1032);
+            this.dynamicParameter1.Size = new System.Drawing.Size(763, 1028);
             this.dynamicParameter1.TabIndex = 0;
             // 
             // MeasureMletUserControlcs
@@ -466,11 +467,11 @@
             this.groupBox1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown5)).EndInit();
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
             this.tabPage3.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown5)).EndInit();
             this.ResumeLayout(false);
 
         }

@@ -22,6 +22,7 @@ using Vision2.Project.formula;
 using Vision2.Project.Mes;
 using Vision2.vision.HalconRunFile.Controls;
 using static Vision2.Project.formula.UserFormulaContrsl;
+using static Vision2.vision.HalconRunFile.PCBFile.PCBLibraryForm;
 using static Vision2.vision.HalconRunFile.RunProgramFile.HalconRun;
 
 namespace Vision2.vision.HalconRunFile.RunProgramFile
@@ -349,6 +350,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             AddRun( "PCB", typeof(PCBA));
             AddRun( "元件", typeof(VisionContainer));
             AddRun( "镀层缺陷", typeof(Overgild));
+            AddRun("库调用", typeof(PCBFile.PCBAEX));
             if (contextMenuTT.Items.Find("删除", false).Length == 0)
             {
                 ToolStripItem toolStripItemw = contextMenuTT.Items.Add("删除");
@@ -1284,7 +1286,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 }
                 return pint.TupleMult(this.GetCam().CaliConst).TupleMult(Vision.Instance.Transform);
             }
-            return pint.TupleMult(1);
+            return pint.TupleMult(1).TupleMult(Vision.Instance.Transform);
         }
         public HTuple GetCaliConstPx(HTuple pint)
         {
@@ -1687,6 +1689,11 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         {
             AddObj(objectColor._HObject, objectColor.HobjectColot);
         }
+
+        //public void AddObj(HObject hObject)
+        //{
+        //    AddObj(hObject, ColorResult.green);
+        //}
         /// <summary>
         /// 传递区域并显示结果区域
         /// </summary>
@@ -1997,7 +2004,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             thread.Start();
         }
 
-        public  bool RunHProgram(  OneResultOBj oneResultOBj, out List<OneRObj> oneRObjs, int id = 0)
+        public  bool RunHProgram(  OneResultOBj oneResultOBj, out List<OneRObj> oneRObjs,AoiObj aoiObj)
         {
             oneRObjs = new List<OneRObj>();
             if (oneResultOBj == null)
@@ -2007,7 +2014,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             }
             this.UPStart();
             oneResultOBj.RunName = this.Name;
-            oneResultOBj.RunID = id;
+            oneResultOBj.RunID = aoiObj.DebugID;
             this.ShowVision("1", oneResultOBj);
             this.EndChanged(oneResultOBj);
             this.ShowObj();
@@ -2116,8 +2123,8 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         /// <summary>
         /// 单个产品参数
         /// </summary>
-        DataVale OnePatrData;
-        public DataVale GetData()
+        OneDataVale OnePatrData;
+        public OneDataVale GetData()
         {
             return OnePatrData;
         }
@@ -2288,7 +2295,6 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 {
                     OneCamData = new OneCamData();
                 }
-
                 OneCamData.ResuOBj.Add(OneImageData);
                 UPDa(OneImageData, isSave, hObject);
          
@@ -2451,9 +2457,15 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         if (trayRobotData!=null)
                         {
                             if (trayRobotData.GetITrayRobot()!=null)
+                        {
+                            if (OnePatrData.PanelID == null || OnePatrData.PanelID == "")
                             {
-                                OnePatrData.AutoOK = OnePatrData.OK;
-                                trayRobotData.SetNumberValue(TrayLocation, trayRobotData);
+                                OneCamData.NGObj.AddCont(new OneRObj() { ComponentID="SN",NGText="SN未识别"});
+                                OnePatrData.OK = false;
+                            }
+                            OnePatrData.AutoOK = OnePatrData.OK;
+                            OnePatrData.EndTime = DateTime.Now;
+                            trayRobotData.SetNumberValue(TrayLocation, trayRobotData);
                                 if (Vision.GetSaveImageInfo(this.Name).ISCount)
                                 {
                                     if (RecipeCompiler.Instance.TrayQRType == RecipeCompiler.TrayEnumType.一个流程一个产品)
@@ -2465,7 +2477,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                                                     RecipeCompiler.Instance.GetMes().WrietMes(OnePatrData, Product.ProductionName);
                                                 }
                                             }
-                                    UserFormulaContrsl.GetDataVale(OnePatrData);
+                                         UserFormulaContrsl.GetDataVale(OnePatrData);
                                     }
                                 }
                        
@@ -3409,7 +3421,6 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             Ellipes = 2,
             Rectangle1 = 3,
             Rectangle2 = 4,
-
         }
         /// <summary>
         /// 
@@ -3717,7 +3728,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 }
             }
         }
-
+        public DXFInFo DXFInFoc = new DXFInFo();
         public class DicHObject
         {
             public string Name { get; set; }

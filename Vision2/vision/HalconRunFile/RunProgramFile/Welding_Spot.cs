@@ -95,7 +95,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         public byte NoNeedle_H_thr_min { get; set; }
         public double NoNeedle_area_min { get; set; }
 
-        public override bool RunHProgram( OneResultOBj oneResultOBj, out List<OneRObj> oneRObjs, int runID = 0)
+        public override bool RunHProgram( OneResultOBj oneResultOBj, out List<OneRObj> oneRObjs, AoiObj aoiObj)
         {
             oneRObjs = new List<OneRObj>();
             List<bool> restle = new List<bool>();
@@ -111,11 +111,18 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     if (areas[i2].S.Length > 2)
                     {
                         text += areas[i2];
-
                     }
                 }
+                if (!restle[i])
+                {
+                    oneResultOBj.AddObj(this.GetPThis().GetModelHaoMatRegion(HomName, listWelding[i].HObject), ColorResult.green);
+                }
+                else
+                {
+                    oneResultOBj.AddObj(this.GetPThis().GetModelHaoMatRegion(HomName, listWelding[i].HObject), ColorResult.red);
+                }
                 //halcon.TrayRestData.ListVerData.Add(text);
-                oneResultOBj.AddObj(this.GetPThis().GetModelHaoMatRegion(HomName, listWelding[i].HObject), ColorResult.green);
+               
             }
             for (int i = 0; i < restle.Count; i++)
             {
@@ -236,7 +243,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 if (hwH != null)
                 {
                     hwH.SetPerpetualPart(row1, column1, row2, column2);
-                    hwH.ClearObj();
+                    hwH.HobjClear();
                 }
                     if (runID == 3)
                 {
@@ -580,16 +587,13 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         Halcon.AddImageMassage(row + welding_Spo.DispRow, column + welding_Spo.DispCow, magetSText.TupleInsert(0, "NG"), ColorResult.red);
                     }
                 }
-                else
-                {
-                }
                 if (hwH != null)
                 {
                     hwH.ShowImage();
                     hwH.ShowObj();
                 
                 }
-                    if (is_Conglutination || is_less_defend)
+                if (is_Conglutination || is_less_defend)
                 {
                     return true;
                 }

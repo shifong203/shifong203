@@ -585,7 +585,10 @@ namespace Vision2.Project.DebugF.IO
                         EndTime = DateTime.Now;
                         MainForm1.MainFormF.toolStripLabel3.Text = "CT" + WatchT.ElapsedMilliseconds / 1000 / 60 + ":" + WatchT.ElapsedMilliseconds / 1000 % 60;
                         WatchT.Stop();
-                        Stop();
+                        if (DebugCompiler.GetThis().RunEndStop)
+                        {
+                            Stop();
+                        }
                     }
                     while (DebugCompiler.EquipmentStatus == ErosSocket.ErosConLink.EnumEquipmentStatus.暂停中)
                     {
@@ -997,7 +1000,7 @@ namespace Vision2.Project.DebugF.IO
                 ListTray[name].P2 = toPointFile(GetToPoint(p2));
                 ListTray[name].P3 = toPointFile(GetToPoint(p3));
                 ListTray[name].P4 = toPointFile(GetToPoint(p4));
-
+                ListTray[name].Is8Point = false;
                 ListTray[name].XNumber = (sbyte)RunCodeStr.ToDoubleP(x);
                 ListTray[name].YNumber = (sbyte)RunCodeStr.ToDoubleP(y);
                 ListTray[name].Calculate(out HalconDotNet.HTuple liset, out HalconDotNet.HTuple hTuple);
@@ -1969,6 +1972,10 @@ namespace Vision2.Project.DebugF.IO
 
         [DescriptionAttribute("=负数不使用刹车。"), Category("调试参数"), DisplayName("刹车系统")]
         public sbyte IsBand_type_brakeNumber { get; set; } = -1;
+
+        [DescriptionAttribute("限位反向。"), Category("调试参数"), DisplayName("限位反向")]
+        public bool isBdt { get; set; } 
+
         [DescriptionAttribute("。"), Category("调试参数"), DisplayName("点动距离")]
         public double Jog_Distance { get; set; } = 10;
 
@@ -2293,14 +2300,14 @@ namespace Vision2.Project.DebugF.IO
                 //MP_C154.c154_set_alm(AxisNo, 1, 0); //Feedback source is Internal       
                 //MP_C154.c154_set_limit_logic(AxisNo, 1);   //伺服限位开关         
                 //MP_C154.c154_set_home_config(AxisNo, 1, 0, 0, 0, 0);  //回原点方式
-                MP_C154.c154_set_pls_outmode(AxisNo, 4); //Output type is CW/CCW
-                MP_C154.c154_set_pls_iptmode(AxisNo, 2, 0); //Input Type is 4*AB Phase
-                MP_C154.c154_set_feedback_src(AxisNo, 1); //Feedback source is Internal
-                MP_C154.c154_set_alm(AxisNo, 1, 0); //Feedback source is Internal
-                if (true)
+                MP_C154.c154_set_pls_outmode(AxisNo, 4); //Output type is CW/CCWCW/CCW脉冲方向
+                MP_C154.c154_set_pls_iptmode(AxisNo, 2, 0); //Input Type is 4*AB Phase AB项
+                MP_C154.c154_set_feedback_src(AxisNo, 1); //Feedback source is Internal     外部反馈
+                MP_C154.c154_set_alm(AxisNo, 1, 0); //Feedback source is Internal私服报警常开
+                MP_C154.c154_set_inp(AxisNo, 1, 1); //定位完成常闭
+                if (isBdt)
                 {
-                    MP_C154.c154_set_inp(AxisNo, 1, 1);
-                    MP_C154.c154_set_limit_logic(AxisNo, 1);   //伺服限位开关    
+                    MP_C154.c154_set_limit_logic(AxisNo, 1);   //伺服限位开关常闭    
                 }
                 //MP_C154.c154_set_home_config(AxisNo, 4, 0, 0, 0, 0);                
                 MP_C154.c154_set_home_config(AxisNo, 1, 0, 0, 0, 0);
@@ -2318,10 +2325,10 @@ namespace Vision2.Project.DebugF.IO
 
             MP_C154.c154_set_servo(AxisNo, 1);//伺服上电      
 
-            if (IsBand_type_brakeNumber >= 0)
-            {
-                MP_C154.c154_set_gpio_output_ex_CH(0, IsBand_type_brakeNumber, 1);   //伺服刹车
-            }
+            //if (IsBand_type_brakeNumber >= 0)
+            //{
+            //    MP_C154.c154_set_gpio_output_ex_CH(0, IsBand_type_brakeNumber, 1);   //伺服刹车
+            //}
             return true;
         }
         /// <summary>

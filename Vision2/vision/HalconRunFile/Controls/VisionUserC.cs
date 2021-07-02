@@ -40,6 +40,9 @@ namespace Vision2.vision.HalconRunFile.Controls
             public bool WhidowAdd { get; set; }
             public bool AddMode { get; set; }
             public bool FillMode { get; set; }
+            public int DrawType { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+            public bool DrawErasure { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
             public void Focus()
             {
 
@@ -206,6 +209,31 @@ namespace Vision2.vision.HalconRunFile.Controls
             {
                 hObjects.Clear();
                 keyValuePairs.Clear();
+            }
+
+            public HTuple hWindowHalcon(HTuple hawid = null)
+            {
+                return hWindowHalconID;
+            }
+
+            public void HobjClear()
+            {
+                ClearObj();
+            }
+
+            public void AddMeassge(HTuple text)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void AddObj(HObject hObject, ColorResult colorResult = ColorResult.green)
+            {
+      
+            }
+
+            public void ShowObj()
+            {
+            
             }
         }
 

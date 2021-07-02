@@ -1,12 +1,11 @@
 ﻿using HalconDotNet;
 using System;
 using System.Windows.Forms;
-
+using Vision2.vision.HalconRunFile.RunProgramFile;
 namespace Vision2.vision
 {
-    public class HWindID
+    public class HWindID :IDrawHalcon
     {
-
         public HWindID()
         {
             hObject = new HObject();
@@ -139,7 +138,21 @@ namespace Vision2.vision
             {
                 this.OneResIamge.IsXLDOrImage = true;
             }
-
+            if (e.Control&&e.KeyCode==Keys.Q)
+            {
+                try
+                {
+                    foreach (var item in OneResIamge.GetKeyHobj())
+                    {
+                        HOperatorSet.AreaCenter(item.Value.Object, out HTuple area, out HTuple row, out HTuple col);
+                        HOperatorSet.DispText(this.hWindowControl1.HalconWindow, 
+                           item.Key,"image", row, col , "black", new HTuple(), new HTuple());
+                    }
+                }
+                catch (Exception)
+                {
+                }
+            }
         }
 
         HWindowControl hWindowControl1;
@@ -156,15 +169,34 @@ namespace Vision2.vision
                     HOperatorSet.SetPart(hWindowControl1.HalconWindow, ImageRowStrat, ImageColStrat, HeigthImage, WidthImage);
                     ShowImage();
                 }
-                if (!WhidowAdd)
+                else if (e.Button == MouseButtons.Left)
                 {
-                    return;
+                    if (!this.Drawing)
+                    {
+                        foreach (var item in OneResIamge.GetKeyHobj())
+                        {
+                            HOperatorSet.GetRegionIndex(item.Value.Object, (int)e.Y, (int)e.X, out HTuple index);
+                            if (index > 0)
+                            {
+                                RunProgram.DragMoveOBJS(this, OneResIamge.GetKeyHobj());
+                                this.ShowObj();
+                                break;
+                            }
+                        }
+                    }
                 }
-                if (e.Button == MouseButtons.Left)
+                //if (!WhidowAdd)
+                //{
+                //    return;
+                //}
+                if (!this.Drawing)
                 {
-                    stratX = e.X;
-                    stratY = e.Y;
-                    meuseBool = true;
+                    if (e.Button == MouseButtons.Left)
+                    {
+                        stratX = e.X;
+                        stratY = e.Y;
+                        meuseBool = true;
+                    }
                 }
             }
             catch (Exception ex)
@@ -248,9 +280,7 @@ namespace Vision2.vision
                 m_ImageRow0 = rect2.Y;
                 m_ImageCol1 = rect2.X + rect2.Width;
                 m_ImageRow1 = rect2.Y + rect2.Height;
-
                 HOperatorSet.GetMposition(hWindowControl1.HalconWindow, out ptY, out ptX, out hv_Button);
-
                 if (m_ImageRow1 == null)
                 {
                     m_ImageRow1 = WidthImage;
@@ -299,7 +329,6 @@ namespace Vision2.vision
             }
             catch (Exception es)
             {
-
             }
         }
         public int ImageRowStrat = 0;
@@ -334,6 +363,10 @@ namespace Vision2.vision
 
         HObject hObject;
 
+        public bool Drawing { get ; set ; }
+        public int DrawType { get ; set ; }
+        public bool DrawErasure { get ; set ; }
+
         public void ShowImage()
         {
             try
@@ -355,9 +388,50 @@ namespace Vision2.vision
             {
             }
         }
-        public void ClearObj()
+        public void HobjClear()
         {
             OneResIamge.ClearAllObj();
+        }
+
+        public void Focus()
+        {
+            try
+            {
+                hWindowControl1.Focus();
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        public HTuple hWindowHalcon(HTuple hawid = null)
+        {
+           return this.hWindowControl1.HalconWindow;
+        }
+
+        public HObject Image(HObject hObject = null)
+        {
+            if (hObject!=null)
+            {
+                OneResIamge.Image = hObject;
+            }
+            if (OneResIamge==null)
+            {
+                OneResIamge = new OneResultOBj();
+            }
+          return     OneResIamge.Image;
+        }
+
+    
+
+        public void AddMeassge(HTuple text)
+        {
+            OneResIamge.AddMeassge(text);
+        }
+
+        public void AddObj(HObject hObject,ColorResult colorResult = ColorResult.green)
+        {
+            OneResIamge.AddObj(hObject, colorResult);
         }
     }
 }

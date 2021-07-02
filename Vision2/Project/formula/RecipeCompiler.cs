@@ -66,27 +66,76 @@ namespace Vision2.Project.formula
             {
                 Testre_Name = Dns.GetHostName();
             }
-            [Description("客户名Customer"), Category("Mes信息"), DisplayName("客户名")]
-            public string Customer { get; set; } = "Customer";
-            [Description("客户版本号 DiviSion"), Category("Mes信息"), DisplayName("客户版本号")]
-            public string DiviSion { get; set; } = "DiviSion";
-            [Description("计算机名称 Testre_Name"), Category("Mes信息"), DisplayName("计算机名称")]
-            public string Testre_Name { get; set; } = "Testre_Name";
-            [Description("设备名Test_Process"), Category("Mes信息"), DisplayName("设备名")]
-            public string Test_Process { get; set; } = "Test_Process";
-            [Description("操作员工号"), Category("Mes信息"), DisplayName("操作员工号")]
-            public string UserID { get; set; } = "Mtd0";
 
+            [Description("文件名明名时间规则"), Category("文件名称"), DisplayName("文件名时间规则")]
+            public string FileTimeName { get; set; } = "yyyy-MM-dd";
+            /// <summary>
+            /// 客户名
+            /// </summary>
+            [Description("客户名Customer"), Category("Mes信息"), DisplayName("C-客户名")]
+            public string Customer { get; set; } = "Customer";
+
+            [Description("板样式"), Category("Mes信息"), DisplayName("B-Board_Style")]
+            public string Board_Style { get; set; } = "Stack";
+            /// <summary>
+            /// 客户版本号
+            /// </summary>
+            [Description("客户版本号 DiviSion"), Category("Mes信息"), DisplayName("I-客户版本号")]
+            public string DiviSion { get; set; } = "DiviSion";
+            /// <summary>
+            /// 计算机名称
+            /// </summary>
+            [Description("计算机名称 Testre_Name"), Category("Mes信息"), DisplayName("N-计算机名称")]
+            public string Testre_Name { get; set; } = "Testre_Name";
+            /// <summary>
+            /// 设备名
+            /// </summary>
+            [Description("设备名Test_Process"), Category("Mes信息"), DisplayName("P-设备名")]
+            public string Test_Process { get; set; } = "Test_Process";
+            /// <summary>
+            /// 操作员工号
+            /// </summary>
+            [Description("Operator ID操作员工号"), Category("Mes信息"), DisplayName("O-操作员工号")]
+            public string UserID { get; set; } = "Mtd0";
+            /// <summary>
+            /// 操作员名称
+            /// </summary>
             [Description("操作员名称"), Category("Mes信息"), DisplayName("操作员名称"), ReadOnly(true)]
             public string UserIDName { get; set; } = "User1";
-            [Description("AssemblyNumber"), Category("Mes信息"), DisplayName("装配编号")]
+            /// <summary>
+            /// 装配编号
+            /// </summary>
+            [Description("AssemblyNumber"), Category("Mes信息"), DisplayName("n-装配编号")]
             public string AssemblyNumber { get; set; } = "AssemblyNumber";
 
-            [Description("CRD标识"), Category("Mes标识"), DisplayName("CRD")]
+            [Description("Defect Location (CRD)"), Category("Mes标识"), DisplayName("c-检测位置")]
+            /// <summary>
+            /// CRD
+            /// </summary>
             public string CRD { get; set; } = "ccap";
+
+
+            [Description("Site 位置"), Category("Mes标识"), DisplayName("p-位置")]
+            public string Site { get; set; } = "SHA";
+            [Description("Fixture Slot 固定槽"), Category("Mes标识"), DisplayName("s-固定槽")]
+            public string Fixture_Slot { get; set; } = "1";
+
+            [Description("Software Document 软件文件"), Category("Mes标识"), DisplayName("D-软件文件")]
+            public string Software_Document { get; set; } = "TarsSoftwareDoc";
+
+            [Description("Software Revision 软件版本"), Category("Mes标识"), DisplayName("R-软件版本")]
+            public string Software_Revision { get; set; } = "TarsSoftwareRevision";
+            [Description("Software Revision 软件版本"), Category("Mes标识"), DisplayName("r-装配版本")]
+            public string Assembly_Revision { get; set; } = "A";
+            [Description("Firmware Revision 固件版本"), Category("Mes标识"), DisplayName("W-固件版本")]
+            public string Firmware_Revision { get; set; } = "TarsFirmwareRevision";
+            [Description("Line 线号"), Category("Mes标识"), DisplayName("L-线体")]
+            public string Line { get; set; } = "Bay32";
+
 
         }
         public MesData MesDatat { get; set; } = new MesData();
+
         public 安费诺MesData MesDa { get; set; } = new 安费诺MesData();
         /// <summary>
         /// 点位 集合
@@ -187,26 +236,39 @@ namespace Vision2.Project.formula
 
         [Description("单个产品数据接受次数"), Category("通信数据"), DisplayName("数据次数")]
         public int DataNumber { get; set; } = 2;
+        [Description(""), Category("通信数据"), DisplayName("数据最小长度")]
+        public int DataMinCont{ get; set; } = 100;
+        [Description(""), Category("通信数据"), DisplayName("相机名称")]
+        public string DataMCamName { get; set; } ="上相机";
 
         public LinkData Data { get; set; } = new LinkData();
 
 
         [Description("数据显示的方式"), Category("显示数据"), DisplayName("数据显示方式")]
         public EnumUpDataType UpDataType { get; set; }
+        /// <summary>
+        /// 托盘ID
+        /// </summary>
+        [DescriptionAttribute("。"), Category("显示数据"), DisplayName("是否使用托盘")]
+        public sbyte TrayCont { get; set; } = -1;
+
+        [Description("是否显示二维码"), Category("显示数据"), DisplayName("显示托盘码")]
+        public bool IsQRCdoe { get; set; } = true;
+
 
 
         [Description("是否复盘"), Category("复判"), DisplayName("是否复盘")]
         public bool IsRestOk { get; set; }
 
 
-        [Description("是否显示二维码"), Category("显示数据"), DisplayName("显示托盘码")]
-        public bool IsQRCdoe { get; set; } = true;
 
-        [Description("文件命名规则"), Category("写数据"), DisplayName("写文件命名规则")]
+        [Description("文件后缀"), Category("Mes数据"), DisplayName("文件后缀")]
+        [TypeConverter(typeof(ErosConverter)), ErosConverter.ThisDropDownAttribute("", false,".txt", ".Csv", "")]
+        public string Filet { get; set; } = ".txt";
+
+        [Description("文件命名规则"), Category("Mes数据"), DisplayName("写文件命名规则")]
         [TypeConverter(typeof(ErosConverter)), ErosConverter.ThisDropDownAttribute("", "QR", "Time", "")]
         public string WritDataFileName { get; set; } = "QR";
-
-
 
         [Description("Mes厂家规则,"), Category("Mes数据"), DisplayName("写Mes厂家规则")]
         [TypeConverter(typeof(ErosConverter)), ErosConverter.ThisDropDownAttribute("", "","伟世通", "丸旭", "捷普", "安费诺")]

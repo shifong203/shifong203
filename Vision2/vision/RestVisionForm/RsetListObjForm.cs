@@ -23,9 +23,9 @@ namespace Vision2.vision
         }
         HWindID HWindd = new HWindID();
         HWindID HWindIDt = new HWindID();
-        static Queue<DataVale> trayDataVales = new Queue<DataVale>();
+        static Queue<OneDataVale> trayDataVales = new Queue<OneDataVale>();
  
-        static DataVale data;
+        static OneDataVale data;
         public void SetImage()
         {
 
@@ -34,7 +34,7 @@ namespace Vision2.vision
         /// 
         /// </summary>
         /// <param name="dat"></param>
-        public void ShowImage(DataVale dat)
+        public void ShowImage(OneDataVale dat)
         {
             try
             {
@@ -87,7 +87,7 @@ namespace Vision2.vision
                     }
                 }
                 label3.Text = RecipeCompiler.Instance.GetSPC();
-                Vision.OneProductVale = new DataVale();
+                Vision.OneProductVale = new OneDataVale();
                 //Vision.Instance.OneProductValeClert();
                 HWindIDt.ShowImage();
             }
@@ -128,7 +128,7 @@ namespace Vision2.vision
             }
             try
             {
-                HWindIDt.ClearObj();
+                HWindIDt.HobjClear();
                 string nareName = Vision.GetRunNameVision(HWindd.OneResIamge.RunName).ReNmae[HWindd.OneResIamge.RunID - 1];
                 string[] datas = nareName.Split('.');
                 HWindIDt.SetImaage(RecipeCompiler.GetProductEX().Key_Navigation_Picture[datas[0]].GetHObject());

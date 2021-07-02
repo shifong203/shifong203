@@ -148,7 +148,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         }
 
         public Dictionary<string, bool> keyValues = new Dictionary<string, bool>();
-        public override bool RunHProgram( OneResultOBj oneResultOBj, out List<OneRObj> oneRObjs, int runID = 0)
+        public override bool RunHProgram( OneResultOBj oneResultOBj, out List<OneRObj> oneRObjs, AoiObj aoiObj)
         {
             oneRObjs = new List<OneRObj>();
             if (keyValues==null)
@@ -168,7 +168,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             //{
                 foreach (var item in ListRun)
                 {
-                    keyValues.Add(item.Key, item.Value.Run(oneResultOBj));
+                    keyValues.Add(item.Key, item.Value.Run(oneResultOBj,new AoiObj()));
                     if (!keyValues[item.Key])
                     {
                         ResltBool = false;

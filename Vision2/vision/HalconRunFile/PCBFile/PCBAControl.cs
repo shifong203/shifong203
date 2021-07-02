@@ -138,7 +138,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                                 RunProgram bPCBoJB =     CurrentNode.Tag as RunProgram;
                                 propertyGrid1.SelectedObject = bPCBoJB;
                                 bPCBoJB.GetRunProgram(PCBAT);
-                                bPCBoJB.RunHProgram( halcon.GetOneImageR(),out List<OneRObj> oneRObj);
+                                bPCBoJB.RunHProgram(halcon.GetOneImageR(), out List<OneRObj> oneRObj, new AoiObj()); ;
                                 //halcon.AddObj(bPCBoJB.TestingRoi);
                                 halcon.ShowObj();
                             }

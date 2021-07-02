@@ -268,7 +268,9 @@ namespace Vision2.ErosProjcetDLL.Project
 
         public UserData UsData { get; set; } = new UserData();
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public class UserData
         {
             [Description("是否必须登录运行"), Category("权限管理"), DisplayName("必须登录运行")]

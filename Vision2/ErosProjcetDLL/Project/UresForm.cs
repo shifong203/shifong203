@@ -28,7 +28,8 @@ namespace Vision2.ErosProjcetDLL.Project
 
                 jurisdiction.Items.AddRange(ProjectINI.In.User.UserRightGroup.Keys.ToArray());
 
-                comboBox1.Items.AddRange(ProjectINI.In.User.UserRightGroup.Keys.ToArray());
+                comboBox1.Items.AddRange(ProjectINI.In.UserRight.ToArray());
+                comboBox1.SelectedIndex = 0;
                 department.Items.Clear();
                 department.Items.AddRange(ProjectINI.In.User.ListDepartmentGroup.ToArray());
                 listBoxDepartmentGroup.Items.Clear();
@@ -51,7 +52,7 @@ namespace Vision2.ErosProjcetDLL.Project
                 }
                 dataGridView1.Rows.Clear();
                 propertyGrid1.Visible = false;
-                if (ProjectINI.In.User.ListRightGroup.Contains("工程师"))
+                if (ProjectINI.In.UserRight.Contains("工程师"))
                 {
                     propertyGrid1.Visible = true;
                     propertyGrid1.SelectedObject = ProjectINI.In.UsData;
@@ -63,7 +64,7 @@ namespace Vision2.ErosProjcetDLL.Project
                     dataGridView1.Rows[ds].Cells[0].Value = item.uersName;
                     dataGridView1.Rows[ds].Cells[1].Value = item.name;
                     dataGridView1.Rows[ds].Cells[2].Value = item.UserID;
-                    if (ProjectINI.In.User.ListRightGroup.Contains("工程师"))
+                    if (ProjectINI.In.UserRight.Contains("工程师"))
                     {
                         dataGridView1.Rows[ds].Cells[5].Value = item.passWord;
                     }
@@ -181,7 +182,6 @@ namespace Vision2.ErosProjcetDLL.Project
                     }
                     up();
                 }
-
             }
             catch (Exception)
             {
@@ -192,6 +192,11 @@ namespace Vision2.ErosProjcetDLL.Project
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void toolStripButton5_Click(object sender, EventArgs e)
+        {
+            up();
         }
     }
 }

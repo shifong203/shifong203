@@ -82,7 +82,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         Dictionary <string, RunProgram> DictRoi { get; set; } = new Dictionary<string, RunProgram>();
 
         public Dictionary<string, string> DicPCBType { get; set; } = new Dictionary<string, string>();
-        public override bool RunHProgram( OneResultOBj oneResultOBj, out List< OneRObj> oneRObj, int id)
+        public override bool RunHProgram( OneResultOBj oneResultOBj, out List< OneRObj> oneRObj, AoiObj aoiObj)
         {
             oneRObj = new List<OneRObj>();
             Dictionary<string, bool> keyValue = new Dictionary<string, bool>();

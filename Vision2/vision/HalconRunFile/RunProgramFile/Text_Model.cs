@@ -288,7 +288,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             }
             halcon.ShowObj();
         }
-        public override bool RunHProgram( OneResultOBj oneResultOBj, out List<OneRObj> oneRObjs, int runID = 0)
+        public override bool RunHProgram( OneResultOBj oneResultOBj, out List<OneRObj> oneRObjs, AoiObj aoiObj)
         {
             oneRObjs = new List<OneRObj>();
             SetParam();
