@@ -10,5 +10,9 @@
 
         public override string Name => "设备管理";
 
+        public override void initialization()
+        {
+            
+        }
     }
 }

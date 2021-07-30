@@ -18,6 +18,7 @@ namespace Vision2.vision.HalconRunFile.PCBFile
         {
             InitializeComponent();
             HWindID.Initialize(hWindowControl1);
+            ErosProjcetDLL.UI.DataGridViewF.StCon.AddCon(dataGridView1);
         }
         HWindID HWindID = new HWindID();
 
@@ -39,10 +40,10 @@ namespace Vision2.vision.HalconRunFile.PCBFile
                 {
                     TreeNode treeNode= treeView1.Nodes.Add(item.Key);
                     treeNode.Tag = item.Value;
-                    HOperatorSet.AffineTransPixel(PCBAEX.GetPThis().DXFInFoc.SetDXF(), item.Value.Row, item.Value.Col, 
-                        out HTuple rowTrans, out HTuple colTrans);
-                    HOperatorSet.GenRectangle2(out  HObject hObject, rowTrans, colTrans, 
-                       new HTuple(item.Value.Angle).TupleRad(), 100, 50);
+                    //HOperatorSet.AffineTransPixel(PCBAEX.GetPThis().DXFInFoc.SetDXF(), item.Value.Row, item.Value.Col, 
+                    //    out HTuple rowTrans, out HTuple colTrans);
+                    HOperatorSet.GenRectangle2(out  HObject hObject, item.Value.Row, item.Value.Col, 
+                       new HTuple(item.Value.Angle).TupleRad(), item.Value.Length1, item.Value.Length2);
                     HWindID.OneResIamge.AddNameOBJ(item.Key,hObject);
                 }
             }
@@ -153,11 +154,12 @@ namespace Vision2.vision.HalconRunFile.PCBFile
             {
                 if (libraryVisionBase!=null)
                 {
+                    this.panel1.Controls.Clear();
                     HWindID.OneResIamge.ClearImageMassage();
                     HOperatorSet.AffineTransPixel(PCBAEX.GetPThis().DXFInFoc.SetDXF(), libraryVisionBase.Row, libraryVisionBase.Col,
                   out HTuple rowTrans, out HTuple colTrans);
                     HOperatorSet.GenRectangle2(out HObject hObject, rowTrans, colTrans,
-                       new HTuple(libraryVisionBase.Angle).TupleDeg(), 100, 50);
+                       new HTuple(libraryVisionBase.Angle).TupleRad(), libraryVisionBase.Length1, libraryVisionBase.Length2);
                     HWindID.OneResIamge.AddNameOBJ(libraryVisionBase.Name, hObject);
                 }
                 libraryVisionBase = e.Node.Tag as Library.LibraryVisionBase;
@@ -166,10 +168,13 @@ namespace Vision2.vision.HalconRunFile.PCBFile
                     HOperatorSet.AffineTransPixel(PCBAEX.GetPThis().DXFInFoc.SetDXF(), libraryVisionBase.Row, libraryVisionBase.Col,
                       out HTuple rowTrans, out HTuple colTrans);
                     HOperatorSet.GenRectangle2(out HObject hObject, rowTrans, colTrans,
-                       new HTuple(libraryVisionBase.Angle).TupleDeg(), 100, 50);
+                       new HTuple(libraryVisionBase.Angle).TupleRad(), libraryVisionBase.Length1, libraryVisionBase.Length2);
                     HWindID.OneResIamge.AddNameOBJ(libraryVisionBase.Name, hObject,ColorResult.red);
                     HWindID.OneResIamge.AddImageMassage(rowTrans, colTrans, libraryVisionBase.Name);
                     HWindID.SetPart(rowTrans - 500, colTrans - 500, rowTrans + 500, colTrans + 500);
+                    propertyGrid2.SelectedObject = libraryVisionBase;
+                    libraryVisionBase.Run(HWindID);
+                  this.panel1.Controls.Add(   libraryVisionBase.GetControl());
                 }
                 HWindID.ShowObj();
 
@@ -306,7 +311,19 @@ namespace Vision2.vision.HalconRunFile.PCBFile
         {
             try
             {
-                UPdata();
+                propertyGrid1.SelectedObject = PCBAEX.GetPThis().DXFInFoc;
+                HWindID.HobjClear();
+                treeView1.Nodes.Clear();
+                foreach (var item in PCBAEX.DictRoi)
+                {
+                    TreeNode treeNode = treeView1.Nodes.Add(item.Key);
+                    treeNode.Tag = item.Value;
+                    HOperatorSet.AffineTransPixel(PCBAEX.GetPThis().DXFInFoc.SetDXF(), item.Value.Row, item.Value.Col,
+                        out HTuple rowTrans, out HTuple colTrans);
+                    HOperatorSet.GenRectangle2(out HObject hObject, rowTrans, colTrans,
+                       new HTuple(item.Value.Angle).TupleRad(), item.Value.Length1, item.Value.Length2);
+                    HWindID.OneResIamge.AddNameOBJ(item.Key, hObject);
+                }
             }
             catch (Exception)
             {
@@ -331,7 +348,10 @@ namespace Vision2.vision.HalconRunFile.PCBFile
         {
             try
             {
-             
+                dataGridView1.Rows.Clear();
+
+                dataGridView1.Rows.Add(HWindID.OneResIamge.GetKeyHobj().Count);
+                int det = 0;
                 foreach (var item in HWindID.OneResIamge.GetKeyHobj())
                 {
                     HOperatorSet.AreaCenter(item.Value.Object, out HTuple area, out HTuple row, out HTuple column);
@@ -340,6 +360,14 @@ namespace Vision2.vision.HalconRunFile.PCBFile
                         PCBAEX.DictRoi[item.Key].Row = row;
                         PCBAEX.DictRoi[item.Key].Col = column;
                     }
+                    dataGridView1.Rows[det].Cells[0].Value = item.Key;
+                    dataGridView1.Rows[det].Cells[1].Value = row;
+                    dataGridView1.Rows[det].Cells[2].Value = column;
+                    dataGridView1.Rows[det].Cells[3].Value = PCBAEX.DictRoi[item.Key].Angle;
+                    dataGridView1.Rows[det].Cells[4].Value = PCBAEX.DictRoi[item.Key].ToolDone;
+
+                    dataGridView1.Rows[det].Cells[5].Value = PCBAEX.DictRoi[item.Key].LibraryName;
+                    det++;
                 }
             }
             catch (Exception ex)
@@ -362,16 +390,34 @@ namespace Vision2.vision.HalconRunFile.PCBFile
                         libraryVisionBase.Name = dataGridView1.Rows[i].Cells[0].Value.ToString();
                         PCBAEX.DictRoi.Add(libraryVisionBase.Name, libraryVisionBase);
                     }
-
                     libraryVisionBase = PCBAEX.DictRoi[dataGridView1.Rows[i].Cells[0].Value.ToString()];
                     libraryVisionBase.Name = dataGridView1.Rows[i].Cells[0].Value.ToString();
                     libraryVisionBase.Row = double.Parse(dataGridView1.Rows[i].Cells[1].Value.ToString());
                     libraryVisionBase.Col = double.Parse(dataGridView1.Rows[i].Cells[2].Value.ToString());
                     libraryVisionBase.Angle = double.Parse(dataGridView1.Rows[i].Cells[3].Value.ToString());
                     libraryVisionBase.ToolDone = dataGridView1.Rows[i].Cells[4].Value.ToString();
-             
                 }
                 UPdata();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void toolStripButton6_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                SaveFileDialog openFileDialog = new SaveFileDialog();
+                openFileDialog.Filter = "Exlce文件|*.xls;*.xlsx";
+            
+                openFileDialog.FileName = Project.formula.Product.ProductionName+ ".xls";
+                DialogResult dialogResult = openFileDialog.ShowDialog();
+                if (dialogResult == DialogResult.OK)
+                {
+                    ErosProjcetDLL.Excel.Npoi.DataGridViewExportExcel(openFileDialog.FileName, Project.formula.Product.ProductionName, dataGridView1);
+                }
             }
             catch (Exception ex)
             {

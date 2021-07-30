@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Vision2.Project.formula;
+using Vision2.Project.Mes;
 
 namespace Vision2.捷普
 {
@@ -24,7 +25,9 @@ namespace Vision2.捷普
             {
                 if (e.KeyCode==Keys.Enter)
                 {
-                    RecipeCompiler.Instance.MesDatat.UserID = textBox1.Text;
+
+                    ErosProjcetDLL.Project.ProjectINI.In.UserID=
+                    ((MesJib)RecipeCompiler.Instance.GetMes()).MesData.UserID = textBox1.Text;
                     this.Close();
                 }
             }

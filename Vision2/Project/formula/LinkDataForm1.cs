@@ -187,14 +187,14 @@ namespace Vision2.Project.formula
                         {
                             ListData.ListDatV[i].RunNameOBJ = (dataGridView1.Rows[i].Cells[1].Value.ToString());
                         }
-                        if (dataGridView1.Rows[i].Cells[2].Value!=null)
-                        {
-                            ListData.PointXID[i] = (dataGridView1.Rows[i].Cells[2].Value.ToString());
-                        }
-                        if (dataGridView1.Rows[i].Cells[3].Value != null)
-                        {
-                            ListData.PointYID[i] = (dataGridView1.Rows[i].Cells[3].Value.ToString());
-                        }
+                        //if (dataGridView1.Rows[i].Cells[2].Value!=null)
+                        //{
+                        //    ListData.PointXID[i] = (dataGridView1.Rows[i].Cells[2].Value.ToString());
+                        //}
+                        //if (dataGridView1.Rows[i].Cells[3].Value != null)
+                        //{
+                        //    ListData.PointYID[i] = (dataGridView1.Rows[i].Cells[3].Value.ToString());
+                        //}
                     }
                 }
         
@@ -223,11 +223,7 @@ namespace Vision2.Project.formula
                     dataGridView1.Rows[i].Cells[0].Value = ListData.ListDatV[i].ComponentName;
                     dataGridView1.Rows[i].Cells[1].Value = ListData.ListDatV[i].RunNameOBJ;
                     dataGridView1.Rows[i].Cells[0].Tag = ListData.ListDatV[i];
-                    dataGridView1.Rows[i].Cells[2].Value = ListData.PointXID[i];
-                    dataGridView1.Rows[i].Cells[3].Value = ListData.PointYID[i];
-
                 }
-
                 //for (int i = 0; i < ListData.ListDatV.Count; i++)
                 //{
                 //    if (ListData.ListDatV.Count > i)
@@ -279,7 +275,7 @@ namespace Vision2.Project.formula
                             {
                                 datas += ListData.ListDatV[i].ValueStrs[i2] + ',';
                             }
-                            dataGridView1.Rows[i].Cells[4].Value = datas;
+                            dataGridView1.Rows[i].Cells[2].Value = datas;
                             int rset = ListData.ListDatV[i].GetRset();
                             if (rset ==0)
                             {
@@ -328,7 +324,7 @@ namespace Vision2.Project.formula
                 for (int i = 0; i < dataGridView1.Rows.Count; i++)
                 {
                     dataGridView1.Rows[i].Cells[0].Style.BackColor = Color.Gray;
-                    dataGridView1.Rows[i].Cells[4].Value = "";
+                    dataGridView1.Rows[i].Cells[2].Value = "";
                 }
                 for (int i = 0; i < ListData.ListDatV.Count; i++)
                 {
@@ -412,9 +408,14 @@ namespace Vision2.Project.formula
             Random rd = new Random();
             double i = rd.NextDouble();
             RecipeCompiler.Instance.Data.AddData(i);
-            DebugF.DebugCompiler.GetTrayDataUserControl().GetTrayEx().Number++;
-            numericUpDown3.Value = DebugF.DebugCompiler.GetTrayDataUserControl().GetTrayEx().Number;
-            DebugF.DebugCompiler.GetTrayDataUserControl().SetValue(i);
+            DebugF.DebugCompiler.GetTray(0).GetITrayRobot().SetValue(i);
+           
+            DebugF.DebugCompiler.GetTray(0).Number++;
+            if (DebugF.DebugCompiler.GetTray(0).Count < DebugF.DebugCompiler.GetTray(0).Number)
+            {
+                DebugF.DebugCompiler.GetTray(0).Number = 1;
+            }
+            numericUpDown3.Value = DebugF.DebugCompiler.GetTray(0).Number;
         }
         public double NextDouble(Random ran, double minValue, double maxValue)
         {
@@ -467,8 +468,8 @@ namespace Vision2.Project.formula
                 }
                 DebugF.DebugCompiler.DebugData(dataStr);
                 //DebugF.DebugCompiler.GetTrayDataUserControl().SetValue(vs);
-                DebugF.DebugCompiler.GetTrayDataUserControl().GetTrayEx().Number++;
-                numericUpDown3.Value = DebugF.DebugCompiler.GetTrayDataUserControl().GetTrayEx().Number;
+                DebugF.DebugCompiler.GetTray(0).Number++;
+                numericUpDown3.Value = DebugF.DebugCompiler.GetTray(0).Number;
                 RecipeCompiler.Instance.Data.AddData(vs);
             }
             catch (Exception ex)
@@ -481,8 +482,8 @@ namespace Vision2.Project.formula
         {
             try
             {
-                DebugF.DebugCompiler.GetTrayDataUserControl().GetTrayEx().Number = 1;
-                  numericUpDown3.Value=  DebugF.DebugCompiler.GetTrayDataUserControl().GetTrayEx().Number;
+                DebugF.DebugCompiler.GetTray(0).Number = 1;
+                  numericUpDown3.Value=  DebugF.DebugCompiler.GetTray(0).Number;
                 //DebugF.DebugCompiler.GetTrayDataUserControl().GetTrayEx().RestValue();
             }
             catch (Exception ex)
@@ -495,7 +496,10 @@ namespace Vision2.Project.formula
         {
             try
             {
-                DebugF.DebugCompiler.GetTrayDataUserControl().WriatTary(ProcessControl.ProcessUser.GetThis().ExcelPath + "\\", "{文件名= [newtime]-[trayid];}", DebugF.DebugCompiler.GetTrayDataUserControl().GetTrayEx().GetTrayData(), out string err);
+                DebugF.DebugCompiler.GetTray(0).GetTrayData().
+                    WriatTary(ProcessControl.ProcessUser.GetThis().ExcelPath + "\\",
+                    "{文件名= [newtime]-[trayid];}",
+                    DebugF.DebugCompiler.GetTray(0).GetTrayData(), out string err);
             }
             catch (Exception ex)
             {
@@ -509,7 +513,7 @@ namespace Vision2.Project.formula
             {
                 if (ErosSocket.ErosConLink.StaticCon.GetSocketClint(RecipeCompiler.Instance.RsetLinkName) != null)
                 {
-                    string jsonStr = JsonConvert.SerializeObject(DebugF.DebugCompiler.GetTrayDataUserControl().GetTrayEx());
+                    string jsonStr = JsonConvert.SerializeObject(DebugF.DebugCompiler.GetTray(0).GetTrayData());
                     ErosSocket.ErosConLink.StaticCon.GetSocketClint(RecipeCompiler.Instance.RsetLinkName).Send("Tray" + jsonStr);
                 }
                 else
@@ -528,7 +532,7 @@ namespace Vision2.Project.formula
         {
             try
             {
-                DebugF.DebugCompiler.GetTrayDataUserControl().GetTrayEx().Number = (int)numericUpDown3.Value;
+                DebugF.DebugCompiler.GetTray(0).Number = (int)numericUpDown3.Value;
             }
             catch (Exception)
             {

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Threading;
+using System.Windows.Forms;
 using Vision2.Project.formula;
 using Vision2.vision.HalconRunFile.RunProgramFile;
 using static Vision2.Project.DebugF.IO.RunCodeStr.ThreadData;
@@ -485,27 +486,35 @@ namespace Vision2.Project.DebugF.IO
         public void Go(object codeStr)
         {
             RunErr runErr = codeStr as RunErr;
-            double? x = null;
-            double? y = null;
-            double? z = null;
-            double? u = null;
-            string[] imtey = runErr.Code.Trim().Split(',');
-            if (ToPoint(runErr.Code, out x, out y, out z, out u, out EnumXYZUMoveType enumXYZUMoveType))
+            try
             {
-                if (!IsSimulate)
+                double? x = null;
+                double? y = null;
+                double? z = null;
+                double? u = null;
+                string[] imtey = runErr.Code.Trim().Split(',');
+                if (ToPoint(runErr.Code, out x, out y, out z, out u, out EnumXYZUMoveType enumXYZUMoveType))
                 {
-                    if (!DebugCompiler.GetThis().DDAxis.SetXYZ1Points(imtey[0], GoOutTime, x, y, z, u, enumXYZUMoveType))
+                    if (!IsSimulate)
                     {
-                        if (DebugCompiler.EquipmentStatus != ErosSocket.ErosConLink.EnumEquipmentStatus.已停止)
+                        if (!DebugCompiler.GetThis().DDAxis.SetXYZ1Points(imtey[0], GoOutTime, x, y, z, u, enumXYZUMoveType))
                         {
-                            runErr.ErrStr += imtey[0]+"移动失败;";
+                            if (DebugCompiler.EquipmentStatus != ErosSocket.ErosConLink.EnumEquipmentStatus.已停止)
+                            {
+                                runErr.ErrStr += imtey[0] + "移动失败;";
+                            }
                         }
                     }
                 }
+                else
+                {
+                    runErr.ErrStr += "未找到点位数据:" + runErr.Code;
+                }
+
             }
-            else
+            catch (Exception ex)
             {
-                runErr.ErrStr += "未找到点位数据:" + runErr.Code;
+                runErr.ErrStr += ex.Message;
             }
             runErr.Done = true;
         }
@@ -1367,6 +1376,16 @@ namespace Vision2.Project.DebugF.IO
 
         }
  
+            public void SetLight(string lightName)
+            {
+                try
+                {
+                   vision.Vision.SetLight(lightName);
+                }
+                catch (Exception)
+                {
+                }
+            }
         #endregion
 
         public RunErr RunSingle(string text, int rowindex)
@@ -1676,7 +1695,7 @@ namespace Vision2.Project.DebugF.IO
                 {
                     if (ErosSocket.ErosConLink.StaticCon.GetSocketClint(RecipeCompiler.Instance.RsetLinkName) != null)
                     {
-                        string jsonStr = JsonConvert.SerializeObject(DebugF.DebugCompiler.GetTrayDataUserControl().GetTrayEx());
+                        string jsonStr = JsonConvert.SerializeObject(DebugCompiler.GetTray((int)ToDoubleP(tdat[1])).GetTrayData());
                         ErosSocket.ErosConLink.StaticCon.GetSocketClint(RecipeCompiler.Instance.RsetLinkName).Send("Tray" + jsonStr);
                     }
                 }
@@ -1804,6 +1823,9 @@ namespace Vision2.Project.DebugF.IO
                             DebugCompiler.GetThis().DDAxis.SetTray(det, tdat[1], tdat[2], tdat[3], tdat[4], xNumber.ToString(), YNumber.ToString());
                         }
                     }
+                }else if (imtey[0]== "setlight")
+                {
+                    SetLight(tdat[1]);
                 }
                 else if (imtey[0] == "axis")
                 {
@@ -2081,8 +2103,8 @@ namespace Vision2.Project.DebugF.IO
                 {
                     int det = 0;
                     det = ToDoubleP(imtey[1]);
-                    DebugCompiler.GetTrayDataUserControl().WriatTary(ProcessControl.ProcessUser.GetThis().ExcelPath + "\\", text,
-                        DebugCompiler.GetTrayDataUserControl().GetTrayEx(det).GetTrayData(), out runErr.ErrStr);
+                    DebugCompiler.GetTray(det).GetTrayData().WriatTary(ProcessControl.ProcessUser.GetThis().ExcelPath + "\\", text,
+                        DebugCompiler.GetTray(det).GetTrayData(), out runErr.ErrStr);
                 }//等待读取文件
                 else if (imtey[0] == "awaitread")
                 {
@@ -2185,7 +2207,7 @@ namespace Vision2.Project.DebugF.IO
                                             {
                                                 UserFormulaContrsl.SetOK(3);
                                             }
-                                            DebugCompiler.GetTrayDataUserControl().SetValue(ListR);
+                                            DebugCompiler.GetTray(0).GetITrayRobot().SetValue(ListR);
                                             System.IO.Directory.CreateDirectory(ProcessControl.ProcessUser.GetThis().ExcelPath + "\\历史记录\\");
                                             System.IO.File.Move(Pahts[i], ProcessControl.ProcessUser.GetThis().ExcelPath + "\\历史记录\\" + System.IO.Path.GetFileName(Pahts[i]));
                                             Vision2.ErosProjcetDLL.Project.AlarmText.AddTextNewLine("SIFS过站完成" + textT[0], Color.Green);
@@ -2393,7 +2415,7 @@ namespace Vision2.Project.DebugF.IO
                                     AwaitOut = true;
                                     break;
                                 }
-                                System.Threading.Thread.Sleep(10);
+                                Thread.Sleep(10);
                                 if (DebugCompiler.EquipmentStatus == ErosSocket.ErosConLink.EnumEquipmentStatus.已停止)
                                 {
                                     break;
@@ -2446,14 +2468,18 @@ namespace Vision2.Project.DebugF.IO
                     }
                     else if (imtey[1].ToLower().StartsWith("ng"))
                     {
-                        if (UserFormulaContrsl.NG)
+                        if (!UserFormulaContrsl.NG)
                         {
                             IFElseBool = false;
                         }
                     }
                     else if (imtey[1].ToLower().StartsWith("ok"))
                     {
-                        IFElseBool = UserFormulaContrsl.NG;
+                        if (UserFormulaContrsl.NG)
+                        {
+                            IFElseBool = false;
+                        }
+                        //IFElseBool = UserFormulaContrsl.NG;
                     }
                     else if (imtey[1].ToLower().StartsWith("do"))
                     {
@@ -2727,11 +2753,32 @@ namespace Vision2.Project.DebugF.IO
                 {
                     if (tdat.Length >= 2)
                     {
-                        DebugCompiler.GetTrayDataUserControl().SetTray(DebugCompiler.GetThis().DDAxis.GetTrayInxt((int)ToDoubleP(tdat[1])));
-                        if (tdat.Length == 4)
+                        int trayID = (int)ToDoubleP(tdat[1]);
+                        TrayDataUserControl TrayData;
+                        MainForm1.MainFormF.Invoke(new Action(() =>
                         {
-                            DebugCompiler.GetTrayDataUserControl().SetMinMax(ToDoubleP(tdat[1]), ToDoubleP(tdat[2]));
-                        }
+                            if (!MainForm1.MainFormF.tabControl1.TabPages.ContainsKey("托盘"+ trayID))
+                            {
+                                TrayData=  new TrayDataUserControl();
+                                TrayData.Dock = DockStyle.Fill;
+                                TabPage tabPage = new TabPage();
+                                tabPage.Text = tabPage.Name = "托盘" + trayID;
+                                tabPage.Controls.Add(TrayData);
+                                tabPage.Tag = TrayData;
+                                MainForm1.MainFormF.tabControl1.Controls.Add(tabPage);
+                            }
+                            else
+                            {
+                                TrayData= MainForm1.MainFormF.tabControl1.TabPages["托盘" + trayID].Tag as TrayDataUserControl;
+                            }
+                            TrayData.SetTray(DebugCompiler.GetTray(trayID).GetTrayData());
+                            //DebugCompiler.GetTrayDataUserControl(TrayData);
+                            if (tdat.Length == 4)
+                            {
+                                TrayData.SetMinMax(ToDoubleP(tdat[1]), ToDoubleP(tdat[2]));
+                            }
+                        }));
+                       
                     }
                 }
                 else if (imtey[0] == "cleartray")
@@ -2741,9 +2788,25 @@ namespace Vision2.Project.DebugF.IO
                         DebugCompiler.GetThis().DDAxis.GetTrayInxt((int)ToDoubleP(tdat[1])).GetTrayData().RestValue();
                     }
                 }
+                else if (imtey[0] == "selectbpage")
+                {
+                    MainForm1.MainFormF.Invoke(new Action(() =>
+                    {
+                            if (int.TryParse(tdat[1],out int selindex))
+                        {
+                            MainForm1.MainFormF.tabControl1.SelectedIndex = selindex;
+                        }
+                        else
+                        {
+                            MainForm1.MainFormF.tabControl1.SelectTab (tdat[1]);
+                        }
+                    }));
+
+                }
                 else if (imtey[0] == "settraynumber")
                 {
-                    DebugCompiler.GetTrayDataUserControl().SetNumber((int)ToDoubleP(tdat[1]));
+                    DebugCompiler.GetTray((int)ToDoubleP(tdat[1])).Number = (int)ToDoubleP(tdat[2]);
+                 
                 }
                 else if (imtey[0] == "submitresults")
                 {

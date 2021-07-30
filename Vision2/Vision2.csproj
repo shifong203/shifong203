@@ -70,16 +70,15 @@
       <HintPath>Dll\HslCommunication.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualBasic" />
-    <Reference Include="MVReader, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Dll\MVReader.exe</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>bin\Debug\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="NPOI">
       <HintPath>..\ErosProjcetDLL\bin\Debug\NPOI.dll</HintPath>
+    </Reference>
+    <Reference Include="NPOI.Fakes">
+      <HintPath>FakesAssemblies\NPOI.Fakes.dll</HintPath>
     </Reference>
     <Reference Include="NPOI.OOXML">
       <HintPath>..\ErosProjcetDLL\bin\Debug\NPOI.OOXML.dll</HintPath>
@@ -530,12 +529,6 @@
     <Compile Include="Project\DebugF\TechnologyFile\TechnologyUserControl1.Designer.cs">
       <DependentUpon>TechnologyUserControl1.cs</DependentUpon>
     </Compile>
-    <Compile Include="Project\DebugF\UserInterfaceControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Project\DebugF\UserInterfaceControl.Designer.cs">
-      <DependentUpon>UserInterfaceControl.cs</DependentUpon>
-    </Compile>
     <Compile Include="Project\DebugF\工艺库\AxisDPUserControl1.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -586,10 +579,22 @@
       <DependentUpon>FormulaPrForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Project\Mes\IMesData.cs" />
-    <Compile Include="Project\formula\JabilForm.cs">
+    <Compile Include="vision\RestVisionForm\OneNGDataMinMaxControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="vision\RestVisionForm\OneNGDataMinMaxControl.Designer.cs">
+      <DependentUpon>OneNGDataMinMaxControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="捷普\CXAMForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Project\formula\JabilForm.Designer.cs">
+    <Compile Include="捷普\CXAMForm.Designer.cs">
+      <DependentUpon>CXAMForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Project\Mes\JabilForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Project\Mes\JabilForm.Designer.cs">
       <DependentUpon>JabilForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Project\formula\LinkData.cs" />
@@ -655,6 +660,13 @@
       <DependentUpon>MainForm1.cs</DependentUpon>
     </Compile>
     <Compile Include="Project\Mes\安费诺Mes.cs" />
+    <Compile Include="Project\Mes\环旭SISF\SisfForm1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Project\Mes\环旭SISF\SisfForm1.Designer.cs">
+      <DependentUpon>SisfForm1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Project\Mes\环旭SISF\SISF.cs" />
     <Compile Include="Project\NewProjectForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1106,6 +1118,12 @@
     <Compile Include="vision\HalconRunFile\Controls\Color_Dete_Control.Designer.cs">
       <DependentUpon>Color_Dete_Control.cs</DependentUpon>
     </Compile>
+    <Compile Include="vision\HalconRunFile\Controls\DrawVisionForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\Controls\DrawVisionForm.Designer.cs">
+      <DependentUpon>DrawVisionForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="vision\HalconRunFile\PCBFile\CapacitanceMinMaxV.cs" />
     <Compile Include="vision\HalconRunFile\PCBFile\PCBAEX.cs" />
     <Compile Include="vision\HalconRunFile\PCBFile\PCBBControl.cs">
@@ -1129,6 +1147,9 @@
     </Compile>
     <Compile Include="vision\Library\LibraryBasics.cs" />
     <Compile Include="vision\Library\LibraryVisionBase.cs" />
+    <Compile Include="vision\RestVisionForm\PrestC.cs" />
+    <Compile Include="vision\RestVisionForm\PrestImageData.cs" />
+    <Compile Include="vision\RestVisionForm\XldOjb.cs" />
     <Compile Include="vision\RestVisionForm\OneResultOBj.cs" />
     <Compile Include="vision\RestVisionForm\FormRestfDataIamge.cs">
       <SubType>Form</SubType>
@@ -1458,6 +1479,12 @@
     </Compile>
     <Compile Include="vision\Zazaniao.cs" />
     <Compile Include="Web References\cnshah0tis01\Reference.cs" />
+    <Compile Include="捷普\CRRForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="捷普\CRRForm.Designer.cs">
+      <DependentUpon>CRRForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="捷普\DebugSele.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1641,9 +1668,6 @@
     <EmbeddedResource Include="Project\DebugF\TechnologyFile\TechnologyUserControl1.resx">
       <DependentUpon>TechnologyUserControl1.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Project\DebugF\UserInterfaceControl.resx">
-      <DependentUpon>UserInterfaceControl.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Project\DebugF\工艺库\AxisDPUserControl1.resx">
       <DependentUpon>AxisDPUserControl1.cs</DependentUpon>
     </EmbeddedResource>
@@ -1668,7 +1692,13 @@
     <EmbeddedResource Include="Project\formula\FormulaPrForm.resx">
       <DependentUpon>FormulaPrForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Project\formula\JabilForm.resx">
+    <EmbeddedResource Include="vision\RestVisionForm\OneNGDataMinMaxControl.resx">
+      <DependentUpon>OneNGDataMinMaxControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="捷普\CXAMForm.resx">
+      <DependentUpon>CXAMForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Project\Mes\JabilForm.resx">
       <DependentUpon>JabilForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Project\formula\LinkDataForm1.resx">
@@ -1705,6 +1735,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Project\MainForm1.zh-Hans.resx">
       <DependentUpon>MainForm1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Project\Mes\环旭SISF\SisfForm1.resx">
+      <DependentUpon>SisfForm1.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Project\NewProjectForm.resx">
       <DependentUpon>NewProjectForm.cs</DependentUpon>
@@ -1891,6 +1924,9 @@
     <EmbeddedResource Include="vision\Cams\LightSourceControl.resx">
       <DependentUpon>LightSourceControl.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="vision\HalconRunFile\Controls\DrawVisionForm.resx">
+      <DependentUpon>DrawVisionForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="vision\HalconRunFile\PCBFile\PCBBControl.resx">
       <DependentUpon>PCBBControl.cs</DependentUpon>
     </EmbeddedResource>
@@ -2053,6 +2089,9 @@
     <EmbeddedResource Include="vision\VisonRsoertUI.resx">
       <DependentUpon>VisonRsoertUI.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="捷普\CRRForm.resx">
+      <DependentUpon>CRRForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="捷普\DebugSele.resx">
       <DependentUpon>DebugSele.cs</DependentUpon>
     </EmbeddedResource>
@@ -2062,6 +2101,7 @@
     <EmbeddedResource Include="捷普\OperatorFormShow.resx">
       <DependentUpon>OperatorFormShow.cs</DependentUpon>
     </EmbeddedResource>
+    <Fakes Include="Fakes\halcondotnetxl.fakes" />
     <None Include="Iamge\HalconDemo1_TemporaryKey.pfx" />
     <Fakes Include="ErosProjcetDLL\Fakes\NPOI.fakes" />
     <None Include="Properties\Settings.settings">

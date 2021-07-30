@@ -105,10 +105,10 @@ namespace Vision2.vision.HalconRunFile.Controls
                 {
                     HWindID.HobjClear();
 
-                    HWindID.GetHWindowControl().HalconWindow.ClearWindow();
+                    HWindID.GetHWindowControl().ClearWindow();
 
-                    HWindID.GetHWindowControl().HalconWindow.SetColor("red");
-                    HOperatorSet.SetDraw(HWindID.GetHWindowControl().HalconWindow, "margin");
+                    HWindID.GetHWindowControl().SetColor("red");
+                    HOperatorSet.SetDraw(HWindID.GetHWindowControl(), "margin");
                     text_Mode.SetParam();
                     //HOperatorSet.HomMat2dIdentity(out HTuple home2d);
                     //HOperatorSet.HomMat2dRotate(home2d, text_Mode.Phi[listBox1.SelectedIndex], text_Mode.Row[listBox1.SelectedIndex], text_Mode.Column[listBox1.SelectedIndex], out home2d);

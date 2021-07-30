@@ -317,7 +317,42 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                             HOperatorSet.AffineTransRegion(hObject4, out hObject4, home2d, "nearest_neighbor");
                             if (QRMode)
                             {
-                                if (text == Project.ProcessControl.ProcessUser.QRCode)
+                                ResltBool = false;
+                                if (text.Length== Project.ProcessControl.ProcessUser.QRCode.Length)
+                                {
+                                    for (int d = 0; d < text.Length; d++)
+                                    {
+                                        char texChar = text[d];
+                                        if (texChar == Project.ProcessControl.ProcessUser.QRCode[d])
+                                        {
+
+                                        }
+                                        else  if (texChar == '0' || texChar == 'O')
+                                        {
+                                            if (Project.ProcessControl.ProcessUser.QRCode[d]=='0'|| Project.ProcessControl.ProcessUser.QRCode[d]=='O')
+                                            {
+
+                                            }
+                                            else
+                                            {
+                                                errNumer++;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            errNumer++;
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    errNumer++;
+                                }
+                                if (errNumer==0)
+                                {
+                                    ResltBool = true;
+                                }
+                                if (ResltBool)
                                 {
                                     oneResultOBj.AddObj(hObject2);
                                     AddGreen(hObject4);
@@ -353,7 +388,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         }
                     }
                 }
-                HOperatorSet.AreaCenter(NGRoi, out HTuple area, out HTuple row, out HTuple column);
+                HOperatorSet.AreaCenter(nGRoi, out HTuple area, out HTuple row, out HTuple column);
                 string textStr = "";
                 for (int i = 0; i < row.Length; i++)
                 {

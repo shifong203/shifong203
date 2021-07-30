@@ -43,7 +43,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 //HOperatorSet.EdgesImage(halcon.Image(), out HObject hObject1, out HObject hObject2, Filter,Alpha, NMS, Low, High);
                 HOperatorSet.Threshold(oneResultOBj.Image, out HObject hObject1, thresholdLow, thresholdHigh);
                 HOperatorSet.Connection(hObject1, out hObject1);
-                HOperatorSet.SelectShape(hObject1, out NGRoi, "height", "and", 30, 999999);
+                HOperatorSet.SelectShape(hObject1, out nGRoi, "height", "and", 30, 999999);
                 return true;
             }
             catch (Exception ex)

@@ -42,7 +42,7 @@
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.userInterfaceControl1 = new Vision2.Project.DebugF.UserInterfaceControl();
+            this.userFormulaContrsl1 = new Vision2.Project.formula.UserFormulaContrsl();
             this.miniToolStrip = new System.Windows.Forms.ToolStrip();
             this.toolStripCheckbox2 = new Vision2.ErosProjcetDLL.UI.ToolStrip.ToolStripCheckbox();
             this.toolStrip2 = new System.Windows.Forms.ToolStrip();
@@ -73,10 +73,16 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripLabel5 = new System.Windows.Forms.ToolStripLabel();
             this.toolStripLabel7 = new System.Windows.Forms.ToolStripLabel();
+            this.labelStat1 = new System.Windows.Forms.ToolStripDropDownButton();
+            this.Btn_Rest = new System.Windows.Forms.ToolStripMenuItem();
+            this.Btn_Initialize = new System.Windows.Forms.ToolStripMenuItem();
+            this.Btn_Debug = new Vision2.ErosProjcetDLL.UI.ToolStrip.TSButton();
+            this.Btn_Stop = new Vision2.ErosProjcetDLL.UI.ToolStrip.TSButton();
+            this.Btn_Pause = new Vision2.ErosProjcetDLL.UI.ToolStrip.TSButton();
+            this.Btn_Start = new Vision2.ErosProjcetDLL.UI.ToolStrip.TSButton();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             this.timer100 = new System.Windows.Forms.Timer(this.components);
             this.timer500 = new System.Windows.Forms.Timer(this.components);
-            this.userFormulaContrsl1 = new Vision2.Project.formula.UserFormulaContrsl();
             this.toolStripLeft.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -134,7 +140,7 @@
             this.toolStripLabel8});
             this.toolStrip1.Location = new System.Drawing.Point(0, 611);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(1465, 25);
+            this.toolStrip1.Size = new System.Drawing.Size(1300, 25);
             this.toolStrip1.TabIndex = 0;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -188,10 +194,9 @@
             // 
             this.splitContainer1.Panel2.AutoScroll = true;
             this.splitContainer1.Panel2.Controls.Add(this.panel2);
-            this.splitContainer1.Panel2.Controls.Add(this.userInterfaceControl1);
             this.splitContainer1.Panel2.Paint += new System.Windows.Forms.PaintEventHandler(this.splitContainer1_Panel2_Paint);
-            this.splitContainer1.Size = new System.Drawing.Size(1408, 560);
-            this.splitContainer1.SplitterDistance = 1060;
+            this.splitContainer1.Size = new System.Drawing.Size(1243, 560);
+            this.splitContainer1.SplitterDistance = 935;
             this.splitContainer1.SplitterWidth = 1;
             this.splitContainer1.TabIndex = 7;
             this.splitContainer1.SplitterMoving += new System.Windows.Forms.SplitterCancelEventHandler(this.splitContainer1_SplitterMoving);
@@ -206,7 +211,7 @@
             // splitContainer3.Panel1
             // 
             this.splitContainer3.Panel1.Controls.Add(this.tabControl1);
-            this.splitContainer3.Size = new System.Drawing.Size(1060, 560);
+            this.splitContainer3.Size = new System.Drawing.Size(935, 560);
             this.splitContainer3.SplitterDistance = 387;
             this.splitContainer3.TabIndex = 1;
             // 
@@ -216,28 +221,28 @@
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1060, 387);
+            this.tabControl1.Size = new System.Drawing.Size(935, 387);
             this.tabControl1.TabIndex = 0;
             // 
             // panel2
             // 
             this.panel2.Controls.Add(this.userFormulaContrsl1);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel2.Location = new System.Drawing.Point(0, 98);
+            this.panel2.Location = new System.Drawing.Point(0, 0);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(347, 462);
+            this.panel2.Size = new System.Drawing.Size(307, 560);
             this.panel2.TabIndex = 2;
             // 
-            // userInterfaceControl1
+            // userFormulaContrsl1
             // 
-            this.userInterfaceControl1.AutoSize = true;
-            this.userInterfaceControl1.BackColor = System.Drawing.Color.Gray;
-            this.userInterfaceControl1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.userInterfaceControl1.Location = new System.Drawing.Point(0, 0);
-            this.userInterfaceControl1.Name = "userInterfaceControl1";
-            this.userInterfaceControl1.Size = new System.Drawing.Size(347, 98);
-            this.userInterfaceControl1.TabIndex = 1;
-            this.userInterfaceControl1.Load += new System.EventHandler(this.userInterfaceControl1_Load);
+            this.userFormulaContrsl1.AutoScroll = true;
+            this.userFormulaContrsl1.AutoSize = true;
+            this.userFormulaContrsl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.userFormulaContrsl1.Location = new System.Drawing.Point(0, 0);
+            this.userFormulaContrsl1.Name = "userFormulaContrsl1";
+            this.userFormulaContrsl1.Size = new System.Drawing.Size(307, 560);
+            this.userFormulaContrsl1.TabIndex = 0;
+            this.userFormulaContrsl1.Load += new System.EventHandler(this.userFormulaContrsl1_Load);
             // 
             // miniToolStrip
             // 
@@ -259,8 +264,8 @@
             // 
             this.toolStripCheckbox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.toolStripCheckbox2.Name = "toolStripCheckbox2";
-            this.toolStripCheckbox2.Size = new System.Drawing.Size(111, 48);
-            this.toolStripCheckbox2.Text = "直通模式";
+            this.toolStripCheckbox2.Size = new System.Drawing.Size(71, 48);
+            this.toolStripCheckbox2.Text = "直通";
             this.toolStripCheckbox2.Click += new System.EventHandler(this.toolStripCheckbox2_Click);
             // 
             // toolStrip2
@@ -277,7 +282,7 @@
             this.ToolSripButtonHelp});
             this.toolStrip2.Location = new System.Drawing.Point(0, 0);
             this.toolStrip2.Name = "toolStrip2";
-            this.toolStrip2.Size = new System.Drawing.Size(659, 51);
+            this.toolStrip2.Size = new System.Drawing.Size(311, 51);
             this.toolStrip2.TabIndex = 2;
             this.toolStrip2.Text = "toolStrip2";
             // 
@@ -400,11 +405,10 @@
             this.版本信息ToolStripMenuItem});
             this.ToolSripButtonHelp.Font = new System.Drawing.Font("宋体", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.ToolSripButtonHelp.ForeColor = System.Drawing.Color.Black;
-            this.ToolSripButtonHelp.Image = ((System.Drawing.Image)(resources.GetObject("ToolSripButtonHelp.Image")));
             this.ToolSripButtonHelp.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.ToolSripButtonHelp.Name = "ToolSripButtonHelp";
             this.ToolSripButtonHelp.ShowDropDownArrow = false;
-            this.ToolSripButtonHelp.Size = new System.Drawing.Size(118, 48);
+            this.ToolSripButtonHelp.Size = new System.Drawing.Size(78, 48);
             this.ToolSripButtonHelp.Text = "F1帮助";
             this.ToolSripButtonHelp.Click += new System.EventHandler(this.ToolSripButtonHelp_Click);
             this.ToolSripButtonHelp.MouseMove += new System.Windows.Forms.MouseEventHandler(this.ToolSripButtonHelp_MouseMove);
@@ -431,7 +435,7 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1465, 51);
+            this.panel1.Size = new System.Drawing.Size(1300, 51);
             this.panel1.TabIndex = 1;
             // 
             // splitContainer2
@@ -447,8 +451,8 @@
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.toolStrip4);
-            this.splitContainer2.Size = new System.Drawing.Size(1465, 51);
-            this.splitContainer2.SplitterDistance = 659;
+            this.splitContainer2.Size = new System.Drawing.Size(1300, 51);
+            this.splitContainer2.SplitterDistance = 311;
             this.splitContainer2.TabIndex = 5;
             // 
             // toolStrip4
@@ -466,10 +470,15 @@
             this.toolStripSeparator1,
             this.toolStripLabel5,
             this.toolStripCheckbox2,
-            this.toolStripLabel7});
+            this.toolStripLabel7,
+            this.labelStat1,
+            this.Btn_Debug,
+            this.Btn_Stop,
+            this.Btn_Pause,
+            this.Btn_Start});
             this.toolStrip4.Location = new System.Drawing.Point(0, 0);
             this.toolStrip4.Name = "toolStrip4";
-            this.toolStrip4.Size = new System.Drawing.Size(802, 51);
+            this.toolStrip4.Size = new System.Drawing.Size(985, 51);
             this.toolStrip4.TabIndex = 3;
             this.toolStrip4.Text = "toolStrip4";
             this.toolStrip4.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.toolStrip4_ItemClicked);
@@ -482,8 +491,7 @@
             this.tsButton6.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsButton6.IsCher = false;
             this.tsButton6.Name = "tsButton6";
-            this.tsButton6.Size = new System.Drawing.Size(96, 48);
-            this.tsButton6.Text = "退出";
+            this.tsButton6.Size = new System.Drawing.Size(44, 48);
             this.tsButton6.Click += new System.EventHandler(this.button2_Click);
             // 
             // tsButton5
@@ -513,10 +521,9 @@
             // toolStripButton2
             // 
             this.toolStripButton2.Enabled = false;
-            this.toolStripButton2.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton2.Image")));
             this.toolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton2.Name = "toolStripButton2";
-            this.toolStripButton2.Size = new System.Drawing.Size(96, 48);
+            this.toolStripButton2.Size = new System.Drawing.Size(56, 48);
             this.toolStripButton2.Text = "光栅";
             this.toolStripButton2.Visible = false;
             // 
@@ -547,8 +554,83 @@
             // toolStripLabel7
             // 
             this.toolStripLabel7.Name = "toolStripLabel7";
-            this.toolStripLabel7.Size = new System.Drawing.Size(92, 48);
-            this.toolStripLabel7.Text = "内存使用";
+            this.toolStripLabel7.Size = new System.Drawing.Size(52, 48);
+            this.toolStripLabel7.Text = "内存";
+            // 
+            // labelStat1
+            // 
+            this.labelStat1.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.labelStat1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.labelStat1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.labelStat1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.Btn_Rest,
+            this.Btn_Initialize});
+            this.labelStat1.Image = ((System.Drawing.Image)(resources.GetObject("labelStat1.Image")));
+            this.labelStat1.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.labelStat1.Name = "labelStat1";
+            this.labelStat1.Size = new System.Drawing.Size(85, 48);
+            this.labelStat1.Text = "停止中";
+            // 
+            // Btn_Rest
+            // 
+            this.Btn_Rest.Name = "Btn_Rest";
+            this.Btn_Rest.Size = new System.Drawing.Size(144, 30);
+            this.Btn_Rest.Text = "复位";
+            this.Btn_Rest.Click += new System.EventHandler(this.复位ToolStripMenuItem_Click_2);
+            // 
+            // Btn_Initialize
+            // 
+            this.Btn_Initialize.Name = "Btn_Initialize";
+            this.Btn_Initialize.Size = new System.Drawing.Size(144, 30);
+            this.Btn_Initialize.Text = "初始化";
+            this.Btn_Initialize.Click += new System.EventHandler(this.初始化ToolStripMenuItem_Click_1);
+            // 
+            // Btn_Debug
+            // 
+            this.Btn_Debug.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.Btn_Debug.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.Btn_Debug.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.Btn_Debug.IsCher = true;
+            this.Btn_Debug.Name = "Btn_Debug";
+            this.Btn_Debug.Size = new System.Drawing.Size(56, 48);
+            this.Btn_Debug.Text = "调试";
+            this.Btn_Debug.Click += new System.EventHandler(this.tsButton1_Click_2);
+            // 
+            // Btn_Stop
+            // 
+            this.Btn_Stop.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.Btn_Stop.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.Btn_Stop.Image = global::Vision2.Properties.Resources.stop_alt;
+            this.Btn_Stop.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.Btn_Stop.IsCher = true;
+            this.Btn_Stop.Name = "Btn_Stop";
+            this.Btn_Stop.Size = new System.Drawing.Size(96, 48);
+            this.Btn_Stop.Text = "停止";
+            this.Btn_Stop.Click += new System.EventHandler(this.tsButton2_Click);
+            // 
+            // Btn_Pause
+            // 
+            this.Btn_Pause.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.Btn_Pause.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.Btn_Pause.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.Btn_Pause.IsCher = true;
+            this.Btn_Pause.Name = "Btn_Pause";
+            this.Btn_Pause.Size = new System.Drawing.Size(56, 48);
+            this.Btn_Pause.Text = "暂停";
+            this.Btn_Pause.Click += new System.EventHandler(this.Btn_Pause_Click);
+            // 
+            // Btn_Start
+            // 
+            this.Btn_Start.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.Btn_Start.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.Btn_Start.Image = global::Vision2.Properties.Resources.play;
+            this.Btn_Start.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.Btn_Start.IsCher = true;
+            this.Btn_Start.Name = "Btn_Start";
+            this.Btn_Start.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
+            this.Btn_Start.Size = new System.Drawing.Size(96, 48);
+            this.Btn_Start.Text = "启动";
+            this.Btn_Start.Click += new System.EventHandler(this.tsButton1_Click_1);
             // 
             // notifyIcon1
             // 
@@ -565,22 +647,12 @@
             this.timer500.Interval = 500;
             this.timer500.Tick += new System.EventHandler(this.timer500_Tick);
             // 
-            // userFormulaContrsl1
-            // 
-            this.userFormulaContrsl1.AutoScroll = true;
-            this.userFormulaContrsl1.AutoSize = true;
-            this.userFormulaContrsl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.userFormulaContrsl1.Location = new System.Drawing.Point(0, 0);
-            this.userFormulaContrsl1.Name = "userFormulaContrsl1";
-            this.userFormulaContrsl1.Size = new System.Drawing.Size(347, 462);
-            this.userFormulaContrsl1.TabIndex = 0;
-            // 
             // MainForm1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.ClientSize = new System.Drawing.Size(1465, 636);
+            this.ClientSize = new System.Drawing.Size(1300, 636);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.toolStripLeft);
             this.Controls.Add(this.panel1);
@@ -602,7 +674,6 @@
             this.toolStrip1.PerformLayout();
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
-            this.splitContainer1.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.splitContainer3.Panel1.ResumeLayout(false);
@@ -636,7 +707,6 @@
         public System.Windows.Forms.ToolStripLabel toolStripLabel2;
         private System.Windows.Forms.ToolStripLabel toolStripLabel4;
         public System.Windows.Forms.TabControl tabControl1;
-        public DebugF.UserInterfaceControl userInterfaceControl1;
         private System.Windows.Forms.ToolStrip toolStrip2;
         private System.Windows.Forms.ToolStripDropDownButton toolStripDropDownButton1;
         private System.Windows.Forms.ToolStripMenuItem 截取屏幕ToolStripMenuItem1;
@@ -674,5 +744,12 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         public System.Windows.Forms.SplitContainer splitContainer3;
         public formula.UserFormulaContrsl userFormulaContrsl1;
+        public ErosProjcetDLL.UI.ToolStrip.TSButton Btn_Start;
+        public ErosProjcetDLL.UI.ToolStrip.TSButton Btn_Stop;
+        public ErosProjcetDLL.UI.ToolStrip.TSButton Btn_Pause;
+        public ErosProjcetDLL.UI.ToolStrip.TSButton Btn_Debug;
+        public System.Windows.Forms.ToolStripMenuItem Btn_Initialize;
+        public System.Windows.Forms.ToolStripMenuItem Btn_Rest;
+        public System.Windows.Forms.ToolStripDropDownButton labelStat1;
     }
 }

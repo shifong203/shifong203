@@ -1611,6 +1611,7 @@ namespace Vision2.ErosProjcetDLL.Excel
                     {
                         if (dataGridView.Rows[i].Cells[i2].Value == null)
                         {
+                            listObj.Add(null);
                             continue;
                         }
                         if (Double.TryParse(dataGridView.Rows[i].Cells[i2].Value.ToString(), out double dewsd))

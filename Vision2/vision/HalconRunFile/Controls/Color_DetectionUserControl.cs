@@ -27,8 +27,11 @@ namespace Vision2.vision.HalconRunFile.Controls
             try
             {
                 halcon.HobjClear();
-
-                _Classify.Classify(halcon.GetOneImageR(),  _Classify.DrawObj,
+                AoiObj aoiObj = new AoiObj();
+                aoiObj.SelseAoi = _Classify.DrawObj;
+              
+                aoiObj.CiName = _Classify.Name;
+                _Classify.Classify(halcon.GetOneImageR(), aoiObj,
                     Color_detection, out HObject hObject,
                     hObjects);
         
@@ -156,7 +159,11 @@ namespace Vision2.vision.HalconRunFile.Controls
                 _Classify.COlorES = button3.BackColor;
                 _Classify.ISFillUp = checkBox1.Checked;
                 _Classify.ClosingCircleValue = (double)numericUpDown3.Value;
-                _Classify.Classify( halcon.GetOneImageR(),  _Classify.DrawObj,   Color_detection, out HObject hObject, hObjects);
+                AoiObj aoiObj = new AoiObj();
+                aoiObj.SelseAoi = _Classify.DrawObj;
+
+                aoiObj.CiName = _Classify.Name;
+                _Classify.Classify( halcon.GetOneImageR(), aoiObj,   Color_detection, out HObject hObject, hObjects);
                 halcon.AddObj(hObject);
                 halcon.ShowImage();
                 halcon.ShowObj();
@@ -220,7 +227,10 @@ namespace Vision2.vision.HalconRunFile.Controls
                 {
                     listBox2.Items.Add(_Classify.threshold_Min_Maxes[i].ImageTypeObj);
                 }
-                _Classify.Classify( halcon.GetOneImageR(), _Classify.DrawObj, Color_detection, out HObject hObject,
+                AoiObj aoiObj = new AoiObj();
+                aoiObj.SelseAoi = _Classify.DrawObj;
+                aoiObj.CiName = _Classify.Name;
+                _Classify.Classify( halcon.GetOneImageR(), aoiObj, Color_detection, out HObject hObject,
                 this.hObjects);
                 listBox2.SelectedIndex = 0;
                 hWindID.ShowImage();

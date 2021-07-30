@@ -84,27 +84,10 @@ namespace Vision2.vision.Cams
                     ThridLibray.IGigeInterfaceInfo device2 = ThridLibray.Enumerator.GigeInterfaceInfo(Cam.Index);
                     Cam.IntIP = device2.IPAddress;
                     TBGain.Text = hSBGain.Value.ToString();
-                    //textBoxCamName.Text = Cam.Name;
-                    //TxDeviceID.Text = Cam.ID;
-                    //TxCamIp_address.Text = Cam.IP;
-                    //textBox1.Text = Cam.IntIP;
+       
                     if (Cam.IsCamConnected)
                     {
-                        //if (!Vision.Instance.HalconCam)
-                        //{
-                        //    HTuple values = Cam.GetFramegrabberParam("BalanceWhiteAuto");
-                        //    if (values.Length == 1)
-                        //    {
-                        //        CamIntPut1.SelectedItem = values.S;
-                        //    }
-
-                        //}
-                        //else
-                        //{
-                        //    CamIntPut1.SelectedItem = Cam.GetFramegrabberParam("BalanceWhiteAuto");
-                        //}
                         toCamLink.Text = "断开";
-
                     }
                     else
                     {
@@ -240,14 +223,11 @@ namespace Vision2.vision.Cams
                     if (intExp != 0)
                     {
                         Cam.ExposureTime = hSBExposure.Value = (int)(intExp);
-
                     }
                     else
                     {
                         txExposure.Text = (hSBExposure.Value).ToString();
                     }
-
-                    //Cam.SetFramegrabberParam("ExposureTime", Cam.ExposureTimeAbs);
                 }
             }
             catch (Exception ex)
@@ -338,6 +318,11 @@ namespace Vision2.vision.Cams
             //CamParam camParam = new CamParam();
             //camParam.m_IDStr = Cam.Name;
             //Cam = camParam;
+        }
+
+        private void panel1_Paint(object sender, PaintEventArgs e)
+        {
+
         }
     }
 }

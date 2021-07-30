@@ -644,17 +644,17 @@ namespace Vision2.Project.DebugF.IO
                     {
                         if (DebugCompiler.RunStop)
                         {
-                            DebugCompiler.EquipmentStatus = ErosSocket.ErosConLink.EnumEquipmentStatus.错误停止中;
+                            DebugCompiler.EquipmentStatus = EnumEquipmentStatus.错误停止中;
                             return;
                         }
-                        DebugCompiler.EquipmentStatus = ErosSocket.ErosConLink.EnumEquipmentStatus.初始化完成;
+                        DebugCompiler.EquipmentStatus = EnumEquipmentStatus.初始化完成;
                         DebugCompiler.ISHome = true;
-                        Vision2.ErosProjcetDLL.Project.AlarmText.AddTextNewLine("初始化完成，" + HomeCodeT.RunTime + "S", Color.Green);
+                        ErosProjcetDLL.Project.AlarmText.AddTextNewLine("初始化完成，" + HomeCodeT.RunTime + "S", Color.Green);
                     }
                     else
                     {
-                        DebugCompiler.EquipmentStatus = ErosSocket.ErosConLink.EnumEquipmentStatus.错误停止中;
-                        Vision2.ErosProjcetDLL.Project.AlarmText.AddTextNewLine("初始化失败，" + HomeCodeT.RunTime + "S", Color.Red);
+                        DebugCompiler.EquipmentStatus = EnumEquipmentStatus.错误停止中;
+                        ErosProjcetDLL.Project.AlarmText.AddTextNewLine("初始化失败，" + HomeCodeT.RunTime + "S", Color.Red);
                     }
                 });
                 thread.IsBackground = true;
@@ -721,9 +721,8 @@ namespace Vision2.Project.DebugF.IO
                 }
                 if (KeyVales == null)
                 {
-                    KeyVales = new ErosSocket.ErosConLink.UClass.ErosValues();
+                    KeyVales = new UClass.ErosValues();
                 }
-
                 UInt16 CardID_InBit = 0;
                 IsInitialBool = false;
                 RunCodeT.Single_step = false;
@@ -952,6 +951,40 @@ namespace Vision2.Project.DebugF.IO
                 for (int i2 = 0; i2 < AxisS.Count; i2++)
                 {
                         AxisS[i2].Initial();
+                }
+                ErosProjcetDLL.Project.AlarmText.AddTextNewLine("第一次使能");
+                for (int i2 = 0; i2 < AxisS.Count; i2++)
+                {
+                    AxisS[i2].Initial();
+                }
+                Thread.Sleep(5000);
+                for (int i2 = 0; i2 < AxisS.Count; i2++)
+                {
+                    AxisS[i2].GetStatus();
+                    if (!AxisS[i2].IsEnabled)
+                    {
+                        ErosProjcetDLL.Project.AlarmText.AddTextNewLine(AxisS[i2].Name + "一未使能");
+                    }
+                }
+                ErosProjcetDLL.Project.AlarmText.AddTextNewLine("第二次使能");
+
+                for (int i2 = 0; i2 < AxisS.Count; i2++)
+                {
+                    AxisS[i2].Enabled();
+                }
+                Thread.Sleep(5000);
+                for (int i2 = 0; i2 < AxisS.Count; i2++)
+                {
+                    AxisS[i2].GetStatus();
+                    if (!AxisS[i2].IsEnabled)
+                    {
+                        ErosProjcetDLL.Project.AlarmText.AddTextNewLine(AxisS[i2].Name + "二未使能");
+                    }
+                }
+                ErosProjcetDLL.Project.AlarmText.AddTextNewLine("第三次使能");
+                for (int i2 = 0; i2 < AxisS.Count; i2++)
+                {
+                    AxisS[i2].Enabled();
                 }
                 if (CurAvailableDevs[i].DeviceName != "")
                 {
@@ -1441,9 +1474,8 @@ namespace Vision2.Project.DebugF.IO
             }
             catch (Exception ex)
             {
-                //throw new Exception(groupName + ex.Message);
+                throw new Exception(groupName + ex.Message);
             }
-
             return false;
         }
 
@@ -2021,6 +2053,33 @@ namespace Vision2.Project.DebugF.IO
             this.Tacc = Dacc;
             AddSeelp();
         }
+        public void AddSeelp(int SeelpTpeyIndex)
+        {
+            switch (SeelpTpeyIndex)
+            {
+                case 0:
+                    Tdec = this.LowDceValue;
+                    Tacc = this.LowAceValue;
+                    StrVal = this.LowStrValue;
+                    MaxVel = this.LowMavValue;
+                    break;
+                case 1:
+                    Tdec = this.DceValue;
+                    Tacc = this.AceValue;
+                    StrVal = this.StrValue;
+                    MaxVel = this.MavValue;
+                    break;
+                case 2:
+                    Tdec = this.HighDceValue;
+                    Tacc = this.HighAceValue;
+                    StrVal = this.HighStrValue;
+                    MaxVel = this.HighMavValue;
+                    break;
+                default:
+                    break;
+            }
+            AddSeelp();
+        }
         public void AddSeelp()
         {
             if (DebugCompiler.GetThis().ListKat == "PCI-1245L")
@@ -2075,6 +2134,7 @@ namespace Vision2.Project.DebugF.IO
         /// </summary>
         public bool Origin_Limit;
         public bool[] IOBools;
+        public bool[] IOBoolsEx;
         /// <summary>
         /// 当前运行速度
         /// </summary>
@@ -2082,19 +2142,43 @@ namespace Vision2.Project.DebugF.IO
 
         public void Enabled()
         {
-       
-            if (!IsEnabled)
+            if (IsError)
             {
-                UResult = Motion.mAcm_AxSetSvOn(m_Axishand, 1);
+
+
+            }
+       
+                if (!IsEnabled)
+                {
+                    UResult = Motion.mAcm_AxSetSvOn(m_Axishand, 1);
+                }
+                if (AxisNoEx > 0)
+                {
+                    uint IOStatus = 0;
+                    Motion.mAcm_AxGetMotionIO(m_AxishandEx, ref IOStatus);
+                    bool[] IOBo = ErosSocket.ErosConLink.StaticCon.ConvertIntToBoolArray((int)IOStatus, 32);
+                    if (!IOBo[14])
+                    {
+                        UResult = Motion.mAcm_AxSetSvOn(m_AxishandEx, 1);
+                    }
+                }
+            
+     
+        }
+        public void Diset()
+        {
+            if (IsEnabled)
+            {
+                UResult = Motion.mAcm_AxSetSvOn(m_Axishand, 0);
             }
             if (AxisNoEx > 0)
             {
                 uint IOStatus = 0;
                 Motion.mAcm_AxGetMotionIO(m_AxishandEx, ref IOStatus);
                 bool[] IOBo = ErosSocket.ErosConLink.StaticCon.ConvertIntToBoolArray((int)IOStatus, 32);
-                if (!IOBo[14])
+                if (IOBo[14])
                 {
-                    UResult = Motion.mAcm_AxSetSvOn(m_AxishandEx, 1);
+                    UResult = Motion.mAcm_AxSetSvOn(m_AxishandEx, 0);
                 }
             }
         }
@@ -2116,9 +2200,17 @@ namespace Vision2.Project.DebugF.IO
                         uint IOStatus = 0;
                         uint Result = Motion.mAcm_AxGetMotionIO(m_Axishand, ref IOStatus);
                         IOBools =StaticCon.ConvertIntToBoolArray((int)IOStatus, 32);
+                        if (AxisNoEx>=0)
+                        {
+                            Result = Motion.mAcm_AxGetMotionIO(m_AxishandEx, ref IOStatus);
+                            IOBoolsEx = StaticCon.ConvertIntToBoolArray((int)IOStatus, 32);
+                        }
                         Positive_Limit = IOBools[2];
                         Negative_Limit = IOBools[3];
                         Origin_Limit = IOBools[4];
+                        Positive_LimitSwt = IOBools[16];
+                        Negative_LimitSwt = IOBools[17];
+                        IsEnabled = IOBools[14];
                         ushort IOStatust = 0;
                         Result = Motion.mAcm_AxGetState(m_Axishand, ref IOStatust);
                         StaratNn = IOStatust;
@@ -2138,11 +2230,8 @@ namespace Vision2.Project.DebugF.IO
                             //    Motion.mAcm_AxResetError(m_AxishandEx);
                             //}
                         }
-                        Positive_LimitSwt = IOBools[16];
-                        Negative_LimitSwt = IOBools[17];
-                        IsEnabled= IOBools[14];
-   
-                        if (IOBools[1] || (IOStatust == 3 && (Positive_LimitSwt || Negative_LimitSwt || Positive_Limit || Negative_Limit)) )
+                        // || ( (Positive_LimitSwt || Negative_LimitSwt || Positive_Limit || Negative_Limit)) 
+                        if (IOBools[1] || IOStatust == 3)
                         {
                             string errStr = "";
                             if (Negative_LimitSwt)
@@ -2164,6 +2253,10 @@ namespace Vision2.Project.DebugF.IO
                             if (Negative_Limit)
                             {
                                 errStr += "硬件负限位";
+                            }
+                            if (IOStatust==3)
+                            {
+                                errStr += "错误停止";
                             }
                             ErosProjcetDLL.Project.AlarmListBoxt.AddAlarmText(new Vision2.ErosProjcetDLL.Project.AlarmText.alarmStruct() { Name = this.Name + "轴故障", Text = errStr });
                             IsError = true;
@@ -2401,14 +2494,41 @@ namespace Vision2.Project.DebugF.IO
                 ErosProjcetDLL.Project.AlarmListBoxt.RomveAlarm(this.Name + "轴故障");
                 if (DebugCompiler.GetThis().ListKat == "PCI-1245L")
                 {
-                    Enabled();
-                    UResult = 0;
-                    UResult = Motion.mAcm_AxResetError(m_Axishand);
-                    if (AxisNoEx > 0)
+                    if (IOBools[1]||StaratNn==3)
                     {
-                      UResult = Motion.mAcm_AxResetError(m_AxishandEx);
+                        UResult = Motion.mAcm_AxResetError(m_Axishand);
+                        if (AxisNoEx > 0)
+                        {
+                            uint IOStatus = 0;
+                            ushort IOStatust = 0;
+                            uint Result = Motion.mAcm_AxGetMotionIO(m_AxishandEx, ref IOStatus);
+                            bool[] vs = StaticCon.ConvertIntToBoolArray((int)IOStatus, 32);
+                                  Result = Motion.mAcm_AxGetState(m_AxishandEx, ref IOStatust);
+                            if (vs[0] || IOStatust ==3)
+                            {
+                                UResult = Motion.mAcm_AxResetError(m_AxishandEx);
+                            }
+                        }
+                        Thread.Sleep(50);
                     }
-          
+       
+                    Enabled();
+                    if (IOBools[1] || StaratNn == 3)
+                    {
+                        UResult = Motion.mAcm_AxResetError(m_Axishand);
+                        if (AxisNoEx > 0)
+                        {
+                            uint IOStatus = 0;
+                            ushort IOStatust = 0;
+                            uint Result = Motion.mAcm_AxGetMotionIO(m_AxishandEx, ref IOStatus);
+                            bool[] vs = StaticCon.ConvertIntToBoolArray((int)IOStatus, 32);
+                            Result = Motion.mAcm_AxGetState(m_AxishandEx, ref IOStatust);
+                            if (vs[0] || IOStatust == 3)
+                            {
+                                UResult = Motion.mAcm_AxResetError(m_AxishandEx);
+                            }
+                        }
+                    }
                     return;
                 }
                 else
@@ -2490,7 +2610,7 @@ namespace Vision2.Project.DebugF.IO
                     UResult = Motion.mAcm_AxHome(m_Axishand, HomeTepy, 1);
                     if (UResult != 0)
                     {
-                        ErosProjcetDLL.Project.AlarmListBoxt.AddAlarmText(this.Name + "轴初始化故障", "初始化失败代码:" + UResult);
+                        ErosProjcetDLL.Project.AlarmListBoxt.AddAlarmText(this.Name + "轴故障", "轴初始化故障,初始化失败代码:" + UResult);
                         return;
                     }
                 }
@@ -2517,6 +2637,11 @@ namespace Vision2.Project.DebugF.IO
                             if (HomeStop)
                             {
                                 return;
+                            }
+                            if (det==3)
+                            {
+                                homeing = false;
+                                break;
                             }
                             UResult = Motion.mAcm_AxGetMotionIO(m_Axishand, ref detInt);
                             bool[] bools2 = StaticCon.ConvertIntToBoolArray((int)detInt, 32);
@@ -2549,8 +2674,8 @@ namespace Vision2.Project.DebugF.IO
                                 if (det == 1)
                                 {
                                     Thread.Sleep(1000);
-                                    UResult = Motion.mAcm_AxSetCmdPosition(m_Axishand, 0);
-                                    UResult = Motion.mAcm_AxSetActualPosition(m_Axishand, 0);
+                                    //UResult = Motion.mAcm_AxSetCmdPosition(m_Axishand, 0);
+                                    //UResult = Motion.mAcm_AxSetActualPosition(m_Axishand, 0);
                                     UResult = Motion.mAcm_SetU32Property(m_Axishand, (uint)PropertyID.CFG_AxSwMelEnable, 1);
                                     UResult = Motion.mAcm_SetU32Property(m_Axishand, (uint)PropertyID.CFG_AxSwPelEnable, 1);
                                     UResult = Motion.mAcm_SetI32Property(m_Axishand, (uint)PropertyID.CFG_AxSwPelValue, (int)(this.PlusLimit * Scale * this.Ratio));

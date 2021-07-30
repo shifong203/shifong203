@@ -70,45 +70,45 @@ namespace Vision2.Project.DebugF
                                         {
                                             try
                                             {
-                                                if (StaticCon.GetSocketClint(RecipeCompiler.Instance.DataLinkName).GetIDValue(RecipeCompiler.Instance.Data.PLCID[i], "Single", out dynamic values))
-                                                {
-                                                    RecipeCompiler.Instance.Data.AddData(values.ToString());
-                                                    valuse.Add(Convert.ToSingle(values));
-                                                }
-                                                else
-                                                {
-                                                    Vision2.ErosProjcetDLL.Project.AlarmText.AddTextNewLine("读取PLC错误z:" + i);
-                                                }
-                                                if (!Single.TryParse(RecipeCompiler.Instance.Data.PointXID[i], out float resFloat))
-                                                {
-                                                    if (StaticCon.GetSocketClint(RecipeCompiler.Instance.DataLinkName).GetIDValue(RecipeCompiler.Instance.Data.PointXID[i], "Single", out values))
-                                                    {
-                                                        xs.Add(Convert.ToSingle(values));
-                                                    }
-                                                    else
-                                                    {
-                                                        Vision2.ErosProjcetDLL.Project.AlarmText.AddTextNewLine("读取PLC错误X:" + i);
-                                                    }
-                                                }
-                                                else
-                                                {
-                                                    xs.Add(resFloat);
-                                                }
-                                                if (!Single.TryParse(RecipeCompiler.Instance.Data.PointYID[i], out resFloat))
-                                                {
-                                                    if (StaticCon.GetSocketClint(RecipeCompiler.Instance.DataLinkName).GetIDValue(RecipeCompiler.Instance.Data.PointYID[i], "Single", out values))
-                                                    {
-                                                        ys.Add(Convert.ToSingle(values));
-                                                    }
-                                                    else
-                                                    {
-                                                        Vision2.ErosProjcetDLL.Project.AlarmText.AddTextNewLine("读取PLC错误X:" + i);
-                                                    }
-                                                }
-                                                else
-                                                {
-                                                    ys.Add(resFloat);
-                                                }
+                                                //if (StaticCon.GetSocketClint(RecipeCompiler.Instance.DataLinkName).GetIDValue(RecipeCompiler.Instance.Data.PLCID[i], "Single", out dynamic values))
+                                                //{
+                                                //    RecipeCompiler.Instance.Data.AddData(values.ToString());
+                                                //    valuse.Add(Convert.ToSingle(values));
+                                                //}
+                                                //else
+                                                //{
+                                                //    Vision2.ErosProjcetDLL.Project.AlarmText.AddTextNewLine("读取PLC错误z:" + i);
+                                                //}
+                                                //if (!Single.TryParse(RecipeCompiler.Instance.Data.PointXID[i], out float resFloat))
+                                                //{
+                                                //    if (StaticCon.GetSocketClint(RecipeCompiler.Instance.DataLinkName).GetIDValue(RecipeCompiler.Instance.Data.PointXID[i], "Single", out values))
+                                                //    {
+                                                //        xs.Add(Convert.ToSingle(values));
+                                                //    }
+                                                //    else
+                                                //    {
+                                                //        Vision2.ErosProjcetDLL.Project.AlarmText.AddTextNewLine("读取PLC错误X:" + i);
+                                                //    }
+                                                //}
+                                                //else
+                                                //{
+                                                //    xs.Add(resFloat);
+                                                //}
+                                                //if (!Single.TryParse(RecipeCompiler.Instance.Data.PointYID[i], out resFloat))
+                                                //{
+                                                //    if (StaticCon.GetSocketClint(RecipeCompiler.Instance.DataLinkName).GetIDValue(RecipeCompiler.Instance.Data.PointYID[i], "Single", out values))
+                                                //    {
+                                                //        ys.Add(Convert.ToSingle(values));
+                                                //    }
+                                                //    else
+                                                //    {
+                                                //        Vision2.ErosProjcetDLL.Project.AlarmText.AddTextNewLine("读取PLC错误X:" + i);
+                                                //    }
+                                                //}
+                                                //else
+                                                //{
+                                                //    ys.Add(resFloat);
+                                                //}
                                             }
                                             catch (Exception)
                                             {
@@ -191,51 +191,51 @@ namespace Vision2.Project.DebugF
 
 
                     valuse.Add(rd.Next(-1, 10));
-                    if (RecipeCompiler.Instance.Data.PointXID[i] == "")
-                    {
-                        xs.Add(rd.Next(-1, 10));
-                    }
-                    else
-                    {
-                        if (!Single.TryParse(RecipeCompiler.Instance.Data.PointXID[i], out float resFloat))
-                        {
-                            if (StaticCon.GetSocketClint(RecipeCompiler.Instance.DataLinkName).GetIDValue(RecipeCompiler.Instance.Data.PointXID[i], "Single", out dynamic values))
-                            {
-                                xs.Add(Convert.ToSingle(values));
-                            }
-                            else
-                            {
-                                Vision2.ErosProjcetDLL.Project.AlarmText.AddTextNewLine("读取PLC错误X:" + i);
-                            }
-                        }
-                        else
-                        {
-                            xs.Add(resFloat);
-                        }
+                    //if (RecipeCompiler.Instance.Data.PointXID[i] == "")
+                    //{
+                    //    xs.Add(rd.Next(-1, 10));
+                    //}
+                    //else
+                    //{
+                    //    if (!Single.TryParse(RecipeCompiler.Instance.Data.PointXID[i], out float resFloat))
+                    //    {
+                    //        if (StaticCon.GetSocketClint(RecipeCompiler.Instance.DataLinkName).GetIDValue(RecipeCompiler.Instance.Data.PointXID[i], "Single", out dynamic values))
+                    //        {
+                    //            xs.Add(Convert.ToSingle(values));
+                    //        }
+                    //        else
+                    //        {
+                    //            Vision2.ErosProjcetDLL.Project.AlarmText.AddTextNewLine("读取PLC错误X:" + i);
+                    //        }
+                    //    }
+                    //    else
+                    //    {
+                    //        xs.Add(resFloat);
+                    //    }
 
-                    }
-                    if (RecipeCompiler.Instance.Data.PointYID[i] == "")
-                    {
-                        ys.Add(rd.Next(-1, 10));
-                    }
-                    else
-                    {
-                        if (!Single.TryParse(RecipeCompiler.Instance.Data.PointYID[i], out float resFloat))
-                        {
-                            if (StaticCon.GetSocketClint(RecipeCompiler.Instance.DataLinkName).GetIDValue(RecipeCompiler.Instance.Data.PointYID[i], "Single", out dynamic values))
-                            {
-                                ys.Add(Convert.ToSingle(values));
-                            }
-                            else
-                            {
-                                Vision2.ErosProjcetDLL.Project.AlarmText.AddTextNewLine("读取PLC错误X:" + i);
-                            }
-                        }
-                        else
-                        {
-                            ys.Add(resFloat);
-                        }
-                    }
+                    //}
+                    //if (RecipeCompiler.Instance.Data.PointYID[i] == "")
+                    //{
+                    //    ys.Add(rd.Next(-1, 10));
+                    //}
+                    //else
+                    //{
+                    //    if (!Single.TryParse(RecipeCompiler.Instance.Data.PointYID[i], out float resFloat))
+                    //    {
+                    //        if (StaticCon.GetSocketClint(RecipeCompiler.Instance.DataLinkName).GetIDValue(RecipeCompiler.Instance.Data.PointYID[i], "Single", out dynamic values))
+                    //        {
+                    //            ys.Add(Convert.ToSingle(values));
+                    //        }
+                    //        else
+                    //        {
+                    //            Vision2.ErosProjcetDLL.Project.AlarmText.AddTextNewLine("读取PLC错误X:" + i);
+                    //        }
+                    //    }
+                    //    else
+                    //    {
+                    //        ys.Add(resFloat);
+                    //    }
+                    //}
 
 
 

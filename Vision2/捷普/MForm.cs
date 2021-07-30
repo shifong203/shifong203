@@ -1,8 +1,15 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using Vision2.ErosProjcetDLL.Project;
+using Vision2.ErosProjcetDLL.UI.PropertyGrid;
+using Vision2.Project.DebugF;
 using Vision2.Project.formula;
+using Vision2.Project.Mes;
 using Vision2.Project.ProcessControl;
+using Vision2.vision;
+using Vision2.vision.HalconRunFile.RunProgramFile;
+
 
 namespace Vision2.捷普
 {
@@ -17,47 +24,178 @@ namespace Vision2.捷普
         {
             try
             {
-                if (textBox1.Text.Length>=numericUpDown1.Value)
-                {
-                    if (ErosProjcetDLL.Project.ProjectINI.Enbt)
-                    {
-                        DebugSele debugSele = new DebugSele();
-                        debugSele.ShowDialog();
-                    }
-                    if (!ErosProjcetDLL.Project.ProjectINI.DebugMode)
-                    {
-                        if (RecipeCompiler.Instance.GetMes().ReadMes(textBox1.Text, out string strErr))
-                        {
-                            label6.BackColor = Color.ForestGreen;
-                            OperatorFormShow operatorFormShow = new OperatorFormShow();
-                            operatorFormShow.ShowDialog();
-                        }
-                        else
-                        {
-                            label6.BackColor = Color.Red;
-                        }
-                        label6.Text = strErr;
-                    }
-                }
+               //if (textBox1.Text.Length>=numericUpDown1.Value)
+               // {
+                   
+               // }
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
         }
-        
+        bool MesRestBool;
         private void button1_Click(object sender, EventArgs e)
         {
             try
             {
-                if (label6.Text=="Pass" || ErosProjcetDLL.Project.ProjectINI.DebugMode)
+                if (ProjectINI.DebugMode|| MesRestBool)
                 {
                     //RecipeCompiler.Instance.MesDatat.UserID = textBox3.Text;
-                    textBox2.Text = RecipeCompiler.Instance.MesDatat.Testre_Name;
+                    textBox2.Text = mesJib.MesData.Testre_Name;
                     UserFormulaContrsl.StaticAddQRCode(textBox1.Text);
-                    Project.DebugF.DebugCompiler.Start();
+                   DebugCompiler.Start();
                 }
                 tabControl1.SelectedIndex = 1;
+                Project.MainForm1.MainFormF.WindowState = FormWindowState.Minimized;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+        MesJib mesJib;
+        private void MForm_Load(object sender, EventArgs e)
+        {
+            try
+            {
+                mesJib = RecipeCompiler.Instance.GetMes() as MesJib;
+                this.Text  +=Application.StartupPath;
+                comboBox1.Items.Clear();
+                textBox2.Text = mesJib.MesData.Testre_Name;
+                vision.Vision.GetRunNameVision().EventDoen += MForm_EventDoen;
+                 comboBox1.Items.Add(@"D:\NGP_SOFT\NGP BOARD STACK DIMENSION TEST_REV.B.JTS");
+                comboBox1.SelectedIndex = 0;
+                tabControl1.SelectedIndex = 1;
+                timer1.Interval = 100;
+                timer1.Start();
+                ProjectINI.In.User.EventLog += User_EventLog; ;
+                HalconRun halconRun = Vision.GetRunNameVision();
+
+                foreach (var item in halconRun.GetRunProgram())
+                {
+                    MeasureMlet measureMlet = item.Value as MeasureMlet;
+                    if (measureMlet==null)
+                    {
+                        continue;
+                    }
+                    string numbrEE = "null";
+                    string txdet = "读取"+item.Key;
+                    Double dvalue = 0;
+                    if (item.Key == "P1_dist")
+                    {
+                        numbrEE = "";
+                 
+                        string data= ProjectINI.GetInI(Application.StartupPath + @"\setting.ini", "cal_data_mm", "P1_dist_pixels");
+                        if (double.TryParse(data, out dvalue))
+                            measureMlet.Scale = dvalue;
+                        else numbrEE += "读取比例;";
+                        data = ProjectINI.GetInI(Application.StartupPath + @"\setting.ini", "dist_mm", "P1_dist");
+                         measureMlet.ResValue = double.Parse(data);
+                        if (double.TryParse(data, out dvalue))
+                            measureMlet.ResValue = dvalue;
+                        else numbrEE += "读取参考值;";
+                        data = ProjectINI.GetInI(Application.StartupPath + @"\setting.ini", "p1_limit_mm", "limit_lo");
+              
+                        if (double.TryParse(data, out dvalue))
+                            measureMlet.DistanceMin = dvalue/25.4;
+                        else numbrEE += "读取下限;";
+                        data = ProjectINI.GetInI(Application.StartupPath + @"\setting.ini", "p1_limit_mm", "limit_hi");
+                   
+                        if (double.TryParse(data, out dvalue))
+                            measureMlet.DistanceMax = dvalue / 25.4;
+                        else numbrEE += "读取上限;";
+                    }
+                    else if (item.Key == "P2_dist")
+                    {
+                        numbrEE = "";
+                        item.Value.Run(halconRun.GetOneImageR(), new AoiObj());
+                   
+                        string data = ProjectINI.GetInI(Application.StartupPath + @"\setting.ini", "cal_data_mm", "P2_dist_pixels");
+                        measureMlet.Scale = double.Parse(data);
+                        if (double.TryParse(data, out dvalue))
+                            measureMlet.Scale = dvalue;
+                        else numbrEE += "读取比例;";
+                        data = ProjectINI.GetInI(Application.StartupPath + @"\setting.ini", "dist_mm", "P2_dist");
+                        measureMlet.ResValue = double.Parse(data);
+                        if (double.TryParse(data, out dvalue))
+                            measureMlet.ResValue = dvalue;
+                        else numbrEE += "读取参考值;";
+                        data = ProjectINI.GetInI(Application.StartupPath + @"\setting.ini", "p2_limit_mm", "limit_lo");
+                        if (double.TryParse(data, out dvalue))
+                            measureMlet.DistanceMin = dvalue / 25.4;
+                        else numbrEE += "读取下限;";
+                        data = ProjectINI.GetInI(Application.StartupPath + @"\setting.ini", "p2_limit_mm", "limit_hi");
+                        if (double.TryParse(data, out dvalue))
+                            measureMlet.DistanceMax = dvalue / 25.4;
+                        else numbrEE += "读取上限;";
+                    }
+                    else if (item.Key == "P3_dist")
+                    {
+                        numbrEE = "";
+                     
+                        string data = ProjectINI.GetInI(Application.StartupPath + @"\setting.ini", "cal_data_mm", "P3_dist_pixels");
+                        measureMlet.Scale = double.Parse(data);
+                        if (double.TryParse(data, out dvalue))
+                            measureMlet.Scale = dvalue;
+                        else numbrEE += "读取比例;";
+                        data = ProjectINI.GetInI(Application.StartupPath + @"\setting.ini", "dist_mm", "P3_dist");
+                        if (double.TryParse(data, out dvalue))
+                            measureMlet.ResValue = dvalue;
+                        else numbrEE += "读取参考值;";
+                        data = ProjectINI.GetInI(Application.StartupPath + @"\setting.ini", "p3_limit_mm", "limit_lo");
+                        if (double.TryParse(data, out dvalue))
+                            measureMlet.DistanceMin = dvalue / 25.4;
+                        else
+                            numbrEE += "读取下限;";
+                        data = ProjectINI.GetInI(Application.StartupPath + @"\setting.ini", "p3_limit_mm", "limit_hi");
+                        if (double.TryParse(data, out dvalue))
+                            measureMlet.DistanceMax = dvalue / 25.4;
+                        else numbrEE += "读取上限;";
+                    }
+                    else if (item.Key == "P4_dist")
+                    {
+                        numbrEE = "";
+                        
+                        string data = ProjectINI.GetInI(Application.StartupPath + @"\setting.ini", "cal_data_mm", "P4_dist_pixels");
+                        if (double.TryParse(data, out dvalue))
+                            measureMlet.Scale = dvalue;
+                        else numbrEE += "读取比例;";
+                        
+                        data = ProjectINI.GetInI(Application.StartupPath + @"\setting.ini", "dist_mm", "P4_dist");
+
+                        if (double.TryParse(data, out dvalue))
+                            measureMlet.ResValue = dvalue;
+                        else  numbrEE += "读取参考值;";
+                        
+                        data = ProjectINI.GetInI(Application.StartupPath + @"\setting.ini", "p4_limit_mm", "limit_lo");
+                        if (double.TryParse(data, out  dvalue))
+                            measureMlet.DistanceMin = dvalue / 25.4;
+                        else
+                            numbrEE += "读取下限;";
+                        
+                        data = ProjectINI.GetInI(Application.StartupPath + @"\setting.ini", "p4_limit_mm", "limit_hi");
+
+                        if (double.TryParse(data,out  dvalue))
+                            measureMlet.DistanceMax = dvalue / 25.4;
+                        else  numbrEE += "读取上限;";
+                    }
+                    if (numbrEE == "")
+                    {
+                        richTextBox1.AppendText(txdet+"成功"+Environment.NewLine);
+                    }
+                    else
+                    {
+                        richTextBox1.AppendText(txdet + "失败:" + numbrEE+ Environment.NewLine);
+                    }
+                }
+                textBox3.Text = ProjectINI.In.UserID;
+                校验ToolStripMenuItem.Visible = false;
+                if (ProjectINI.Enbt)
+                {
+                    校验ToolStripMenuItem.Visible = true;
+                }
+
 
             }
             catch (Exception ex)
@@ -66,70 +204,76 @@ namespace Vision2.捷普
             }
         }
 
-        private void MForm_Load(object sender, EventArgs e)
+        private void User_EventLog(bool isLog)
         {
             try
             {
-                this.Text  +=Application.StartupPath;
-                comboBox1.Items.Clear();
-                textBox2.Text = RecipeCompiler.Instance.MesDatat.Testre_Name;
-                vision.Vision.GetRunNameVision().EventDoen += MForm_EventDoen;
-                 comboBox1.Items.Add(@"D:\");
-                comboBox1.SelectedIndex = 0;
-                tabControl1.SelectedIndex = 1;
-                timer1.Interval = 100;
-                timer1.Start();
+                textBox3.Text= ProjectINI.In.UserID;
+                if (ProjectINI.Enbt)
+                {
+                    校验ToolStripMenuItem.Visible = true;
+                }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
             }
         }
 
-   
 
+        /// <summary>
+        /// 执行完成
+        /// </summary>
+        /// <param name="key"></param>
         private void RunCodeT_RunDone(Project.DebugF.IO.RunCodeStr.RunErr key)
         {
             try
             {
-               
-                for (int i = 0; i < dataGridView1.Rows.Count; i++)
-                {
-                    dataGridView1.Rows[i].Cells[8].Value = key.RunTime;
-                }
-                //data.EndTime.ToString()
-                //(MM-dd-yyyy HH - mm - ss)
-                string Name = textBox1.Text + UserFormulaContrsl.GetDataVale().EndTime.ToString(RecipeCompiler.Instance.MesDatat.FileTimeName);
-                if (ErosProjcetDLL.Project.ProjectINI.DebugMode)
-                {
-                    Name = "DEBUG-" + Name;
-                }
-                string path = ProcessUser.GetThis().ExcelPath + "\\" + Name;
-                if (UserFormulaContrsl.GetDataVale().OK)
-                {
-                    label7.BackColor = Color.Green;
-                    label7.Text = "Pass";
-                }
-                else
-                {
-                    label7.BackColor = Color.Red;
-                    label7.Text = "Fill";
-                }
-                HtmlMaker.Html.GenerateCode(ProcessUser.GetThis().ExcelPath 
-                    +"\\历史数据\\"+ DateTime.Now .ToString("yyyyMMdd") +"\\"+ Name
+                this.Invoke(new Action(() => {
+                    for (int i = 0; i < dataGridView1.Rows.Count; i++)
+                    {
+                        dataGridView1.Rows[i].Cells[8].Value = key.RunTime;
+                    }
+                    string Name = textBox1.Text + 
+                    UserFormulaContrsl.GetDataVale().EndTime.ToString(
+                        mesJib.MesData.FileTimeName);
+                    if (ProjectINI.DebugMode)
+                    {
+                        Name = "DEBUG-" + Name;
+                    }
+                    string path = mesJib.MesData.TEPath + "\\" + Name;
+                    if (UserFormulaContrsl.GetDataVale().OK)
+                    {
+                        label7.BackColor = Color.Green;
+                        label7.Text = "Pass";
+                    }
+                    else
+                    {
+                        button8.Visible = true;
+                        label7.BackColor = Color.Red;
+                        label7.Text = "Fail";
+                    }
+                    string textd = "00:00:";
+                    label9.Text = textd + key.RunTime.ToString("00");
+                    HtmlMaker.Html.GenerateCode(path, key.RunTime, UserFormulaContrsl.timeStrStrat, DateTime.Now,  UserFormulaContrsl.GetDataVale());
+                }));
+                HtmlMaker.Html.GenerateCode(
+                    "D:\\历史数据\\"+ DateTime.Now .ToString("yyyyMMdd") +"\\"+ Name
                     , key.RunTime, UserFormulaContrsl.timeStrStrat, DateTime.Now,UserFormulaContrsl.GetDataVale());
-                HtmlMaker.Html.GenerateCode(path, key.RunTime, UserFormulaContrsl.timeStrStrat, DateTime.Now,
-               UserFormulaContrsl.GetDataVale());
             }
             catch (Exception ex)
             {
             }
         }
-
+        /// <summary>
+        /// 图像完成
+        /// </summary>
+        /// <param name="oneResultO"></param>
         private void MForm_EventDoen(vision.OneResultOBj oneResultO)
         {
             try
             {
-                dataGridView1.Rows.Clear();
+                this.Invoke(new Action(() => {
+                    dataGridView1.Rows.Clear();
                 foreach (var item in oneResultO.GetNgOBJS().DicOnes)
                 {
                     foreach (var itemdt in item.Value.oneRObjs)
@@ -142,9 +286,10 @@ namespace Vision2.捷普
                         }
                         else
                         {
-                            dataGridView1.Rows[index].Cells[2].Value = "Fill";
+                            dataGridView1.Rows[index].Cells[2].Value = "Fail";
                             dataGridView1.Rows[index].DefaultCellStyle.BackColor = Color.Red;
                         }
+                        dataGridView1.Rows[index].Cells[0].Value = "Dimension Analysis";
                         dataGridView1.Rows[index].Cells[1].Value = item.Value.ComponentID;
                         dataGridView1.Rows[index].Cells[1].Value = itemdt.ComponentID;
                         dataGridView1.Rows[index].Cells[5].Value =vision.Vision.Instance.TransformName;
@@ -154,7 +299,7 @@ namespace Vision2.捷普
                         dataGridView1.Rows[index].Cells[7].Value = itemdt.dataMinMax.Reference_ValueMax[0];
                     }
                 }
-             
+                }));
             }
             catch (Exception)
             {
@@ -163,17 +308,22 @@ namespace Vision2.捷普
 
         private void MForm_FormClosing(object sender, FormClosingEventArgs e)
         {
+
+            if (MessageBox.Show("是否退出程序？", "退出程序", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            {
+                this.Cursor =Cursors.WaitCursor;
+                ProjectINI.In.Clros();
+            }
             e.Cancel = true;
+
         }
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            //if (RecipeCompiler.Instance.GetMes() != null)
-            //{
-            //    RecipeCompiler.Instance.GetMes().ResDoneEvent += MForm_ResDoneEvent;
-            //}
+          
+            Project.MainForm1.MainFormF.WindowState = FormWindowState.Minimized;
             timer1.Stop();
-            Project.DebugF.DebugCompiler.GetThis().DDAxis.RunCodeT.RunDone += RunCodeT_RunDone;
+           DebugCompiler.GetThis().DDAxis.RunCodeT.RunDone += RunCodeT_RunDone;
         }
 
         private void toolStripButton1_Click(object sender, EventArgs e)
@@ -189,19 +339,56 @@ namespace Vision2.捷普
             {
                 if (e.KeyCode == Keys.Enter)
                 {
-            
-                        if (RecipeCompiler.Instance.GetMes().ReadMes(textBox1.Text, out string strErr))
+                    string strErr = "";
+                    ProjectINI.DebugMode = false;
+
+                    if (ProjectINI.Enbt)
+                    {
+                        DebugSele debugSele = new DebugSele();
+                        debugSele.ShowDialog();
+                    }
+                    bool Passr=true;
+                    if (!ProjectINI.DebugMode)
+                    {
+                        if (RestMesEnb)
+                        {
+                            Passr = RecipeCompiler.Instance.GetMes().ReadMes(textBox1.Text, out strErr);
+                            MesRestBool = Passr;
+                        }
+                        if (Passr)
                         {
                             label6.BackColor = Color.ForestGreen;
                             OperatorFormShow operatorFormShow = new OperatorFormShow();
                             operatorFormShow.ShowDialog();
+                            bool Err = false;
+                            foreach (var item in ProjectINI.In.User.UserPassWords)
+                            {
+                                if (item.Value.UserID == ProjectINI.In.UserID)
+                                {
+                                    Err = true;
+                                    break;
+                                }
+                            }
+                            if (!Err)
+                            {
+                                MessageBox.Show("用户ID无权限!");
+                            }
+                            else
+                            {
+                                button1.PerformClick();
+                            }
                         }
                         else
                         {
                             label6.BackColor = Color.Red;
-
                         }
+                        textBox3.Text = ProjectINI.In.UserID;
                         label6.Text = strErr;
+                    }
+                    else
+                    {
+                        button1.PerformClick();
+                    }
                 }
             }
             catch (Exception)
@@ -209,42 +396,6 @@ namespace Vision2.捷普
             }
    
         }
-
-
-        private void tsButton1_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-        }
-
-        private void tsButton2_Click(object sender, EventArgs e)
-        {
-
-            try
-            {
-              
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-        }
-
-        private void toolStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
-        {
-           
-        }
-
-  
-
-
-    
 
         private void toolStripButton7_Click(object sender, EventArgs e)
         {
@@ -258,19 +409,102 @@ namespace Vision2.捷普
             }
         }
 
-
-
         private void toolStripDropDownButton3_Click_1(object sender, EventArgs e)
+        {
+          
+        }
+
+        private void eT数据地址ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
             {
-                ErosProjcetDLL.Project.LandingForm landingForm = new ErosProjcetDLL.Project.LandingForm();
+                try
+                {
+                FolderBrowserDialog fbd = new FolderBrowserDialog();
+                    fbd.Description = "请选择文件夹";
+                    if (mesJib.MesData.TEPath == null)
+                    {
+                        mesJib.MesData.TEPath = Application.StartupPath;
+                    }
+                    if (System.IO.Directory.Exists(mesJib.MesData.TEPath))
+                    {
+                        fbd.SelectedPath = mesJib.MesData.TEPath;
+                    }
+                      DialogResult dialog = FolderBrowserLauncher.ShowFolderBrowser(fbd);
+                    if (dialog == DialogResult.OK)
+                    {
+                        mesJib.MesData.TEPath = fbd.SelectedPath;
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                }
+
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button8_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                DebugCompiler.GetDoDi().WritDO(3, false);
+                button8.Visible = false;
+            }
+            catch (Exception)
+            {
+            }
+     
+        }
+
+        private void 校验ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                CRRForm cRRFor = new CRRForm();
+                cRRFor.ShowDialog();
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        private void loingToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                LandingForm landingForm = new LandingForm();
                 landingForm.ShowDialog();
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
+        }
+
+        private void toolStripDropDownButton6_Click(object sender, EventArgs e)
+        {
+
+        }
+        public static Boolean RestMesEnb = true;
+     
+        private void cAMXToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CXAMForm CXAMForm = new CXAMForm();
+            CXAMForm.ShowDialog();
+        }
+
+        private void textBox3_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

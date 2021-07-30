@@ -40,23 +40,24 @@
             this.hWindowControl1 = new HalconDotNet.HWindowControl();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.dataGridView2 = new System.Windows.Forms.DataGridView();
+            this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.treeView1 = new System.Windows.Forms.TreeView();
+            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripTextBox1 = new System.Windows.Forms.ToolStripTextBox();
+            this.tsButton1 = new Vision2.ErosProjcetDLL.UI.ToolStrip.TSButton();
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.tsButton1 = new Vision2.ErosProjcetDLL.UI.ToolStrip.TSButton();
-            this.treeView1 = new System.Windows.Forms.TreeView();
-            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
+            this.label1 = new System.Windows.Forms.Label();
             this.contextMenuStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -89,7 +90,7 @@
             // 
             this.panel1.Controls.Add(this.tabControl1);
             this.panel1.Controls.Add(this.toolStrip1);
-            this.panel1.Location = new System.Drawing.Point(89, 87);
+            this.panel1.Location = new System.Drawing.Point(341, 180);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(582, 489);
             this.panel1.TabIndex = 1;
@@ -156,12 +157,72 @@
             this.dataGridView2.TabIndex = 1;
             this.dataGridView2.Visible = false;
             // 
+            // Column2
+            // 
+            this.Column2.HeaderText = "数据名";
+            this.Column2.Name = "Column2";
+            this.Column2.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // Column3
+            // 
+            this.Column3.HeaderText = "值";
+            this.Column3.Name = "Column3";
+            this.Column3.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // Column5
+            // 
+            this.Column5.HeaderText = "最小值";
+            this.Column5.Name = "Column5";
+            this.Column5.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // Column6
+            // 
+            this.Column6.HeaderText = "最大值";
+            this.Column6.Name = "Column6";
+            this.Column6.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // treeView1
+            // 
+            this.treeView1.BackColor = System.Drawing.Color.Gainsboro;
+            this.treeView1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.treeView1.Dock = System.Windows.Forms.DockStyle.Left;
+            this.treeView1.Font = new System.Drawing.Font("宋体", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.treeView1.ImageIndex = 0;
+            this.treeView1.ImageList = this.imageList1;
+            this.treeView1.Location = new System.Drawing.Point(3, 3);
+            this.treeView1.Name = "treeView1";
+            treeNode1.Name = "节点0";
+            treeNode1.Text = "节点0";
+            this.treeView1.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
+            treeNode1});
+            this.treeView1.SelectedImageIndex = 1;
+            this.treeView1.Size = new System.Drawing.Size(133, 423);
+            this.treeView1.TabIndex = 2;
+            this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
+            this.treeView1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.treeView1_MouseDown);
+            // 
+            // imageList1
+            // 
+            this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
+            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
+            this.imageList1.Images.SetKeyName(0, "leica-off.png");
+            this.imageList1.Images.SetKeyName(1, "tv-show-vector.png");
+            this.imageList1.Images.SetKeyName(2, "delete.png");
+            this.imageList1.Images.SetKeyName(3, "forward-vector.png");
+            this.imageList1.Images.SetKeyName(4, "drop-down-vector.png");
+            this.imageList1.Images.SetKeyName(5, "back-vector.png");
+            this.imageList1.Images.SetKeyName(6, "warning.png");
+            this.imageList1.Images.SetKeyName(7, "accept.png");
+            this.imageList1.Images.SetKeyName(8, "security.png");
+            this.imageList1.Images.SetKeyName(9, "thumb-up-vector.png");
+            this.imageList1.Images.SetKeyName(10, "thumb-down-vector.png");
+            // 
             // toolStrip1
             // 
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripLabel1,
             this.toolStripButton1,
-            this.toolStripButton2,
+            this.toolStripTextBox1,
             this.tsButton1});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
@@ -194,15 +255,23 @@
             this.toolStripButton1.Text = "关闭";
             this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
             // 
-            // toolStripButton2
+            // toolStripTextBox1
             // 
-            this.toolStripButton2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.toolStripButton2.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton2.Image")));
-            this.toolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton2.Name = "toolStripButton2";
-            this.toolStripButton2.Size = new System.Drawing.Size(53, 31);
-            this.toolStripButton2.Text = "复制SN";
-            this.toolStripButton2.Click += new System.EventHandler(this.toolStripButton2_Click);
+            this.toolStripTextBox1.Font = new System.Drawing.Font("Microsoft YaHei UI", 9F);
+            this.toolStripTextBox1.Name = "toolStripTextBox1";
+            this.toolStripTextBox1.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
+            this.toolStripTextBox1.Size = new System.Drawing.Size(300, 34);
+            // 
+            // tsButton1
+            // 
+            this.tsButton1.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.tsButton1.Image = global::Vision2.Properties.Resources.zoom_in_vector;
+            this.tsButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsButton1.IsCher = true;
+            this.tsButton1.Name = "tsButton1";
+            this.tsButton1.Size = new System.Drawing.Size(52, 31);
+            this.tsButton1.Text = "放大";
+            this.tsButton1.Click += new System.EventHandler(this.tsButton1_Click);
             // 
             // dataGridViewTextBoxColumn1
             // 
@@ -246,83 +315,25 @@
             this.dataGridViewTextBoxColumn6.ReadOnly = true;
             this.dataGridViewTextBoxColumn6.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
-            // Column2
+            // label1
             // 
-            this.Column2.HeaderText = "数据名";
-            this.Column2.Name = "Column2";
-            this.Column2.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            // 
-            // Column3
-            // 
-            this.Column3.HeaderText = "值";
-            this.Column3.Name = "Column3";
-            this.Column3.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            // 
-            // Column5
-            // 
-            this.Column5.HeaderText = "最小值";
-            this.Column5.Name = "Column5";
-            this.Column5.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            // 
-            // Column6
-            // 
-            this.Column6.HeaderText = "最大值";
-            this.Column6.Name = "Column6";
-            this.Column6.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            // 
-            // tsButton1
-            // 
-            this.tsButton1.Image = ((System.Drawing.Image)(resources.GetObject("tsButton1.Image")));
-            this.tsButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsButton1.IsCher = false;
-            this.tsButton1.Name = "tsButton1";
-            this.tsButton1.Size = new System.Drawing.Size(52, 31);
-            this.tsButton1.Text = "放大";
-            this.tsButton1.Click += new System.EventHandler(this.tsButton1_Click);
-            // 
-            // treeView1
-            // 
-            this.treeView1.BackColor = System.Drawing.Color.Gainsboro;
-            this.treeView1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.treeView1.Dock = System.Windows.Forms.DockStyle.Left;
-            this.treeView1.Font = new System.Drawing.Font("宋体", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.treeView1.ImageIndex = 0;
-            this.treeView1.ImageList = this.imageList1;
-            this.treeView1.Location = new System.Drawing.Point(3, 3);
-            this.treeView1.Name = "treeView1";
-            treeNode1.Name = "节点0";
-            treeNode1.Text = "节点0";
-            this.treeView1.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode1});
-            this.treeView1.SelectedImageIndex = 1;
-            this.treeView1.Size = new System.Drawing.Size(133, 423);
-            this.treeView1.TabIndex = 2;
-            this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
-            this.treeView1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.treeView1_MouseDown);
-            // 
-            // imageList1
-            // 
-            this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
-            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
-            this.imageList1.Images.SetKeyName(0, "leica-off.png");
-            this.imageList1.Images.SetKeyName(1, "tv-show-vector.png");
-            this.imageList1.Images.SetKeyName(2, "delete.png");
-            this.imageList1.Images.SetKeyName(3, "forward-vector.png");
-            this.imageList1.Images.SetKeyName(4, "drop-down-vector.png");
-            this.imageList1.Images.SetKeyName(5, "back-vector.png");
-            this.imageList1.Images.SetKeyName(6, "warning.png");
-            this.imageList1.Images.SetKeyName(7, "accept.png");
-            this.imageList1.Images.SetKeyName(8, "security.png");
-            this.imageList1.Images.SetKeyName(9, "thumb-up-vector.png");
-            this.imageList1.Images.SetKeyName(10, "thumb-down-vector.png");
+            this.label1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.label1.Font = new System.Drawing.Font("宋体", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label1.Location = new System.Drawing.Point(0, 0);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(1073, 24);
+            this.label1.TabIndex = 2;
+            this.label1.Text = "TraySN:                  TrayID:0,X:10,Y20,Number:300";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // TrayDataUserControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.panel1);
             this.Name = "TrayDataUserControl";
-            this.Size = new System.Drawing.Size(688, 610);
+            this.Size = new System.Drawing.Size(1073, 627);
             this.Load += new System.EventHandler(this.TrayDataUserControl_Load);
             this.contextMenuStrip1.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
@@ -353,7 +364,6 @@
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage2;
         private HalconDotNet.HWindowControl hWindowControl1;
-        private System.Windows.Forms.ToolStripButton toolStripButton2;
         private ErosProjcetDLL.UI.ToolStrip.TSButton tsButton1;
         private System.Windows.Forms.DataGridView dataGridView2;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
@@ -364,5 +374,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn5;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn6;
         private System.Windows.Forms.ImageList imageList1;
+        public System.Windows.Forms.Label label1;
+        private System.Windows.Forms.ToolStripTextBox toolStripTextBox1;
     }
 }

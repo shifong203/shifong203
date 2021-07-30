@@ -1,5 +1,5 @@
 ﻿using HalconDotNet;
-using MVReader;
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,6 +15,7 @@ using System.Net.Sockets;
 using Vision2.Project.DebugF.IO;
 using Vision2.ErosProjcetDLL.UI.PropertyGrid;
 using System.Drawing.Design;
+using Vision2.vision.RestVisionForm;
 
 namespace Vision2.vision
 {
@@ -27,7 +28,9 @@ namespace Vision2.vision
         public Dictionary<string, OBJData> keyValuePairs = new Dictionary<string, OBJData>();
 
         public HWindID HWind = new HWindID();
-    
+    /// <summary>
+    /// 远程
+    /// </summary>
         public class OBJData
         {
             public HObject ImageMode = new HObject();
@@ -195,7 +198,7 @@ namespace Vision2.vision
             {
                 int number = data.Key1Xld.Count();
                 int numbt = 0;
-                keyValuePairs[data.LinkName].trayDataUser.RestValue();
+                //keyValuePairs[data.LinkName].trayDataUser.RestValue();
                 keyValuePairs[data.LinkName].trayDataUser.SetValue(data.TrayID, false);
                 keyValuePairs[data.LinkName].trayDataUser.SetValue(data.TrayID, data.PaleSN);
 
@@ -266,8 +269,8 @@ namespace Vision2.vision
                                 hWindowControl2.HalconWindow.DispObj(keyValuePairs[data.LinkName].ImageMode);
                             }
                             hWindowControl3.HalconWindow.DispObj(ImageNG);
-                            MVReader.HWindID.Disp_message(hWindowControl2.HalconWindow, item.Key, 20, 20, true);
-                            MVReader.HWindID.Disp_message(hWindowControl3.HalconWindow, item.Key, 20, 20, true);
+                            Vision. Disp_message(hWindowControl2.HalconWindow, item.Key, 20, 20, true);
+                            vision.Vision.Disp_message(hWindowControl3.HalconWindow, item.Key, 20, 20, true);
                             HSystem.SetSystem("flush_graphic", "true");
                         }
                         catch (Exception ex)

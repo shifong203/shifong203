@@ -1,16 +1,18 @@
 ﻿using HalconDotNet;
+using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
-using System.IO;
+using System.Threading;
 using System.Windows.Forms;
+using ThridLibray;
+using Vision2.ErosProjcetDLL.UI.DataGridViewF;
 using Vision2.Project.formula;
 using Vision2.vision.HalconRunFile.RunProgramFile;
-using System.Threading;
-using Vision2.Project.DebugF;
-using Microsoft.VisualBasic;
 using static Vision2.vision.Vision;
 
 namespace Vision2.vision.HalconRunFile.Controls
@@ -212,6 +214,39 @@ namespace Vision2.vision.HalconRunFile.Controls
             try
             {
                 Movable = true;
+                isChanged = true;
+                Column22.Items.Clear();
+                Column22.Items.AddRange(Vision.Instance.DicLightSource.Keys.ToArray());
+                if (halconRun.GetSaveImageInfo().ListCamData.Count!=0)
+                {
+                    dataGridView5.Rows.Add(halconRun.GetSaveImageInfo().ListCamData.Count);
+                }
+                for (int i = 0; i < halconRun.GetSaveImageInfo().ListCamData.Count; i++)
+                {
+                   dataGridView5.Rows[i].Cells[0].Value = i + 1;
+                    dataGridView5.Rows[i].Cells[1].Value =
+                        halconRun.GetSaveImageInfo().ListCamData[i].ExposureTime;
+                    dataGridView5.Rows[i].Cells[2].Value =
+                       halconRun.GetSaveImageInfo().ListCamData[i].Gain;
+                    dataGridView5.Rows[i].Cells[3].Value =
+                     halconRun.GetSaveImageInfo().ListCamData[i].Gamma;
+                    dataGridView5.Rows[i].Cells[4].Value =
+                   halconRun.GetSaveImageInfo().ListCamData[i].Light_Source;
+                }
+                if (Vision.Instance.DicLightSource.Count != 0)
+                {
+                    dataGridView6.Rows.Add(Vision.Instance.DicLightSource.Count);
+                }
+                int nIndex = 0;
+                foreach (var item in Vision.Instance.DicLightSource)
+                {
+                    dataGridView6.Rows[nIndex].Cells[0].Value = item.Key;
+                    dataGridView6.Rows[nIndex].Cells[1].Value = item.Value.H1;
+                    dataGridView6.Rows[nIndex].Cells[2].Value = item.Value.H2;
+                    dataGridView6.Rows[nIndex].Cells[3].Value = item.Value.H3;
+                    dataGridView6.Rows[nIndex].Cells[4].Value = item.Value.H4;
+                    nIndex++;
+                }   
                 listBox1.Items.Clear();
                 foreach (var item in Vision.Instance.DicDrawbackNameS)
                 {
@@ -229,12 +264,16 @@ namespace Vision2.vision.HalconRunFile.Controls
                 {
                     label4.Text = "FOV:" + halconRun.GetCam().FOV;
                 }
-                listBox1.Items.Clear();
-
-          
+                //listBox1.Items.Clear();
                 propertyGrid2.SelectedObject = halconRun.TiffeOffsetImageEX;
                 checkBox3.Checked = halconRun.EnbExposureTime;
-                numericUpDown4.Value = halconRun.ExposureTime;
+                numericUpDown4.Value = (decimal)halconRun.CamData. ExposureTime;
+                numericUpDown5.Value =  (decimal)halconRun.CamData.Gain;
+                numericUpDown6.Value = (decimal)halconRun.CamData.Gamma;
+                hSBExposure.Value = (int)(halconRun.CamData.ExposureTime*100);
+                hSBGain.Value =  (int)halconRun.CamData.Gain*10;
+                hScrollBar1.Value =  (int)(halconRun.CamData.Gamma*100);
+
                 halconRun.UpData(dataGridViewHalcon);
                 numericUpDown1.Value = halconRun.MaxRunID;
                 if (halconRun.RunIDStr == null)
@@ -382,6 +421,7 @@ namespace Vision2.vision.HalconRunFile.Controls
             {
                 MessageBox.Show(ex.Message);
             }
+            isChanged = false;
         }
 
         private bool _movable = true;
@@ -423,7 +463,7 @@ namespace Vision2.vision.HalconRunFile.Controls
         private void MeasureControl_Load(object sender, EventArgs e)
         {
             Movable = false;
-
+         
 
         }
 
@@ -450,10 +490,6 @@ namespace Vision2.vision.HalconRunFile.Controls
                 if (dataGridViewHalcon.Columns[e.ColumnIndex].Name == "dataGridViewButtonColumn1" && e.RowIndex >= 0)
                 {
                     dataGridViewHalcon[4, e.RowIndex].Style.BackColor = Color.White;
-                    //for (int i = 0; i < dataGridViewHalcon.Rows.Count; i++)
-                    //{
-                    //    dataGridViewHalcon[4, i].Style.BackColor = Color.White;
-                    //}
                     RunProgram runProgram = dataGridViewHalcon.Rows[e.RowIndex].Cells[e.ColumnIndex].Tag as RunProgram;
                     if (runProgram != null)
                     {
@@ -466,24 +502,19 @@ namespace Vision2.vision.HalconRunFile.Controls
                             dataGridViewHalcon[4, e.RowIndex].Style.BackColor = Color.Red;
                         }
                     }
-                    else
-                    {
-                        //HalconRun run = dataGridViewHalcon.Rows[e.RowIndex].Cells[e.ColumnIndex].Tag as HalconRun;
-                        //if (run != null)
-                        //{
-                        //    run.ThreadShowVision();
-                        //    Movable = true;
-                        //    run.UpData(dataGridViewHalcon);
-                        //    Movable = false;
-                        //}
-                    }
-                    //dataGridViewHalcon.ClearSelection();
                 }
                 if (e.ColumnIndex == 5)
                 {
                     if (halconRun.GetRunProgram().ContainsKey(dataGridViewHalcon.Rows[e.RowIndex].Cells[1].Value.ToString()))
                     {
+                    
                         RunProgram runProgram = halconRun.GetRunProgram()[dataGridViewHalcon.Rows[e.RowIndex].Cells[1].Value.ToString()];
+                        //if (true)
+                        //{
+                        //    DrawVisionForm drawVisionForm = new DrawVisionForm(runProgram);
+                        //    drawVisionForm.Show();
+                        //    return;
+                        //}
                         Vision2.ErosProjcetDLL.Project.PropertyForm propertyForm = new Vision2.ErosProjcetDLL.Project.PropertyForm();
                         propertyForm.TopLevel = false;
                         propertyForm.Location = new Point(1000, 20);
@@ -498,12 +529,8 @@ namespace Vision2.vision.HalconRunFile.Controls
             }
             catch (Exception ex)
             {
-
             }
         }
-
-
-
         private void button3_Click(object sender, EventArgs e)
         {
             try
@@ -903,13 +930,33 @@ namespace Vision2.vision.HalconRunFile.Controls
 
         private void checkBox3_CheckedChanged(object sender, EventArgs e)
         {
-            if (_movable)
+            SetCamPraegrm();
+        }
+        public void SetCamPraegrm()
+        {
+            try
             {
-                return;
+
+                if (_movable)
+                {
+                    return;
+                }
+                _movable = true;
+                halconRun.EnbExposureTime = checkBox3.Checked;
+                hSBExposure.Value  =(int) numericUpDown4.Value*100;
+                hScrollBar1.Value = (int)numericUpDown6.Value * 100;
+                hSBGain.Value = (int)numericUpDown5.Value * 10;
+
+                halconRun.CamData.ExposureTime = (double)numericUpDown4.Value;
+                halconRun.CamData.Gain = (double)numericUpDown5.Value;
+                halconRun.CamData.Gamma = (double)numericUpDown6.Value;
+
+                halconRun.SetCamPraegrm();
             }
-            halconRun.EnbExposureTime = checkBox3.Checked;
-            halconRun.ExposureTime = (int)numericUpDown4.Value;
-            halconRun.SetExposureTime();
+            catch (Exception)
+            {
+            }
+            _movable = false;
         }
 
         private void dataGridView2_CellValueChanged(object sender, DataGridViewCellEventArgs e)
@@ -1057,7 +1104,7 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             try
             {
-                Vision.ShowVisionResetForm(  this.halconRun);
+                Vision.ShowVisionResetForm(this.halconRun);
             }
             catch (Exception ex)
             {
@@ -1497,6 +1544,10 @@ namespace Vision2.vision.HalconRunFile.Controls
                         Vision.Instance.DicDrawbackNameS.Add(name, new DrawBackSt());
                         listBox1.Items.Add(name);
                     }
+                    else
+                    {
+                        MessageBox.Show("已存在"+name);
+                    }
                 }
             }
             catch (Exception ex)
@@ -1555,9 +1606,360 @@ namespace Vision2.vision.HalconRunFile.Controls
                                 drawBackSt.DicDrawbackName[i] = dataGridView4.Rows[i].Cells[1].Value.ToString();
                             }
                         }
-               
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+
+        private void 删除缺陷类型ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                drawBackSt.DicDrawbackIndex.RemoveAt(dataGridView4.SelectedCells[0].RowIndex);
+                drawBackSt.DicDrawbackName.RemoveAt(dataGridView4.SelectedCells[0].RowIndex);
+                dataGridView4.Rows.RemoveAt(dataGridView4.SelectedCells[0].RowIndex);
+                
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        private void hSBExposure_Scroll(object sender, ScrollEventArgs e)
+        {
+            try
+            {
+                if (_movable)
+                {
+                    return;
+                }
+                _movable = true;
+                numericUpDown4.Value = (decimal)(hSBExposure.Value * 0.01);
+                halconRun.CamData.ExposureTime = (double)numericUpDown4.Value;
+
+                halconRun.SetCamPraegrm();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            _movable = false;
+        }
+
+        private void hSBGain_Scroll(object sender, ScrollEventArgs e)
+        {
+            try
+            {
+                if (_movable)
+                {
+                    return;
+                }
+                _movable = true;
+                numericUpDown5.Value = (decimal)(hSBGain.Value*0.1);
+                halconRun.CamData.Gain = (double)numericUpDown5.Value;
+
+                halconRun.SetCamPraegrm();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            _movable = false;
+        }
+
+
+
+
+        private void hScrollBar1_Scroll_1(object sender, ScrollEventArgs e)
+        {
+            try
+            {
+                if (_movable)
+                {
+                    return;
+                }
+                _movable = true;
+                numericUpDown6.Value = (decimal)(hScrollBar1.Value * 0.01);
+                halconRun.CamData.Gamma = (double)numericUpDown6.Value;
+
+                halconRun.SetCamPraegrm();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            _movable = false;
+        }
+
+        private void 删除ToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                halconRun.GetSaveImageInfo().ListCamData.
+                    RemoveAt(dataGridView5.SelectedCells[0].RowIndex);
+                dataGridView5.Rows.RemoveAt(dataGridView5.SelectedCells[0].RowIndex);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void 添加采图ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                isChanged = true;
+                halconRun.GetSaveImageInfo().ListCamData.Add(new Cams.CamData());
+                int indext=  dataGridView5.Rows.Add();
+                dataGridView5.Rows[indext].Cells[0].Value = indext;
+                dataGridView5.Rows[indext].Cells[1].Value = halconRun.GetSaveImageInfo().ListCamData[
+                    indext].ExposureTime;
+                dataGridView5.Rows[indext].Cells[2].Value = halconRun.GetSaveImageInfo().ListCamData[
+                    indext].Gain;
+                dataGridView5.Rows[indext].Cells[3].Value = halconRun.GetSaveImageInfo().ListCamData[
+               indext].Gamma;
+                dataGridView5.Rows[indext].Cells[4].Value = halconRun.GetSaveImageInfo().ListCamData[
+                 indext].Light_Source;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            isChanged = false;
+        }
+
+
+
+        private void 删除ToolStripMenuItem2_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string key = dataGridView6.Rows[dataGridView6.SelectedCells[0].RowIndex].Cells[0].Value.ToString();
+                dataGridView6.Rows.RemoveAt(dataGridView6.SelectedCells[0].RowIndex);
+                Vision.Instance.DicLightSource.Remove(key);
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+
+        }
+
+        private void 添加ToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                isChanged = true;
+                int indext = dataGridView6.Rows.Add();
+                for (int i = 0; i < 10; i++)
+                {
+                    if (!Vision.Instance.DicLightSource.ContainsKey("光源" + indext))
+                    {
+                        Vision.Instance.DicLightSource.Add("光源" + indext, new Cams.LightSource.LightSourceData());
+                        dataGridView6.Rows[indext].Cells[0].Value = "光源" + indext;
+                        dataGridView6.Rows[indext].Cells[1].Value = Vision.Instance.DicLightSource["光源" + indext].H1;
+                        dataGridView6.Rows[indext].Cells[2].Value = Vision.Instance.DicLightSource["光源" + indext].H2;
+                        dataGridView6.Rows[indext].Cells[3].Value = Vision.Instance.DicLightSource["光源" + indext].H3;
+                        dataGridView6.Rows[indext].Cells[4].Value = Vision.Instance.DicLightSource["光源" + indext].H4;
+                        break;
+                    }
+                    indext++;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            isChanged = false;
+
+        }
+
+        private void dataGridView6_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            try
+            {
+                if (e.ColumnIndex==5)
+                {
+                   string key= dataGridView6.Rows[e.RowIndex].Cells[0].Value.ToString();
+                   Vision.SetLight(key);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void dataGridView5_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            try
+            {
+                if (e.ColumnIndex==5)
+                {
+                    halconRun.SetCamPraegrm(e.RowIndex+1);
+                    Thread.Sleep(400);
+                    HObject imaget = halconRun.GetCam().GetImage();
+                    OneResultOBj oneResultOBj = new OneResultOBj();
+                    oneResultOBj.Image = imaget;
+                    oneResultOBj.LiyID = 0;
+                    oneResultOBj.RunID = e.RowIndex + 1;
+                    halconRun.Image(imaget);
+                    halconRun.ShowImage();
+                    //VisionWindow.UPOneImage(oneResultOBj);
+                    halconRun.GetHWindow().UPOneImage(oneResultOBj);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void dataGridView5_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            try
+            {
+                if (isChanged)
+                {
+                    return;
+                }
+                for (int i = 0; i < dataGridView5.RowCount; i++)
+                {
+                    halconRun.GetSaveImageInfo().ListCamData[i].ExposureTime = double.Parse(dataGridView5.Rows[i].Cells[1].Value.ToString());
+                    halconRun.GetSaveImageInfo().ListCamData[i].Gain = double.Parse(dataGridView5.Rows[i].Cells[2].Value.ToString());
+                    halconRun.GetSaveImageInfo().ListCamData[i].Gamma = double.Parse(dataGridView5.Rows[i].Cells[3].Value.ToString());
+                    halconRun.GetSaveImageInfo().ListCamData[i].Light_Source = dataGridView5.Rows[i].Cells[4].Value.ToString();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void dataGridView6_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            try
+            {
+                if (isChanged)
+                {
+                    return;
+                }
+                for (int i = 0; i < dataGridView6.RowCount; i++)
+                {
+                    if (dataGridView6.Rows[i].Cells[0].Value==null)
+                    {
+                        continue;
+                    }
+                    string key = dataGridView6.Rows[i].Cells[0].Value.ToString();
+                    if (Vision.Instance.DicLightSource.ContainsKey(key))
+                    {
+                        Vision.Instance.DicLightSource[key].H1 = Int16.Parse(dataGridView6.Rows[i].Cells[1].Value.ToString());
+                        Vision.Instance.DicLightSource[key].H2 = Int16.Parse(dataGridView6.Rows[i].Cells[2].Value.ToString());
+                        Vision.Instance.DicLightSource[key].H3 = Int16.Parse(dataGridView6.Rows[i].Cells[3].Value.ToString());
+                        Vision.Instance.DicLightSource[key].H4 = Int16.Parse(dataGridView6.Rows[i].Cells[4].Value.ToString());
+                        //Vision.Instance.DicLightSource[key].H1 = byte.Parse(dataGridView6.Rows[i].Cells[2].Value.ToString());
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void button14_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Thread thread=new Thread(()=> {
+                    halconRun.HobjClear();
+                    Stopwatch stopwatch = new Stopwatch();
+                    stopwatch.Restart(); 
+                    for (int i = 0; i < dataGridView5.RowCount; i++)
+                    {
+                        OneResultOBj oneResultOBj = new OneResultOBj();
+                        oneResultOBj.LiyID = 0;
+                        oneResultOBj.RunID = i+1;
+                        halconRun.SetResultOBj(oneResultOBj);
+                        halconRun.GetStopwatch().Restart();
+                        halconRun.SetCamPraegrm(i + 1);
+                        halconRun.AddMeassge((i + 1) + "setCamP:" + halconRun.GetStopwatch().ElapsedMilliseconds + "ms");
+                        Thread.Sleep((int)numericUpDown7.Value);
+                        if (!halconRun.GetCam().GetImage(out IGrabbedRawData dse))
+                        {
+                            continue;
+                        }
+                        halconRun.SetImages(oneResultOBj, dse);
+                        halconRun.AddMeassge((i+1)+":"+halconRun.GetStopwatch().ElapsedMilliseconds + "ms");
+                    }
+                    stopwatch.Stop();
+                    halconRun.AddMeassge( "总时间:" + stopwatch.ElapsedMilliseconds + "ms");
+                    halconRun.ShowObj();
+                });
+                thread.IsBackground = true;
+                thread.Start();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void button15_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Thread thread = new Thread(() => {
+                    halconRun.HobjClear();
+                    Stopwatch stopwatch = new Stopwatch();
+                    stopwatch.Restart();
+                    OneResultOBj oneResultOBj = new OneResultOBj();
+                    oneResultOBj.LiyID = 0;
+                    oneResultOBj.RunID = 1;
+                    for (int i = 0; i < dataGridView5.RowCount; i++)
+                    {
+                        halconRun.SetResultOBj(oneResultOBj);
+                        halconRun.GetStopwatch().Restart();
+                        halconRun.SetCamPraegrm(i + 1);
+                        halconRun.AddMeassge((i + 1) + "setCamP:" + halconRun.GetStopwatch().ElapsedMilliseconds + "ms");
+                        Thread.Sleep((int)numericUpDown7.Value);
+                        if (!halconRun.GetCam().GetImage(out IGrabbedRawData dse))
+                        {
+                            continue;
+                        }
+                       HObject hObject=  halconRun.GetCam().IGrabbedRawDataTOImage(dse);
+                        oneResultOBj.Image= oneResultOBj.Image.ConcatObj(hObject);
+                        //halconRun.SetImages(oneResultOBj, dse);
+                        halconRun.AddMeassge((i + 1) + ":" + halconRun.GetStopwatch().ElapsedMilliseconds + "ms");
+                    }
+                    stopwatch.Stop();
+                    halconRun.AddMeassge("总时间:" + stopwatch.ElapsedMilliseconds + "ms");
+                    halconRun.ShowObj();
+                });
+                thread.IsBackground = true;
+                thread.Start();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+
+        }
+
+        private void button16_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                halconRun.SetCamPraegrm();
+                halconRun.ReadCamImage();
             }
             catch (Exception ex)
             {

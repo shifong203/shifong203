@@ -168,6 +168,20 @@ namespace Vision2.ErosProjcetDLL.Project
             }
             data = stringBuilder.ToString();
         }
+
+        public static string GetInI(string path,string item,string key)
+        {
+            StringBuilder stringBuilder = new StringBuilder();
+
+            try
+            {
+                GetPrivateProfileString(item, key, " ", stringBuilder, 100, path);
+            }
+            catch (Exception)
+            {
+            }
+            return stringBuilder.ToString();
+        }
         public static string TempPath
         {
             get
@@ -213,7 +227,7 @@ namespace Vision2.ErosProjcetDLL.Project
         {
             get
             {
-                if (!iNI.UserRight.Contains("管理"))
+                if (!In.UserRight.Contains("管理"))
                 {
                     return false;
                 }
@@ -276,6 +290,8 @@ namespace Vision2.ErosProjcetDLL.Project
             [Description("是否必须登录运行"), Category("权限管理"), DisplayName("必须登录运行")]
             public bool IsMet { get; set; }
 
+            [Description("是否打开软件开始登录"), Category("权限管理"), DisplayName("启动立即登录")]
+            public bool Boot_The_Login { get; set; }
         }
 
         public ProjectINI()

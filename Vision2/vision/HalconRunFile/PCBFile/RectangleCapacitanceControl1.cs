@@ -23,6 +23,7 @@ namespace Vision2.vision.HalconRunFile.PCBFile
         {
             halcon= halconRun;
             Run = rectangleCapacitance;
+            propertyGrid2.SelectedObject = Run;
             propertyGrid1.SelectedObject = Run.IntCapcitanceMinx;
             select_obj_type1.SetData(Run.select_Shape_Min_Max);
             thresholdControls1.SetData(Run.Threshold_Min_M);
@@ -36,7 +37,7 @@ namespace Vision2.vision.HalconRunFile.PCBFile
         {
             try
             {
-                HOperatorSet.SmallestRectangle2(Run.AOIObj, out HTuple row, out HTuple colu, out HTuple phi, out HTuple lengt1, out HTuple lnegt2);
+                HOperatorSet.SmallestRectangle2(Run.Point1, out HTuple row, out HTuple colu, out HTuple phi, out HTuple lengt1, out HTuple lnegt2);
                 if (row.Length==0)
                 {
                     HOperatorSet.DrawRectangle2(halcon.hWindowHalcon(), out row, out colu,  out phi, out lengt1, out lnegt2);
@@ -46,7 +47,7 @@ namespace Vision2.vision.HalconRunFile.PCBFile
                     HOperatorSet.DrawRectangle2Mod(halcon.hWindowHalcon(), row, colu, phi, lengt1, lnegt2, out row, out colu, out phi, out lengt1, out lnegt2);
                 }
                 HOperatorSet.GenRectangle2(out HObject circle, row, colu, phi, lengt1, lnegt2);
-                Run.AOIObj = circle;
+                Run.Point1 = circle;
             }
             catch (Exception ex)
             {
@@ -70,7 +71,11 @@ namespace Vision2.vision.HalconRunFile.PCBFile
         {
             try
             {
-                Run.RunDebug( halcon.GetOneImageR(),1);
+             
+                
+                AoiObj aoiObj=    Run.GetAoi();
+                aoiObj.DebugID = 1;
+                Run.RunDebug( halcon.GetOneImageR(), aoiObj);
             }
             catch (Exception ex)
             {
@@ -91,8 +96,30 @@ namespace Vision2.vision.HalconRunFile.PCBFile
                 Run.IntCapcitanceMinx.AreaCValue = (double)numericUpDown1.Value;
             }
             catch (Exception)
-            {            }
+            {            
+            }
+        }
 
+        private void button3_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                HOperatorSet.SmallestRectangle2(Run.Point2, out HTuple row, out HTuple colu, out HTuple phi, out HTuple lengt1, out HTuple lnegt2);
+                if (row.Length == 0)
+                {
+                    HOperatorSet.DrawRectangle2(halcon.hWindowHalcon(), out row, out colu, out phi, out lengt1, out lnegt2);
+                }
+                else
+                {
+                    HOperatorSet.DrawRectangle2Mod(halcon.hWindowHalcon(), row, colu, phi, lengt1, lnegt2, out row, out colu, out phi, out lengt1, out lnegt2);
+                }
+                HOperatorSet.GenRectangle2(out HObject circle, row, colu, phi, lengt1, lnegt2);
+                Run.Point2 = circle;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
     }
 }

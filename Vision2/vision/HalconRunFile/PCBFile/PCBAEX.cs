@@ -49,13 +49,13 @@ namespace Vision2.vision.HalconRunFile.PCBFile
             foreach (var item in DictRoi)
             {
                 item.Value.Name = item.Key; 
-                bool rok = item.Value.Run( oneResultOBj);
-                if (!rok)
+                AoiObj  rok = item.Value.Run( oneResultOBj);
+                if (!rok.RestBool)
                 {
                 //    //oneResultOBj.AddNGOBJ(new OneRObj() { NGText = this.Name + "." + item.Key,ROI=ErrROI,NGROI= ErrROI });
                     OK = false;
                 }
-                keyValue.Add(item.Key, rok);
+                keyValue.Add(item.Key, rok.RestBool);
             }
             return OK;
         }

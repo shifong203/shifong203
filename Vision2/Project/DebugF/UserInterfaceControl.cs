@@ -58,7 +58,7 @@ namespace Vision2.Project.DebugF
 
         private void Btn_Massge_Click(object sender, System.EventArgs e)
         {
-            labelStat.Text = DebugCompiler.EquipmentStatus.ToString();
+            //labelStat.Text = DebugCompiler.EquipmentStatus.ToString();
         }
         DebugF.DebugForm debugForm;
         private void Btn_Debug_Click(object sender, System.EventArgs e)
@@ -99,7 +99,7 @@ namespace Vision2.Project.DebugF
             {
                 MessageBox.Show(ex.Message);
             }
-            labelStat.Text = DebugCompiler.EquipmentStatus.ToString();
+            //labelStat.Text = DebugCompiler.EquipmentStatus.ToString();
         }
 
         private void Btn_Reset_Click(object sender, System.EventArgs e)
@@ -169,7 +169,7 @@ namespace Vision2.Project.DebugF
             try
             {
                 DebugCompiler.Initialize();
-                labelStat.Text = DebugCompiler.EquipmentStatus.ToString();
+                //labelStat.Text = DebugCompiler.EquipmentStatus.ToString();
             }
             catch (System.Exception ex)
             {
@@ -253,7 +253,7 @@ namespace Vision2.Project.DebugF
             Name = "UserInterface";
             Btn_Stop.MouseClick += Btn_Stop_MouseDoubleClick;
             //DebugCompiler.EquipmentStatus = ErosSocket.ErosConLink.EnumEquipmentStatus.已停止;
-            labelStat.Text = DebugCompiler.EquipmentStatus.ToString();
+            //labelStat.Text = DebugCompiler.EquipmentStatus.ToString();
             timer = new Timer();
             timer.Tick += Timer_Tick;
             timer.Interval = 3000;

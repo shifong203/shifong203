@@ -53,16 +53,7 @@ namespace Vision2.vision
                 if (dat.GetNGCompData() != null)
                 {
                     dat.OK = true;
-                    //foreach (var item in dat.ResuOBj)
-                    //{
-                    //    foreach (var itemT in item.CantOBJ)
-                    //    {
-                    //        if (trayDataVales.Count() != 0)
-                    //        {
-                    //            itemT.Value.OK = true;
-                    //        }
-                    //    }
-                    //}
+
                     if (dat.GetNGCompData() != null && !dat.OK)
                     {
                         if (!trayDataVales.Contains(dat))

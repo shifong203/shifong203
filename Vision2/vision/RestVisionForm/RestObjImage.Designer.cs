@@ -42,6 +42,18 @@
             treeNode5});
             System.Windows.Forms.TreeNode treeNode7 = new System.Windows.Forms.TreeNode("节点1");
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RestObjImage));
+            System.Windows.Forms.TreeNode treeNode8 = new System.Windows.Forms.TreeNode("节点2", 1, -2);
+            System.Windows.Forms.TreeNode treeNode9 = new System.Windows.Forms.TreeNode("节点4");
+            System.Windows.Forms.TreeNode treeNode10 = new System.Windows.Forms.TreeNode("节点5");
+            System.Windows.Forms.TreeNode treeNode11 = new System.Windows.Forms.TreeNode("节点6");
+            System.Windows.Forms.TreeNode treeNode12 = new System.Windows.Forms.TreeNode("节点7");
+            System.Windows.Forms.TreeNode treeNode13 = new System.Windows.Forms.TreeNode("节点0", new System.Windows.Forms.TreeNode[] {
+            treeNode8,
+            treeNode9,
+            treeNode10,
+            treeNode11,
+            treeNode12});
+            System.Windows.Forms.TreeNode treeNode14 = new System.Windows.Forms.TreeNode("节点1");
             this.hWindowControl1 = new HalconDotNet.HWindowControl();
             this.label4 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
@@ -52,6 +64,8 @@
             this.treeView1 = new System.Windows.Forms.TreeView();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.treeView2 = new System.Windows.Forms.TreeView();
+            this.panel5 = new System.Windows.Forms.Panel();
             this.panel1 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
             this.panel4 = new System.Windows.Forms.Panel();
@@ -74,6 +88,7 @@
             this.groupBox1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            this.tabPage2.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panel4.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -95,15 +110,13 @@
             // 
             // label4
             // 
-            this.label4.AutoSize = true;
             this.label4.Dock = System.Windows.Forms.DockStyle.Top;
             this.label4.Font = new System.Drawing.Font("宋体", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label4.Location = new System.Drawing.Point(3, 134);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(238, 24);
+            this.label4.Size = new System.Drawing.Size(362, 72);
             this.label4.TabIndex = 4;
-            this.label4.Text = "位置信息:1234567890";
-            this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.label4.Text = "位置信息:123456789011111111112358910899771";
             // 
             // button1
             // 
@@ -141,10 +154,10 @@
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControl1.Location = new System.Drawing.Point(3, 221);
+            this.tabControl1.Location = new System.Drawing.Point(3, 269);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(362, 650);
+            this.tabControl1.Size = new System.Drawing.Size(362, 602);
             this.tabControl1.TabIndex = 10;
             // 
             // tabPage1
@@ -154,7 +167,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 30);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(354, 616);
+            this.tabPage1.Size = new System.Drawing.Size(354, 568);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "NG";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -165,7 +178,7 @@
             this.restOneComUserControl1.Margin = new System.Windows.Forms.Padding(5);
             this.restOneComUserControl1.Name = "restOneComUserControl1";
             this.restOneComUserControl1.Size = new System.Drawing.Size(512, 538);
-            this.restOneComUserControl1.TabIndex = 9;
+            this.restOneComUserControl1.TabIndex = 1;
             // 
             // treeView1
             // 
@@ -198,39 +211,85 @@
             this.treeView1.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
             treeNode6,
             treeNode7});
-            this.treeView1.SelectedImageIndex = 4;
-            this.treeView1.Size = new System.Drawing.Size(348, 610);
-            this.treeView1.TabIndex = 10;
+            this.treeView1.SelectedImageIndex = 1;
+            this.treeView1.Size = new System.Drawing.Size(348, 562);
+            this.treeView1.TabIndex = 0;
             this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
             // 
             // imageList1
             // 
             this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
             this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
-            this.imageList1.Images.SetKeyName(0, "iphone-bk.png");
-            this.imageList1.Images.SetKeyName(1, "forward_alt.png");
+            this.imageList1.Images.SetKeyName(0, "Cam.png");
+            this.imageList1.Images.SetKeyName(1, "Sele.png");
             this.imageList1.Images.SetKeyName(2, "back_alt.png");
-            this.imageList1.Images.SetKeyName(3, "tick.png");
+            this.imageList1.Images.SetKeyName(3, "OK.png");
             this.imageList1.Images.SetKeyName(4, "tools.png");
-            this.imageList1.Images.SetKeyName(5, "cross.png");
+            this.imageList1.Images.SetKeyName(5, "NG.png");
             this.imageList1.Images.SetKeyName(6, "accept.png");
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.treeView2);
+            this.tabPage2.Controls.Add(this.panel5);
             this.tabPage2.Location = new System.Drawing.Point(4, 30);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(354, 616);
+            this.tabPage2.Size = new System.Drawing.Size(354, 568);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "OK";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // treeView2
+            // 
+            this.treeView2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.treeView2.Font = new System.Drawing.Font("宋体", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.treeView2.ImageIndex = 0;
+            this.treeView2.ImageList = this.imageList1;
+            this.treeView2.Location = new System.Drawing.Point(3, 3);
+            this.treeView2.Name = "treeView2";
+            treeNode8.ImageIndex = 1;
+            treeNode8.Name = "节点2";
+            treeNode8.SelectedImageIndex = -2;
+            treeNode8.Text = "节点2";
+            treeNode9.ImageIndex = 2;
+            treeNode9.Name = "节点4";
+            treeNode9.Text = "节点4";
+            treeNode10.ImageIndex = 3;
+            treeNode10.Name = "节点5";
+            treeNode10.Text = "节点5";
+            treeNode11.ImageIndex = 5;
+            treeNode11.Name = "节点6";
+            treeNode11.Text = "节点6";
+            treeNode12.ImageIndex = 6;
+            treeNode12.Name = "节点7";
+            treeNode12.Text = "节点7";
+            treeNode13.Name = "节点0";
+            treeNode13.Text = "节点0";
+            treeNode14.Name = "节点1";
+            treeNode14.Text = "节点1";
+            this.treeView2.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
+            treeNode13,
+            treeNode14});
+            this.treeView2.SelectedImageIndex = 1;
+            this.treeView2.Size = new System.Drawing.Size(348, 251);
+            this.treeView2.TabIndex = 1;
+            this.treeView2.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView2_AfterSelect);
+            // 
+            // panel5
+            // 
+            this.panel5.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panel5.Location = new System.Drawing.Point(3, 254);
+            this.panel5.Name = "panel5";
+            this.panel5.Size = new System.Drawing.Size(348, 311);
+            this.panel5.TabIndex = 2;
             // 
             // panel1
             // 
             this.panel1.Controls.Add(this.button1);
             this.panel1.Controls.Add(this.label1);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel1.Location = new System.Drawing.Point(3, 158);
+            this.panel1.Location = new System.Drawing.Point(3, 206);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(362, 63);
             this.panel1.TabIndex = 9;
@@ -263,7 +322,7 @@
             this.textBox1.Location = new System.Drawing.Point(69, 0);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(293, 35);
-            this.textBox1.TabIndex = 1;
+            this.textBox1.TabIndex = 111;
             this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
             // label2
@@ -433,9 +492,9 @@
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.RestObjImage_KeyDown);
             this.Resize += new System.EventHandler(this.RestObjImage_Resize);
             this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
+            this.tabPage2.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel4.ResumeLayout(false);
             this.panel4.PerformLayout();
@@ -479,5 +538,7 @@
         private System.Windows.Forms.ToolStripLabel toolStripLabel1;
         private System.Windows.Forms.TreeView treeView1;
         private System.Windows.Forms.ImageList imageList1;
+        private System.Windows.Forms.TreeView treeView2;
+        private System.Windows.Forms.Panel panel5;
     }
 }

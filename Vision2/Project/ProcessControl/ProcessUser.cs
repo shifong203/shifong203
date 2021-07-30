@@ -157,7 +157,7 @@ namespace Vision2.Project.ProcessControl
 
         public override void initialization()
         {
-            base.initialization();
+            //base.initialization();
             if (userVisionManagement == null || userVisionManagement.IsDisposed)
             {
                 userVisionManagement = new ProcessControl(this);

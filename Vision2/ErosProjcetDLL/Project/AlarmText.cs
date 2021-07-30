@@ -886,6 +886,7 @@ namespace Vision2.ErosProjcetDLL.Project
             //弹出报警列表ToolStripMenuItem.Checked = ProjectINI.In.IsShowAlarmText;
         }
 
+
         private void toolStripButton3_Click(object sender, EventArgs e)
         {
             try
@@ -899,7 +900,6 @@ namespace Vision2.ErosProjcetDLL.Project
                         AlarmForm.AlarmFormThis.FormBorderStyle = FormBorderStyle.None;
                         AlarmForm.AlarmFormThis.Dock = DockStyle.Fill;
                         AlarmForm.AlarmFormThis.Show();
-
                 }
                 else
                 {
@@ -964,6 +964,19 @@ namespace Vision2.ErosProjcetDLL.Project
             {
             }
        
+        }
+
+        private void toolStripComboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+
+                AlarmForm.UpDa(toolStripComboBox1.SelectedItem.ToString() );
+       
+            }
+            catch (Exception)
+            {
+            }
         }
     }
 

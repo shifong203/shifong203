@@ -181,11 +181,11 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             bool istBool = false;
             try
             {
-                ISCompound = false;
+                //ISCompound = false;
                 oneResultOBj .GetHalcon().GetHomdeMobel(this.HomName);
                 HObject hObject, ho_PinSort;
-                NGRoi = new HObject();
-                NGRoi.GenEmptyObj();
+                nGRoi = new HObject();
+                nGRoi.GenEmptyObj();
                 //Pin好坏
                 HTuple rows, columns, area;
                 HObject FreiAmpImage;
@@ -978,7 +978,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 HOperatorSet.AreaCenter(ho_PinHave, out area, out rows, out columns);
                 columns = columns.TupleRemove(rows.TupleFind(0));
                 rows = rows.TupleRemove(rows.TupleFind(0));
-                NGRoi = NGRoi.ConcatObj(ho_PinHave);
+                nGRoi = nGRoi.ConcatObj(ho_PinHave);
 
             }
             catch (HalconException HDevExpDefaultException)

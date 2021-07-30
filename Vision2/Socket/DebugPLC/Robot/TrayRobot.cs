@@ -6,6 +6,11 @@ using Vision2.Project.formula;
 using Vision2.Project.Mes;
 using Vision2.vision.HalconRunFile.RunProgramFile;
 using static ErosSocket.DebugPLC.Robot.TrayRobot;
+using Vision2.ErosProjcetDLL.Excel;
+using Vision2.Project;
+using Vision2.Project.ProcessControl;
+using System.Drawing;
+using Vision2.Project.DebugF.IO;
 
 namespace ErosSocket.DebugPLC.Robot
 {
@@ -18,8 +23,18 @@ namespace ErosSocket.DebugPLC.Robot
         void SetValue(int number, bool value, double? valueDouble = null);
         void SetValue(int number, OneDataVale dataVale);
         void SetValue(int number, TrayData dataVale);
+        void SetValue(double value);
+        void SetValue(List<bool> listValue);
         void SetPanleSN(List<string> listSN, List<int> tryaid);
-        void RestValue();
+        void RestValue(TrayData trayData );
+        ///// <summary>
+        ///// 关联数据
+        ///// </summary>
+        ///// <param name="tray"></param>
+        //void SetTray(TrayData tray);
+        void Initialize(TrayData trayData=null);
+
+        void UpData();
     }
     /// <summary>
     /// 
@@ -104,11 +119,11 @@ namespace ErosSocket.DebugPLC.Robot
         public void AddTary(ITrayRobot trayRobot)
         {
             trayRobots = trayRobot;
-            if (TrayDataS!=null)
+            if (TrayDataS != null)
             {
-                TrayDataS.AddTary(trayRobots);
+                TrayDataS.SetITrayRobot(trayRobots);
             }
-       
+           
         }
         /// <summary>
         /// 
@@ -183,20 +198,26 @@ namespace ErosSocket.DebugPLC.Robot
                 TrayDataS.XNumber = XNumber;
                 TrayDataS.YNumber = YNumber;
                 TrayDataS.HorizontallyORvertically = HorizontallyORvertically;
+                TrayDataS.SetITrayRobot(trayRobots);
             }
-            if (TrayDataS==null)
+            if (TrayDataS == null)
             {
                 TrayDataS = new TrayData(this);
             }
-            TrayDataS.AddTary(trayRobots);
             return TrayDataS;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public TrayData QuntData()
         {
             TrayData tray = TrayDataS;
+
             TrayDataS = new TrayData(this);
-            TrayDataS.RestValue();
+            this.GetITrayRobot().Initialize(TrayDataS);
+            //TrayDataS.SetITrayRobot(this.GetITrayRobot());
+            //TrayDataS.RestValue();
             return tray;
         }
 
@@ -501,8 +522,14 @@ namespace ErosSocket.DebugPLC.Robot
         public TrayData( TrayRobot trayRobot)
         {
             tray1 = trayRobot;
-            AddTary(tray1.GetITrayRobot());
+            SetITrayRobot(tray1.GetITrayRobot());
             Clear();
+            //trayRobots.Initialize(this);
+        }
+        public string GetTrayString()
+        {
+          return  string.Format("TraySN:{0};         TrayID:{1},X{2}*Y{3}/数量:{4},NG数:{5}当前:{6}",
+                    this.TrayIDQR, tray1.Name, XNumber, YNumber, Count, NGLocation,Number);
         }
         TrayRobot tray1;
         ITrayRobot trayRobots;
@@ -510,10 +537,14 @@ namespace ErosSocket.DebugPLC.Robot
         {
             return trayRobots;
         }
-        public void AddTary(ITrayRobot trayRobot)
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="trayRobot"></param>
+        public void SetITrayRobot(ITrayRobot trayRobot)
         {
             trayRobots = trayRobot;
-
         }
         [DescriptionAttribute("起点位置四个角落，并根据横向或竖向共8种排列方式。"), Category("排列"), DisplayName("起点位置")]
         public TrayDirectionEnum TrayDirection { get; set; }
@@ -537,7 +568,7 @@ namespace ErosSocket.DebugPLC.Robot
             {
                 try
                 {
-                    if (DebugComp.GetThis().TrayID)
+                    if (RecipeCompiler.Instance.TrayID)
                     {
                         if (TrayIDQR == null || TrayIDQR == "")
                         {
@@ -549,7 +580,7 @@ namespace ErosSocket.DebugPLC.Robot
                         for (int i = 0; i < GetDataVales().Count; i++)
                         {
 
-                            if (GetDataVales()[i] == null || !GetDataVales()[i].OK)
+                            if (!GetDataVales()[i].NotNull || !GetDataVales()[i].OK)
                             {
                                 return false;
                             }
@@ -589,6 +620,19 @@ namespace ErosSocket.DebugPLC.Robot
         /// NG位置
         /// </summary>
         public List<int> NGLocation = new List<int>();
+
+        public int NGNubmer { get
+            {
+                int numbert = 0;
+                for (int i = 0; i < dataVales1.Count; i++)
+                {
+                    if (!dataVales1[i].OK)
+                    {
+                        numbert++;
+                    }
+                }
+                return numbert;
+            } }
         /// <summary>
         /// 产品名称
         /// </summary>
@@ -619,7 +663,17 @@ namespace ErosSocket.DebugPLC.Robot
             }
             return dataVales1;
         }
-
+        public OneDataVale GetOneDataVale(int nubemr)
+        {
+            if (dataVales1 != null)
+            {
+                if (this.Count>nubemr)
+                {
+                    return GetDataVales()[nubemr];
+                }
+            }
+            return null;
+        }
         public HObject ImagePlus;
 
         public void RestValue()
@@ -627,9 +681,8 @@ namespace ErosSocket.DebugPLC.Robot
             Clear();
             if (trayRobots!=null)
             {
-                trayRobots.RestValue();
+                trayRobots.RestValue(this);
             }
-        
         }
 
         /// <summary>
@@ -642,8 +695,10 @@ namespace ErosSocket.DebugPLC.Robot
                 XNumber = tray1.XNumber;
                 YNumber = tray1.YNumber;
                 TrayDirection = tray1.TrayDirection;
+                TrayIDQR = "";
                 HorizontallyORvertically = tray1.HorizontallyORvertically;
             }
+            Number = 1;
             dataVales1 = new List<OneDataVale>(new OneDataVale[XNumber * YNumber]);
             for (int i = 0; i < dataVales1.Count; i++)
             {
@@ -657,7 +712,15 @@ namespace ErosSocket.DebugPLC.Robot
         }
         public void SetPanleSN(List<string> listSN, List<int> tryaid)
         {
-            trayRobots.SetPanleSN(listSN, tryaid);
+            if (trayRobots==null)
+            {
+                Vision2.ErosProjcetDLL.Project.AlarmText.AddTextNewLine(this.tray1.Name+ "托盘未加载显示",System.Drawing.Color.Red);
+            }
+            else
+            {
+                trayRobots.SetPanleSN(listSN, tryaid);
+            }
+        
         }
         public void SetNumberValue(int number, OneDataVale dataVale)
         {
@@ -674,19 +737,19 @@ namespace ErosSocket.DebugPLC.Robot
         }
         public void SetNumberValue(List<DataMinMax> dataMins, int number = 0)
         {
-            if (number != 0)
-            {
-                Number = number;
-            }
-            if (Number <=0)
-            {
-                Number = 1;
-            }
+            //if (number != 0)
+            //{
+            //    Number = number;
+            //}
+            //if (Number <=0)
+            //{
+            //    Number = 1;
+            //}
             for (int i = 0; i < dataMins.Count; i++)
             {
-                this.GetDataVales()[Number - 1].AddCamOBj(RecipeCompiler.Instance.DataMCamName, dataMins[i].GetOneRObj());
+                this.GetDataVales()[number - 1].AddCamOBj(RecipeCompiler.Instance.DataMCamName, dataMins[i].GetOneRObj());
             }
-            SetNumberValue(Number, this.GetDataVales()[Number - 1]);
+            SetNumberValue(number, this.GetDataVales()[number - 1]);
         }
 
         /// <summary>
@@ -707,7 +770,384 @@ namespace ErosSocket.DebugPLC.Robot
             {
             }
         }
+        public void UpITrayRobt()
+        {
+            trayRobots.UpData();
+        }
 
+        public void RaeaTary(string filePaht, string text, double outTime, out string runErr)
+        {
+            runErr = "";
+
+            string ReadTextPath = "";
+            int Strtrow = 0;
+            int StrtCol = 0;
+            string rset = "";
+            char Sipe = ',';
+            string StartsWith = "";
+            //string filePaht = ProcessControl.ProcessUser.GetThis().ExcelPath + "\\";
+
+            //   AwaitRead 5, Tray 2 { 行=2; 分割==;数据列=1; 结果=OK; StartsWith=SPUTTERING_Result_; }
+            if (text.Contains("{"))
+            {
+                string dtat = text.Substring(text.IndexOf('{') + 1, text.IndexOf('}') - text.IndexOf('{') - 1);
+                if (dtat.Contains(";"))
+                {
+                    string[] dtastTd = dtat.Split(';');
+                    for (int i = 0; i < dtastTd.Length; i++)
+                    {
+                        if (dtastTd[i].Contains("="))
+                        {
+                            string[] dtast = dtastTd[i].Split('=');
+                            if (dtast[0] == "行")
+                            {
+                                Strtrow = int.Parse(dtast[1]);
+                            }
+                            else if (dtast[0] == "分割")
+                            {
+                                if (dtast.Length == 3)
+                                {
+                                    Sipe = '=';
+                                }
+                                else
+                                {
+                                    Sipe = dtast[1].Trim()[0];
+                                }
+
+                            }
+                            else if (dtast[0] == "数据列")
+                            {
+                                StrtCol = int.Parse(dtast[1]);
+                            }
+                            else if (dtast[0] == "结果")
+                            {
+                                rset = dtast[1];
+                            }
+                            else if (dtast[0] == "StartsWith")
+                            {
+                                StartsWith = dtast[1];
+                            }
+                        }
+                    }
+                }
+            }
+            bool Done = false;
+            System.Diagnostics.Stopwatch Watch = new System.Diagnostics.Stopwatch();
+
+            while (true)
+            {
+
+                if (StartsWith != "" && System.IO.Directory.Exists(filePaht))
+                {
+                    string[] Pahts = System.IO.Directory.GetFiles(filePaht);
+                    for (int i = 0; i < Pahts.Length; i++)
+                    {
+                        if (System.IO.Path.GetFileNameWithoutExtension(Pahts[i]).StartsWith(StartsWith))
+                        {
+                            if (Vision2.ErosProjcetDLL.Excel.Npoi.ReadText(Pahts[i], out List<string> textT))
+                            {
+                                List<bool> ListR = new List<bool>();
+                                string err = "";
+                                if (textT.Count >= 1)
+                                {
+                                    if (!textT[0].Contains("OK"))
+                                    {
+                                        err = textT[0];
+                                    }
+                                }
+                                for (int i2 = Strtrow; i2 < textT.Count; i2++)
+                                {
+                                    if (textT[i2].Contains(Sipe.ToString()) && textT[i2].Split(Sipe)[StrtCol] == rset)
+                                    {
+                                        ListR.Add(true);
+                                    }
+                                    else
+                                    {
+                                        err += i2 + ":" + textT[i2];
+                                        ListR.Add(false);
+                                    }
+                                }
+                                if (err != "")
+                                {
+                                    UserFormulaContrsl.SetOK(2);
+                                    simulateQRForm.ShowMesabe(err);
+                                }
+                                else
+                                {
+                                    UserFormulaContrsl.SetOK(3);
+                                }
+                                this.GetITrayRobot().SetValue(ListR);
+                                System.IO.Directory.CreateDirectory(ProcessUser.GetThis().ExcelPath + "\\历史记录\\");
+                                System.IO.File.Move(Pahts[i], 
+                                    ProcessUser.GetThis().ExcelPath + "\\历史记录\\" + System.IO.Path.GetFileName(Pahts[i]));
+                                Vision2.ErosProjcetDLL.Project.AlarmText.AddTextNewLine("SIFS过站完成" + textT[0], Color.Green);
+                                Done = true;
+                            }
+                        }
+                    }
+                }
+
+                //else if (DebugCompiler.GetThis().DDAxis.KeyVales.ContainsKey(tdat[2].Trim(' ')))
+                //{
+                //    if (Vision2.ErosProjcetDLL.Excel.Npoi.ReadText(ReadTextPath, out string textT))
+                //    {
+                //        DebugCompiler.GetThis().DDAxis.KeyVales.DictionaryValueD[tdat[2]].Value = textT;
+                //        break;
+                //    }
+                //}
+                if (Done)
+                {
+                    break;
+                }
+                if (outTime != 0 && outTime <= Watch.ElapsedMilliseconds / 1000)
+                {
+                    runErr += "未找到目标文件";
+                    break;
+                }
+                System.Threading.Thread.Sleep(10);
+
+            }
+        }
+
+
+        public void WriatTary(string filePaht, string text, TrayData tray, out string runErr)
+        {
+            runErr = "";
+            List<string> Datas = new List<string>();
+            try
+            {
+                //文件名规则
+                //  日期+字符+托盘ID  =[关键字(托盘ID，和日期时间)]字符[关键字托盘(trayid)]
+
+                string FileName = DateTime.Now.ToString("yyyyMMddHHmmss");
+                int trype = 0;
+                if (text.Contains("{"))
+                {
+                    string dtat = text.Substring(text.IndexOf('{') + 1, text.IndexOf('}') - text.IndexOf('{') - 1);
+                    if (dtat.Contains(";"))
+                    {
+                        string[] dtastTd = dtat.Split(';');
+                        for (int i = 0; i < dtastTd.Length; i++)
+                        {
+                            if (dtastTd[i].Contains("="))
+                            {
+                                string[] dtast = dtastTd[i].Split('=');
+                                if (dtast[0] == "文件名")
+                                {
+                                    while (dtast[1].Contains("["))
+                                    {
+                                        int stR = dtast[1].IndexOf('[');
+                                        string dtattd = dtast[1].Substring(dtast[1].IndexOf('[') + 1, dtast[1].IndexOf(']') - dtast[1].IndexOf('[') - 1);
+                                        if (dtattd.ToLower() == "trayid")
+                                        {
+                                            dtattd = tray.TrayIDQR;
+                                            dtast[1] = dtast[1].Remove(dtast[1].IndexOf('['), dtast[1].IndexOf(']') - dtast[1].IndexOf('[') + 1);
+                                            dtast[1] = dtast[1].Insert(stR, dtattd);
+                                        }
+                                        else if (dtattd.ToLower() == "newtime")
+                                        {
+                                            dtattd = DateTime.Now.ToString("yyyyMMddHHmmss");
+                                            dtast[1] = dtast[1].Remove(dtast[1].IndexOf('['), dtast[1].IndexOf(']') - dtast[1].IndexOf('[') + 1);
+                                            dtast[1] = dtast[1].Insert(stR, dtattd);
+                                        }
+                                        else if (dtattd.ToLower().StartsWith("trayid "))
+                                        {
+                                            string Itmess = tray.GetDataVales()[RunCodeStr.ToDoubleP(dtattd.Split(' ')[1])].ID;
+
+                                            if (Itmess == null)
+                                            {
+                                                Itmess = tray.GetDataVales()[RunCodeStr.ToDoubleP(dtattd.Split(' ')[1]) + 1].ID;
+                                            }
+                                            dtast[1] = dtast[1].Remove(dtast[1].IndexOf('['), dtast[1].IndexOf(']') - dtast[1].IndexOf('[') + 1);
+                                            dtast[1] = dtast[1].Insert(stR, Itmess);
+                                        }
+                                        else if (dtattd.ToLower().StartsWith("newdata"))
+                                        {
+                                            string Itmess = tray.GetDataVales()[RunCodeStr.ToDoubleP(dtattd.Split(' ')[1])].ID;
+
+                                            if (Itmess == null)
+                                            {
+                                                Itmess = tray.GetDataVales()[RunCodeStr.ToDoubleP(dtattd.Split(' ')[1]) + 1].ID;
+                                            }
+                                            dtast[1] = dtast[1].Remove(dtast[1].IndexOf('['), dtast[1].IndexOf(']') - dtast[1].IndexOf('[') + 1);
+                                            dtast[1] = dtast[1].Insert(stR, Itmess);
+                                        }
+                                    }
+                                    FileName = dtast[1].Trim();
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (dtat.Contains("="))
+                        {
+                            string[] dtast = dtat.Split('=');
+                            if (dtast[0] == "文件名")
+                            {
+                                while (dtast[1].Contains("["))
+                                {
+                                    int stR = dtast[1].IndexOf('[');
+                                    string dtattd = dtast[1].Substring(dtast[1].IndexOf('[') + 1, dtast[1].IndexOf(']') - dtast[1].IndexOf('[') - 1);
+                                    if (dtattd.ToLower() == "trayid")
+                                    {
+                                        dtattd = tray.TrayIDQR;
+                                        dtast[1] = dtast[1].Remove(dtast[1].IndexOf('['), dtast[1].IndexOf(']') - dtast[1].IndexOf('[') + 1);
+                                        dtast[1] = dtast[1].Insert(stR, dtattd);
+                                    }
+                                    else if (dtattd.ToLower() == "newtime")
+                                    {
+                                        dtattd = DateTime.Now.ToString("HHmmss");
+                                        dtast[1] = dtast[1].Remove(dtast[1].IndexOf('['), dtast[1].IndexOf(']') - dtast[1].IndexOf('[') + 1);
+                                        dtast[1] = dtast[1].Insert(stR, dtattd);
+                                    }
+                                    else if (dtattd.ToLower().StartsWith("trayid "))
+                                    {
+                                        string Itmess = tray.GetDataVales()[RunCodeStr.ToDoubleP(dtattd.Split(' ')[1])].ID;
+                                        if (Itmess == null)
+                                        {
+                                            Itmess = tray.GetDataVales()[RunCodeStr.ToDoubleP(dtattd.Split(' ')[1]) + 1].ID;
+                                        }
+                                        dtast[1] = dtast[1].Remove(dtast[1].IndexOf('['), dtast[1].IndexOf(']') - dtast[1].IndexOf('[') + 1);
+                                        dtast[1] = dtast[1].Insert(stR, Itmess);
+                                    }
+                                    else if (dtattd.ToLower().StartsWith("newdata"))
+                                    {
+                                        string Itmess = DateTime.Now.ToString("yyyyMMdd");
+                                        if (Itmess == null)
+                                        {
+                                            Itmess = tray.GetDataVales()[RunCodeStr.ToDoubleP(dtattd.Split(' ')[1]) + 1].ID;
+                                        }
+                                        dtast[1] = dtast[1].Remove(dtast[1].IndexOf('['), dtast[1].IndexOf(']') - dtast[1].IndexOf('[') + 1);
+                                        dtast[1] = dtast[1].Insert(stR, Itmess);
+                                    }
+                                }
+                                FileName = dtast[1].Trim();
+                            }
+                        }
+                    }
+
+                }
+                Datas.Add(ProcessUser.GetThis().CarrierQRIDName + ProcessUser.GetThis().Split_Symbol +
+                    tray.TrayIDQR + Environment.NewLine);
+                int deNumber = 0;
+
+                bool Err = false;
+                string ErrString = "";
+
+                List<string> list1 = new List<string>();
+                for (int i = 0; i < tray.GetDataVales().Count; i++)
+                {
+                    if (tray.GetDataVales()[i] == null)
+                    {
+                        continue;
+                    }
+                    if (tray.GetDataVales()[i].PanelID == null)
+                    {
+                        continue;
+                    }
+                    list1.Add(tray.GetDataVales()[i].PanelID);
+                }
+                HTuple[] vs = new HTuple[tray.GetDataVales().Count];
+                for (int i = 0; i < tray.GetDataVales().Count; i++)
+                {
+
+                    if (tray.GetDataVales()[i] == null)
+                    {
+                        continue;
+                    }
+                    List<double> objt = new List<double>();
+                    objt.Add((i + 1));
+                    string objtStr = "";
+
+                    if (tray.GetDataVales()[i].PanelID != null)
+                    {
+                        deNumber++;
+                        objtStr = tray.GetDataVales()[i].PanelID;
+                        list1[i] = "";
+                        if (list1.Contains(objtStr))
+                        {
+                            ErrString += (i + 1) + ":" + objtStr + ";";
+                            Vision2.ErosProjcetDLL.Project.AlarmText.AddTextNewLine("重复信息:" + objtStr);
+                        }
+                        else
+                        {
+                            Datas.Add(ProcessUser.GetThis().SN_Name + (deNumber) + ProcessUser.GetThis().Split_Symbol + objtStr + Environment.NewLine);
+                        }
+                        list1[i] = objtStr;
+                    }
+                    List<double> objtT = tray.GetDataVales()[i].Data as List<double>;
+                    if (objtT != null)
+                    {
+                        objt.AddRange(objtT);
+                        if (vs == null)
+                        {
+                            vs = new HTuple[objt.Count];
+                        }
+                        List<string> vs2 = new List<string>();
+                        vs2.Add("托盘位号");
+                        for (int i2 = 0; i2 < objt.Count; i2++)
+                        {
+                            if (vs[i2] == null)
+                            {
+                                vs[i2] = new HTuple();
+                            }
+                            if (i2 != objt.Count - 1)
+                            {
+                                vs2.Add("p" + (i2 + 1));
+                            }
+                            vs[i2].Append(objt[i2]);
+                        }
+                        if (trype != 1)
+                        {
+                            trype = 1;
+                            Npoi.AddWriteColumnToExcel(ProcessUser.GetThis().ExcelPath + "\\" + FileName, "托盘", vs2.ToArray());
+                        }
+                       Npoi.AddRosWriteToExcel(ProcessUser.GetThis().ExcelPath + "\\" + FileName, "托盘", objt.ToArray());
+                    }
+                    else if (tray.GetDataVales()[i].Data.Count == 1)
+                    {
+                        double objtDouble = tray.GetDataVales()[i].Data[0];
+                        objtStr += objtDouble;
+                        Datas.Add(ProcessUser.GetThis().SN_Name + (deNumber) + ProcessUser.GetThis().Split_Symbol + objtStr + Environment.NewLine);
+                    }
+                }
+                if (trype == 1)
+                {
+                    HTuple max = new HTuple(new HTuple("Max"));
+                    HTuple min = new HTuple(new HTuple("Min"));
+                    HTuple metw = new HTuple(new HTuple("差"));
+                    for (int i = 1; i < vs.Length; i++)
+                    {
+                        if (vs[i] != null)
+                        {
+                            max.Append(vs[i].TupleMax());
+                            min.Append(vs[i].TupleMin());
+                            metw.Append(vs[i].TupleMax() - vs[i].TupleMin());
+                        }
+                    }
+                    Npoi.AddRosWriteToExcel(ProcessUser.GetThis().ExcelPath + "\\" + FileName, "托盘", max.ToSArr());
+                    Npoi.AddRosWriteToExcel(ProcessUser.GetThis().ExcelPath + "\\" + FileName, "托盘", min.ToSArr());
+                    Npoi.AddRosWriteToExcel(ProcessUser.GetThis().ExcelPath + "\\" + FileName, "托盘", metw.ToSArr());
+                }
+                else
+                {
+                    if (Err)
+                    {
+                        UserFormulaContrsl.SetOK(2);
+                        simulateQRForm.ShowMesabe("托盘码重复:" + ErrString);
+                    }
+                    else
+                    {
+                       Npoi.AddText(ProcessUser.GetThis().ExcelPath + "\\" + FileName, Datas.ToArray());
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw (new Exception(ex.Message));
+            }
+        }
 
     }
 

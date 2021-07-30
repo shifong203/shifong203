@@ -188,7 +188,7 @@ namespace ErosSocket.ErosConLink
         public override void initialization()
         {
             ErosConLink.SocketClint.EnumComputers();
-            base.initialization();
+            //base.initialization();
 
             Dictionary<string, SocketClint> ites = new Dictionary<string, SocketClint>();
             foreach (var item in SocketClint.Values)

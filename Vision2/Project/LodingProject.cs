@@ -24,14 +24,36 @@ namespace Vision2.Project
         string[] ImageS;
         private void LodingProject_Load(object sender, EventArgs e)
         {
-            ds = new Vision2.Project.MainForm1();
+            ProjectINI.In.UserName = "";
+            ProjectINI.In.UserID = "";
+            if (ProjectINI.In.UsData.Boot_The_Login)
+            {
+                LandingForm logMessageForm = new LandingForm(true);
+                logMessageForm.ShowDialog();
+                if (ProjectINI.In.UserName == "未登陆"|| ProjectINI.In.UserName=="")
+                {
+                    MessageBox.Show("未登录！", "退出程序");
+                    ProjectINI.In.Clros();
+                }
+            }
+            ds = new MainForm1();
             ds.Show();
             try
             {
-                if (System.IO.File.Exists(Application.StartupPath + "\\LOGO.jpg"))
+                string[] paths = System.IO.Directory.GetFiles(Application.StartupPath);
+                for (int i = 0; i < paths.Length; i++)
                 {
-                    pictureBox2.Image = Image.FromFile(Application.StartupPath + "\\LOGO.jpg");
+                    string fileName = System.IO.Path.GetFileNameWithoutExtension(paths[i]);
+                    if (fileName.ToLower() == "logo")
+                    {
+                        pictureBox2.Image = Image.FromFile(paths[i]);
+                        break;
+                    }
                 }
+                //if (System.IO.File.Exists(Application.StartupPath + "\\LOGO.jpg"))
+                //{
+                //    pictureBox2.Image = Image.FromFile(Application.StartupPath + "\\LOGO.jpg");
+                //}
                 if (System.IO.Directory.Exists(Application.StartupPath + "\\ImageD"))
                 {
                     ImageS = System.IO.Directory.GetFiles(Application.StartupPath + "\\ImageD");
@@ -56,11 +78,12 @@ namespace Vision2.Project
                     {
                         pictureBox1.Image = Image.FromFile(ImageS[0]);
                     }
-                    for (int i = 0; i < 10; i++)
+                    for (int i = 0; i < 5; i++)
                     {
                         Thread.Sleep(100);
                         dss1.progressBar2.Value = i * 10;
                     }
+               
                     dss1.progressBar1.Value = 20;
                     if (ImageS.Length > 1)
                     {
@@ -81,11 +104,16 @@ namespace Vision2.Project
                         Thread.Sleep(100);
                         dss1.progressBar2.Value = i * 10;
                     }
+
                     dss1.progressBar1.Value = 90;
                     if (ImageS.Length > 3)
                     {
                         pictureBox1.Image = Image.FromFile(ImageS[3]);
                     }
+                    //MainForm1.MainFormF.Invoke(new MethodInvoker(() => {
+                    //    RecipeCompiler.GetUserFormulaContrsl().UPSetGetPargam();
+
+                    //}));
                     for (int i = 0; i < 10; i++)
                     {
                         Thread.Sleep(100);
@@ -93,13 +121,19 @@ namespace Vision2.Project
                     }
                     dss1.label1.Text = "载入完成;";
                     dss1.progressBar1.Value = 100;
+                
                     Thread.Sleep(500);
+                    //MainForm1.MainFormF.Invoke(new MethodInvoker(() => {
+                    //    RecipeCompiler.GetUserFormulaContrsl().UPSetGetPargam();
+
+                    //}));
                     foreach (var item in Vision.GetHimageList())
                     {
                         item.Value.ShowImage(true);
                     }
-
                     this.Hide();
+              
+
                 }
                 catch (Exception ex)
                 {
@@ -134,16 +168,15 @@ namespace Vision2.Project
                 }
                 else
                 {
-                    ProjectINI.In.UserName = "";
-                    ProjectINI.In.UserID = "";
+                  
                     //加载程序参数
                     //ErosSocket.ErosConLink.StaticCon.StataRunSocket(Application.StartupPath + "\\Project\\" + ProjectINI.In.ProjectName + "\\" + ProjectINI.In.RunName + "\\Socket");
-                    ProjectINI.ReadPathJsonToCalss<ErosSocket.ErosConLink.DicSocket>(ProjectINI.In.ProjectPathRun + "\\Socket\\SocketLink.socket", out dicSocket);
+                    ProjectINI.ReadPathJsonToCalss<DicSocket>(ProjectINI.In.ProjectPathRun + "\\Socket\\SocketLink.socket", out dicSocket);
                     dss1.label1.Text = "载入链接信息完成.....";
 
                     if (dicSocket == null)
                     {
-                        dicSocket = new ErosSocket.ErosConLink.DicSocket();
+                        dicSocket = new DicSocket();
                     }
                     dicSocket.initialization();
 
@@ -158,7 +191,6 @@ namespace Vision2.Project
 
                     dss1.label1.Text = "载入视觉信息......";
                     Vision.Instance.UpReadThis(ProjectINI.In.ProjectPathRun, Product.ProductionName);
-
                     if (Vision.Instance.RsetPort >= 0)
                     {
                         MainForm1.MainFormF.Hide();
@@ -180,7 +212,6 @@ namespace Vision2.Project
                         debugCalss = new DebugCompiler();
                     }
        
-                    RecipeCompiler.GetUserFormulaContrsl().UPSetGetPargam();
        
                     endt:
                     process = process.ReadThis<ProcessUser>(ProjectINI.In.ProjectPathRun);
@@ -202,11 +233,8 @@ namespace Vision2.Project
                     //toolStripButton.Text = "历史信息";
                     //toolStripButton.Font = new System.Drawing.Font("宋体", 21.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
                     //toolStripButton.ForeColor = System.Drawing.SystemColors.GradientInactiveCaption;
-
                     //toolStripButton.Click += Btn_Massge_Click;
                     //ds.FileToolStripAdd(toolStripButton);
-
-
                     //加载链接状态
                     foreach (var item in StaticCon.SocketClint)
                     {
@@ -272,30 +300,32 @@ namespace Vision2.Project
                             }
                         }
                     }
-
                     if (DebugCompiler.GetThis().Run_Mode == ProjectINI.RunMode.Debug)
                     {
-                        Vision2.ErosProjcetDLL.Project.User.Loge("Eros", "ErosEE1988");
+                       User.Loge("Eros", "ErosEE1988");
                     }
+       
                     //添加运行框
                     //UserInterfaceControl formText = new UserInterfaceControl();
                     //formText.Dock = DockStyle.Top;
                     //MainForm1.MainFormF.u2.Controls.Add(formText);
                     //MainForm1.MainFormF.Up();
-                    debugCalss.SetUesrContrsl(MainForm1.MainFormF.userInterfaceControl1);
+                    debugCalss.initialization();
                 }
-                UserFormulaContrsl.This.tabControl1.TabPages.Remove(UserFormulaContrsl.This.tabPage4);
-                MainForm1.MainFormF.splitContainer3.Panel2Collapsed = false;
-                MainForm1.MainFormF.splitContainer3.Panel2.Controls.Add(AlarmForm.AlarmFormThis);
-                AlarmForm.AlarmFormThis.BringToFront();
-                AlarmForm.AlarmFormThis.Dock = DockStyle.Fill;
-                AlarmForm.AlarmFormThis.FormBorderStyle = FormBorderStyle.None;
-                AlarmForm.AlarmFormThis.TopMost = false;
-                AlarmForm.AlarmFormThis.Show();
+                MainForm1.MainFormF.Invoke(new MethodInvoker(() =>
+                {
+                    RecipeCompiler.GetUserFormulaContrsl().UPSetGetPargam();
+                }));
+                //UserFormulaContrsl.This.tabControl1.TabPages.Remove(UserFormulaContrsl.This.tabPage4);
+                //MainForm1.MainFormF.splitContainer3.Panel2Collapsed = false;
+                AlarmForm.UpDa(Vision2.Project.DebugF.DebugCompiler.GetThis().ErrTextS);
+
                 System.GC.Collect();
                 //form.LoadEnd();
                 //UPForm1_EventShowObj(Vision.Instance.GetRunNameVision());
                 Thread.Sleep(100);
+
+              
                 //this.Hide();
                 this.Cursor = Cursors.Default;
                 //MainForm1.MainFormF.UserControl2.tabControl1.SelectedIndex = 0;

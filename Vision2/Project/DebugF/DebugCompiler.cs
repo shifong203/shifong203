@@ -126,20 +126,18 @@ namespace Vision2.Project.DebugF
         /// 管理控件
         /// </summary>
         /// <param name="formText"></param>
-        public void SetUesrContrsl(UserInterfaceControl formText)
+        public void SetUesrContrsl()
         {
-            textProgram = formText;
+   
             try
             {
-                textProgram.Btn_Start.Enabled = IsConnect;
-                textProgram.Btn_Stop.Enabled = IsConnect;
-                textProgram.Btn_Initialize.Enabled = IsConnect;
-                textProgram.Btn_Pause.Enabled = IsConnect;
-                textProgram.Btn_Reset.Enabled = IsConnect;
 
+                //textProgram.Btn_Start.Enabled = IsConnect;
+                //textProgram.Btn_Stop.Enabled = IsConnect;
+                //textProgram.Btn_Initialize.Enabled = IsConnect;
+                //textProgram.Btn_Pause.Enabled = IsConnect;
+                //textProgram.Btn_Reset.Enabled = IsConnect;
                 PointFile.ReadPoint();
-
-        
                 StartWhil0eRun();
                 thread = new Thread(ThreadRun);
                 thread.IsBackground = true;
@@ -176,6 +174,11 @@ namespace Vision2.Project.DebugF
         [DescriptionAttribute("。"), Category("选项功能"), DisplayName("显示状态")]
         public bool Display_Status { get; set; } = false;
 
+        [DescriptionAttribute("。"), Category("选项功能"), DisplayName("信息窗口位置")]
+        [TypeConverter(typeof(ErosConverter)),
+          ErosConverter.ThisDropDown("", false, "", "主窗口下", "控制栏左", "浮动窗口")]
+        public string ErrTextS { get; set; } = "主窗口下";
+
         [DescriptionAttribute("当设备发生异常时必须初始化设备。"), Category("选项功能"), DisplayName("异常初始化")]
         public bool IsRunStrat { get; set; } = false;
 
@@ -185,7 +188,6 @@ namespace Vision2.Project.DebugF
         [DescriptionAttribute("外部程序Dll。"), Category("外部程序"), DisplayName("加载的DLL地址")]
         public List<DllUers> ListDllPath { get; set; } = new List<DllUers>();
 
-        UserInterfaceControl textProgram;
         //[DescriptionAttribute("控制方式数据。"), Category("控制"), DisplayName("用户控制方式"), Browsable(false)]
         //public UserInterfaceControl.UserInterfaceData Data { get; set; } = new UserInterfaceControl.UserInterfaceData();
 
@@ -255,30 +257,7 @@ namespace Vision2.Project.DebugF
             {
                 for (int i = 0; i < this.DDAxis.AxisS.Count; i++)
                 {
-                    switch (LinkSeelpTyoe)
-                    {
-                        case 0:
-                            DceValue = this.DDAxis.AxisS[i].LowDceValue;
-                            AceValue = this.DDAxis.AxisS[i].LowAceValue;
-                            StrValue = this.DDAxis.AxisS[i].LowStrValue;
-                            MavValue = this.DDAxis.AxisS[i].LowMavValue;
-                            break;
-                        case 1:
-                            DceValue = this.DDAxis.AxisS[i].DceValue;
-                            AceValue = this.DDAxis.AxisS[i].AceValue;
-                            StrValue = this.DDAxis.AxisS[i].StrValue;
-                            MavValue = this.DDAxis.AxisS[i].MavValue;
-                            break;
-                        case 2:
-                            DceValue = this.DDAxis.AxisS[i].HighDceValue;
-                            AceValue = this.DDAxis.AxisS[i].HighAceValue;
-                            StrValue = this.DDAxis.AxisS[i].HighStrValue;
-                            MavValue = this.DDAxis.AxisS[i].HighMavValue;
-                            break;
-                        default:
-                            break;
-                    }
-                    this.DDAxis.AxisS[i].AddSeelp(DceValue, StrValue, MavValue, AceValue);
+                    this.DDAxis.AxisS[i].AddSeelp(LinkSeelpTyoe);
                 }
             }
             catch (Exception)
@@ -421,7 +400,7 @@ namespace Vision2.Project.DebugF
                     Thread.Sleep(200);
                     Product.IsSwitchover = true;
                     RecipeCompiler.GetUserFormulaContrsl().EnabledLog(true);
-                    StaticThis.textProgram.Btn_Start.Enabled = false;
+                    MainForm1.MainFormF.Btn_Start.Enabled = false;
                     StaticCon.SetLinkAddressValue(StaticThis.LinkPause, false);
                     StaticCon.SetLinkAddressValue(StaticThis.LinkConnectName, false);
                     RunUpStatus(StaticThis.LinkStart, false);
@@ -813,30 +792,36 @@ namespace Vision2.Project.DebugF
             }
             return "";
         }
-        public static TrayDataUserControl GetTrayDataUserControl()
-        {
-            if (TrayData == null)
-            {
-                MainForm1.MainFormF.Invoke(new Action(() =>
-                {
-                    TrayData = new TrayDataUserControl();
-                    TrayData.Dock = DockStyle.Fill;
-                    if (MainForm1.MainFormF.tabControl1.TabPages.ContainsKey("托盘状态"))
-                    {
-                    }
-                    else
-                    {
-                        TabPage tabPage = new TabPage();
-                        tabPage.Text = tabPage.Name = "托盘状态";
-                        tabPage.Controls.Add(TrayData);
-                        MainForm1.MainFormF.tabControl1.Controls.Add(tabPage);
-                    }
-                }));
-            }
-            return TrayData;
-        }
+        //public static TrayDataUserControl GetTrayDataUserControl(TrayDataUserControl trayDataUserControl=null)
+        //{
+        //    if (trayDataUserControl!=null)
+        //    {
+        //        TrayData = trayDataUserControl;
+        //    }
+        //    if (TrayData == null)
+        //    {
+        //        TrayData = new TrayDataUserControl();
+        //        TrayData.Dock = DockStyle.Fill;
+        //        //MainForm1.MainFormF.Invoke(new Action(() =>
+        //        //{
+        //        //    TrayData = new TrayDataUserControl();
+        //        //    TrayData.Dock = DockStyle.Fill;
+        //        //    if (MainForm1.MainFormF.tabControl1.TabPages.ContainsKey("托盘状态"))
+        //        //    {
+        //        //    }
+        //        //    else
+        //        //    {
+        //        //        TabPage tabPage = new TabPage();
+        //        //        tabPage.Text = tabPage.Name = "托盘状态";
+        //        //        tabPage.Controls.Add(TrayData);
+        //        //        MainForm1.MainFormF.tabControl1.Controls.Add(tabPage);
+        //        //    }
+        //        //}));
+        //    }
+        //    return TrayData;
+        //}
 
-        static TrayDataUserControl TrayData;
+        //static TrayDataUserControl TrayData;
 
         /// <summary>
         /// 初始化
@@ -1049,7 +1034,8 @@ namespace Vision2.Project.DebugF
                 ErosSocket.DebugPLC.Robot.TrayRobot tray = JsonConvert.DeserializeObject<ErosSocket.DebugPLC.Robot.TrayRobot>(d.Remove(0, 4));
                 if (tray != null)
                 {
-                    DebugF.IO.TrayDataUserControl.SetStaticTray(tray );
+                    //tray.GetITrayRobot()
+                    //DebugF.IO.TrayDataUserControl.SetStaticTray(tray );
                     listTray.Add(tray);
                     SimulateTrayMesForm.ShowMesabe("存在NG请复判!", tray.GetTrayData());
                     listTray.Remove(tray);
@@ -1069,10 +1055,7 @@ namespace Vision2.Project.DebugF
             try
             {
                 string dataStr = socket.GetEncoding().GetString(key);
-                if (true)
-                {
 
-                }
                 DebugData(dataStr);
             }
             catch (Exception ex)
@@ -1080,23 +1063,24 @@ namespace Vision2.Project.DebugF
             }
             return "";
         }
-
+       static ErosSocket.DebugPLC.Robot.TrayData TrayData;
         public static  void DebugData(string dataStr)
         {
             try
             {
                 if (RecipeCompiler.Instance.DataMinCont<dataStr.Length)
                 {
-                    int trayID = 1;
-                    int DataNumber = 0;
+                    double trayID = 1;
+                    double DataNumber = 0;
                     List<string> liastStr = new List<string>();
                     if (dataStr.Contains(";"))
                     {
                         string[] dataVat = dataStr.Trim(';').Split(';');
-                        int.TryParse(dataVat[0], out trayID);
-                        int.TryParse(dataVat[1], out DataNumber);
+                        double.TryParse(dataVat[0].Trim('+').Trim(','), out trayID);
+                        double.TryParse(dataVat[1].Trim('+').Trim(','), out DataNumber);
                         string[] dataStrTd = new string[dataVat.Length - 2];
                         Array.Copy(dataVat, 2, dataStrTd, 0, dataStrTd.Length);
+                        AlarmText.AddTextNewLine("穴位" + trayID + "次数" + DataNumber + "数据长度"+dataStrTd.Length.ToString() );
                         if (DataNumber == 1)
                         {
                             RecipeCompiler.Instance.Data.Clear();
@@ -1116,20 +1100,28 @@ namespace Vision2.Project.DebugF
                         liastStr.AddRange(dataStr.Trim(',').Split(','));
                         if (liastStr.Count == 1)
                         {
-                            TrayData.SetValue(double.Parse(liastStr[0]));
+                            if (RecipeCompiler.Instance.TrayCont>=0)
+                            {
+                                DebugCompiler.GetTray(RecipeCompiler.Instance.TrayCont).GetITrayRobot().SetValue(double.Parse(liastStr[0]));
+                            }
                         }
                         else if (liastStr.Count >= 1)
                         {
-                            TrayData.SetValue(liastStr);
+                            if (RecipeCompiler.Instance.TrayCont >= 0)
+                            {
+                                //DebugCompiler.GetTray(RecipeCompiler.Instance.TrayCont).GetITrayRobot().SetValue(liastStr);
+                            }
                         }
                     }
                     if (DataNumber == RecipeCompiler.Instance.DataNumber)
                     {
-                        TrayDataUserControl.GetTray().GetTrayData().SetNumberValue(RecipeCompiler.Instance.Data.ListDatV, trayID);
+                        if (RecipeCompiler.Instance.TrayCont >= 0)
+                        {
+                            DebugCompiler.GetThis().DDAxis.GetTrayInxt(RecipeCompiler.Instance.TrayCont).GetTrayData().SetNumberValue(RecipeCompiler.Instance.Data.ListDatV, (int)trayID);
+                            //DebugCompiler.GetTray(RecipeCompiler.Instance.TrayCont).GetTrayData().SetNumberValue(RecipeCompiler.Instance.Data.ListDatV, (int)trayID);
+                        }
                     }
-
                 }
-
             }
             catch (Exception ex)
             {
@@ -1298,7 +1290,7 @@ namespace Vision2.Project.DebugF
                         {
                             MainForm1.MainFormF.Invoke(new Action(() =>
                             {
-                                UserInterfaceControl.This.labelStat.Text = EquipmentStatus.ToString();
+                                MainForm1.MainFormF.labelStat1.Text = EquipmentStatus.ToString();
                             }));
                         }
                         string dsa = StaticCon.GetLingkNameValueString(StaticThis.LinkPauseName);
@@ -1309,8 +1301,10 @@ namespace Vision2.Project.DebugF
                             DODI.WritDO(RunButton.RunButtenS, false);
                             isPatime = dsa;
                             EquipmentStatus = EnumEquipmentStatus.暂停中;
-                            StaticThis.textProgram.Btn_Start.Text = "继续";
-                            StaticThis.textProgram.Btn_Debug.Enabled = StaticThis.textProgram.Btn_Start.Enabled = true;
+     
+                            MainForm1.MainFormF.Btn_Start.Text = "继续";
+                            MainForm1.MainFormF.Btn_Debug.Enabled =
+                            MainForm1.MainFormF.Btn_Start.Enabled = true;
                         }
                         else
                         {
@@ -1333,27 +1327,27 @@ namespace Vision2.Project.DebugF
                             {
                                 if (EquipmentStatus == EnumEquipmentStatus.初始化完成)
                                 {
-                                    StaticThis.textProgram.Btn_Debug.Enabled =
-                            StaticThis.textProgram.Btn_Initialize.Enabled =
-                            StaticThis.textProgram.Btn_Start.Enabled = true;
-                                    StaticThis.textProgram.Btn_Start.Text = "启动";
+                                    MainForm1.MainFormF.Btn_Debug.Enabled =
+                              MainForm1.MainFormF.Btn_Initialize.Enabled =
+                               MainForm1.MainFormF.Btn_Start.Enabled = true;
+                                    MainForm1.MainFormF.Btn_Start.Text = "启动";
                                     Product.IsSwitchover = true;
                                     RecipeCompiler.GetUserFormulaContrsl().EnabledLog(true);
                                 }
                                 else if (EquipmentStatus != EnumEquipmentStatus.初始化中)
                                 {
-                                    StaticThis.textProgram.Btn_Start.Text = "启动";
+                                    MainForm1.MainFormF.Btn_Start.Text = "启动";
                                     Product.IsSwitchover = false;
                                     RecipeCompiler.GetUserFormulaContrsl().EnabledLog(true);
                                     Stoping = false;
                                 }
                                 else if (EquipmentStatus == EnumEquipmentStatus.初始化中)
                                 {
-                                    StaticThis.textProgram.Btn_Start.Text = "启动";
+                                    MainForm1.MainFormF.Btn_Start.Text = "启动";
                                     Product.IsSwitchover = false;
                                     RecipeCompiler.GetUserFormulaContrsl().EnabledLog(false);
                                     Stoping = false;
-                                    StaticThis.textProgram.Btn_Start.Enabled = false;
+                                    MainForm1.MainFormF.Btn_Start.Enabled = false;
                                 }
                             }
                         }
@@ -1369,10 +1363,11 @@ namespace Vision2.Project.DebugF
                                 DODI.WritDO(RunButton.RunButtenS, true);
                                 DODI.WritDO(RunButton.StopButtenS, false);
                             }
-                            StaticThis.textProgram.Btn_Start.Text = "启动";
-                            StaticThis.textProgram.Btn_Debug.Enabled =
-                           StaticThis.textProgram.Btn_Initialize.Enabled =
-                           StaticThis.textProgram.Btn_Start.Enabled = false;
+                            MainForm1.MainFormF.Btn_Start.Text = "启动";
+                            MainForm1.MainFormF.Btn_Debug.Enabled =
+                            MainForm1.MainFormF.Btn_Initialize.Enabled =
+                             MainForm1.MainFormF.Btn_Start.Enabled = false;
+                            MainForm1.MainFormF.Btn_Pause.Enabled = true;
                             if (run_Project.Pauseing)
                             {
                                 run_Project.Cont();
@@ -1387,38 +1382,38 @@ namespace Vision2.Project.DebugF
                                 DODI.WritDO(RunButton.RunButtenS, false);
                                 DODI.WritDO(RunButton.StopButtenS, true);
                             }
-                            StaticThis.textProgram.Btn_Start.Enabled =
-                             StaticThis.textProgram.Btn_Debug.Enabled =
-                            StaticThis.textProgram.Btn_Initialize.Enabled = true;
+                            MainForm1.MainFormF.Btn_Start.Enabled =
+                             MainForm1.MainFormF.Btn_Debug.Enabled =
+                             MainForm1.MainFormF.Btn_Initialize.Enabled = true;
 
                         }
                         else if (EquipmentStatus == EnumEquipmentStatus.暂停中)
                         {
                             run_Project.Pause();
-                            StaticThis.textProgram.Btn_Start.Enabled = true;
-                            StaticThis.textProgram.Btn_Start.Text = "继续";
+                            MainForm1.MainFormF.Btn_Start.Enabled = true;
+                            MainForm1.MainFormF.Btn_Start.Text = "继续";
                         }
                         dsa = StaticCon.GetLingkNameValueString(StaticThis.LinkAlarmName);
                         if (dsa == true.ToString())
                         {
-                            textProgram.labelAram.Text = "故障";
+                            //textProgram.labelAram.Text = "故障";
                             IsAlarm = true;
-                            textProgram.labelAram.BackColor = System.Drawing.Color.Red;
+                            //textProgram.labelAram.BackColor = System.Drawing.Color.Red;
                         }
                         else
                         {
                             IsAlarm = false;
-                            textProgram.labelAram.Text = "正常";
-                            textProgram.labelAram.BackColor = System.Drawing.Color.Green;
+                            //textProgram.labelAram.Text = "正常";
+                            //textProgram.labelAram.BackColor = System.Drawing.Color.Green;
                         }
-                        if (this.LinkPause == "")
-                        {
-                            textProgram.Btn_Pause.Enabled = false;
-                        }
-                        else
-                        {
-                            textProgram.Btn_Pause.Enabled = true;
-                        }
+                        //if (this.LinkPause == "")
+                        //{
+                        //    MainForm1.MainFormF.Btn_Pause.Enabled = false;
+                        //}
+                        //else
+                        //{
+                        //    MainForm1.MainFormF.Btn_Pause.Enabled = true;
+                        //}
                         if (EquipmentStatus == EnumEquipmentStatus.暂停中)
                         {
                             run_Project.Pause();
@@ -1504,6 +1499,34 @@ namespace Vision2.Project.DebugF
         public Control GetThisControl()
         {
             return new CommandControl1(this);
+        }
+
+        public override void initialization()
+        {
+
+            try
+            {
+
+                //textProgram.Btn_Start.Enabled = IsConnect;
+                //textProgram.Btn_Stop.Enabled = IsConnect;
+                //textProgram.Btn_Initialize.Enabled = IsConnect;
+                //textProgram.Btn_Pause.Enabled = IsConnect;
+                //textProgram.Btn_Reset.Enabled = IsConnect;
+                PointFile.ReadPoint();
+                StartWhil0eRun();
+                thread = new Thread(ThreadRun);
+                thread.IsBackground = true;
+                thread.Start();
+                thread = new Thread(RunTime);
+                thread.IsBackground = true;
+                thread.Start();
+                thread = new Thread(RunBtuun);
+                thread.IsBackground = true;
+                thread.Start();
+            }
+            catch (Exception ex)
+            {
+            }
         }
         #endregion
     }

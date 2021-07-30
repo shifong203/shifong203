@@ -46,32 +46,55 @@ namespace Vision2.vision
         //public HObject image;
         public string Mesgage;
 
-        public HWindowControl GetHWindowControl()
+        public HWindow GetHWindowControl()
         {
-            return hWindowControl1;
+            return hWindow;
         }
 
-        public void Initialize(HWindowControl hWindowControl)
+        //HWindowControl hWindowControl1;
+        HWindow hWindow;
+        //public void Initialize(HWindowControl hWindowControl)
+        //{
+        //    //hWindowControl1 = hWindowControl;
+        //    //try
+        //    //{
+        //    //    HOperatorSet.SetDraw(hWindowControl.HalconWindow, "margin");
+        //    //    HOperatorSet.SetLineWidth(hWindow, Vision.Instance.LineWidth);
+        //    //    //HOperatorSet.QueryFont(hWindow, out HTuple font);
+        //    //    Vision.SetFont(hWindow);
+        //    //}
+        //    //catch (Exception)
+        //    //{   }
+        //    //hWindowControl.HMouseUp += hWindowControl1_HMouseUp;
+        //    //hWindowControl1.HMouseDown += hWindowControl1_MouseDown;
+        //    //hWindowControl1.HMouseWheel += hWindowControl2_HMouseWheel;
+        //    //hWindowControl1.HMouseMove += hWindowControl4_HMouseMove;
+        //    //hWindowControl1.KeyDown += HWindowControl1_KeyDown; ;
+        //    //hWindowControl1.KeyUp += HWindowControl1_KeyUp;
+        //}
+        public void Initialize(HWindowControl hSmartWindowCont)
         {
-            hWindowControl1 = hWindowControl;
+            hWindow = hSmartWindowCont.HalconWindow;
+            hSmartWindowControl = hSmartWindowCont;
             try
             {
-                HOperatorSet.SetDraw(hWindowControl.HalconWindow, "margin");
-                HOperatorSet.SetLineWidth(hWindowControl1.HalconWindow, Vision.Instance.LineWidth);
-                //HOperatorSet.QueryFont(hWindowControl1.HalconWindow, out HTuple font);
-                Vision.SetFont(hWindowControl1.HalconWindow);
-
+                HOperatorSet.SetDraw(hWindow, "margin");
+                HOperatorSet.SetLineWidth(hWindow, Vision.Instance.LineWidth);
+                //HOperatorSet.QueryFont(hWindow, out HTuple font);
+                Vision.SetFont(hWindow);
             }
             catch (Exception)
-            {
-            }
-            hWindowControl.HMouseUp += hWindowControl1_HMouseUp;
-            hWindowControl1.HMouseDown += hWindowControl1_MouseDown;
-            hWindowControl1.HMouseWheel += hWindowControl2_HMouseWheel;
-            hWindowControl1.HMouseMove += hWindowControl4_HMouseMove;
-            hWindowControl1.KeyDown += HWindowControl1_KeyDown; ;
-            hWindowControl1.KeyUp += HWindowControl1_KeyUp;
+            { }
+            hSmartWindowControl.HMouseUp += hWindowControl1_HMouseUp;
+            hSmartWindowControl.HMouseDown += hWindowControl1_MouseDown;
+            hSmartWindowControl.HMouseWheel += hWindowControl2_HMouseWheel;
+            hSmartWindowControl.HMouseMove += hWindowControl4_HMouseMove;
+            hSmartWindowControl.KeyDown += HWindowControl1_KeyDown; ;
+            hSmartWindowControl.KeyUp += HWindowControl1_KeyUp;
         }
+
+        HWindowControl hSmartWindowControl;
+
 
         public void SetDraw(bool isMargin)
         {
@@ -79,11 +102,11 @@ namespace Vision2.vision
             {
                 if (!isMargin)
                 {
-                    HOperatorSet.SetDraw(hWindowControl1.HalconWindow, "margin");
+                    HOperatorSet.SetDraw(hWindow, "margin");
                 }
                 else
                 {
-                    HOperatorSet.SetDraw(hWindowControl1.HalconWindow, "fill");
+                    HOperatorSet.SetDraw(hWindow, "fill");
                 }
             }
             catch (Exception)
@@ -94,7 +117,7 @@ namespace Vision2.vision
         {
             try
             {
-                HOperatorSet.SetPart(hWindowControl1.HalconWindow, rowStrat, colStrat, rowEnd, colEnd);
+                HOperatorSet.SetPart(hWindow, rowStrat, colStrat, rowEnd, colEnd);
             }
             catch (Exception)
             {
@@ -108,7 +131,7 @@ namespace Vision2.vision
                 ImageColStrat = colStrat;
                 HeigthImage = rowEnd;
                 WidthImage = colEnd;
-                HOperatorSet.SetPart(hWindowControl1.HalconWindow, ImageRowStrat, ImageColStrat, HeigthImage, WidthImage);
+                HOperatorSet.SetPart(hWindow, ImageRowStrat, ImageColStrat, HeigthImage, WidthImage);
             }
             catch (Exception)
             {
@@ -145,7 +168,7 @@ namespace Vision2.vision
                     foreach (var item in OneResIamge.GetKeyHobj())
                     {
                         HOperatorSet.AreaCenter(item.Value.Object, out HTuple area, out HTuple row, out HTuple col);
-                        HOperatorSet.DispText(this.hWindowControl1.HalconWindow, 
+                        HOperatorSet.DispText(this.hWindow, 
                            item.Key,"image", row, col , "black", new HTuple(), new HTuple());
                     }
                 }
@@ -155,7 +178,6 @@ namespace Vision2.vision
             }
         }
 
-        HWindowControl hWindowControl1;
         private void hWindowControl1_HMouseUp(object sender, HMouseEventArgs e)
         {
             meuseBool = false;
@@ -166,7 +188,7 @@ namespace Vision2.vision
             {
                 if (e.Button == MouseButtons.Right)
                 {
-                    HOperatorSet.SetPart(hWindowControl1.HalconWindow, ImageRowStrat, ImageColStrat, HeigthImage, WidthImage);
+                    HOperatorSet.SetPart(hWindow, ImageRowStrat, ImageColStrat, HeigthImage, WidthImage);
                     ShowImage();
                 }
                 else if (e.Button == MouseButtons.Left)
@@ -227,23 +249,25 @@ namespace Vision2.vision
                             m_ImageRow1 = WidthImage;
                             m_ImageCol1 = HeigthImage;
                         }
-                        System.Drawing.Rectangle rect2 = hWindowControl1.ImagePart;
+                    
+                        System.Drawing.Rectangle rect2 = hSmartWindowControl.ImagePart;
                         HTuple row = rect2.Y + -motionY;
                         HTuple colum = rect2.X + -motionX;
                         rect2.X = (int)Math.Round(colum.D);
                         rect2.Y = (int)Math.Round(row.D);
-                        hWindowControl1.ImagePart = rect2;
+                        hSmartWindowControl.ImagePart = rect2;
                         stratX = e.X - motionX;
                         stratY = e.Y - motionY;
                     }
-
                 }
                 ShowImage();
                 string data = "C:" + e.X.ToString("0.0") + "R:" + e.Y.ToString("0.0");
                 if (Vision.GetRunNameVision()!=null)
                 {
                     Vision.GetRunNameVision().GetCalib().GetPointRctoXY(e.Y, e.X, out HTuple ys, out HTuple xs);
-                    Vision.Disp_message(hWindowControl1.HalconWindow, "X:" + xs.TupleString("0.02f") + "Y:" + ys.TupleString("0.02f"), 5, hWindowControl1.Width / 4, true, "red", "false");
+                    Vision.Disp_message(hWindow, "X:" + xs.TupleString("0.02f") + 
+                        "Y:" + ys.TupleString("0.02f"), 5,
+                        hSmartWindowControl.Width / 4, true, "red", "false");
                 }
                 try
                 {
@@ -261,7 +285,7 @@ namespace Vision2.vision
                 {
                 }
              
-                Vision.Disp_message(hWindowControl1.HalconWindow, data, hWindowControl1.Height - 25, hWindowControl1.Width / 4, true, "red", "false");
+                Vision.Disp_message(hWindow, data, hSmartWindowControl.Height - 25, hSmartWindowControl.Width / 4, true, "red", "false");
             }
             catch (Exception)
             {
@@ -275,12 +299,12 @@ namespace Vision2.vision
                 {
                     return;
                 }
-                System.Drawing.Rectangle rect2 = hWindowControl1.ImagePart;
+                System.Drawing.Rectangle rect2 = hSmartWindowControl.ImagePart;
                 m_ImageCol0 = rect2.X;
                 m_ImageRow0 = rect2.Y;
                 m_ImageCol1 = rect2.X + rect2.Width;
                 m_ImageRow1 = rect2.Y + rect2.Height;
-                HOperatorSet.GetMposition(hWindowControl1.HalconWindow, out ptY, out ptX, out hv_Button);
+                HOperatorSet.GetMposition(hWindow, out ptY, out ptX, out hv_Button);
                 if (m_ImageRow1 == null)
                 {
                     m_ImageRow1 = WidthImage;
@@ -324,7 +348,7 @@ namespace Vision2.vision
                         m_ImageCol1 = Col1_1;
                     }
                 }
-                HOperatorSet.SetPart(hWindowControl1.HalconWindow, m_ImageRow0, m_ImageCol0, m_ImageRow1, m_ImageCol1);
+                HOperatorSet.SetPart(hWindow, m_ImageRow0, m_ImageCol0, m_ImageRow1, m_ImageCol1);
                 ShowImage();
             }
             catch (Exception es)
@@ -349,8 +373,9 @@ namespace Vision2.vision
                     WidthImage = wi;
                     HeigthImage = heit;
                 }
-                hWindowControl1.HalconWindow.SetPart(ImageRowStrat, ImageColStrat, HeigthImage, WidthImage);
-                hWindowControl1.HalconWindow.DispObj(OneResIamge.Image);
+
+                hWindow.SetPart(ImageRowStrat, ImageColStrat, HeigthImage, WidthImage);
+                hWindow.DispObj(OneResIamge.Image);
             }
             catch (Exception ex)
             {
@@ -371,7 +396,11 @@ namespace Vision2.vision
         {
             try
             {
-                OneResIamge.ShowAll(hWindowControl1.HalconWindow);
+                if (hWindow!=null)
+                {
+                    OneResIamge.ShowAll(hWindow);
+                }
+       
             }
             catch (Exception)
             {
@@ -381,7 +410,7 @@ namespace Vision2.vision
         {
             try
             {
-                OneResIamge.ShowAll(hWindowControl1.HalconWindow);
+                OneResIamge.ShowAll(hWindow);
 
             }
             catch (Exception)
@@ -397,7 +426,7 @@ namespace Vision2.vision
         {
             try
             {
-                hWindowControl1.Focus();
+                hSmartWindowControl.Focus();
             }
             catch (Exception)
             {
@@ -406,7 +435,7 @@ namespace Vision2.vision
 
         public HTuple hWindowHalcon(HTuple hawid = null)
         {
-           return this.hWindowControl1.HalconWindow;
+           return this.hWindow;
         }
 
         public HObject Image(HObject hObject = null)

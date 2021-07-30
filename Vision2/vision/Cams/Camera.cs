@@ -3,6 +3,8 @@ using HalconDotNet;
 using System;
 using System.ComponentModel;
 using System.Drawing.Design;
+using System.Runtime.InteropServices;
+using ThridLibray;
 using Vision2.vision.HalconRunFile.RunProgramFile;
 
 namespace Vision2.vision.Cams
@@ -26,7 +28,9 @@ namespace Vision2.vision.Cams
     {
 
         protected string name = "";
-        protected int expoursetime = 1000;
+
+ 
+
         protected string serialnum = "";
 
         public EnumCameraType cameratype = EnumCameraType.Dahua;
@@ -63,11 +67,13 @@ namespace Vision2.vision.Cams
         /// 
         /// </summary>
         public virtual bool IsCamConnected { get { return iscamconnected; } set { iscamconnected = value; } }
-        [Description("曝光时间微秒"), Category("图像属性"), DisplayName("曝光时间")]
+        [Description("曝光时间微秒"), Category("采图属性"), DisplayName("曝光时间")]
         /// <summary>
         /// 曝光时间
         /// </summary>
-        public virtual int ExposureTime { get { return expoursetime; } set { expoursetime = value; } }
+        public virtual double ExposureTime { get { return expoursetime; } set { expoursetime = value; } }
+        protected double expoursetime = 1000;
+
         [Description("相机类型"), Category("硬件属性"), DisplayName("相机类型")]
         public string Cameratype
         {
@@ -87,10 +93,20 @@ namespace Vision2.vision.Cams
                 }
             }
         }
-        [Description("增益"), Category("图像属性"), DisplayName("增益")]
-        public virtual int Gain
+        [Description("增益"), Category("采图属性"), DisplayName("增益")]
+        public virtual double Gain
         { get { return gain; } set { gain = value; } }
-        protected int gain = 1;
+        protected double gain = 1;
+
+        [DescriptionAttribute("是否纠正图像"), Category("采图属性"), DisplayName("纠正图像")]
+        public virtual double Gamma { get; set; }
+        protected double gamma = 0.4;
+
+        [Description("图像类型黑白或彩色"), Category("采图属性"), DisplayName("图像类型")]
+        [TypeConverter(typeof(Vision2.ErosProjcetDLL.UI.PropertyGrid.ErosConverter)),
+            Vision2.ErosProjcetDLL.UI.PropertyGrid.ErosConverter.ThisDropDown("", true, "Mono8", "BayerRG8")]
+        public string CameraImageFormat { get; set; } = "BayerRG8";
+
         public string Key { get; set; }
         [Description("相机与PC接口IP"), Category("Net"), DisplayName("本地IP")]
         public virtual string IntIP { get; set; }
@@ -103,16 +119,15 @@ namespace Vision2.vision.Cams
         public int RunID { get; set; }
 
         public long RunTime { get; set; }
-
+        [Description("像素与MM转换比例"), Category("像素转换"), DisplayName("像素转换比例")]
         public double CaliConst { get; set; } = 1;
+
         public int MaxNumbe { get; set; }
+        [Description(""), Category("采图属性"), DisplayName("宽度")]
         public int Width { get; set; }
+        [Description(""), Category("采图属性"), DisplayName("高度")]
         public int Height { get; set; }
 
-        [Description("图像类型黑白或彩色"), Category("图像属性"), DisplayName("图像类型")]
-        [TypeConverter(typeof(Vision2.ErosProjcetDLL.UI.PropertyGrid.ErosConverter)),
-            Vision2.ErosProjcetDLL.UI.PropertyGrid.ErosConverter.ThisDropDown("", true, "Mono8", "BayerRG8")]
-        public string CameraImageFormat { get; set; } = "BayerRG8";
 
         [DescriptionAttribute("灯光输出。"), Category("触发器"), DisplayName("灯光输出名称")]
         [Editor(typeof(LinkNameAddreControl.Editor), typeof(UITypeEditor))]
@@ -122,7 +137,7 @@ namespace Vision2.vision.Cams
         [Editor(typeof(LinkNameAddreControl.Editor), typeof(UITypeEditor))]
         public int FlashLampTime { get; set; } = 100;
 
-        [Description("镜像角度,row上翻转，diagonal对角斜线翻转，column左右翻转，None无翻转"), Category("图像属性"),
+        [Description("镜像角度,row上翻转，diagonal对角斜线翻转，column左右翻转，None无翻转"), Category("采图属性"),
         DisplayName("镜像角度"), TypeConverter(typeof(Vision2.ErosProjcetDLL.UI.PropertyGrid.ErosConverter)),
         Vision2.ErosProjcetDLL.UI.PropertyGrid.ErosConverter.ThisDropDown("", true, "row", "diagonal", "column", "None")]
         public string RotateTypeStr { get; set; } = "None";
@@ -167,10 +182,10 @@ namespace Vision2.vision.Cams
         public double Sy { get; set; }
         [DescriptionAttribute("像元Sx。"), Category("内参"), DisplayName("像元Sx")]
         public double Sx { get; set; }
+
         public HObject Map { get; set; }
         [DescriptionAttribute("是否纠正图像"), Category("标定"), DisplayName("纠正图像")]
         public bool ISMap { get; set; }
-
 
 
         public virtual void OpenCam()
@@ -246,10 +261,68 @@ namespace Vision2.vision.Cams
             this.Swtr.Invoke(key, iamge, runid, true);
         }
 
-        public virtual void SetExposureTime(int VALUE)
+        public virtual void SetExposureTime(double VALUE)
         {
 
         }
-   
+
+        public  virtual   bool GetImage(out IGrabbedRawData image)
+        {
+            image = null;
+            return false;
+        }
+
+        public virtual HObject IGrabbedRawDataTOImage(IGrabbedRawData frame)
+        {
+            HObject ho_image2 = new HObject();
+            if (CameraImageFormat == "Mono8")
+            {
+                int nRGB = RGBFactory.EncodeLen(frame.Width, frame.Height, false);
+                IntPtr pData = Marshal.AllocHGlobal(nRGB);
+                Marshal.Copy(frame.Image, 0, pData, frame.ImageSize);
+                HOperatorSet.GenImage1Extern(out ho_image2, "byte", frame.Width, frame.Height, (HTuple)pData, 0);
+                Marshal.FreeHGlobal(pData);
+            }
+            //彩色图像
+            else
+            {
+                int nRGB = RGBFactory.EncodeLen(frame.Width, frame.Height, true);
+                IntPtr pData = Marshal.AllocHGlobal(nRGB);
+                RGBFactory.ToRGB(frame.Image, frame.Width, frame.Height, true, frame.PixelFmt, pData, nRGB);
+                HOperatorSet.GenImageInterleaved(out ho_image2, (HTuple)pData, "bgr", frame.Width, frame.Height, 0, "byte", frame.Width, frame.Height, 0, 0, 8, 0);
+                Marshal.FreeHGlobal(pData);
+            }
+            if (RotateTypeStr != "None")
+            {
+                HOperatorSet.MirrorImage(ho_image2, out ho_image2, RotateTypeStr);
+            }
+            //frame.Dispose();
+            return ho_image2;
+        }
+    }
+
+
+    public class CamData
+    {
+        [Description("增益"), Category("采图属性"), DisplayName("增益")]
+        public virtual double Gain
+        { get { return gain; } set { gain = value; } }
+        protected double gain = 1;
+
+        [Description("曝光时间微秒"), Category("采图属性"), DisplayName("曝光时间")]
+        /// <summary>
+        /// 曝光时间
+        /// </summary>
+        public virtual double ExposureTime { get { return expoursetime; }
+            set { expoursetime = value; } }
+        protected double expoursetime = 1000;
+
+        [DescriptionAttribute("伽马"), Category("采图属性"), DisplayName("伽马")]
+        public double Gamma { get { return gamma; } set { gamma = value; } }
+        protected double gamma = 1;
+
+        [DescriptionAttribute("光源配置"), Category("采图属性"), DisplayName("光源配置")]
+        public string Light_Source { get; set; } ="";
+
     }
 }

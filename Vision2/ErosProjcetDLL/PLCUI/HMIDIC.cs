@@ -87,7 +87,7 @@ namespace Vision2.ErosProjcetDLL.PLCUI
             {
                 item.Value.initialization();
             }
-            base.initialization();
+            //base.initialization();
         }
 
         /// <summary>

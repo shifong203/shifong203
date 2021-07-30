@@ -69,7 +69,8 @@ namespace Vision2.vision.Cams
         {
             cameratype = EnumCameraType.Dahua;
         }
-        [Description("Off关闭,Once 一次,Continuous 自动"), Category("图像属性"), DisplayName("白平衡"),
+
+        [Description("Off关闭,Once 一次,Continuous 自动"), Category("采图属性"), DisplayName("白平衡"),
         TypeConverter(typeof(ErosConverter)), ErosConverter.ThisDropDownAttribute("", false, "Off", "Once", "Continuous")]
         public string BalanceWhiteAuto
         {
@@ -112,7 +113,10 @@ namespace Vision2.vision.Cams
             {
                 try
                 {
-
+                    if (balanceWhiteAuto==value)
+                    {
+                        return;
+                    }
                     balanceWhiteAuto = value;
                     if (IsCamConnected)
                     {
@@ -130,11 +134,11 @@ namespace Vision2.vision.Cams
             }
         }
         string balanceWhiteAuto = "Off";
-        [Description("彩色通道"), Category("图像属性"), DisplayName("红色")]
+        [Description("彩色通道"), Category("采图属性"), DisplayName("红色")]
         public double Red { get; set; }
-        [Description("彩色通道"), Category("图像属性"), DisplayName("蓝色")]
+        [Description("彩色通道"), Category("采图属性"), DisplayName("蓝色")]
         public double Blue { get; set; }
-        [Description("彩色通道"), Category("图像属性"), DisplayName("绿色")]
+        [Description("彩色通道"), Category("采图属性"), DisplayName("绿色")]
         public double Green { get; set; }
         public override string IP
         {
@@ -144,7 +148,7 @@ namespace Vision2.vision.Cams
         /// <summary>
         /// 相机曝光时间
         /// </summary>
-        public override int ExposureTime
+        public override double ExposureTime
         {
             get
             {
@@ -152,6 +156,10 @@ namespace Vision2.vision.Cams
             }
             set
             {
+                if ( expoursetime== value)
+                {
+                    return;
+                }
                 if (IsCamConnected)
                 {
                     using (IFloatParameter p = dahuaCam.ParameterCollection[ParametrizeNameSet.ExposureTime])
@@ -163,7 +171,27 @@ namespace Vision2.vision.Cams
             }
         }
 
-        public override int Gain
+
+        public override double Gamma 
+        { get => base.Gamma;
+            set
+            {
+                if (gamma == value)
+                {
+                    return;
+                }
+                if (IsCamConnected)
+                {
+                    using (IFloatParameter p = dahuaCam.ParameterCollection[ParametrizeNameSet.Gamma])
+                    {
+                        p.SetValue(value);
+                    }
+                }
+                gamma = value;
+            }
+        }
+
+        public override double Gain
         {
             get
             {
@@ -171,6 +199,10 @@ namespace Vision2.vision.Cams
             }
             set
             {
+                if (gain == value)
+                {
+                    return;
+                }
                 if (IsCamConnected)
                 {
                     using (IFloatParameter p = dahuaCam.ParameterCollection[ParametrizeNameSet.GainRaw])
@@ -336,7 +368,7 @@ namespace Vision2.vision.Cams
             {
 
                 Vision.TriggerSetup(this.FlashLampName, true.ToString());
-                if (FlashLampName != "")
+                if (FlashLampName!=null&&  FlashLampName != "")
                 {
                     Thread.Sleep(FlashLampTime);
                 }
@@ -420,6 +452,74 @@ namespace Vision2.vision.Cams
                 return ho_image2;
             }
         }
+
+        public override bool GetImage(out IGrabbedRawData image)
+        {
+            image = null;
+            Watch.Restart();
+            if (!this.Grabbing)
+            {
+
+                Vision.TriggerSetup(this.FlashLampName, true.ToString());
+                if (FlashLampName != null && FlashLampName != "")
+                {
+                    Thread.Sleep(FlashLampTime);
+                }
+            }
+            lock (this)
+            {
+                int err = 0;
+                HObject ho_image2 = new HObject();
+                ho_image2.GenEmptyObj();
+            ST:
+                if (dahuaCam != null)
+                {
+                    if (!dahuaCam.IsOpen)
+                    {
+                        AlarmText.AddTextNewLine(this.name + "短线重连");
+                        OpenCam();
+                    }
+                    try
+                    {
+                        IFrameRawData frame;//IGrabbedRawData frame;
+                        if (ID.Contains("SONY"))
+                        {
+                            dahuaCam.TriggerSet.ExecuteSoftwareTrigger();
+                            dahuaCam.TriggerSet.Start();
+                        }
+                        if (dahuaCam.WaitForFrameTriggerReady(out frame, 1000))
+                        {
+                            image = frame.GrabResult.Clone();
+                            frame.Dispose();
+                            Watch.Stop();
+                            RunTime = Watch.ElapsedMilliseconds;
+                            return true;
+                        }
+                        else
+                        {
+                            CloseCam();
+                            OpenCam();
+                            err++;
+                            AlarmText.AddTextNewLine("采图失败");
+                            if (err < 3)
+                            {
+                                goto ST;
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        AlarmText.AddTextNewLine("采图错误" + ex.Message);
+                        throw ex;
+                    }
+                }
+                else
+                {
+                    AlarmText.AddTextNewLine("程序未关联相机" + this.name);
+                }
+                return false;
+            }
+        }
         public override void Straing(HalconRun halconRun)
         {
 
@@ -490,7 +590,7 @@ namespace Vision2.vision.Cams
             return false;
         }
 
-        public override void SetExposureTime(int VALUE)
+        public override void SetExposureTime(double VALUE)
         {
             if (IsCamConnected)
             {

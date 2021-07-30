@@ -28,6 +28,7 @@ namespace Vision2.ErosProjcetDLL.UI.DataGridViewF
         {
             dropDownStyle = ComboBoxStyle.DropDownList;
         }
+
     }
     /// <summary>
     /// 自定义可编辑下拉框单元
@@ -93,7 +94,9 @@ namespace Vision2.ErosProjcetDLL.UI.DataGridViewF
         }
     }
 
-
+    /// <summary>
+    /// 
+    /// </summary>
     public class DataGridViewComboEditBoxColumn : DataGridViewComboBoxColumn
     {
 

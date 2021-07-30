@@ -12,8 +12,11 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
     public class MassageText
     {
         public List<HTuple> Rows = new List<HTuple>();
+
         public List<HTuple> Columns = new List<HTuple>();
+
         public List<HTuple> Massage = new List<HTuple>();
+
         public string MassageBlute = "false";
 
         public string color = "red";
@@ -77,6 +80,8 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         public bool OK;
 
         public bool Done;
+
+        public string RunName = "";
         /// <summary>
         /// 元件名称
         /// </summary>

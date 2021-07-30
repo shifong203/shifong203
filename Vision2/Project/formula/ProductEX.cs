@@ -3,9 +3,13 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using Vision2.Project.DebugF.IO;
+using Vision2.vision.Cams;
 
 namespace Vision2.Project.formula
 {
+    /// <summary>
+    /// 产品类
+    /// </summary>
     public class ProductEX
     {
 
@@ -41,6 +45,10 @@ namespace Vision2.Project.formula
         /// </summary>
         public int ProductNumber { get; set; } = 1;
 
+
+        public List<LightSource.LightSourceData> lightSourceDatas { get; set; } 
+            = new List<LightSource.LightSourceData>();
+
         /// <summary>
         /// 附加测试参数
         /// </summary>
@@ -51,7 +59,10 @@ namespace Vision2.Project.formula
         /// </summary>
         public List<XYZPoint> DPoint { get; set; } = new List<XYZPoint>();
 
-
+        /// <summary>
+        /// 获取点位名称
+        /// </summary>
+        /// <returns></returns>
         public List<string> GetPointNames()
         {
             List<string> vs = new List<string>();
@@ -61,6 +72,11 @@ namespace Vision2.Project.formula
             }
             return vs;
         }
+        /// <summary>
+        /// 根据点位名称获取点
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
         public XYZPoint GetPoint(string name)
         {
 
@@ -73,6 +89,11 @@ namespace Vision2.Project.formula
             }
             return null;
         }
+        /// <summary>
+        /// 获取点位序号
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
         public int GetPointIntdx(string name)
         {
             ;
@@ -85,13 +106,12 @@ namespace Vision2.Project.formula
             }
             return -1;
         }
-
+        /// <summary>
+        /// 轨迹
+        /// </summary>
         public Relatively Relativel { get; set; } = new Relatively();
 
-        ///// <summary>
-        ///// 轨迹点
-        ///// </summary>
-        //public List<XYZPoint> RelativelyPoint { get; set; } = new List<XYZPoint>();
+        
 
 
         /// <summary>
@@ -157,7 +177,7 @@ namespace Vision2.Project.formula
         }
 
         /// <summary>
-        /// 轨迹
+        /// 轨迹流程
         /// </summary>
         public class Relatively
         {
@@ -183,7 +203,9 @@ namespace Vision2.Project.formula
             /// 轨迹流程
             /// </summary>
             public List<List<PointType>> ListListPointName { get; set; } = new List<List<PointType>>();
-
+            /// <summary>
+            /// 轨迹ID
+            /// </summary>
             public int RelativelyId;
 
             /// <summary>

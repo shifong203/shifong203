@@ -24,7 +24,7 @@ namespace Vision2.Project.formula
             groupBox1.Text = dataVale.TrayLocation.ToString();
             label1.BackColor = Color.Transparent;
             label1.Text = dataVale.TrayLocation.ToString()+"-";
-            if (data.Null)
+            if (data.NotNull)
             {
                 if (!data.Done)
                 { 

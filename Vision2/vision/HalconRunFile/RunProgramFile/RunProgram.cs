@@ -31,8 +31,8 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 ListType.Add(GetType().ToString());
             }
             Type = GetType().ToString();
-            NGRoi = new HObject();
-            NGRoi.GenEmptyObj();
+            nGRoi = new HObject();
+            nGRoi.GenEmptyObj();
             AOIObj = new HObject();
             AOIObj.GenEmptyObj();
             DrawObj.GenEmptyObj();
@@ -62,10 +62,8 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             TabPage tabPage;
             Control controlT = GetThisControl();
             tabPage = new TabPage();
-
             tabPage.Text = tabPage.Name = "调试接面";
             DrawContrlos draw = new DrawContrlos(this);
-
             tabPage.Controls.Add(draw);
             draw.Dock = DockStyle.Top;
             if (controlT != null)
@@ -102,10 +100,55 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             return null;
         }
 
+        [Category("图像选择"), DisplayName("图像通道"), Description("")]
         /// <summary>
         /// 选择图像类型
         /// </summary>
         public ImageTypeObj ImageTypeOb { get; set; }
+        [Category("坐标位置"), DisplayName("搜索坐标Row"), Description("")]
+        /// <summary>
+        /// 搜索点位
+        /// </summary>
+        public double AoiRow { get; set; }
+
+        [Category("坐标位置"), DisplayName("搜索坐标Col"), Description("")]
+        /// <summary>
+        /// 搜索点位
+        /// </summary>
+        public double AoiCol { get; set; }
+
+        [Category("坐标位置"), DisplayName("参考坐标Row"), Description("")]
+        /// <summary>
+        /// 参考坐标
+        /// </summary>
+        public HTuple ModeRow { get; set; } = new HTuple();
+        [Category("坐标位置"), DisplayName("参考坐标Col"), Description("")]
+        /// <summary>
+        /// 参考坐标
+        /// </summary>
+        public HTuple ModeCol { get; set; } = new HTuple();
+        [Category("坐标位置"), DisplayName("目标坐标Rows"), Description("")]
+        /// <summary>
+        /// 参考坐标
+        /// </summary>
+        public HTuple OutRow { get; set; } = new HTuple();
+        [Category("坐标位置"), DisplayName("目标坐标Cols"), Description("")]
+        /// <summary>
+        /// 参考坐标
+        /// </summary>
+        public HTuple OutCol { get; set; } = new HTuple();
+        [Category("坐标位置"), DisplayName("同步到参考坐标"), Description("将目标坐标同步到参考坐标")]
+        public bool IsModePoint {
+            get { return false; }
+            set {
+                if (value)
+                {
+                    ModeRow = OutRow;
+                    ModeCol = OutCol;
+                }
+            }
+       }
+   
 
         /// <summary>
         /// 
@@ -155,6 +198,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     {
                         HOperatorSet.AffineTransRegion(aoiobj, out aoiobj, homat2d, "nearest_neighbor");
                     }
+
                      HOperatorSet.ReduceDomain(image, aoiobj, out image);
                 }
                 if (drawobj != null&& drawobj.IsInitialized() && drawobj.CountObj() >= 1)
@@ -216,21 +260,21 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         {
             get
             {
-                if (NGRoi == null)
+                if (nGRoi == null)
                 {
-                    NGRoi = new HObject();
-                    NGRoi.GenEmptyObj();
+                    nGRoi = new HObject();
+                    nGRoi.GenEmptyObj();
                 }
-                if (!NGRoi.IsInitialized())
+                if (!nGRoi.IsInitialized())
                 {
-                    NGRoi.GenEmptyObj();
+                    nGRoi.GenEmptyObj();
                 }
-                return NGRoi;
+                return nGRoi;
             }
-            set { NGRoi = value; }
+            set { nGRoi = value; }
         }
 
-        protected HObject NGRoi;
+        protected HObject nGRoi;
 
         ///// <summary>
         ///// 图像区域
@@ -275,8 +319,27 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         /// </summary>
         public HObject AOIObj  = new HObject();
 
-        [DescriptionAttribute("是否在复判栏显示。"), Category("结果显示"), DisplayName("是否显示复判项")]
-        public bool ISCompound { get; set; } = true;
+        //[DescriptionAttribute("是否在复判栏显示。"), Category("结果显示"), DisplayName("是否显示复判项")]
+        //public bool ISCompound { get; set; } = true;
+
+        [DescriptionAttribute("可复判的缺陷类型。"), Category("结果输出"), DisplayName("缺陷类型")]
+       [ TypeConverter(typeof(ErosConverter)),
+        ErosConverter.ThisDropDown("BackNameList", false, "")]
+        public string BackName { get; set; } ="";
+
+        public List<string> BackNameList
+        {
+            get
+            {
+                    List<string> listS = new List<string>();
+                    foreach (var item in Vision.Instance.DicDrawbackNameS)
+                    {
+                       listS.Add(item.Key);
+                    }
+                    return listS;
+            }
+        }
+
         public OneComponent GetOneComponent()
         {
             return oneCompo;
@@ -286,6 +349,23 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         //public string NGText { get; set; } = string.Empty;
         [DescriptionAttribute("NG结果集合"), Category("结果显示"), DisplayName("结果NG文本集合")]
         public HTuple NGTextS { get; set; } 
+
+        public AoiObj GetAoi()
+        {
+            AoiObj aoiObj = new AoiObj();
+            aoiObj.SelseAoi = AOIObj;
+            HOperatorSet.AreaCenter(AOIObj, out HTuple area, out HTuple row, out HTuple col);
+            if (row.Length != 0)
+            {
+                AoiRow = row;
+                AoiCol = col;
+            }
+            aoiObj.AoiRow = this.AoiRow;
+            aoiObj.AoiCol = this.AoiCol;
+            aoiObj.Drow = DrawObj;
+            aoiObj.CiName = this.Name;
+            return aoiObj;
+        }
         /// <summary>
         /// 外部调用程序
         /// </summary>
@@ -299,7 +379,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             }
             if (aoiObj==null)
             {
-                aoiObj = new AoiObj() { Aoi = AOIObj, Drow = DrawObj };
+                aoiObj = GetAoi();
             }
             if (aoiObj.DebugID != 0)
             {
@@ -310,10 +390,10 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 ResltBool = true;
                 this.ErrBool = false;
                 this.ClerItem();
-                if (NGRoi != null)
+                if (nGRoi != null)
                 {
-                    NGRoi = new HObject();
-                    NGRoi.GenEmptyObj();
+                    nGRoi = new HObject();
+                    nGRoi.GenEmptyObj();
                 }
                 HObjectGreen = new HObject();
                 HObjectBule = new HObject();
@@ -324,14 +404,13 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 this.NGNumber = 0;
                 Watch.Restart();
                 oneCompo = new OneComponent();
-                //NGText = "";
                 NGTextS = new HTuple();
-                ResltBool = RunHProgram( oneResultOBj,out List<OneRObj> oneRObj, aoiObj);
+                ResltBool = RunHProgram(oneResultOBj,out List<OneRObj> oneRObj, aoiObj);
                 Watch.Stop();
                 Dictionary<string, HTuple> sdd = this.SetData();
                 if (IsDisObj)
                 {
-                  oneResultOBj.AddObj(HObjectGreen, ColorResult.green);
+                    oneResultOBj.AddObj(HObjectGreen, ColorResult.green);
                 }
                 oneResultOBj.AddObj(HObjectYellow, ColorResult.yellow);
                 oneResultOBj.AddObj(HObjectBule, ColorResult.blue);
@@ -339,7 +418,6 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 {
                     if (this.OKName.Contains(","))
                     {
-
                         ErosSocket.ErosConLink.StaticCon.SetLinkAddressValue(this.OKName, true);
                     }
                     else
@@ -369,7 +447,6 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 this.LogErr(this.Name + ",执行错误:", ex);
                 ResltBool = false;
             }
- 
             return ResltBool;
         }
 
@@ -389,9 +466,9 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 ResltBool = true;
                 this.ErrBool = false;
                 this.ClerItem();
-                if (NGRoi != null)
+                if (nGRoi != null)
                 {
-                    NGRoi.GenEmptyObj();
+                    nGRoi.GenEmptyObj();
                 }
                 HObjectGreen = new HObject();
                 HObjectBule = new HObject();
@@ -684,9 +761,9 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             {
                 Dic_Measure.Dispose();
                 Watch = null;
-                if (NGRoi != null)
+                if (nGRoi != null)
                 {
-                    NGRoi.Dispose();
+                    nGRoi.Dispose();
                 }
                 //this.SocketClint = null;
             }
@@ -737,6 +814,11 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 while (hv_Button != 4)
                 {
                     //一直在循环,需要让halcon控件也响应事件,不然到时候跳出循环,之前的事件会一起爆发触发,
+                    //string ds= Console.ReadLine();
+                    //if (ds!=null&&  ds !="")
+                    //{
+
+                    //}
                     Application.DoEvents();
                     try
                     {
@@ -745,8 +827,11 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
 
                         HOperatorSet.GetMposition(drawh.hWindowHalcon(), out hv_Row, out hv_Column, out hv_Button);
                         HObject hObject = new HObject();
+                   
+                        //if (HOperatorSet.getk)
+                        //{
 
-
+                        //}
                         HOperatorSet.DispObj(drawh.Image(), drawh.hWindowHalcon());
                         HOperatorSet.SetSystem("flush_graphic", "true");
                         //HOperatorSet.SetSystem("flush_graphic", "true");
@@ -810,7 +895,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
             }
             drawh.Drawing = false;
@@ -1240,7 +1325,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             }
             return drawObj;
         }
-        public static double Circl_Rire { get; set; }
+        public static double Circl_Rire { get; set; } = 100;
 
         /// <summary>
         /// 擦除区域

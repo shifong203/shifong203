@@ -4,6 +4,9 @@ using Vision2.Project.Mes;
 using Vision2.vision.HalconRunFile.RunProgramFile;
 namespace Vision2.Project.formula
 {
+    /// <summary>
+    /// 附加数据
+    /// </summary>
     public class LinkData
     {
 
@@ -22,7 +25,10 @@ namespace Vision2.Project.formula
             }
 
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="text"></param>
         public void AddData(string text)
         {
             //DataStr.Add(text);
@@ -647,10 +653,10 @@ namespace Vision2.Project.formula
         ///// 点位名称
         ///// </summary>
         //public List<string> Reference_Name { get; set; } = new List<string>();
-        public List<string> PLCID { get; set; } = new List<string>();
+        //public List<string> PLCID { get; set; } = new List<string>();
 
-        public List<string> PointXID { get; set; } = new List<string>();
-        public List<string> PointYID { get; set; } = new List<string>();
+        //public List<string> PointXID { get; set; } = new List<string>();
+        //public List<string> PointYID { get; set; } = new List<string>();
     }
     public class DataMinMax
     {

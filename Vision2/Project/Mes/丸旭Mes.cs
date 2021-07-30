@@ -2,27 +2,32 @@
 using System.Collections.Generic;
 using Vision2.Project.formula;
 using ErosSocket.DebugPLC.Robot;
-
+using System.Windows.Forms;
 
 namespace Vision2.Project.Mes
 {
-    public class 丸旭Mes : IMesData
+    public class 丸旭Mes : MesInfon
     {
-        public event IMesData.ResTMesd ResDoneEvent;
+        public override event IMesData.ResTMesd ResDoneEvent;
 
-        public bool ReadMes(string SerialNumber, out string resetMesString)
+        public override Form GetForm()
+        {
+            return null;
+        }
+
+        public override bool ReadMes(string SerialNumber, out string resetMesString)
         {
             resetMesString = "";
             return true;
         }
 
-        public bool ReadMes(out string resetMesString)
+        public override bool ReadMes(out string resetMesString)
         {
             resetMesString = "";
             return true;
         }
 
-        public void WrietMes(UserFormulaContrsl userFormulaContrsl, string QRCODE, string product_Name)
+        public override void WrietMes(UserFormulaContrsl userFormulaContrsl, string QRCODE, string product_Name)
         {
             List<string> ListText = new List<string>();
             string timeStr = DateTime.Now.ToString();
@@ -137,17 +142,17 @@ namespace Vision2.Project.Mes
 
         }
 
-        public void WrietMes(OneDataVale data, string Product_Name)
+        public override void WrietMes(OneDataVale data, string Product_Name)
         {
 
         }
 
-        public void WrietMes(TrayData trayData, string Product_Name)
+        public override void WrietMes(TrayData trayData, string Product_Name)
         {
          
         }
 
-        public void WrietMesAll<T>(T data, string QRCODE, string product_Name)
+        public override void WrietMesAll<T>(T data, string QRCODE, string product_Name)
         {
             try
             {
@@ -188,59 +193,9 @@ namespace Vision2.Project.Mes
                 {
                     foreach (var itemDT in item.GetNGCompData().DicOnes)
                     {
-
-                    //}
-                    //for (int i = 0; i < item.GetNGCompData().DicOnes.Count; i++)
-                    //{
-                        //name = itemDT.Key;
-                        //if (!itemDT.OK)
-                        //{
-                        //    reset = "NG";
-                        //    if (item.ResuOBj[i].OK)
-                        //    {
-                        //        NG1 = "OK";
-                        //    }
-                        //    reset = "";
-                        //    //jtvales = item.ResuOBj[i].CantOBJ.NGText;
-                        //    ListText.Add("," + QrCode + "," + reset + ", , ," + name + "," + jtvales + "," + NG1);
-                        //    name = "";
-                        //    NG1 = "";
-                        //}
                     }
                 }
-                //foreach (var item in dataVale.GetDataVales())
-                //{
-                //    for (int i = 0; i < item.ResuOBj.Count; i++)
-                //    {
-                //        string dataStr = ",";
 
-                //        for (int j = 0; j < item.ResuOBj[i].RowsData.Length; j++)
-                //        {
-                //            dataStr += item.ResuOBj[i].RowsData.TupleSelect(j).TupleString("0.02f") + ",";
-                //        }
-                //        if (item.Value[i].RowsData.Length != 0)
-                //        {
-                //            if (vision.Vision.GetRunNameVision(item.Key).RunName.Count > i)
-                //            {
-                //                dataStr = vision.Vision.GetRunNameVision(item.Key).RunName[i] + dataStr;
-                //            }
-                //            ListText.Add(",,,,,,,,,X:" + item.Key + "(" + (i + 1) + ")" + dataStr);
-                //        }
-                //        dataStr = ",";
-                //        for (int j = 0; j < item.Value[i].ColumnsData.Length; j++)
-                //        {
-                //            dataStr += item.Value[i].ColumnsData.TupleSelect(j).TupleString("0.02f") + ",";
-                //        }
-                //        if (item.Value[i].ColumnsData.Length != 0)
-                //        {
-                //            if (vision.Vision.GetRunNameVision(item.Key).RunName.Count > i)
-                //            {
-                //                dataStr = vision.Vision.GetRunNameVision(item.Key).RunName[i] + dataStr;
-                //            }
-                //            ListText.Add(",,,,,,,,,Y:" + item.Key + "(" + (i + 1) + ")" + dataStr);
-                //        }
-                //    }
-                //}
                 ErosProjcetDLL.Excel.Npoi.WriteF(paht, ListText);
                 if (ListText.Count == 1)
                 {

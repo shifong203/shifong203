@@ -43,6 +43,7 @@
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
+            this.同步到库ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -67,42 +68,43 @@
             this.添加矩形电容ToolStripMenuItem,
             this.添加ICToolStripMenuItem,
             this.重命名ToolStripMenuItem,
-            this.删除ToolStripMenuItem});
+            this.删除ToolStripMenuItem,
+            this.同步到库ToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(149, 114);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(181, 158);
             // 
             // 添加电阻ToolStripMenuItem
             // 
             this.添加电阻ToolStripMenuItem.Name = "添加电阻ToolStripMenuItem";
-            this.添加电阻ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.添加电阻ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.添加电阻ToolStripMenuItem.Text = "添加圆电阻";
             this.添加电阻ToolStripMenuItem.Click += new System.EventHandler(this.添加电阻ToolStripMenuItem_Click);
             // 
             // 添加矩形电容ToolStripMenuItem
             // 
             this.添加矩形电容ToolStripMenuItem.Name = "添加矩形电容ToolStripMenuItem";
-            this.添加矩形电容ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.添加矩形电容ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.添加矩形电容ToolStripMenuItem.Text = "添加矩形电容";
             this.添加矩形电容ToolStripMenuItem.Click += new System.EventHandler(this.添加矩形电容ToolStripMenuItem_Click);
             // 
             // 添加ICToolStripMenuItem
             // 
             this.添加ICToolStripMenuItem.Name = "添加ICToolStripMenuItem";
-            this.添加ICToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.添加ICToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.添加ICToolStripMenuItem.Text = "添加IC";
             this.添加ICToolStripMenuItem.Click += new System.EventHandler(this.添加ICToolStripMenuItem_Click);
             // 
             // 重命名ToolStripMenuItem
             // 
             this.重命名ToolStripMenuItem.Name = "重命名ToolStripMenuItem";
-            this.重命名ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.重命名ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.重命名ToolStripMenuItem.Text = "重命名";
             this.重命名ToolStripMenuItem.Click += new System.EventHandler(this.重命名ToolStripMenuItem_Click);
             // 
             // 删除ToolStripMenuItem
             // 
             this.删除ToolStripMenuItem.Name = "删除ToolStripMenuItem";
-            this.删除ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.删除ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.删除ToolStripMenuItem.Text = "删除";
             this.删除ToolStripMenuItem.Click += new System.EventHandler(this.删除ToolStripMenuItem_Click);
             // 
@@ -165,6 +167,13 @@
             this.propertyGrid1.Size = new System.Drawing.Size(502, 589);
             this.propertyGrid1.TabIndex = 0;
             // 
+            // 同步到库ToolStripMenuItem
+            // 
+            this.同步到库ToolStripMenuItem.Name = "同步到库ToolStripMenuItem";
+            this.同步到库ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.同步到库ToolStripMenuItem.Text = "同步到库";
+            this.同步到库ToolStripMenuItem.Click += new System.EventHandler(this.同步到库ToolStripMenuItem_Click);
+            // 
             // PCBAControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -200,5 +209,6 @@
         private System.Windows.Forms.ToolStripMenuItem 添加ICToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 重命名ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 添加矩形电容ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 同步到库ToolStripMenuItem;
     }
 }

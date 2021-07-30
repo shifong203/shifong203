@@ -15,7 +15,7 @@ namespace Vision2.ErosProjcetDLL.Project
 
         private void toolStripButton4_Click(object sender, EventArgs e)
         {
-            up();
+     
         }
 
         public void up()
@@ -23,12 +23,21 @@ namespace Vision2.ErosProjcetDLL.Project
             try
             {
                 comboBox1.Items.Clear();
-
+                dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
                 jurisdiction.Items.Clear();
-
+                jurisdiction.ReadOnly = true;
+                dataGridView1.RowHeadersWidth = 60;
                 jurisdiction.Items.AddRange(ProjectINI.In.User.UserRightGroup.Keys.ToArray());
+                comboBox1.Items.Add("操作员");
+                if (ProjectINI.Enbt)
+                {
+                    comboBox1.Items.Add("管理员");
+                }
+                if (ProjectINI.AdminEnbt)
+                {
+                    comboBox1.Items.Add("工程师");
+                }
 
-                comboBox1.Items.AddRange(ProjectINI.In.UserRight.ToArray());
                 comboBox1.SelectedIndex = 0;
                 department.Items.Clear();
                 department.Items.AddRange(ProjectINI.In.User.ListDepartmentGroup.ToArray());
@@ -51,12 +60,12 @@ namespace Vision2.ErosProjcetDLL.Project
                     dataGridView2.Rows[ds].Cells[1].Value = datas.TrimEnd(',');
                 }
                 dataGridView1.Rows.Clear();
-                propertyGrid1.Visible = false;
-                if (ProjectINI.In.UserRight.Contains("工程师"))
-                {
-                    propertyGrid1.Visible = true;
-                    propertyGrid1.SelectedObject = ProjectINI.In.UsData;
-                }
+                //propertyGrid1.Visible = false;
+                //if (ProjectINI.In.UserRight.Contains("工程师"))
+                //{
+                //    propertyGrid1.Visible = true;
+                //    propertyGrid1.SelectedObject = ProjectINI.In.UsData;
+                //}
                 ds = 0;
                 foreach (var item in ProjectINI.In.User.UserPassWords.Values)
                 {
@@ -68,7 +77,9 @@ namespace Vision2.ErosProjcetDLL.Project
                     {
                         dataGridView1.Rows[ds].Cells[5].Value = item.passWord;
                     }
+                    //dataGridView1.Rows[ds].Cells[5]
                     dataGridView1.Rows[ds].Cells[3].Value = item.UserRightGroup;
+
 
                 }
             }
@@ -126,14 +137,11 @@ namespace Vision2.ErosProjcetDLL.Project
             try
             {
                 ProjectINI.In.SaveProjectAll();
-
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-
+                MessageBox.Show(ex.Message);
             }
-
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -197,6 +205,16 @@ namespace Vision2.ErosProjcetDLL.Project
         private void toolStripButton5_Click(object sender, EventArgs e)
         {
             up();
+        }
+
+        private void toolStripButton3_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void toolStripButton2_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

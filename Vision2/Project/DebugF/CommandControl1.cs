@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Threading;
 using System.Windows.Forms;
+using Vision2.ErosProjcetDLL.Project;
+
 namespace Vision2.Project.DebugF
 {
     public partial class CommandControl1 : System.Windows.Forms.UserControl
@@ -13,7 +15,7 @@ namespace Vision2.Project.DebugF
             try
             {
                 DebugC = compiler;
-
+                propertyGrid2.SelectedObject = ProjectINI.In.UsData;
                 propertyGrid1.SelectedObject = compiler.RunButton;
                 //propertyGrid2.SelectedObject = compiler.SeelpData;
                 Vision2.ErosProjcetDLL.UI.DataGridViewF.StCon.AddCon(dataGridView1, 0);

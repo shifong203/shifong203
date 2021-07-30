@@ -29,20 +29,12 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LodingProject));
-            this.dss1 = new Vision2.ErosProjcetDLL.UI.dss();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.dss1 = new Vision2.ErosProjcetDLL.UI.dss();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.SuspendLayout();
-            // 
-            // dss1
-            // 
-            this.dss1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.dss1.Location = new System.Drawing.Point(182, -24);
-            this.dss1.Name = "dss1";
-            this.dss1.Size = new System.Drawing.Size(863, 194);
-            this.dss1.TabIndex = 0;
             // 
             // pictureBox1
             // 
@@ -57,13 +49,20 @@
             // 
             // pictureBox2
             // 
-            this.pictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox2.Image")));
             this.pictureBox2.Location = new System.Drawing.Point(12, 12);
             this.pictureBox2.Name = "pictureBox2";
             this.pictureBox2.Size = new System.Drawing.Size(150, 115);
             this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox2.TabIndex = 2;
             this.pictureBox2.TabStop = false;
+            // 
+            // dss1
+            // 
+            this.dss1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.dss1.Location = new System.Drawing.Point(182, -24);
+            this.dss1.Name = "dss1";
+            this.dss1.Size = new System.Drawing.Size(863, 194);
+            this.dss1.TabIndex = 0;
             // 
             // LodingProject
             // 

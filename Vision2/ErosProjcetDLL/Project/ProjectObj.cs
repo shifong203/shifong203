@@ -18,10 +18,10 @@ namespace Vision2.ErosProjcetDLL.Project
         /// 文件夹名称
         /// </summary>
         public override abstract string FileName { get; }
-        /// <summary>
-        /// 名称
-        /// </summary>
-        public override abstract string Name { get; }
+        ///// <summary>
+        ///// 名称
+        ///// </summary>
+        //public override abstract string Name { get; }
         /// <summary>
         /// 文件后缀名
         /// </summary>
@@ -35,12 +35,16 @@ namespace Vision2.ErosProjcetDLL.Project
         {
 
         }
+        public override abstract void initialization();
+
+
+
     }
 
     /// <summary>
     /// 程序集访问
     /// </summary>
-    public class ProjectC : IUpProjetNode, IDisposable
+    public  class ProjectC : IUpProjetNode, IDisposable
     {
         [DescriptionAttribute("程序名称。唯一程序名"), Category("程序参数"), DisplayName("程序名")]
         /// <summary>
@@ -118,6 +122,29 @@ namespace Vision2.ErosProjcetDLL.Project
         }
 
         /// <summary>
+        /// 读取Josn到实例
+        /// </summary>
+        /// <param name="path">文件地址</param>
+        /// <param name="obj">对象</param>
+        public virtual T ReadThis<T>(string path, T obj = default(T)) where T : new()
+        {
+            if (System.IO.File.Exists(path + "\\" + FileName + "\\" + Name + SuffixName))
+            {
+                ProjectINI.ReadPathJsonToCalss(path + "\\" + FileName + "\\" + Name + SuffixName, out obj);
+            }
+            if (obj == null)
+            {
+                obj = new T();
+            }
+            if (obj is ProjectC)
+            {
+                ProjectC SD = obj as ProjectC;
+                SD.ReadCode(path + "\\" + SD.FileName + "\\CSarp.Cs");
+            }
+            return obj;
+        }
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="path"></param>
@@ -145,31 +172,7 @@ namespace Vision2.ErosProjcetDLL.Project
                 System.IO.File.WriteAllLines(path + "\\" + FileName + "\\" + "CSarp.Cs", ListCode);
             }
         }
-        /// <summary>
-        /// 读取Josn到实例
-        /// </summary>
-        /// <param name="path">文件地址</param>
-        /// <param name="obj">对象</param>
-        public virtual T ReadThis<T>(string path, T obj = default(T)) where T : new()
-        {
-            if (System.IO.File.Exists(path + "\\" + FileName + "\\" + Name + SuffixName))
-            {
-                ProjectINI.ReadPathJsonToCalss(path + "\\" + FileName + "\\" + Name + SuffixName, out obj);
-            }
-
-
-            if (obj == null)
-            {
-                obj = new T();
-            }
-            if (obj is ProjectC)
-            {
-                ProjectC SD = obj as ProjectC;
-                SD.ReadCode(path + "\\" + SD.FileName + "\\CSarp.Cs");
-            }
-
-            return obj;
-        }
+    
 
 
 
@@ -184,6 +187,7 @@ namespace Vision2.ErosProjcetDLL.Project
         {
 
         }
+
 
         /// <summary>
         ///载入错误信息
@@ -313,26 +317,7 @@ namespace Vision2.ErosProjcetDLL.Project
             socketConnectForm.UpCSharpCode(this);
             socketConnectForm.Dock = DockStyle.Fill;
             tabPage.Controls.Add(socketConnectForm);
-
-
         }
-
-        ///// <summary>
-        ///// 单击刷新属性
-        ///// </summary>
-        ///// <param name="pertyForm"></param>
-        ///// <param name="data"></param>
-        //public virtual void UpProperty(PropertyForm pertyForm, object data = null)
-        //{
-
-        //    //TabPage tabPage = new TabPage();
-        //    //tabPage.Text = "C#脚本";
-        //    //CsCode.CSharpCodeUserControl cSharpCodeUserControl = new CsCode.CSharpCodeUserControl();
-        //    //cSharpCodeUserControl.UpCSharpCode(this);
-        //    ////tabPage.Controls.Add(cSharpCodeUserControl);
-        //    //cSharpCodeUserControl.Dock = DockStyle.Fill;
-        //    //pertyForm.tabControl1.TabPages.Add(tabPage);
-        //}
 
         /// <summary>
         /// 获取ContextMenu按下的按键
@@ -348,7 +333,7 @@ namespace Vision2.ErosProjcetDLL.Project
         /// <param name="txt"></param>
         public virtual void NewProject(object sender, EventArgs e)
         {
-            Vision2.ErosProjcetDLL.Project.NewPragram newPragram = new NewPragram();
+            NewPragram newPragram = new NewPragram();
             newPragram.ShowDialog();
 
         }

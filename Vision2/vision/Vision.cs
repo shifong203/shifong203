@@ -23,11 +23,12 @@ using Vision2.Project.ProcessControl;
 using Vision2.vision.Cams;
 using Vision2.vision.HalconRunFile.Controls;
 using Vision2.vision.HalconRunFile.RunProgramFile;
-using MVReader;
+
 using System.Text;
 using System.Runtime.Serialization;
 using Vision2.Project.DebugF.IO;
 using ErosSocket.DebugPLC.Robot;
+using Vision2.vision.RestVisionForm;
 
 namespace Vision2.vision
 {
@@ -65,9 +66,43 @@ namespace Vision2.vision
         violet = 17,
         firebrick = 18,
     }
+    /// <summary>
+    /// 库数据
+    /// </summary>
     public class AoiObj
     {
-
+        public bool RestBool;
+        public HObject GetAOI(HObject aoiObj,HObject draw=null)
+        {
+            try
+            {
+                SelseAoi = aoiObj;
+                if (IsLibrary)
+                {
+                    HOperatorSet.Union1(aoiObj, out HObject selseAoi);
+                    if (draw!=null)
+                    {
+                        HOperatorSet.Union1(draw, out Drow);
+                    }
+                
+                    HOperatorSet.AreaCenter(selseAoi, out HTuple area, out HTuple row, out HTuple col);
+                    if (row.Length == 1)
+                    {
+                        HOperatorSet.VectorAngleToRigid(row, col, 0, AoiRow, AoiCol, new HTuple(Angle).TupleRad(), out HTuple hom2dt);
+                        Homt2D = hom2dt;
+                        HOperatorSet.AffineTransRegion(SelseAoi, out SelseAoi, hom2dt, "nearest_neighbor");
+                        if (draw != null)
+                        {
+                            HOperatorSet.AffineTransRegion(Drow, out Drow, hom2dt, "nearest_neighbor");
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+            }
+            return SelseAoi;
+        }
         public AoiObj()
         {
 
@@ -76,10 +111,46 @@ namespace Vision2.vision
         {
             DebugID = runid;
         }
-        public HObject Aoi  = new HObject();
-
+        /// <summary>
+        /// 搜索区域
+        /// </summary>
+        public HObject SelseAoi  = new HObject();
+        /// <summary>
+        /// 掩模区域
+        /// </summary>
         public HObject Drow  = new HObject();
+        /// <summary>
+        /// 元件名
+        /// </summary>
+        public string CiName = "";
+        /// <summary>
+        /// 程序名
+        /// </summary>
+        public string RPName = "";
+        /// <summary>
+        /// 搜索坐标
+        /// </summary>
+        public HTuple AoiRow;
+        /// <summary>
+        /// 搜索坐标
+        /// </summary>
+        public HTuple AoiCol;
+        /// <summary>
+        /// 角度
+        /// </summary>
+        public double Angle;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public HTuple Homt2D;
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool IsLibrary = false;
+        /// <summary>
+        /// 调试ID
+        /// </summary>
         public int DebugID;
 
     }
@@ -103,12 +174,13 @@ namespace Vision2.vision
                         TabPage.Text = TabPage.Name = this.Name;
                     }
                     catch (Exception)
-                    {
-
-                    }
+                    { }
                     this.Information = "视觉程序结构";
                 }
-                public static string GetFilePath()
+                public override void initialization()
+                { 
+                }
+            public static string GetFilePath()
                 {
                     return ProjectINI.In.ProjectPathRun + "\\" + _instance.FileName + "\\";
                 }
@@ -194,151 +266,50 @@ namespace Vision2.vision
 
            
         [Description("供应商光源控制方式，"), Category("光源控制"), DisplayName("光源控制器数量")]
-        public int OffCont { get; set; } = 0;
+        public int OffCont { get; set; } = 1;
 
-        //[Description("供应商光源控制方式，"), Category("光源控制"), DisplayName("控制器供应商")]
-        //        [TypeConverter(typeof(ErosConverter)), ErosConverter.ThisDropDownAttribute("", "浮根", "凯威", "")]
-        //        public string OffName { get; set; }
-        //public string Rs232Name { get; set; } = "COM1";
+        [Description("供应商光源控制方式，"), Category("光源控制"), DisplayName("控制器供应商")]
+        [TypeConverter(typeof(ErosConverter)), ErosConverter.ThisDropDownAttribute("", "浮根", "凯威", "嘉历")]
+         public string OffName { get; set; }
+        public string Rs232Name { get; set; } = "COM1";
      
         #endregion
-        //private string CheckChData()
-        //{
-        //    string data = "S";
-        //    if (H1Off)
-        //    {
-        //        data += H1.ToString("000") + "T";
-        //    }
-        //    else
-        //    {
-        //        data += H1.ToString("000") + "F";
-        //    }
-        //    if (H2Off)
-        //    {
-        //        data += H2.ToString("000") + "T";
-        //    }
-        //    else
-        //    {
-        //        data += H2.ToString("000") + "F";
-        //    }
 
-        //    if (H3Off)
-        //    {
-        //        data += H3.ToString("000") + "T";
-        //    }
-        //    else
-        //    {
-        //        data += H3.ToString("000") + "F";
-        //    }
-        //    if (H4Off)
-        //    {
-        //        data += H4.ToString("000") + "T";
-        //    }
-        //    else
-        //    {
-        //        data += H4.ToString("000") + "F";
-        //    }
 
-        //    return data + "C#";
-        //}
-
-        //public string CheckChKWData()
-        //{
-        //    string data = "S";
-        //    if (H1Off)
-        //    {
-        //        data += H1.ToString("000") + "T";
-        //        SerialPort.Write("#1106411");
-
-        //    }
-        //    else
-        //    {
-        //        SerialPort.Write("#2106411");
-
-        //        data += H1.ToString("000") + "F";
-        //    }
-        //    Thread.Sleep(100);
-        //    if (H2Off)
-        //    {
-
-        //        SerialPort.Write("#1206412");
-        //        data += H2.ToString("000") + "T";
-        //    }
-        //    else
-        //    {
-        //        SerialPort.Write("#2106412");
-        //        data += H2.ToString("000") + "F";
-        //    }
-        //    Thread.Sleep(100);
-        //    if (H3Off)
-        //    {
-        //        SerialPort.Write("#1306413");
-        //        data += H3.ToString("000") + "T";
-        //    }
-        //    else
-        //    {
-        //        SerialPort.Write("#2106412");
-        //        data += H3.ToString("000") + "F";
-        //    }
-        //    Thread.Sleep(100);
-        //    if (H4Off)
-        //    {
-
-        //        SerialPort.Write("#1406414");
-        //        data += H4.ToString("000") + "T";
-        //    }
-        //    else
-        //    {
-        //        SerialPort.Write("#2106413");
-        //        data += H4.ToString("000") + "F";
-        //    }
-
-        //    return data;
-        //}
-        //public void SetHx()
-        //{
-        //    if (OffName == "浮根")
-        //    {
-        //        SerialPort.Parity = Parity.None;
-        //        SerialPort.BaudRate = 19200;
-        //        SerialPort.StopBits = StopBits.One;
-        //    }
-        //    else
-        //    {
-        //        SerialPort.Parity = Parity.None;
-        //        SerialPort.BaudRate = 9600;
-        //        SerialPort.StopBits = StopBits.One;
-        //    }
-        //    if (!SerialPort.IsOpen)
-        //    {
-        //        SerialPort.PortName = Rs232Name;
-        //        SerialPort.Open();
-        //    }
-        //    if (OffName == "浮根")
-        //    {
-        //        SerialPort.Write(CheckChData() + "C#");
-        //    }
-        //    else
-        //    {
-        //        CheckChKWData();
-        //    }
-        //}
-        //public void SetOFF()
-        //{
-        //    if (!SerialPort.IsOpen)
-        //    {
-        //        SerialPort.PortName = Rs232Name;
-        //        SerialPort.Open();
-        //    }
-        //    SerialPort.Write(CheckChData() + "C#");
-        //}
 
         LightSource[] serialPort ;
-        //SerialPort SerialPort = new SerialPort();
-
-        //SerialPortHelper[] serialPort;
-
-        //Parity Parity { get; set; } = Parity.Even;
+        public LightSource[] GetLightSources()
+        {
+            return serialPort;
+        }
+        public static void SetLight(string name)
+        {
+            try
+            {
+                if (name=="off")
+                {
+                    OffLight();
+                    return;
+                }
+                if (Vision.Instance.DicLightSource.ContainsKey(name))
+                {
+                    Vision.Instance.GetLightSources()[0].SetLightSource(Vision.Instance.DicLightSource[name]);
+                }
+            }
+            catch (Exception)
+            {
+            }
+        }
+        public static void OffLight()
+        {
+            try
+            {     
+               Vision.Instance.GetLightSources()[0].SetOFF();   
+            }
+            catch (Exception)
+            {
+            }
+        }
 
 
         SocketServer SoServer;
@@ -895,7 +866,7 @@ namespace Vision2.vision
             string prodName = Project.formula.Product.ProductionName;
             foreach (var item in Himagelist)
             {
-                item.Value.SaveThis(Vision2.ErosProjcetDLL.Project.ProjectINI.In.ProjectPathRun + "\\" + FileName + "\\" + prodName + "\\");
+                item.Value.SaveThis(ProjectINI.In.ProjectPathRun + "\\" + FileName + "\\" + prodName + "\\");
             }
         }
         /// <summary>
@@ -961,10 +932,10 @@ namespace Vision2.vision
                 ProjectINI.ReadPathJsonToCalss(datpath, out visionf);
             }
             Vision.Instance = visionf;
-            serialPort = new LightSource[Vision.Instance.OffCont];
-            for (int i = 0; i < serialPort.Length; i++)
+            Vision.Instance.serialPort = new LightSource[Vision.Instance.OffCont];
+            for (int i = 0; i < Vision.Instance.OffCont; i++)
             {
-                serialPort[i] = new LightSource(i);
+                Vision.Instance.serialPort[i] = new LightSource(i+1);
             }
             if (Vision.Instance.VisionPr.Count == 0)
             {
@@ -1065,16 +1036,14 @@ namespace Vision2.vision
         {
             try
             {
-                    if (ErosProjcetDLL.Bytes.ByteHelper.BytesToObject(key) is PrestC)
+               if (ErosProjcetDLL.Bytes.ByteHelper.BytesToObject(key) is PrestC)
                     {
-                         PrestC prestC = ErosProjcetDLL.Bytes.ByteHelper.BytesToObject(key) as PrestC;
+                        PrestC prestC = ErosProjcetDLL.Bytes.ByteHelper.BytesToObject(key) as PrestC;
                         if (!ForImageFor.keyValuePairs.ContainsKey(prestC.LineName))
                         {
-                           
                             ForImageFor.Invoke(new Action(() => {
-
-                             ForImageFor.listBox2.Items.Add(prestC.LineName);
-                             TabPage tabPage = new TabPage();
+                            ForImageFor.listBox2.Items.Add(prestC.LineName);
+                            TabPage tabPage = new TabPage();
                             tabPage.Text = prestC.LineName;
                             TrayDataUserControl trayDataUserControl = new TrayDataUserControl();
                             trayDataUserControl.Dock = DockStyle.Fill;
@@ -1084,13 +1053,11 @@ namespace Vision2.vision
                             trayRobot.XNumber = (sbyte)prestC.XNumber;
                             trayRobot.YNumber = (sbyte)prestC.YNumber;
                             trayRobot.Clear();
-                            trayDataUserControl.SetTray(trayRobot);
-
-                            ForImageFor.keyValuePairs.Add(prestC.LineName,new FormRestfDataIamge.OBJData() { socket = socketR,prest1= prestC,trayDataUser= trayDataUserControl });
-                            }));
+                            trayDataUserControl.SetTray(trayRobot.GetTrayData());
+                            ForImageFor.keyValuePairs.Add(prestC.LineName,new FormRestfDataIamge.OBJData() { socket = socketR,prest1= prestC,trayDataUser= trayDataUserControl });}));
                         }
                         else
-                       {
+                        {
                             ForImageFor.keyValuePairs[prestC.LineName].trayDataUser.GetTrayEx().XNumber= (sbyte)prestC.XNumber;
                             ForImageFor.keyValuePairs[prestC.LineName].trayDataUser.GetTrayEx().YNumber = (sbyte)prestC.YNumber;
                             ForImageFor.keyValuePairs[prestC.LineName].trayDataUser.GetTrayEx().GetTrayData().RestValue();
@@ -1099,15 +1066,13 @@ namespace Vision2.vision
                         }
                            ForImageFor.SetData(ForImageFor.keyValuePairs[prestC.LineName]);     
                     }
-                    else if (ErosProjcetDLL.Bytes.ByteHelper.BytesToObject(key) is PrestImageData)
+              else if (ErosProjcetDLL.Bytes.ByteHelper.BytesToObject(key) is PrestImageData)
                     {
                         PrestImageData data = ErosProjcetDLL.Bytes.ByteHelper.BytesToObject(key) as PrestImageData;
                         ForImageFor.keyValuePairs[data.LinkName].socket = socketR;
-              
-                    if (data != null)
-                        {
-
-                             ForImageFor.SetImageData(data);
+                       if (data != null)
+                       {
+                           ForImageFor.SetImageData(data);
                         }
                     }
             }
@@ -1128,7 +1093,6 @@ namespace Vision2.vision
                 bool icong = false;
                 MainForm1.MainFormF.Invoke(new Action(() =>
                 {
-
                     string listPath = ProjectINI.In.ProjectPathRun + "\\" + Instance.FileName + "\\" + nameP;
                     if (Directory.Exists(listPath))
                     {
@@ -1675,20 +1639,15 @@ namespace Vision2.vision
                             {
                                 halconRun.GetHWindow().UpHalcon();
                             }
-                            catch (Exception)
-                            {
-                            }
+                            catch (Exception)     { }
                         }
                     }
-                    catch (Exception ex)
-                    {
-                    }
+                    catch (Exception ex) { }
                 }
             }
             this.UpProjectNode(Node.Parent);
             GC.SuppressFinalize(this);
         }
-
 
         #region //单例实例
 
@@ -1759,6 +1718,15 @@ namespace Vision2.vision
 
         public class DrawBackSt
         {
+            public HTuple GetBackName()
+            {
+                HTuple hTuple = new HTuple();
+                for (int i = 0; i < DicDrawbackName.Count; i++)
+                {
+                    hTuple.Append(DicDrawbackName[i]);
+                }
+                return hTuple;
+            }
             public List<string> DicDrawbackName = new List<string>();
             public List<int> DicDrawbackIndex = new List<int>();
         }
@@ -1815,7 +1783,11 @@ namespace Vision2.vision
             return GetRunNameVision();
         }
 
-
+        /// <summary>
+        /// 光源配置
+        /// </summary>
+        public Dictionary<string, LightSource.LightSourceData> DicLightSource 
+            = new Dictionary<string, LightSource.LightSourceData>();
 
         #region 视觉库  
 
@@ -1928,14 +1900,19 @@ namespace Vision2.vision
                 {
                     if (halcon!=null)
                     {
-
                         RestObjImage.RestObjImageFrom.ShowImage(DebugCompiler.GetThis().DDAxis.GetTrayInxt(halcon.TrayID).QuntData());
                     }
                     else
                     {
-                        RestObjImage.RestObjImageFrom.ShowImage(TrayDataUserControl.GetTray().GetTrayData());
+                        if (TrayDataUserControl.GetTray()!=null)
+                        {
+                            RestObjImage.RestObjImageFrom.ShowImage(TrayDataUserControl.GetTray().GetTrayData());
+                        }
+                        if (RecipeCompiler.Instance.TrayCont >=0)
+                        {
+                            RestObjImage.RestObjImageFrom.ShowImage(DebugCompiler.GetThis().DDAxis.GetTrayInxt(RecipeCompiler.Instance.TrayCont).QuntData());
+                        }
                     }
-                    
                 }));
             }
             catch (Exception ex)
@@ -1973,7 +1950,11 @@ namespace Vision2.vision
             {
                 return Instance.DicSaveType[name];
             }
-            return null;
+            else
+            {
+                Instance.DicSaveType.Add(name,new SaveImageInfo());
+            }
+            return Instance.DicSaveType[name]; 
         }
         public static Dictionary<string, HalconRun> GetHimageList()
         {

@@ -39,10 +39,16 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.dataGridView2 = new System.Windows.Forms.DataGridView();
+            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column3 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.插入ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.删除ToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.托盘编号叠加ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.托盘编号递减ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1 = new System.Windows.Forms.Panel();
             this.comboBox4 = new System.Windows.Forms.ComboBox();
             this.comboBox3 = new System.Windows.Forms.ComboBox();
@@ -93,6 +99,12 @@
             this.numericUpDown3 = new System.Windows.Forms.NumericUpDown();
             this.label1 = new System.Windows.Forms.Label();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.Column5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.contextMenuStrip3 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.button2 = new System.Windows.Forms.Button();
+            this.checkBox5 = new System.Windows.Forms.CheckBox();
             this.button8 = new System.Windows.Forms.Button();
             this.label8 = new System.Windows.Forms.Label();
             this.numericUpDown8 = new System.Windows.Forms.NumericUpDown();
@@ -128,15 +140,10 @@
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
-            this.托盘编号叠加ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.托盘编号递减ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.dataGridViewComboBoxColumn1 = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.contextMenuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -164,6 +171,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).BeginInit();
             this.tabPage3.SuspendLayout();
+            this.groupBox3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown8)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown9)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown6)).BeginInit();
@@ -198,7 +207,7 @@
             this.listBox1.ItemHeight = 14;
             this.listBox1.Location = new System.Drawing.Point(381, 2);
             this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(96, 186);
+            this.listBox1.Size = new System.Drawing.Size(96, 158);
             this.listBox1.TabIndex = 8;
             this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
             // 
@@ -254,7 +263,7 @@
             this.tabControl1.Location = new System.Drawing.Point(0, 25);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(703, 572);
+            this.tabControl1.Size = new System.Drawing.Size(643, 572);
             this.tabControl1.TabIndex = 11;
             // 
             // tabPage1
@@ -264,7 +273,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 24);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(695, 544);
+            this.tabPage1.Size = new System.Drawing.Size(635, 544);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "识别二维码";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -282,20 +291,49 @@
             this.Column4});
             this.dataGridView2.ContextMenuStrip = this.contextMenuStrip2;
             this.dataGridView2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridView2.Location = new System.Drawing.Point(3, 192);
+            this.dataGridView2.Location = new System.Drawing.Point(3, 173);
             this.dataGridView2.Name = "dataGridView2";
             this.dataGridView2.RowTemplate.Height = 23;
-            this.dataGridView2.Size = new System.Drawing.Size(689, 349);
+            this.dataGridView2.Size = new System.Drawing.Size(629, 368);
             this.dataGridView2.TabIndex = 21;
             this.dataGridView2.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView2_CellContentClick);
             this.dataGridView2.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView2_CellValueChanged);
             this.dataGridView2.CurrentCellChanged += new System.EventHandler(this.dataGridView2_CurrentCellChanged);
+            // 
+            // dataGridViewTextBoxColumn1
+            // 
+            this.dataGridViewTextBoxColumn1.FillWeight = 253.8071F;
+            this.dataGridViewTextBoxColumn1.HeaderText = "码";
+            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
+            this.dataGridViewTextBoxColumn1.ReadOnly = true;
+            this.dataGridViewTextBoxColumn1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // Column2
+            // 
+            this.Column2.FillWeight = 39.61736F;
+            this.Column2.HeaderText = "托盘编号";
+            this.Column2.Name = "Column2";
+            this.Column2.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
             // Column3
             // 
             this.Column3.FillWeight = 34.18956F;
             this.Column3.HeaderText = "启用";
             this.Column3.Name = "Column3";
+            // 
+            // Column1
+            // 
+            this.Column1.FillWeight = 84.73257F;
+            this.Column1.HeaderText = "Row";
+            this.Column1.Name = "Column1";
+            this.Column1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // Column4
+            // 
+            this.Column4.FillWeight = 87.65341F;
+            this.Column4.HeaderText = "Column";
+            this.Column4.Name = "Column4";
+            this.Column4.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
             // contextMenuStrip2
             // 
@@ -310,16 +348,30 @@
             // 插入ToolStripMenuItem
             // 
             this.插入ToolStripMenuItem.Name = "插入ToolStripMenuItem";
-            this.插入ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.插入ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.插入ToolStripMenuItem.Text = "插入";
             this.插入ToolStripMenuItem.Click += new System.EventHandler(this.插入ToolStripMenuItem_Click);
             // 
             // 删除ToolStripMenuItem1
             // 
             this.删除ToolStripMenuItem1.Name = "删除ToolStripMenuItem1";
-            this.删除ToolStripMenuItem1.Size = new System.Drawing.Size(148, 22);
+            this.删除ToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
             this.删除ToolStripMenuItem1.Text = "删除";
             this.删除ToolStripMenuItem1.Click += new System.EventHandler(this.删除ToolStripMenuItem1_Click);
+            // 
+            // 托盘编号叠加ToolStripMenuItem
+            // 
+            this.托盘编号叠加ToolStripMenuItem.Name = "托盘编号叠加ToolStripMenuItem";
+            this.托盘编号叠加ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.托盘编号叠加ToolStripMenuItem.Text = "托盘编号递增";
+            this.托盘编号叠加ToolStripMenuItem.Click += new System.EventHandler(this.托盘编号叠加ToolStripMenuItem_Click);
+            // 
+            // 托盘编号递减ToolStripMenuItem
+            // 
+            this.托盘编号递减ToolStripMenuItem.Name = "托盘编号递减ToolStripMenuItem";
+            this.托盘编号递减ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.托盘编号递减ToolStripMenuItem.Text = "托盘编号递减";
+            this.托盘编号递减ToolStripMenuItem.Click += new System.EventHandler(this.托盘编号递减ToolStripMenuItem_Click);
             // 
             // panel1
             // 
@@ -347,7 +399,7 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(3, 3);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(689, 189);
+            this.panel1.Size = new System.Drawing.Size(629, 170);
             this.panel1.TabIndex = 18;
             // 
             // comboBox4
@@ -607,7 +659,7 @@
             this.tabPage5.Location = new System.Drawing.Point(4, 24);
             this.tabPage5.Name = "tabPage5";
             this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage5.Size = new System.Drawing.Size(695, 544);
+            this.tabPage5.Size = new System.Drawing.Size(635, 544);
             this.tabPage5.TabIndex = 4;
             this.tabPage5.Text = "预处理";
             this.tabPage5.UseVisualStyleBackColor = true;
@@ -620,9 +672,9 @@
             this.hWindowControl1.ImagePart = new System.Drawing.Rectangle(0, 0, 640, 480);
             this.hWindowControl1.Location = new System.Drawing.Point(3, 226);
             this.hWindowControl1.Name = "hWindowControl1";
-            this.hWindowControl1.Size = new System.Drawing.Size(689, 315);
+            this.hWindowControl1.Size = new System.Drawing.Size(629, 315);
             this.hWindowControl1.TabIndex = 25;
-            this.hWindowControl1.WindowSize = new System.Drawing.Size(689, 315);
+            this.hWindowControl1.WindowSize = new System.Drawing.Size(629, 315);
             // 
             // groupBox1
             // 
@@ -655,7 +707,7 @@
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupBox1.Location = new System.Drawing.Point(3, 3);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(689, 223);
+            this.groupBox1.Size = new System.Drawing.Size(629, 223);
             this.groupBox1.TabIndex = 24;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "预处理";
@@ -979,6 +1031,7 @@
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.groupBox3);
             this.tabPage3.Controls.Add(this.button8);
             this.tabPage3.Controls.Add(this.label8);
             this.tabPage3.Controls.Add(this.numericUpDown8);
@@ -997,11 +1050,68 @@
             this.tabPage3.Location = new System.Drawing.Point(4, 24);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(695, 544);
+            this.tabPage3.Size = new System.Drawing.Size(635, 544);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "检测矩阵";
             this.tabPage3.UseVisualStyleBackColor = true;
             this.tabPage3.Click += new System.EventHandler(this.tabPage3_Click);
+            // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.dataGridView1);
+            this.groupBox3.Controls.Add(this.button2);
+            this.groupBox3.Controls.Add(this.checkBox5);
+            this.groupBox3.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.groupBox3.Location = new System.Drawing.Point(3, 143);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(629, 398);
+            this.groupBox3.TabIndex = 14;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "码偏移";
+            // 
+            // dataGridView1
+            // 
+            this.dataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.Column5});
+            this.dataGridView1.ContextMenuStrip = this.contextMenuStrip3;
+            this.dataGridView1.Location = new System.Drawing.Point(301, 26);
+            this.dataGridView1.Name = "dataGridView1";
+            this.dataGridView1.RowTemplate.Height = 23;
+            this.dataGridView1.Size = new System.Drawing.Size(322, 366);
+            this.dataGridView1.TabIndex = 2;
+            // 
+            // Column5
+            // 
+            this.Column5.HeaderText = "Mack点";
+            this.Column5.Name = "Column5";
+            this.Column5.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            // 
+            // contextMenuStrip3
+            // 
+            this.contextMenuStrip3.Name = "contextMenuStrip3";
+            this.contextMenuStrip3.Size = new System.Drawing.Size(61, 4);
+            // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(33, 74);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(98, 36);
+            this.button2.TabIndex = 1;
+            this.button2.Text = "创建Mark";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click_1);
+            // 
+            // checkBox5
+            // 
+            this.checkBox5.AutoSize = true;
+            this.checkBox5.Location = new System.Drawing.Point(6, 26);
+            this.checkBox5.Name = "checkBox5";
+            this.checkBox5.Size = new System.Drawing.Size(104, 23);
+            this.checkBox5.TabIndex = 0;
+            this.checkBox5.Text = "启用检测";
+            this.checkBox5.UseVisualStyleBackColor = true;
             // 
             // button8
             // 
@@ -1221,14 +1331,14 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 24);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(695, 544);
+            this.tabPage2.Size = new System.Drawing.Size(635, 544);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "生成二维码";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
             // button10
             // 
-            this.button10.Location = new System.Drawing.Point(147, 166);
+            this.button10.Location = new System.Drawing.Point(133, 164);
             this.button10.Name = "button10";
             this.button10.Size = new System.Drawing.Size(107, 40);
             this.button10.TabIndex = 6;
@@ -1241,7 +1351,7 @@
             this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.pictureBox1.Location = new System.Drawing.Point(3, 201);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(689, 340);
+            this.pictureBox1.Size = new System.Drawing.Size(629, 340);
             this.pictureBox1.TabIndex = 5;
             this.pictureBox1.TabStop = false;
             // 
@@ -1251,7 +1361,7 @@
             this.textBox1.Location = new System.Drawing.Point(3, 3);
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(689, 161);
+            this.textBox1.Size = new System.Drawing.Size(629, 161);
             this.textBox1.TabIndex = 4;
             // 
             // button3
@@ -1270,7 +1380,7 @@
             this.tabPage4.Location = new System.Drawing.Point(4, 24);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(695, 544);
+            this.tabPage4.Size = new System.Drawing.Size(635, 544);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "一维码参数";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -1280,7 +1390,7 @@
             this.propertyGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.propertyGrid1.Location = new System.Drawing.Point(3, 3);
             this.propertyGrid1.Name = "propertyGrid1";
-            this.propertyGrid1.Size = new System.Drawing.Size(689, 538);
+            this.propertyGrid1.Size = new System.Drawing.Size(629, 538);
             this.propertyGrid1.TabIndex = 0;
             // 
             // tabPage6
@@ -1289,7 +1399,7 @@
             this.tabPage6.Location = new System.Drawing.Point(4, 24);
             this.tabPage6.Name = "tabPage6";
             this.tabPage6.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage6.Size = new System.Drawing.Size(695, 544);
+            this.tabPage6.Size = new System.Drawing.Size(635, 544);
             this.tabPage6.TabIndex = 5;
             this.tabPage6.Text = "属性";
             this.tabPage6.UseVisualStyleBackColor = true;
@@ -1299,7 +1409,7 @@
             this.propertyGrid2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.propertyGrid2.Location = new System.Drawing.Point(3, 3);
             this.propertyGrid2.Name = "propertyGrid2";
-            this.propertyGrid2.Size = new System.Drawing.Size(689, 538);
+            this.propertyGrid2.Size = new System.Drawing.Size(629, 538);
             this.propertyGrid2.TabIndex = 0;
             // 
             // tabPage7
@@ -1310,7 +1420,7 @@
             this.tabPage7.Location = new System.Drawing.Point(4, 24);
             this.tabPage7.Name = "tabPage7";
             this.tabPage7.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage7.Size = new System.Drawing.Size(695, 544);
+            this.tabPage7.Size = new System.Drawing.Size(635, 544);
             this.tabPage7.TabIndex = 6;
             this.tabPage7.Text = "训练图像";
             this.tabPage7.UseVisualStyleBackColor = true;
@@ -1321,7 +1431,7 @@
             this.groupBox2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox2.Location = new System.Drawing.Point(3, 161);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(689, 380);
+            this.groupBox2.Size = new System.Drawing.Size(629, 380);
             this.groupBox2.TabIndex = 1;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "groupBox2";
@@ -1334,9 +1444,9 @@
             this.hWindowControl2.ImagePart = new System.Drawing.Rectangle(0, 0, 640, 480);
             this.hWindowControl2.Location = new System.Drawing.Point(3, 19);
             this.hWindowControl2.Name = "hWindowControl2";
-            this.hWindowControl2.Size = new System.Drawing.Size(683, 358);
+            this.hWindowControl2.Size = new System.Drawing.Size(623, 358);
             this.hWindowControl2.TabIndex = 0;
-            this.hWindowControl2.WindowSize = new System.Drawing.Size(683, 358);
+            this.hWindowControl2.WindowSize = new System.Drawing.Size(623, 358);
             // 
             // panel2
             // 
@@ -1347,13 +1457,13 @@
             this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel2.Location = new System.Drawing.Point(3, 3);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(689, 158);
+            this.panel2.Size = new System.Drawing.Size(629, 158);
             this.panel2.TabIndex = 0;
             // 
             // label17
             // 
             this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(5, 9);
+            this.label17.Location = new System.Drawing.Point(128, 9);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(63, 14);
             this.label17.TabIndex = 34;
@@ -1361,7 +1471,7 @@
             // 
             // numericUpDown17
             // 
-            this.numericUpDown17.Location = new System.Drawing.Point(69, 3);
+            this.numericUpDown17.Location = new System.Drawing.Point(192, 3);
             this.numericUpDown17.Maximum = new decimal(new int[] {
             10,
             0,
@@ -1379,7 +1489,7 @@
             // 
             // button4
             // 
-            this.button4.Location = new System.Drawing.Point(3, 32);
+            this.button4.Location = new System.Drawing.Point(126, 32);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(95, 28);
             this.button4.TabIndex = 14;
@@ -1389,10 +1499,10 @@
             // 
             // listBox2
             // 
-            this.listBox2.Dock = System.Windows.Forms.DockStyle.Right;
+            this.listBox2.Dock = System.Windows.Forms.DockStyle.Left;
             this.listBox2.FormattingEnabled = true;
             this.listBox2.ItemHeight = 14;
-            this.listBox2.Location = new System.Drawing.Point(569, 0);
+            this.listBox2.Location = new System.Drawing.Point(0, 0);
             this.listBox2.Name = "listBox2";
             this.listBox2.Size = new System.Drawing.Size(120, 158);
             this.listBox2.TabIndex = 0;
@@ -1406,7 +1516,7 @@
             this.toolStripButton3});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(703, 25);
+            this.toolStrip1.Size = new System.Drawing.Size(643, 25);
             this.toolStrip1.TabIndex = 12;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -1439,20 +1549,6 @@
             this.toolStripButton3.ToolTipText = "将当前区域作为矩阵识别区";
             this.toolStripButton3.Click += new System.EventHandler(this.toolStripButton3_Click);
             // 
-            // 托盘编号叠加ToolStripMenuItem
-            // 
-            this.托盘编号叠加ToolStripMenuItem.Name = "托盘编号叠加ToolStripMenuItem";
-            this.托盘编号叠加ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
-            this.托盘编号叠加ToolStripMenuItem.Text = "托盘编号递增";
-            this.托盘编号叠加ToolStripMenuItem.Click += new System.EventHandler(this.托盘编号叠加ToolStripMenuItem_Click);
-            // 
-            // dataGridViewTextBoxColumn1
-            // 
-            this.dataGridViewTextBoxColumn1.FillWeight = 253.8071F;
-            this.dataGridViewTextBoxColumn1.HeaderText = "码";
-            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
-            this.dataGridViewTextBoxColumn1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            // 
             // dataGridViewTextBoxColumn2
             // 
             this.dataGridViewTextBoxColumn2.FillWeight = 39.61736F;
@@ -1477,33 +1573,12 @@
             this.dataGridViewTextBoxColumn4.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.dataGridViewTextBoxColumn4.Width = 113;
             // 
-            // Column2
+            // dataGridViewComboBoxColumn1
             // 
-            this.Column2.FillWeight = 39.61736F;
-            this.Column2.HeaderText = "托盘编号";
-            this.Column2.Name = "Column2";
-            this.Column2.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            // 
-            // Column1
-            // 
-            this.Column1.FillWeight = 84.73257F;
-            this.Column1.HeaderText = "Row";
-            this.Column1.Name = "Column1";
-            this.Column1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            // 
-            // Column4
-            // 
-            this.Column4.FillWeight = 87.65341F;
-            this.Column4.HeaderText = "Column";
-            this.Column4.Name = "Column4";
-            this.Column4.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            // 
-            // 托盘编号递减ToolStripMenuItem
-            // 
-            this.托盘编号递减ToolStripMenuItem.Name = "托盘编号递减ToolStripMenuItem";
-            this.托盘编号递减ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.托盘编号递减ToolStripMenuItem.Text = "托盘编号递减";
-            this.托盘编号递减ToolStripMenuItem.Click += new System.EventHandler(this.托盘编号递减ToolStripMenuItem_Click);
+            this.dataGridViewComboBoxColumn1.HeaderText = "Mack点";
+            this.dataGridViewComboBoxColumn1.Name = "dataGridViewComboBoxColumn1";
+            this.dataGridViewComboBoxColumn1.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridViewComboBoxColumn1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
             // 
             // QRCodeControl1
             // 
@@ -1512,7 +1587,7 @@
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.toolStrip1);
             this.Name = "QRCodeControl1";
-            this.Size = new System.Drawing.Size(703, 597);
+            this.Size = new System.Drawing.Size(643, 597);
             this.Load += new System.EventHandler(this.QRCodeControl1_Load);
             this.contextMenuStrip1.ResumeLayout(false);
             this.tabControl1.ResumeLayout(false);
@@ -1544,6 +1619,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).EndInit();
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown8)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown9)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown6)).EndInit();
@@ -1651,11 +1729,6 @@
         private System.Windows.Forms.NumericUpDown numericUpDown17;
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.ListBox listBox2;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn Column3;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column4;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip2;
         private System.Windows.Forms.ToolStripMenuItem 插入ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 删除ToolStripMenuItem1;
@@ -1678,5 +1751,17 @@
         private System.Windows.Forms.ComboBox comboBox4;
         private System.Windows.Forms.ToolStripMenuItem 托盘编号叠加ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 托盘编号递减ToolStripMenuItem;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn Column3;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column4;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.CheckBox checkBox5;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column5;
+        private System.Windows.Forms.DataGridViewComboBoxColumn dataGridViewComboBoxColumn1;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip3;
     }
 }

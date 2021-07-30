@@ -30,7 +30,6 @@ namespace Vision2.Project.DebugF
         /// </summary>
         private void InitializeComponent()
         {
-            this.labelStat = new System.Windows.Forms.Label();
             this.labelAram = new System.Windows.Forms.Label();
             this.Btn_Reset = new System.Windows.Forms.Button();
             this.Btn_Pause = new System.Windows.Forms.Button();
@@ -41,17 +40,6 @@ namespace Vision2.Project.DebugF
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // labelStat
-            // 
-            this.labelStat.AutoSize = true;
-            this.labelStat.Font = new System.Drawing.Font("宋体", 21.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.labelStat.ForeColor = System.Drawing.SystemColors.GradientInactiveCaption;
-            this.labelStat.Location = new System.Drawing.Point(302, 10);
-            this.labelStat.Name = "labelStat";
-            this.labelStat.Size = new System.Drawing.Size(73, 29);
-            this.labelStat.TabIndex = 8;
-            this.labelStat.Text = "状态";
             // 
             // labelAram
             // 
@@ -158,7 +146,6 @@ namespace Vision2.Project.DebugF
             this.panel1.Controls.Add(this.Btn_Stop);
             this.panel1.Controls.Add(this.labelAram);
             this.panel1.Controls.Add(this.Btn_Initialize);
-            this.panel1.Controls.Add(this.labelStat);
             this.panel1.Controls.Add(this.Btn_Debug);
             this.panel1.Controls.Add(this.Btn_Reset);
             this.panel1.Controls.Add(this.Btn_Pause);
@@ -193,7 +180,6 @@ namespace Vision2.Project.DebugF
         public System.Windows.Forms.Button Btn_Debug;
         public System.Windows.Forms.Button Btn_Pause;
         public System.Windows.Forms.Button Btn_Reset;
-        public System.Windows.Forms.Label labelStat;
         public System.Windows.Forms.Label labelAram;
         private System.Windows.Forms.Panel panel1;
     }

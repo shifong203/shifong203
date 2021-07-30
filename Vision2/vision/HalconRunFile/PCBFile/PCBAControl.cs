@@ -251,6 +251,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 }
                 else bPCBoJB = new RectangleCapacitance();
                 PCBAT.GetDicPCBA().Add(dsts, bPCBoJB);
+                bPCBoJB.Name = dsts;
                 TreeNode treeNode = treeView1.Nodes.Add(dsts);
                 treeNode.Tag = bPCBoJB;
             }
@@ -264,6 +265,27 @@ namespace Vision2.vision.HalconRunFile.Controls
         private void toolStripButton1_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void 同步到库ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+              {
+                //ToolStrip toolStrip  =toolStripItemw.GetCurrentParent();
+              
+                        if (CurrentNode!=null)
+                        {
+                            PCBAT.GetDicPCBA()[CurrentNode.Text].SaveThis(Library.LibraryBasics.PathStr);
+                            Vision.Instance.AddLibrary(PCBAT.GetDicPCBA()[CurrentNode.Text]);
+                        }
+
+                    }
+                    catch (Exception)
+                    {
+                    }
+                    //弹出带输入
+                
+         
         }
     }
 }

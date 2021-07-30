@@ -148,6 +148,7 @@ namespace Vision2.vision.HalconRunFile.Controls
             }
             catch (Exception ex)
             {
+                MessageBox.Show(ex.Message);
             }
             this.Cursor = System.Windows.Forms.Cursors.Default;
         }
@@ -181,23 +182,42 @@ namespace Vision2.vision.HalconRunFile.Controls
                 comboBox1.SelectedItem = Code.SymbolType;
                 GetP();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-
+                MessageBox.Show(ex.Message);
             }
             isCheave = false;
         }
         public void GetP()
         {
+            try
+            {
+                isCheave = true;
+                checkBox5.Checked = Code.Enble;
 
-            comboBox4.SelectedIndex = Code.QRCOntEn;
-            numericUpDown4.Value = Code.XNumber;
-            numericUpDown5.Value = Code.YNumber;
-            numericUpDown6.Value = Code.XInterval;
-            numericUpDown7.Value = Code.YInterval;
-            numericUpDown8.Value = Code.XLocation;
-            numericUpDown9.Value = Code.YLocation;
+                dataGridView1.Rows.Clear();
+                if (Code.MarkName.Count!=0)
+                {
+                    dataGridView1.Rows.Add(Code.MarkName.Count);
+                    for (int i = 0; i < Code.MarkName.Count; i++)
+                    {
+                        dataGridView1.Rows[i].Cells[0].Value = Code.MarkName[i];
+                    }
+                }
+                comboBox4.SelectedIndex = Code.QRCOntEn;
+                numericUpDown4.Value = Code.XNumber;
+                numericUpDown5.Value = Code.YNumber;
+                numericUpDown6.Value = Code.XInterval;
+                numericUpDown7.Value = Code.YInterval;
+                numericUpDown8.Value = Code.XLocation;
+                numericUpDown9.Value = Code.YLocation;
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+          
         }
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -717,25 +737,34 @@ namespace Vision2.vision.HalconRunFile.Controls
                 HOperatorSet.AreaCenter(hObject,  out HTuple area, out HTuple rows, out HTuple colus);
                 Code.Rows = rows;
                 Code.Cols = colus;
+                HTuple id = new HTuple();
+                for (int i = 0; i < rows.Length; i++)
+                {
+                    if (Code.TrayIDS.Count<=i)
+                    {
+                        Code.TrayIDS.Add(Code.TrayIDS[i-1]+1);
+                    }
+                    id.Append(Code.TrayIDS[i]);
+                }
                 halcon.HobjClear();
-                Code.SrotCode(halcon.GetOneImageR());
+                halcon.AddImageMassage(rows + 80, colus, id);
+                halcon.ShowObj();
+                //Code.SrotCode(halcon.GetOneImageR());
             }
             catch (Exception)
             {
             }
         }
-
         private void 插入ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
             {
-                Code.Rows= Code.Rows.TupleInsert(dataGridView2.SelectedCells[0].RowIndex+1, Code.Rows[dataGridView2.SelectedCells[0].RowIndex] + 20);
-                Code.Cols = Code.Cols.TupleInsert(dataGridView2.SelectedCells[0].RowIndex+1, Code.Cols[dataGridView2.SelectedCells[0].RowIndex] + 20);
+                Code.Rows= Code.Rows.TupleInsert(dataGridView2.SelectedCells[0].RowIndex+1, Code.Rows[dataGridView2.SelectedCells[0].RowIndex] + 60);
+                Code.Cols = Code.Cols.TupleInsert(dataGridView2.SelectedCells[0].RowIndex+1, Code.Cols[dataGridView2.SelectedCells[0].RowIndex] + 60);
                 int det = dataGridView2.SelectedCells[0].RowIndex + 2;
                 Code.IsEt.Insert(dataGridView2.SelectedCells[0].RowIndex + 1,true);
                 dataGridView2.Rows.Insert(dataGridView2.SelectedCells[0].RowIndex+1,"", dataGridView2.SelectedCells[0].RowIndex+2,true,
-                    Code.Rows[dataGridView2.SelectedCells[0].RowIndex]+20, Code.Cols[dataGridView2.SelectedCells[0].RowIndex] + 20);
-   
+                    Code.Rows[dataGridView2.SelectedCells[0].RowIndex]+60, Code.Cols[dataGridView2.SelectedCells[0].RowIndex] + 60);
                 for (int i = det; i < dataGridView2.Rows.Count; i++)
                 {
                     if (dataGridView2.Rows[i].Cells[1].Value!=null)
@@ -779,7 +808,9 @@ namespace Vision2.vision.HalconRunFile.Controls
                 Code.Rows = rows;
                 Code.Cols = colus;
                 halcon.HobjClear();
-                Code.SrotCode(halcon.GetOneImageR());
+                halcon.AddImageMassage(rows + 80, colus, new HTuple(Code.TrayIDS.ToArray()));
+                halcon.ShowObj();
+                //Code.SrotCode(halcon.GetOneImageR());
             }
             catch (Exception)
             {
@@ -803,8 +834,44 @@ namespace Vision2.vision.HalconRunFile.Controls
 
         private void toolStripButton3_Click(object sender, EventArgs e)
         {
-            halcon.HobjClear();
-            Code.SrotCode(halcon.GetOneImageR());
+            try
+            {
+                halcon.HobjClear();
+                Code.SrotCode(halcon.GetOneImageR());
+                dataGridView2.Rows.Clear();
+                if (Code.IDValue > 0)
+                {
+                    if (dataGridView2.Rows.Count < Code.Rows.Length)
+                    {
+                        dataGridView2.Rows.Add(Code.Rows.Length - dataGridView2.Rows.Count);
+                    }
+                    for (int i = 0; i < Code.Rows.Length; i++)
+                    {
+                        if (Code.TrayIDS.Count > i)
+                        {
+                            dataGridView2.Rows[i].Cells[1].Value = (Code.TrayIDS[i]);
+                        }
+
+                        if (Code.IsEt.Count > i)
+                        {
+                            dataGridView2.Rows[i].Cells[2].Value = (Code.IsEt[i]);
+                        }
+                        if (Code.Rows.Length > i)
+                        {
+                            dataGridView2.Rows[i].Cells[3].Value = Code.Rows.TupleSelect(i);
+                        }
+                        if (Code.Cols.Length > i)
+                        {
+                            dataGridView2.Rows[i].Cells[4].Value = Code.Cols.TupleSelect(i);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+     
         }
 
    
@@ -865,6 +932,66 @@ namespace Vision2.vision.HalconRunFile.Controls
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+            }
+        }
+       
+        private void button2_Click_1(object sender, EventArgs e)
+        {
+            try
+            {
+                Code.MarkName = new List<string>();
+                Code.MarkName.Add("颜色检测.颜色");
+                Code.MarkName.Add("颜色检测.颜色1");
+                Code.MarkName.Add("颜色检测.颜色2");
+                Code.MarkName.Add("颜色检测.颜色3");
+                Code.MarkName.Add("颜色检测.颜色4");
+                Code.GetPThis().HobjClear();
+                for (int id = 0; id < Code.MarkName.Count; id++)
+                {
+                    string[] prn = Code.MarkName[id].Split('.');
+                    Color_Detection color_Detection = Code.GetPThis().GetRunProgram()[prn[0]] as Color_Detection;
+                    if (color_Detection != null)
+                    {
+                        HOperatorSet.GenCrossContourXld(out HObject hObject, color_Detection.keyColor[prn[1]].OBJRow,
+                            color_Detection.keyColor[prn[1]].OBJCol, 60, 0);
+                        HOperatorSet.GenRegionLine(out HObject hObject1, color_Detection.keyColor[prn[1]].OBJRow[0],
+                            color_Detection.keyColor[prn[1]].OBJCol[0], color_Detection.keyColor[prn[1]].OBJRow[1],
+                            color_Detection.keyColor[prn[1]].OBJCol[1]);
+                        Code.GetPThis().AddObj(hObject1);
+                        Code.GetPThis().AddObj(hObject);
+                        HOperatorSet.DistancePl(Code.OutRow, Code.OutCol, color_Detection.keyColor[prn[1]].OBJRow[0],
+                        color_Detection.keyColor[prn[1]].OBJCol[0], color_Detection.keyColor[prn[1]].OBJRow[1],
+                        color_Detection.keyColor[prn[1]].OBJCol[1], out HTuple ding);
+                        HTuple row = new HTuple();
+                        HTuple col = new HTuple();
+                        HTuple intd = new HTuple();
+                        HTuple dingpp = new HTuple();
+                        for (int i = 0; i < ding.Length; i++)
+                        {
+                            if (ding[i] < 250)
+                            {
+                                row.Append(Code.OutRow[i]);
+                                col.Append(Code.OutCol[i]);
+                                HTuple hTupleR = HTuple.TupleGenConst(Code.Cols.Length, Code.OutRow[i]);
+                                HTuple hTupleC = HTuple.TupleGenConst(Code.Cols.Length, Code.OutCol[i]);
+                                HOperatorSet.DistancePp(Code.Rows, Code.Cols, hTupleR, hTupleC, out HTuple dipp);
+                                HTuple intex = dipp.TupleFind(dipp.TupleMin());
+
+                                intd.Append((intex + 1) + ":" +( ding[i]-160));
+                                dingpp.Append(ding[i]);
+                            }
+                        }
+                        HOperatorSet.GenCrossContourXld(out HObject hObject2, row, col, 60, 0);
+                        Code.GetPThis().AddImageMassage(row, col, intd);
+                        Code.GetPThis().AddObj(hObject2);
+                    }
+                    Code.GetPThis().ShowObj();
+
+                }
+
+            }
+            catch (Exception ex)
+            {
             }
         }
     }

@@ -39,11 +39,12 @@
             this.alarmText1.Name = "alarmText1";
             this.alarmText1.Size = new System.Drawing.Size(923, 585);
             this.alarmText1.TabIndex = 0;
+            this.alarmText1.Load += new System.EventHandler(this.alarmText1_Load);
             // 
             // AlarmForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(923, 585);
             this.Controls.Add(this.alarmText1);
             this.MaximizeBox = false;

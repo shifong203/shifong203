@@ -2473,7 +2473,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         {
 
                             //HOperatorSet.GrayClosingShape(timeobj, out timeobj, 5, 5, "octagon");
-                            Measuring_Arc(timeobj, out NGRoi, this.Measure_Waigth, Measure_Heigth,
+                            Measuring_Arc(timeobj, out nGRoi, this.Measure_Waigth, Measure_Heigth,
                             this.Tepy, InterpolationStr.ToString(), new HTuple(this.Sigma, this.Sigma2),
                             new HTuple(this.Threshold, this.Threshold2),
                             new HTuple(this.SelectStr.ToString(), this.SelectStr2.ToString()),
@@ -2520,7 +2520,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                             halcon.AddObj(hObject3);
 
                             Measuring_xld(hObject3, DrawRows, drawCols, DrawRows2, DrawCols2, hv_LeftMeasureAngles, this.Measure_Heigth, out outRows,
-                               out outCols, out outRows2, out outCols2, out distance, out HObject hObject, out NGRoi, out HObject itmexl);
+                               out outCols, out outRows2, out outCols2, out distance, out HObject hObject, out nGRoi, out HObject itmexl);
                             halcon.AddObj(hObject);
                             halcon.AddObj(itmexl);
                         }
@@ -2533,7 +2533,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         HOperatorSet.GenCrossContourXld(out HObject LeftMeasureRectangles, rows, cols, 40, 0);
                         halcon.AddObj(LeftMeasureRectangles);
 
-                        HOperatorSet.ConcatObj(objectColor._HObject, NGRoi.ConcatObj(LeftMeasureRectangles), out objectColor._HObject);
+                        HOperatorSet.ConcatObj(objectColor._HObject, nGRoi.ConcatObj(LeftMeasureRectangles), out objectColor._HObject);
                         this["距离mm"] = halcon.GetCaliConstMM(this.distance);
                         //hObject.Dispose();
                         ISSt = NurbsMeasureResult(halcon);
@@ -2617,7 +2617,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 this["DrawPhis2"] = RightDrawPhi;
                 this["Distance"] = distance;
 
-                return TMeasureObj(halcon.Image(), halcon, oneResultOBj);
+                return TMeasureObj(halcon.GetImageOBJ(this.ImageTypeOb), halcon, oneResultOBj);
             }
         }
 
@@ -2634,6 +2634,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         {
             try
             {
+                ResltBool = false;
                 this.MeasureHObj.Dispose();
                 this.MeasureHObj.GenEmptyObj();
                 this.HamMatDrawObj.Dispose();
@@ -2945,7 +2946,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     halcon.AddMeassge(halcon.GetCaliConstMM(distance));
                 }
                 this["测量距离mm"] = halcon.GetCaliConstMM(distance);
-                HOperatorSet.GenCrossContourXld(out line, OutRows, OutCols, 10, 0);
+                HOperatorSet.GenCrossContourXld(out line, OutRows, OutCols, 20, 0);
                 switch (this.measure_Type)
                 {
                     case MeasureType.PointIXLD:
@@ -3008,11 +3009,11 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             vision.Vision.Peak(image, this["DrawRows"], this["DrawCols"], HomMatPhi.D, DrawLength1.D,
                         DrawLength2.D, this.Measure_Waigth, this.Sigma, this.Threshold, this.TransitionStr.ToString(), this.SelectStr.ToString(),
                         out this.outRows, out this.outCols, out this.outCentreRow, out this.outCentreCol);
-            HOperatorSet.GenCrossContourXld(out NGRoi, this.OutCentreRow, this.outCentreCol, 60, 0);
+            HOperatorSet.GenCrossContourXld(out nGRoi, this.OutCentreRow, this.outCentreCol, 60, 0);
 
             this["拟合点Rows"] = outRows;
             this["拟合点Columns"] = outCols;
-            return NGRoi;
+            return nGRoi;
         }
         /// <summary>
         /// 测量XLD

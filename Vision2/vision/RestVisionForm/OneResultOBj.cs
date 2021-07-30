@@ -136,10 +136,11 @@ namespace Vision2.vision
             oneContOBJs.AddCont(rObj);
         }
 
-        public void AddNGOBJ(string component, string nGText, HObject roi,HObject err,HTuple ngText=null)
+        public void AddNGOBJ(string component, string nGText, HObject roi,HObject err,
+            HTuple ngText=null,string runPa="")
         {
-
-            OneRObj rObj = new OneRObj() { NGText = nGText, ComponentID = component, ROI = roi, NGROI = err,};
+            OneRObj rObj = new OneRObj() { NGText = nGText, ComponentID = component,
+                ROI = roi, NGROI = err,RunName= runPa };
             if (ngText!=null)
             {
                 for (int i = 0; i < ngText.Length; i++)

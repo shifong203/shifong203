@@ -211,70 +211,70 @@ namespace htmlMaker
             stbMsg.Text = "清空所有输入框";
         }
 
-        private bool GenerateCode(string sn, string pass, int timems)
-        {
-            // 文件存在时是否覆盖
-            filename = ProcessUser.GetThis().ExcelPath +"\\"+sn + ".html";
-            FileInfo f = new FileInfo(filename);
-            if(f.Exists)
-            {
-                f.Delete();
-                //DialogResult s = MessageBox.Show("该文件已经存在，是否覆盖？" , "警告", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
-                //if(String.Format("{0}" , s) == "Yes")
-                //{
+        //private bool GenerateCode(string sn, string pass, int timems)
+        //{
+        //    // 文件存在时是否覆盖
+        //    filename = ProcessUser.GetThis().ExcelPath +"\\"+sn + ".html";
+        //    FileInfo f = new FileInfo(filename);
+        //    if(f.Exists)
+        //    {
+        //        f.Delete();
+        //        //DialogResult s = MessageBox.Show("该文件已经存在，是否覆盖？" , "警告", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
+        //        //if(String.Format("{0}" , s) == "Yes")
+        //        //{
            
-                //}
-                //else
-                //{
-                //    s = MessageBox.Show("请输入不同的文件名！" , "警告");
-                //    txbFilename.Focus();
-                //    return false;
-                //}				
-            }
+        //        //}
+        //        //else
+        //        //{
+        //        //    s = MessageBox.Show("请输入不同的文件名！" , "警告");
+        //        //    txbFilename.Focus();
+        //        //    return false;
+        //        //}				
+        //    }
 
-            // 写文件
-            FileStream outputfile = null;
-            try
-            {
-                outputfile = new FileStream(filename,FileMode.OpenOrCreate, FileAccess.Write);
-                writer = new StreamWriter(outputfile);
-                writer.BaseStream.Seek(0, SeekOrigin.End);
-                DoWrite ("<HTML>");
-                DoWrite ("<HEAD>");
-                DoWrite ("<TITLE>"+sn+ "</TITLE>");
-                DoWrite ("</HEAD>");
-                DoWrite ("<BODY BGCOLOR='white'>");
-                DoWrite("<CENTER>");
-                DoWrite("<BR><BR><H2>Trst Report</H2>");
-                DoWrite("</CENTER>");
-                DoWrite ("<Label>");
-                DoWrite("<H2>Serial Number: "+ sn +"</H2>");
-                DoWrite("<H2>Start Time: "+ DateTime.Now+"</H2>");
-                //DoWrite(" <Button ID=\"saveBtn\" runat=\"server\" Text=\"生成静态文件 / \" nClick=\"saveBtn_click\" /> ");
-                DoWrite("<H2>Stop Time: " + DateTime.Now + "</H2>");
-                DoWrite("<H2>Text Station: " + RecipeCompiler.Instance.MesDatat.Testre_Name + "</H2>");
-                DoWrite("<H2>Text Operator: " + RecipeCompiler.Instance.MesDatat.UserID + "</H2>");
-                DoWrite("<H2>Text Cell: " + "1" + "</H2>");
-                DoWrite("<H2>Text Result: " + pass + "</H2>");
-                DoWrite("<H2Text Script: " + ProcessUser.GetThis().ExcelPath + "</H2>");
-                DoWrite("<H2>Text Script Validation Hash: " + "1" + "</H2>");
-                DoWrite("<H2>Elapsed Time: " + timems + "</H2>");
-                DoWrite("<H2>Total Execution Time: " + timems + "</H2>");
-                DoWrite("</Label>");
-                DoWrite ("</BODY>");
-                DoWrite ("</HTML>");
-                writer.Close();
-            }
-            catch(Exception ex)
-            {
-                Console.WriteLine("Exception GenerateCode = "+ex);
-                stbMsg.Text = "Error";
-                outputfile = null;
-                writer = null;
-                return false;
-            }
-            return true;
-        }
+        //    // 写文件
+        //    FileStream outputfile = null;
+        //    try
+        //    {
+        //        outputfile = new FileStream(filename,FileMode.OpenOrCreate, FileAccess.Write);
+        //        writer = new StreamWriter(outputfile);
+        //        writer.BaseStream.Seek(0, SeekOrigin.End);
+        //        DoWrite ("<HTML>");
+        //        DoWrite ("<HEAD>");
+        //        DoWrite ("<TITLE>"+sn+ "</TITLE>");
+        //        DoWrite ("</HEAD>");
+        //        DoWrite ("<BODY BGCOLOR='white'>");
+        //        DoWrite("<CENTER>");
+        //        DoWrite("<BR><BR><H2>Trst Report</H2>");
+        //        DoWrite("</CENTER>");
+        //        DoWrite ("<Label>");
+        //        DoWrite("<H2>Serial Number: "+ sn +"</H2>");
+        //        DoWrite("<H2>Start Time: "+ DateTime.Now+"</H2>");
+        //        //DoWrite(" <Button ID=\"saveBtn\" runat=\"server\" Text=\"生成静态文件 / \" nClick=\"saveBtn_click\" /> ");
+        //        DoWrite("<H2>Stop Time: " + DateTime.Now + "</H2>");
+        //        DoWrite("<H2>Text Station: " + mes.MesDatat.Testre_Name + "</H2>");
+        //        DoWrite("<H2>Text Operator: " + RecipeCompiler.Instance.MesDatat.UserID + "</H2>");
+        //        DoWrite("<H2>Text Cell: " + "1" + "</H2>");
+        //        DoWrite("<H2>Text Result: " + pass + "</H2>");
+        //        DoWrite("<H2Text Script: " + ProcessUser.GetThis().ExcelPath + "</H2>");
+        //        DoWrite("<H2>Text Script Validation Hash: " + "1" + "</H2>");
+        //        DoWrite("<H2>Elapsed Time: " + timems + "</H2>");
+        //        DoWrite("<H2>Total Execution Time: " + timems + "</H2>");
+        //        DoWrite("</Label>");
+        //        DoWrite ("</BODY>");
+        //        DoWrite ("</HTML>");
+        //        writer.Close();
+        //    }
+        //    catch(Exception ex)
+        //    {
+        //        Console.WriteLine("Exception GenerateCode = "+ex);
+        //        stbMsg.Text = "Error";
+        //        outputfile = null;
+        //        writer = null;
+        //        return false;
+        //    }
+        //    return true;
+        //}
 
         private void DoWrite (String line)
         {

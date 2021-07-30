@@ -11,6 +11,7 @@ using Vision2.Project.DebugF.IO;
 using Vision2.Project.Mes;
 using ErosSocket.DebugPLC.Robot;
 using static Vision2.Project.Mes.安费诺Mes;
+using System.Reflection;
 
 namespace Vision2.Project.formula
 {
@@ -58,87 +59,12 @@ namespace Vision2.Project.formula
 
         }
 
-
-
-        public class MesData
-        {
-            public MesData()
-            {
-                Testre_Name = Dns.GetHostName();
-            }
-
-            [Description("文件名明名时间规则"), Category("文件名称"), DisplayName("文件名时间规则")]
-            public string FileTimeName { get; set; } = "yyyy-MM-dd";
-            /// <summary>
-            /// 客户名
-            /// </summary>
-            [Description("客户名Customer"), Category("Mes信息"), DisplayName("C-客户名")]
-            public string Customer { get; set; } = "Customer";
-
-            [Description("板样式"), Category("Mes信息"), DisplayName("B-Board_Style")]
-            public string Board_Style { get; set; } = "Stack";
-            /// <summary>
-            /// 客户版本号
-            /// </summary>
-            [Description("客户版本号 DiviSion"), Category("Mes信息"), DisplayName("I-客户版本号")]
-            public string DiviSion { get; set; } = "DiviSion";
-            /// <summary>
-            /// 计算机名称
-            /// </summary>
-            [Description("计算机名称 Testre_Name"), Category("Mes信息"), DisplayName("N-计算机名称")]
-            public string Testre_Name { get; set; } = "Testre_Name";
-            /// <summary>
-            /// 设备名
-            /// </summary>
-            [Description("设备名Test_Process"), Category("Mes信息"), DisplayName("P-设备名")]
-            public string Test_Process { get; set; } = "Test_Process";
-            /// <summary>
-            /// 操作员工号
-            /// </summary>
-            [Description("Operator ID操作员工号"), Category("Mes信息"), DisplayName("O-操作员工号")]
-            public string UserID { get; set; } = "Mtd0";
-            /// <summary>
-            /// 操作员名称
-            /// </summary>
-            [Description("操作员名称"), Category("Mes信息"), DisplayName("操作员名称"), ReadOnly(true)]
-            public string UserIDName { get; set; } = "User1";
-            /// <summary>
-            /// 装配编号
-            /// </summary>
-            [Description("AssemblyNumber"), Category("Mes信息"), DisplayName("n-装配编号")]
-            public string AssemblyNumber { get; set; } = "AssemblyNumber";
-
-            [Description("Defect Location (CRD)"), Category("Mes标识"), DisplayName("c-检测位置")]
-            /// <summary>
-            /// CRD
-            /// </summary>
-            public string CRD { get; set; } = "ccap";
-
-
-            [Description("Site 位置"), Category("Mes标识"), DisplayName("p-位置")]
-            public string Site { get; set; } = "SHA";
-            [Description("Fixture Slot 固定槽"), Category("Mes标识"), DisplayName("s-固定槽")]
-            public string Fixture_Slot { get; set; } = "1";
-
-            [Description("Software Document 软件文件"), Category("Mes标识"), DisplayName("D-软件文件")]
-            public string Software_Document { get; set; } = "TarsSoftwareDoc";
-
-            [Description("Software Revision 软件版本"), Category("Mes标识"), DisplayName("R-软件版本")]
-            public string Software_Revision { get; set; } = "TarsSoftwareRevision";
-            [Description("Software Revision 软件版本"), Category("Mes标识"), DisplayName("r-装配版本")]
-            public string Assembly_Revision { get; set; } = "A";
-            [Description("Firmware Revision 固件版本"), Category("Mes标识"), DisplayName("W-固件版本")]
-            public string Firmware_Revision { get; set; } = "TarsFirmwareRevision";
-            [Description("Line 线号"), Category("Mes标识"), DisplayName("L-线体")]
-            public string Line { get; set; } = "Bay32";
-
-
-        }
-        public MesData MesDatat { get; set; } = new MesData();
+    
+        //public MesData MesDatat { get; set; } = new MesData();
 
         public 安费诺MesData MesDa { get; set; } = new 安费诺MesData();
         /// <summary>
-        /// 点位 集合
+        /// 全局点集合
         /// </summary>
         public Dictionary<string, List<XYZPoint>> DPoint { get; set; } = new Dictionary<string, List<XYZPoint>>();
 
@@ -186,14 +112,7 @@ namespace Vision2.Project.formula
             }
             return "计数:" + OKNumber.Number + "  良率%:" + OKNumber.OKNG.ToString("0.00") + "\n\rOK:" + OKNumber.OKNumber + "  NG:" + OKNumber.NGNumber + "  NOK:" + OKNumber.AutoNGNumber;
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="mesDat"></param>
-        public void SetMES(IMesData mesDat)
-        {
-            GetMes(mesDat);
-        }
+  
         public enum EnumUpDataType
         {
             表格 = 0,
@@ -202,21 +121,14 @@ namespace Vision2.Project.formula
             不显示 = 3,
             弹出复判按钮 = 4,
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        //public TrayRobot ResetDataS { get; set; } /*= new TrayResetData()*/
+      
 
-        public IMesData GetMes(IMesData mesDataT = null)
+        public MesInfon GetMes()
         {
-            if (mesDataT != null)
-            {
-                mesData = mesDataT;
-            }
-            return mesData;
+            return data1;
         }
-        IMesData mesData;
-
+     
+        MesInfon data1;
         [Description("客户端使用"), Category("复判通信"), DisplayName("复判客户端名")]
         [TypeConverter(typeof(ErosSocket.ErosConLink.DicSocket.LinkNameConverter))]
         public string RsetLinkName { get; set; } = "";
@@ -254,6 +166,13 @@ namespace Vision2.Project.formula
 
         [Description("是否显示二维码"), Category("显示数据"), DisplayName("显示托盘码")]
         public bool IsQRCdoe { get; set; } = true;
+        [DescriptionAttribute("。"), Category("显示数据"), DisplayName("托盘ID判断")]
+        public bool TrayID { get; set; }
+
+        [DescriptionAttribute("。"), Category("显示数据"), DisplayName("穴位ID判断")]
+        public bool PalenID { get; set; }
+        [DescriptionAttribute("。"), Category("显示数据"), DisplayName("显示手动输入ID")]
+        public bool PalenIDVsible { get; set; }
 
 
 
@@ -271,8 +190,10 @@ namespace Vision2.Project.formula
         public string WritDataFileName { get; set; } = "QR";
 
         [Description("Mes厂家规则,"), Category("Mes数据"), DisplayName("写Mes厂家规则")]
-        [TypeConverter(typeof(ErosConverter)), ErosConverter.ThisDropDownAttribute("", "","伟世通", "丸旭", "捷普", "安费诺")]
+        [TypeConverter(typeof(ErosConverter)), ErosConverter.ThisDropDownAttribute("", "","伟世通", "丸旭", "捷普", "安费诺","SISF")]
         public string MesType { get; set; }
+        [Description("Mes厂家规则,"), Category("Mes数据"), DisplayName("Mes类")]
+        public string MesTypeName { get; set; }
         [Description("复判数据回传去程序PC,"), Category("Mes数据"), DisplayName("复判数据回传")]
 
         public bool RsetSever { get; set; }
@@ -302,7 +223,7 @@ namespace Vision2.Project.formula
         public List<MaterialManagement> ListMaterial { get; set; } = new List<MaterialManagement>();
 
         [DescriptionAttribute("设置与当前参数。"), Category("参数"), DisplayName("设置与监视参数"),
-        Editor(typeof(Vision2.Project.formula.Editor), typeof(UITypeEditor))]
+        Editor(typeof(Editor), typeof(UITypeEditor))]
         public List<LinkVaset> Dsate { get; set; } = new List<LinkVaset>();
 
 
@@ -333,10 +254,46 @@ namespace Vision2.Project.formula
         static UserFormulaContrsl userVisionManagement;
         public override void initialization()
         {
-            base.initialization();
-
+            try
+            {
+                IMesData mesData = null;
+                if (mesData == null)
+                {
+                    switch (RecipeCompiler.Instance.MesType)
+                    {
+                        case "丸旭":
+                            mesData=new 丸旭Mes();
+                            break;
+                        case "捷普":
+                            mesData=new MesJib();
+                            break;
+                        case "伟世通":
+                            mesData=new 伟世通Mes();
+                            break;
+                        case "安费诺":
+                            mesData = new 安费诺Mes();
+                            break;
+                        case "SISF":
+                            mesData = new Mes.环旭SISF.SISF();
+                            break;
+                        default:
+                            break;
+                    }
+                }
+              
+                Assembly assembly = Assembly.GetExecutingAssembly(); // 获取当前程序集
+                MesTypeName = mesData.GetType().FullName;
+                dynamic obj = assembly.CreateInstance(MesTypeName);
+                if (obj!=null)
+                {
+                    data1 = obj.ReadThis(ProjectINI.In.ProjectPathRun + "\\产品配方", obj);
+                }
+            }
+            catch (Exception ex)
+            {
+                AlarmText.AddTextNewLine("读取Mes失败:"+ex.Message);
+            }
             Product.ReadExcelDic(ProjectINI.In.ProjectPathRun + "\\产品配方\\产品文件", out string err);
-
             if (RecipeCompiler.Instance.DPoint.Count != 0)
             {
                 foreach (var item in Product.GetThisP())
@@ -366,9 +323,7 @@ namespace Vision2.Project.formula
                 RecipeCompiler.Instance.DPoint = new Dictionary<string, List<XYZPoint>>();
             }
             string paths = ProjectINI.In.ProjectPathRun + "\\" + vision.Vision.Instance.FileName + "\\";
-   
             Dictionary<string, Dictionary<string, string>> keyValuePairs = new Dictionary<string, Dictionary<string, string>>();
-
             foreach (var item in Product.GetThisP())
             {
                 if (ProjectINI.ReadPathJsonToCalss(paths + item.Key + "\\配方参数", out Dictionary<string, string> dke))
@@ -441,7 +396,11 @@ namespace Vision2.Project.formula
 
         private string SocketClint_PassiveEvent(byte[] key, ErosSocket.ErosConLink.SocketClint socket, System.Net.Sockets.Socket socketR)
         {
-            Data.AddData(socket.GetEncoding().GetString(key).Substring(RecipeCompiler.Instance.DataStrat));
+            string data = socket.GetEncoding().GetString(key);
+          
+                Data.AddData(data.Substring(RecipeCompiler.Instance.DataStrat));
+            
+
             return "";
         }
         private string RecipeCompiler_PassiveEvent(byte[] key, ErosSocket.ErosConLink.SocketClint socket, System.Net.Sockets.Socket socketR)
@@ -459,7 +418,6 @@ namespace Vision2.Project.formula
             Instance.OKNumber.OKNG = 0;
             Instance.OKNumber.AutoNGNumber = 0;
             Instance.OKNumber.IsOK = false;
-        
             UserFormulaContrsl.StaticAddData(Instance.OKNumber);
         }
         /// <summary>
@@ -624,6 +582,10 @@ namespace Vision2.Project.formula
 
         public override void SaveThis(string path)
         {
+            if (data1 != null)
+            {
+                data1.SaveThis(path+ "\\产品配方");
+            }
             Product.SaveDicExcel(path + "\\产品配方\\产品文件.xls");
             string paths = ProjectINI.In.ProjectPathRun + "\\" + vision. Vision.Instance.FileName + "\\";
             foreach (var item in Produc)

@@ -43,9 +43,8 @@
             this.DropDownSele = new System.Windows.Forms.ToolStripDropDownButton();
             this.全选 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
-            this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripComboBox1 = new System.Windows.Forms.ToolStripComboBox();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -57,8 +56,7 @@
             this.toolStripDropDownButton3,
             this.DropDownSele,
             this.toolStripButton1,
-            this.toolStripButton3,
-            this.toolStripButton2});
+            this.toolStripComboBox1});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(763, 25);
@@ -80,7 +78,7 @@
             // 弹出报警列表ToolStripMenuItem
             // 
             this.弹出报警列表ToolStripMenuItem.Name = "弹出报警列表ToolStripMenuItem";
-            this.弹出报警列表ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.弹出报警列表ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.弹出报警列表ToolStripMenuItem.Text = "弹出报警列表";
             this.弹出报警列表ToolStripMenuItem.Click += new System.EventHandler(this.弹出报警列表ToolStripMenuItem_Click);
             // 
@@ -184,17 +182,6 @@
             this.toolStripButton1.Text = "清除文本";
             this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
             // 
-            // toolStripButton3
-            // 
-            this.toolStripButton3.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.toolStripButton3.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton3.Image")));
-            this.toolStripButton3.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton3.Name = "toolStripButton3";
-            this.toolStripButton3.RightToLeftAutoMirrorImage = true;
-            this.toolStripButton3.Size = new System.Drawing.Size(64, 22);
-            this.toolStripButton3.Text = "状态栏";
-            this.toolStripButton3.Click += new System.EventHandler(this.toolStripButton3_Click);
-            // 
             // richTextBox1
             // 
             this.richTextBox1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
@@ -211,15 +198,18 @@
             this.richTextBox1.TextChanged += new System.EventHandler(this.dsAlphaRichTextBox1_TextChanged);
             this.richTextBox1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.richTextBox1_MouseDown);
             // 
-            // toolStripButton2
+            // toolStripComboBox1
             // 
-            this.toolStripButton2.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.toolStripButton2.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton2.Image")));
-            this.toolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton2.Name = "toolStripButton2";
-            this.toolStripButton2.Size = new System.Drawing.Size(64, 22);
-            this.toolStripButton2.Text = "窗口栏";
-            this.toolStripButton2.Click += new System.EventHandler(this.toolStripButton2_Click);
+            this.toolStripComboBox1.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.toolStripComboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.toolStripComboBox1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.toolStripComboBox1.Items.AddRange(new object[] {
+            "主窗口下",
+            "控制栏左",
+            "浮动窗口"});
+            this.toolStripComboBox1.Name = "toolStripComboBox1";
+            this.toolStripComboBox1.Size = new System.Drawing.Size(121, 25);
+            this.toolStripComboBox1.SelectedIndexChanged += new System.EventHandler(this.toolStripComboBox1_SelectedIndexChanged);
             // 
             // AlarmText
             // 
@@ -254,7 +244,6 @@
         private System.Windows.Forms.ToolStripButton toolStripButton1;
         private System.Windows.Forms.ToolStripMenuItem 查看事件信息ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 弹出报警列表ToolStripMenuItem;
-        private System.Windows.Forms.ToolStripButton toolStripButton3;
-        private System.Windows.Forms.ToolStripButton toolStripButton2;
+        private System.Windows.Forms.ToolStripComboBox toolStripComboBox1;
     }
 }

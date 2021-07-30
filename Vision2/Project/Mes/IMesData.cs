@@ -5,6 +5,8 @@ using HalconDotNet;
 using Vision2.vision.HalconRunFile.RunProgramFile;
 using  ErosSocket.DebugPLC.Robot;
 using System;
+using Vision2.ErosProjcetDLL.Project;
+using System.Windows.Forms;
 
 namespace Vision2.Project.Mes
 {
@@ -31,26 +33,105 @@ namespace Vision2.Project.Mes
         bool ReadMes(out string resetMesString);
 
     }
+    public abstract  class MesInfon :IMesData
+    {
+
+        public abstract Form GetForm();
+
+        public abstract  event IMesData.ResTMesd ResDoneEvent;
+
+        /// <summary>
+        /// 保存到项目地址,必须调用父类
+        /// </summary>
+        /// <param name="name"></param>
+        public virtual void SaveThis(string path = null)
+        {
+            if (path == null)
+            {
+                path = ProjectINI.ProjietPath + "Project\\" + ProjectINI.In.ProjectName + "\\" + ProjectINI.In.RunName;
+            }
+            ProjectINI.ClassToJsonSavePath(this, path + "\\Mes.txt");
+        }
+
+        /// <summary>
+        /// 读取Josn到实例
+        /// </summary>
+        /// <param name="path">文件地址</param>
+        /// <param name="obj">对象</param>
+        public virtual T ReadThis<T>(string path, T obj = default(T)) where T : new()
+        {
+            if (System.IO.File.Exists(path + "\\Mes.txt"))
+            {
+                ProjectINI.ReadPathJsonToCalss(path + "\\Mes.txt", out obj);
+            }
+            if (obj == null)
+            {
+                obj = new T();
+            }
+            return obj;
+        }
+
+        public abstract void WrietMes(UserFormulaContrsl userFormulaContrsl,
+            string QRCODE, string Product_Name);
+
+
+        public abstract void WrietMes(TrayData trayData, string Product_Name);
+
+        public abstract void WrietMes(OneDataVale trayData, string Product_Name);
+
+
+        public abstract void WrietMesAll<T>(T data, string QRCODE, string Product_Name);
+
+
+        public abstract bool ReadMes(string SerialNumber, out string resetMesString);
+
+
+        public abstract bool ReadMes(out string resetMesString);
+  
+    }
 
     /// <summary>
         /// 单个产品信息
         /// </summary>
     public class OneDataVale
     {
-
-
             public DateTime StrTime = DateTime.Now;
             public DateTime EndTime ;
             public void ResetOK()
-            {
-                OK = true;
+           {
+            Dictionary<string, bool> keyValuePairs = new Dictionary<string, bool>();
+                foreach (var item in NGName)
+                {
+                    keyValuePairs.Add(item.Key, true);
+                }
+            NGName = keyValuePairs;
+            OK = true;
                 Done = true;
             }
             public void ResetNG()
             {
-                OK = false;
+        
+               OK = false;
                 Done = true;
             }
+            public void AddNG(string name,bool OKt=false)
+            {
+            if (NGName==null)
+            {
+                NGName = new Dictionary<string, bool>();
+
+            }
+                if (!NGName.ContainsKey(name))
+                {
+                   NGName.Add(name, OKt);
+                 }
+                 else
+                {
+                  NGName[name] = OKt;
+                }
+            }
+            public Dictionary<string, bool> NGName { get; set; } = new Dictionary<string, bool>();
+
            /// <summary>
         /// 产品SN
         /// </summary>
@@ -91,7 +172,7 @@ namespace Vision2.Project.Mes
                     item.Value.Done = value;
                     }     } }
 
-            public bool Null;
+            public bool NotNull;
 
             /// <summary>
             /// 结果
@@ -100,19 +181,32 @@ namespace Vision2.Project.Mes
             {
                 get
                 {
+                    if (!NotNull)
+                    {
+                        return NotNull;
+                    }
                     foreach (var item in ListCamsData)
                     {
                         if (!item.Value.OK) return false;
                     }
+                    foreach (var item in NGName)
+                    {
+                        if (!item.Value) return false;
+                    }
                     return true;
                 }
                 set
-                {       
+                {
+                        Dictionary<string, bool> keyValuePairs = new Dictionary<string, bool>();
+                        foreach (var item in NGName)
+                        {
+                            keyValuePairs.Add(item.Key, false);
+                        }
+                        NGName = keyValuePairs;
                         foreach (var item in ListCamsData)
                         {
                             item.Value.OK = value;
                         }     
-                     
                     }
             }
       
@@ -149,6 +243,16 @@ namespace Vision2.Project.Mes
                 {
                     return item.Value.NGObj;
                 }
+            }
+            return ListCamsData[data].NGObj;
+        }
+        public OneCompOBJs GetCompOBJs()
+        {
+            string data = "";
+            foreach (var item in ListCamsData)
+            {
+                data = item.Key;
+                return item.Value.NGObj;
             }
             return ListCamsData[data].NGObj;
         }
@@ -205,7 +309,7 @@ namespace Vision2.Project.Mes
         {
             if (ListCamsData.ContainsKey(camName))
             {
-                if (!oneRObj.OK)
+                if (oneRObj.OK)
                 {
                     ListCamsData[camName].AllCompObjs.AddCont(oneRObj);
                 }

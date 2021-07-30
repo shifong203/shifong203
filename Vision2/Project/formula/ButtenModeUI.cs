@@ -11,21 +11,28 @@ namespace Vision2.Project.formula
         {
             InitializeComponent();
         }
-        public void SetTrayData(TrayData trayData )
+        public void Initialize(TrayData trayData =null)
         {
-
-            dataVales = trayData;
+     
+            if (trayData!=null)
+            {
+                dataVales = trayData;
+            }
             try
             {
-                this.Controls.Clear();
-                for (int i = 0; i < dataVales.Count; i++)
+                if (dataVales!=null)
                 {
-                    DataButtenModeU dataUi = new DataButtenModeU();
-                    dataUi.Name = (i + 1).ToString();
-                    dataUi.Dock = DockStyle.Top;
-                    this.Controls.Add(dataUi);
-                    dataUi.Set(dataVales.GetDataVales()[i]);
+                    this.Controls.Clear();
+                    for (int i = 0; i < dataVales.Count; i++)
+                    {
+                        DataButtenModeU dataUi = new DataButtenModeU();
+                        dataUi.Name = (i + 1).ToString();
+                        dataUi.Dock = DockStyle.Top;
+                        this.Controls.Add(dataUi);
+                        dataUi.Set(dataVales.GetDataVales()[i]);
+                    }
                 }
+       
             }
             catch (Exception ex)
             {
@@ -73,7 +80,7 @@ namespace Vision2.Project.formula
           
         }
 
-        public void RestValue()
+        public void RestValue(TrayData trayData)
         {
             try
             {
@@ -96,6 +103,28 @@ namespace Vision2.Project.formula
             {
                 MessageBox.Show(ex.Message);
             }
+        }
+        
+
+        public void UpData()
+        {
+         
+        }
+
+        public void SetValue(List<bool> listValue)
+        {
+            try
+            {
+
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        public void SetValue(double value)
+        {
+            
         }
     }
 }

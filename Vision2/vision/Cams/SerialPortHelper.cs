@@ -11,8 +11,14 @@ namespace Vision2.vision.Cams
     public class SerialPortHelper :SerialPort
     {
 
-        private string comReceive;
+        string comReceive;
+        /// <summary>
+        /// 
+        /// </summary>
         public dosome DOrecevie;
+        /// <summary>
+        /// 接受到的字符
+        /// </summary>
         public string ComReceive
         {
             get { return comReceive; }
@@ -83,10 +89,6 @@ namespace Vision2.vision.Cams
             {
                 //throw;
             }
-
         }
-
-   
-
     }
 }

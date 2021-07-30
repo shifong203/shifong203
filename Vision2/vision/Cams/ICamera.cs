@@ -1,5 +1,6 @@
 ﻿using HalconDotNet;
 using System;
+using ThridLibray;
 using Vision2.vision.HalconRunFile.RunProgramFile;
 
 namespace Vision2.vision.Cams
@@ -12,9 +13,12 @@ namespace Vision2.vision.Cams
         void OpenCam();
         void CloseCam();
         HObject GetImage();
+        bool GetImage(out IGrabbedRawData image);
+        HObject IGrabbedRawDataTOImage(IGrabbedRawData data);
+ 
         object GetIDevice();
 
-        void SetExposureTime(int VALUE);
+        void SetExposureTime(double VALUE);
 
 
         void Straing(HalconRun halconRun);
@@ -63,7 +67,8 @@ namespace Vision2.vision.Cams
         bool IsCamConnected { get; }
 
         string CameraImageFormat { get; set; }
-        int ExposureTime { get; set; }
+        double ExposureTime { get; set; }
+        double Gamma { get; set; }
         HObject Map { get; set; }
 
         bool ISMap { get; set; }
@@ -72,7 +77,7 @@ namespace Vision2.vision.Cams
 
         int Height { get; set; }
 
-        int Gain { get; set; }
+        double Gain { get; set; }
         string Key { get; set; }
         long RunTime { get; }
 

@@ -420,7 +420,8 @@ namespace Vision2.vision.HalconRunFile.Controls
 
                 this.HalconWindow.GetMposition(out int rowi, out int coli, out int button1);
                 hWindwC.ShowOBJ(rowi, coli);
-                HOperatorSet.GetGrayval(hWindwC.Image(), rowi, coli, out HTuple Grey);
+
+                HOperatorSet.GetGrayval(hWindwC.Image().SelectObj(1), rowi, coli, out HTuple Grey);
                 if (Grey.Length == 3)
                 {
                     Vision.Disp_message(HalconWindow, "X" + rowi + " Y" + coli + " RGB:" + Grey[0] + "," + Grey[1] + "," + Grey[2], 20, 20, true);
@@ -432,7 +433,7 @@ namespace Vision2.vision.HalconRunFile.Controls
 
 
             }
-            catch
+            catch(Exception wx)
             {
             }
         }

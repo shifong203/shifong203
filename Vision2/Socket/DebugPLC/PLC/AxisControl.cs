@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using Vision2.ErosProjcetDLL.UI;
 
 namespace ErosSocket.DebugPLC.PLC
 {
@@ -296,16 +297,16 @@ namespace ErosSocket.DebugPLC.PLC
         {
 
         }
-        Pf pf = new Pf();
+        Pf pf ;
         private void label9_Click(object sender, EventArgs e)
         {
-            if (pf.IsDisposed)
+            if (pf==null  ||  pf.IsDisposed)
             {
-                pf = new Pf();
+                pf = new Pf(axisData);
             }
-
-            pf.SetAxis(axisData);
-            pf.Show();
+            UICon.WindosFormerShow(ref pf);
+ 
+   
         }
     }
 

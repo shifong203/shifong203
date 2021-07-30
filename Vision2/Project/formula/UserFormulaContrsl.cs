@@ -1,4 +1,5 @@
-﻿using ErosSocket.ErosConLink;
+﻿using ErosSocket.DebugPLC.Robot;
+using ErosSocket.ErosConLink;
 using HalconDotNet;
 using Microsoft.VisualBasic;
 using System;
@@ -14,7 +15,6 @@ using Vision2.Project.DebugF;
 using Vision2.Project.Mes;
 using Vision2.vision;
 using Vision2.vision.HalconRunFile.RunProgramFile;
-using ErosSocket.DebugPLC.Robot;
 
 namespace Vision2.Project.formula
 {
@@ -33,7 +33,8 @@ namespace Vision2.Project.formula
         {
             try
             {
-                if (DebugF.DebugCompiler.GetLinkNmae(RecipeCompiler.Instance.GetTrageNmae) == "1" || DebugF.DebugCompiler.GetLinkNmae(RecipeCompiler.Instance.GetTrageNmae) == true.ToString())
+                if (DebugCompiler.GetLinkNmae(RecipeCompiler.Instance.GetTrageNmae) == "1" 
+              || DebugCompiler.GetLinkNmae(RecipeCompiler.Instance.GetTrageNmae) == true.ToString())
                 {
                     if (checkBox1.Checked)
                     {
@@ -83,6 +84,7 @@ namespace Vision2.Project.formula
                 HWind.Initialize(hWindowControl1);
                 hWindowControl1.MouseClick += HWindowControl1_MouseClick;
                 MainForm1.MainFormF.CycleEven += ThreadUP;
+            
             }
             catch (Exception)
             {
@@ -193,7 +195,8 @@ namespace Vision2.Project.formula
                     {
                         mForm = new 捷普.MForm();
                     }
-                    ErosProjcetDLL.UI.UICon.WindosFormerShow(ref mForm);
+                    mForm.Show();
+                    mForm.Focus();
                 }
                 //tabPage4.Controls.Add(AlarmForm.AlarmFormThis);
                 //AlarmForm.AlarmFormThis.TopLevel = false;
@@ -231,48 +234,27 @@ namespace Vision2.Project.formula
             try
             {
                 Up();
+
                 isUP = true;
+
+                try
+                {
+                    lightSourceControl1.GetData(Vision.Instance.GetLightSources()[0]);
+                    //ProductEX
+                }
+                catch (Exception)
+                {
+                }
                 if (DebugCompiler.GetThis().LinkSeelpTyoe<3)
                 {
-                    comboBox2.SelectedIndex = DebugCompiler.GetThis().LinkSeelpTyoe;
+                    toolStripComboBox1.SelectedIndex = DebugCompiler.GetThis().LinkSeelpTyoe;
                 }
                 if (!RecipeCompiler.Instance.ProductEX.ContainsKey(Product.ProductionName))
                 {
                     RecipeCompiler.Instance.ProductEX.Add(Product.ProductionName, new ProductEX());
                 }
                 RecipeCompiler.Instance.Data.SetData(RecipeCompiler.GetProductEX().ListDicData);
-                if (RecipeCompiler.Instance.GetMes() == null)
-                {
-                    switch (RecipeCompiler.Instance.MesType)
-                    {
-                        case "丸旭":
-                            RecipeCompiler.Instance.SetMES(new 丸旭Mes());
-                            break;
-                        case "捷普":
-                            RecipeCompiler.Instance.SetMES(new MesJib());
-                            break;
-                        case "伟世通":
-                            RecipeCompiler.Instance.SetMES(new 伟世通Mes());
-                            break;
-                        case "安费诺":
-                            RecipeCompiler.Instance.SetMES(new 安费诺Mes());
-                            break;
-                        default:
-                            break;
-                    }
-                }
 
-        
-                //if (DebugCompiler.GetThis().TrayCont >= 0)
-                //{
-                //    DebugCompiler.GetTrayDataUserControl().SetTray(DebugCompiler.GetThis().TrayCont);
-                //}
-                //else
-                //{
-                //    MainForm1.MainFormF.tabControl1.TabPages.RemoveByKey("托盘状态");
-                //}
-                //RecipeCompiler.Instance.ResetDataS.Clear();
-                //RecipeCompiler.Instance.ResetDataS.Product_Name = Product.ProductionName;
                 try
                 {
                     runUControl1.Visible = DebugCompiler.GetThis().IsCtr;
@@ -321,16 +303,7 @@ namespace Vision2.Project.formula
                 }
                 catch (Exception ex)
                 {
-                    ErosProjcetDLL.Project.AlarmText.AddTextNewLine("导航图加载错误:" + ex.Message);
-
-                }
-                if (DebugCompiler.GetThis().LinkSeelpTyoe > 3)
-                {
-                    panel2.Visible = false;
-                }
-                else
-                {
-                    panel2.Visible = true;
+                   AlarmText.AddTextNewLine("导航图加载错误:" + ex.Message);
                 }
                 if (trayDataUserControl != null)
                 {
@@ -338,7 +311,7 @@ namespace Vision2.Project.formula
                 }
                 dataGridView1.Visible = false;
                 label3.Visible = false;
-                button2.Visible = false;
+           
                 label2.BackColor = Color.Yellow;
                 label2.Text = "...";
                 label4.Visible = label6.Visible = RecipeCompiler.Instance.IsQRCdoe;
@@ -348,16 +321,25 @@ namespace Vision2.Project.formula
                 {
                     tabControl1.TabPages.Remove(tabPage2);
                 }
+                else if (!tabControl1.TabPages.Contains(tabPage2))
+                {
+                    tabControl1.TabPages.Add(tabPage2);
+                }
                 if (!DebugCompiler.GetThis().Display_Status)
                 {
                     tabControl1.TabPages.Remove(tabPage3);
+                }
+                else if (!tabControl1.TabPages.Contains(tabPage3))
+                {
+                   
+                    tabControl1.TabPages.Add(tabPage3);
                 }
                 switch (RecipeCompiler.Instance.UpDataType)
                 {
                     case RecipeCompiler.EnumUpDataType.表格:
                         dataGridView1.Visible = true;
                         label3.Visible = true;
-                        button2.Visible = true;
+              
                         button3.Visible = true;
                         DataGuiVievModeUI butte = new DataGuiVievModeUI();
                         butte.Dock = DockStyle.Fill;
@@ -369,8 +351,8 @@ namespace Vision2.Project.formula
                         {
                             This.trayDataUserControl = new DebugF.IO.TrayDatas();
                         }
+                        trayDataUserControl.Load += TrayDataUserControl_Load;
                         label3.Visible = true;
-                        button2.Visible = true;
                         if (!tabPage1.Controls.Contains(trayDataUserControl))
                         {
                             tabPage1.Controls.Add(trayDataUserControl);
@@ -378,16 +360,16 @@ namespace Vision2.Project.formula
                         trayDataUserControl.BringToFront();
                         trayDataUserControl.Dock = DockStyle.Fill;
                         trayDataUserControl.Visible = true;
-                        if (RecipeCompiler.Instance.TrayCont>=0)
+                        if (RecipeCompiler.Instance.TrayCont >= 0)
                         {
-                            trayDataUserControl.SetTray(DebugCompiler.GetTray(RecipeCompiler.Instance.TrayCont).GetTrayData());
+                            trayDataUserControl.Initialize(DebugCompiler.GetTray(RecipeCompiler.Instance.TrayCont).GetTrayData());
                             DebugCompiler.GetTray(RecipeCompiler.Instance.TrayCont).AddTary(trayDataUserControl);
+                            //trayDataUserControl.Initialize(DebugCompiler.GetTray(RecipeCompiler.Instance.TrayCont).GetTrayData());
                         }
-                        
                         break;
                     case RecipeCompiler.EnumUpDataType.复判按钮:
                         label3.Visible = true;
-                        button2.Visible = true;
+              
                         ButtenModeUI buttenModeUI;
                         if (!tabPage1.Controls.ContainsKey("buttenModeUI"))
                         {
@@ -402,13 +384,13 @@ namespace Vision2.Project.formula
                    
                         TrayData Traydata = DebugCompiler.GetTray(RecipeCompiler.Instance.TrayCont).GetTrayData();
                         DebugCompiler.GetTray(RecipeCompiler.Instance.TrayCont).AddTary(buttenModeUI);
-                        buttenModeUI.SetTrayData(Traydata);
+                        buttenModeUI.Initialize(Traydata);
                         break;
                     case RecipeCompiler.EnumUpDataType.弹出复判按钮:
                         label3.Visible = true;
-                        button2.Visible = true;
+      
                         label3.Visible = true;
-                        button2.Visible = true;
+               
                         tabControl1.TabPages.Remove(tabPage1);
                         //ButtenModeUI buttenMode = new ButtenModeUI();
                         //buttenMode.Dock = DockStyle.Fill;
@@ -419,7 +401,7 @@ namespace Vision2.Project.formula
                         checkBox1.Visible = false;
                         dataGridView1.Visible = false;
                         label3.Visible = true;
-                        button2.Visible = true;
+                     
                         button3.Visible = false;
                         button5.Visible = false;
                         break;
@@ -434,23 +416,56 @@ namespace Vision2.Project.formula
                 {
                     button5.Visible = true;
                 }
-                if (RecipeCompiler.Instance.DataLinkName == "")
+                groupBox2.Visible = RecipeCompiler.Instance.PalenIDVsible;
+                if (Vision.Instance.OffCont==0)
                 {
-                    toolStripButton2.Visible = false;
+                    lightSourceControl1.Visible = false;
                 }
                 else
                 {
-                    toolStripButton2.Visible = true;
+                    lightSourceControl1.Visible = true;
                 }
+                bool visible = false;
+                foreach (Control item in groupBox3.Controls)
+                {
+                    if (item.Visible)
+                    {
+                        groupBox3.Visible = true;
+                        visible = true;
+                    }
+                }
+                 groupBox3.Visible = visible;
+                
+
+           
                 isUP = false;
             }
             catch (Exception ex)
             {
-
                 MessageBox.Show(ex.StackTrace+ ex.Message);
             }
 
         }
+
+        private void TrayDataUserControl_Load(object sender, EventArgs e)
+        {
+            try
+            {
+                if (RecipeCompiler.Instance.TrayCont >= 0)
+                {
+                    trayDataUserControl.Initialize(DebugCompiler.GetTray(RecipeCompiler.Instance.TrayCont).GetTrayData());
+                    DebugCompiler.GetTray(RecipeCompiler.Instance.TrayCont).AddTary(trayDataUserControl);
+                    //trayDataUserControl.SetTray(DebugCompiler.GetTray(RecipeCompiler.Instance.TrayCont).GetTrayData());
+                }
+            
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("加载托盘错误:"+ex.Message);
+            }
+        
+        }
+
         /// <summary>
         /// 使能加载项
         /// </summary>
@@ -593,27 +608,13 @@ namespace Vision2.Project.formula
         JabilForm JabilForm;
         private void ToolStripButton1_Click(object sender, EventArgs e)
         {
-            if (JabilForm == null)
-            {
-                RecipeCompiler.Instance.MesDatat.UserIDName = ProjectINI.In.UserName;
-                IMesData mesData = RecipeCompiler.Instance.GetMes();
-                JabilForm = new JabilForm(mesData as MesJib);
-                JabilForm.ShowDialog();
-                JabilForm = null;
-            }
-
+        
 
         }
 
         private void button2_Click_1(object sender, EventArgs e)
         {
-            if (MessageBox.Show("是否清除数据?", "清除产能数据", MessageBoxButtons.OKCancel, MessageBoxIcon.Information) == DialogResult.OK)
-            {
-
-                RecipeCompiler.ResetDATA();
-                label2.Text = "";
-                label2.BackColor = Color.Wheat;
-            }
+           
         }
 
         public static bool NG { get { return data.OK; } }
@@ -650,7 +651,7 @@ namespace Vision2.Project.formula
             {
                 if (trayDataUserControl != null)
                 {
-                    trayDataUserControl.RestValue();
+                   trayDataUserControl.RestValue(DebugCompiler.GetTray(RecipeCompiler.Instance.TrayCont).GetTrayData());
                 }
                 if (checkBox1.Checked || dataGridView1.Rows.Count > 0 && ProcessControl.ProcessUser.QRCode != "")
                 {
@@ -678,8 +679,8 @@ namespace Vision2.Project.formula
             {
                 if (This.trayDataUserControl != null)
                 {
-                    This.trayDataUserControl.RestValue();
-                    DebugCompiler.GetTrayDataUserControl().RestValue();
+                    //This.trayDataUserControl.RestValue();
+                    //DebugCompiler.GetTrayDataUserControl().RestValue();
                 }
                 if (DebugCompiler.GetThis().DDAxis != null)
                 {
@@ -693,7 +694,6 @@ namespace Vision2.Project.formula
                 }
                 Vision.Instance.HObjCler();
                 dataVales.Clear(); ;
-          
                 UserFormulaContrsl.SetOK(0);
                 This.ListReslutMestTR.Clear();
                 This.ListOkNumber = new List<bool>();
@@ -758,28 +758,7 @@ namespace Vision2.Project.formula
                 This.dataGridView1.Columns.RemoveAt(2);
             }
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="isclaet"></param>
-        public static void WeirtOne(bool isclaet)
-        {
-            try
-            {
-                if (ProcessControl.ProcessUser.QRCode == null)
-                {
-                    return;
-                }
-                if (RecipeCompiler.Instance.GetMes() != null)
-                {
-                    RecipeCompiler.Instance.GetMes().WrietMes(This, ProcessControl.ProcessUser.QRCode, Product.ProductionName);
-                }
-            }
-            catch (Exception ex)
-            {
-                AlarmText.LogErr(ex.Message, "写入数据");
-            }
-        }
+
         public static void WeirtAll(object datas = null)
         {
             try
@@ -810,7 +789,6 @@ namespace Vision2.Project.formula
         /// <param name="oKNumber"></param>
         public void AddData(RecipeCompiler.OKNumberClass oKNumber)
         {
-
             label3.Text = RecipeCompiler.Instance.GetSPC();
             ISOk = oKNumber.IsOK;
             if (oKNumber.IsOK)
@@ -944,7 +922,7 @@ namespace Vision2.Project.formula
                             {
                                 RecipeCompiler.Instance.GetMes().WrietMes(dataVale, Product.ProductionName);
                             }
-                            WeirtOne(false);
+                            //WeirtOne(false);
                         }
                     }
                     else
@@ -998,13 +976,8 @@ namespace Vision2.Project.formula
                                         RecipeCompiler.Instance.GetMes().WrietMes(dataVale, Product.ProductionName);
                                     }
 
-                                    WeirtOne(false);
+                                    //WeirtOne(false);
                                 }
-                            }
-                            else
-                            {
-                    
-
                             }
                         }
                     }
@@ -1265,7 +1238,6 @@ namespace Vision2.Project.formula
         {
             try
             {
-
                 if (System.IO.Directory.Exists(ProcessControl.ProcessUser.GetThis().ExcelPath))
                 {
                     System.Diagnostics.Process.Start(ProcessControl.ProcessUser.GetThis().ExcelPath);
@@ -1274,8 +1246,6 @@ namespace Vision2.Project.formula
                 {
                     System.Diagnostics.Process.Start(ProcessControl.ProcessUser.GetThis().ExcelPath);
                 }
-
-
             }
             catch (Exception ex)
             {
@@ -1536,12 +1506,7 @@ namespace Vision2.Project.formula
         LinkDataForm1 linkDataForm1;
         private void toolStripButton2_Click(object sender, EventArgs e)
         {
-            if (linkDataForm1 == null || linkDataForm1.IsDisposed)
-            {
-                linkDataForm1 = new LinkDataForm1();
-                linkDataForm1.SetData(RecipeCompiler.Instance.Data);
-            }
-            Vision2.ErosProjcetDLL.UI.UICon.WindosFormerShow(ref linkDataForm1);
+           
 
         }
         public static OneDataVale GetDataVale(  OneDataVale dataD=null)
@@ -1561,15 +1526,7 @@ namespace Vision2.Project.formula
 
         private void comboBox2_SelectionChangeCommitted(object sender, EventArgs e)
         {
-            try
-            {
-                DebugCompiler.GetThis().LinkSeelpTyoe = (byte)comboBox2.SelectedIndex;
-                DebugCompiler.GetThis().SetSeelp();
-            }
-            catch (Exception)
-            {
-
-            }
+         
         }
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
@@ -1606,7 +1563,99 @@ namespace Vision2.Project.formula
                 StaticAddQRCode(textBox1.Text);
                 textBox1.Text = "";
             }
+        }
+        private void 附加测试ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (linkDataForm1 == null || linkDataForm1.IsDisposed)
+            {
+                linkDataForm1 = new LinkDataForm1();
+                linkDataForm1.SetData(RecipeCompiler.Instance.Data);
+            }
+            ErosProjcetDLL.UI.UICon.WindosFormerShow(ref linkDataForm1);
+        }
 
+        private void mES设置ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Form form = RecipeCompiler.Instance.GetMes().GetForm();
+                if (form != null)
+                {
+                    form.ShowDialog();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        
+        }
+
+        private void toolStripComboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (isUP)
+                {
+                    return;
+                }
+                DebugCompiler.GetThis().LinkSeelpTyoe = (byte)toolStripComboBox1.SelectedIndex;
+                DebugCompiler.GetThis().SetSeelp();
+            }
+            catch (Exception)
+            {
+
+            }
+        }
+
+        private void 打开数据ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (System.IO.Directory.Exists(ProcessControl.ProcessUser.GetThis().ExcelPath))
+                {
+                    System.Diagnostics.Process.Start(ProcessControl.ProcessUser.GetThis().ExcelPath);
+                }
+                else
+                {
+                    System.Diagnostics.Process.Start(ProcessControl.ProcessUser.GetThis().ExcelPath);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void 清除数据ToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("是否清除数据?", "清除产能数据", MessageBoxButtons.OKCancel, MessageBoxIcon.Information) == DialogResult.OK)
+            {
+
+                RecipeCompiler.ResetDATA();
+                label2.Text = "";
+                label2.BackColor = Color.Wheat;
+            }
+        }
+
+        private void toolStripDropDownButton1_MouseMove(object sender, EventArgs e)
+        {
+            toolStripDropDownButton1.ShowDropDown();
+        }
+
+        private void toolStripDropDownButton1_MouseLeave(object sender, EventArgs e)
+        {
+            toolStripDropDownButton1.HideDropDown();
+        }
+
+        private void 清除统计数据ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("是否清除数据?", "清除产能数据", MessageBoxButtons.OKCancel, MessageBoxIcon.Information) == DialogResult.OK)
+            {
+                RecipeCompiler.ResetDATA();
+                label2.Text = "";
+                label2.BackColor = Color.Wheat;
+            }
         }
     }
 }

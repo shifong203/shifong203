@@ -3,16 +3,16 @@ using System;
 using System.ComponentModel;
 using System.Drawing;
 using Vision2.Project.formula;
-using Vision2.Project.formula;
 using ErosSocket.DebugPLC.Robot;
+using System.Windows.Forms;
 
 namespace Vision2.Project.Mes
 {
-    public class 安费诺Mes : IMesData
+    public class 安费诺Mes : MesInfon
     {
         AmphenolMES.mespublic mespubl = new mespublic();
 
-        public event IMesData.ResTMesd ResDoneEvent;
+        public override event IMesData.ResTMesd ResDoneEvent;
 
         public class 安费诺MesData
         {
@@ -53,7 +53,7 @@ namespace Vision2.Project.Mes
         }
 
 
-        public bool ReadMes(string SerialNumber, out string resetMesString)
+        public override bool ReadMes(string SerialNumber, out string resetMesString)
         {
             resetMesString = "";
             try
@@ -73,23 +73,23 @@ namespace Vision2.Project.Mes
             return false;
         }
 
-        public bool ReadMes(out string resetMesString)
+        public override bool ReadMes(out string resetMesString)
         {
             resetMesString = "未实现";
             return false;
         }
 
-        public void WrietMes(UserFormulaContrsl userFormulaContrsl, string QRCODE, string Product_Name)
+        public override void WrietMes(UserFormulaContrsl userFormulaContrsl, string QRCODE, string Product_Name)
         {
 
         }
 
-        public void WrietMes(OneDataVale data, string Product_Name)
+        public override void WrietMes(OneDataVale data, string Product_Name)
         {
 
         }
 
-        public void WrietMesAll<T>(T data, string QRCODE, string Product_Name)
+        public override void WrietMesAll<T>(T data, string QRCODE, string Product_Name)
         {
             try
             {
@@ -111,11 +111,14 @@ namespace Vision2.Project.Mes
             }
         }
 
-        public void WrietMes(TrayData trayData, string Product_Name)
+        public override void WrietMes(TrayData trayData, string Product_Name)
         {
-     
+
         }
 
-  
+        public override Form GetForm()
+        {
+            return null;
+        }
     }
 }

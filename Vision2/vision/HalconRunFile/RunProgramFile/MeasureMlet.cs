@@ -24,9 +24,10 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             HObject hObjectRoi = new HObject();
             bool OK = true;            HObject image;
             //this.SetDefault("NG距离", 100, true);
-            image = GetEmset(oneResultOBj.Image);
+            image = GetEmset(oneResultOBj.GetHalcon().GetImageOBJ(this.ImageTypeOb));
             foreach (var item in Dic_Measure.Keys_Measure)
             {
+                item.Value.ImageTypeOb = this.ImageTypeOb;
                 item.Value.ResltBool = false;
                 if (item.Value.ISMatHat)
                 {
@@ -38,7 +39,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                             if (objectColor._HObject.CountObj() > 0)
                             {
                                 item.Value.ResltBool = true;
-                                NGRoi = NGRoi.ConcatObj(objectColor._HObject);
+                                nGRoi = nGRoi.ConcatObj(objectColor._HObject);
                             }
                             else
                             {
@@ -49,7 +50,9 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 }
                 else
                 {
+               
                     bool ist = item.Value.Run( oneResultOBj);
+                     ist = item.Value.ResltBool;
                     if (item.Value.IsExist("距离mm"))
                     {
                         this["距离mm"] = item.Value["距离mm"];
@@ -170,11 +173,14 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         HOperatorSet.ProjectionPl(dinRow1, dinCol1, dinRow21, dinCol21, dinRow22, dinCol22, out HTuple projectRow, out HTuple projectCol0);
                         HOperatorSet.DistancePp(projectRow, projectCol0, dinRow1, dinCol1, out HTuple dist);
                         Vision.Gen_arrow_contour_xld(out HObject contour1, dinRow1, dinCol1, projectRow, projectCol0);
+
                         HOperatorSet.ProjectionPl(dinRow2, dinCol2, dinRow21, dinCol21, dinRow22, dinCol22, out HTuple projectRow2, out HTuple projectCol02);
-                        HOperatorSet.DistancePp(projectRow2, projectCol02, dinRow2, dinCol2, out HTuple dist2);
+                        HOperatorSet.DistancePp(projectRow2, projectCol02, dinRow2, dinCol2, out HTuple dist3);
                         Vision.Gen_arrow_contour_xld(out HObject contour3, dinRow2, dinCol2, projectRow2, projectCol02);
+
                         HOperatorSet.ProjectionPl(dinRow3, dinCol3, dinRow21, dinCol21, dinRow22, dinCol22, out HTuple projectRow3, out HTuple projectCol03);
-                        HOperatorSet.DistancePp(projectRow3, projectCol03, dinRow3, dinCol3, out HTuple dist3);
+                        HOperatorSet.DistancePp(projectRow3, projectCol03, dinRow3, dinCol3, out HTuple dist2);
+
                         Vision.Gen_arrow_contour_xld(out HObject contour4, dinRow3, dinCol3, projectRow3, projectCol03);
                         HObject corss = new HObject();
                         corss.GenEmptyObj();
@@ -200,7 +206,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         if (SelePointName == "第一点" || SelePointName == "全部")
                         {
                             oneRObj.dataMinMax.AddData("第一点", DistM, DistanceMin, DistanceMax);
-                            massage =  DistM.TupleString("0.6f")+Vision.Instance.TransformName;
+                            massage =  DistM.TupleString("0."+ Vision.Instance.Decimal_point + "f")+Vision.Instance.TransformName;
                             if (IsRadius)
                             {
                                 massage += "夹角°" + angleD.TupleString("0.2f");
@@ -230,7 +236,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         if (SelePointName == "中心点" || SelePointName == "全部")
                         {
                             oneRObj.dataMinMax.AddData("中心点", DistM2, DistanceMin, DistanceMax);
-                            massage = DistM2.TupleString("0.6f") + Vision.Instance.TransformName;
+                            massage = DistM2.TupleString("0." + Vision.Instance.Decimal_point + "f") + Vision.Instance.TransformName;
                                 if (oneResultOBj.GetHalcon().keyValuePairs1.ContainsKey(this.Name + ".第2点"))
                             {
                                 oneResultOBj.GetHalcon().keyValuePairs1[this.Name + ".第2点"] = DistM2;
@@ -262,7 +268,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                             oneRObj.dataMinMax.AddData("结束点", DistM3, DistanceMin, DistanceMax);
                             HOperatorSet.GenCrossContourXld(out HObject corss2, new HTuple(projectRow2.D, dinRow2), new HTuple(projectCol02.D, dinCol2), 20, 0);
                             corss = corss.ConcatObj(corss2);
-                            massage = DistM3.TupleString("0.6f") + Vision.Instance.TransformName;
+                            massage = DistM3.TupleString("0." + Vision.Instance.Decimal_point + "f") + Vision.Instance.TransformName;
                                 if (IsRadius)
                             {
                                 massage += "夹角" + angleD.TupleString("0.2f");
@@ -311,12 +317,12 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                                 this["圆直径"] = measure1.OutRadius;
                                 this["圆直径MM"] = measure1.OutRadiusMM;
                                 ValuePP = measure1.OutRadius; 
-                                NGRoi = NGRoi.ConcatObj(hObject1);
+                                nGRoi = nGRoi.ConcatObj(hObject1);
                                 OK = true;
                             }
                             else
                             {
-                                NGRoi = NGRoi.ConcatObj(measure1.GetHamMatDraw());
+                                nGRoi = nGRoi.ConcatObj(measure1.GetHamMatDraw());
                                 OK = false;
                             }
                         }
@@ -467,6 +473,11 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
 
         [DescriptionAttribute(""), Category("测量结果"), DisplayName("转换比例")]
         public double Scale { get; set; } = 1;
+        /// <summary>
+        /// 参考值
+        /// </summary>
+        [DescriptionAttribute(""), Category("测量结果"), DisplayName("参考值")]
+        public double ResValue { get; set; } = 1;
 
 
         [DescriptionAttribute("选择测量点"), Category("测量点"), DisplayName("选择测量点")]
@@ -501,10 +512,10 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             HOperatorSet.DistancePp(row, Col, row2, Col2, out HTuple distance);
             ValuePP = distance;
             HTuple minMM = this.ScaleMM(halcon.GetCaliConstMM(distance)) - AddOreM;
-            if (ISCompound)
-            {
+            //if (ISCompound)
+            //{
                 halcon.AddImageMassage(row, Col, minMM);
-            }
+            //}
             if (!this.IsExist("同心圆mm"))
             {
                 this["同心圆mm"] = minMM;

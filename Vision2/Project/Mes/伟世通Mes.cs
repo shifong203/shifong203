@@ -1,13 +1,14 @@
 ﻿using ErosSocket.DebugPLC.Robot;
 using System;
 using System.Collections.Generic;
+using System.Windows.Forms;
 using Vision2.Project.formula;
 
 namespace Vision2.Project.Mes
 {
-    public class 伟世通Mes : IMesData
+    public class 伟世通Mes : MesInfon
     {
-        public event IMesData.ResTMesd ResDoneEvent;
+        public override event IMesData.ResTMesd ResDoneEvent;
 
         public static void WeirtFlg(string path, string code, bool ok)
         {
@@ -28,7 +29,7 @@ namespace Vision2.Project.Mes
             Vision2.ErosProjcetDLL.Excel.Npoi.WriteF(path, ListText, ".dat");
         }
 
-        public void WrietMes(UserFormulaContrsl userFormulaContrsl, string QrCode, string Product_Name)
+        public override void WrietMes(UserFormulaContrsl userFormulaContrsl, string QrCode, string Product_Name)
         {
             try
             {
@@ -39,22 +40,22 @@ namespace Vision2.Project.Mes
             }
         }
 
-        public bool ReadMes(string SerialNumber, out string resetMesString)
+        public override bool ReadMes(string SerialNumber, out string resetMesString)
         {
             throw new NotImplementedException();
         }
 
-        public bool ReadMes(out string resetMesString)
+        public override bool ReadMes(out string resetMesString)
         {
             throw new NotImplementedException();
         }
 
-        public void WrietMesAll<T>(T datas, string QrCode, string Product_Name)
+        public override void WrietMesAll<T>(T datas, string QrCode, string Product_Name)
         {
             WrietMes(datas as OneDataVale, Product_Name);
         }
 
-        public void WrietMes(TrayData data, string Product_Name)
+        public override void WrietMes(TrayData data, string Product_Name)
         {
             for (int i = 0; i < data.GetDataVales().Count; i++)
             {
@@ -63,7 +64,7 @@ namespace Vision2.Project.Mes
   
         }
 
-        public void WrietMes( OneDataVale trayData, string Product_Name)
+        public override void WrietMes( OneDataVale trayData, string Product_Name)
         {
             try
             {
@@ -108,12 +109,17 @@ namespace Vision2.Project.Mes
                 }
                 string path = ProcessControl.ProcessUser.GetThis().ExcelPath + "//" + DiName + "//"
                + trayData.PanelID + "_" + DateTime.Now.ToString("yyyyMMddHHmmss") + reset;
-                Vision2.ErosProjcetDLL.Excel.Npoi.WriteF(path, ListText, ".dat");
+                ErosProjcetDLL.Excel.Npoi.WriteF(path, ListText, ".dat");
             }
             catch (Exception ex)
             {
-                Vision2.ErosProjcetDLL.Project.AlarmText.LogErr(ex.Message, "写入数据");
+                ErosProjcetDLL.Project.AlarmText.LogErr(ex.Message, "写入数据");
             }
+        }
+
+        public override Form GetForm()
+        {
+            return null;
         }
     }
 }

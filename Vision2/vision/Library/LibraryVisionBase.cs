@@ -14,7 +14,7 @@ namespace Vision2.vision.Library
      public  class LibraryVisionBase : DicHtuple
      {
 
-        public Control GetControl(HalconRun halconRun)
+        public Control GetControl(HalconRun halconRun=null)
         {
             try
             {
@@ -33,6 +33,22 @@ namespace Vision2.vision.Library
             catch (Exception ex)
             { }
             return null;
+        }
+        public HObject GetRoi()
+        {
+            RunProgram run = GetRun();
+            if (run != null)
+            {
+                HOperatorSet.SmallestRectangle2(run.AOIObj, out HTuple row, out HTuple col, out HTuple phi, out HTuple leng1, out HTuple length2);
+                if (row.Length == 1)
+                {
+                    Length1 = leng1.TupleInt();
+                    Length2 = length2.TupleInt();
+                }
+            }
+         
+            HOperatorSet.GenRectangle2(out HObject recaoi, Row, Col, new HTuple(Angle).TupleRad(), Length1, Length2);
+            return recaoi;
         }
 
         public int RunID = 1;
@@ -71,36 +87,79 @@ namespace Vision2.vision.Library
 
         public bool RestBool;
 
-        public bool Run( OneResultOBj oneResultO)
+        public AoiObj Run( OneResultOBj oneResultO)
+        {
+            AoiObj aoiObj = new AoiObj();
+            aoiObj.AoiRow = Row;
+            aoiObj.AoiCol = Col;
+            aoiObj.Angle = Angle;
+            aoiObj.IsLibrary = true;
+            aoiObj.CiName = Name;
+            RestBool = false;
+            try
+            {
+                    if (LibraryName ==null)
+                    {
+                        aoiObj.RestBool = true;
+                        return aoiObj;
+                    }
+                    if (LibraryName!="")
+                    {
+                        aoiObj.RPName = LibraryName;
+                        HOperatorSet.Union1(Vision.GetLibrary()[LibraryName].AOIObj, out aoiObj.SelseAoi);
+                        HOperatorSet.Union1(Vision.GetLibrary()[LibraryName].DrawObj, out aoiObj.Drow);
+                        HOperatorSet.AreaCenter(aoiObj.SelseAoi, out HTuple area, out HTuple row, out HTuple col);
+                        if (row.Length==1)
+                        {
+                            HOperatorSet.VectorAngleToRigid(row, col, 0, Row, Col, new HTuple(Angle).TupleRad(), out HTuple hom2dt);
+                             aoiObj.Homt2D = hom2dt;
+                            HOperatorSet.AffineTransRegion(aoiObj.SelseAoi, out aoiObj.SelseAoi, hom2dt, "nearest_neighbor");
+                            HOperatorSet.AffineTransRegion(aoiObj.Drow, out aoiObj.Drow, hom2dt, "nearest_neighbor");
+                        }
+                        //oneResultO.AddObj(aoiObj.Aoi, ColorResult.blue);
+                        //oneResultO.AddObj(aoiObj.Drow, ColorResult.yellow);
+                        RestBool = Vision.GetLibrary()[LibraryName].Run(oneResultO, aoiObj);
+                    }
+                    else
+                    {
+                        aoiObj.RestBool = true;
+                    }
+            }
+            catch (Exception ex)
+            { }
+            return aoiObj;
+        }
+
+        public AoiObj Run(IDrawHalcon drawHalcon )
         {
             AoiObj aoiObj = new AoiObj();
             RestBool = false;
             try
             {
-                if (LibraryName ==null)
+                if (LibraryName == null)
                 {
-                    return false;
+                    return aoiObj;
                 }
-                    if (LibraryName!="")
+                if (LibraryName != "")
                 {
-                    HOperatorSet.Union1(Vision.GetLibrary()[LibraryName].AOIObj, out aoiObj.Aoi);
+                    HOperatorSet.Union1(Vision.GetLibrary()[LibraryName].AOIObj, out aoiObj.SelseAoi);
                     HOperatorSet.Union1(Vision.GetLibrary()[LibraryName].DrawObj, out aoiObj.Drow);
-                    HOperatorSet.AreaCenter(aoiObj.Aoi, out HTuple area, out HTuple row, out HTuple col);
-                    HOperatorSet.VectorAngleToRigid(row, col, 0, Row, Col, Angle, out HTuple hom2dt);
-                    HOperatorSet.AffineTransRegion(aoiObj.Aoi, out aoiObj.Aoi, hom2dt, "nearest_neighbor");
+                    HOperatorSet.AreaCenter(aoiObj.SelseAoi, out HTuple area, out HTuple row, out HTuple col);
+                    HOperatorSet.VectorAngleToRigid(row, col, 0, Row, Col, new HTuple(Angle).TupleRad(), out HTuple hom2dt);
+                    HOperatorSet.AffineTransRegion(aoiObj.SelseAoi, out aoiObj.SelseAoi, hom2dt, "nearest_neighbor");
                     HOperatorSet.AffineTransRegion(aoiObj.Drow, out aoiObj.Drow, hom2dt, "nearest_neighbor");
-                    oneResultO.AddObj(aoiObj.Aoi, ColorResult.blue);
-                    oneResultO.AddObj(aoiObj.Drow, ColorResult.yellow);
-                    RestBool = Vision.GetLibrary()[LibraryName].Run(oneResultO, aoiObj);
-
+                    drawHalcon.AddObj(aoiObj.SelseAoi, ColorResult.blue);
+                    drawHalcon.AddObj(aoiObj.Drow, ColorResult.yellow);
+                    OneResultOBj oneResultOBj = new OneResultOBj();
+                    oneResultOBj.Image = drawHalcon.Image();
+                    RestBool = Vision.GetLibrary()[LibraryName].Run(oneResultOBj, aoiObj);
+                    aoiObj.RestBool = RestBool;
                 }
-              
-
             }
             catch (Exception ex)
             {
             }
-            return RestBool;
+            return aoiObj;
         }
 
         public AoiObj GetAOI()
@@ -108,11 +167,11 @@ namespace Vision2.vision.Library
             AoiObj aoiObj = new AoiObj();
             try
             {
-                HOperatorSet.Union1(Vision.GetLibrary()[LibraryName].AOIObj, out aoiObj.Aoi);
+                HOperatorSet.Union1(Vision.GetLibrary()[LibraryName].AOIObj, out aoiObj.SelseAoi);
                 HOperatorSet.Union1(Vision.GetLibrary()[LibraryName].DrawObj, out aoiObj.Drow);
-                HOperatorSet.AreaCenter(aoiObj.Aoi, out HTuple area, out HTuple row, out HTuple col);
-                HOperatorSet.VectorAngleToRigid(row, col, 0, Row, Col, Angle, out HTuple hom2dt);
-                HOperatorSet.AffineTransRegion(aoiObj.Aoi, out aoiObj.Aoi, hom2dt, "nearest_neighbor");
+                HOperatorSet.AreaCenter(aoiObj.SelseAoi, out HTuple area, out HTuple row, out HTuple col);
+                HOperatorSet.VectorAngleToRigid(row, col, 0, Row, Col, new HTuple(Angle).TupleRad(), out HTuple hom2dt);
+                HOperatorSet.AffineTransRegion(aoiObj.SelseAoi, out aoiObj.SelseAoi, hom2dt, "nearest_neighbor");
                 HOperatorSet.AffineTransRegion(aoiObj.Drow, out aoiObj.Drow, hom2dt, "nearest_neighbor");
             }
             catch (Exception)

@@ -690,24 +690,30 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                                 HOperatorSet.Complement(hObject2, out HObject hObject4);
                                 HOperatorSet.ReduceDomain(hObjectImage, hObject4, out hObjectImage);
                                 HOperatorSet.CropDomain(hObjectImage, out hObjectImage);
-                                //halcon.Image(hObjectImage);
+
+                                //halcon.Image=(hObjectImage);
                                 if (IDs.Count<=i)
                                 {
                                     HOperatorSet.CreateDataCode2dModel(this.SymbolType, new HTuple(), new HTuple(), out HTuple hTuple1);
                                     IDs.Add(hTuple1);
                                     HOperatorSet.FindDataCode2d(hObjectImage, out hObject1, IDs[i], "train", "all", out resultHandles, out tupleStr);
                                 }
-                                if (resultHandles.Length == 0)
+                                else
                                 {
-                                    break;
+                                    HOperatorSet.FindDataCode2d(hObjectImage, out hObject1, IDs[i], "train", "all", out resultHandles, out tupleStr);
+                                    if (resultHandles.Length == 0)
+                                    {
+                                        break;
+                                    }
+                                    HOperatorSet.FindDataCode2d(hObjectImage, out hObject2, IDs[i], "stop_after_result_num", IDValue.ToString(), out resultHandles, out  tupleStr);
+                                    if (resultHandles.Length == 0)
+                                    {
+                                        break;
+                                    }
                                 }
-                                HOperatorSet.FindDataCode2d(hObjectImage, out hObject2, IDs[i], "stop_after_result_num", IDValue.ToString(), out resultHandles, out HTuple tupleStr2);
-                                if (resultHandles.Length == 0)
-                                {
-                                    break;
-                                }
-                                textS.Append(tupleStr2);
-                                NumberInt = NumberInt + tupleStr2.Length;
+                           
+                                textS.Append(tupleStr);
+                                NumberInt = NumberInt + tupleStr.Length;
                                 if (hObject2.GetObjClass() == "xld_cont")
                                 {
                                     HOperatorSet.SmallestRectangle2Xld(hObject2, out HTuple row1, out HTuple column1, out HTuple phi, out HTuple lengt1, out HTuple length2);
@@ -717,7 +723,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                                 hOQERoi = hOQERoi.ConcatObj(hObject2);
                                 if (this.ISShowText)
                                 {
-                                    halcon.AddMeassge("第" + (i + 2) + ":" + tupleStr2.Length);
+                                    halcon.AddMeassge("第" + (i + 2) + ":" + tupleStr.Length);
                                 }
                             }
                         }
@@ -739,31 +745,28 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                             {
                                 this.GetPThis().AddObj(hObject2, ColorResult.red);
                             }
-                            QRText.AddRange( textS.ToSArr());
-                            string[] lixetCR = new string[Rows.Length];
+                            HTuple lixetCR = HTuple.TupleGenConst(Rows.Length, "");
                             string err = "";
                             int det = hObject3.CountObj();
-                            for (int i = 0; i < QRText.Count; i++)
+                            for (int i = 0; i < textS.Length; i++)
                             {
                                 HOperatorSet.GetRegionIndex(hObject3, row.TupleSelect(i).TupleInt(), colu.TupleSelect(i).TupleInt(), out HTuple intdex);
                                 try
                                 {
-                                    string daq = QRText[i];
-                                    QRText[i] = "";
+                                    string daq = textS[i];
+                                    textS[i] = "";
                                     if (intdex.Length == 1)
                                     {
-                                        if (QRText.Contains(daq))
+                                        if (textS.TupleFind(daq)>=0)
                                         {
-                                            //err += QRText[i]+";";
-                                            QRText[i] = "";
+                                            textS[i] = "";
                                         }
                                         lixetCR[intdex - 1] = daq;
-                                        halcon.AddImageMassage(row[i], colu[i], intdex.ToString());
-                                        DecodedDataString.Append(QRText[i] + this.SiptS);
+                                        DecodedDataString.Append(textS.TupleSelect(i).S + this.SiptS);
                                     }
                                     else
                                     {
-                                        if (QRText.Contains(QRText[i]))
+                                        if (textS.TupleFind(textS[i]))
                                         {
                                             //err += QRText[i] + ";";
                                         }
@@ -772,24 +775,26 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                                             err += i + ";";
                                         }
                                     }
-                                    QRText[i] = daq;
+                                    textS[i] = daq;
                                 }
                                 catch (Exception ex)
                                 {
                                     err += i + ex.Message;
                                 }
                             }
-                            QRText = lixetCR.ToList();
+                            textS = lixetCR;
                             if (err != "")
                             {
                                 this.LogErr("二维码位置错误:" + err);
                             }
-                            //QRText.Clear();
-                            //QRText.AddRange(lixetCR);
                             HTuple index = new HTuple();
                             for (int i = 0; i < Rows.Length; i++)
                             {
-                                index.Append(i + 1);
+                                if (TrayIDS.Count <= i)
+                                {
+                                    TrayIDS.Add(TrayIDS[i-1 ]+1);
+                                }
+                                index.Append(TrayIDS[i]);
                             }
                             halcon.AddImageMassage(Rows, Cols, index);
                         }
@@ -797,21 +802,19 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     else
                     {
                         SrotQR(hOQERoi, textS, out  hOQERoi, out textS);
-                        QRText.AddRange(textS.ToSArr());
                     }
                     //重复剔除
                     if (QRCOntEn==1)
                     {
-                        textS=new HTuple(  QRText.ToArray());
                         HOperatorSet.AreaCenter(hOQERoi, out area, out row, out colu);
                         HTuple indexS = new HTuple();
-                        for (int i = 0; i < row.Length; i++)
+                        for (int i = 0; i < textS.Length; i++)
                         {
-                            if (textS.TupleSelect(i) == "")
+                            string txQ = textS[i];
+                            if (txQ=="")
                             {
                                 continue;
                             }
-                            string txQ = textS.TupleSelect(i);
                             textS[i] = "";
                             HTuple indx = textS.TupleFind(txQ);
                             if (indx[0] < 0)
@@ -828,14 +831,22 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         }
                         if (indexS.Length!=0)
                         {
+                            if (DiscernType==0)
+                            {
+                                hObject3 = hOQERoi;
+                            }
+                            else
+                            {
+                                HOperatorSet.GenRectangle1(out hObject3, this.Rows - Height,
+                              Cols - this.Height, Rows + this.Height, Cols + this.Height);
+                            }
                             HTuple de = indexS + 1;
-                            HOperatorSet.SelectObj(hOQERoi, out HObject hObject4, de);
+                            HOperatorSet.SelectObj(hObject3, out HObject hObject4, de);
                             HOperatorSet.DilationCircle(hObject4, out hObject4, 20);
                             HOperatorSet.RemoveObj(hOQERoi, out hOQERoi, de);
-                            textS = textS.TupleRemove(indexS);
-                            AddBule(hObject4);
-                            //halcon.AddMessage("重复数量" +indexS.Length);
-                            ErosProjcetDLL.Project.AlarmText.AddTextNewLine("重复数量" + indexS.Length +":"+ indexS.ToString());
+                            this.GetPThis().AddObj(hObject4, ColorResult.red);
+                            ErosProjcetDLL.Project.AlarmText.AddTextNewLine("重复数量" + indexS.Length 
+                                +":"+ de.ToString());
                         }
                     }
                     if (DiscernType == 0)
@@ -849,14 +860,14 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         }
                         halcon.AddImageMassage(row, colu, index);
                     }
-
                 }
                 else
                 {
                     this.GetPThis().AddObj(hObject3, ColorResult.red);
                 }
+                HOperatorSet.AreaCenter(hOQERoi, out  area, out OutRow, out OutCol);
                 QRText.Clear();
-                QRText .AddRange( textS.ToSArr());
+                QRText.AddRange(textS.ToSArr());
                 string data = "";
                 for (int i = 0; i < QRText.Count; i++)
                 {
@@ -870,13 +881,21 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             {
                 this.LogErr(ex.StackTrace.Remove(0,ex.StackTrace.Length-100));
             }
-
         }
 
-
+        public List<string> MarkName = new List<string>();
         public HTuple Rows { get; set; } = new HTuple();
 
         public HTuple Cols { get; set; } = new HTuple();
+
+        public HTuple OutRow = new HTuple();
+
+        public HTuple OutCol = new HTuple();
+
+        public bool Enble { get; set; }
+
+       
+
 
         public List<bool> IsEt { get; set; } = new List<bool>();
         /// <summary>
@@ -927,9 +946,9 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 }
                 number = QRText.Count;
                 //image.Dispose();
-                if (NGRoi.IsInitialized())
+                if (nGRoi.IsInitialized())
                 {
-                    HOperatorSet.CountObj(NGRoi, out HTuple hTuple);
+                    HOperatorSet.CountObj(nGRoi, out HTuple hTuple);
                 }
                 string dataT = "";
                 if (number!= this.IDValue)
@@ -986,7 +1005,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         {
                             if (TrayIDNumber>=0)
                             {
-                                DebugCompiler.GetTrayDataUserControl().GetTrayEx(TrayIDNumber).GetTrayData().SetPanleSN(this.QRText, this.TrayIDS);
+                                DebugCompiler.GetTray(TrayIDNumber).GetTrayData().SetPanleSN(this.QRText, this.TrayIDS);
                             }
                             //DebugCompiler.GetTrayDataUserControl().SetValue(this.QRText, this.TrayIDS);
                             oneResultOBj.GetHalcon().SendMesage(this.QRText.ToArray());
@@ -1351,7 +1370,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 }
                 while (this.IsEt.Count > Row2.Length)
                 {
-                    this.IsEt.RemoveAt(this.IsEt.Count);
+                    this.IsEt.RemoveAt(this.IsEt.Count-1);
                 }
                 while (this.IsEt.Count < Row2.Length)
                 {

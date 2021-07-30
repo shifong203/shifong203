@@ -284,12 +284,12 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         
         public void ShowMesager(HalconRun halcon)
         {
-            NGRoi.GenEmptyObj();
+            nGRoi.GenEmptyObj();
             foreach (var item in this.Dic_Measure.Keys_Measure)
             {
-                NGRoi = NGRoi.ConcatObj(item.Value.MeasureObj(halcon,halcon.GetOneImageR())._HObject);
+                nGRoi = nGRoi.ConcatObj(item.Value.MeasureObj(halcon,halcon.GetOneImageR())._HObject);
             }
-            halcon.AddObj(NGRoi);
+            halcon.AddObj(nGRoi);
         }
 
 

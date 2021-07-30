@@ -14,6 +14,7 @@ using System.Runtime.InteropServices;
 using  ErosSocket.DebugPLC.Robot;
 using Vision2.Project.DebugF;
 using static Vision2.vision.HalconRunFile.RunProgramFile.OneCompOBJs;
+using Vision2.vision.RestVisionForm;
 
 namespace Vision2.vision
 {
@@ -115,15 +116,10 @@ namespace Vision2.vision
                     HWindd = new HWindID();
                     HWindd.Initialize(hWindowControl1);
                 }
-             
                     if (!trayImage.OK)
                     {
                         if (!trayImage.Done)
                         {
-                            if (TrayImageTs.Count == 0)
-                            {
-                                //TrayImage = null;
-                            }
                             if (!TrayImageTs.Contains(trayImage))
                             {
                                 TrayImageTs.Enqueue(trayImage);
@@ -134,13 +130,9 @@ namespace Vision2.vision
                             RestObjImage.RestObjImageFrom.Show();
                         }
                     }
-                    else
+                    if (trayImage.Done)
                     {
-                        if (trayImage.Done)
-                        {
-                            //RecipeCompiler.AddOKNumber(true);
-                            UserFormulaContrsl.WeirtAll(trayImage);
-                        }
+                        UserFormulaContrsl.WeirtAll(trayImage);
                     }
                 label3.Text = RecipeCompiler.Instance.GetSPC();
         
@@ -231,9 +223,7 @@ namespace Vision2.vision
                 int idt = 0;
                 foreach (var item in OneProductV.GetNGCompData().DicOnes)
                 {
-                    //int det=   dataGridView1.Rows.Add();
-                    //dataGridView1.Rows[det].Cells[0].Value = item.Value.ComponentID;
-                    //dataGridView1.Rows[det].Cells[1].Value = item.Value.NGText;
+         
                     if (item.Value.Done)
                     {
                         if (item.Value.OK)
@@ -266,7 +256,6 @@ namespace Vision2.vision
                 restOneComUserControl1.UpData(OneRObjT);
             }
             label4.Text = PatText;
-    
             try
             {
                 if (Vision.Instance.RestT)
@@ -372,6 +361,7 @@ namespace Vision2.vision
                     label1.BackColor = Color.Red;
                 }
                 treeView1.Nodes.Clear();
+                treeView2.Nodes.Clear();
                 UserFormulaContrsl.WeirtAll(TrayImage);
                 label3.Text = RecipeCompiler.Instance.GetSPC();
                 if (TrayImageTs.Count == 0)
@@ -410,8 +400,11 @@ namespace Vision2.vision
                                     if (TrayImageTs.Count != 0)
                                     {
                                         TrayImage = TrayImageTs.Dequeue();
-                                        trayDatas1.SetTray(TrayImage);
-                                        trayDatas1.UpDa();
+                                 
+                                        trayDatas1.Initialize(TrayImage);
+                                        //trayDatas1.SetTray(TrayImage);
+                                        TrayImage.SetITrayRobot(trayDatas1);
+                                        trayDatas1.UpData();
                                         this.Invoke(new Action(() =>
                                         {
                                             try
@@ -429,16 +422,19 @@ namespace Vision2.vision
                                                         continue;
                                                     }
 
-                                                        OneProductV = item;
-                                                       treeView1.Nodes.Clear();
+                                                     OneProductV = item;
+                                                     treeView1.Nodes.Clear();
+                                                     treeView2.Nodes.Clear();
 
                                                     foreach (var itemdt in OneProductV.ListCamsData)
                                                     {
                                                          TreeNode treeNode=    treeView1.Nodes.Add(itemdt.Key);
                                                         treeNode.Tag = itemdt.Value;
+                                                        TreeNode treeNodeOK = treeView2.Nodes.Add(itemdt.Key);
+                                                        treeNodeOK.Tag = itemdt.Value;
                                                         foreach (var itemdte in itemdt.Value.AllCompObjs.DicOnes)
                                                         {
-                                                            TreeNode treeNode1= treeNode.Nodes.Add(itemdte.Key);
+                                                            TreeNode treeNode1= treeNodeOK.Nodes.Add(itemdte.Key);
                                                             treeNode1.Tag = itemdte.Value; 
                                                             treeNode1.ImageIndex = 6;
                                                         }
@@ -448,6 +444,7 @@ namespace Vision2.vision
                                                             treeNode1.Tag = itemdte.Value;
                                                             treeNode1.ImageIndex = 5;
                                                         }
+                                                        treeNodeOK.Expand();
                                                         treeNode.Expand();
                                                     }
                                                     break;
@@ -515,7 +512,8 @@ namespace Vision2.vision
                         if (OneProductV.Done)
                         {
                             treeView1.Nodes.Clear();
-               
+                            treeView2.Nodes.Clear();
+
                             for (int i = 0; i < TrayImage.Count; i++)
                             {
                                 if (TrayImage.GetDataVales()[i]!=null)
@@ -530,17 +528,25 @@ namespace Vision2.vision
                                         foreach (var item in OneProductV.ListCamsData)
                                         {
                                              TreeNode treeNode=  treeView1.Nodes.Add(item.Key);
-                                            foreach (var itemdt in item.Value.NGObj.DicOnes)
+                                             foreach (var itemdt in item.Value.NGObj.DicOnes)
                                             {
                                                 TreeNode treeNode1= treeNode.Nodes.Add(itemdt.Key);
                                                 treeNode1.Tag = itemdt.Value;
                                                 treeNode1.ImageIndex = 6;
                                             }
+                                            TreeNode treeNodeOK = treeView2.Nodes.Add(item.Key);
+
+                                            foreach (var itemdt in item.Value.AllCompObjs.DicOnes)
+                                            {
+                                                TreeNode treeNode1 = treeNodeOK.Nodes.Add(itemdt.Key);
+                                                treeNode1.Tag = itemdt.Value;
+                                                treeNode1.ImageKey = "OK";
+                                            }
+                                            treeNodeOK.Expand();
                                             treeNode.ImageIndex = 5;
                                             treeNode.Expand();
                                             treeNode.Tag = item.Value;
                                         }
-                                   
                                         label1.Text = "NG";
                                         label1.BackColor = Color.Red;
                                         if (OneProductV.GetNGImage() != null)
@@ -593,8 +599,8 @@ namespace Vision2.vision
                             }
                          }
                         if (OneProductV.OK)
-                        {
-                            TrayImage.SetNumberValue(OneProductV.TrayLocation, OneProductV.OK);
+                        {/*.SetNumberValue(OneProductV.TrayLocation, OneProductV.OK);*/
+                            TrayImage.GetITrayRobot().UpData();
                             label1.Text = "OK";
                             label1.BackColor = Color.Green;
                         }
@@ -603,7 +609,7 @@ namespace Vision2.vision
                             label1.Text = "NG";
                             label1.BackColor = Color.Red;
                         }
-                        UpData();
+                        //UpData();
                     }else  if (e.KeyCode==Keys.D1)
                     {
                         restOneComUserControl1.SetRest(1);
@@ -750,8 +756,7 @@ namespace Vision2.vision
         {
             try
             {
-
-                OneProductV.PanelID = textBox1.Text;
+                OneProductV.PanelID = textBox1.Text.Trim();
             }
             catch (Exception)
             {
@@ -791,40 +796,36 @@ namespace Vision2.vision
             }
         }
 
-        private void dataGridView1_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)
-        {
-        }
-
-        private void dataGridView1_MouseClick(object sender, MouseEventArgs e)
-        {
-        }
 
         private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
         {
             try
             {
-                try
-                {
-                    //int i = 0;
-                    //foreach (var item in OneProductV.GetNGCompData().DicOnes)
-                    //{
-                    //    if (!item.Value.Done)
-                    //    {
-                    //        dataGridView1.Rows[i].DefaultCellStyle.BackColor = Color.White;
-                    //    }
-                    //    i++;
-                    //}
-                    UpData();
-                    HWindd.ShowImage();
-                }
-                catch (Exception ex)
-                {
-                }
-
-
-
+                 UpData();
+                 HWindd.ShowImage();
             }
             catch (Exception)
+            {
+            }
+        }
+        OneNGDataMinMaxControl oneNGDataMinMaxControl;
+        private void treeView2_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            try
+            {
+                OneComponent one= e.Node.Tag as OneComponent;
+                if (oneNGDataMinMaxControl==null)
+                {
+                    oneNGDataMinMaxControl = new OneNGDataMinMaxControl();
+                    panel5.Controls.Add(oneNGDataMinMaxControl);
+                }
+
+                panel5.AutoScroll = true;
+                oneNGDataMinMaxControl.Dock = DockStyle.Top;
+                oneNGDataMinMaxControl.UpDataMax(one.oneRObjs[0].dataMinMax);
+             
+            }
+            catch (Exception ex)
             {
             }
         }

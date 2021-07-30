@@ -15,7 +15,7 @@ namespace Vision2.HtmlMaker
       
         private static string filename = "";
         private static  StreamWriter writer = null;
-        public static bool GenerateCode(string filepth,   double timems,DateTime sTime,DateTime eTime, OneDataVale dataVale)
+        public static bool GenerateCode(string filepth,double timems,DateTime sTime,DateTime eTime, OneDataVale dataVale)
         {
             // 文件存在时是否覆盖
             filename = filepth+ ".html";
@@ -31,7 +31,7 @@ namespace Vision2.HtmlMaker
                 outputfile = new FileStream(filename, FileMode.OpenOrCreate, FileAccess.Write);
                 writer = new StreamWriter(outputfile);
                 writer.BaseStream.Seek(0, SeekOrigin.End);
-   
+                MesJib mesJib= RecipeCompiler.Instance.GetMes() as MesJib;
                 DoWrite("<HTML>");
                 DoWrite("<HEAD>");
                 DoWrite("<TITLE> Test Results For Serial Number:" + dataVale.PanelID + " Executed At 4:10:48 PM</TITLE>");
@@ -42,17 +42,12 @@ namespace Vision2.HtmlMaker
                 //string.Format("{0:R}", sTime)
                 DoWrite("<H3>Start Time:" + sTime .ToString()+ "</h3>");
                 DoWrite("<H3>Stop Time:" + eTime .ToString()+ "</h3>");
-                DoWrite("<H3>Test Station:" + RecipeCompiler.Instance.MesDatat.Testre_Name + "</h3>");
-                DoWrite("<H3>Test Operator:" + RecipeCompiler.Instance.MesDatat.UserID + "</H3>");
+                DoWrite("<H3>Test Station:" + mesJib.MesData.Testre_Name + "</h3>");
+                DoWrite("<H3>Test Operator:" + mesJib.MesData.UserID + "</H3>");
                 DoWrite("<H3>Test Cell:" + "1" + "</H3>");
-                if (dataVale.OK)
-                {
-                    DoWrite("<H3>Test Result:<FONT COLOR=GREEN>PASS</FONT>");
-                }
-                else
-                {
-                    DoWrite("<H3>Test Result:<FONT COLOR=RED>FILL</FONT>");
-                }
+                if (dataVale.OK) DoWrite("<H3>Test Result:<FONT COLOR=GREEN>PASS</FONT>");
+                else DoWrite("<H3>Test Result:<FONT COLOR=RED>FILL</FONT>");
+                
                 DoWrite(@"<H3>Test Script:D:\NGP_SOFT\NGP BOARD STACK DIMENSION TEST_REV.B.JTS</H3>");
                 DoWrite("<H3>Test Script Validation Hash:" + "1" + "</H3>");
                 DoWrite("<H3>Elapsed Time:" + timems + "</H3>");
@@ -77,15 +72,9 @@ namespace Vision2.HtmlMaker
                 DoWrite("<TR>");
                 DoWrite("<TD>Serial Number Check</TD>");
                 DoWrite("<TD>SerialNumber</TD>");
-                if (dataVale.OK)
-                {
-                    DoWrite("<TD bgColor=#00ff00><B>PASS</B></TD>");
-                }
-                else
-                {
-                    DoWrite("<TD bgColor=RED><B>FILL</B></TD>");
-                }
-       
+                if (dataVale.OK) DoWrite("<TD bgColor=#00ff00><B>PASS</B></TD>");
+                else DoWrite("<TD bgColor=RED><B>FILL</B></TD>");
+
                 DoWrite("<TD bgColor=#FFFF99><CENTER>&#149;</CENTER></TD><TD bgColor=#FFFF99><CENTER>&#149;</CENTER></TD><TD  bgColor=#FFFF99></TD>");
                 DoWrite("<TD bgColor=#FFFF99></TD>");
                 DoWrite("<TD bgColor=#FFFF99>"+ dataVale.PanelID+ "</TD>");
@@ -107,7 +96,14 @@ namespace Vision2.HtmlMaker
 
                 DoWrite("<TD bgColor=#FFFF99><CENTER>&nbsp;</CENTER></TD><TD bgColor=#FFFF99><CENTER>&#149;</CENTER></TD><TD  bgColor=#FFFF99></TD>");
                 DoWrite("<TD bgColor=#FFFF99></TD>");
-                DoWrite("<TD bgColor=#FFFF99>PRODUCTION</TD>");
+                if (ErosProjcetDLL.Project.ProjectINI.DebugMode)
+                {
+                    DoWrite("<TD bgColor=#FFFF99>Debug</TD>");
+                }
+                else
+                {
+                    DoWrite("<TD bgColor=#FFFF99>PRODUCTION</TD>");
+                }
                 DoWrite("<TD>N/A</TD><TD>"+ timems + "</TD>");
                 DoWrite("<TD>0</TD>");
                 DoWrite("</TR>");
@@ -121,9 +117,8 @@ namespace Vision2.HtmlMaker
                     {
                         DoWrite("<TR>");
                         DoWrite("<TD>Dimension Analysis</TD>");
-                        DoWrite("<TD>p"+ runo + "_dist</TD>");
+                        DoWrite("<TD>"+ itemd .Key+ "</TD>");
                         runo++;
-
                         if (itemd.Value.OK)
                         {
                             DoWrite("<TD bgColor=#00ff00><B>PASS</B></TD>");
@@ -132,10 +127,9 @@ namespace Vision2.HtmlMaker
                         {
                             DoWrite("<TD bgColor=#ff0000><B>FIll</B></TD>");
                         }
-
                         DoWrite("<TD bgColor=#FFFF99><CENTER>&#149;</CENTER></TD><TD bgColor=#FFFF99><CENTER>&#149;</CENTER></TD><TD  bgColor=#FFFF99>"+ itemd.Value .oneRObjs[0].dataMinMax.Reference_ValueMin[0]+ "</TD>");
                         DoWrite("<TD bgColor=#FFFF99>" + itemd.Value.oneRObjs[0].dataMinMax.Reference_ValueMax[0]  + "</TD>");
-                        DoWrite("<TD bgColor=#FFFF99>" + itemd.Value.oneRObjs[0].dataMinMax.ValueStrs[0] + "</TD>");
+                        DoWrite("<TD bgColor=#FFFF99>" + itemd.Value.oneRObjs[0].dataMinMax.doubleV[0].Value.ToString("0.000000") + "</TD>");
                         DoWrite("<TD>inches</TD><TD>" + timeSpan.TotalSeconds + "</TD>");
                         DoWrite("<TD>0</TD>");
                         DoWrite("</TR>");

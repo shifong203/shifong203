@@ -354,6 +354,10 @@ namespace ErosSocket.DebugPLC
                 {
                     return;
                 }
+                if (LinkInitialize == null)
+                {
+                    return;
+                }
                 if (EquipmentStatus == EnumEquipmentStatus.初始化中)
                 {
                     AlarmText.AddTextNewLine(this.Name + "正在初始化中", Color.Red);

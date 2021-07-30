@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using Vision2.ErosProjcetDLL.PLCUI;
 using Vision2.ErosProjcetDLL.Project;
 using Vision2.ErosProjcetDLL.UI;
+using Vision2.Project.DebugF;
 using Vision2.Project.formula;
 
 namespace Vision2.Project
@@ -125,11 +126,23 @@ namespace Vision2.Project
                 AlarmListBoxt.AlarmFormThis.Hide();
                 timer100.Start();
                 timer500.Start();
-                if (File.Exists(Application.StartupPath + "\\LOGO.jpg"))
+
+                string[] paths = Directory.GetFiles(Application.StartupPath);
+                for (int i = 0; i < paths.Length; i++)
                 {
-                    toolStripPictureBox1.BackgroundImage = Image.FromFile(Application.StartupPath + "\\LOGO.jpg");
-                    toolStripPictureBox1.BackgroundImageLayout = ImageLayout.Zoom;
+                    string fileName = Path.GetFileNameWithoutExtension(paths[i]);
+                    if (fileName.ToLower() == "logo")
+                    {
+                        toolStripPictureBox1.BackgroundImage = Image.FromFile(paths[i]);
+                        toolStripPictureBox1.BackgroundImageLayout = ImageLayout.Zoom;
+                        break;
+                    }
                 }
+                //if (File.Exists(Application.StartupPath + "\\LOGO.jpg"))
+                //{
+                //    toolStripPictureBox1.BackgroundImage = Image.FromFile(Application.StartupPath + "\\LOGO.jpg");
+                //    toolStripPictureBox1.BackgroundImageLayout = ImageLayout.Zoom;
+                //}
                 SetFormMax(this);
 
                 this.LayoutMdi(MdiLayout.TileVertical);
@@ -635,12 +648,12 @@ namespace Vision2.Project
         {
             try
             {
-                Directory.CreateDirectory(Application.StartupPath + "\\截取屏幕\\" + DateTime.Now.ToLongDateString());
+                //Directory.CreateDirectory(Application.StartupPath + "\\截取屏幕\\");
                 Bitmap bitmap = UICon.GetScreenCapture();
                 SaveFileDialog saveFileDialog = new SaveFileDialog();
-                saveFileDialog.InitialDirectory = Application.StartupPath + @"\截取屏幕\";
+                //saveFileDialog.InitialDirectory = Application.StartupPath + @"\截取屏幕\";
                 saveFileDialog.Filter = "图像|*.jpg";
-                string timeStr = DateTime.Now.ToString("HH时mm分ss秒");
+                string timeStr = DateTime.Now.ToString("HH时mm分ss秒截屏");
                 saveFileDialog.FileName = timeStr;
                 if (saveFileDialog.ShowDialog() == DialogResult.OK)
                 {
@@ -960,7 +973,6 @@ namespace Vision2.Project
                         DebugF.DebugCompiler.GetDoDi().WritDO(DebugF.DebugCompiler.GetThis().RunButton.ResetButtenS, false);
                     }
                 }
-       
             }
             catch (Exception)
             {
@@ -983,13 +995,6 @@ namespace Vision2.Project
         {
 
         }
-
-        private void userInterfaceControl1_Load(object sender, EventArgs e)
-        {
-
-        }
-
-
         vision.LibraryForm1 LibraryForm1;
         private void 库管理ToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -1021,6 +1026,171 @@ namespace Vision2.Project
             {
                 MessageBox.Show(ex.Message);
             }
+        }
+
+        private void tsButton1_Click_1(object sender, EventArgs e)
+        {
+            try
+            {
+                DebugCompiler.Start();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+
+            }
+        }
+
+        private void tsButton2_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (DebugCompiler.GetThis().IsRunStrat)
+                {
+                    DebugCompiler.ISHome = false;
+                }
+                DebugF.DebugCompiler.RunStop = true;
+                DebugCompiler.Stop();
+            }
+            catch (System.Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+
+
+        private void Btn_Pause_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                DebugCompiler.Pause();
+            }
+            catch (System.Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        DebugForm debugForm;
+        private void Btn_Debug_Click(object sender, EventArgs e)
+        {
+          
+      
+        }
+
+        private void toolStripSplitButton1_ButtonClick(object sender, EventArgs e)
+        {
+     
+        }
+
+        private void 初始化ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+      
+        }
+
+        private void 复位ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+           
+        }
+
+        private void 复位ToolStripMenuItem_Click_1(object sender, EventArgs e)
+        {
+    
+        }
+
+        private void 初始化ToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                DebugCompiler.Initialize();
+                labelStat1.Text = DebugCompiler.EquipmentStatus.ToString();
+            }
+            catch (System.Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void tsButton1_Click_2(object sender, EventArgs e)
+        {
+            try
+            {
+                if (ProjectINI.Enbt || User.MatchThePermissions("管理权限"))
+                {
+                    if (debugForm == null)
+                    {
+                        debugForm = new DebugForm();
+                    }
+                    UICon.WindosFormerShow(ref debugForm);
+                    DebugCompiler.Debuging = true;
+                    if (DebugCompiler.GetThis().LinkAutoMode != null && DebugCompiler.GetThis().LinkAutoMode != "")
+                    {
+                        if (ErosSocket.ErosConLink.StaticCon.GetLingkIDValue(DebugCompiler.GetThis().LinkAutoMode, ErosSocket.ErosConLink.UClass.Boolean, out dynamic valueDy))
+                        {
+                            if (valueDy)
+                            {
+                                DialogResult dialogResult = MessageBox.Show("是否切换为手动模式", "", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
+                                if (dialogResult == DialogResult.Yes)
+                                {
+                                    ErosSocket.ErosConLink.StaticCon.SetLinkAddressValue(DebugCompiler.GetThis().LinkAutoMode, false);
+                                    //ErosSocket.ErosConLink.StaticCon.SetLinkAddressValue(DebugCompiler.GetThis().LinkAutoMode, true);
+                                }
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("用户权限不足！需要管理员权限");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void 复位ToolStripMenuItem_Click_2(object sender, EventArgs e)
+        {
+            try
+            {
+                AlarmText.ResetAlarm();
+                DebugCompiler.Rest();
+                DebugCompiler.Buzzer = false;
+                DebugCompiler.GetDoDi().WritDO(DebugCompiler.GetThis().RunButton.red, false);
+                DebugCompiler.GetDoDi().WritDO(DebugCompiler.GetThis().RunButton.Fmq, false);
+                DebugCompiler.GetDoDi().WritDO(DebugCompiler.GetThis().RunButton.ResetButtenS, false);
+                //this.Btn_Reset.KeyValuePairs = this.data.LinkRestoration;
+                //labelStat.Text = DebugCompiler.EquipmentStatus.ToString();
+            }
+            catch (System.Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void 初始化ToolStripMenuItem_Click_1(object sender, EventArgs e)
+        {
+            try
+            {
+                DebugCompiler.Initialize();
+                labelStat1.Text = DebugCompiler.EquipmentStatus.ToString();
+            }
+            catch (System.Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void labelStat1_ButtonClick(object sender, EventArgs e)
+        {
+
+        }
+
+        private void userFormulaContrsl1_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -791,6 +791,10 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             try
             {
+                if (isChe)
+                {
+                    return;
+                }
                 halcon.HobjClear();
                 if (_Model.ColorDic.ContainsKey(listBox2.SelectedItem.ToString()))
                 {
@@ -842,7 +846,9 @@ namespace Vision2.vision.HalconRunFile.Controls
                 _Classify.Color_ID = (byte)numericUpDown9.Value;
                 _Classify.ISFillUp = checkBox10.Checked;
                 _Classify.ClosingCircleValue = (double)numericUpDown11.Value;
-                _Classify.Classify( halcon.GetOneImageR(), _Classify.DrawObj, _Model, out HObject hObject,  this.hObjects);
+                AoiObj aoiObj = _Model.GetAoi();
+                aoiObj.SelseAoi = _Classify.DrawObj;
+                _Classify.Classify( halcon.GetOneImageR(), aoiObj, _Model, out HObject hObject,  this.hObjects);
                 halcon.AddObj(hObject);
                 halcon.ShowImage();
                 halcon.ShowObj();
@@ -880,10 +886,14 @@ namespace Vision2.vision.HalconRunFile.Controls
                 {
                     listBox3.Items.Add(_Classify.threshold_Min_Maxes[i].ImageTypeObj);
                 }
+
                 for (int i = 0; i < _Model.MRModelHomMat.NumberT; i++)
                 {
-                    HOperatorSet.AffineTransRegion(_Classify.DrawObj, out HObject hObjectROI, _Model.MRModelHomMat.HomMat[i], "nearest_neighbor");
-                    _Classify.Classify( halcon.GetOneImageR(), hObjectROI, _Model, out HObject hObject, hObjects);
+                    HOperatorSet.AffineTransRegion(_Classify.DrawObj, out HObject hObjectROI, 
+                        _Model.MRModelHomMat.HomMat[i], "nearest_neighbor");
+                     AoiObj aoiObj=    _Model.GetAoi();
+                    aoiObj.SelseAoi = hObjectROI;
+                    _Classify.Classify( halcon.GetOneImageR(), aoiObj, _Model, out HObject hObject, hObjects);
                     halcon.AddObj(hObject);
                     HOperatorSet.AreaCenter(hObject, out HTuple area, out HTuple row, out HTuple column);
                     HOperatorSet.EllipticAxis(hObject, out HTuple ra, out HTuple rb, out HTuple phi);
@@ -975,7 +985,9 @@ namespace Vision2.vision.HalconRunFile.Controls
         private void button23_Click(object sender, EventArgs e)
         {
             halcon.HobjClear();
-            _Classify.Classify( halcon.GetOneImageR(), _Classify.DrawObj, _Model, out HObject hObject, this.hObjects);
+            AoiObj aoiObj = _Model.GetAoi();
+            aoiObj.SelseAoi = _Classify.DrawObj;
+            _Classify.Classify( halcon.GetOneImageR(), aoiObj, _Model, out HObject hObject, this.hObjects);
             //_Classify.Classify(halcon, _Model, out HObject color);
             halcon.AddObj(hObject);
             halcon.ShowObj();
@@ -1127,6 +1139,10 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             try
             {
+                if (isChe)
+                {
+                    return;
+                }
                 hWindID.HobjClear();
                 HOperatorSet.SmallestRectangle1(_Classify.DrawObj, out HTuple row, out HTuple col1, out HTuple row2, out HTuple col2);
                 if (listBox3.SelectedIndex == 0)

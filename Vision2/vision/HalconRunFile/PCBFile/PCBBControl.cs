@@ -68,9 +68,37 @@ namespace Vision2.vision.HalconRunFile.PCBFile
                 halcon.HobjClear();
                 Library.LibraryVisionBase Capacit = CurrentNode.Tag as Library.LibraryVisionBase;
                 propertyGrid1.SelectedObject = Capacit;
-                halcon.AddObj(Capacit.GetAOI().Aoi);
-                halcon.AddImageMassage(Capacit.Row, Capacit.Col,Capacit.Name);
-                halcon.ShowObj();
+             
+                Task.Run(() =>
+                {
+                    this.Invoke(new Action(() =>
+                    {
+                        if (CurrentNode != null)
+                        {
+                            tabPage1.Text = CurrentNode.Text;
+                            Library.LibraryVisionBase Capacit = CurrentNode.Tag as Library.LibraryVisionBase;
+                            propertyGrid1.SelectedObject = Capacit;
+                            if (Capacit != null)
+                            {
+                                halcon.HobjClear();
+                                panel1.Controls.Clear();
+                                if (Capacit.LibraryName != "")
+                                {
+                                    Control control = Capacit.GetControl(pCBAEX1.GetPThis());
+                                    panel1.Controls.Add(control);
+                                    control.Dock = DockStyle.Fill;
+                                    Capacit.Run(halcon.GetOneImageR());
+                                }
+                             
+                                halcon.AddObj(Capacit.GetAOI().SelseAoi);
+                                halcon.AddImageMassage(Capacit.Row, Capacit.Col, Capacit.Name);
+                      
+                                //halcon.AddObj(bPCBoJB.TestingRoi);
+                                halcon.ShowObj();
+                            }
+                        }
+                    }));
+                });
             }
             catch (Exception)
             {
@@ -171,31 +199,7 @@ namespace Vision2.vision.HalconRunFile.PCBFile
                 try
                 {
                     if (e.Button == MouseButtons.Right) return;
-                    Task.Run(() =>
-                    {
-                        this.Invoke(new Action(() =>
-                        {
-                            Point ClickPoint = new Point(e.X, e.Y);
-                            CurrentNode = treeView1.GetNodeAt(ClickPoint);
-                            if (CurrentNode != null)
-                            {
-                                tabPage1.Text = CurrentNode.Text;
-                                Library.LibraryVisionBase Capacit = CurrentNode.Tag as Library.LibraryVisionBase;
-                                propertyGrid1.SelectedObject = Capacit;
-                                if (Capacit != null)
-                                {
-                                    panel1.Controls.Clear();
-                                    Control control = Capacit.GetControl(pCBAEX1.GetPThis());
-                                    panel1.Controls.Add(control);
-                                    control.Dock = DockStyle.Fill;
-                                    halcon.HobjClear();
-                                    Capacit.Run(halcon.GetOneImageR());
-                                    //halcon.AddObj(bPCBoJB.TestingRoi);
-                                    halcon.ShowObj();
-                                }
-                            }
-                        }));
-                    });
+                  
                 }
                 catch (Exception ex)
                 {
@@ -209,8 +213,8 @@ namespace Vision2.vision.HalconRunFile.PCBFile
             try
             {
                 Library.LibraryVisionBase Capacit = CurrentNode.Tag as Library.LibraryVisionBase;
-
-                HObject hObject = RunProgram.DragMoveOBJ(halcon, Capacit.GetRun().AOIObj);
+          
+                HObject hObject = RunProgram.DragMoveOBJ(halcon, Capacit.GetRoi());
                 HOperatorSet.AreaCenter(hObject, out HTuple area, out HTuple row, out HTuple column);
                 Capacit.Row = row;
                 Capacit.Col = column;

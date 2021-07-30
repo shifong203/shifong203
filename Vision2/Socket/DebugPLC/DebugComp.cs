@@ -25,11 +25,7 @@ namespace ErosSocket.DebugPLC
         public bool Stop { get; set; }
         [DescriptionAttribute("是否单步执行"), Category("轴参数"), DisplayName("单步模式")]
         public bool Single_step_mode { get; set; }
-        [DescriptionAttribute("。"), Category("托盘信息"), DisplayName("托盘ID判断")]
-        public bool TrayID { get; set; }
-
-        [DescriptionAttribute("。"), Category("托盘信息"), DisplayName("穴位ID判断")]
-        public bool PalenID { get; set; }
+    
         public Dictionary<string, PLCAxis> DicAxes { get; set; }
         public Dictionary<string, Cylinder> DicCylinder { get; set; }
         public List<AxisSPD> ListAxisP { get; set; }
@@ -76,7 +72,7 @@ namespace ErosSocket.DebugPLC
         }
         public override void initialization()
         {
-            base.initialization();
+            //base.initialization();
         }
         /// <summary>
         /// 返回实例
