@@ -28,8 +28,10 @@ namespace Vision2.Project.formula
             {
             }
         }
-        int y;
-        int x;
+
+        private int y;
+        private int x;
+
         private void Tool_Click(object sender, EventArgs e)
         {
             string[] text;
@@ -69,13 +71,12 @@ namespace Vision2.Project.formula
                         tool.Click += Tool_Click;
                         contextMenuStrip.Items.Add(tool);
                     }
-                    if (keys.Length==2 && keys[1].Length==0)
+                    if (keys.Length == 2 && keys[1].Length == 0)
                     {
                         Rectangle rectangle = dataGridView1.GetCellDisplayRectangle(x, y, false);
                         Rectangle rectangle2 = dataGridView1.RectangleToScreen(rectangle);
                         contextMenuStrip.Show(rectangle2.X, rectangle2.Y + this.dataGridView1.Rows[x].Height);
                     }
-               
                 }
                 dataGridView1.EndEdit();
                 dataGridView1.BeginEdit(false);
@@ -87,6 +88,7 @@ namespace Vision2.Project.formula
                 MessageBox.Show(ex.Message);
             }
         }
+
         private void DataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             try
@@ -94,17 +96,17 @@ namespace Vision2.Project.formula
                 ErosProjcetDLL.UI.UICon.GetCursorPos(out ErosProjcetDLL.UI.UICon.POINT pOINT);
                 int X = dataGridView1.CurrentCellAddress.X;
                 int Y = dataGridView1.CurrentCellAddress.Y;
-                if (X!=1)
+                if (X != 1)
                 {
                     return;
                 }
                 if ((Y != -1 && X != -1) && dataGridView1.Rows[Y].Cells[X] != null && dataGridView1.Rows[Y].Cells[X].Value != null)
                 {
-                    string[] keys = new string []{ };
-                   ContextMenuStrip contextMenuStrip = new ContextMenuStrip();
+                    string[] keys = new string[] { };
+                    ContextMenuStrip contextMenuStrip = new ContextMenuStrip();
                     if (dataGridView1.Rows[Y].Cells[X].Value.ToString().Contains("."))
                     {
-                        keys= dataGridView1.Rows[Y].Cells[X].Value.ToString().Split('.');
+                        keys = dataGridView1.Rows[Y].Cells[X].Value.ToString().Split('.');
                         if (keys.Length == 1)
                         {
                             if (RecipeCompiler.GetProductEX().Key_Navigation_Picture.ContainsKey(keys[0]))
@@ -159,8 +161,9 @@ namespace Vision2.Project.formula
                     }
                 }
             }
-            catch (Exception es) {}
+            catch (Exception es) { }
         }
+
         private void DataGridView1_CurrentCellDirtyStateChanged(object sender, EventArgs e)
         {
             if (dataGridView1.IsCurrentCellDirty)
@@ -177,7 +180,7 @@ namespace Vision2.Project.formula
                 {
                     return;
                 }
-                if (e.ColumnIndex == 0 || e.ColumnIndex == 1 || e.ColumnIndex == 2 || e.ColumnIndex == 3 )
+                if (e.ColumnIndex == 0 || e.ColumnIndex == 1 || e.ColumnIndex == 2 || e.ColumnIndex == 3)
                 {
                     for (int i = 0; i < dataGridView1.Rows.Count; i++)
                     {
@@ -197,15 +200,16 @@ namespace Vision2.Project.formula
                         //}
                     }
                 }
-        
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.StackTrace);
             }
         }
-        LinkData ListData;
-        bool ICc;
+
+        private LinkData ListData;
+        private bool ICc;
+
         public void SetData(LinkData data)
         {
             ListData = data;
@@ -267,7 +271,6 @@ namespace Vision2.Project.formula
 
                     for (int i = 0; i < text.Count; i++)
                     {
-      
                         if (i < ListData.ListDatV.Count)
                         {
                             string datas = "";
@@ -277,7 +280,7 @@ namespace Vision2.Project.formula
                             }
                             dataGridView1.Rows[i].Cells[2].Value = datas;
                             int rset = ListData.ListDatV[i].GetRset();
-                            if (rset ==0)
+                            if (rset == 0)
                             {
                                 dataGridView1.Rows[i].Cells[0].Style.BackColor = Color.Gray;
                             }
@@ -285,16 +288,14 @@ namespace Vision2.Project.formula
                             {
                                 dataGridView1.Rows[i].Cells[0].Style.BackColor = Color.Green;
                             }
-                            else 
+                            else
                             {
                                 dataGridView1.Rows[i].Cells[0].Style.BackColor = Color.Red;
                             }
-                         
                         }
                         dataGridView1.Rows[i].Cells[0].Tag = text[i];
                     }
                 }));
-
             }
             catch (Exception ex)
             {
@@ -306,11 +307,9 @@ namespace Vision2.Project.formula
         {
             try
             {
-
                 RecipeCompiler.GetProductEX().ListDicData = ListData.ListDatV;
 
                 ListData.EventAddValue -= LinkD_EventAddValue;
-
             }
             catch (Exception)
             {
@@ -335,7 +334,6 @@ namespace Vision2.Project.formula
             {
                 MessageBox.Show(ex.StackTrace);
             }
-       
         }
 
         private void 参数覆盖ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -364,7 +362,7 @@ namespace Vision2.Project.formula
                     dataGridView1.SelectedCells[i].Value = data;
                 }
             }
-            catch (Exception ex)    { }
+            catch (Exception ex) { }
         }
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
@@ -384,7 +382,6 @@ namespace Vision2.Project.formula
         {
             RecipeCompiler.Instance.Data.CheCalssT.Add(new LinkData.CheCalss());
             listBox1.Items.Add(RecipeCompiler.Instance.Data.CheCalssT.Count - 1);
-
         }
 
         private void button4_Click(object sender, EventArgs e)
@@ -400,7 +397,6 @@ namespace Vision2.Project.formula
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-        
         }
 
         private void button5_Click(object sender, EventArgs e)
@@ -409,7 +405,7 @@ namespace Vision2.Project.formula
             double i = rd.NextDouble();
             RecipeCompiler.Instance.Data.AddData(i);
             DebugF.DebugCompiler.GetTray(0).GetITrayRobot().SetValue(i);
-           
+
             DebugF.DebugCompiler.GetTray(0).Number++;
             if (DebugF.DebugCompiler.GetTray(0).Count < DebugF.DebugCompiler.GetTray(0).Number)
             {
@@ -417,10 +413,12 @@ namespace Vision2.Project.formula
             }
             numericUpDown3.Value = DebugF.DebugCompiler.GetTray(0).Number;
         }
+
         public double NextDouble(Random ran, double minValue, double maxValue)
         {
             return ran.NextDouble() * (maxValue - minValue) + minValue;
         }
+
         private void button2_Click_1(object sender, EventArgs e)
         {
             try
@@ -457,7 +455,7 @@ namespace Vision2.Project.formula
                         {
                             for (int id = 0; id < RecipeCompiler.Instance.Data.ListDatV[i].Reference_Name.Count; id++)
                             {
-                                vs.Add(NextDouble(rd, RecipeCompiler.Instance.Data.ListDatV[i].Reference_ValueMax[id], RecipeCompiler.Instance.Data.ListDatV[i].Reference_ValueMax[id]+5));
+                                vs.Add(NextDouble(rd, RecipeCompiler.Instance.Data.ListDatV[i].Reference_ValueMax[id], RecipeCompiler.Instance.Data.ListDatV[i].Reference_ValueMax[id] + 5));
                             }
                         }
                     }
@@ -483,7 +481,7 @@ namespace Vision2.Project.formula
             try
             {
                 DebugF.DebugCompiler.GetTray(0).Number = 1;
-                  numericUpDown3.Value=  DebugF.DebugCompiler.GetTray(0).Number;
+                numericUpDown3.Value = DebugF.DebugCompiler.GetTray(0).Number;
                 //DebugF.DebugCompiler.GetTrayDataUserControl().GetTrayEx().RestValue();
             }
             catch (Exception ex)
@@ -497,7 +495,7 @@ namespace Vision2.Project.formula
             try
             {
                 DebugF.DebugCompiler.GetTray(0).GetTrayData().
-                    WriatTary(ProcessControl.ProcessUser.GetThis().ExcelPath + "\\",
+                    WriatTary(ProcessControl.ProcessUser.Instancen.ExcelPath + "\\",
                     "{文件名= [newtime]-[trayid];}",
                     DebugF.DebugCompiler.GetTray(0).GetTrayData(), out string err);
             }
@@ -525,7 +523,6 @@ namespace Vision2.Project.formula
             {
                 MessageBox.Show(ex.Message);
             }
-
         }
 
         private void numericUpDown3_ValueChanged(object sender, EventArgs e)
@@ -536,14 +533,11 @@ namespace Vision2.Project.formula
             }
             catch (Exception)
             {
-
             }
-
         }
 
         private void dataGridView2_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-
         }
 
         private void 添加ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -551,7 +545,7 @@ namespace Vision2.Project.formula
             try
             {
                 DataMinMax datat = new DataMinMax();
-                if (data!=null)
+                if (data != null)
                 {
                     datat = new DataMinMax()
                     {
@@ -564,22 +558,19 @@ namespace Vision2.Project.formula
                     datat.Reference_Name.AddRange(data.Reference_Name);
                     datat.Reference_ValueMax.AddRange(data.Reference_ValueMax);
                     datat.Reference_ValueMin.AddRange(data.Reference_ValueMin);
-
                 }
 
                 datat.ComponentName = "元件" + (ListData.ListDatV.Count + 1);
-         
-
 
                 ListData.ListDatV.Add(datat);
-               int d= dataGridView1.Rows.Add();
+                int d = dataGridView1.Rows.Add();
                 dataGridView1.Rows[d].Cells[0].Value = datat.ComponentName;
                 dataGridView1.Rows[d].Cells[1].Value = datat.RunNameOBJ;
                 dataGridView1.Rows[d].Cells[0].Tag = datat;
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.StackTrace); 
+                MessageBox.Show(ex.StackTrace);
             }
         }
 
@@ -587,8 +578,8 @@ namespace Vision2.Project.formula
         {
             try
             {
-                ListData.ListDatV.RemoveAt(ListData.ListDatV.Count-1);
-                dataGridView1.Rows.RemoveAt(dataGridView1.Rows.Count-1);
+                ListData.ListDatV.RemoveAt(ListData.ListDatV.Count - 1);
+                dataGridView1.Rows.RemoveAt(dataGridView1.Rows.Count - 1);
             }
             catch (Exception ex)
             {
@@ -608,9 +599,10 @@ namespace Vision2.Project.formula
             {
             }
         }
-        int xPos;
-        int yPos;
-        bool MoveFlag;
+
+        private int xPos;
+        private int yPos;
+        private bool MoveFlag;
 
         private void dataGridView2_CellMouseMove(object sender, DataGridViewCellMouseEventArgs e)
         {
@@ -632,10 +624,11 @@ namespace Vision2.Project.formula
         {
             MoveFlag = false;
         }
-        DataMinMax data;
+
+        private DataMinMax data;
+
         private void dataGridView1_CellMouseMove(object sender, DataGridViewCellMouseEventArgs e)
         {
-      
         }
 
         private void 添加数据ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -644,7 +637,7 @@ namespace Vision2.Project.formula
             {
                 iscavet = true;
                 int det = data.Reference_Name.Count;
-                data.Reference_Name.Add("点" + (data.Reference_Name.Count+1));
+                data.Reference_Name.Add("点" + (data.Reference_Name.Count + 1));
                 data.Reference_ValueMax.Add(10);
                 data.Reference_ValueMin.Add(0);
                 if (det >= dataGridView2.Rows.Count)
@@ -672,18 +665,16 @@ namespace Vision2.Project.formula
                     data.Reference_Name.RemoveAt(dataGridView2.SelectedCells[0].RowIndex);
                     data.Reference_ValueMax.RemoveAt(dataGridView2.SelectedCells[0].RowIndex);
                     data.Reference_ValueMin.RemoveAt(dataGridView2.SelectedCells[0].RowIndex);
-                dataGridView2.Rows.RemoveAt(dataGridView2.SelectedCells[0].RowIndex);
-
+                    dataGridView2.Rows.RemoveAt(dataGridView2.SelectedCells[0].RowIndex);
                 }
-    
-       
-
             }
             catch (Exception)
             {
             }
         }
-        bool iscavet;
+
+        private bool iscavet;
+
         private void dataGridView2_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             try
@@ -692,7 +683,7 @@ namespace Vision2.Project.formula
                 {
                     return;
                 }
-                if (data==null)
+                if (data == null)
                 {
                     return;
                 }
@@ -703,11 +694,10 @@ namespace Vision2.Project.formula
                     {
                         data.Reference_ValueMin[i] = double.Parse(dataGridView2.Rows[i].Cells[1].Value.ToString());
                     }
-                    if (dataGridView2.Rows[i].Cells[3].Value!=null)
+                    if (dataGridView2.Rows[i].Cells[3].Value != null)
                     {
                         data.Reference_ValueMax[i] = double.Parse(dataGridView2.Rows[i].Cells[3].Value.ToString());
                     }
-                 
                 }
             }
             catch (Exception ex)
@@ -724,7 +714,7 @@ namespace Vision2.Project.formula
                 dataGridView2.Visible = true;
                 dataGridView2.Rows.Clear();
                 data = dataGridView1.Rows[e.RowIndex].Cells[0].Tag as DataMinMax;
-                if (data.Reference_Name.Count!=0)
+                if (data.Reference_Name.Count != 0)
                 {
                     int cont = data.Reference_Name.Count;
                     if (data.ValueStrs.Count > cont)
@@ -734,7 +724,7 @@ namespace Vision2.Project.formula
                     dataGridView2.Rows.Add(cont);
                     for (int i = 0; i < cont; i++)
                     {
-                        if (data.Reference_Name.Count>i)
+                        if (data.Reference_Name.Count > i)
                         {
                             dataGridView2.Rows[i].Cells[0].Value = data.Reference_Name[i];
                             dataGridView2.Rows[i].Cells[1].Value = data.Reference_ValueMin[i];
@@ -761,10 +751,8 @@ namespace Vision2.Project.formula
                         {
                             dataGridView2.Rows[i].Cells[2].Value = data.ValueStrs[i];
                         }
-
                     }
                 }
-     
             }
             catch (Exception ex)
             {
@@ -782,10 +770,9 @@ namespace Vision2.Project.formula
         {
             try
             {
-              
                 int nuber = (int)numericUpDown2.Value;
                 Random rd = new Random();
-                string dataStr = numericUpDown3.Value.ToString()+";"+ numericUpDown4.Value.ToString() + ";";
+                string dataStr = numericUpDown3.Value.ToString() + ";" + numericUpDown4.Value.ToString() + ";";
 
                 for (int ie = 0; ie < numericUpDown1.Value; ie++)
                 {

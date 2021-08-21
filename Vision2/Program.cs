@@ -6,20 +6,20 @@ using Vision2.ErosProjcetDLL.Project;
 
 namespace Vision2
 {
-    static class Program
+    internal static class Program
     {
         public static System.Threading.Mutex Run;
+
         /// <summary>
         /// 应用程序的主入口点。
         /// </summary>
         [STAThread]
-        static void Main()
+        private static void Main()
         {
             bool noRun = false;
             Run = new System.Threading.Mutex(true, "HumControl2", out noRun);
             if (noRun)
             {
-
                 if (IntPtr.Size == 4)
                 {
                     File.Copy(Application.StartupPath + "\\X86\\FY6400.dll", Application.StartupPath + "\\FY6400.dll", true);
@@ -69,7 +69,6 @@ namespace Vision2
                 MessageBox.Show("软件已启动，请关闭或重新启动", "", MessageBoxButtons.OKCancel, MessageBoxIcon.Hand);
                 if (dialog == DialogResult.OK)
                 {
-
                     Program.Run.Close();
                     Application.Restart();
                 }
@@ -77,7 +76,6 @@ namespace Vision2
                 {
                     Program.Run.Close();
                 }
-
             }
         }
     }

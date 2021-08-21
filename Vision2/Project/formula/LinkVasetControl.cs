@@ -18,6 +18,7 @@ namespace Vision2.Project.formula
             dataGridView1.CellValueChanged += dataGridView1_CellValueChanged;
             dataGridView1.CurrentCellDirtyStateChanged += dataGridView1_CurrentCellDirtyStateChanged;
         }
+
         public LinkVasetControl(List<LinkVaset> linkVasets) : this()
         {
             links = linkVasets;
@@ -36,9 +37,9 @@ namespace Vision2.Project.formula
             {
                 MessageBox.Show(ex.Message);
             }
-
         }
-        List<LinkVaset> links;
+
+        private List<LinkVaset> links;
 
         private void LinkVasetControl_Leave(object sender, EventArgs e)
         {
@@ -72,6 +73,7 @@ namespace Vision2.Project.formula
             }
             links = null;
         }
+
         private void Tool_Click(object sender, EventArgs e)
         {
             try
@@ -125,13 +127,14 @@ namespace Vision2.Project.formula
                 MessageBox.Show(ex.Message);
             }
         }
-        int y;
-        int x;
+
+        private int y;
+        private int x;
+
         private void dataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             if (e.ColumnIndex == 1 || e.ColumnIndex == 2)
             {
-
                 try
                 {
                     Vision2.ErosProjcetDLL.UI.UICon.GetCursorPos(out Vision2.ErosProjcetDLL.UI.UICon.POINT pOINT);
@@ -197,7 +200,6 @@ namespace Vision2.Project.formula
                 {
                 }
             }
-
         }
 
         private void dataGridView1_CurrentCellDirtyStateChanged(object sender, EventArgs e)
@@ -218,6 +220,7 @@ namespace Vision2.Project.formula
         {
             return UITypeEditorEditStyle.DropDown;
         }
+
         public override object EditValue(ITypeDescriptorContext context, IServiceProvider provider, object value)
         {
             IWindowsFormsEditorService service = provider.GetService(typeof(IWindowsFormsEditorService)) as IWindowsFormsEditorService;
@@ -228,5 +231,4 @@ namespace Vision2.Project.formula
             return value;
         }
     }
-
 }

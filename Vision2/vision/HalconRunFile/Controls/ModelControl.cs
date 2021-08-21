@@ -2,31 +2,27 @@
 using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Windows.Forms;
 using Vision2.ErosProjcetDLL.Project;
 using Vision2.vision.HalconRunFile.RunProgramFile;
 using static Vision2.vision.HalconRunFile.RunProgramFile.Color_Detection;
-using static Vision2.vision.HalconRunFile.RunProgramFile.RunProgram;
-using static Vision2.vision.Vision;
 
 namespace Vision2.vision.HalconRunFile.Controls
 {
     public partial class ModelControl : UserControl
     {
-
-  
         public ModelControl()
         {
             InitializeComponent();
         }
+
         public DrawContrlos DrawCont;
 
-        public ModelControl(ModelVision model) : this()
+        public ModelControl(ModelVision model, IDrawHalcon drawHalcon) : this()
         {
             _Model = model;
             halcon = model.GetPThis() as HalconRun;
-            propertyGrid2 .SelectedObject= model;
+            propertyGrid2.SelectedObject = model;
             Updata(model);
             comboBox2.Items.Clear();
             comboBox2.Items.AddRange(Enum.GetNames(typeof(ImageTypeObj)));
@@ -37,8 +33,8 @@ namespace Vision2.vision.HalconRunFile.Controls
         public HalconRun halcon;
         public Color_classify _Classify;
         public HWindID hWindID = new HWindID();
-        HWindID HWi1 = new HWindID();
-        List<HObject> hObjects = new List<HObject>();
+        private HWindID HWi1 = new HWindID();
+        private List<HObject> hObjects = new List<HObject>();
 
         private void btnFindShapeModel_Click(object sender, EventArgs e)
         {
@@ -61,8 +57,7 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             try
             {
-             
-                this.Cursor =Cursors.WaitCursor;
+                this.Cursor = Cursors.WaitCursor;
                 modify();
                 if (comboBox3.SelectedItem == null)
                 {
@@ -96,7 +91,6 @@ namespace Vision2.vision.HalconRunFile.Controls
                 //modelID.Text = _Model.ID.ToString();
                 HOperatorSet.ReduceDomain(_Model.GetEmset(halcon.Image()), _Model.Create_ModelRegr, out HObject hObject1);
                 HWi1.SetImaage(hObject1);
-
             }
             catch (Exception EX)
             {
@@ -105,8 +99,10 @@ namespace Vision2.vision.HalconRunFile.Controls
             this.Cursor = System.Windows.Forms.Cursors.Default;
             halcon.Drawing = false;
         }
-        bool isChe = true;
-        void modify()
+
+        private bool isChe = true;
+
+        private void modify()
         {
             try
             {
@@ -139,6 +135,7 @@ namespace Vision2.vision.HalconRunFile.Controls
             {
             }
         }
+
         private void modifyModel_Click(object sender, EventArgs e)
         {
             modify();
@@ -161,7 +158,7 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             try
             {
-                string ds = System.IO.Path.GetDirectoryName(ProjectINI.In.ProjectPathRun);
+                string ds = System.IO.Path.GetDirectoryName(ErosProjcetDLL.Project.ProjectINI.ProjectPathRun);
                 _Model.UpSatrt<ModelVision>(ds + "\\" + _Model.Name);
                 halcon.ShowImage();
                 halcon.AddObj(_Model.OrignXLD);
@@ -236,18 +233,21 @@ namespace Vision2.vision.HalconRunFile.Controls
                 }
 
                 comboBox3.SelectedIndex = 1;
-                textBox1.Text=   _Model.Variation_Model.Name;
+                textBox1.Text = _Model.Variation_Model.Name;
                 switch (_Model.Variation_Model.CreateModeMode)
                 {
                     case "direct":
                         comboBox1.SelectedIndex = 0;
                         break;
+
                     case "standard":
                         comboBox1.SelectedIndex = 1;
                         break;
+
                     case "robust":
                         comboBox1.SelectedIndex = 2;
                         break;
+
                     default:
                         break;
                 }
@@ -328,6 +328,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 //_Model.ROIModeXLD = halcon.GetObj().CopyObj(1, -1).Clone();
             }
         }
+
         private void button4_Click(object sender, EventArgs e)
         {
             try
@@ -352,6 +353,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 MessageBox.Show(ex.Message);
             }
         }
+
         private void button7_Click(object sender, EventArgs e)
         {
             try
@@ -380,14 +382,11 @@ namespace Vision2.vision.HalconRunFile.Controls
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
-
             }
-
         }
 
         private void ModelControl_Load(object sender, EventArgs e)
         {
-
             try
             {
                 HWi1.Initialize(hWindowControl1);
@@ -397,20 +396,17 @@ namespace Vision2.vision.HalconRunFile.Controls
 
                 select_obj_type1.SetData(_Model.Variation_Model.select_Shape_Min_Max);
                 DrawCont = this.Tag as DrawContrlos;
-                propertyGrid1.SelectedObject=_Model.Variation_Model;
+                propertyGrid1.SelectedObject = _Model.Variation_Model;
             }
             catch (Exception ex)
             {
             }
         }
 
-
-
         private void button8_Click(object sender, EventArgs e)
         {
             try
             {
-
                 halcon.HobjClear();
                 _Model.Create_ModelRegr = RunProgram.DrawModOBJ(halcon, HalconRun.EnumDrawType.Rectangle2, _Model.Create_ModelRegr);
                 halcon.AddObj(_Model.DrawObj, ColorResult.blue);
@@ -431,7 +427,6 @@ namespace Vision2.vision.HalconRunFile.Controls
                 }
 
                 halcon.ShowObj();
-
             }
             catch (Exception)
             {
@@ -467,7 +462,6 @@ namespace Vision2.vision.HalconRunFile.Controls
             }
             catch (Exception)
             {
-
             }
         }
 
@@ -503,16 +497,16 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             try
             {
-                while (dataGridView1.SelectedCells.Count!=0)
+                while (dataGridView1.SelectedCells.Count != 0)
                 {
                     dataGridView1.Rows.RemoveAt(dataGridView1.SelectedCells[0].RowIndex);
                 }
             }
             catch (Exception ex)
             {
-
             }
         }
+
         private void 读取当前到错漏检测ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
@@ -520,7 +514,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 dataGridView1.Rows.Clear();
                 for (int i = 0; i < _Model.MRModelHomMat.NumberT; i++)
                 {
-                    if (_Model.DIPs.Count>i)
+                    if (_Model.DIPs.Count > i)
                     {
                         _Model.DIPs[i].Row = _Model.MRModelHomMat.Row[i];
                         _Model.DIPs[i].Col = _Model.MRModelHomMat.Col[i];
@@ -532,9 +526,9 @@ namespace Vision2.vision.HalconRunFile.Controls
                     }
                 }
 
-                while (_Model.MRModelHomMat.NumberT< _Model.DIPs.Count)
+                while (_Model.MRModelHomMat.NumberT < _Model.DIPs.Count)
                 {
-                    _Model.DIPs.RemoveAt(_Model.DIPs.Count-1);
+                    _Model.DIPs.RemoveAt(_Model.DIPs.Count - 1);
                 }
                 for (int i = 0; i < _Model.DIPs.Count; i++)
                 {
@@ -598,8 +592,8 @@ namespace Vision2.vision.HalconRunFile.Controls
             try
             {
                 HWi1.SetImaage(_Model.Variation_Model.Create_Variation_Model(halcon.Image()));
-                 string path=    ProjectINI.In.ProjectPathRun + "\\Vision\\" + Project.formula.Product.ProductionName 
-                    + "\\Halcon\\" + halcon.Name + "\\" + _Model.Name + "\\形变图片";
+                string path = ErosProjcetDLL.Project.ProjectINI.ProjectPathRun + "\\Vision\\" + Project.formula.Product.ProductionName
+                   + "\\Halcon\\" + halcon.Name + "\\" + _Model.Name + "\\形变图片";
                 //if (Vision.ObjectValided(HWi1.HalconResult.Image))
                 //{
                 //     System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(path));
@@ -611,15 +605,13 @@ namespace Vision2.vision.HalconRunFile.Controls
             {
                 MessageBox.Show(ex.Message);
             }
- 
         }
-
 
         private void button9_Click_1(object sender, EventArgs e)
         {
             try
             {
-                _Model.Variation_Model.Xld = RunProgram.DrawModOBJ(halcon,HalconRun.EnumDrawType.Rectangle1 ,_Model.Variation_Model.Xld);
+                _Model.Variation_Model.Xld = RunProgram.DrawModOBJ(halcon, HalconRun.EnumDrawType.Rectangle1, _Model.Variation_Model.Xld);
             }
             catch (Exception ex)
             {
@@ -631,7 +623,7 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             try
             {
-                _Model.Variation_Model.RunPa( halcon.GetOneImageR(), _Model, _Model.MRModelHomMat.HomMat,HWi1);
+                _Model.Variation_Model.RunPa(halcon.GetOneImageR(), _Model, _Model.MRModelHomMat.HomMat, HWi1);
             }
             catch (Exception ex)
             {
@@ -646,7 +638,6 @@ namespace Vision2.vision.HalconRunFile.Controls
 
         private void button13_Click(object sender, EventArgs e)
         {
-
         }
 
         private void button14_Click(object sender, EventArgs e)
@@ -654,14 +645,13 @@ namespace Vision2.vision.HalconRunFile.Controls
             try
             {
                 halcon.HobjClear();
-                _Model.Variation_Model.Xld =RunProgram.DrawRmoveObj(halcon, _Model.Variation_Model.Xld);
+                _Model.Variation_Model.Xld = RunProgram.DrawRmoveObj(halcon, _Model.Variation_Model.Xld);
                 halcon.ShowObj();
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
- 
         }
 
         private void button15_Click(object sender, EventArgs e)
@@ -671,7 +661,6 @@ namespace Vision2.vision.HalconRunFile.Controls
                 halcon.HobjClear();
                 _Model.Variation_Model.Xld = RunProgram.DrawHObj(halcon, _Model.Variation_Model.Xld);
                 halcon.ShowObj();
-
             }
             catch (Exception ex)
             {
@@ -698,13 +687,16 @@ namespace Vision2.vision.HalconRunFile.Controls
                         _Model.Variation_Model.CreateModeMode = "direct";
 
                         break;
+
                     case 1:
                         _Model.Variation_Model.CreateModeMode = "standard";
 
                         break;
+
                     case 2:
                         _Model.Variation_Model.CreateModeMode = "robust";
                         break;
+
                     default:
 
                         break;
@@ -714,18 +706,18 @@ namespace Vision2.vision.HalconRunFile.Controls
             {
                 MessageBox.Show(ex.Message);
             }
-
         }
 
         private void button16_Click(object sender, EventArgs e)
         {
             try
             {
-                if (_Model.Variation_Model.CreateModeMode!= "direct")
+                if (_Model.Variation_Model.CreateModeMode != "direct")
                 {
                     _Model.Variation_Model.get_variation_model(out HObject image, out HObject varImage);
                     HWi1.SetImaage(varImage);
-                }else
+                }
+                else
                 {
                     MessageBox.Show("多图训练模式下才可以读取模板图像");
                 }
@@ -734,32 +726,31 @@ namespace Vision2.vision.HalconRunFile.Controls
             {
                 MessageBox.Show(ex.Message);
             }
-
         }
 
         private void button17_Click(object sender, EventArgs e)
         {
-
         }
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
         }
 
-        int d;
+        private int d;
+
         private void button19_Click(object sender, EventArgs e)
         {
             try
             {
                 HWi1.HobjClear();
                 HWi1.SetImaage(halcon.Image());
-                if (_Model.MRModelHomMat.HomMat.Count<=d)
+                if (_Model.MRModelHomMat.HomMat.Count <= d)
                 {
                     d = 0;
                 }
                 List<HTuple> hTuples = new List<HTuple>();
                 hTuples.Add(_Model.MRModelHomMat.HomMat[d]);
-                _Model.Variation_Model.RunPa( halcon.GetOneImageR(), _Model, hTuples, HWi1);
+                _Model.Variation_Model.RunPa(halcon.GetOneImageR(), _Model, hTuples, HWi1);
                 d++;
             }
             catch (Exception ex)
@@ -848,7 +839,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 _Classify.ClosingCircleValue = (double)numericUpDown11.Value;
                 AoiObj aoiObj = _Model.GetAoi();
                 aoiObj.SelseAoi = _Classify.DrawObj;
-                _Classify.Classify( halcon.GetOneImageR(), aoiObj, _Model, out HObject hObject,  this.hObjects);
+                _Classify.Classify(halcon.GetOneImageR(), aoiObj, _Model, out HObject hObject, this.hObjects);
                 halcon.AddObj(hObject);
                 halcon.ShowImage();
                 halcon.ShowObj();
@@ -889,11 +880,11 @@ namespace Vision2.vision.HalconRunFile.Controls
 
                 for (int i = 0; i < _Model.MRModelHomMat.NumberT; i++)
                 {
-                    HOperatorSet.AffineTransRegion(_Classify.DrawObj, out HObject hObjectROI, 
+                    HOperatorSet.AffineTransRegion(_Classify.DrawObj, out HObject hObjectROI,
                         _Model.MRModelHomMat.HomMat[i], "nearest_neighbor");
-                     AoiObj aoiObj=    _Model.GetAoi();
+                    AoiObj aoiObj = _Model.GetAoi();
                     aoiObj.SelseAoi = hObjectROI;
-                    _Classify.Classify( halcon.GetOneImageR(), aoiObj, _Model, out HObject hObject, hObjects);
+                    _Classify.Classify(halcon.GetOneImageR(), aoiObj, _Model, out HObject hObject, hObjects);
                     halcon.AddObj(hObject);
                     HOperatorSet.AreaCenter(hObject, out HTuple area, out HTuple row, out HTuple column);
                     HOperatorSet.EllipticAxis(hObject, out HTuple ra, out HTuple rb, out HTuple phi);
@@ -911,7 +902,6 @@ namespace Vision2.vision.HalconRunFile.Controls
                             + "rb" + halcon.GetCaliConstMM(rb).TupleString("0.3f") + "高" + halcon.GetCaliConstMM(height).TupleString("0.3f") + "宽" + halcon.GetCaliConstMM(width).TupleString("0.3f") +
                             "半径" + halcon.GetCaliConstMM(radius).TupleString("0.3f"));
                     }
-
                 }
                 listBox3.SelectedIndex = 0;
                 halcon.ShowImage();
@@ -921,8 +911,8 @@ namespace Vision2.vision.HalconRunFile.Controls
             {
                 MessageBox.Show(ex.Message);
             }
-
         }
+
         private void button18_Click_1(object sender, EventArgs e)
         {
             try
@@ -934,8 +924,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 halcon.HobjClear();
 
                 _Classify.DrawObj = RunProgram.DrawHObj(halcon, _Classify.DrawObj);
-                    halcon.AddObj(_Classify.DrawObj, ColorResult.pink);
-              
+                halcon.AddObj(_Classify.DrawObj, ColorResult.pink);
             }
             catch (Exception)
             {
@@ -944,7 +933,6 @@ namespace Vision2.vision.HalconRunFile.Controls
 
         private void button22_Click(object sender, EventArgs e)
         {
-
         }
 
         private void button21_Click(object sender, EventArgs e)
@@ -958,9 +946,8 @@ namespace Vision2.vision.HalconRunFile.Controls
                 halcon.HobjClear();
 
                 _Classify.DrawObj = RunProgram.DrawRmoveObj(halcon, _Classify.DrawObj);
-        
-              halcon.AddObj(_Classify.DrawObj, ColorResult.pink);
-                
+
+                halcon.AddObj(_Classify.DrawObj, ColorResult.pink);
             }
             catch (Exception)
             {
@@ -987,13 +974,11 @@ namespace Vision2.vision.HalconRunFile.Controls
             halcon.HobjClear();
             AoiObj aoiObj = _Model.GetAoi();
             aoiObj.SelseAoi = _Classify.DrawObj;
-            _Classify.Classify( halcon.GetOneImageR(), aoiObj, _Model, out HObject hObject, this.hObjects);
+            _Classify.Classify(halcon.GetOneImageR(), aoiObj, _Model, out HObject hObject, this.hObjects);
             //_Classify.Classify(halcon, _Model, out HObject color);
             halcon.AddObj(hObject);
             halcon.ShowObj();
         }
-
-    
 
         private void checkBox4_CheckedChanged(object sender, EventArgs e)
         {
@@ -1007,7 +992,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 string meassge = "创建颜色";
             st:
                 string sd = Interaction.InputBox("请输入新名称", meassge, "颜色", 100, 100);
-                if (sd=="")
+                if (sd == "")
                 {
                     return;
                 }
@@ -1025,7 +1010,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                         threshold_Min_Maxes = new List<Threshold_Min_Max> { new Threshold_Min_Max() { ImageTypeObj=ImageTypeObj.H,
                               },new Threshold_Min_Max(){ ImageTypeObj=ImageTypeObj.S,},
                         new Threshold_Min_Max(){ ImageTypeObj=ImageTypeObj.V} }
-                    }); 
+                    });
                     listBox2.Items.Add(sd);
                 }
                 else
@@ -1091,7 +1076,7 @@ namespace Vision2.vision.HalconRunFile.Controls
             {
             }
         }
-  
+
         private void numericUpDown11_ValueChanged(object sender, EventArgs e)
         {
             Set_Pragram();
@@ -1158,7 +1143,6 @@ namespace Vision2.vision.HalconRunFile.Controls
                 hWindID.OneResIamge.AddObj(_Classify.DrawObj, ColorResult.blue);
                 hWindID.OneResIamge.AddObj(hObjects[listBox3.SelectedIndex]);
                 hWindID.ShowObj();
-
             }
             catch (Exception ex)
             {

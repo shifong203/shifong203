@@ -20,6 +20,7 @@ namespace Vision2.Project.DebugF.IO
         public DODIAxis()
         {
         }
+
         public void Close()
         {
             SaveValue();
@@ -35,7 +36,7 @@ namespace Vision2.Project.DebugF.IO
         public List<ErosSocket.DebugPLC.Robot.TrayRobot> ListTray { get; set; } = new List<ErosSocket.DebugPLC.Robot.TrayRobot>();
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public List<C154Cylinder> Cylinders { get; set; } = new List<C154Cylinder>();
 
@@ -63,13 +64,15 @@ namespace Vision2.Project.DebugF.IO
             }
         }
 
-        static ErosSocket.ErosConLink.UClass.ErosValues keyValuePairs
+        private static ErosSocket.ErosConLink.UClass.ErosValues keyValuePairs
                = new ErosSocket.ErosConLink.UClass.ErosValues();
+
         public Dictionary<string, List<string>> AxisGrot { get; set; } = new Dictionary<string, List<string>>();
+
         /// <summary>
         /// 轴组
         /// </summary>
-        Dictionary<string, List<Axis>> axisGrot;
+        private Dictionary<string, List<Axis>> axisGrot;
 
         /// <summary>
         /// 获得指定名称的轴组合，不存在为Null;
@@ -104,13 +107,10 @@ namespace Vision2.Project.DebugF.IO
             }
             catch (Exception)
             {
-
-
             }
 
             return null;
         }
-
 
         /// <summary>
         /// 获取指定的轴
@@ -141,7 +141,6 @@ namespace Vision2.Project.DebugF.IO
             {
                 if (name == null || AxisGrot.Count == 1)
                 {
-
                     foreach (var item in AxisGrot)
                     {
                         for (int i = 0; i < item.Value.Count; i++)
@@ -162,7 +161,6 @@ namespace Vision2.Project.DebugF.IO
                     {
                         for (int i = 0; i < AxisGrot[name].Count; i++)
                         {
-
                             for (int i2 = 0; i2 < AxisS.Count; i2++)
                             {
                                 if (AxisGrot[name][i] == AxisS[i2].Name && AxisS[i2].AxisType == enumAxisType)
@@ -173,13 +171,13 @@ namespace Vision2.Project.DebugF.IO
                         }
                     }
                 }
-
             }
             catch (Exception)
             {
             }
             return null;
         }
+
         /// <summary>
         /// 获取指定的轴
         /// </summary>
@@ -198,7 +196,7 @@ namespace Vision2.Project.DebugF.IO
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="number">不大于15</param>
         /// <returns></returns>
@@ -237,7 +235,7 @@ namespace Vision2.Project.DebugF.IO
             { intT = value; }
         }
 
-        NameBool intT = new NameBool();
+        private NameBool intT = new NameBool();
 
         public NameBool Out
         {
@@ -248,7 +246,7 @@ namespace Vision2.Project.DebugF.IO
             { outT = value; }
         }
 
-        NameBool outT = new NameBool();
+        private NameBool outT = new NameBool();
 
         /// <summary>
         /// 等待信号等于Value并保持多少秒
@@ -284,14 +282,17 @@ namespace Vision2.Project.DebugF.IO
                 }
             }
         }
+
         /// <summary>
         /// 入站信号
         /// </summary>
         public AlwaysIO AlwaysIOInt = new AlwaysIO();
+
         /// <summary>
         /// 到站信号
         /// </summary>
         public AlwaysIO AlwaysIODot = new AlwaysIO();
+
         /// <summary>
         /// 出站信号
         /// </summary>
@@ -304,6 +305,7 @@ namespace Vision2.Project.DebugF.IO
         public DateTime StartTime;
 
         public DateTime EndTime;
+
         /// <summary>
         /// 皮带移动
         /// </summary>
@@ -313,7 +315,7 @@ namespace Vision2.Project.DebugF.IO
         {
             try
             {
-                if (int.TryParse(DebugCompiler.GetThis().AxisNameS, out int outd))
+                if (int.TryParse(DebugCompiler.Instance.AxisNameS, out int outd))
                 {
                     if (!outT[outd])
                     {
@@ -322,16 +324,15 @@ namespace Vision2.Project.DebugF.IO
                 }
                 else
                 {
-
                     if (Point != null)
                     {
-                        this.GetAxisName(DebugCompiler.GetThis().AxisNameS).SetPoint(Point.Value, sleep);
+                        this.GetAxisName(DebugCompiler.Instance.AxisNameS).SetPoint(Point.Value, sleep);
                     }
                     else
                     {
-                        if (!this.GetAxisName(DebugCompiler.GetThis().AxisNameS).IsMove)
+                        if (!this.GetAxisName(DebugCompiler.Instance.AxisNameS).IsMove)
                         {
-                            this.GetAxisName(DebugCompiler.GetThis().AxisNameS).SetMoveTe(true);
+                            this.GetAxisName(DebugCompiler.Instance.AxisNameS).SetMoveTe(true);
                         }
                     }
                 }
@@ -340,17 +341,18 @@ namespace Vision2.Project.DebugF.IO
             {
             }
         }
+
         public bool IsMove
         {
             get
             {
-                if (int.TryParse(DebugCompiler.GetThis().AxisNameS, out int outd))
+                if (int.TryParse(DebugCompiler.Instance.AxisNameS, out int outd))
                 {
                     return Out[outd];
                 }
-                else if (this.GetAxisName(DebugCompiler.GetThis().AxisNameS) != null)
+                else if (this.GetAxisName(DebugCompiler.Instance.AxisNameS) != null)
                 {
-                    return this.GetAxisName(DebugCompiler.GetThis().AxisNameS).IsMove;
+                    return this.GetAxisName(DebugCompiler.Instance.AxisNameS).IsMove;
                 }
                 return false;
             }
@@ -360,16 +362,15 @@ namespace Vision2.Project.DebugF.IO
         {
             try
             {
-                if (int.TryParse(DebugCompiler.GetThis().AxisNameS, out int outd))
+                if (int.TryParse(DebugCompiler.Instance.AxisNameS, out int outd))
                 {
                     DebugCompiler.GetDoDi().WritDO(outd, false);
                 }
                 else
                 {
-                    if (GetAxisName(DebugCompiler.GetThis().AxisNameS).IsMove)
+                    if (GetAxisName(DebugCompiler.Instance.AxisNameS).IsMove)
                     {
-
-                        GetAxisName(DebugCompiler.GetThis().AxisNameS).Stop();
+                        GetAxisName(DebugCompiler.Instance.AxisNameS).Stop();
                     }
                 }
             }
@@ -377,6 +378,17 @@ namespace Vision2.Project.DebugF.IO
             {
             }
         }
+
+        /// <summary>
+        /// 判断结束
+        /// </summary>
+        public static bool RresOK = false;
+
+        /// <summary>
+        /// 放行等待
+        /// </summary>
+        public static bool RresWait = false;
+
         public override bool Run()
         {
             StopCodeT.Stop();
@@ -395,20 +407,22 @@ namespace Vision2.Project.DebugF.IO
             {
                 try
                 {
-                    if (DebugCompiler.GetThis().IsCtr)
+                    if (DebugCompiler.Instance.IsCtr)
                     {
-                        this.GetAxisName(DebugCompiler.GetThis().AxisNameS).AddSeelp();
-                        while (SimulateTrayMesForm.RresWait)
+                        this.GetAxisName(DebugCompiler.Instance.AxisNameS).AddSeelp();
+                        //循环起点
+                        while (RresWait)
                         {
-                            if (AlwaysIOOut.TimeValue && Int[DebugCompiler.GetThis().To_Board_DI])
-                            {
-                                DebugCompiler.GetDoDi().WritDO(DebugCompiler.GetThis().To_Board_DO, false);
+                            runID = 0;
+                            if (AlwaysIOOut.TimeValue && Int[DebugCompiler.Instance.To_Board_DI])
+                            {//出口有板++要板信号
+                                DebugCompiler.GetDoDi().WritDO(DebugCompiler.Instance.To_Board_DO, false);
                                 SetMoveAxistP();
-                                Cyp(DebugCompiler.GetThis().LoctionCylinder, false);
+                                Cyp(DebugCompiler.Instance.LoctionCylinder, false);
                                 Thread.Sleep(2000);
                             }
                             else
-                            {
+                            {//停止皮带
                                 MoveAxisStop();
                             }
                             Thread.Sleep(10);
@@ -416,40 +430,40 @@ namespace Vision2.Project.DebugF.IO
 
                         if (AlwaysIOInt.Value && !AlwaysIODot.Value)
                         {
-                            DebugCompiler.GetDoDi().WritDO(DebugCompiler.GetThis().OutFDEX, true);
-                            if (DebugCompiler.GetThis().Modet != 1 || !AlwaysIOOut.Value)
+                            DebugCompiler.GetDoDi().WritDO(DebugCompiler.Instance.OutFDEX, true);
+                            if (DebugCompiler.Instance.Modet != 1 || !AlwaysIOOut.Value)
                             {
-                                DebugCompiler.GetDoDi().WritDO(DebugCompiler.GetThis().To_Board_DO, false);
+                                DebugCompiler.GetDoDi().WritDO(DebugCompiler.Instance.To_Board_DO, false);
                                 SetMoveAxistP();
-                                Cyp(DebugCompiler.GetThis().LoctionCylinder, false);
-                                Cyp(DebugCompiler.GetThis().RCylinder, true);
+                                Cyp(DebugCompiler.Instance.LoctionCylinder, false);
+                                Cyp(DebugCompiler.Instance.RCylinder, true);
                                 runID = 1;
                             }
                         }
-                        else if (AlwaysIOInt.RunTime > DebugCompiler.GetThis().IntTime && !AlwaysIOOut.Value && !AlwaysIODot.Value)
+                        else if (AlwaysIOInt.RunTime > DebugCompiler.Instance.IntTime && !AlwaysIOOut.Value && !AlwaysIODot.Value)
                         {
-                            DebugCompiler.GetDoDi().WritDO(DebugCompiler.GetThis().OutFDEX, false);
+                            DebugCompiler.GetDoDi().WritDO(DebugCompiler.Instance.OutFDEX, false);
                             runID = 2;
-                            DebugCompiler.GetDoDi().WritDO(DebugCompiler.GetThis().To_Board_DO, true);
+                            DebugCompiler.GetDoDi().WritDO(DebugCompiler.Instance.To_Board_DO, true);
                             MoveAxisStop();
                         }
-                        if (AlwaysIOOut.TimeValue && !Int[DebugCompiler.GetThis().To_Board_DI])
+                        if (AlwaysIOOut.TimeValue && !Int[DebugCompiler.Instance.To_Board_DI])
                         {
                             runID = 3;
                             MoveAxisStop();
                         }
-                        else if (AlwaysIOOut.TimeValue && Out[DebugCompiler.GetThis().To_Board_DO])
+                        else if (AlwaysIOOut.TimeValue && Out[DebugCompiler.Instance.To_Board_DO])
                         {
                             runID = 4;
-                            DebugCompiler.GetDoDi().WritDO(DebugCompiler.GetThis().To_Board_DO, false);
+                            DebugCompiler.GetDoDi().WritDO(DebugCompiler.Instance.To_Board_DO, false);
                             SetMoveAxistP();
-                            Cyp(DebugCompiler.GetThis().LoctionCylinder, false);
+                            Cyp(DebugCompiler.Instance.LoctionCylinder, false);
                             Thread.Sleep(2000);
                         }
-                        else if (AlwaysIOOut.TimeValue && Int[DebugCompiler.GetThis().To_Board_DI])
+                        else if (AlwaysIOOut.TimeValue && Int[DebugCompiler.Instance.To_Board_DI])
                         {
                             runID = 5;
-                            DebugCompiler.GetDoDi().WritDO(DebugCompiler.GetThis().To_Board_DO, false);
+                            DebugCompiler.GetDoDi().WritDO(DebugCompiler.Instance.To_Board_DO, false);
                             SetMoveAxistP();
                             //Cyp(DebugCompiler.GetThis().LoctionCylinder, false);
                             Thread.Sleep(2000);
@@ -461,25 +475,25 @@ namespace Vision2.Project.DebugF.IO
                             {
                                 //Thread.Sleep(50);
                                 runID = 6;
-                                Cyp(DebugCompiler.GetThis().RCylinder, false);
-                                double d = this.GetAxisName(DebugCompiler.GetThis().AxisNameS).Point+ DebugCompiler.GetThis().WaitPoint;
-                                SetMoveAxistP(DebugCompiler.GetThis().WaitPoint, DebugCompiler.GetThis().WaitSleep);
+                                Cyp(DebugCompiler.Instance.RCylinder, false);
+                                double d = this.GetAxisName(DebugCompiler.Instance.AxisNameS).Point + DebugCompiler.Instance.WaitPoint;
+                                SetMoveAxistP(DebugCompiler.Instance.WaitPoint, DebugCompiler.Instance.WaitSleep);
                                 int der = 0;
-                                while (this.GetAxisName(DebugCompiler.GetThis().AxisNameS).Point <d)
+                                while (this.GetAxisName(DebugCompiler.Instance.AxisNameS).Point < d)
                                 {
                                     der++;
-                                    if (der>=1000)
+                                    if (der >= 1000)
                                     {
                                         break;
                                     }
                                     Thread.Sleep(10);
                                 }
                                 MoveAxisStop();
-                                this.GetAxisName(DebugCompiler.GetThis().AxisNameS).AddSeelp();
+                                this.GetAxisName(DebugCompiler.Instance.AxisNameS).AddSeelp();
                             }
                         }
                         bool Runt = true;
-                        if (DebugCompiler.GetThis().Modet == 1)
+                        if (DebugCompiler.Instance.Modet == 1)
                         {
                             if (AlwaysIOOut.Value)
                             {
@@ -494,8 +508,8 @@ namespace Vision2.Project.DebugF.IO
                         {
                             runID = 7;
                             StartTime = DateTime.Now;
-                            Cyp(DebugCompiler.GetThis().RCylinder, false);
-                            DebugCompiler.GetDoDi().WritDO(DebugCompiler.GetThis().To_Board_DO, false);
+                            Cyp(DebugCompiler.Instance.RCylinder, false);
+                            DebugCompiler.GetDoDi().WritDO(DebugCompiler.Instance.To_Board_DO, false);
                             MoveAxisStop();
                             WatchT.Restart();
                             if (!DebugCompiler.CPMode)
@@ -503,7 +517,7 @@ namespace Vision2.Project.DebugF.IO
                                 RunCodeT.Run();
                             }
                             runID = 8;
-                            this.GetAxisName(DebugCompiler.GetThis().AxisNameS).AddSeelp();
+                            this.GetAxisName(DebugCompiler.Instance.AxisNameS).AddSeelp();
                             WatchT.Stop();
                             while (DebugCompiler.EquipmentStatus == ErosSocket.ErosConLink.EnumEquipmentStatus.暂停中)
                             {
@@ -521,7 +535,7 @@ namespace Vision2.Project.DebugF.IO
                                 return false;
                             }
                             SetMoveAxistP();
-                            Cyp(DebugCompiler.GetThis().LoctionCylinder, true);
+                            Cyp(DebugCompiler.Instance.LoctionCylinder, true);
                             while (!AlwaysIOOut.Value)
                             {
                                 runID = 9;
@@ -535,7 +549,7 @@ namespace Vision2.Project.DebugF.IO
                                     return false;
                                 }
                                 SetMoveAxistP();
-                                Cyp(DebugCompiler.GetThis().LoctionCylinder, true);
+                                Cyp(DebugCompiler.Instance.LoctionCylinder, true);
                                 Thread.Sleep(1);
                                 if (!AlwaysIODot.Value && AlwaysIODot.RunTime > 10000)
                                 {
@@ -545,11 +559,11 @@ namespace Vision2.Project.DebugF.IO
                             }
                             runID = 10;
                             MoveAxisStop();
-                            if (DebugCompiler.GetThis().Modet != 1)
+                            if (DebugCompiler.Instance.Modet != 1)
                             {
-                                Cyp(DebugCompiler.GetThis().LoctionCylinder, false);
+                                Cyp(DebugCompiler.Instance.LoctionCylinder, false);
                             }
-                            while (AlwaysIOOut.TimeValue && Int[DebugCompiler.GetThis().To_Board_DI])
+                            while (AlwaysIOOut.TimeValue && Int[DebugCompiler.Instance.To_Board_DI])
                             {
                                 runID = 11;
                                 while (DebugCompiler.EquipmentStatus == ErosSocket.ErosConLink.EnumEquipmentStatus.暂停中)
@@ -569,12 +583,12 @@ namespace Vision2.Project.DebugF.IO
                             Thread.Sleep(1000);
                         }
                         else if (!AlwaysIOOut.TimeValue && runID == 0)
-                        {
+                        {//空
                             runID = 12;
-                            Cyp(DebugCompiler.GetThis().LoctionCylinder, false);
-                            Cyp(DebugCompiler.GetThis().RCylinder, true);
+                            Cyp(DebugCompiler.Instance.LoctionCylinder, false);
+                            Cyp(DebugCompiler.Instance.RCylinder, true);
                             MoveAxisStop();
-                            DebugCompiler.GetDoDi().WritDO(DebugCompiler.GetThis().To_Board_DO, true);
+                            DebugCompiler.GetDoDi().WritDO(DebugCompiler.Instance.To_Board_DO, true);
                         }
                     }
                     else
@@ -585,7 +599,7 @@ namespace Vision2.Project.DebugF.IO
                         EndTime = DateTime.Now;
                         MainForm1.MainFormF.toolStripLabel3.Text = "CT" + WatchT.ElapsedMilliseconds / 1000 / 60 + ":" + WatchT.ElapsedMilliseconds / 1000 % 60;
                         WatchT.Stop();
-                        if (DebugCompiler.GetThis().RunEndStop)
+                        if (DebugCompiler.Instance.RunEndStop)
                         {
                             Stop();
                         }
@@ -615,11 +629,11 @@ namespace Vision2.Project.DebugF.IO
             WatchT.Stop();
             HomeCodeT.Stop();
             RunCodeT.Stop();
-            if (DebugCompiler.GetThis() != null)
+            if (DebugCompiler.Instance != null)
             {
                 if (DebugCompiler.GetDoDi() != null)
                 {
-                    DebugCompiler.GetDoDi().WritDO(DebugCompiler.GetThis().To_Board_DO, false);
+                    DebugCompiler.GetDoDi().WritDO(DebugCompiler.Instance.To_Board_DO, false);
                 }
             }
             for (int i = 0; i < AxisS.Count; i++)
@@ -630,13 +644,15 @@ namespace Vision2.Project.DebugF.IO
 
             return false;
         }
-        Thread thread;
+
+        private Thread thread;
+
         public override bool SetHome()
         {
             StopCodeT.Stop();
             DebugCompiler.RunStop = false;
             DebugCompiler.ISHome = false;
-            if (thread==null || !thread.IsAlive)
+            if (thread == null || !thread.IsAlive)
             {
                 thread = new Thread(() =>
                 {
@@ -691,7 +707,6 @@ namespace Vision2.Project.DebugF.IO
                     }
                 }
 
-
                 Vision2.ErosProjcetDLL.Project.AlarmListBoxt.RomveAlarmAll();
                 //StopCodeT.Run();
             }
@@ -733,7 +748,7 @@ namespace Vision2.Project.DebugF.IO
                 {
                     ListTray[i].UpS();
                 }
-                if (DebugCompiler.GetThis().ListKat == "C154")
+                if (DebugCompiler.Instance.ListKat == "C154")
                 {
                     C154_AxisGrub.ReturnCode = MP_C154.c154_close();//初始化板卡
                     C154_AxisGrub.ReturnCode = MP_C154.c154_initial(ref CardID_InBit, 1);//初始化板卡
@@ -750,7 +765,6 @@ namespace Vision2.Project.DebugF.IO
                                 AxisS[i] = new Axis();
                                 AxisS[i].AxisNo = (short)(i);
                             }
-
                         }
                         for (short AxisNo = 0; AxisNo <= AxisS.Count - 1; AxisNo++)
                         {
@@ -785,11 +799,11 @@ namespace Vision2.Project.DebugF.IO
                         thread.Start();
                     }
                 }
-                else if (DebugCompiler.GetThis().ListKat == "PCI-1245L")
+                else if (DebugCompiler.Instance.ListKat == "PCI-1245L")
                 {
                     PCI1245();
                     IsInitialBool = true;
-                    DebugCompiler.GetThis().SetSeelp();
+                    DebugCompiler.Instance.SetSeelp();
                     Thread thread = new Thread(() =>
                     {
                         while (IsInitialBool)
@@ -810,23 +824,23 @@ namespace Vision2.Project.DebugF.IO
                 }
                 else
                 {
-                    AlwaysIOInt.Dnumber = (sbyte)DebugCompiler.GetThis().IntCDI;
-                    AlwaysIODot.Dnumber = (sbyte)DebugCompiler.GetThis().RunDI;
-                    AlwaysIOOut.Dnumber = (sbyte)DebugCompiler.GetThis().OutDi;
-                    AlwaysIODot.TimeS = DebugCompiler.GetThis().waitTime;
+                    AlwaysIOInt.Dnumber = (sbyte)DebugCompiler.Instance.IntCDI;
+                    AlwaysIODot.Dnumber = (sbyte)DebugCompiler.Instance.RunDI;
+                    AlwaysIOOut.Dnumber = (sbyte)DebugCompiler.Instance.OutDi;
+                    AlwaysIODot.TimeS = DebugCompiler.Instance.waitTime;
                     AlwaysIOOut.TimeS = 0.1;
                     AlwaysIOOut.Always();
                     AlwaysIODot.Always();
                     AlwaysIOInt.Always();
                     return true;
                 }
-                if (DebugCompiler.GetThis().Is_AxisEnble >= 0)
+                if (DebugCompiler.Instance.Is_AxisEnble >= 0)
                 {
-                    this.WritDO(DebugCompiler.GetThis().Is_AxisEnble, true);
+                    this.WritDO(DebugCompiler.Instance.Is_AxisEnble, true);
                 }
-                if (DebugCompiler.GetThis().Is_braking >= 0)
+                if (DebugCompiler.Instance.Is_braking >= 0)
                 {
-                    this.WritDO(DebugCompiler.GetThis().Is_braking, true);
+                    this.WritDO(DebugCompiler.Instance.Is_braking, true);
                 }
                 axisGrot = new Dictionary<string, List<Axis>>();
                 foreach (var item in AxisGrot)
@@ -851,11 +865,11 @@ namespace Vision2.Project.DebugF.IO
                     }
                     axisGrot.Add(item.Key, axess);
                 }
-                AlwaysIOInt.Dnumber = (sbyte)DebugCompiler.GetThis().IntCDI;
-                AlwaysIODot.Dnumber = (sbyte)DebugCompiler.GetThis().RunDI;
-                AlwaysIOOut.Dnumber = (sbyte)DebugCompiler.GetThis().OutDi;
-                AlwaysIODot.TimeS = DebugCompiler.GetThis().waitTime;
-                AlwaysIOOut.TimeS = DebugCompiler.GetThis().OutwaitTime;
+                AlwaysIOInt.Dnumber = (sbyte)DebugCompiler.Instance.IntCDI;
+                AlwaysIODot.Dnumber = (sbyte)DebugCompiler.Instance.RunDI;
+                AlwaysIOOut.Dnumber = (sbyte)DebugCompiler.Instance.OutDi;
+                AlwaysIODot.TimeS = DebugCompiler.Instance.waitTime;
+                AlwaysIOOut.TimeS = DebugCompiler.Instance.OutwaitTime;
                 AlwaysIOOut.Always();
                 AlwaysIODot.Always();
                 AlwaysIOInt.Always();
@@ -874,19 +888,20 @@ namespace Vision2.Project.DebugF.IO
             }
             return false;
         }
-        int Result;
-        Int16[] Axis_Gear = new Int16[8];
-        DEV_LIST[] CurAvailableDevs = new DEV_LIST[Motion.MAX_DEVICES];
-        uint deviceCount = 0;
-        IntPtr m_DeviceHandle0 = IntPtr.Zero;
-        IntPtr m_DeviceHandle1 = IntPtr.Zero;
-        IntPtr[] m_Axishand = new IntPtr[32];
 
-        IntPtr[] m_DeviceHandle;
+        private int Result;
+        private Int16[] Axis_Gear = new Int16[8];
+        private DEV_LIST[] CurAvailableDevs = new DEV_LIST[Motion.MAX_DEVICES];
+        private uint deviceCount = 0;
+        private IntPtr m_DeviceHandle0 = IntPtr.Zero;
+        private IntPtr m_DeviceHandle1 = IntPtr.Zero;
+        private IntPtr[] m_Axishand = new IntPtr[32];
 
-        StringBuilder ErrorMsg = new StringBuilder("", 100);
+        private IntPtr[] m_DeviceHandle;
 
-        uint UResult
+        private StringBuilder ErrorMsg = new StringBuilder("", 100);
+
+        private uint UResult
         {
             get
             {
@@ -903,8 +918,9 @@ namespace Vision2.Project.DebugF.IO
             }
         }
 
-        uint uResul;
-        void PCI1245()
+        private uint uResul;
+
+        private void PCI1245()
         {
             int i = 0;
             for (i = 0; i < 8; i++)
@@ -950,7 +966,7 @@ namespace Vision2.Project.DebugF.IO
                 }
                 for (int i2 = 0; i2 < AxisS.Count; i2++)
                 {
-                        AxisS[i2].Initial();
+                    AxisS[i2].Initial();
                 }
                 ErosProjcetDLL.Project.AlarmText.AddTextNewLine("第一次使能");
                 for (int i2 = 0; i2 < AxisS.Count; i2++)
@@ -1042,10 +1058,9 @@ namespace Vision2.Project.DebugF.IO
             {
                 throw (ex);
             }
-
         }
 
-        public void SetTray(int indxe,string x,string y)
+        public void SetTray(int indxe, string x, string y)
         {
             try
             {
@@ -1072,13 +1087,13 @@ namespace Vision2.Project.DebugF.IO
                 ListTray[indxe].bitW = new List<sbyte>();
                 ListTray[indxe].bitW.AddRange(new sbyte[ListTray[indxe].Count]);
                 ListTray[indxe].Clear();
-
             }
             catch (Exception ex)
             {
                 throw (ex);
             }
         }
+
         public void SetTray(int name, string p1, string p2, string p3, string p4, string x, string y, string p5, string p6, string p7, string p8, string x2, string y2)
         {
             try
@@ -1122,8 +1137,8 @@ namespace Vision2.Project.DebugF.IO
             catch (Exception)
             {
             }
-
         }
+
         /// <summary>
         /// 获取全局点位坐标
         /// </summary>
@@ -1143,7 +1158,6 @@ namespace Vision2.Project.DebugF.IO
             else
             {
                 return RunCodeStr.ToDoubleP(text);
-            
             }
 
             for (int i = 0; i < XyzPoints.Count; i++)
@@ -1158,6 +1172,7 @@ namespace Vision2.Project.DebugF.IO
             }
             return null;
         }
+
         public PointFile toPointFile(XYZPoint xYZPoint)
         {
             PointFile pointFile = new PointFile();
@@ -1166,14 +1181,14 @@ namespace Vision2.Project.DebugF.IO
             pointFile.Z = xYZPoint.Z;
             return pointFile;
         }
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
         public XYZPoint GetToPointFileProt(string name)
         {
-
             if (name == null)
             {
                 return null;
@@ -1208,24 +1223,23 @@ namespace Vision2.Project.DebugF.IO
             return vs;
         }
 
-        sbyte[] BitDataInt;
-        sbyte[] BitDataOut;
-        sbyte[] BitDataIntID;
-        sbyte[] BitDataOutID;
+        private sbyte[] BitDataInt;
+        private sbyte[] BitDataOut;
+        private sbyte[] BitDataIntID;
+        private sbyte[] BitDataOutID;
+
         /// <summary>
         /// 更新状态
         /// </summary>
-        void GetStatus()
+        private void GetStatus()
         {
             short DIvalue = 0;
             short DOvalue = 0;
 
-            if (DebugCompiler.GetThis().ListKat == "PCI-1245L")
+            if (DebugCompiler.Instance.ListKat == "PCI-1245L")
             {
-                if (DebugCompiler.GetThis().ListIO)
+                if (DebugCompiler.Instance.ListIO)
                 {
-
-
                 }
                 else
                 {
@@ -1260,9 +1274,7 @@ namespace Vision2.Project.DebugF.IO
                             {
                                 BitDataOutID[i] = resubyte;
                             }
-
                         }
-
                     }
                     //输入
                     for (short i = 0; i < intT.Count; i++)
@@ -1298,7 +1310,7 @@ namespace Vision2.Project.DebugF.IO
                     intT[i] = DIvalue == 0 ? false : true;
                     outT[i] = DOvalue == 0 ? false : true;
                 }
-                if (DebugCompiler.GetThis().Cont > 1)
+                if (DebugCompiler.Instance.Cont > 1)
                 {
                     for (short i = 0; i < 16; i++)
                     {
@@ -1349,7 +1361,7 @@ namespace Vision2.Project.DebugF.IO
                 {
                     axisU = GetAxisGrotNameEx(groupName, EnumAxisType.Udd);
                 }
-              
+
                 if ((axisU != null && !axisU.IsHome) && (axisZ != null && !axisZ.IsHome) && !axisX.IsHome && !axisY.IsHome)
                 {
                     ErosProjcetDLL.Project.AlarmListBoxt.AddAlarmText(new ErosProjcetDLL.Project.AlarmText.alarmStruct() { Name = groupName, Text = "未初始化" });
@@ -1479,7 +1491,6 @@ namespace Vision2.Project.DebugF.IO
             return false;
         }
 
-
         /// <summary>
         /// 获取轴组值
         /// </summary>
@@ -1547,6 +1558,7 @@ namespace Vision2.Project.DebugF.IO
             }
             AxisGo(name, det);
         }
+
         public void AxisSeelp(string name, double seelp, double? stv = null, double? acc = null, double? dec = null)
         {
             for (int i = 0; i < AxisS.Count; i++)
@@ -1572,13 +1584,14 @@ namespace Vision2.Project.DebugF.IO
             }
             throw (new Exception(name + ":轴不存在"));
         }
+
         public void AxisSeelp(string name)
         {
             for (int i = 0; i < AxisS.Count; i++)
             {
                 if (AxisS[i].Name == name)
                 {
-                    switch (DebugCompiler.GetThis().LinkSeelpTyoe)
+                    switch (DebugCompiler.Instance.LinkSeelpTyoe)
                     {
                         case 0:
                             AxisS[i].Tdec = this.AxisS[i].LowDceValue;
@@ -1586,18 +1599,21 @@ namespace Vision2.Project.DebugF.IO
                             AxisS[i].StrVal = this.AxisS[i].LowStrValue;
                             AxisS[i].MaxVel = this.AxisS[i].LowMavValue;
                             break;
+
                         case 1:
                             AxisS[i].Tdec = this.AxisS[i].DceValue;
                             AxisS[i].Tacc = this.AxisS[i].AceValue;
                             AxisS[i].StrVal = this.AxisS[i].StrValue;
                             AxisS[i].MaxVel = this.AxisS[i].MavValue;
                             break;
+
                         case 2:
                             AxisS[i].Tdec = this.AxisS[i].HighDceValue;
                             AxisS[i].Tacc = this.AxisS[i].HighAceValue;
                             AxisS[i].StrVal = this.AxisS[i].HighStrValue;
                             AxisS[i].MaxVel = this.AxisS[i].HighMavValue;
                             break;
+
                         default:
                             break;
                     }
@@ -1607,6 +1623,7 @@ namespace Vision2.Project.DebugF.IO
             }
             throw (new Exception(name + ":轴不存在"));
         }
+
         /// <summary>
         /// 单轴移动
         /// </summary>
@@ -1614,7 +1631,6 @@ namespace Vision2.Project.DebugF.IO
         /// <param name="point"></param>
         public void AxisGo(string name, double point, double seelp = 0)
         {
-
             for (int i = 0; i < AxisS.Count; i++)
             {
                 if (AxisS[i].Name == name)
@@ -1644,7 +1660,6 @@ namespace Vision2.Project.DebugF.IO
             throw (new Exception(name + ":轴不存在"));
         }
 
-
         public void AxisSycnGo(string name, double point, double seelp = 0)
         {
             for (int i = 0; i < AxisS.Count; i++)
@@ -1663,6 +1678,7 @@ namespace Vision2.Project.DebugF.IO
             }
             throw (new Exception(name + ":轴不存在"));
         }
+
         public double GetAxisPoint(string name)
         {
             for (int i = 0; i < AxisS.Count; i++)
@@ -1674,6 +1690,7 @@ namespace Vision2.Project.DebugF.IO
             }
             throw (new Exception(name + ":轴不存在"));
         }
+
         public bool AxisSycnGo(string[] name, string[] point1)
         {
             if (name.Length != point1.Length)
@@ -1723,6 +1740,7 @@ namespace Vision2.Project.DebugF.IO
 
             return false;
         }
+
         /// <summary>
         /// 气缸移动
         /// </summary>
@@ -1738,8 +1756,8 @@ namespace Vision2.Project.DebugF.IO
             {
                 return Cyp(name, false);
             }
-
         }
+
         /// <summary>
         /// 气缸移动
         /// </summary>
@@ -1770,6 +1788,7 @@ namespace Vision2.Project.DebugF.IO
             Vision2.vision.Vision.GetRunNameVision(null).ReadCamImage(xYZPoint.ID.ToString(), xYZPoint.ID);
             Thread.Sleep(500);
         }
+
         public bool ReadDO(int number)
         {
             return false;
@@ -1779,8 +1798,9 @@ namespace Vision2.Project.DebugF.IO
         {
             return false;
         }
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="intex"></param>
         /// <param name="inde"></param>
@@ -1794,17 +1814,16 @@ namespace Vision2.Project.DebugF.IO
                 {
                     return false;
                 }
-                if (DebugCompiler.GetThis().ListIO)
+                if (DebugCompiler.Instance.ListIO)
                 {
-
-                    if (DebugCompiler.GetDoDi()!=null)
+                    if (DebugCompiler.GetDoDi() != null)
                     {
                         return DebugCompiler.GetDoDi().WritDO(intex, inde, value);
                     }
                     return false;
                 }
 
-                if (DebugCompiler.GetThis().ListKat == "PCI-1245L")
+                if (DebugCompiler.Instance.ListKat == "PCI-1245L")
                 {
                     string[] vs = this.outT.LinkIDs[inde + 16 * intex].Split('.');
                     int idx = int.Parse(vs[0]);
@@ -1840,7 +1859,6 @@ namespace Vision2.Project.DebugF.IO
             }
             catch (Exception ex)
             {
-
             }
 
             return false;
@@ -1860,20 +1878,17 @@ namespace Vision2.Project.DebugF.IO
             return WritDO(intex / 16, intex % 16, value);
         }
 
-
         /// <summary>
         /// 轴定义
         /// </summary>
 
-
-
         public delegate int Compile(String command, StringBuilder inf);
-        //编译  
+
+        //编译
     }
 
     public enum EnumXYZUMoveType
     {
-
         直接移动 = 0,
 
         跳跃门型 = 1,
@@ -1881,8 +1896,8 @@ namespace Vision2.Project.DebugF.IO
         先旋转再移动 = 2,
 
         先移动再旋转 = 3,
-
     }
+
     public class XYZPoint
     {
         public string Name { get; set; } = "";
@@ -1892,22 +1907,24 @@ namespace Vision2.Project.DebugF.IO
         public double U { get; set; }
         public int ID { get; set; }
         public EnumXYZUMoveType isMove { get; set; }
+
         [Description("2D坐标彷射参数"), Category("坐标系统"), DisplayName("坐标系统"),
          TypeConverter(typeof(ErosConverter)), ErosConverter.ThisDropDownAttribute("ListCoordinateName")]
         public string AxisGrabName { get; set; }
+
         public static List<string> ListCoordinateName
         {
             get
             {
-                string[] liast = new string[DebugCompiler.GetThis().DDAxis.AxisGrot.Keys.Count];
-                DebugCompiler.GetThis().DDAxis.AxisGrot.Keys.CopyTo(liast, 0);
+                string[] liast = new string[DebugCompiler.Instance.DDAxis.AxisGrot.Keys.Count];
+                DebugCompiler.Instance.DDAxis.AxisGrot.Keys.CopyTo(liast, 0);
                 return new List<string>(liast);
             }
         }
+
         public string GetPointStr()
         {
-            return  "轴组"+ AxisGrabName + ",名称" + Name + ",ID" + ID +",轨迹"+ isMove .ToString()+ ",X:" + X + ",Y" + Y + ",Z" + Z + ",U" + U+";";
-
+            return "轴组" + AxisGrabName + ",名称" + Name + ",ID" + ID + ",轨迹" + isMove.ToString() + ",X:" + X + ",Y" + Y + ",Z" + Z + ",U" + U + ";";
         }
     }
 
@@ -1949,13 +1966,15 @@ namespace Vision2.Project.DebugF.IO
         [DescriptionAttribute("减速速度"), Category("低速度"), DisplayName("减速速度")]
         public float LowDceValue { get; set; } = 200;
 
-
         [DescriptionAttribute("。"), Category("回零参数"), DisplayName("回零低速")]
         public int PAR_AxVelLow { get; set; } = 50;
+
         [DescriptionAttribute("。"), Category("回零参数"), DisplayName("回零高速")]
         public int PAR_AxVelHigh { get; set; } = 200;
+
         [DescriptionAttribute("。"), Category("回零参数"), DisplayName("回零加速")]
         public int PAR_AxAcc { get; set; } = 1000;
+
         [DescriptionAttribute("。"), Category("回零参数"), DisplayName("回零减速")]
         public int PAR_AxDec { get; set; } = 1000;
 
@@ -1964,21 +1983,30 @@ namespace Vision2.Project.DebugF.IO
 
         [DescriptionAttribute("回零后将零点设置为此值"), Category("回零参数"), DisplayName("零点偏移位置")]
         public float HomePoint { get; set; } = 0;
+
         [DescriptionAttribute("。"), Category("基本参数"), DisplayName("反馈转换")]
         public float Ratio { get; set; } = 1;
+
         [DescriptionAttribute("。"), Category("限位"), DisplayName("最大软限位")]
         public int PlusLimit { get; set; } = 400;
+
         [DescriptionAttribute("。"), Category("限位"), DisplayName("最小软限位")]
         public int MinusLimit { get; set; } = -10;
+
         [DescriptionAttribute("。"), Category("初始化"), DisplayName("初始化超时")]
         public int HomeTime { get; set; } = 100;
+
         [DescriptionAttribute("脉冲与MM转换比"), Category("基本参数"), DisplayName("脉冲比例")]
         public double Scale { get; set; } = 1;
+
         [DescriptionAttribute("。"), Category("运动参数"), DisplayName("轴定义")]
         public ErosSocket.DebugPLC.EnumAxisType AxisType { get; set; }
+
         [DescriptionAttribute("。"), Category("运动参数"), DisplayName("当前位置")]
         public double Point { get { return point; } set { point = value; } }
-        double point;
+
+        private double point;
+
         [DescriptionAttribute("运行速度s/mm"), Category("当前速度"), DisplayName("移动速度")]
         public double MaxVel { get; set; } = 100;
 
@@ -1991,14 +2019,15 @@ namespace Vision2.Project.DebugF.IO
         [DescriptionAttribute("运行到起始速度减速时间s"), Category("当前速度"), DisplayName("减速时间")]
         public double Tdec { get; set; } = 0.1;
 
-
         [DescriptionAttribute("。"), Category("运动参数"), DisplayName("是否已同步原点")]
         public bool IsHome { get; private set; } = false;
 
         [DescriptionAttribute("。"), Category("运动参数"), DisplayName("是否存在错误")]
         public bool IsError { get; set; } = false;
+
         [DescriptionAttribute("。"), Category("运动参数"), DisplayName("使能")]
         public bool IsEnabled { get; set; } = false;
+
         [DescriptionAttribute("速度百分比"), Category("运动参数"), DisplayName("速度百分比")]
         public byte Override_speed { get; set; } = 100;
 
@@ -2006,7 +2035,7 @@ namespace Vision2.Project.DebugF.IO
         public sbyte IsBand_type_brakeNumber { get; set; } = -1;
 
         [DescriptionAttribute("限位反向。"), Category("调试参数"), DisplayName("限位反向")]
-        public bool isBdt { get; set; } 
+        public bool isBdt { get; set; }
 
         [DescriptionAttribute("。"), Category("调试参数"), DisplayName("点动距离")]
         public double Jog_Distance { get; set; } = 10;
@@ -2014,13 +2043,15 @@ namespace Vision2.Project.DebugF.IO
         [DescriptionAttribute("。"), Category("调试参数"), DisplayName("轴卡号")]
         public short AxisNo { get; set; }
 
+        [DescriptionAttribute("。"), Category("调试参数"), DisplayName("是否直线电机")]
+        public bool IsDacc { get; set; }
 
         [DescriptionAttribute("。"), Category("调试参数"), DisplayName("从轴卡号")]
         public short AxisNoEx { get; set; } = -1;
 
-
         [DescriptionAttribute("。"), Category("状态"), DisplayName("是否运动中")]
         public bool IsMove { get; private set; }
+
         [DescriptionAttribute("1=mAcm_AxGetCmdPosition。2=mAcm_AxGetMachPosition,其他=mAcm_AxGetActualPosition"),
             Category("状态"), DisplayName("读取当前位置方法")]
         public int IsGetPoint { get; set; } = 0;
@@ -2030,6 +2061,7 @@ namespace Vision2.Project.DebugF.IO
 
         [DescriptionAttribute("。"), Category("误差"), DisplayName("移动误差")]
         public double Deviatcion { get; set; } = 0.05;
+
         /// <summary>
         /// 比对目标与当前位置是否到位
         /// </summary>
@@ -2040,6 +2072,7 @@ namespace Vision2.Project.DebugF.IO
             double pu = Math.Abs((Point - p));
             return ((pu < Deviatcion && pu > -Deviatcion));
         }
+
         /// <summary>
         /// 状态编号
         /// </summary>
@@ -2053,6 +2086,7 @@ namespace Vision2.Project.DebugF.IO
             this.Tacc = Dacc;
             AddSeelp();
         }
+
         public void AddSeelp(int SeelpTpeyIndex)
         {
             switch (SeelpTpeyIndex)
@@ -2063,26 +2097,30 @@ namespace Vision2.Project.DebugF.IO
                     StrVal = this.LowStrValue;
                     MaxVel = this.LowMavValue;
                     break;
+
                 case 1:
                     Tdec = this.DceValue;
                     Tacc = this.AceValue;
                     StrVal = this.StrValue;
                     MaxVel = this.MavValue;
                     break;
+
                 case 2:
                     Tdec = this.HighDceValue;
                     Tacc = this.HighAceValue;
                     StrVal = this.HighStrValue;
                     MaxVel = this.HighMavValue;
                     break;
+
                 default:
                     break;
             }
             AddSeelp();
         }
+
         public void AddSeelp()
         {
-            if (DebugCompiler.GetThis().ListKat == "PCI-1245L")
+            if (DebugCompiler.Instance.ListKat == "PCI-1245L")
             {
                 UResult = Motion.mAcm_SetF64Property(m_Axishand, (uint)PropertyID.CFG_AxMaxVel, MaxVel * Scale);
                 if (MaxVel < StrVal)
@@ -2099,7 +2137,7 @@ namespace Vision2.Project.DebugF.IO
 
         public void SetSeelp(double acc, double dec, double strV, double MaxV)
         {
-            if (DebugCompiler.GetThis().ListKat == "PCI-1245L")
+            if (DebugCompiler.Instance.ListKat == "PCI-1245L")
             {
                 UResult = Motion.mAcm_SetF64Property(m_Axishand, (uint)PropertyID.CFG_AxMaxVel, MaxV * 2 * Scale);
                 UResult = Motion.mAcm_SetF64Property(m_Axishand, (uint)PropertyID.PAR_AxVelLow, strV * Scale);
@@ -2109,32 +2147,39 @@ namespace Vision2.Project.DebugF.IO
                 UResult = Motion.mAcm_SetF64Property(m_Axishand, (uint)PropertyID.PAR_AxJerk, 0); //T 型曲线
             }
         }
+
         public void Dand_type_brake(bool isDeal)
         {
-
         }
+
         /// <summary>
         /// 正硬限位
         /// </summary>
         public bool Positive_Limit;
+
         /// <summary>
         /// 负硬限位
         /// </summary>
         public bool Negative_Limit;
+
         /// <summary>
         /// 正软限位
         /// </summary>
         public bool Positive_LimitSwt;
+
         /// <summary>
         /// 负软限
         /// </summary>
         public bool Negative_LimitSwt;
+
         /// <summary>
         /// 原点信号
         /// </summary>
         public bool Origin_Limit;
+
         public bool[] IOBools;
         public bool[] IOBoolsEx;
+
         /// <summary>
         /// 当前运行速度
         /// </summary>
@@ -2144,27 +2189,24 @@ namespace Vision2.Project.DebugF.IO
         {
             if (IsError)
             {
-
-
             }
-       
-                if (!IsEnabled)
+
+            if (!IsEnabled)
+            {
+                UResult = Motion.mAcm_AxSetSvOn(m_Axishand, 1);
+            }
+            if (AxisNoEx > 0)
+            {
+                uint IOStatus = 0;
+                Motion.mAcm_AxGetMotionIO(m_AxishandEx, ref IOStatus);
+                bool[] IOBo = ErosSocket.ErosConLink.StaticCon.ConvertIntToBoolArray((int)IOStatus, 32);
+                if (!IOBo[14])
                 {
-                    UResult = Motion.mAcm_AxSetSvOn(m_Axishand, 1);
+                    UResult = Motion.mAcm_AxSetSvOn(m_AxishandEx, 1);
                 }
-                if (AxisNoEx > 0)
-                {
-                    uint IOStatus = 0;
-                    Motion.mAcm_AxGetMotionIO(m_AxishandEx, ref IOStatus);
-                    bool[] IOBo = ErosSocket.ErosConLink.StaticCon.ConvertIntToBoolArray((int)IOStatus, 32);
-                    if (!IOBo[14])
-                    {
-                        UResult = Motion.mAcm_AxSetSvOn(m_AxishandEx, 1);
-                    }
-                }
-            
-     
+            }
         }
+
         public void Diset()
         {
             if (IsEnabled)
@@ -2182,7 +2224,9 @@ namespace Vision2.Project.DebugF.IO
                 }
             }
         }
-        bool isAddMove;
+
+        private bool isAddMove;
+
         public bool GetStatus()
         {
             short errorID = 0;
@@ -2193,14 +2237,14 @@ namespace Vision2.Project.DebugF.IO
             bool[] bools2 = null;
             try
             {
-                if (DebugCompiler.GetThis().ListKat == "PCI-1245L")
+                if (DebugCompiler.Instance.ListKat == "PCI-1245L")
                 {
                     try
                     {
                         uint IOStatus = 0;
                         uint Result = Motion.mAcm_AxGetMotionIO(m_Axishand, ref IOStatus);
-                        IOBools =StaticCon.ConvertIntToBoolArray((int)IOStatus, 32);
-                        if (AxisNoEx>=0)
+                        IOBools = StaticCon.ConvertIntToBoolArray((int)IOStatus, 32);
+                        if (AxisNoEx >= 0)
                         {
                             Result = Motion.mAcm_AxGetMotionIO(m_AxishandEx, ref IOStatus);
                             IOBoolsEx = StaticCon.ConvertIntToBoolArray((int)IOStatus, 32);
@@ -2222,7 +2266,7 @@ namespace Vision2.Project.DebugF.IO
                         {
                             homeing = true;
                         }
-                        else if(IOStatust == 3)
+                        else if (IOStatust == 3)
                         {
                             //Motion.mAcm_AxResetError(m_Axishand);
                             //if (AxisNoEx>0)
@@ -2230,7 +2274,7 @@ namespace Vision2.Project.DebugF.IO
                             //    Motion.mAcm_AxResetError(m_AxishandEx);
                             //}
                         }
-                        // || ( (Positive_LimitSwt || Negative_LimitSwt || Positive_Limit || Negative_Limit)) 
+                        // || ( (Positive_LimitSwt || Negative_LimitSwt || Positive_Limit || Negative_Limit))
                         if (IOBools[1] || IOStatust == 3)
                         {
                             string errStr = "";
@@ -2254,7 +2298,7 @@ namespace Vision2.Project.DebugF.IO
                             {
                                 errStr += "硬件负限位";
                             }
-                            if (IOStatust==3)
+                            if (IOStatust == 3)
                             {
                                 errStr += "错误停止";
                             }
@@ -2275,9 +2319,11 @@ namespace Vision2.Project.DebugF.IO
                             case 1:
                                 Result = Motion.mAcm_AxGetCmdPosition(m_Axishand, ref this.point);
                                 break;
+
                             case 2:
                                 Result = Motion.mAcm_AxGetCompensatePosition(m_Axishand, ref this.point);
                                 break;
+
                             default:
                                 Result = Motion.mAcm_AxGetActualPosition(m_Axishand, ref this.point);
                                 break;
@@ -2315,7 +2361,6 @@ namespace Vision2.Project.DebugF.IO
                 C154_AxisGrub.ReturnCode = MP_C154.c154_get_position(AxisNo, ref pointD);//
                 if (AxisType == EnumAxisType.T)
                 {
-
                 }
                 double detet = (pointD / Scale);
                 point = (pointD / Scale);
@@ -2329,17 +2374,21 @@ namespace Vision2.Project.DebugF.IO
             }
             return false;
         }
+
         public void SetAxisHand(IntPtr intPtr)
         {
             m_Axishand = intPtr;
         }
+
         public void SetAxisHandEx(IntPtr intPtr)
         {
             m_AxishandEx = intPtr;
         }
-        IntPtr m_Axishand;
 
-        IntPtr m_AxishandEx;
+        private IntPtr m_Axishand;
+
+        private IntPtr m_AxishandEx;
+
         /// <summary>
         /// 初始化轴
         /// </summary>
@@ -2352,11 +2401,11 @@ namespace Vision2.Project.DebugF.IO
             {
                 Ratio = 1;
             }
-            if (DebugCompiler.GetThis().ListKat == "PCI-1245L")
+            if (DebugCompiler.Instance.ListKat == "PCI-1245L")
             {
                 Motion.mAcm_AxSetCmdPosition(m_Axishand, 0);
                 Motion.mAcm_AxSetActualPosition(m_Axishand, 0);
-                if (DebugCompiler.GetThis().Is_Sv)
+                if (DebugCompiler.Instance.Is_Sv)
                 {
                     GetStatus();
                     Enabled();
@@ -2372,26 +2421,26 @@ namespace Vision2.Project.DebugF.IO
             if (this.AxisType == EnumAxisType.S)
             {
                 //MP_C154.c154_set_home_config(AxisNo, 1, 0, 0, 0, 0);  //回原点方式
-                //MP_C154.c154_set_limit_logic(AxisNo, 1);   //伺服限位开关 
+                //MP_C154.c154_set_limit_logic(AxisNo, 1);   //伺服限位开关
             }
             else if (this.AxisType == EnumAxisType.T)
             {
                 MP_C154.c154_set_home_config(AxisNo, 1, 0, 0, 0, 0);  //回原点方式
-                MP_C154.c154_set_limit_logic(AxisNo, 1);   //伺服限位开关 
+                MP_C154.c154_set_limit_logic(AxisNo, 1);   //伺服限位开关
                 MP_C154.c154_set_pls_iptmode(AxisNo, 0, 1);
                 MP_C154.c154_set_feedback_src(AxisNo, 01);
             }
             else
             {
                 //MP_C154.c154_set_inp(AxisNo, 1, 1);
-                //MP_C154.c154_set_home_config(AxisNo, 4, 0, 0, 0, 0);                
-                //MP_C154.c154_set_pls_outmode(AxisNo, 4); //Output type is CW/CCW设定脉冲控制命令输出信号模式  设定脉冲控制命令输出模式，有 6 种模式可供设定。 
+                //MP_C154.c154_set_home_config(AxisNo, 4, 0, 0, 0, 0);
+                //MP_C154.c154_set_pls_outmode(AxisNo, 4); //Output type is CW/CCW设定脉冲控制命令输出信号模式  设定脉冲控制命令输出模式，有 6 种模式可供设定。
                 //                                         //1X A/ B 1 2X A/ B 2 4X A/ B 3 CW / CCW
-                //MP_C154.c154_set_pls_iptmode(AxisNo, 2, 0); //Input Type is 4*AB Phase设定反馈脉冲输入信号模式  设定反馈脉冲输入信号模式，有 4 种模式可供设定，请注意，唯 有 c154_set_feedback_src() 内的 Src 选择反馈信号，设定此函 数才有意义。 
+                //MP_C154.c154_set_pls_iptmode(AxisNo, 2, 0); //Input Type is 4*AB Phase设定反馈脉冲输入信号模式  设定反馈脉冲输入信号模式，有 4 种模式可供设定，请注意，唯 有 c154_set_feedback_src() 内的 Src 选择反馈信号，设定此函 数才有意义。
                 //                                            //0 External signal feedback 1 Command pulse
-                //MP_C154.c154_set_feedback_src(AxisNo, 1); //Feedback source is Internal设定反馈计数器信号源 若外部可提供编码器反馈信号，则可设定此函数参数 Src 来启动 内部计数器依据 c154_set_pls_iptmode() 所设定之反馈信号计 数，否则计数器将依据脉冲控制命令输出计数。 
-                //MP_C154.c154_set_alm(AxisNo, 1, 0); //Feedback source is Internal       
-                //MP_C154.c154_set_limit_logic(AxisNo, 1);   //伺服限位开关         
+                //MP_C154.c154_set_feedback_src(AxisNo, 1); //Feedback source is Internal设定反馈计数器信号源 若外部可提供编码器反馈信号，则可设定此函数参数 Src 来启动 内部计数器依据 c154_set_pls_iptmode() 所设定之反馈信号计 数，否则计数器将依据脉冲控制命令输出计数。
+                //MP_C154.c154_set_alm(AxisNo, 1, 0); //Feedback source is Internal
+                //MP_C154.c154_set_limit_logic(AxisNo, 1);   //伺服限位开关
                 //MP_C154.c154_set_home_config(AxisNo, 1, 0, 0, 0, 0);  //回原点方式
                 MP_C154.c154_set_pls_outmode(AxisNo, 4); //Output type is CW/CCWCW/CCW脉冲方向
                 MP_C154.c154_set_pls_iptmode(AxisNo, 2, 0); //Input Type is 4*AB Phase AB项
@@ -2400,23 +2449,22 @@ namespace Vision2.Project.DebugF.IO
                 MP_C154.c154_set_inp(AxisNo, 1, 1); //定位完成常闭
                 if (isBdt)
                 {
-                    MP_C154.c154_set_limit_logic(AxisNo, 1);   //伺服限位开关常闭    
+                    MP_C154.c154_set_limit_logic(AxisNo, 1);   //伺服限位开关常闭
                 }
-                //MP_C154.c154_set_home_config(AxisNo, 4, 0, 0, 0, 0);                
+                //MP_C154.c154_set_home_config(AxisNo, 4, 0, 0, 0, 0);
                 MP_C154.c154_set_home_config(AxisNo, 1, 0, 0, 0, 0);
                 //MP_C154.c154_set_pls_outmode(AxisNo, 4); //Output type is CW/CCW
                 //MP_C154.c154_set_pls_iptmode(AxisNo, 2, 0); //Input Type is 4*AB Phase
-                //MP_C154.c154_set_limit_logic(AxisNo, 1);   //伺服限位开关   
+                //MP_C154.c154_set_limit_logic(AxisNo, 1);   //伺服限位开关
                 //MP_C154.c154_set_feedback_src(AxisNo, 1); //Feedback source is Internal
                 //MP_C154.c154_set_alm(AxisNo, 1, 0); //Feedback source is Internal
                 //                                    //MP_C154.c154_set_inp(AxisNo, 1, 1);
                 //                                    // MP_C154.c154_set_home_config(AxisNo, 4, 0, 0, 0, 0);
                 //MP_C154.c154_set_home_config(AxisNo, 1, 0, 0, 0, 0);
-                MP_C154.c154_set_servo(AxisNo, 1);//伺服上电      
+                MP_C154.c154_set_servo(AxisNo, 1);//伺服上电
             }
 
-
-            MP_C154.c154_set_servo(AxisNo, 1);//伺服上电      
+            MP_C154.c154_set_servo(AxisNo, 1);//伺服上电
 
             //if (IsBand_type_brakeNumber >= 0)
             //{
@@ -2424,9 +2472,10 @@ namespace Vision2.Project.DebugF.IO
             //}
             return true;
         }
+
         /// <summary>
         /// 移动轴，正反模式，是否点的，移动量
-        /// 
+        ///
         /// </summary>
         /// <param name="JogPsion">正反</param>
         /// <param name="jogmode">点或寸</param>
@@ -2441,7 +2490,7 @@ namespace Vision2.Project.DebugF.IO
             }
             if (AxisType == EnumAxisType.T)
             {
-                if (DebugCompiler.GetThis().DDAxis.AlwaysIODot.Value || DebugCompiler.GetThis().DDAxis.AlwaysIOInt.Value || DebugCompiler.GetThis().DDAxis.AlwaysIOOut.Value)
+                if (DebugCompiler.Instance.DDAxis.AlwaysIODot.Value || DebugCompiler.Instance.DDAxis.AlwaysIOInt.Value || DebugCompiler.Instance.DDAxis.AlwaysIOOut.Value)
                 {
                     MessageBox.Show("设备中有产品,无法调整轨道宽度");
                     return;
@@ -2458,18 +2507,18 @@ namespace Vision2.Project.DebugF.IO
                 {
                     throw (new Exception("超出最小限位"));
                 }
-                if (DebugCompiler.GetThis().ListKat == "PCI-1245L")
+                if (DebugCompiler.Instance.ListKat == "PCI-1245L")
                 {
                     UResult = Motion.mAcm_AxMoveAbs(m_Axishand, Math.Round((Point + seepJog) * Scale));
                 }
                 else
                 {
-                    C154_AxisGrub.ReturnCode = MP_C154.c154_start_ta_move(AxisNo, Math.Round((Point + seepJog) * Scale), StrVal * Scale, MaxVel * Scale, Tacc, Tdec);   //以梯形速度曲线控制绝对坐标的点位运动 
+                    C154_AxisGrub.ReturnCode = MP_C154.c154_start_ta_move(AxisNo, Math.Round((Point + seepJog) * Scale), StrVal * Scale, MaxVel * Scale, Tacc, Tdec);   //以梯形速度曲线控制绝对坐标的点位运动
                 }
             }
             else
             {
-                if (DebugCompiler.GetThis().ListKat == "PCI-1245L")
+                if (DebugCompiler.Instance.ListKat == "PCI-1245L")
                 {
                     if (seepJog > 0)
                     {
@@ -2492,9 +2541,9 @@ namespace Vision2.Project.DebugF.IO
             try
             {
                 ErosProjcetDLL.Project.AlarmListBoxt.RomveAlarm(this.Name + "轴故障");
-                if (DebugCompiler.GetThis().ListKat == "PCI-1245L")
+                if (DebugCompiler.Instance.ListKat == "PCI-1245L")
                 {
-                    if (IOBools[1]||StaratNn==3)
+                    if (IOBools[1] || StaratNn == 3)
                     {
                         UResult = Motion.mAcm_AxResetError(m_Axishand);
                         if (AxisNoEx > 0)
@@ -2503,15 +2552,15 @@ namespace Vision2.Project.DebugF.IO
                             ushort IOStatust = 0;
                             uint Result = Motion.mAcm_AxGetMotionIO(m_AxishandEx, ref IOStatus);
                             bool[] vs = StaticCon.ConvertIntToBoolArray((int)IOStatus, 32);
-                                  Result = Motion.mAcm_AxGetState(m_AxishandEx, ref IOStatust);
-                            if (vs[0] || IOStatust ==3)
+                            Result = Motion.mAcm_AxGetState(m_AxishandEx, ref IOStatust);
+                            if (vs[0] || IOStatust == 3)
                             {
                                 UResult = Motion.mAcm_AxResetError(m_AxishandEx);
                             }
                         }
                         Thread.Sleep(50);
                     }
-       
+
                     Enabled();
                     if (IOBools[1] || StaratNn == 3)
                     {
@@ -2541,10 +2590,11 @@ namespace Vision2.Project.DebugF.IO
             }
         }
 
-        bool homeing = false;
-        bool HomeStop;
-        StringBuilder ErrorMsg = new StringBuilder("", 100);
-        uint UResult
+        private bool homeing = false;
+        private bool HomeStop;
+        private StringBuilder ErrorMsg = new StringBuilder("", 100);
+
+        private uint UResult
         {
             get
             {
@@ -2560,9 +2610,10 @@ namespace Vision2.Project.DebugF.IO
                 uResul = value;
             }
         }
-        uint uResul;
 
-        void SetHomeEX()
+        private uint uResul;
+
+        private void SetHomeEX()
         {
             try
             {
@@ -2571,27 +2622,26 @@ namespace Vision2.Project.DebugF.IO
                 {
                     AddSeelp();
                     Thread.Sleep(1000);
-                     Motion.mAcm_AxSetCmdPosition(m_Axishand, 0);
+                    Motion.mAcm_AxSetCmdPosition(m_Axishand, 0);
                     Motion.mAcm_AxSetActualPosition(m_Axishand, 0);
                     IsHome = true;
                     return;
                 }
                 UResult = Motion.mAcm_AxResetError(m_Axishand);
-                if (AxisNoEx>=0)
+                if (AxisNoEx >= 0)
                 {
                     UResult = Motion.mAcm_AxResetError(m_AxishandEx);
                 }
                 if (AxisType == EnumAxisType.Udd)
                 {
-                    DebugCompiler.GetThis().DDAxis.WritDO(DDHomeIO, true);
+                    DebugCompiler.Instance.DDAxis.WritDO(DDHomeIO, true);
                 }
                 else
                 {
                     UResult = Motion.mAcm_SetU32Property(m_Axishand, (uint)PropertyID.CFG_AxSwMelEnable, 0);
                     UResult = Motion.mAcm_SetU32Property(m_Axishand, (uint)PropertyID.CFG_AxSwPelEnable, 0);
-                    if (HomeTepy>100)
+                    if (HomeTepy > 100)
                     {
-
                         UResult = Motion.mAcm_SetF64Property(m_Axishand, (uint)PropertyID.PAR_AxHomeVelLow, PAR_AxVelLow);
                         UResult = Motion.mAcm_SetF64Property(m_Axishand, (uint)PropertyID.PAR_AxHomeVelHigh, PAR_AxVelHigh);
                         UResult = Motion.mAcm_SetF64Property(m_Axishand, (uint)PropertyID.PAR_AxHomeAcc, PAR_AxAcc);
@@ -2604,8 +2654,6 @@ namespace Vision2.Project.DebugF.IO
                         UResult = Motion.mAcm_SetF64Property(m_Axishand, (uint)PropertyID.PAR_AxAcc, PAR_AxAcc);
                         UResult = Motion.mAcm_SetF64Property(m_Axishand, (uint)PropertyID.PAR_AxDec, PAR_AxDec);
                     }
-                
-
                     Thread.Sleep(200);
                     UResult = Motion.mAcm_AxHome(m_Axishand, HomeTepy, 1);
                     if (UResult != 0)
@@ -2622,7 +2670,7 @@ namespace Vision2.Project.DebugF.IO
                         Thread.Sleep(1000);
                         if (AxisType == EnumAxisType.Udd)
                         {
-                            DebugCompiler.GetThis().DDAxis.WritDO(DDHomeIO, false);
+                            DebugCompiler.Instance.DDAxis.WritDO(DDHomeIO, false);
                         }
                         System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
                         watch.Start();
@@ -2638,7 +2686,7 @@ namespace Vision2.Project.DebugF.IO
                             {
                                 return;
                             }
-                            if (det==3)
+                            if (det == 3)
                             {
                                 homeing = false;
                                 break;
@@ -2657,13 +2705,16 @@ namespace Vision2.Project.DebugF.IO
                                     UResult = Motion.mAcm_SetU32Property(m_Axishand, (uint)PropertyID.CFG_AxSwMelReact, 0);
                                     Thread.Sleep(1000);
                                     AddSeelp();
-                                     Motion.mAcm_AxSetCmdPosition(m_Axishand, 0);
-                                     Motion.mAcm_AxSetActualPosition(m_Axishand, 0);
+                                    if (!IsDacc)
+                                    {
+                                        UResult = Motion.mAcm_AxSetCmdPosition(m_Axishand, 0);
+                                        UResult = Motion.mAcm_AxSetActualPosition(m_Axishand, 0);
+                                    }
                                     IsHome = true;
                                     HomeDone = true;
                                     break;
                                 }
-                                else if(bools2[13])
+                                else if (bools2[13])
                                 {
                                     HomeDone = true;
                                     break;
@@ -2674,8 +2725,11 @@ namespace Vision2.Project.DebugF.IO
                                 if (det == 1)
                                 {
                                     Thread.Sleep(1000);
-                                    //UResult = Motion.mAcm_AxSetCmdPosition(m_Axishand, 0);
-                                    //UResult = Motion.mAcm_AxSetActualPosition(m_Axishand, 0);
+                                    if (!IsDacc)
+                                    {
+                                        UResult = Motion.mAcm_AxSetCmdPosition(m_Axishand, 0);
+                                        UResult = Motion.mAcm_AxSetActualPosition(m_Axishand, 0);
+                                    }
                                     UResult = Motion.mAcm_SetU32Property(m_Axishand, (uint)PropertyID.CFG_AxSwMelEnable, 1);
                                     UResult = Motion.mAcm_SetU32Property(m_Axishand, (uint)PropertyID.CFG_AxSwPelEnable, 1);
                                     UResult = Motion.mAcm_SetI32Property(m_Axishand, (uint)PropertyID.CFG_AxSwPelValue, (int)(this.PlusLimit * Scale * this.Ratio));
@@ -2704,11 +2758,9 @@ namespace Vision2.Project.DebugF.IO
                     catch (Exception)
                     {
                     }
-
                 });
                 thread.IsBackground = true;
                 thread.Start();
-
             }
             catch (Exception ex)
             {
@@ -2728,15 +2780,15 @@ namespace Vision2.Project.DebugF.IO
             homeing = true;
             if (AxisType == EnumAxisType.T)
             {
-                if (DebugCompiler.GetThis().DDAxis.AlwaysIODot.Value ||
-                                   DebugCompiler.GetThis().DDAxis.AlwaysIOInt.Value ||
-                                    DebugCompiler.GetThis().DDAxis.AlwaysIOOut.Value)
+                if (DebugCompiler.Instance.DDAxis.AlwaysIODot.Value ||
+                                   DebugCompiler.Instance.DDAxis.AlwaysIOInt.Value ||
+                                    DebugCompiler.Instance.DDAxis.AlwaysIOOut.Value)
                 {
                     ErosProjcetDLL.Project.AlarmListBoxt.AddAlarmText(new Vision2.ErosProjcetDLL.Project.AlarmText.alarmStruct() { Name = this.Name + "故障", Text = "线体存在托盘，无法回零！" });
                     return;
                 }
             }
-            if (DebugCompiler.GetThis().ListKat == "PCI-1245L")
+            if (DebugCompiler.Instance.ListKat == "PCI-1245L")
             {
                 SetHomeEX();
                 return;
@@ -2800,7 +2852,6 @@ namespace Vision2.Project.DebugF.IO
             });
             thread.IsBackground = true;
             thread.Start();
-
         }
 
         public bool SetPoint(double? p, double? sleep = null)
@@ -2832,8 +2883,7 @@ namespace Vision2.Project.DebugF.IO
             {
                 if (p == 0)
                 {
-
-                    if (DebugCompiler.GetThis().ListKat == "PCI-1245L")
+                    if (DebugCompiler.Instance.ListKat == "PCI-1245L")
                     {
                         if (sleep != null)
                         {
@@ -2857,7 +2907,7 @@ namespace Vision2.Project.DebugF.IO
                 }
                 else
                 {
-                    if (DebugCompiler.GetThis().ListKat == "PCI-1245L")
+                    if (DebugCompiler.Instance.ListKat == "PCI-1245L")
                     {
                         if (sleep != null)
                         {
@@ -2868,7 +2918,7 @@ namespace Vision2.Project.DebugF.IO
                     }
                     else
                     {
-                        d = MP_C154.c154_start_ta_move(AxisNo, (p.Value * Scale), StrVal * Scale, MaxVel * Scale, Tacc, Tdec);   //以梯形速度曲线控制绝对坐标的点位运动 
+                        d = MP_C154.c154_start_ta_move(AxisNo, (p.Value * Scale), StrVal * Scale, MaxVel * Scale, Tacc, Tdec);   //以梯形速度曲线控制绝对坐标的点位运动
                         C154_AxisGrub.ReturnCode = d;
                     }
                 }
@@ -2879,19 +2929,19 @@ namespace Vision2.Project.DebugF.IO
             }
             else if (AxisType == EnumAxisType.T)
             {
-                if (DebugCompiler.GetThis().DDAxis.AlwaysIODot.Value ||    DebugCompiler.GetThis().DDAxis.AlwaysIOInt.Value  || DebugCompiler.GetThis().DDAxis.AlwaysIOOut.Value)
+                if (DebugCompiler.Instance.DDAxis.AlwaysIODot.Value || DebugCompiler.Instance.DDAxis.AlwaysIOInt.Value || DebugCompiler.Instance.DDAxis.AlwaysIOOut.Value)
                 {
                     MessageBox.Show("设备中有产品,无法调整轨道宽度");
                     return false;
                 }
             }
-            if (DebugCompiler.GetThis().ListKat == "PCI-1245L")
+            if (DebugCompiler.Instance.ListKat == "PCI-1245L")
             {
                 UResult = Motion.mAcm_AxMoveAbs(m_Axishand, p.Value * Scale);
             }
             else
             {
-                d = MP_C154.c154_start_ta_move(AxisNo, Math.Round(p.Value * Scale), StrVal * Scale, MaxVel * Scale, Tacc, Tdec);   //以梯形速度曲线控制绝对坐标的点位运动 
+                d = MP_C154.c154_start_ta_move(AxisNo, Math.Round(p.Value * Scale), StrVal * Scale, MaxVel * Scale, Tacc, Tdec);   //以梯形速度曲线控制绝对坐标的点位运动
                 C154_AxisGrub.ReturnCode = d;
             }
             if (d == 0)
@@ -2899,7 +2949,6 @@ namespace Vision2.Project.DebugF.IO
                 return true;
             }
             throw (new Exception(C154_AxisGrub.ErrMasage(d)));
-
         }
 
         public bool SetWPoint(double? p)
@@ -2930,6 +2979,7 @@ namespace Vision2.Project.DebugF.IO
             }
             return true;
         }
+
         public void SetMoveTe(bool Addt)
         {
             short d = 0;
@@ -2937,7 +2987,7 @@ namespace Vision2.Project.DebugF.IO
             {
                 if (AxisType == EnumAxisType.S)
                 {
-                    if (DebugCompiler.GetThis().ListKat == "PCI-1245L")
+                    if (DebugCompiler.Instance.ListKat == "PCI-1245L")
                     {
                         if (Addt)
                         {
@@ -2967,7 +3017,7 @@ namespace Vision2.Project.DebugF.IO
                     //else
                     //{
                     //    d = MP_C154.c154_tv_move(AxisNo,- StrVal * Scale, MaxVel * Scale, Tacc);
-                    //    //d = MP_C154.c154_start_ta_move(AxisNo, (p.Value * Scale), StrVal * Scale, MaxVel * Scale, Tacc, Tdec);   //以梯形速度曲线控制绝对坐标的点位运动 
+                    //    //d = MP_C154.c154_start_ta_move(AxisNo, (p.Value * Scale), StrVal * Scale, MaxVel * Scale, Tacc, Tdec);   //以梯形速度曲线控制绝对坐标的点位运动
                     //    //C154_AxisGrub.ReturnCode = d;
                     //}
                     if (d == 0)
@@ -2985,10 +3035,11 @@ namespace Vision2.Project.DebugF.IO
         {
             Stop();
         }
+
         public bool Stop()
         {
             HomeStop = true;
-            if (DebugCompiler.GetThis().ListKat == "PCI-1245L")
+            if (DebugCompiler.Instance.ListKat == "PCI-1245L")
             {
                 uint UResult = Motion.mAcm_AxStopDec(m_Axishand);
             }
@@ -3000,25 +3051,33 @@ namespace Vision2.Project.DebugF.IO
             return true;
         }
     }
+
     public class RunButton
     {
         [Description("黄指示灯IO"), Category("指示灯"), DisplayName("黄灯")]
         public sbyte yellow { get; set; } = -1;
+
         [Description("绿指示灯IO"), Category("指示灯"), DisplayName("绿灯")]
         public sbyte green { get; set; } = -1;
+
         [Description("红指示灯IO"), Category("指示灯"), DisplayName("红灯")]
         public sbyte red { get; set; } = -1;
+
         [Description("蜂鸣器IO"), Category("指示灯"), DisplayName("蜂鸣器")]
         public sbyte Fmq { get; set; } = -1;
+
         [Description("负值无效"), Category("按钮"), DisplayName("运行IO")]
         public sbyte RunButten { get; set; } = -1;
+
         [Description("负值无效"), Category("按钮"), DisplayName("停止IO")]
         public sbyte StopButten { get; set; } = -1;
+
         [Description("负值无效"), Category("按钮"), DisplayName("复位IO")]
         public sbyte ResetButten { get; set; } = -1;
 
         [Description("负值无效"), Category("按钮"), DisplayName("初始化IO")]
         public sbyte InButten { get; set; } = -1;
+
         [Description("负值无效"), Category("按钮"), DisplayName("急停按钮I")]
         public sbyte StopTButten { get; set; } = -1;
 
@@ -3027,26 +3086,31 @@ namespace Vision2.Project.DebugF.IO
         /// </summary>
         [Description("负值无效"), Category("按钮指示灯"), DisplayName("运行指示灯IO")]
         public sbyte RunButtenS { get; set; } = -1;
+
         /// <summary>
         /// 停止按钮灯
         /// </summary>
         [Description("负值无效"), Category("按钮指示灯"), DisplayName("停止指示灯IO")]
         public sbyte StopButtenS { get; set; } = -1;
+
         [Description("负值无效"), Category("按钮指示灯"), DisplayName("复位指示灯IO")]
         /// <summary>
         /// 复位按钮灯
         /// </summary>
         public sbyte ResetButtenS { get; set; } = -1;
+
         /// <summary>
         /// 安全门
         /// </summary>
         [Description("安全门锁Q"), Category("门锁"), DisplayName("安全门锁")]
         public sbyte ANmen { get; set; } = -1;
+
         /// <summary>
         /// 安全门检测
         /// </summary>
         [Description("安全门锁I"), Category("门锁"), DisplayName("门锁检测")]
         public sbyte ANmenTI { get; set; } = -1;
+
         /// <summary>
         /// 安全光栅
         /// </summary>
@@ -3061,12 +3125,15 @@ namespace Vision2.Project.DebugF.IO
     {
         [DllImport("kernel32.dll")]
         private extern static IntPtr LoadLibrary(String path);
+
         [DllImport("kernel32.dll")]
         private extern static IntPtr GetProcAddress(IntPtr lib, String funcName);
+
         [DllImport("kernel32.dll")]
         private extern static bool FreeLibrary(IntPtr lib);
 
         private IntPtr hLib;
+
         public DllInvoke(String DLLPath)
         {
             hLib = LoadLibrary(DLLPath);
@@ -3077,7 +3144,7 @@ namespace Vision2.Project.DebugF.IO
             FreeLibrary(hLib);
         }
 
-        //将要执行的函数转换为委托    
+        //将要执行的函数转换为委托
         public Delegate Invoke(String APIName, Type t)
         {
             IntPtr api = GetProcAddress(hLib, APIName);

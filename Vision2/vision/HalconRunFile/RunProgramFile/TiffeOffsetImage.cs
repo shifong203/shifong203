@@ -6,47 +6,54 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
 {
     public class TiffeOffsetImageEX
     {
-
         [DescriptionAttribute("拼接行数。"), Category("排列"), DisplayName("图像行")]
         public int ImageNumberROW { get; set; } = 2;
+
         [DescriptionAttribute("拼接列数。"), Category("排列"), DisplayName("图像列")]
         public int ImageNumberCol { get; set; } = 2;
 
         [Browsable(false)]
         public HTuple Rows { get; set; } = new HTuple();
+
         [Browsable(false)]
         public HTuple Cols { get; set; } = new HTuple();
+
         [Browsable(false)]
         public HTuple Rows1 { get; set; } = new HTuple();
+
         [Browsable(false)]
         public HTuple Cols1 { get; set; } = new HTuple();
+
         [Browsable(false)]
         public HTuple Rows2 { get; set; } = new HTuple();
+
         [Browsable(false)]
         public HTuple Cols2 { get; set; } = new HTuple();
+
         [DescriptionAttribute("1使用相机图像，2使用执行后图像。"), Category("图像"), DisplayName("图像源")]
         public byte ISHomdeImage { get; set; } = 2;
 
-
         [DescriptionAttribute("计算拼接的起点左上点。"), Category("拼图位移"), DisplayName("起点左上Row")]
         public int OriginRow { get; set; }
+
         [DescriptionAttribute("计算拼接的起点左上点。"), Category("拼图位移"), DisplayName("起点左上Col")]
         public int OriginCol { get; set; }
 
-
         [DescriptionAttribute("计算拼接的左上点。"), Category("拼图位移"), DisplayName("剪切起点左上Row")]
         public int CutRow1 { get; set; }
+
         [DescriptionAttribute("计算拼接的左上点。"), Category("拼图位移"), DisplayName("剪切起点左上Col")]
         public int CutCol1 { get; set; }
 
         [DescriptionAttribute("计算拼接的右下。"), Category("拼图位移"), DisplayName("剪切终点右下Row")]
         public int CutRow2 { get; set; }
+
         [DescriptionAttribute("计算拼接的右下。"), Category("拼图位移"), DisplayName("剪切终点右下Col")]
         public int CutCol2 { get; set; }
 
-
         [DescriptionAttribute("单张图像缩放比例。"), Category("图像"), DisplayName("缩放比例")]
         public double ZoomImageSize { get; set; } = 1;
+
         [DescriptionAttribute("图像宽。"), Category("图像"), DisplayName("整图像宽")]
         public int WidthI { get; set; }
 
@@ -55,6 +62,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
 
         [DescriptionAttribute("单张图像宽。"), Category("图像"), DisplayName("图像宽")]
         public int ImageWidthI { get; set; } = 6000;
+
         [DescriptionAttribute("单张图像高。"), Category("图像"), DisplayName("图像高")]
         public int ImageHeightI { get; set; } = 4000;
 
@@ -71,11 +79,11 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
 
         public HTuple zoonCol { get; set; }
 
-        HObject[] Imgaes;
+        private HObject[] Imgaes;
 
         public void TiffeClose()
         {
-            if (ISHomdeImage==1)
+            if (ISHomdeImage == 1)
             {
                 if (Imgaes != null)
                 {
@@ -89,10 +97,10 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 }
             }
             Imgaes = new HObject[ImageNumberROW * ImageNumberCol];
-
         }
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public void SetTiffeOff()
         {
@@ -111,10 +119,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             }
             catch (Exception)
             {
-
             }
-  
-
         }
 
         public void CatTimetPoint()
@@ -185,17 +190,17 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             }
         }
 
-        public void SetTiffeOff(HObject iamge, int number=-1)
+        public void SetTiffeOff(HObject iamge, int number = -1)
         {
             if (Imgaes == null)
             {
                 SetTiffeOff();
             }
-            if (number<0)
+            if (number < 0)
             {
                 for (int i = 0; i < Imgaes.Length; i++)
                 {
-                    if (Imgaes[i]==null)
+                    if (Imgaes[i] == null)
                     {
                         Imgaes[i] = iamge;
                         return;
@@ -210,14 +215,15 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     Imgaes[number] = iamge;
                 }
             }
-      
         }
-        HObject hObjectT = new HObject();
+
+        private HObject hObjectT = new HObject();
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <returns></returns>
-        public HObject TiffeOffsetImage(string name="")
+        public HObject TiffeOffsetImage(string name = "")
         {
             HObject hObject = new HObject();
             hObject.GenEmptyObj();
@@ -243,7 +249,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     }
                 }
                 int d = hObject.CountObj();
-                if (IsFill==0)
+                if (IsFill == 0)
                 {
                     if (Vertical)
                     {
@@ -261,13 +267,13 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             }
             catch (Exception ex)
             {
-
-                ErosProjcetDLL.Project.AlarmText.AddTextNewLine(name+ "拼图失败，行:" + ex.StackTrace.Remove(0, ex.StackTrace.Length - 5) + ":" + ex.Message);
+                ErosProjcetDLL.Project.AlarmText.AddTextNewLine(name + "拼图失败，行:" + ex.StackTrace.Remove(0, ex.StackTrace.Length - 5) + ":" + ex.Message);
             }
             return hObject;
         }
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <returns></returns>
         public HObject TiffeOffSetImageFill()
@@ -304,7 +310,6 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             }
 
             return hObject;
-
         }
     }
 }

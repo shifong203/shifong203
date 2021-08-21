@@ -10,6 +10,7 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             InitializeComponent();
         }
+
         public OvergildControl1(Overgild pingZheng) : this()
         {
             overgild = pingZheng;
@@ -34,16 +35,19 @@ namespace Vision2.vision.HalconRunFile.Controls
             }
             isChaved = false;
         }
-        bool isChaved = true;
-        Overgild overgild;
-        HalconRun halcon;
+
+        private bool isChaved = true;
+        private Overgild overgild;
+        private HalconRun halcon;
+
         private void button2_Click(object sender, System.EventArgs e)
         {
             try
             {
-                //RunProgram.DrawHoj()
-
-
+                overgild.Run(halcon.GetOneImageR(), new AoiObj());
+                halcon.HobjClear();
+                halcon.AddObj(overgild.SelecRoi);
+                halcon.ShowObj();
             }
             catch (Exception)
             {
@@ -54,7 +58,7 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             try
             {
-                listBox1.Items.Add(listBox1.Items.Count+1);
+                listBox1.Items.Add(listBox1.Items.Count + 1);
                 overgild.RunListOvergil.Add(new Overgild.OvergilEX());
             }
             catch (System.Exception ex)
@@ -80,14 +84,14 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             try
             {
-                if (listBox1.SelectedItem==null)
+                if (listBox1.SelectedItem == null)
                 {
                     return;
                 }
                 overgild.GetPThis().HobjClear();
                 groupBox3.Text = listBox1.SelectedItem.ToString();
                 propertyGrid2.SelectedObject = overgild.RunListOvergil[listBox1.SelectedIndex];
-                overgild.RunSeleRoi(halcon.GetOneImageR(), 1,out HalconDotNet.HObject err);
+                overgild.RunSeleRoi(halcon.GetOneImageR(), 1, out HalconDotNet.HObject err);
                 overgild.RunListOvergil[listBox1.SelectedIndex].RunPa(halcon.GetOneImageR(), overgild, out HalconDotNet.HObject hObject);
                 halcon.AddObj(hObject);
                 overgild.GetPThis().ShowObj();
@@ -97,7 +101,8 @@ namespace Vision2.vision.HalconRunFile.Controls
                 MessageBox.Show(ex.Message);
             }
         }
-        public void SetDatd(int id=0)
+
+        public void SetDatd(int id = 0)
         {
             try
             {
@@ -107,21 +112,21 @@ namespace Vision2.vision.HalconRunFile.Controls
                 }
                 overgild.ImageTypeOb = (ImageTypeObj)Enum.Parse(typeof(ImageTypeObj),
                 comboBox1.SelectedItem.ToString());
-                overgild.ThresSelectMin =(byte) numericUpDown4.Value;
+                overgild.ThresSelectMin = (byte)numericUpDown4.Value;
                 overgild.ErosinCircle = (double)numericUpDown1.Value;
-               overgild.ThresSelectMax = (byte)numericUpDown5.Value;
+                overgild.ThresSelectMax = (byte)numericUpDown5.Value;
                 halcon.HobjClear();
                 overgild.RunSeleRoi(halcon.GetOneImageR(), 1, out HalconDotNet.HObject err);
                 halcon.AddObj(err);
                 overgild.GetPThis().ShowObj();
                 halcon.ShowObj();
             }
-
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
         }
+
         private void comboBox1_SelectedIndexChanged(object sender, System.EventArgs e)
         {
             SetDatd();
@@ -131,7 +136,6 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             try
             {
-
             }
             catch (Exception)
             {
@@ -140,20 +144,39 @@ namespace Vision2.vision.HalconRunFile.Controls
 
         private void groupBox1_Enter(object sender, EventArgs e)
         {
-
         }
 
         private void button4_Click(object sender, EventArgs e)
         {
             try
             {
-           
                 halcon.HobjClear();
-                overgild.Run( halcon.GetOneImageR(),new AoiObj());
+                overgild.Run(halcon.GetOneImageR(), new AoiObj());
                 overgild.ModeOBj = overgild.SelecRoi;
                 halcon.AddObj(overgild.ModeOBj);
                 halcon.ShowObj();
+            }
+            catch (Exception)
+            {
+            }
+        }
 
+        private void button5_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                overgild.SelecRoi = RunProgram.DrawHObj(halcon, overgild.SelecRoi);
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                overgild.SelecRoi = RunProgram.DrawRmoveObj(halcon, overgild.SelecRoi);
             }
             catch (Exception)
             {

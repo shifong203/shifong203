@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
+using System.IO;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Vision2.ErosProjcetDLL.Project;
 
@@ -17,18 +13,38 @@ namespace Vision2.Project.Mes.环旭SISF
         {
             InitializeComponent();
         }
-        SISF mesInfon1;
-        public SisfForm1(SISF mesInfon):this()
+
+        private SISF mesInfon1;
+
+        public SisfForm1(SISF mesInfon) : this()
         {
-            mesInfon1 = mesInfon as  SISF;
+            mesInfon1 = mesInfon as SISF;
             propertyGrid1.SelectedObject = mesInfon1;
+            listBox1.Items.Clear();
+            try
+            {
+                string[] strd = Directory.GetFiles(ProjectINI.ProjectPathRun + "\\Mes");
+                for (int i = 0; i < strd.Length; i++)
+                {
+                    listBox1.Items.Add(Path.GetFileName(strd[i]));
+                }
+            }
+            catch (Exception)
+            {
+            }
+            //listBox1.Items.Add("芯片扫码改造V1");
+
+            //listBox1.Items.Add("Presasm1_SPEC");
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
             try
             {
-                richTextBox2.AppendText(mesInfon1.SendText1(textBox1.Text) + Environment.NewLine);
+                richTextBox2.AppendText(mesInfon1.SendStep7(textBox1.Text) + Environment.NewLine);
+
+                string ds = mesInfon1.GetSocketClint().AlwaysRece(10000);
+                richTextBox1.AppendText(ds + Environment.NewLine);
             }
             catch (Exception ex)
             {
@@ -41,19 +57,7 @@ namespace Vision2.Project.Mes.环旭SISF
             try
             {
                 mesInfon1.GetSocketClint().Send(textBox4.Text);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }  
-        }
-
-        private void button4_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                mesInfon1.GetSocketClint().Send(textBox5.Text);
-
+                richTextBox2.AppendText(DateTime.Now + "S:" + textBox4.Text + Environment.NewLine);
             }
             catch (Exception ex)
             {
@@ -66,6 +70,7 @@ namespace Vision2.Project.Mes.环旭SISF
             try
             {
                 mesInfon1.GetSocketClint().Send(textBox6.Text);
+                richTextBox2.AppendText(DateTime.Now + "S:" + textBox6.Text + Environment.NewLine);
             }
             catch (Exception ex)
             {
@@ -77,7 +82,9 @@ namespace Vision2.Project.Mes.环旭SISF
         {
             try
             {
-                richTextBox2.AppendText(mesInfon1.SendText2(textBox1.Text, textBox2.Text, textBox3.Text) + Environment.NewLine);
+                richTextBox2.AppendText(mesInfon1.SendStep2(textBox1.Text, textBox2.Text, textBox3.Text) + Environment.NewLine);
+                string ds = mesInfon1.GetSocketClint().AlwaysRece(10000);
+                richTextBox1.AppendText(ds + Environment.NewLine);
             }
             catch (Exception ex)
             {
@@ -89,8 +96,13 @@ namespace Vision2.Project.Mes.环旭SISF
         {
             try
             {
-                mesInfon1.GetSocketClint().PassiveStringBuilderEvent += SisfForm1_PassiveStringBuilderEvent;   
-
+                mesInfon1.GetSocketClint().PassiveStringBuilderEvent += SisfForm1_PassiveStringBuilderEvent;
+                for (int i = 0; i < listBox1.Items.Count; i++)
+                {
+                    listBox1.Items[i].ToString().Contains(mesInfon1.SISFVersions);
+                    listBox1.SelectedItem = listBox1.Items[i];
+                    break;
+                }
             }
             catch (Exception)
             {
@@ -101,9 +113,7 @@ namespace Vision2.Project.Mes.环旭SISF
         {
             try
             {
-
-                richTextBox1.AppendText(DateTime.Now.ToString()+"接收:"+ key.ToString() + Environment.NewLine);
-
+                richTextBox1.AppendText(DateTime.Now.ToString() + "接收:" + key.ToString() + socket.RecivesDone + Environment.NewLine);
             }
             catch (Exception)
             {
@@ -119,6 +129,56 @@ namespace Vision2.Project.Mes.环旭SISF
             }
             catch (Exception)
             {
+            }
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                mesInfon1.WrietMes(DebugF.DebugCompiler.GetTray(0).GetTrayData());
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void SisfForm1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            try
+            {
+                mesInfon1.GetSocketClint().PassiveStringBuilderEvent -= SisfForm1_PassiveStringBuilderEvent;
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                pictureBox1.Image = Image.FromFile(ProjectINI.ProjectPathRun + "\\Mes\\" + listBox1.SelectedItem.ToString());
+                pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                mesInfon1.WrietMes(DebugF.DebugCompiler.GetTray(0).GetTrayData());
+                //richTextBox2.AppendText(mesInfon1.Sisf2(DebugF.DebugCompiler.GetTray(0).GetTrayData()) + Environment.NewLine);
+                //string ds = mesInfon1.GetSocketClint().AlwaysRece(10000);
+                //richTextBox1.AppendText(ds + Environment.NewLine);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
     }

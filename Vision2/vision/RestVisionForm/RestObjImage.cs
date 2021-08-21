@@ -1,20 +1,17 @@
-﻿using System;
+﻿using ErosSocket.DebugPLC.Robot;
+using HalconDotNet;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
+using System.IO;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
+using Vision2.ErosProjcetDLL.UI;
 using Vision2.Project.formula;
 using Vision2.Project.Mes;
-using Vision2.vision.HalconRunFile.RunProgramFile;
-using HalconDotNet;
-using System.IO;
-using Vision2.ErosProjcetDLL.UI;
-using System.Runtime.InteropServices;
-using  ErosSocket.DebugPLC.Robot;
-using Vision2.Project.DebugF;
-using static Vision2.vision.HalconRunFile.RunProgramFile.OneCompOBJs;
 using Vision2.vision.RestVisionForm;
+using static Vision2.vision.HalconRunFile.RunProgramFile.OneCompOBJs;
 
 namespace Vision2.vision
 {
@@ -25,30 +22,35 @@ namespace Vision2.vision
             InitializeComponent();
             objImageFrom = this;
         }
+
         public int MaxNumber = 0;
 
         /// <summary>
         /// 产品集合
         /// </summary>
-        static Queue<OneDataVale> OneProductVS = new Queue<OneDataVale>();
+        private static Queue<OneDataVale> OneProductVS = new Queue<OneDataVale>();
+
         /// <summary>
         /// 整盘集合
         /// </summary>
-        static Queue<TrayData> TrayImageTs = new Queue<TrayData>();
-        HWindID HWindd;
+        private static Queue<TrayData> TrayImageTs = new Queue<TrayData>();
+
+        private HWindID HWindd;
+
         /// <summary>
         /// 单个产品
         /// </summary>
-        static OneDataVale OneProductV;
-            
+        private static OneDataVale OneProductV;
+
         /// <summary>
         /// 单个元件
         /// </summary>
-        OneComponent OneRObjT;
+        private OneComponent OneRObjT;
+
         /// <summary>
         /// 整盘
         /// </summary>
-        static TrayData TrayImage;
+        private static TrayData TrayImage;
 
         public static RestObjImage RestObjImageFrom
         {
@@ -66,13 +68,12 @@ namespace Vision2.vision
             }
         }
 
-        static RestObjImage objImageFrom;
+        private static RestObjImage objImageFrom;
 
         public void SetData(TrayData dataVale, int max = -1)
         {
             try
             {
-
                 if (max >= 0)
                 {
                     MaxNumber = max;
@@ -99,7 +100,6 @@ namespace Vision2.vision
                     TrayImageTs.Enqueue(dataVale);
                     label3.Text = RecipeCompiler.Instance.GetSPC();
                 }));
-
             }
             catch (Exception ex)
             {
@@ -116,32 +116,32 @@ namespace Vision2.vision
                     HWindd = new HWindID();
                     HWindd.Initialize(hWindowControl1);
                 }
-                    if (!trayImage.OK)
+                if (!trayImage.OK)
+                {
+                    if (!trayImage.Done)
                     {
-                        if (!trayImage.Done)
+                        if (!TrayImageTs.Contains(trayImage))
                         {
-                            if (!TrayImageTs.Contains(trayImage))
-                            {
-                                TrayImageTs.Enqueue(trayImage);
-                            }
-                            label3.Text = RecipeCompiler.Instance.GetSPC();
-                            toolStripLabel1.Text = "复判剩余:" + TrayImageTs.Count;
-                            UICon.SwitchToThisWindow(RestObjImage.RestObjImageFrom.Handle, true);
-                            RestObjImage.RestObjImageFrom.Show();
+                            TrayImageTs.Enqueue(trayImage);
                         }
+                        label3.Text = RecipeCompiler.Instance.GetSPC();
+                        toolStripLabel1.Text = "复判剩余:" + TrayImageTs.Count;
+                        UICon.SwitchToThisWindow(RestObjImage.RestObjImageFrom.Handle, true);
+                        RestObjImage.RestObjImageFrom.Show();
                     }
-                    if (trayImage.Done)
-                    {
-                        UserFormulaContrsl.WeirtAll(trayImage);
-                    }
+                }
+                if (trayImage.Done)
+                {
+                    UserFormulaContrsl.WeirtAll(trayImage);
+                }
                 label3.Text = RecipeCompiler.Instance.GetSPC();
-        
             }
             catch (Exception ex)
             {
                 ErosProjcetDLL.Project.AlarmText.AddTextNewLine("复判窗口:" + ex.Message, Color.Red);
             }
         }
+
         public static void Clser()
         {
             try
@@ -153,11 +153,13 @@ namespace Vision2.vision
             {
             }
         }
-        double dee;
-        void UpData()
+
+        private double dee;
+
+        private void UpData()
         {
             string PatText = "";
-             dee = HWindd.HeigthImage / HWindd.WidthImage;
+            dee = HWindd.HeigthImage / HWindd.WidthImage;
             hWindowControl1.Height = (int)(hWindowControl1.Width * dee);
             if (panel2.Height < hWindowControl1.Height)
             {
@@ -167,15 +169,18 @@ namespace Vision2.vision
             textBox1.Text = OneProductV.PanelID;
             if (OneProductV != null)
             {
-                HWindd.OneResIamge.GetNgOBJS( OneProductV.GetNGCompData());
+                HWindd.OneResIamge.GetNgOBJS(OneProductV.GetNGCompData());
                 HWindd.SetImaage(OneProductV.GetNGImage());
             }
-            PatText = "托盘号:" + OneProductV.TrayLocation + "." +OneProductV.GetNGCamName()+ Environment.NewLine;
+            PatText = "托盘号:" + OneProductV.TrayLocation + "." + OneProductV.GetNGCamName() + Environment.NewLine;
             if (Vision.Instance.RestT)
             {
-   
                 foreach (TreeNode item in treeView1.Nodes)
                 {
+                    if (item.Nodes.Count == 0)
+                    {
+                        continue;
+                    }
                     foreach (TreeNode itemdt in item.Nodes)
                     {
                         if (itemdt.Tag is OneComponent)
@@ -184,7 +189,7 @@ namespace Vision2.vision
                             if (!oneComponent.Done)
                             {
                                 OneRObjT = oneComponent;
-                                restOneComUserControl1.Location = new Point(itemdt.Bounds.X, itemdt.Bounds.Y+itemdt.Bounds.Height+2);
+                                restOneComUserControl1.Location = new Point(itemdt.Bounds.X, itemdt.Bounds.Y + itemdt.Bounds.Height + 2);
                                 restOneComUserControl1.Visible = true;
                                 restOneComUserControl1.BringToFront();
                                 restOneComUserControl1.UpData(OneRObjT);
@@ -218,40 +223,13 @@ namespace Vision2.vision
                 {
                     restOneComUserControl1.Visible = false;
                 }
-
-                //dataGridView1.Rows.Clear();
-                int idt = 0;
-                foreach (var item in OneProductV.GetNGCompData().DicOnes)
-                {
-         
-                    if (item.Value.Done)
-                    {
-                        if (item.Value.OK)
-                        {
-                            //dataGridView1.Rows[det].Cells[1].Value = item.Value.RestText;
-                            //dataGridView1.Rows[det].DefaultCellStyle.BackColor = Color.Green;
-                        }
-                        else
-                        {
-                            //dataGridView1.Rows[det].DefaultCellStyle.BackColor = Color.Red;
-                        }
-                    }
-                    else
-                    {
-                        if (!item.Value.OK)
-                        {
-                            //dataGridView1.Rows[det].DefaultCellStyle.BackColor = Color.Yellow;
-                        }
-                    }
-                    idt++;
-                }
             }
-            if (OneRObjT!=null)
+            if (OneRObjT != null)
             {
                 PatText += OneRObjT.ComponentID + "NG信息:" + OneRObjT.NGText + "\\" + OneProductV.NGNumber;
                 if (OneRObjT.ComponentID != "")
                 {
-                    PatText += ";位号:" + OneRObjT.ComponentID + Environment.NewLine;
+                    //PatText += ";位号:" + OneRObjT.ComponentID + Environment.NewLine;
                 }
                 restOneComUserControl1.UpData(OneRObjT);
             }
@@ -278,38 +256,47 @@ namespace Vision2.vision
                                 Vision.SetFont(hWindowControl3.HalconWindow);
                                 HOperatorSet.SetColor(hWindowControl3.HalconWindow, "red");
                             }
-                            catch (Exception)  { }
+                            catch (Exception) { }
                             HObject imaget = new HObject();
                             imaget.GenEmptyObj();
                             //HOperatorSet.ReadImage(out HObject imaget, Vision.VisionPath + "Image\\" + OneRImage.LiyID + ".bmp");
-                            if (File.Exists(Vision.VisionPath + "Image\\" + OneProductV.GetNGCamName() + "拼图.jpg"))
+                            string[] images = Directory.GetFiles(Vision.VisionPath + "Image\\");
+                            List<string> imageStr = new List<string>(images);
+                            bool isbde = false;
+                            for (int i = 0; i < images.Length; i++)
                             {
-                                HOperatorSet.ReadImage(out imaget, Vision.VisionPath + "Image\\" + OneProductV.GetNGCamName() + "拼图.jpg");
+                                if (images[i].StartsWith(Vision.VisionPath + "Image\\" + OneProductV.GetNGCamName() + "拼图"))
+                                {
+                                    HOperatorSet.ReadImage(out imaget, images[i]);
+                                    isbde = true;
+                                    break;
+                                }
                             }
-                            else
+                            if (!isbde)
                             {
-                                hWindowControl4.HalconWindow.DispText( "未创建参考图片"+ OneProductV.GetNGCamName() , "window", 0, 0, "red", new HTuple(), new HTuple());
+                                hWindowControl4.HalconWindow.DispText("未创建参考图片" + OneProductV.GetNGCamName(), "window", 0, 0, "red", new HTuple(), new HTuple());
                             }
+
                             HOperatorSet.SelectObj(item.Value.NGROI, out HObject hObject1, 1);
                             hObject1 = Vision.XLD_To_Region(hObject1);
                             HOperatorSet.SmallestRectangle1(hObject1, out HTuple row1, out HTuple col1, out HTuple row2, out HTuple clo2);
                             if (row1.Length != 0)
                             {
-                                 HOperatorSet.AreaCenter(hObject1, out HTuple area, out HTuple row, out HTuple col);
-                                 HOperatorSet.GenContourPolygonXld(out HObject hObject, new HTuple(row, row), new HTuple(new HTuple(0), col1));
-                                 HOperatorSet.GenContourPolygonXld(out HObject hObject2, new HTuple(new HTuple(0), row1), new HTuple(col, col));
-                                 HOperatorSet.GenContourPolygonXld(out HObject hObject3, new HTuple(new HTuple(row), row), new HTuple(clo2, wid));
-                                 HOperatorSet.GenContourPolygonXld(out HObject hObject4, new HTuple(new HTuple(row2), hei), new HTuple(col, col));
-                                 HWindd.OneResIamge.SetCross(hObject.ConcatObj(hObject2).ConcatObj(hObject3).ConcatObj(hObject4));
-                                 double d = (double)wid / (double)hei;
-                                 hWindowControl3.HalconWindow.SetPart(row1 - (200*1),col1 -(200 * d), row2 + (200 * 1), clo2 + (200 * d));
-                                 hWindowControl4.HalconWindow.SetPart(row1 - (200*1),col1 -(200 * d), row2 + (200 * 1), clo2 + (200 * d));
+                                HOperatorSet.AreaCenter(hObject1, out HTuple area, out HTuple row, out HTuple col);
+                                HOperatorSet.GenContourPolygonXld(out HObject hObject, new HTuple(row, row), new HTuple(new HTuple(0), col1));
+                                HOperatorSet.GenContourPolygonXld(out HObject hObject2, new HTuple(new HTuple(0), row1), new HTuple(col, col));
+                                HOperatorSet.GenContourPolygonXld(out HObject hObject3, new HTuple(new HTuple(row), row), new HTuple(clo2, wid));
+                                HOperatorSet.GenContourPolygonXld(out HObject hObject4, new HTuple(new HTuple(row2), hei), new HTuple(col, col));
+                                HWindd.OneResIamge.SetCross(hObject.ConcatObj(hObject2).ConcatObj(hObject3).ConcatObj(hObject4));
+                                double d = (double)wid / (double)hei;
+                                hWindowControl3.HalconWindow.SetPart(row1 - (200 * 1), col1 - (200 * d), row2 + (200 * 1), clo2 + (200 * d));
+                                hWindowControl4.HalconWindow.SetPart(row1 - (200 * 1), col1 - (200 * d), row2 + (200 * 1), clo2 + (200 * d));
                             }
                             else
                             {
                                 hObject1 = Vision.XLD_To_Region(item.Value.ROI);
-                                HOperatorSet.SmallestRectangle1(hObject1, out  row1, out  col1, out  row2, out  clo2);
-                                if (row1.Length!=0)
+                                HOperatorSet.SmallestRectangle1(hObject1, out row1, out col1, out row2, out clo2);
+                                if (row1.Length != 0)
                                 {
                                     HOperatorSet.AreaCenter(hObject1, out HTuple area, out HTuple row, out HTuple col);
                                     HOperatorSet.GenContourPolygonXld(out HObject hObject, new HTuple(row, row), new HTuple(new HTuple(0), col1));
@@ -324,8 +311,10 @@ namespace Vision2.vision
                             }
                             hWindowControl3.HalconWindow.DispObj(OneProductV.GetNGImage());
                             hWindowControl4.HalconWindow.DispObj(imaget);
-                            hWindowControl3.HalconWindow.DispObj(item.Value.NGROI);
-                            hWindowControl3.HalconWindow.DispText(item.Value.NGText+ "{" + item.Value.NGText + "}", "window", 0, 0, "red", new HTuple(), new HTuple());
+                            HOperatorSet.DilationCircle(hObject1, out HObject hObject5, 50);
+                            HOperatorSet.AreaCenter(item.Value.NGROI, out HTuple areas, out HTuple rows, out HTuple colus);
+                            hWindowControl3.HalconWindow.DispObj(hObject5);
+                            hWindowControl3.HalconWindow.DispText(item.Value.NGText + "{" + item.Value.NGText + "}", "window", 0, 0, "red", new HTuple(), new HTuple());
                             break;
                         }
                     }
@@ -341,7 +330,7 @@ namespace Vision2.vision
         {
             try
             {
-                if (OneProductV.PanelID=="")
+                if (OneProductV.PanelID == "")
                 {
                     textBox1.Focus();
                     MessageBox.Show("SN为空,请输入SN");
@@ -373,14 +362,14 @@ namespace Vision2.vision
                             Thread.Sleep(1000);
                             this.Hide();
                         }
-                        catch (Exception)         { }
+                        catch (Exception) { }
                     });
                     thread.IsBackground = true;
                     thread.Start();
                 }
                 TrayImage = null;
             }
-            catch (Exception ex) {}
+            catch (Exception ex) { }
         }
 
         private void RestObjImage_Load(object sender, EventArgs e)
@@ -400,7 +389,7 @@ namespace Vision2.vision
                                     if (TrayImageTs.Count != 0)
                                     {
                                         TrayImage = TrayImageTs.Dequeue();
-                                 
+
                                         trayDatas1.Initialize(TrayImage);
                                         //trayDatas1.SetTray(TrayImage);
                                         TrayImage.SetITrayRobot(trayDatas1);
@@ -417,32 +406,36 @@ namespace Vision2.vision
                                                 }
                                                 foreach (var item in TrayImage.GetDataVales())
                                                 {
-                                                    if (item.Done && item.OK)
+                                                    if (item.Done || item.OK)
                                                     {
                                                         continue;
                                                     }
 
-                                                     OneProductV = item;
-                                                     treeView1.Nodes.Clear();
-                                                     treeView2.Nodes.Clear();
+                                                    OneProductV = item;
+                                                    trayDatas1.SelesItem(OneProductV.TrayLocation);
+                                                    treeView1.Nodes.Clear();
+                                                    treeView2.Nodes.Clear();
 
                                                     foreach (var itemdt in OneProductV.ListCamsData)
                                                     {
-                                                         TreeNode treeNode=    treeView1.Nodes.Add(itemdt.Key);
+                                                        TreeNode treeNode = treeView1.Nodes.Add(itemdt.Key);
                                                         treeNode.Tag = itemdt.Value;
                                                         TreeNode treeNodeOK = treeView2.Nodes.Add(itemdt.Key);
                                                         treeNodeOK.Tag = itemdt.Value;
                                                         foreach (var itemdte in itemdt.Value.AllCompObjs.DicOnes)
                                                         {
-                                                            TreeNode treeNode1= treeNodeOK.Nodes.Add(itemdte.Key);
-                                                            treeNode1.Tag = itemdte.Value; 
+                                                            TreeNode treeNode1 = treeNodeOK.Nodes.Add(itemdte.Key);
+                                                            treeNode1.Tag = itemdte.Value;
                                                             treeNode1.ImageIndex = 6;
                                                         }
                                                         foreach (var itemdte in itemdt.Value.NGObj.DicOnes)
                                                         {
-                                                            TreeNode treeNode1 = treeNode.Nodes.Add(itemdte.Key);
-                                                            treeNode1.Tag = itemdte.Value;
-                                                            treeNode1.ImageIndex = 5;
+                                                            if (!itemdte.Value.OK)
+                                                            {
+                                                                TreeNode treeNode1 = treeNode.Nodes.Add(itemdte.Key);
+                                                                treeNode1.Tag = itemdte.Value;
+                                                                treeNode1.ImageIndex = 5;
+                                                            }
                                                         }
                                                         treeNodeOK.Expand();
                                                         treeNode.Expand();
@@ -466,7 +459,7 @@ namespace Vision2.vision
                                             catch (Exception ex)
                                             {
                                                 ErosProjcetDLL.Project.AlarmText.AddTextNewLine("复判窗口:" + ex.StackTrace, Color.Red);
-                                            }      
+                                            }
                                         }));
                                     }
                                 }
@@ -483,7 +476,7 @@ namespace Vision2.vision
                         ErosProjcetDLL.Project.AlarmText.AddTextNewLine("复判窗口:" + ex.Message, Color.Red);
                     }
                 });
-                
+
                 thread.IsBackground = true;
                 thread.Start();
             }
@@ -491,11 +484,13 @@ namespace Vision2.vision
             {
             }
         }
+
         private void RestObjImage_FormClosing(object sender, FormClosingEventArgs e)
         {
             this.WindowState = FormWindowState.Minimized;
             e.Cancel = true;
         }
+
         private void RestObjImage_KeyDown(object sender, KeyEventArgs e)
         {
             try
@@ -513,10 +508,9 @@ namespace Vision2.vision
                         {
                             treeView1.Nodes.Clear();
                             treeView2.Nodes.Clear();
-
                             for (int i = 0; i < TrayImage.Count; i++)
                             {
-                                if (TrayImage.GetDataVales()[i]!=null)
+                                if (TrayImage.GetDataVales()[i] != null)
                                 {
                                     if (TrayImage.GetDataVales()[i].OK)
                                     {
@@ -525,14 +519,18 @@ namespace Vision2.vision
                                     if (!TrayImage.GetDataVales()[i].Done)
                                     {
                                         OneProductV = TrayImage.GetDataVales()[i];
+                                        trayDatas1.SelesItem(OneProductV.TrayLocation);
                                         foreach (var item in OneProductV.ListCamsData)
                                         {
-                                             TreeNode treeNode=  treeView1.Nodes.Add(item.Key);
-                                             foreach (var itemdt in item.Value.NGObj.DicOnes)
+                                            TreeNode treeNode = treeView1.Nodes.Add(item.Key);
+                                            foreach (var itemdt in item.Value.NGObj.DicOnes)
                                             {
-                                                TreeNode treeNode1= treeNode.Nodes.Add(itemdt.Key);
-                                                treeNode1.Tag = itemdt.Value;
-                                                treeNode1.ImageIndex = 6;
+                                                if (!itemdt.Value.OK)
+                                                {
+                                                    TreeNode treeNode1 = treeNode.Nodes.Add(itemdt.Key);
+                                                    treeNode1.Tag = itemdt.Value;
+                                                    treeNode1.ImageIndex = 6;
+                                                }
                                             }
                                             TreeNode treeNodeOK = treeView2.Nodes.Add(item.Key);
 
@@ -580,9 +578,9 @@ namespace Vision2.vision
                                 OneProductV.Done = true;
                                 OneProductV.OK = true;
                             }
-                         }
-                         else
-                         {
+                        }
+                        else
+                        {
                             if (TrayImage.Done)
                             {
                                 button1_Click(null, null);
@@ -597,7 +595,7 @@ namespace Vision2.vision
                                 OneProductV.Done = true;
                                 OneProductV.OK = false;
                             }
-                         }
+                        }
                         if (OneProductV.OK)
                         {/*.SetNumberValue(OneProductV.TrayLocation, OneProductV.OK);*/
                             TrayImage.GetITrayRobot().UpData();
@@ -609,15 +607,14 @@ namespace Vision2.vision
                             label1.Text = "NG";
                             label1.BackColor = Color.Red;
                         }
-                        //UpData();
-                    }else  if (e.KeyCode==Keys.D1)
+                    }
+                    else if (e.KeyCode == Keys.D1)
                     {
                         restOneComUserControl1.SetRest(1);
                     }
-                    else  if(e.KeyCode == Keys.D2)
+                    else if (e.KeyCode == Keys.D2)
                     {
                         restOneComUserControl1.SetRest(2);
-                        
                     }
                     else if (e.KeyCode == Keys.D3)
                     {
@@ -645,11 +642,12 @@ namespace Vision2.vision
                     }
                     UpData();
                 }
-             }
-             catch (Exception ex)
-             {
+            }
+            catch (Exception ex)
+            {
             }
         }
+
         private void RestObjImage_Resize(object sender, EventArgs e)
         {
             try
@@ -668,14 +666,7 @@ namespace Vision2.vision
             try
             {
                 int i = 0;
-                //foreach (var item in OneProductV.GetNGCompData().DicOnes)
-                //{
-                //    if (!item.Value.Done)
-                //    {
-                //        dataGridView1.Rows[i].DefaultCellStyle.BackColor = Color.White;
-                //    }
-                //    i++;
-                //}
+
                 UpData();
                 HWindd.ShowImage();
             }
@@ -715,12 +706,14 @@ namespace Vision2.vision
                 MessageBox.Show(ex.Message);
             }
         }
+
         //需添加using System.Runtime.InteropServices;
         [DllImport("user32.dll")]
         public static extern bool ReleaseCapture();
 
         [DllImport("user32.dll")]
         public static extern bool SendMessage(IntPtr hwnd, int wMsg, int wParam, int lParam);
+
         private void toolStrip1_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
@@ -744,6 +737,7 @@ namespace Vision2.vision
                 }
             }
         }
+
         public virtual void SetFormMax(Form frm)
         {
             frm.Top = 0;
@@ -767,7 +761,7 @@ namespace Vision2.vision
         {
             try
             {
-                if (MessageBox.Show("取消提交将不处理当前产品！", "是否取消提交？", MessageBoxButtons.YesNo)==DialogResult.Yes)
+                if (MessageBox.Show("取消提交将不处理当前产品！", "是否取消提交？", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
                     timer1.Start();
                     hWindowControl1.Focus();
@@ -796,36 +790,61 @@ namespace Vision2.vision
             }
         }
 
-
         private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
         {
             try
             {
-                 UpData();
-                 HWindd.ShowImage();
+                UpData();
+                HWindd.ShowImage();
             }
             catch (Exception)
             {
             }
         }
-        OneNGDataMinMaxControl oneNGDataMinMaxControl;
+
+        private OneNGDataMinMaxControl oneNGDataMinMaxControl;
+
         private void treeView2_AfterSelect(object sender, TreeViewEventArgs e)
         {
             try
             {
-                OneComponent one= e.Node.Tag as OneComponent;
-                if (oneNGDataMinMaxControl==null)
+                OneComponent one = e.Node.Tag as OneComponent;
+                if (oneNGDataMinMaxControl == null)
                 {
                     oneNGDataMinMaxControl = new OneNGDataMinMaxControl();
                     panel5.Controls.Add(oneNGDataMinMaxControl);
                 }
-
                 panel5.AutoScroll = true;
                 oneNGDataMinMaxControl.Dock = DockStyle.Top;
                 oneNGDataMinMaxControl.UpDataMax(one.oneRObjs[0].dataMinMax);
-             
             }
             catch (Exception ex)
+            {
+            }
+        }
+
+        private void RestObjImage_VisibleChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (Vision.Instance.RestWait)
+                {
+                    if (this.Visible)
+                    {
+                        Project.DebugF.IO.DODIAxis.RresOK = false;
+                        Project.DebugF.IO.DODIAxis.RresWait = true;
+                    }
+                    else
+                    {
+                        Project.DebugF.IO.DODIAxis.RresOK = false;
+                        Project.DebugF.IO.DODIAxis.RresWait = false;
+                    }
+                }
+                else
+                {
+                }
+            }
+            catch (Exception)
             {
             }
         }

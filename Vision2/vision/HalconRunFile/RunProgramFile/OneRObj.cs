@@ -1,11 +1,6 @@
 ﻿using HalconDotNet;
-using System;
 using System.Collections.Generic;
-using Vision2.Project.Mes;
-using ErosSocket.DebugPLC.Robot;
-using static Vision2.vision.HalconRunFile.RunProgramFile.RunProgram;
 using Vision2.Project.formula;
-using static Vision2.vision.Vision;
 
 namespace Vision2.vision.HalconRunFile.RunProgramFile
 {
@@ -20,6 +15,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         public string MassageBlute = "false";
 
         public string color = "red";
+
         public void ShowMassage(HTuple hWindowHalconID)
         {
             for (int i = 0; i < Massage.Count; i++)
@@ -30,6 +26,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 }
             }
         }
+
         public void AddImageMassage(HTuple rows, HTuple columns, HTuple Massage)
         {
             if (columns.Length != Massage.Length)
@@ -54,15 +51,18 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         public HObject ROI;
 
         public HObject NGROI = new HObject();
+
         public OneRObj()
         {
             NGROI.GenEmptyObj();
         }
+
         public OneRObj(OneRObj oneRObj)
         {
             this.ComponentID = oneRObj.ComponentID;
             this.RestText = oneRObj.RestText;
             this.NGText = oneRObj.NGText;
+
             this.dataMinMax = oneRObj.dataMinMax;
             this.Done = oneRObj.Done;
             this.NGROI = oneRObj.NGROI;
@@ -72,9 +72,10 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             //oneOdatas.AddRange(oneOdat);
             this.RestStrings = oneRObj.RestStrings;
         }
-       /// <summary>
-       /// 参数集合
-       /// </summary>
+
+        /// <summary>
+        /// 参数集合
+        /// </summary>
         public DataMinMax dataMinMax = new DataMinMax();
 
         public bool OK;
@@ -82,14 +83,35 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         public bool Done;
 
         public string RunName = "";
+
         /// <summary>
         /// 元件名称
         /// </summary>
         public string ComponentID { get; set; } = "";
+
         /// <summary>
         /// NG选项
         /// </summary>
-        public string NGText;
+        public string NGText
+        {
+            get { return ngText; }
+            set
+            {
+                if (CNGText == null)
+                {
+                    CNGText = value;
+                }
+                ngText = value;
+            }
+        }
+
+        private string ngText = "";
+
+        /// <summary>
+        /// 机器NG判断
+        /// </summary>
+        public string CNGText;
+
         /// <summary>
         /// 复判缺陷
         /// </summary>
@@ -99,7 +121,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
 
         public void RAddOK()
         {
-            if (ROI!=null)
+            if (ROI != null)
             {
                 ROI.GenEmptyObj();
             }
@@ -108,10 +130,11 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 NGROI.GenEmptyObj();
             }
             RestText = "OK";
-         
+
             OK = true;
             Done = true;
         }
+
         public void RAddNG(string restText)
         {
             if (ROI != null)
@@ -127,6 +150,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             OK = false;
         }
     }
+
     /// <summary>
     /// 元件集合
     /// </summary>
@@ -140,27 +164,47 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             }
             DicOnes[oneRObj.ComponentID].oneRObjs.Add(oneRObj);
         }
-  
+
+        public void Add(OneComponent oneRObj)
+        {
+            if (!DicOnes.ContainsKey(oneRObj.ComponentID))
+            {
+                DicOnes.Add(oneRObj.ComponentID, oneRObj);
+            }
+            else
+            {
+            }
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
         public Dictionary<string, OneComponent> DicOnes = new Dictionary<string, OneComponent>();
-       /// <summary>
-       /// 单个元件缺陷集合
-       /// </summary>
+
+        /// <summary>
+        /// 单个元件,_缺陷集合
+        /// </summary>
         public class OneComponent
         {
             public List<OneRObj> oneRObjs = new List<OneRObj>();
 
-            public void AddNgObj(string ngText,string conam,HTuple restString,HObject roi,HObject NGerr,DataMinMax dataMinMax)
+            public void AddNgObj(string ngText, string conam, HTuple restString, HObject roi, HObject NGerr, DataMinMax dataMinMax)
             {
-                OneRObj oneRObj = new OneRObj() { NGText = NGText, ComponentID = conam, ROI =roi,NGROI = NGerr,dataMinMax= dataMinMax };
+                OneRObj oneRObj = new OneRObj() { NGText = NGText, ComponentID = conam, ROI = roi, NGROI = NGerr, dataMinMax = dataMinMax };
                 oneRObj.RestStrings.AddRange(restString.ToSArr());
                 oneRObjs.Add(oneRObj);
             }
-            public bool OK { get {
+
+            public bool OK
+            {
+                get
+                {
                     for (int i = 0; i < oneRObjs.Count; i++)
                     {
                         if (!oneRObjs[i].OK) return false;
                     }
-                    return true;  }
+                    return true;
+                }
                 set
                 {
                     for (int i = 0; i < oneRObjs.Count; i++)
@@ -168,15 +212,18 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         oneRObjs[i].OK = value;
                     }
                 }
-              }
+            }
+
             public string ComponentID { get; set; } = "";
+
             public bool Done
             {
                 get
                 {
                     for (int i = 0; i < oneRObjs.Count; i++)
                     {
-                        if (!oneRObjs[i].Done) return false;
+                        if (!oneRObjs[i].Done)
+                            return false;
                     }
                     return true;
                 }
@@ -185,13 +232,13 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 {
                     for (int i = 0; i < oneRObjs.Count; i++)
                     {
-                        oneRObjs[i].Done = value; 
+                        oneRObjs[i].Done = value;
                     }
-      
                 }
             }
-            public string NGText {
 
+            public string NGText
+            {
                 get
                 {
                     string data = "";
@@ -205,11 +252,31 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     }
                     return data;
                 }
-
             }
 
-            public List<string> RestStrings {
-                get 
+            public string CNGText
+            {
+                get
+                {
+                    string data = "";
+                    foreach (var item in oneRObjs)
+                    {
+                        if (!item.Done)
+                        {
+                            return item.CNGText;
+                        }
+                        data += item.CNGText + ";";
+                    }
+                    return data;
+                }
+            }
+
+            /// <summary>
+            ///
+            /// </summary>
+            public List<string> RestStrings
+            {
+                get
                 {
                     //List<string> vs = new List<string>();
                     foreach (var item in oneRObjs)
@@ -225,14 +292,25 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     return restStrings;
                 }
                 set { restStrings = value; }
-
             }
-            List<string> restStrings = new List<string>();
+
+            /// <summary>
+            ///
+            /// </summary>
+            private List<string> restStrings = new List<string>();
+
+            /// <summary>
+            ///
+            /// </summary>
             public string RestText
             {
                 get
                 {
                     string data = "";
+                    if (OK)
+                    {
+                        data = "OK;";
+                    }
                     foreach (var item in oneRObjs)
                     {
                         if (!item.Done)
@@ -244,7 +322,9 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     return data;
                 }
             }
-            public HObject NGROI {
+
+            public HObject NGROI
+            {
                 get
                 {
                     foreach (var item in oneRObjs)
@@ -254,8 +334,8 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                             return item.NGROI;
                         }
                     }
-                    return new  HObject();  
-              }
+                    return new HObject();
+                }
             }
 
             public HObject ROI
@@ -269,7 +349,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                             return item.ROI;
                         }
                     }
-                    return new HObject(); 
+                    return new HObject();
                 }
             }
 
@@ -286,8 +366,8 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         break;
                     }
                 }
-
             }
+
             public void RAddNG(string restText)
             {
                 foreach (var item in oneRObjs)
@@ -302,10 +382,6 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     }
                 }
             }
-
         }
-
     }
-
-
 }

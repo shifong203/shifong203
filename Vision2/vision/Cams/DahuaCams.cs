@@ -1,10 +1,9 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
+
 //using System.Threading.Tasks;
 using System.Windows.Forms;
 using ThridLibray;
-
 
 namespace Vision2.vision.Cams
 {
@@ -14,9 +13,11 @@ namespace Vision2.vision.Cams
         {
             InitializeComponent();
         }
+
         /* 设备对象 */
         private ThridLibray.IDevice m_dev;
-        List<IDeviceInfo> li;
+        private List<IDeviceInfo> li;
+
         private void button1_Click(object sender, EventArgs e)
         {
             try
@@ -28,9 +29,7 @@ namespace Vision2.vision.Cams
                 {
                     for (int i = 0; i < li.Count; i++)
                     {
-
                         listBox2.Items.Add(li[i].Key);
-
                     }
                 }
             }
@@ -38,31 +37,23 @@ namespace Vision2.vision.Cams
             {
                 MessageBox.Show(ex.Message);
             }
-
-
         }
 
         private void DahuaCams_Load(object sender, EventArgs e)
         {
             try
             {
-
-
-
                 /* 设备搜索 */
                 li = Enumerator.EnumerateDevices();
                 if (li.Count > 0)
                 {
                     for (int i = 0; i < li.Count; i++)
                     {
-
                         listBox2.Items.Add(li[i].Key);
                     }
-
                 }
                 foreach (var item in Vision.Instance.RunCams)
                 {
-
                     listBox1.Items.Add(item.Key);
                 }
             }
@@ -88,8 +79,6 @@ namespace Vision2.vision.Cams
                         listBox1.Items.Add(listBox2.SelectedItem.ToString());
                     }
                 }
-
-
             }
             catch (Exception ex)
             {
@@ -97,10 +86,8 @@ namespace Vision2.vision.Cams
             }
         }
 
-
         private void listBox2_SelectedIndexChanged(object sender, EventArgs e)
         {
-
             try
             {
                 if (li == null)
@@ -139,14 +126,11 @@ namespace Vision2.vision.Cams
                 {
                     MessageBox.Show("设置失败");
                 }
-
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
-
-
         }
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -155,8 +139,6 @@ namespace Vision2.vision.Cams
             {
                 if (listBox1.SelectedItem != null)
                 {
-
-
                     if (Vision.GetNameCam(listBox1.SelectedItem.ToString()) != null)
                     {
                         IDevice m_deve = Vision.GetNameCam(listBox1.SelectedItem.ToString()).GetIDevice() as IDevice;

@@ -24,40 +24,41 @@ namespace Vision2.Project.DebugF.IO
             ErosProjcetDLL.UI.DataGridViewF.StCon.AddCon(dataGridView3);
             //ErosProjcetDLL.UI.DataGridViewF.StCon.AddCon(dataGridView4);
         }
-        HWindID HWindID2 = new HWindID();
 
-        HWindID HWindNt = new HWindID();
+        private HWindID HWindID2 = new HWindID();
 
-        ProductEX productEX;
+        private HWindID HWindNt = new HWindID();
 
+        private ProductEX productEX;
 
-        List<XYZPoint> xYZPoints;
+        private List<XYZPoint> xYZPoints;
 
-        List<XYZPoint> RelativelyPoint;
-        List<ProductEX.Relatively.PointType> RelNamePoints;
+        private List<XYZPoint> RelativelyPoint;
+        private List<ProductEX.Relatively.PointType> RelNamePoints;
 
-        bool isCot = false;
+        private bool isCot = false;
 
-        工艺库.MatrixC MatrixC;
+        private 工艺库.MatrixC MatrixC;
+
         private void DDAxis_UpCycle(DODIAxis key)
         {
             try
             {
                 if (this.IsDisposed)
                 {
-                    DebugCompiler.GetThis().DDAxis.UpCycle -= DDAxis_UpCycle;
+                    DebugCompiler.Instance.DDAxis.UpCycle -= DDAxis_UpCycle;
                 }
                 if (this.InvokeRequired)
                 {
                     this.Invoke(new Action<DODIAxis>(DDAxis_UpCycle), key);
                     return;
                 }
-
             }
             catch (Exception)
             {
             }
         }
+
         private void MP_C154Form1_Load(object sender, EventArgs e)
         {
             try
@@ -72,19 +73,19 @@ namespace Vision2.Project.DebugF.IO
                 listBox1.Items.AddRange(Vision2.Project.formula.RecipeCompiler.Instance.ProductEX.Keys.ToArray());
 
                 this.didoUserControl1.setDODI(DebugCompiler.GetDoDi());
-
+                didoUserControl1.Visible = false;
                 Column8.Items.AddRange(Enum.GetNames(typeof(EnumXYZUMoveType)));
                 Column11.Items.AddRange(Enum.GetNames(typeof(ProductEX.Relatively.EnumPointType)));
                 dataGridViewComboBoxColumn3.Items.AddRange(Enum.GetNames(typeof(EnumXYZUMoveType)));
-                DebugCompiler.GetThis().DDAxis.UpCycle += DDAxis_UpCycle;
+                DebugCompiler.Instance.DDAxis.UpCycle += DDAxis_UpCycle;
                 //checkBox1.Checked = DODIAxis.Single_step;
-                Column7.Items.AddRange(DebugCompiler.GetThis().DDAxis.AxisGrot.Keys.ToArray());
-                dataGridViewComboBoxColumn4.Items.AddRange(DebugCompiler.GetThis().DDAxis.AxisGrot.Keys.ToArray());
+                Column7.Items.AddRange(DebugCompiler.Instance.DDAxis.AxisGrot.Keys.ToArray());
+                dataGridViewComboBoxColumn4.Items.AddRange(DebugCompiler.Instance.DDAxis.AxisGrot.Keys.ToArray());
 
                 Point point = new Point();
                 int sdt = 0;
                 listBox5.Items.Clear();
-                for (int it = 0; it < DebugCompiler.GetThis().DDAxis.ListTray.Count; it++)
+                for (int it = 0; it < DebugCompiler.Instance.DDAxis.ListTray.Count; it++)
                 {
                     listBox5.Items.Add(it);
                 }
@@ -94,31 +95,30 @@ namespace Vision2.Project.DebugF.IO
                 HWindID2.OneResIamge = new OneResultOBj();
 
                 listBox6.Items.Clear();
-                for (int it = 0; it < DebugCompiler.GetThis().ListMatrix.Count; it++)
+                for (int it = 0; it < DebugCompiler.Instance.ListMatrix.Count; it++)
                 {
                     listBox6.Items.Add(it);
                 }
 
-                runCodeUserControl1.SetData(DebugCompiler.GetThis().DDAxis.RunCodeT);
-                runCodeUserControl2.SetData(DebugCompiler.GetThis().DDAxis.HomeCodeT);
-                runCodeUserControl3.SetData(DebugCompiler.GetThis().DDAxis.StopCodeT);
-                runCodeUserControl4.SetData(DebugCompiler.GetThis().DDAxis.CPKCodeT);
-
+                runCodeUserControl1.SetData(DebugCompiler.Instance.DDAxis.RunCodeT);
+                runCodeUserControl2.SetData(DebugCompiler.Instance.DDAxis.HomeCodeT);
+                runCodeUserControl3.SetData(DebugCompiler.Instance.DDAxis.StopCodeT);
+                runCodeUserControl4.SetData(DebugCompiler.Instance.DDAxis.CPKCodeT);
 
                 int i = 0;
-                foreach (var item in DebugCompiler.GetThis().DDAxis.AxisS)
+                foreach (var item in DebugCompiler.Instance.DDAxis.AxisS)
                 {
                     ErosSocket.DebugPLC.PLC.AxisControl axis = new ErosSocket.DebugPLC.PLC.AxisControl(item);
                     tabPage2.Controls.Add(axis);
-                    int sd = i / 3;
-                    int dt = i % 3;
+                    int sd = i / 5;
+                    int dt = i % 5;
                     axis.Location = new Point(new Size(axis.Width * dt, axis.Height * sd));
                     point = axis.Location;
                     i++;
                     sdt = axis.Height + axis.Location.Y;
                 }
                 i = 0;
-                foreach (var item in DebugCompiler.GetThis().DDAxis.Cylinders)
+                foreach (var item in DebugCompiler.Instance.DDAxis.Cylinders)
                 {
                     CylinderControl CylinderControlT = new CylinderControl(item);
                     tabPage2.Controls.Add(CylinderControlT);
@@ -127,7 +127,7 @@ namespace Vision2.Project.DebugF.IO
                     CylinderControlT.Location = new Point(new Size(CylinderControlT.Width * dt, sdt + CylinderControlT.Height * sd));
                     i++;
                 }
-                if (DebugCompiler.GetThis().DDAxis.AxisS.Count == 0 && DebugCompiler.GetThis().DDAxis.Cylinders.Count == 0)
+                if (DebugCompiler.Instance.DDAxis.AxisS.Count == 0 && DebugCompiler.Instance.DDAxis.Cylinders.Count == 0)
                 {
                     tabControl1.TabPages.Remove(tabPage2);
                 }
@@ -138,7 +138,7 @@ namespace Vision2.Project.DebugF.IO
             }
             catch (Exception ex)
             {
-                MessageBox.Show( "位置加载:"+ex.Message);
+                MessageBox.Show("位置加载:" + ex.Message);
             }
 
             isCot = false;
@@ -146,7 +146,6 @@ namespace Vision2.Project.DebugF.IO
 
         private void 添加新点ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
             try
             {
                 isCot = true;
@@ -167,12 +166,9 @@ namespace Vision2.Project.DebugF.IO
             }
             catch (Exception)
             {
-
             }
 
             isCot = false;
-
-
         }
 
         private void 移动到点位ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -183,7 +179,7 @@ namespace Vision2.Project.DebugF.IO
                 Thread thread = new Thread(() =>
                 {
                     Enum.TryParse<EnumXYZUMoveType>(this.dataGridView1.Rows[de].Cells[6].Value.ToString(), out EnumXYZUMoveType enumXYZUMoveType);
-                    bool flag2 = DebugCompiler.GetThis().DDAxis.SetXYZ1Points(this.dataGridView1.Rows[de].Cells[7].Value.ToString(), 15,
+                    bool flag2 = DebugCompiler.Instance.DDAxis.SetXYZ1Points(this.dataGridView1.Rows[de].Cells[7].Value.ToString(), 15,
                       double.Parse(this.dataGridView1.Rows[de].Cells[1].Value.ToString()), double.Parse(this.dataGridView1.Rows[de].Cells[2].Value.ToString()),
                   Convert.ToDouble(this.dataGridView1.Rows[de].Cells[3].Value), Convert.ToDouble(this.dataGridView1.Rows[de].Cells[4].Value), enumXYZUMoveType);
                 });
@@ -195,6 +191,7 @@ namespace Vision2.Project.DebugF.IO
                 MessageBox.Show(ex.Message);
             }
         }
+
         private void 删除点ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
@@ -229,11 +226,10 @@ namespace Vision2.Project.DebugF.IO
                         this.dataGridView1.Rows[de].DefaultCellStyle.BackColor = Color.Green;
                         Thread thread = new Thread(() =>
                         {
-
                             try
                             {
                                 Enum.TryParse<EnumXYZUMoveType>(this.dataGridView1.Rows[e.RowIndex].Cells[6].Value.ToString(), out EnumXYZUMoveType enumXYZUMoveType);
-                                bool flag2 = DebugCompiler.GetThis().DDAxis.SetXYZ1Points(this.dataGridView1.Rows[de].Cells[7].Value.ToString(), 15,
+                                bool flag2 = DebugCompiler.Instance.DDAxis.SetXYZ1Points(this.dataGridView1.Rows[de].Cells[7].Value.ToString(), 15,
                            double.Parse(this.dataGridView1.Rows[de].Cells[1].Value.ToString()), double.Parse(this.dataGridView1.Rows[de].Cells[2].Value.ToString()),
                          Convert.ToDouble(this.dataGridView1.Rows[de].Cells[3].Value), Convert.ToDouble(this.dataGridView1.Rows[de].Cells[4].Value),
                            enumXYZUMoveType);
@@ -264,9 +260,7 @@ namespace Vision2.Project.DebugF.IO
                             }
                             catch (Exception ex)
                             {
-
                             }
-
                         });
                         thread.IsBackground = true;
                         thread.Start();
@@ -280,10 +274,8 @@ namespace Vision2.Project.DebugF.IO
             }
             catch (Exception ex)
             {
-
             }
         }
-
 
         private void dataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
@@ -310,19 +302,15 @@ namespace Vision2.Project.DebugF.IO
                         MessageBox.Show(e.RowIndex.ToString() + "Y值错误");
                     }
 
-        
-
-                    if (this.dataGridView1.Rows[e.RowIndex].Cells[3].Value!=null)
+                    if (this.dataGridView1.Rows[e.RowIndex].Cells[3].Value != null)
                     {
-
                         xYZPoints[e.RowIndex].Z = Convert.ToDouble(this.dataGridView1.Rows[e.RowIndex].Cells[3].Value);
-         
                     }
                     else
                     {
                         //MessageBox.Show(e.RowIndex.ToString() + "Z值错误");
                     }
-                    if (this.dataGridView1.Rows[e.RowIndex].Cells[4].Value!=null)
+                    if (this.dataGridView1.Rows[e.RowIndex].Cells[4].Value != null)
                     {
                         if (double.TryParse(this.dataGridView1.Rows[e.RowIndex].Cells[4].Value.ToString(), out eX))
                         {
@@ -333,7 +321,7 @@ namespace Vision2.Project.DebugF.IO
                             MessageBox.Show(e.RowIndex.ToString() + "U值错误");
                         }
                     }
-             
+
                     int iX;
 
                     if (int.TryParse(this.dataGridView1.Rows[e.RowIndex].Cells[5].Value.ToString(), out iX))
@@ -353,9 +341,6 @@ namespace Vision2.Project.DebugF.IO
                         xYZPoints[e.RowIndex].AxisGrabName = this.dataGridView1.Rows[e.RowIndex].Cells[7].Value.ToString();
                     }
                     this.dataGridView1.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.White;
-
-
-
                 }
                 catch (Exception)
                 {
@@ -365,7 +350,6 @@ namespace Vision2.Project.DebugF.IO
 
         private void tabPage1_Click(object sender, EventArgs e)
         {
-
         }
 
         private void 读取当前位置ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -374,7 +358,7 @@ namespace Vision2.Project.DebugF.IO
             {
                 isCot = true;
                 int de = dataGridView1.SelectedCells[0].RowIndex;
-                DebugCompiler.GetThis().DDAxis.GetAxisGroupPoints(this.dataGridView1.Rows[de].Cells[7].Value.ToString(), out double? XpT, out double? Ypt, out double? zpt, out double? u);
+                DebugCompiler.Instance.DDAxis.GetAxisGroupPoints(this.dataGridView1.Rows[de].Cells[7].Value.ToString(), out double? XpT, out double? Ypt, out double? zpt, out double? u);
                 xYZPoints[de].Name = this.dataGridView1.Rows[de].Cells[0].Value.ToString();
                 xYZPoints[de].X = XpT.Value;
                 xYZPoints[de].Y = Ypt.Value;
@@ -393,23 +377,20 @@ namespace Vision2.Project.DebugF.IO
             }
             catch (Exception ex)
             {
-
-
             }
             isCot = false;
         }
 
         private void dataGridView1_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
-
         }
 
         private void listBox5_SelectedIndexChanged(object sender, EventArgs e)
         {
             try
             {
-                propertyGrid3.SelectedObject = DebugCompiler.GetThis().DDAxis.ListTray[listBox5.SelectedIndex];
-                trayControl1.SetTray(DebugCompiler.GetThis().DDAxis.ListTray[listBox5.SelectedIndex]);
+                propertyGrid3.SelectedObject = DebugCompiler.Instance.DDAxis.ListTray[listBox5.SelectedIndex];
+                trayControl1.SetTray(DebugCompiler.Instance.DDAxis.ListTray[listBox5.SelectedIndex]);
             }
             catch (Exception)
             {
@@ -420,19 +401,20 @@ namespace Vision2.Project.DebugF.IO
         {
             try
             {
-                MatrixC = DebugCompiler.GetThis().ListMatrix[listBox6.SelectedIndex];
+                MatrixC = DebugCompiler.Instance.ListMatrix[listBox6.SelectedIndex];
                 propertyGrid4.SelectedObject = MatrixC;
             }
             catch (Exception)
             {
             }
         }
+
         private void 添加点ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
             {
-                DebugCompiler.GetThis().ListMatrix.Add(new 工艺库.MatrixC());
-                listBox6.Items.Add(DebugCompiler.GetThis().ListMatrix.Count - 1);
+                DebugCompiler.Instance.ListMatrix.Add(new 工艺库.MatrixC());
+                listBox6.Items.Add(DebugCompiler.Instance.ListMatrix.Count - 1);
             }
             catch (Exception)
             {
@@ -443,7 +425,7 @@ namespace Vision2.Project.DebugF.IO
         {
             try
             {
-                DebugCompiler.GetThis().ListMatrix.RemoveAt(listBox6.SelectedIndex);
+                DebugCompiler.Instance.ListMatrix.RemoveAt(listBox6.SelectedIndex);
                 listBox6.Items.RemoveAt(listBox6.SelectedIndex);
             }
             catch (Exception ex)
@@ -454,7 +436,6 @@ namespace Vision2.Project.DebugF.IO
 
         private void button2_Click(object sender, EventArgs e)
         {
-
             try
             {
                 MatrixC.Calculate(HWindID2);
@@ -492,14 +473,14 @@ namespace Vision2.Project.DebugF.IO
                     try
                     {
                         MatrixC.Mark1Move(MatrixC.PointName);
-                        XYZPoint point = DebugCompiler.GetThis().DDAxis.GetToPoint(MatrixC.PointName);
+                        XYZPoint point = DebugCompiler.Instance.DDAxis.GetToPoint(MatrixC.PointName);
                         if (point != null)
                         {
                             HalconDotNet.HOperatorSet.GenCircle(out HalconDotNet.HObject hObject1, point.Y, point.X, 10);
                             HalconDotNet.HOperatorSet.GenCrossContourXld(out HalconDotNet.HObject hObjectxs, point.Y, point.X, 10, 0);
 
                             HWindID2.OneResIamge.AddObj(hObject1.ConcatObj(hObjectxs), ColorResult.yellow);
-                            HWindID2.OneResIamge.AddImageMassage(point.Y, point.X, "Mk1",ColorResult.green);
+                            HWindID2.OneResIamge.AddImageMassage(point.Y, point.X, "Mk1", ColorResult.green);
                         }
                     }
                     catch (Exception ex)
@@ -511,8 +492,6 @@ namespace Vision2.Project.DebugF.IO
                 thread.IsBackground = true;
 
                 thread.Start();
-
-
             }
             catch (Exception ex)
             {
@@ -534,7 +513,7 @@ namespace Vision2.Project.DebugF.IO
                     try
                     {
                         MatrixC.Mark1Move(MatrixC.PointNameEnd);
-                        XYZPoint point = DebugCompiler.GetThis().DDAxis.GetToPoint(MatrixC.PointNameEnd);
+                        XYZPoint point = DebugCompiler.Instance.DDAxis.GetToPoint(MatrixC.PointNameEnd);
                         if (point != null)
                         {
                             HalconDotNet.HOperatorSet.GenCircle(out HalconDotNet.HObject hObject1, point.Y, point.X, 10);
@@ -542,7 +521,6 @@ namespace Vision2.Project.DebugF.IO
                             HWindID2.OneResIamge.AddObj(hObject1.ConcatObj(hObjectxs), ColorResult.yellow);
                             HWindID2.OneResIamge.AddImageMassage(point.Y, point.X, MatrixC.PointNameEnd, ColorResult.green);
                         }
-
                     }
                     catch (Exception ex)
                     {
@@ -553,15 +531,15 @@ namespace Vision2.Project.DebugF.IO
                 thread.IsBackground = true;
 
                 thread.Start();
-
-
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
         }
-        bool IThaing;
+
+        private bool IThaing;
+
         private void button5_Click(object sender, EventArgs e)
         {
             try
@@ -655,7 +633,7 @@ namespace Vision2.Project.DebugF.IO
 
                 if (listBox1.SelectedIndex == 0)
                 {
-                    xYZPoints = DebugCompiler.GetThis().DDAxis.XyzPoints;
+                    xYZPoints = DebugCompiler.Instance.DDAxis.XyzPoints;
                     RelativelyPoint = null;
                     移动到点位ToolStripMenuItem.Enabled = true;
                 }
@@ -705,7 +683,6 @@ namespace Vision2.Project.DebugF.IO
                         listBox7.Items.Add(i + 1);
                     }
                 }
-
             }
             catch (Exception ex)
             {
@@ -768,8 +745,6 @@ namespace Vision2.Project.DebugF.IO
                 {
                     toolStripButton4.PerformClick();
                 }
-
-
             }
             catch (Exception)
             {
@@ -782,8 +757,8 @@ namespace Vision2.Project.DebugF.IO
             {
                 if (MessageBox.Show("是否导出到位置信息?", "导出矩阵位置", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
-                    List<XYZPoint> xYZP =RecipeCompiler.GetProductEX().DPoint;
-                    XYZPoint point2 = DebugCompiler.GetThis().DDAxis.GetToPointFileProt(MatrixC.PointName);
+                    List<XYZPoint> xYZP = RecipeCompiler.GetProductEX().DPoint;
+                    XYZPoint point2 = DebugCompiler.Instance.DDAxis.GetToPointFileProt(MatrixC.PointName);
                     for (int i = 0; i < MatrixC.XS.Count; i++)
                     {
                         xYZP.Add(new XYZPoint() { Name = "MP" + (i + 1), X = MatrixC.XS[i], Y = MatrixC.YS[i], Z = point2.Z, ID = i + 1, AxisGrabName = point2.AxisGrabName });
@@ -811,10 +786,8 @@ namespace Vision2.Project.DebugF.IO
                         HOperatorSet.AreaCenter(hObject, out HTuple area, out HTuple rows, out HTuple clos);
                         HWindNt.OneResIamge.AddImageMassage(rows, clos, listBox2.SelectedItem.ToString());
                     }
-
                 }
                 HWindNt.ShowImage();
-
             }
             catch (Exception ex)
             {
@@ -824,7 +797,6 @@ namespace Vision2.Project.DebugF.IO
 
         private void 添加区域ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
             try
             {
                 string meassge = "创建区域";
@@ -839,7 +811,6 @@ namespace Vision2.Project.DebugF.IO
                 productEX.Key_Navigation_Picture[listBox3.SelectedItem.ToString()].KeyRoi.Add(sd, new HalconDotNet.HObject());
                 productEX.Key_Navigation_Picture[listBox3.SelectedItem.ToString()].KeyRoi[sd].GenEmptyObj();
                 listBox2.Items.Add(sd);
-
             }
             catch (Exception ex)
             {
@@ -892,7 +863,6 @@ namespace Vision2.Project.DebugF.IO
         {
             try
             {
-
                 if (productEX.Key_Navigation_Picture[listBox3.SelectedItem.ToString()].KeyRoi.ContainsKey(listBox2.SelectedItem.ToString()))
                 {
                     productEX.Key_Navigation_Picture[listBox3.SelectedItem.ToString()].KeyRoi.Remove(listBox2.SelectedItem.ToString());
@@ -903,14 +873,12 @@ namespace Vision2.Project.DebugF.IO
             {
                 MessageBox.Show(ex.Message);
             }
-
         }
 
         private void 导入整图ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
             {
-
                 OpenFileDialog openFileDialog = new OpenFileDialog();
                 openFileDialog.Title = "请选择图片文件可多选";
                 openFileDialog.Multiselect = true;
@@ -925,7 +893,6 @@ namespace Vision2.Project.DebugF.IO
             {
                 MessageBox.Show(ex.Message);
             }
-
         }
 
         private void 添加导航图ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1012,19 +979,16 @@ namespace Vision2.Project.DebugF.IO
                     }
                 }
                 HWindNt.ShowImage();
-
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
-
         }
 
         private void dataGridView2_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            if (!this.isCot)
-            {
+            if (isCot) return;
                 try
                 {
                     RelativelyPoint[e.RowIndex].Name = this.dataGridView2.Rows[e.RowIndex].Cells[0].Value.ToString();
@@ -1085,12 +1049,10 @@ namespace Vision2.Project.DebugF.IO
                 {
                     MessageBox.Show(ex.Message);
                 }
-            }
         }
 
         private void dataGridView2_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
-
         }
 
         private void 删除ToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -1143,7 +1105,6 @@ namespace Vision2.Project.DebugF.IO
             }
             catch (Exception ex)
             {
-
             }
             isCot = false;
         }
@@ -1171,14 +1132,12 @@ namespace Vision2.Project.DebugF.IO
             {
             }
             isCot = false;
-
         }
 
         private void 读取轨迹位置ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
             {
-
             }
             catch (Exception ex)
             {
@@ -1190,7 +1149,6 @@ namespace Vision2.Project.DebugF.IO
             try
             {
                 int det = dataGridView3.SelectedCells.Count;
-
             }
             catch (Exception ex)
             {
@@ -1200,8 +1158,7 @@ namespace Vision2.Project.DebugF.IO
 
         private void dataGridView3_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            if (!this.isCot)
-            {
+            if (isCot) return;
                 try
                 {
                     if (RelNamePoints.Count <= e.RowIndex)
@@ -1223,13 +1180,11 @@ namespace Vision2.Project.DebugF.IO
                 {
                     MessageBox.Show(ex.Message);
                 }
-            }
         }
 
         private void 删除ToolStripMenuItem2_Click(object sender, EventArgs e)
         {
-            if (!this.isCot)
-            {
+            if (this.isCot) return;
 
                 try
                 {
@@ -1247,7 +1202,6 @@ namespace Vision2.Project.DebugF.IO
                 {
                     MessageBox.Show(ex.Message);
                 }
-            }
         }
 
         private void toolStripButton3_Click(object sender, EventArgs e)
@@ -1263,12 +1217,11 @@ namespace Vision2.Project.DebugF.IO
                         toolStripLabel3.Text = "流程步:" + productEX.Relativel.RelativelyId;
                         XYZPoint xYZPoint = xYZPoints[toolStripComboBox1.SelectedIndex];
                         zoer = xYZPoint;
-                        bool flag2 = DebugCompiler.GetThis().DDAxis.SetXYZ1Points(xYZPoint.AxisGrabName, 15, xYZPoint.X, xYZPoint.Y, xYZPoint.Z, xYZPoint.U, xYZPoint.isMove);
+                        bool flag2 = DebugCompiler.Instance.DDAxis.SetXYZ1Points(xYZPoint.AxisGrabName, 15, xYZPoint.X, xYZPoint.Y, xYZPoint.Z, xYZPoint.U, xYZPoint.isMove);
                         if (flag2)
                         {
                             for (int i = 0; i < dataGridView2.Rows.Count; i++)
                             {
-
                                 this.dataGridView2.Rows[i].DefaultCellStyle.BackColor = Color.White;
                             }
                         }
@@ -1276,7 +1229,6 @@ namespace Vision2.Project.DebugF.IO
                         {
                             MessageBox.Show("移动失败");
                         }
-
                     }
                     catch (Exception ex)
                     {
@@ -1294,7 +1246,6 @@ namespace Vision2.Project.DebugF.IO
 
         private void toolStripButton2_Click(object sender, EventArgs e)
         {
-
             try
             {
                 int de = dataGridView1.SelectedCells[0].RowIndex;
@@ -1329,20 +1280,19 @@ namespace Vision2.Project.DebugF.IO
                         bool flag2;
                         if (xYz.isMove == EnumXYZUMoveType.先移动再旋转)
                         {
-                            flag2 = DebugCompiler.GetThis().DDAxis.SetXYZ1Points(xYz.AxisGrabName, 15, xYz.X, xYz.Y, xYz.Z, xYz.U, EnumXYZUMoveType.先旋转再移动);
+                            flag2 = DebugCompiler.Instance.DDAxis.SetXYZ1Points(xYz.AxisGrabName, 15, xYz.X, xYz.Y, xYz.Z, xYz.U, EnumXYZUMoveType.先旋转再移动);
                         }
                         if (xYz.isMove == EnumXYZUMoveType.先旋转再移动)
                         {
-                            flag2 = DebugCompiler.GetThis().DDAxis.SetXYZ1Points(xYz.AxisGrabName, 15, xYz.X, xYz.Y, xYz.Z, xYz.U, EnumXYZUMoveType.先移动再旋转);
+                            flag2 = DebugCompiler.Instance.DDAxis.SetXYZ1Points(xYz.AxisGrabName, 15, xYz.X, xYz.Y, xYz.Z, xYz.U, EnumXYZUMoveType.先移动再旋转);
                         }
                         else
                         {
-                            flag2 = DebugCompiler.GetThis().DDAxis.SetXYZ1Points(xYz.AxisGrabName, 15, xYz.X, xYz.Y, xYz.Z, xYz.U, xYz.isMove);
+                            flag2 = DebugCompiler.Instance.DDAxis.SetXYZ1Points(xYz.AxisGrabName, 15, xYz.X, xYz.Y, xYz.Z, xYz.U, xYz.isMove);
                         }
 
                         if (flag2)
                         {
-
                             Thread.Sleep(500);
                             foreach (var item in Vision.GetHimageList().Keys)
                             {
@@ -1380,7 +1330,9 @@ namespace Vision2.Project.DebugF.IO
                 MessageBox.Show(ex.Message);
             }
         }
-        XYZPoint zoer;
+
+        private XYZPoint zoer;
+
         private void toolStripButton4_Click(object sender, EventArgs e)
         {
             try
@@ -1405,7 +1357,7 @@ namespace Vision2.Project.DebugF.IO
                         zoer = xYz;
                         productEX.Relativel.RelativelyId++;
                         this.dataGridView2.Rows[productEX.Relativel.RelativelyId - 1].DefaultCellStyle.BackColor = Color.Yellow;
-                        bool flag2 = DebugCompiler.GetThis().DDAxis.SetXYZ1Points(xYz.AxisGrabName, 15, xYz.X, xYz.Y, xYz.Z, xYz.U, xYz.isMove);
+                        bool flag2 = DebugCompiler.Instance.DDAxis.SetXYZ1Points(xYz.AxisGrabName, 15, xYz.X, xYz.Y, xYz.Z, xYz.U, xYz.isMove);
                         if (flag2)
                         {
                             Thread.Sleep(500);
@@ -1413,7 +1365,6 @@ namespace Vision2.Project.DebugF.IO
                             {
                                 if (xYz.AxisGrabName == Vision.GetSaveImageInfo(item).AxisGrot)
                                 {
-
                                     if (productEX.Relativel.RelativelyId <= 0)
                                     {
                                         Vision.GetRunNameVision(item).Image(Vision.GetRunNameVision(item).GetCam().GetImage());
@@ -1453,7 +1404,6 @@ namespace Vision2.Project.DebugF.IO
 
         private void dataGridView3_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
-
         }
 
         private void listBox4_SelectedIndexChanged(object sender, EventArgs e)
@@ -1492,8 +1442,6 @@ namespace Vision2.Project.DebugF.IO
             isCot = false;
         }
 
-
-
         private void 添加轨迹ToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             try
@@ -1517,7 +1465,6 @@ namespace Vision2.Project.DebugF.IO
                 }
                 productEX.Relativel.DicRelativelyPoint.Add(sd, new List<XYZPoint>());
                 listBox4.Items.Add(sd);
-
             }
             catch (Exception ex)
             {
@@ -1544,7 +1491,7 @@ namespace Vision2.Project.DebugF.IO
             {
                 string meassge = "重命名";
                 string names = listBox4.SelectedItem.ToString();
-            st:
+                st:
                 string sd = Interaction.InputBox("请输入新名称", meassge, names, 100, 100);
                 if (productEX.Relativel.DicRelativelyPoint.ContainsKey(sd))
                 {
@@ -1588,7 +1535,6 @@ namespace Vision2.Project.DebugF.IO
 
         private void dataGridView3_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-
         }
 
         private void 添加轨迹ToolStripMenuItem2_Click(object sender, EventArgs e)
@@ -1602,7 +1548,6 @@ namespace Vision2.Project.DebugF.IO
             {
                 MessageBox.Show(ex.Message);
             }
-
         }
 
         private void 删除轨迹ToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -1683,13 +1628,11 @@ namespace Vision2.Project.DebugF.IO
                             }
                         }
                     }
-
                 }
                 else
                 {
                     MessageBox.Show("未选择起点");
                 }
-
             }
             catch (Exception ex)
             {
@@ -1700,22 +1643,18 @@ namespace Vision2.Project.DebugF.IO
 
         private void toolStripDropDownButton1_Click(object sender, EventArgs e)
         {
-
         }
 
         private void 导入ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
         }
 
         private void 导入ExcelToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
         }
 
         private void toolStripComboBox1_Click(object sender, EventArgs e)
         {
-
         }
 
         private void 导出到全局位置ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1724,8 +1663,8 @@ namespace Vision2.Project.DebugF.IO
             {
                 if (MessageBox.Show("是否导出到位置信息?", "导出托盘位置", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
-                    List<PointFile> pointFiles = DebugCompiler.GetThis().DDAxis.ListTray[listBox5.SelectedIndex].GetPoints();
-                    List<XYZPoint> xYZP = DebugCompiler.GetThis().DDAxis.XyzPoints; 
+                    List<PointFile> pointFiles = DebugCompiler.Instance.DDAxis.ListTray[listBox5.SelectedIndex].GetPoints();
+                    List<XYZPoint> xYZP = DebugCompiler.Instance.DDAxis.XyzPoints;
                     for (int i = 0; i < pointFiles.Count; i++)
                     {
                         xYZP.Add(new XYZPoint()
@@ -1747,29 +1686,30 @@ namespace Vision2.Project.DebugF.IO
 
         private void 导出到产品位置ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-        
-                try
+            try
+            {
+                if (MessageBox.Show("是否导出到位置信息?", "导出托盘位置", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
-                    if (MessageBox.Show("是否导出到位置信息?", "导出托盘位置", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    List<PointFile> pointFiles = DebugCompiler.Instance.DDAxis.ListTray[listBox5.SelectedIndex].GetPoints();
+                    List<XYZPoint> xYZP = RecipeCompiler.GetProductEX().DPoint;
+                    //XYZPoint point2 = DebugCompiler.GetThis().DDAxis.GetToPointFileProt(MatrixC.PointName);
+                    for (int i = 0; i < pointFiles.Count; i++)
                     {
-                      List< PointFile>   pointFiles=  DebugCompiler.GetThis().DDAxis.ListTray[listBox5.SelectedIndex].GetPoints();
-                        List<XYZPoint> xYZP = RecipeCompiler.GetProductEX().DPoint;
-                        //XYZPoint point2 = DebugCompiler.GetThis().DDAxis.GetToPointFileProt(MatrixC.PointName);
-                        for (int i = 0; i < pointFiles.Count; i++)
+                        xYZP.Add(new XYZPoint()
                         {
-                            xYZP.Add(new XYZPoint() { Name = "TP" + (i + 1), 
-                                X = pointFiles[i].X.Value, 
-                                Y = pointFiles[i].Y.Value,
-                                Z = pointFiles[i].Z.Value,
-                                ID = i + 1,});
-                        }
+                            Name = "TP" + (i + 1),
+                            X = pointFiles[i].X.Value,
+                            Y = pointFiles[i].Y.Value,
+                            Z = pointFiles[i].Z.Value,
+                            ID = i + 1,
+                        });
                     }
                 }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                }
-
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
     }
 }

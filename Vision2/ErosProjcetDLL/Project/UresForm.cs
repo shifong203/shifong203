@@ -15,7 +15,6 @@ namespace Vision2.ErosProjcetDLL.Project
 
         private void toolStripButton4_Click(object sender, EventArgs e)
         {
-     
         }
 
         public void up()
@@ -79,8 +78,6 @@ namespace Vision2.ErosProjcetDLL.Project
                     }
                     //dataGridView1.Rows[ds].Cells[5]
                     dataGridView1.Rows[ds].Cells[3].Value = item.UserRightGroup;
-
-
                 }
             }
             catch (Exception ex)
@@ -125,7 +122,6 @@ namespace Vision2.ErosProjcetDLL.Project
             catch (Exception)
             {
             }
-
         }
 
         private void dataGridView1_DataError(object sender, DataGridViewDataErrorEventArgs e)
@@ -193,13 +189,11 @@ namespace Vision2.ErosProjcetDLL.Project
             }
             catch (Exception)
             {
-
             }
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-
         }
 
         private void toolStripButton5_Click(object sender, EventArgs e)
@@ -209,12 +203,10 @@ namespace Vision2.ErosProjcetDLL.Project
 
         private void toolStripButton3_Click(object sender, EventArgs e)
         {
-
         }
 
         private void toolStripButton2_Click(object sender, EventArgs e)
         {
-
         }
     }
 }

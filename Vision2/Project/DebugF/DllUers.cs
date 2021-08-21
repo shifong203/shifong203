@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -11,25 +10,31 @@ namespace Vision2.Project.DebugF
     public class DllUers
     {
         #region 声明动态载入DLL的参数
-        byte[] filesByte;
-        Assembly assembly;
-        Type type;
-        #endregion
+
+        private byte[] filesByte;
+        private Assembly assembly;
+        private Type type;
+
+        #endregion 声明动态载入DLL的参数
+
         [DescriptionAttribute("外部Dll地址。"), Category("外部Dll"), DisplayName("外部Dll地址")]
         public string _Path { get; set; } = "";
+
         [DescriptionAttribute("Dll名称。"), Category("外部Dll"), DisplayName("名称")]
         public string Name { get; set; } = "";
+
         [DescriptionAttribute("是否启用外部Dll。"), Category("外部Dll"), DisplayName("启用Dll")]
         public bool IsEn { get; set; }
 
         [DescriptionAttribute("生成类集合。"), Category("外部Dll"), DisplayName("生成类集合")]
         public Dictionary<string, string> DicObjClass { get; set; } = new Dictionary<string, string>();
 
-        Dictionary<string, dynamic> keyObjDlls = new Dictionary<string, dynamic>();
+        private Dictionary<string, dynamic> keyObjDlls = new Dictionary<string, dynamic>();
+
         /// <summary>
         /// DLL动态对象
         /// </summary>
-        dynamic ObjDll { get; set; }
+        private dynamic ObjDll { get; set; }
 
         public dynamic GetObjDll()
         {
@@ -53,10 +58,11 @@ namespace Vision2.Project.DebugF
             }
             return assembly;
         }
+
         [DescriptionAttribute("调用方法名称。"), Category("外部Dll"), DisplayName("调用方法名")]
         public string MetHodStr { get; set; }
 
-        dynamic RetnMetHod { get; set; }
+        private dynamic RetnMetHod { get; set; }
 
         /// <summary>
         /// 加载DLL并生成
@@ -66,7 +72,6 @@ namespace Vision2.Project.DebugF
             string pathst = ClassName;
             SafeInvoke(() =>
             {
-
                 //if (!File.Exists(Path.GetDirectoryName(Application.ExecutablePath) + "//" + Name))
                 //{
                 //    File.Copy(pathst, Path.GetDirectoryName(Application.ExecutablePath) + "//" + Name);
@@ -80,10 +85,10 @@ namespace Vision2.Project.DebugF
                     filesByte = File.ReadAllBytes(pathst);
                     assembly = Assembly.Load(filesByte);
                 }
-
             });
             return assembly;
         }
+
         /// <summary>
         /// 创建实例
         /// </summary>
@@ -91,12 +96,10 @@ namespace Vision2.Project.DebugF
         /// <returns></returns>
         public dynamic New(string ClassName)
         {
-
             type = assembly.GetType(ClassName);
             if (type != null)
             {
                 ObjDll = System.Activator.CreateInstance(type);
-
             }
             else
             {
@@ -104,10 +107,10 @@ namespace Vision2.Project.DebugF
                 MessageBox.Show("创建失败");
             }
             return ObjDll;
-
         }
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="dllText"></param>
         /// <returns></returns>
@@ -116,7 +119,7 @@ namespace Vision2.Project.DebugF
             dynamic nd = null;
             SafeInvoke(() =>
             {
-                //foreach (var item in dllText.Split(';'))    
+                //foreach (var item in dllText.Split(';'))
                 //{
                 //    assembly.GetType(item.);
                 //}
@@ -139,6 +142,7 @@ namespace Vision2.Project.DebugF
                 MessageBox.Show(ex.Message);
             }
         }
+
         /// <summary>
         /// 调用指定名称的方法
         /// </summary>
@@ -150,7 +154,6 @@ namespace Vision2.Project.DebugF
             {
                 if (type != null)
                 {
-
                     return type.InvokeMember(MetHodName, BindingFlags.Default | BindingFlags.InvokeMethod, null, ObjDll, new object[] { });
                     //MethodInfo Mymethodinfoa = type.GetMethod(MetHodName);
                     //if (Mymethodinfoa!=null)

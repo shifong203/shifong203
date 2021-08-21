@@ -13,6 +13,7 @@ namespace Vision2.Project.formula
         {
             InitializeComponent();
         }
+
         public MaterialContrsl(List<MaterialManagement> materialManagement) : this()
         {
             MaterialMan = materialManagement;
@@ -25,7 +26,9 @@ namespace Vision2.Project.formula
             }
             this.Tag = MaterialMan;
         }
-        List<MaterialManagement> MaterialMan;
+
+        private List<MaterialManagement> MaterialMan;
+
         private void MaterialContrsl_Load(object sender, EventArgs e)
         {
         }
@@ -34,12 +37,14 @@ namespace Vision2.Project.formula
         {
             this.Tag = MaterialMan;
         }
+
         public class Editor : UITypeEditor
         {
             public override UITypeEditorEditStyle GetEditStyle(ITypeDescriptorContext context)
             {
                 return UITypeEditorEditStyle.DropDown;
             }
+
             public override object EditValue(ITypeDescriptorContext context, IServiceProvider provider, object value)
             {
                 IWindowsFormsEditorService service = provider.GetService(typeof(IWindowsFormsEditorService)) as IWindowsFormsEditorService;
@@ -80,7 +85,6 @@ namespace Vision2.Project.formula
                     treeView1.Nodes.Add(treeNode);
                     MaterialMan.Add(materialManagement);
                 }
-
             }
             catch (Exception)
             {
@@ -98,10 +102,7 @@ namespace Vision2.Project.formula
             }
             catch (Exception)
             {
-
-
             }
-
         }
 
         private void treeView1_MouseUp(object sender, MouseEventArgs e)

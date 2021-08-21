@@ -10,7 +10,6 @@ using System.Windows.Forms;
 using Vision2.ErosProjcetDLL.Project;
 using Vision2.vision.HalconRunFile.RunProgramFile;
 
-
 namespace Vision2.vision.Cams
 {
     [Serializable]
@@ -31,30 +30,26 @@ namespace Vision2.vision.Cams
         {
         }
 
-
         public int Height { get; set; }
         public int Width { get; set; }
-
 
         public Control GetThisControl()
         {
             return null;
         }
-        #region 属性
 
+        #region 属性
 
         /// <summary>
         /// 相机句柄
         /// </summary>
-        HTuple m_AcqHandle;
-
+        private HTuple m_AcqHandle;
 
         [Description("曝光"), Category("拍照属性"), DefaultValue(""), DisplayName("曝光")]
         /// <summary>
         /// 相机快门
         /// </summary>
         public Int32 ExposureTimeAbs { get; set; }
-
 
         [Description("增益参数"), Category("拍照属性"), DefaultValue(""), DisplayName("增益")]
         /// <summary>
@@ -69,20 +64,17 @@ namespace Vision2.vision.Cams
         /// </summary>
         public bool m_bCamIsCon { get; set; } = false;
 
-
         [Description("链接硬件标识"), Category("硬件属性"), DefaultValue("default"), DisplayName("链接硬件标识")]
         public string m_IDStr { get; set; }
 
         [Description("采图尝试链接次数"), Category("拍照属性"), DefaultValue(1), DisplayName("失败链接")]
         public int LinkNumber { get; set; } = 1;
 
-
         [Description("相机的基本信息"), Category("硬件属性"), DisplayName("相机的基本信息")]
         /// <summary>
         /// 相机详细信息
         /// </summary>
         public string m_CamInformation { get; set; }
-
 
         [Description("软硬触发"), Category("拍照属性"), DisplayName("触发模式"),
             TypeConverter(typeof(Vision2.ErosProjcetDLL.UI.PropertyGrid.ErosConverter)),
@@ -91,26 +83,26 @@ namespace Vision2.vision.Cams
         /// 使能硬触发 On为外触发，Off为软触发
         /// </summary>
         public string TriggerMode { get; set; } = "Off";
+
         /// <summary>
         /// 实时采集模式
         /// </summary>
         [Description("实时模式状态"), Category("拍照属性"), DisplayName("实时状态")]
         public bool RealTimeMode { get; protected set; }
+
         [Description("触发源,FixedRate:固定频率，Software：软触发，Freerun：自由转换，Line1输入1"), Category("拍照属性"), DisplayName("触发源"),
             TypeConverter(typeof(Vision2.ErosProjcetDLL.UI.PropertyGrid.ErosConverter)),
             Vision2.ErosProjcetDLL.UI.PropertyGrid.ErosConverter.ThisDropDown("", true, "Freerun", "Line1", "FixedRate", "Software")]
         public string TriggerSource { get; set; } = "Software";
-
-
 
         [Description("镜像角度,row上翻转，diagonal对角斜线翻转，column左右翻转，None无翻转"), Category("拍照属性"),
             DisplayName("镜像角度"), TypeConverter(typeof(Vision2.ErosProjcetDLL.UI.PropertyGrid.ErosConverter)),
             Vision2.ErosProjcetDLL.UI.PropertyGrid.ErosConverter.ThisDropDown("", true, "row", "diagonal", "column", "None")]
         public string RotateTypeStr { get; set; } = "None";
 
-
         [Description("转换比值像素/MM"), Category("图像属性"), DisplayName("转换比值")]
         public double CaliConst { get; set; } = 1;
+
         /// <summary>
         /// 相机信息
         /// </summary>
@@ -120,19 +112,23 @@ namespace Vision2.vision.Cams
 
         [Description("异步采图有效时间"), DisplayName("有效时间"), Category("异步采集"), DefaultValue(-1)]
         public double Max { get; set; } = -1;
+
         [ReadOnly(true)]
         [Description("异步采集帧数量"), Category("异步采集"), DisplayName("帧数")]
         public int Frame { get; set; } = 0;
+
         [ReadOnly(true)]
         [Description("异步采集帧率，秒/帧"), Category("异步采集"), DisplayName("FPS")]
         public double Fps
         {
             get { return fps; }
         }
+
         protected double fps;
 
         [Description("true程序使用异步采集,Fales同步模式"), Category("异步采集"), DisplayName("使用异步采集")]
         public bool Modet { get; set; }
+
         [Description("采集超时设置"), Category("采集"), DisplayName("采集超时")]
         public int Grab_OutTime
         {
@@ -150,16 +146,19 @@ namespace Vision2.vision.Cams
                     {
                     }
                 }
-
             }
         }
-        int grad_OutTime = 5000;
+
+        private int grad_OutTime = 5000;
+
         [DescriptionAttribute("灯光输出。"), Category("触发器"), DisplayName("灯光输出名称")]
         [Editor(typeof(LinkNameAddreControl.Editor), typeof(UITypeEditor))]
         public string FlashLampName { get; set; } = string.Empty;
+
         public bool Grabbing { get; set; }
         public int MaxNumbe { get; set; }
         public int RunID { get; set; }
+
         [DescriptionAttribute("灯光打开后延时触发拍照。"), Category("触发器"), DisplayName("拍照触发延时")]
         public int CamTime
         {
@@ -173,39 +172,48 @@ namespace Vision2.vision.Cams
                 camTime = value;
             }
         }
+
         private int camTime = 0;
+
         [DescriptionAttribute("NG结果输出的变量名称。"), Category("触发器"), DisplayName("结果NG名称")]
         [Editor(typeof(LinkNameAddreControl.Editor), typeof(UITypeEditor))]
         public string NGName { get; set; } = string.Empty;
-        [DescriptionAttribute("NG结果输出的变量名称。"), Category("触发器"), DisplayName("结果NG名称")]
 
+        [DescriptionAttribute("NG结果输出的变量名称。"), Category("触发器"), DisplayName("结果NG名称")]
         [Editor(typeof(LinkNameAddreControl.Editor), typeof(UITypeEditor))]
         public string OKName { get; set; } = string.Empty;
+
         [DescriptionAttribute("运行时间MS。"), Category("结果显示"), DisplayName("运行时间MS")]
         public long RunTime { get { return Watch.ElapsedMilliseconds; } }
+
         #endregion 属性
 
         /// <summary>
         /// 运行计时
         /// </summary>
         public System.Diagnostics.Stopwatch Watch = new System.Diagnostics.Stopwatch();
+
         /// <summary>
         /// 链接类委托
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="key"></param>
         public delegate void LinkStart<T>(T key);
+
         public delegate void Sw(string key, HObject image, int runID, bool isSave = true);
+
         /// <summary>
         /// 执行链接事件
         /// </summary>
         public event LinkStart<bool> LinkSt;
+
         /// <summary>
         /// 执行链接事件
         /// </summary>
         public event Sw Swtr;
 
         public string Key { get; set; } = "";
+
         /// <summary>
         /// 调用图像事件
         /// </summary>
@@ -216,6 +224,7 @@ namespace Vision2.vision.Cams
         {
             this.Swtr?.Invoke(key, iamge, runID);
         }
+
         /// <summary>
         /// 执行事件
         /// </summary>
@@ -227,7 +236,6 @@ namespace Vision2.vision.Cams
             {
                 Thread thread = new Thread(() =>
                 {
-
                     this.m_bCamIsCon = LiakCam();
                     LinkSt?.Invoke(this.m_bCamIsCon);
                     if (!this.m_bCamIsCon)
@@ -288,7 +296,6 @@ namespace Vision2.vision.Cams
             try
             {
                 HOperatorSet.CloseFramegrabber(this.m_AcqHandle);
-
             }
             catch (Exception)
             {
@@ -330,7 +337,6 @@ namespace Vision2.vision.Cams
                         }
                         catch (Exception)
                         {
-
                         }
                         HOperatorSet.SetFramegrabberParam(this.m_AcqHandle, "TriggerSource", this.TriggerSource);
                         //HOperatorSet.SetFramegrabberParam(this.m_AcqHandle, "TriggerMode", this.TriggerMode);
@@ -359,17 +365,16 @@ namespace Vision2.vision.Cams
 
         public virtual void SetProgramValue(string pragrmName, HTuple value)
         {
-
         }
+
         //public virtual void ge(string pragrmName, uint value)
         //{
-
         //}
 
         public virtual void SetProgramValue(string pragrmName, string value)
         {
-
         }
+
         public virtual void SetFrameGradderIP(string ip)
         {
             try
@@ -395,10 +400,7 @@ namespace Vision2.vision.Cams
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
-
             }
-
-
         }
 
         public virtual void SetGain()
@@ -409,9 +411,9 @@ namespace Vision2.vision.Cams
             }
             catch (Exception)
             {
-
             }
         }
+
         public virtual void SetTriggerMode()
         {
             try
@@ -422,6 +424,7 @@ namespace Vision2.vision.Cams
             {
             }
         }
+
         public virtual void SetTriggerSource()
         {
             try
@@ -432,6 +435,7 @@ namespace Vision2.vision.Cams
             {
             }
         }
+
         public virtual void SetExposureTime(int exp = 0)
         {
             try
@@ -444,7 +448,6 @@ namespace Vision2.vision.Cams
                 {
                     HOperatorSet.SetFramegrabberParam(this.m_AcqHandle, "ExposureTime", this.ExposureTimeAbs);
                 }
-
             }
             catch (Exception)
             {
@@ -455,7 +458,6 @@ namespace Vision2.vision.Cams
             }
             catch (Exception)
             {
-
             }
         }
 
@@ -512,7 +514,6 @@ namespace Vision2.vision.Cams
             }
             catch (Exception)
             {
-
             }
             return this.ExposureTimeAbs;
         }
@@ -538,8 +539,9 @@ namespace Vision2.vision.Cams
             }
             return hTuple;
         }
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <returns></returns>
         public virtual string GetIP()
@@ -562,6 +564,7 @@ namespace Vision2.vision.Cams
             }
             return this.camS_Information.IP;
         }
+
         /// <summary>
         /// int转换IP
         /// </summary>
@@ -632,11 +635,8 @@ namespace Vision2.vision.Cams
         /// <returns>成功返回true</returns>
         public virtual void GaedImageAsync(out HObject Image)
         {
-
-
             try
             {
-
                 HOperatorSet.GrabImageAsync(out Image, this.m_AcqHandle, Max);
             }
             catch (Exception EX)
@@ -647,9 +647,7 @@ namespace Vision2.vision.Cams
                 this.LogErr(EX);
                 return;
             }
-
         }
-
 
         /// <summary>
         /// 拍照接口
@@ -659,7 +657,6 @@ namespace Vision2.vision.Cams
         public virtual bool Run(HalconRun halcon)
         {
             Watch.Restart();
-
 
             Thread.Sleep(camTime);
             bool iscong = GaedImage(out HObject hObject);
@@ -685,10 +682,10 @@ namespace Vision2.vision.Cams
             }
             Watch.Stop();
             return iscong;
-
         }
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <returns></returns>
         public virtual bool GaedImage(out HObject image)
@@ -699,9 +696,8 @@ namespace Vision2.vision.Cams
         stren:
             try
             {
-
                 Vision.TriggerSetup(this.FlashLampName, true.ToString());
-                //HOperatorSet.GetFramegrabberParam()   
+                //HOperatorSet.GetFramegrabberParam()
                 //HOperatorSet.SetFramegrabberParam(this.m_AcqHandle, "TriggerMode",   "Off");
                 //SetTriggerMode();
                 //SetTriggerSource();
@@ -741,12 +737,12 @@ namespace Vision2.vision.Cams
                 this.LogErr("釆图失败,连接不成功");
                 return false;
             }
-
         }
 
         public Coordinate.Coordinate_Type CoordinateMeassage { get; set; } = new Coordinate.Coordinate_Type();
 
-        HTuple MaxTuple = new HTuple();
+        private HTuple MaxTuple = new HTuple();
+
         /// <summary>
         /// 图像清晰度评估
         /// </summary>
@@ -757,7 +753,6 @@ namespace Vision2.vision.Cams
 
             if (this.CoordinateMeassage == Coordinate.Coordinate_Type.XYU2D)
             {
-
                 int widgth = 1000;
                 int Rab = widgth / 2;
                 HTuple Tool;
@@ -825,7 +820,9 @@ namespace Vision2.vision.Cams
                 halcon.Image(hObject);
             }
         }
-        Thread ThreadSatrReadCam;
+
+        private Thread ThreadSatrReadCam;
+
         /// <summary>
         /// 线程执行
         /// </summary>
@@ -841,7 +838,6 @@ namespace Vision2.vision.Cams
             HOperatorSet.CountSeconds(out HTuple SecondsBegin);
             ThreadSatrReadCam = new Thread(() =>
             {
-
                 while (Grabbing)
                 {
                     try
@@ -866,8 +862,8 @@ namespace Vision2.vision.Cams
             });
             ThreadSatrReadCam.Priority = ThreadPriority.Highest;
             ThreadSatrReadCam.Start();
-
         }
+
         /// <summary>
         /// 停止实时采集
         /// </summary>
@@ -875,7 +871,6 @@ namespace Vision2.vision.Cams
         {
             Grabbing = false;
             Key = "One";
-
         }
 
         [Serializable]
@@ -885,6 +880,7 @@ namespace Vision2.vision.Cams
         public class Cam_information : ProjectNodet.IClickNodeProject
         {
             public string Name { get; set; }
+
             public static Cam_information In
             {
                 get
@@ -987,12 +983,9 @@ namespace Vision2.vision.Cams
 
             //public void UpProperty(PropertyForm pertyForm, object data = null)
             //{
-
             //    camPragramV.Dock = DockStyle.Top;
             //    pertyForm.tabPage1.Controls.Add(camPragramV);
             //}
-
-
 
             public Control GetThisControl()
             {
@@ -1018,7 +1011,6 @@ namespace Vision2.vision.Cams
             /// 相机链接标识
             /// </summary>
             public HTuple ID { get; set; }
-
 
             [Browsable(true)]
             [Description("链接目标的IP"), Category("硬件属性"), DefaultValue("")]

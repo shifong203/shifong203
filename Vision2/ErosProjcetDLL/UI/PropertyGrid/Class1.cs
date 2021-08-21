@@ -1,14 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Text;
-using System.Reflection;
 using System.ComponentModel;
 using System.Data;
-
-using System.Xml.Serialization;
-using System.Windows.Forms;
-
-using System.Collections;
 
 namespace Vision2.ErosProjcetDLL.UI.PropertyGrid
 {
@@ -17,6 +11,7 @@ namespace Vision2.ErosProjcetDLL.UI.PropertyGrid
         protected TypeDescriptionProvider _baseProvider;
         private PropertyDescriptorCollection _propCache;
         protected Dictionary<Type, Type> dictEdtor;
+
         /// <summary>
         ///  属性Editor字典
         ///  Key:Attribute Value:Editor
@@ -28,13 +23,15 @@ namespace Vision2.ErosProjcetDLL.UI.PropertyGrid
                 return dictEdtor;
             }
         }
+
         public ControlEditorTypeDescriptionProvider()
             : base()
         {
             dictEdtor = new Dictionary<Type, Type>();
         }
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="t">要修改属性的基类</param>
         public ControlEditorTypeDescriptionProvider(Type t)
@@ -43,15 +40,13 @@ namespace Vision2.ErosProjcetDLL.UI.PropertyGrid
             _baseProvider = TypeDescriptor.GetProvider(t);
         }
 
-
         public override ICustomTypeDescriptor GetTypeDescriptor(Type objectType, object instance)
         {
             PropertiesTypeDescriptor typeDes = new PropertiesTypeDescriptor(_baseProvider.GetTypeDescriptor(objectType, instance), this, objectType);
             return typeDes;
         }
-
-
     }
+
     /// <summary>
     /// 属性集合的描述
     /// </summary>
@@ -60,6 +55,7 @@ namespace Vision2.ErosProjcetDLL.UI.PropertyGrid
         private Type objType;
         private DataTable dtConfig = new DataTable();
         private ControlEditorTypeDescriptionProvider provider;
+
         public PropertiesTypeDescriptor(ICustomTypeDescriptor descriptor, ControlEditorTypeDescriptionProvider provider, Type objType)
             : base(descriptor)
         {
@@ -79,6 +75,7 @@ namespace Vision2.ErosProjcetDLL.UI.PropertyGrid
             this.objType = objType;
             this.provider = provider;
         }
+
         /// <summary>
         /// 获取属性列表
         /// </summary>
@@ -100,7 +97,8 @@ namespace Vision2.ErosProjcetDLL.UI.PropertyGrid
                 ArrayList orderedProperties = new ArrayList();
                 foreach (PropertyDescriptor prop in base.GetProperties(attributes))
                 {
-                    #region  控件、表单部分属性屏蔽
+                    #region 控件、表单部分属性屏蔽
+
                     //屏蔽所有控件数据Category 数据 属性
                     if (((System.ComponentModel.MemberDescriptor)(prop)).Category == "数据" || ((System.ComponentModel.MemberDescriptor)(prop)).Category == "Data")
                     {
@@ -113,9 +111,10 @@ namespace Vision2.ErosProjcetDLL.UI.PropertyGrid
                         continue;
                     }
 
-                    #endregion
+                    #endregion 控件、表单部分属性屏蔽
 
                     #region 屏蔽不需要显示的属性
+
                     switch (((System.ComponentModel.MemberDescriptor)(prop)).Name)
                     {
                         //case "DisplayStyleEnum":
@@ -132,7 +131,8 @@ namespace Vision2.ErosProjcetDLL.UI.PropertyGrid
                             }
                             break;
                     }
-                    #endregion
+
+                    #endregion 屏蔽不需要显示的属性
 
                     abEvent = prop.Attributes[typeof(PropertyIndexAttribute)];
                     if (abEvent != null && abEvent is PropertyIndexAttribute)
@@ -153,7 +153,7 @@ namespace Vision2.ErosProjcetDLL.UI.PropertyGrid
                             //{
                             //    if (cet.Key == nowIndexCode.Substring(6, 3))
                             //    {
-                            //        //根据配置文件的序列号，获取出全名HC.Test.Designer.UI.EventActionEditorControl，放入下面的函数中                          
+                            //        //根据配置文件的序列号，获取出全名HC.Test.Designer.UI.EventActionEditorControl，放入下面的函数中
                             //        //editorControl = ReflectionActivator.GetType("HC.Test.Designer.UI", cet.Value.EditorName);
                             //        //if (editorControl == null)
                             //        //{
@@ -174,7 +174,8 @@ namespace Vision2.ErosProjcetDLL.UI.PropertyGrid
                             //    }
                             //}
                         }
-                        #endregion
+
+                        #endregion 事件编辑器处理
 
                         else
                         {
@@ -209,19 +210,22 @@ namespace Vision2.ErosProjcetDLL.UI.PropertyGrid
             }
         }
     }
+
     /// <summary>
     /// 属性 描述（属性的属性）
     /// </summary>
     public class EventPropertyDescriptor : PropertyDescriptor
     {
-        Type editor = null;
-        PropertyDescriptor prop;
+        private Type editor = null;
+        private PropertyDescriptor prop;
+
         public EventPropertyDescriptor(PropertyDescriptor descr, Type editor)
             : base(descr)
         {
             this.prop = descr;
             this.editor = editor;
         }
+
         ///// <summary>
         ///// 获取Editor;
         ///// </summary>
@@ -261,18 +265,20 @@ namespace Vision2.ErosProjcetDLL.UI.PropertyGrid
         {
             get { return prop.PropertyType; }
         }
+
         public override void ResetValue(object component)
         {
             prop.ResetValue(component);
         }
+
         public override void SetValue(object component, object value)
         {
             prop.SetValue(component, value);
         }
+
         public override bool ShouldSerializeValue(object component)
         {
             return prop.ShouldSerializeValue(component);
         }
     }
-
 }

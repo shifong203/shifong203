@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Vision2.捷普
@@ -22,9 +15,9 @@ namespace Vision2.捷普
         {
             try
             {
-                if (e.KeyCode==Keys.Enter)
+                if (e.KeyCode == Keys.Enter)
                 {
-                    if (listBox1.SelectedIndex==1)
+                    if (listBox1.SelectedIndex == 1)
                     {
                         ErosProjcetDLL.Project.ProjectINI.DebugMode = true;
                     }

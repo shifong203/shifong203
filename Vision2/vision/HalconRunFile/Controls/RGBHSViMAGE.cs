@@ -11,7 +11,9 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             InitializeComponent();
         }
-        HObject Image;
+
+        private HObject Image;
+
         public void SetHalcon(HalconRun halconRun)
         {
             visionUserC1.hWindwC.Image(halconRun.Image());
@@ -28,7 +30,6 @@ namespace Vision2.vision.HalconRunFile.Controls
             }
             else
             {
-
                 if (htcon == 3)
                 {
                     listBox1.Items.AddRange(hsv);
@@ -38,7 +39,8 @@ namespace Vision2.vision.HalconRunFile.Controls
                 }
             }
         }
-        HObject R, G, B, H, S, V;
+
+        private HObject R, G, B, H, S, V;
 
         private void listBox2_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -51,7 +53,8 @@ namespace Vision2.vision.HalconRunFile.Controls
             }
         }
 
-        string[] hsv = new string[] { "Image", "黑白", "R", "G", "B", "H", "S", "V" };
+        private string[] hsv = new string[] { "Image", "黑白", "R", "G", "B", "H", "S", "V" };
+
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
             visionUserC1.hWindwC.FillMode = checkBox1.Checked;
@@ -75,25 +78,32 @@ namespace Vision2.vision.HalconRunFile.Controls
                     case "Image":
                         visionUserC1.hWindwC.Image(Image);
                         break;
+
                     case "R":
                         visionUserC1.hWindwC.Image(R);
 
                         break;
+
                     case "G":
                         visionUserC1.hWindwC.Image(G);
                         break;
+
                     case "B":
                         visionUserC1.hWindwC.Image(B);
                         break;
+
                     case "H":
                         visionUserC1.hWindwC.Image(H);
                         break;
+
                     case "S":
                         visionUserC1.hWindwC.Image(S);
                         break;
+
                     case "V":
                         visionUserC1.hWindwC.Image(V);
                         break;
+
                     default:
                         break;
                 }

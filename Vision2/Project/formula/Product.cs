@@ -29,13 +29,12 @@ namespace Vision2.Project.formula
             Add(name, this);
             Name = name;
         }
+
         /// <summary>
         /// 新建产品添加到集合
         /// </summary>
         public Product()
         {
-
-
         }
 
         /// <summary>
@@ -74,14 +73,19 @@ namespace Vision2.Project.formula
         /// </summary>
         [Description("是否可以切换"), Category("加载项"), DisplayName("是否可以加载产品")]
         public static bool IsSwitchover { get; set; }
+
         [Description("产品唯一名称"), Category("产品信息"), DisplayName("产品名称")]
         public string Name { get; set; }
+
         [Description("产品唯一编号"), Category("产品信息"), DisplayName("产品编号")]
         public string ProductID { get; set; }
+
         [Description("产品唯一ID"), Category("产品信息"), DisplayName("产品ID")]
         public string ID { get; set; }
+
         [Description("尺寸信息文本格式"), Category("产品信息"), DisplayName("尺寸信息")]
         public string Size { get; set; }
+
         [Description("产品显示的图片"), Category("产品信息"), DisplayName("显示产品图片"),
             EditorAttribute(typeof(Vision2.ErosProjcetDLL.UI.PropertyGrid.PageTypeEditor_OpenFileDialog), typeof(System.Drawing.Design.UITypeEditor))]
         public string ImagePath
@@ -94,7 +98,8 @@ namespace Vision2.Project.formula
             }
             set { imagePath = value; }
         }
-        string imagePath = "";
+
+        private string imagePath = "";
 
         [Description("多个产品图片地址组"), Category("产品信息"), DisplayName("产品图片组")]
         [Editor(typeof(Vision2.ErosProjcetDLL.UI.PropertyGrid.ListStringEditor), typeof(UITypeEditor))]
@@ -164,6 +169,7 @@ namespace Vision2.Project.formula
             }
             return false;
         }
+
         /// <summary>
         /// 关联显示控件
         /// </summary>
@@ -183,7 +189,8 @@ namespace Vision2.Project.formula
             userVisionManagement.comboBox1.SelectedItem = ProductionName;
         }
 
-        static UserFormulaContrsl userVisionManagement;
+        private static UserFormulaContrsl userVisionManagement;
+
         /// <summary>
         /// 自动切换产品配方
         /// <param name="productName">选择的产品名称</param>
@@ -341,6 +348,7 @@ namespace Vision2.Project.formula
             }
             return false;
         }
+
         /// <summary>
         /// 自动切换产品配方
         /// <param name="productName">选择的产品名称</param>
@@ -374,7 +382,6 @@ namespace Vision2.Project.formula
                 {
                     return true;
                 }
-
             }
             catch (Exception)
             {
@@ -402,8 +409,7 @@ namespace Vision2.Project.formula
                             userVisionManagement.comboBox1.SelectedItem = value;
                         }
 
-                        File.WriteAllText(Vision2.ErosProjcetDLL.Project.ProjectINI.In.ProjectPathRun + "\\产品配方\\生产产品", value);
-
+                        File.WriteAllText(ProjectINI.ProjectPathRun + "\\产品配方\\生产产品", value);
                     }
                     catch (Exception)
                     {
@@ -411,15 +417,21 @@ namespace Vision2.Project.formula
                 }
                 productionName = value;
             }
-
         }
 
-        static string productionName = "";
+        /// <summary>
+        ///工单号
+        /// </summary>
+        public static String Work_Order = "";
+
+        private static string productionName = "";
+
         /// <summary>
         /// 参数集合
         /// </summary>
         [DescriptionAttribute("参数集合。"), Category("参数"), DisplayName("参数集合"), Browsable(false)]
         public ParameterDic Parameter_Dic { get; set; } = new ParameterDic();
+
         /// <summary>
         ///  判断值是否在最大与最小之间
         /// </summary>
@@ -444,6 +456,7 @@ namespace Vision2.Project.formula
             }
             return false;
         }
+
         /// <summary>
         ///  判断值是否在最大与最小之间
         /// </summary>
@@ -461,8 +474,8 @@ namespace Vision2.Project.formula
             {
             }
             return false;
-
         }
+
         /// <summary>
         /// 链接名集合
         /// </summary>
@@ -489,7 +502,8 @@ namespace Vision2.Project.formula
             }
         }
 
-        static List<string> listLinkNames = new List<string>();
+        private static List<string> listLinkNames = new List<string>();
+
         /// <summary>
         /// 获得连接集合名称
         /// </summary>
@@ -497,18 +511,16 @@ namespace Vision2.Project.formula
         {
             get { return listLinkNames; }
         }
+
         /// <summary>
         /// 参数配置集合
         /// </summary>
-        static Dictionary<string, Product> ThisDic = new Dictionary<string, Product>();
-
-
+        private static Dictionary<string, Product> ThisDic = new Dictionary<string, Product>();
 
         /// <summary>
         /// 参数值集合
         /// </summary>
-        static Dictionary<string, Dictionary<string, string>> ValuePairs = new Dictionary<string, Dictionary<string, string>>();
-
+        private static Dictionary<string, Dictionary<string, string>> ValuePairs = new Dictionary<string, Dictionary<string, string>>();
 
         /// <summary>
         /// 添加产品
@@ -517,7 +529,7 @@ namespace Vision2.Project.formula
         /// <param name="product"></param>
         public static void Add(string name, Product product)
         {
-            Start:
+        Start:
             string das = name;
             if (ValuePairs.ContainsKey(name))
             {
@@ -546,9 +558,9 @@ namespace Vision2.Project.formula
             Product.ProductionName = name;
         }
 
-        public static void Add(string name,string NewName)
+        public static void Add(string name, string NewName)
         {
-           Start:
+        Start:
             string das = NewName;
             if (ValuePairs.ContainsKey(NewName))
             {
@@ -575,7 +587,6 @@ namespace Vision2.Project.formula
                     ValuePairs[NewName].Add(item.Key, item.Value);
                 }
             }
-
         }
 
         /// <summary>
@@ -588,7 +599,7 @@ namespace Vision2.Project.formula
             string das = name;
             string newNmae = "";
             string mesage = "修改程序名";
-            
+
             if (ValuePairs.ContainsKey(name))
             {
                 newNmae = name;
@@ -616,6 +627,7 @@ namespace Vision2.Project.formula
             }
             return "";
         }
+
         /// <summary>
         /// 获取指定名的产品参数配置,不指定名时返回默认名参数配置
         /// </summary>
@@ -642,6 +654,58 @@ namespace Vision2.Project.formula
             ThisDic.Add(name, new Product(false) { Name = name, });
             return null;
         }
+
+        public static bool SetParameData(String name, string value)
+        {
+            try
+            {
+                StructTypeValue structTypeValue = Product.GetProduct().Parameter_Dic.GetParameters()[name];
+                dynamic min = null;
+                dynamic valut = null;
+                if (!UClass.GetTypeValue(structTypeValue.TypeStr, value, out valut))
+                {
+                    return false;
+                }
+                else
+                {
+                    if (structTypeValue.minValue != "" && structTypeValue.minValue != null)
+                    {
+                        UClass.GetTypeValue(structTypeValue.TypeStr, structTypeValue.minValue, out min);
+                    }
+                    dynamic max = null;
+                    if (structTypeValue.MaxValue != "" && structTypeValue.MaxValue != null)
+                    {
+                        UClass.GetTypeValue(structTypeValue.TypeStr, structTypeValue.MaxValue, out max);
+                    }
+                    if (structTypeValue.TypeStr != "Boolean")
+                    {
+                        if ((max != null && valut > max) || (min != null && valut < min))
+                        {
+                            return false;
+                        }
+                        else
+                        {
+                            Product.GetProd()[name] = value;
+                            return true;
+                        }
+                    }
+                    else
+                    {
+                        if (int.TryParse(value, out int det))
+                        {
+                            value = Convert.ToBoolean(det).ToString();
+                        }
+                        Product.GetProd()[name] = value;
+                        return true;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+            }
+            return false;
+        }
+
         /// <summary>
         /// 获取指定名的产品参数配置,不指定名时返回默认参数配置
         /// </summary>
@@ -667,6 +731,7 @@ namespace Vision2.Project.formula
             }
             return null;
         }
+
         /// <summary>
         /// 获得配方参数
         /// </summary>
@@ -714,6 +779,7 @@ namespace Vision2.Project.formula
                 return GetProd(name);
             }
         }
+
         /// <summary>
         /// 删除产品
         /// </summary>
@@ -725,6 +791,7 @@ namespace Vision2.Project.formula
                 ValuePairs.Remove(name);
             }
         }
+
         /// <summary>
         /// 获得产品集合
         /// </summary>
@@ -739,6 +806,7 @@ namespace Vision2.Project.formula
             ThisDic = keyValuePairs;
             return ThisDic;
         }
+
         /// <summary>
         /// 获得产品集合
         /// </summary>
@@ -751,6 +819,7 @@ namespace Vision2.Project.formula
             }
             return ValuePairs;
         }
+
         /// <summary>
         /// 保存产品信息到Excle
         /// </summary>
@@ -759,7 +828,6 @@ namespace Vision2.Project.formula
         {
             try
             {
-
                 GetThisDic();
                 RecipeCompiler.Instance.Produc = Product.GetThisP();
                 string name = Path.GetFileNameWithoutExtension(path);
@@ -775,7 +843,6 @@ namespace Vision2.Project.formula
                     File.AppendAllText(nameP + "\\" + name, item.Key + Environment.NewLine);
                 }
                 return;
-
 
                 foreach (var item in ValuePairs)
                 {
@@ -804,10 +871,10 @@ namespace Vision2.Project.formula
             }
             catch (Exception ex)
             {
-
                 MessageBox.Show("保存失败:" + ex.Message);
             }
         }
+
         /// <summary>
         /// 保存产品配置信息信息到Excle
         /// </summary>
@@ -876,6 +943,7 @@ namespace Vision2.Project.formula
                 MessageBox.Show("保存失败:" + ex.Message);
             }
         }
+
         /// <summary>
         /// 读取Excel文件到集合
         /// </summary>
@@ -987,8 +1055,8 @@ namespace Vision2.Project.formula
                         {
                             string[] st;
                             if (item1[3].ToString().Contains(','))
-                            {  st = item1[3].ToString().Split(','); }
-                            else {  st = new string[] { "", "" };   }
+                            { st = item1[3].ToString().Split(','); }
+                            else { st = new string[] { "", "" }; }
                             product2.Parameter_Dic.SetKet(item1[0].ToString(), item1[1].ToString(), item1[2].ToString(), st[0], st[1], item1[4].ToString());
                             for (int i = 5; i < dataTable3.Columns.Count; i++)
                             {
@@ -1003,18 +1071,18 @@ namespace Vision2.Project.formula
                             }
                         }
                         catch (Exception ex)
-                        {  }
+                        { }
                     }
                     keyValuePairsT.Add(product2.Name, product2);
                 }
                 Product.GetListLinkNames.AddRange(product2.Parameter_Dic.ParameterMap.Keys.ToArray());
                 ThisDic = keyValuePairsT;
-                if (File.Exists(Vision2.ErosProjcetDLL.Project.ProjectINI.In.ProjectPathRun + "\\产品配方\\生产产品"))
+                if (File.Exists(ProjectINI.ProjectPathRun + "\\产品配方\\生产产品"))
                 {
-                    Product.ProductionName = File.ReadAllText(Vision2.ErosProjcetDLL.Project.ProjectINI.In.ProjectPathRun + "\\产品配方\\生产产品");
+                    Product.ProductionName = File.ReadAllText(ProjectINI.ProjectPathRun + "\\产品配方\\生产产品");
                     if (!dataNames.Contains(Product.ProductionName))
                     {
-                        Product.ProductionName = dataNames[dataNames.Length-1];
+                        Product.ProductionName = dataNames[dataNames.Length - 1];
                     }
                 }
                 return true;
@@ -1046,6 +1114,7 @@ namespace Vision2.Project.formula
             }
             return strColumns;
         }
+
         /// <summary>
         /// 返回给通信配方参数
         /// </summary>
@@ -1062,7 +1131,6 @@ namespace Vision2.Project.formula
             }
             if (Project.formula.Product.GetProduct().Parameter_Dic.ParameterMap.ContainsKey(name))
             {
-
                 foreach (var item in Project.formula.Product.GetProduct().Parameter_Dic.ParameterMap[name])
                 {
                     if (item.Value.Contains("arr"))
@@ -1079,6 +1147,7 @@ namespace Vision2.Project.formula
 
                         datastr += String.Join(split.ToString(), values);
                         break;
+
                     case SplitMode.KeyValue:
                         for (int i = 0; i < keys.Count; i++)
                         {
@@ -1103,36 +1172,43 @@ namespace Vision2.Project.formula
             /// 值类型
             /// </summary>
             public string TypeStr;
+
             /// <summary>
             /// 默认值
             /// </summary>
             public string ValueStr;
+
             /// <summary>
             /// 参数描述
             /// </summary>
             public string Pst;
+
             /// <summary>
             /// 最小值
             /// </summary>
             public string minValue;
+
             /// <summary>
             /// 最大值
             /// </summary>
             public string MaxValue;
+
             /// <summary>
             /// 值枚举选项
             /// </summary>
             public string ValueEn;
         }
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public class ParameterDic
         {
             /// <summary>
             /// 配方参数，键参数，值参数值
             /// </summary>
-            Dictionary<string, StructTypeValue> Parameters = new Dictionary<string, StructTypeValue>();
+            private Dictionary<string, StructTypeValue> Parameters = new Dictionary<string, StructTypeValue>();
+
             ///// <summary>
             ///// 类型
             ///// </summary>
@@ -1141,6 +1217,7 @@ namespace Vision2.Project.formula
             /// 装载变量映射，第一键连接名，第二键参数名，第三值连接地址
             /// </summary>
             public Dictionary<string, Dictionary<string, string>> ParameterMap = new Dictionary<string, Dictionary<string, string>>();
+
             /// <summary>
             /// 读取参数,不存在则在提升框显示错误并返回字符串“null”
             /// </summary>
@@ -1161,6 +1238,7 @@ namespace Vision2.Project.formula
                     }
                 }
             }
+
             /// <summary>
             /// 设置参数
             /// </summary>
@@ -1203,6 +1281,7 @@ namespace Vision2.Project.formula
             {
                 return Parameters;
             }
+
             /// <summary>
             /// 返回参数与值
             /// </summary>
@@ -1217,7 +1296,5 @@ namespace Vision2.Project.formula
                 return keyValuePairs;
             }
         }
-
     }
-
 }

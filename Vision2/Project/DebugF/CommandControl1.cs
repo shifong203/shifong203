@@ -7,7 +7,6 @@ namespace Vision2.Project.DebugF
 {
     public partial class CommandControl1 : System.Windows.Forms.UserControl
     {
-
         public CommandControl1(DebugCompiler compiler)
         {
             isChaerv = true;
@@ -30,18 +29,18 @@ namespace Vision2.Project.DebugF
                     dataGridView1.Rows[i].Cells[5].Value = DebugC.DDAxis.Out[i];
                     dataGridView1.Rows[i].Cells[4].Value = DebugC.DDAxis.Int[i];
                 }
-
             }
             catch (Exception)
             {
             }
             isChaerv = false;
         }
-        bool isChaerv;
-        DebugCompiler DebugC;
+
+        private bool isChaerv;
+        private DebugCompiler DebugC;
+
         private void UserCommandControl1_Enter(object sender, EventArgs e)
         {
-
         }
 
         private void treeView1_MouseClick(object sender, MouseEventArgs e)
@@ -52,22 +51,16 @@ namespace Vision2.Project.DebugF
             }
             catch (Exception)
             {
-
                 throw;
             }
-
-
-
         }
 
         private void treeView1_KeyPress(object sender, KeyPressEventArgs e)
         {
-
         }
 
         private void treeView1_KeyUp(object sender, KeyEventArgs e)
         {
-
         }
 
         private void treeView1_MouseUp(object sender, MouseEventArgs e)
@@ -78,7 +71,6 @@ namespace Vision2.Project.DebugF
             }
             catch (Exception)
             {
-
             }
         }
 
@@ -105,8 +97,6 @@ namespace Vision2.Project.DebugF
         {
             try
             {
-
-
             }
             catch (Exception)
             {
@@ -117,25 +107,20 @@ namespace Vision2.Project.DebugF
         {
             try
             {
-
-
             }
             catch (Exception)
             {
             }
-
         }
 
         private void 添加机器人ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
         }
 
         private void 删除ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
             {
-
             }
             catch (Exception)
             {
@@ -148,8 +133,6 @@ namespace Vision2.Project.DebugF
             {
                 Thread thread = new Thread(() =>
                 {
-
-
                     while (!this.IsDisposed)
                     {
                         try
@@ -158,7 +141,6 @@ namespace Vision2.Project.DebugF
                             {
                                 dataGridView1.Rows[i].Cells[5].Value = DebugC.DDAxis.Out[i];
                                 dataGridView1.Rows[i].Cells[4].Value = DebugC.DDAxis.Int[i];
-
                             }
                         }
                         catch (Exception)
@@ -172,7 +154,6 @@ namespace Vision2.Project.DebugF
             }
             catch (Exception)
             {
-
             }
         }
 
@@ -182,19 +163,14 @@ namespace Vision2.Project.DebugF
             {
                 DebugF.IO.Form1C154DIDO form1C154DIDO = new IO.Form1C154DIDO();
                 form1C154DIDO.ShowDialog();
-
             }
             catch (Exception)
             {
-
-
             }
         }
 
         private void dataGridView1_CurrentCellChanged(object sender, EventArgs e)
         {
-
-
         }
 
         private void dataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
@@ -226,7 +202,7 @@ namespace Vision2.Project.DebugF
                 }
                 else if (e.ColumnIndex == 3)
                 {
-                    if (dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value!=null)
+                    if (dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value != null)
                     {
                         DebugC.DDAxis.Out.Name[e.RowIndex] = dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString();
                     }
@@ -234,12 +210,10 @@ namespace Vision2.Project.DebugF
                     {
                         DebugC.DDAxis.Out.Name[e.RowIndex] = null;
                     }
-                   
                 }
             }
             catch (Exception)
             {
-
             }
         }
 
@@ -259,7 +233,6 @@ namespace Vision2.Project.DebugF
                         {
                             DebugC.DDAxis.Int[e.RowIndex] = true;
                         }
-
                     }
                     if (e.ColumnIndex == 5)
                     {
@@ -271,15 +244,11 @@ namespace Vision2.Project.DebugF
                         {
                             DebugC.DDAxis.Out[e.RowIndex] = true;
                         }
-
                     }
-
                 }
             }
             catch (Exception)
             {
-
-
             }
         }
     }

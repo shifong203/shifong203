@@ -93,7 +93,6 @@
             this.hSBGain = new System.Windows.Forms.HScrollBar();
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
-            this.checkBox3 = new System.Windows.Forms.CheckBox();
             this.numericUpDown4 = new System.Windows.Forms.NumericUpDown();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
@@ -146,6 +145,7 @@
             this.CamConMenuStr = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.添加采图ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.删除ToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.listBox2 = new System.Windows.Forms.ListBox();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.numericUpDown7 = new System.Windows.Forms.NumericUpDown();
             this.label9 = new System.Windows.Forms.Label();
@@ -789,9 +789,9 @@
             // 
             this.camControl1.BackColor = System.Drawing.SystemColors.AppWorkspace;
             this.camControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.camControl1.Location = new System.Drawing.Point(3, 123);
+            this.camControl1.Location = new System.Drawing.Point(3, 111);
             this.camControl1.Name = "camControl1";
-            this.camControl1.Size = new System.Drawing.Size(789, 461);
+            this.camControl1.Size = new System.Drawing.Size(789, 473);
             this.camControl1.TabIndex = 0;
             this.camControl1.Load += new System.EventHandler(this.camControl1_Load);
             // 
@@ -806,17 +806,16 @@
             this.panel1.Controls.Add(this.hSBGain);
             this.panel1.Controls.Add(this.label5);
             this.panel1.Controls.Add(this.label6);
-            this.panel1.Controls.Add(this.checkBox3);
             this.panel1.Controls.Add(this.numericUpDown4);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(3, 3);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(789, 120);
+            this.panel1.Size = new System.Drawing.Size(789, 108);
             this.panel1.TabIndex = 1;
             // 
             // button16
             // 
-            this.button16.Location = new System.Drawing.Point(11, 40);
+            this.button16.Location = new System.Drawing.Point(4, 6);
             this.button16.Name = "button16";
             this.button16.Size = new System.Drawing.Size(111, 36);
             this.button16.TabIndex = 55;
@@ -945,17 +944,6 @@
             this.label6.Size = new System.Drawing.Size(71, 12);
             this.label6.TabIndex = 49;
             this.label6.Text = "曝光(微秒)";
-            // 
-            // checkBox3
-            // 
-            this.checkBox3.AutoSize = true;
-            this.checkBox3.Location = new System.Drawing.Point(14, 10);
-            this.checkBox3.Name = "checkBox3";
-            this.checkBox3.Size = new System.Drawing.Size(108, 24);
-            this.checkBox3.TabIndex = 42;
-            this.checkBox3.Text = "独立曝光";
-            this.checkBox3.UseVisualStyleBackColor = true;
-            this.checkBox3.CheckedChanged += new System.EventHandler(this.checkBox3_CheckedChanged);
             // 
             // numericUpDown4
             // 
@@ -1335,7 +1323,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("宋体", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label4.Location = new System.Drawing.Point(10, 633);
+            this.label4.Location = new System.Drawing.Point(10, 723);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(118, 21);
             this.label4.TabIndex = 0;
@@ -1384,6 +1372,7 @@
             // tabPage10
             // 
             this.tabPage10.Controls.Add(this.dataGridView5);
+            this.tabPage10.Controls.Add(this.listBox2);
             this.tabPage10.Controls.Add(this.groupBox5);
             this.tabPage10.Location = new System.Drawing.Point(4, 30);
             this.tabPage10.Name = "tabPage10";
@@ -1407,12 +1396,12 @@
             this.Column23});
             this.dataGridView5.ContextMenuStrip = this.CamConMenuStr;
             this.dataGridView5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridView5.Location = new System.Drawing.Point(3, 98);
+            this.dataGridView5.Location = new System.Drawing.Point(123, 73);
             this.dataGridView5.Name = "dataGridView5";
             this.dataGridView5.RowHeadersVisible = false;
             this.dataGridView5.RowHeadersWidth = 50;
             this.dataGridView5.RowTemplate.Height = 30;
-            this.dataGridView5.Size = new System.Drawing.Size(789, 486);
+            this.dataGridView5.Size = new System.Drawing.Size(669, 511);
             this.dataGridView5.TabIndex = 0;
             this.dataGridView5.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView5_CellContentClick);
             this.dataGridView5.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView5_CellValueChanged);
@@ -1525,6 +1514,16 @@
             this.删除ToolStripMenuItem1.Text = "删除";
             this.删除ToolStripMenuItem1.Click += new System.EventHandler(this.删除ToolStripMenuItem1_Click);
             // 
+            // listBox2
+            // 
+            this.listBox2.Dock = System.Windows.Forms.DockStyle.Left;
+            this.listBox2.FormattingEnabled = true;
+            this.listBox2.ItemHeight = 20;
+            this.listBox2.Location = new System.Drawing.Point(3, 73);
+            this.listBox2.Name = "listBox2";
+            this.listBox2.Size = new System.Drawing.Size(120, 511);
+            this.listBox2.TabIndex = 2;
+            // 
             // groupBox5
             // 
             this.groupBox5.Controls.Add(this.numericUpDown7);
@@ -1535,7 +1534,7 @@
             this.groupBox5.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupBox5.Location = new System.Drawing.Point(3, 3);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(789, 95);
+            this.groupBox5.Size = new System.Drawing.Size(789, 70);
             this.groupBox5.TabIndex = 1;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "采图设置";
@@ -1565,7 +1564,7 @@
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(118, 35);
+            this.label9.Location = new System.Drawing.Point(116, 53);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(89, 20);
             this.label9.TabIndex = 4;
@@ -1573,7 +1572,7 @@
             // 
             // button15
             // 
-            this.button15.Location = new System.Drawing.Point(5, 54);
+            this.button15.Location = new System.Drawing.Point(302, 16);
             this.button15.Name = "button15";
             this.button15.Size = new System.Drawing.Size(111, 36);
             this.button15.TabIndex = 3;
@@ -1584,7 +1583,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(174, 289);
+            this.label8.Location = new System.Drawing.Point(174, 379);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(89, 20);
             this.label8.TabIndex = 2;
@@ -2111,7 +2110,6 @@
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.Button button6;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.CheckBox checkBox3;
         private System.Windows.Forms.NumericUpDown numericUpDown4;
         private System.Windows.Forms.Button button7;
         private System.Windows.Forms.Button button8;
@@ -2215,12 +2213,6 @@
         private ErosProjcetDLL.UI.DataGridViewF.DataGridViewNumericUpDownColumn dataGridViewTextBoxColumn32;
         private ErosProjcetDLL.UI.DataGridViewF.DataGridViewNumericUpDownColumn dataGridViewTextBoxColumn33;
         private System.Windows.Forms.DataGridViewButtonColumn Column24;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column18;
-        private ErosProjcetDLL.UI.DataGridViewF.DataGridViewNumericUpDownColumn Column19;
-        private ErosProjcetDLL.UI.DataGridViewF.DataGridViewNumericUpDownColumn Column20;
-        private ErosProjcetDLL.UI.DataGridViewF.DataGridViewNumericUpDownColumn Column21;
-        private ErosProjcetDLL.UI.DataGridViewF.DataGridViewComboBoxColumnEx Column22;
-        private System.Windows.Forms.DataGridViewButtonColumn Column23;
         private System.Windows.Forms.GroupBox groupBox5;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.NumericUpDown numericUpDown7;
@@ -2234,5 +2226,12 @@
         private System.Windows.Forms.Button button15;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Button button16;
+        private System.Windows.Forms.ListBox listBox2;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column18;
+        private ErosProjcetDLL.UI.DataGridViewF.DataGridViewNumericUpDownColumn Column19;
+        private ErosProjcetDLL.UI.DataGridViewF.DataGridViewNumericUpDownColumn Column20;
+        private ErosProjcetDLL.UI.DataGridViewF.DataGridViewNumericUpDownColumn Column21;
+        private ErosProjcetDLL.UI.DataGridViewF.DataGridViewComboBoxColumnEx Column22;
+        private System.Windows.Forms.DataGridViewButtonColumn Column23;
     }
 }

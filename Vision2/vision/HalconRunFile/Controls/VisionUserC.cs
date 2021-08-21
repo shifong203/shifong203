@@ -3,8 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using Vision2.vision.HalconRunFile.RunProgramFile;
-using static Vision2.vision.HalconRunFile.RunProgramFile.RunProgram;
-using static Vision2.vision.Vision;
 
 namespace Vision2.vision.HalconRunFile.Controls
 {
@@ -14,12 +12,14 @@ namespace Vision2.vision.HalconRunFile.Controls
         HWindow hWindowHalconID { get; set; }
         bool WhidowAdd { get; set; }
     }
+
     public class VisionUserC : HWindowControl
     {
         public class HWindwC : IDrawHalcon
         {
-            List<HObject> hObjects = new List<HObject>();
+            private List<HObject> hObjects = new List<HObject>();
             public Dictionary<string, HalconRun.ObjectColor> keyValuePairs = new Dictionary<string, HalconRun.ObjectColor>();
+
             public HObject Image(HObject image = null)
             {
                 if (image != null)
@@ -28,7 +28,8 @@ namespace Vision2.vision.HalconRunFile.Controls
                 }
                 return iamget;
             }
-            HObject iamget;
+
+            private HObject iamget;
             public HTuple magessage = new HTuple();
             public HTuple hWindowHalconID { get; set; }
             public HTuple Width;
@@ -45,15 +46,14 @@ namespace Vision2.vision.HalconRunFile.Controls
 
             public void Focus()
             {
-
             }
-
 
             public bool Keys;
+
             public void ShowFill()
             {
-
             }
+
             public void ShowOBJ(int rowi = 0, int coli = 0)
             {
                 try
@@ -118,11 +118,9 @@ namespace Vision2.vision.HalconRunFile.Controls
                 catch (Exception)
                 {
                 }
-
-
-
             }
-            void SelectOBJ(HObject hObject, HTuple hWindowHalconID, int rowi, int coli, bool ismove)
+
+            private void SelectOBJ(HObject hObject, HTuple hWindowHalconID, int rowi, int coli, bool ismove)
             {
                 HTuple intd = new HTuple();
                 if (ismove)
@@ -165,7 +163,8 @@ namespace Vision2.vision.HalconRunFile.Controls
                 HOperatorSet.DispObj(hObject, hWindowHalconID);
             }
 
-            HObject HObject;
+            private HObject HObject;
+
             public void SelesShoOBJ(HTuple hWindowHalconID)
             {
                 HOperatorSet.AreaCenter(HObject, out HTuple ar, out HTuple row, out HTuple colum);
@@ -177,7 +176,6 @@ namespace Vision2.vision.HalconRunFile.Controls
                 HTuple hTuple = "X" + row + " Y" + colum + " 面积:" + ar + "高" + height + "宽" + width + "比例" + ratio + "圆度" + circularity
                + Environment.NewLine + "紧密度" + compactness + "凸面" + convexity + "长方形" + Rectangularity;
 
-
                 HOperatorSet.SetColor(hWindowHalconID, "yellow");
                 HOperatorSet.SetDraw(hWindowHalconID, "fill");
                 HOperatorSet.DispObj(HObject, hWindowHalconID);
@@ -187,10 +185,12 @@ namespace Vision2.vision.HalconRunFile.Controls
                 HOperatorSet.SetDraw(hWindowHalconID, "margin");
                 Vision.Disp_message(hWindowHalconID, hTuple, 100, 20, true, "red");
             }
+
             public void AddListObj(HObject hObject)
             {
                 hObjects.Add(hObject);
             }
+
             public void AddKeyObj(string name, HalconRun.ObjectColor hObject)
             {
                 if (!keyValuePairs.ContainsKey(name))
@@ -198,8 +198,8 @@ namespace Vision2.vision.HalconRunFile.Controls
                     keyValuePairs.Add(name, hObject);
                 }
                 keyValuePairs[name] = hObject;
-
             }
+
             public void AddKeyObj(string name, HObject hObject, ColorResult colorResult = ColorResult.red)
             {
                 AddKeyObj(name, new HalconRun.ObjectColor() { _HObject = hObject, HobjectColot = colorResult.ToString() });
@@ -228,12 +228,10 @@ namespace Vision2.vision.HalconRunFile.Controls
 
             public void AddObj(HObject hObject, ColorResult colorResult = ColorResult.green)
             {
-      
             }
 
             public void ShowObj()
             {
-            
             }
         }
 
@@ -245,11 +243,12 @@ namespace Vision2.vision.HalconRunFile.Controls
         private HTuple ptX, ptY;
         private HTuple m_ImageRow0, m_ImageCol0;
         private HTuple hv_Button;
-        bool meuseBool;
+        private bool meuseBool;
 
         private HTuple Row0_1, Col0_1, Row1_1, Col1_1;
 
         public HWindwC hWindwC = new HWindwC();
+
         private void VisionUserControl_HMouseDown(object sender, HMouseEventArgs e)
         {
             try
@@ -274,13 +273,10 @@ namespace Vision2.vision.HalconRunFile.Controls
                 {
                     HOperatorSet.SetPart(this.HalconWindow, 0, 0, hWindwC.Height - 1, hWindwC.Width - 1);
                 }
-
             }
             catch (Exception)
             {
-
             }
-
         }
 
         private void VisionUserControl_Load(object sender, EventArgs e)
@@ -293,7 +289,6 @@ namespace Vision2.vision.HalconRunFile.Controls
                 }
                 //HOperatorSet.SetDraw(this.HalconWindow, "margin");
                 //HOperatorSet.SetColored(this.HalconWindow, 12);
-
             }
             catch (Exception)
             {
@@ -302,19 +297,16 @@ namespace Vision2.vision.HalconRunFile.Controls
 
         private void VisionUserC_KeyDown(object sender, KeyEventArgs e)
         {
-
         }
 
         private void VisionUserC_KeyUp(object sender, KeyEventArgs e)
         {
-
         }
 
         private void VisionUserControl_HMouseUp(object sender, HMouseEventArgs e)
         {
             try
             {
-
                 if (hWindwC.Drawing || hWindwC.WhidowAdd)
                 {
                     return;
@@ -322,7 +314,6 @@ namespace Vision2.vision.HalconRunFile.Controls
             }
             catch (Exception)
             {
-
             }
             meuseBool = false;
         }
@@ -330,9 +321,9 @@ namespace Vision2.vision.HalconRunFile.Controls
         private void InitializeComponent()
         {
             this.SuspendLayout();
-            // 
+            //
             // VisionUserC
-            // 
+            //
             this.Name = "VisionUserC";
             this.Size = new System.Drawing.Size(439, 360);
             this.WindowSize = new System.Drawing.Size(439, 360);
@@ -344,7 +335,6 @@ namespace Vision2.vision.HalconRunFile.Controls
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.VisionUserC_KeyDown);
             this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.VisionUserC_KeyUp);
             this.ResumeLayout(false);
-
         }
 
         public VisionUserC()
@@ -385,7 +375,6 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             try
             {
-
                 if (hWindwC == null)
                 {
                     return;
@@ -430,13 +419,12 @@ namespace Vision2.vision.HalconRunFile.Controls
                 {
                     Vision.Disp_message(HalconWindow, "X" + rowi + " Y" + coli + " B:" + Grey[0], 20, 20, true);
                 }
-
-
             }
-            catch(Exception wx)
+            catch (Exception wx)
             {
             }
         }
+
         /// <summary>
         /// 图像缩放
         /// </summary>
@@ -513,9 +501,7 @@ namespace Vision2.vision.HalconRunFile.Controls
             }
             catch (Exception es)
             {
-
             }
-
         }
     }
 }

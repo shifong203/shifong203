@@ -1,39 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using HalconDotNet;
+using System;
 using System.Windows.Forms;
 using Vision2.vision.HalconRunFile.RunProgramFile;
-using HalconDotNet;
-using static Vision2.vision.HalconRunFile.RunProgramFile.PCBA;
 
 namespace Vision2.vision.HalconRunFile.PCBFile
 {
     public partial class Cap : UserControl
     {
-        Capacitance cap;
-        HalconRun run;
+        private Capacitance cap;
+        private HalconRun run;
+
         public Cap()
         {
             InitializeComponent();
         }
-        public Cap(Capacitance capacitance, HalconRun halconRun) : this()
+
+        public Cap(Capacitance capacitance, IDrawHalcon halconRun) : this()
         {
-   
             cap = capacitance;
-            run = halconRun;
+            run = halconRun as HalconRun;
         }
-        bool isChev;
+
+        private bool isChev;
+
         private void Cap_Load(object sender, EventArgs e)
         {
             try
             {
                 isChev = true;
-                numericUpDown1.Value =(decimal) cap.Periphery_Circle;
+                numericUpDown1.Value = (decimal)cap.Periphery_Circle;
                 numericUpDown2.Value = (decimal)cap.Inside_Circle;
                 numericUpDown3.Value = cap.Inside_Thread_Min;
                 numericUpDown4.Value = cap.Inside_Thread_Max;
@@ -59,7 +54,7 @@ namespace Vision2.vision.HalconRunFile.PCBFile
             try
             {
                 HOperatorSet.AreaCenter(cap.AOIObj, out HTuple area, out HTuple row, out HTuple colu);
-                if (row.Length==0)
+                if (row.Length == 0)
                 {
                     row = 500;
                     colu = 500;
@@ -72,10 +67,11 @@ namespace Vision2.vision.HalconRunFile.PCBFile
             }
             catch (Exception ex)
             {
-              MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message);
             }
         }
-        void Set()
+
+        private void Set()
         {
             try
             {
@@ -83,7 +79,7 @@ namespace Vision2.vision.HalconRunFile.PCBFile
                 {
                     return;
                 }
-                cap.Periphery_Circle =(double) numericUpDown1.Value;
+                cap.Periphery_Circle = (double)numericUpDown1.Value;
                 cap.Inside_Circle = (double)numericUpDown2.Value;
                 cap.Inside_Thread_Min = (byte)numericUpDown3.Value;
                 cap.Inside_Thread_Max = (byte)numericUpDown4.Value;

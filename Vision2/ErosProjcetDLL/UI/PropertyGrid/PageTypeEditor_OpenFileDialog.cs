@@ -7,13 +7,13 @@ using System.Windows.Forms.Design;
 
 namespace Vision2.ErosProjcetDLL.UI.PropertyGrid
 {
-
     /// <summary>
     /// 属性页面编译器///弹出文件标记
     /// </summary>
     public class PageTypeEditor_OpenFileDialog : UITypeEditor
     {
         public static string Filter = "所有文件|*.";
+
         /// <summary>
         /// 弹出文件夹选择框
         /// </summary>
@@ -59,5 +59,4 @@ namespace Vision2.ErosProjcetDLL.UI.PropertyGrid
             return UITypeEditorEditStyle.DropDown;
         }
     }
-
 }

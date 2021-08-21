@@ -1,9 +1,6 @@
 ﻿using HalconDotNet;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Vision2.vision.HalconRunFile.RunProgramFile;
 
 namespace Vision2.vision
@@ -33,23 +30,29 @@ namespace Vision2.vision
 
         public Coordinate CoordinatePXY = new Coordinate();
 
-
-        HObject hObject = new HObject();
+        /// <summary>
+        /// 刷新显示
+        /// </summary>
+        private HObject hObject = new HObject();
 
         public HTuple RowsData { get; set; } = new HTuple();
         public HTuple ColumnsData { get; set; } = new HTuple();
+
         /// <summary>
         /// 执行ID
         /// </summary>
         public int RunID { get; set; }
+
         /// <summary>
         /// 库ID
         /// </summary>
         public int LiyID { get; set; }
+
         /// <summary>
         /// 程序名
         /// </summary>
         public string RunName { get; set; }
+
         public string NGMestage { get; set; } = "";
 
         public HTuple Massage { get; set; } = new HTuple();
@@ -59,10 +62,11 @@ namespace Vision2.vision
         public bool IsMoveBool;
 
         public bool IsXLDOrImage;
+
         ///// <summary>
         ///// 机器结果
         ///// </summary>
-        bool ResultBool
+        private bool ResultBool
         {
             get
             {
@@ -76,6 +80,7 @@ namespace Vision2.vision
                 return true;
             }
         }
+
         public bool OK
         {
             get
@@ -101,17 +106,20 @@ namespace Vision2.vision
                 autoOk = value;
             }
         }
-        bool autoOk;
+
+        private bool autoOk;
+
         /// <summary>
         /// 元件集合
         /// </summary>
-        OneCompOBJs oneContOBJs = new OneCompOBJs();
+        private OneCompOBJs oneContOBJs = new OneCompOBJs();
+
         /// <summary>
         /// 关联元件集合
         /// </summary>
         /// <param name="oneContOB"></param>
         /// <returns></returns>
-        public OneCompOBJs GetNgOBJS(OneCompOBJs oneContOB=null)
+        public OneCompOBJs GetNgOBJS(OneCompOBJs oneContOB = null)
         {
             if (oneContOB != null)
             {
@@ -120,13 +128,21 @@ namespace Vision2.vision
             return oneContOBJs;
         }
 
-
         public void ReadImage(string path)
         {
             HOperatorSet.ReadImage(out HObject hObject, path);
             Image = hObject;
-
         }
+
+        public void AddOKOBj(OneCompOBJs.OneComponent oneComponent)
+        {
+            oneContOBJs.Add(oneComponent);
+        }
+
+        /// <summary>
+        /// 添加NG结果区域数据
+        /// </summary>
+        /// <param name="rObj"></param>
         public void AddNGOBJ(OneRObj rObj)
         {
             if (!rObj.RestStrings.Contains(rObj.NGText))
@@ -136,12 +152,29 @@ namespace Vision2.vision
             oneContOBJs.AddCont(rObj);
         }
 
-        public void AddNGOBJ(string component, string nGText, HObject roi,HObject err,
-            HTuple ngText=null,string runPa="")
+        private List<HObject> imageS = new List<HObject>();
+
+        /// <summary>
+        /// 添加NG结果区域数据
+        /// </summary>
+        /// <param name="component">元件名称</param>
+        /// <param name="nGText">NG信息</param>
+        /// <param name="roi">搜索区域</param>
+        /// <param name="err">NG区域</param>
+        /// <param name="ngText">NG信息集合</param>
+        /// <param name="runPa">库名称</param>
+        public void AddNGOBJ(string component, string nGText, HObject roi, HObject err,
+            HTuple ngText = null, string runPa = "")
         {
-            OneRObj rObj = new OneRObj() { NGText = nGText, ComponentID = component,
-                ROI = roi, NGROI = err,RunName= runPa };
-            if (ngText!=null)
+            OneRObj rObj = new OneRObj()
+            {
+                NGText = nGText,
+                ComponentID = component,
+                ROI = roi,
+                NGROI = err,
+                RunName = runPa
+            };
+            if (ngText != null)
             {
                 for (int i = 0; i < ngText.Length; i++)
                 {
@@ -153,7 +186,15 @@ namespace Vision2.vision
             }
             AddNGOBJ(rObj);
         }
-  
+
+        /// <summary>
+        /// 添加信息到图像显示
+        /// </summary>
+        /// <param name="rows">坐标</param>
+        /// <param name="columns">坐标</param>
+        /// <param name="Massage">信息</param>
+        /// <param name="color">颜色</param>
+        /// <param name="meblut"></param>
         public void AddImageMassage(HTuple rows, HTuple columns, HTuple Massage, ColorResult color, string meblut = "false")
         {
             if (columns.Length > Massage.Length)
@@ -172,6 +213,7 @@ namespace Vision2.vision
                     MaRed.MassageBlute = meblut;
 
                     break;
+
                 case ColorResult.yellow:
 
                     if (rows.Length == columns.Length && columns.Length == Massage.Length)
@@ -183,6 +225,7 @@ namespace Vision2.vision
                         MaYellow.MassageBlute = meblut;
                     }
                     break;
+
                 case ColorResult.green:
                     if (rows.Length == columns.Length && columns.Length == Massage.Length)
                     {
@@ -193,6 +236,7 @@ namespace Vision2.vision
                         MaGreen.MassageBlute = meblut;
                     }
                     break;
+
                 case ColorResult.blue:
                     if (rows.Length == columns.Length && columns.Length == Massage.Length)
                     {
@@ -203,10 +247,18 @@ namespace Vision2.vision
                         MaBlue.MassageBlute = meblut;
                     }
                     break;
+
                 default:
                     break;
             }
         }
+
+        /// <summary>
+        ///  添加信息到图像显示
+        /// </summary>
+        /// <param name="rows">坐标</param>
+        /// <param name="columns">坐标</param>
+        /// <param name="Massage">信息</param>
         public void AddImageMassage(HTuple rows, HTuple columns, HTuple Massage)
         {
             string meblut = "false";
@@ -227,6 +279,7 @@ namespace Vision2.vision
                     MaRed.MassageBlute = meblut;
 
                     break;
+
                 case ColorResult.yellow:
 
                     if (rows.Length == columns.Length && columns.Length == Massage.Length)
@@ -238,6 +291,7 @@ namespace Vision2.vision
                         MaYellow.MassageBlute = meblut;
                     }
                     break;
+
                 case ColorResult.green:
                     if (rows.Length == columns.Length && columns.Length == Massage.Length)
                     {
@@ -248,6 +302,7 @@ namespace Vision2.vision
                         MaGreen.MassageBlute = meblut;
                     }
                     break;
+
                 case ColorResult.blue:
                     if (rows.Length == columns.Length && columns.Length == Massage.Length)
                     {
@@ -258,10 +313,12 @@ namespace Vision2.vision
                         MaBlue.MassageBlute = meblut;
                     }
                     break;
+
                 default:
                     break;
             }
         }
+
         public void AddObj(HObject hObject, ColorResult color)
         {
             try
@@ -275,15 +332,19 @@ namespace Vision2.vision
                     case ColorResult.red:
                         HObjectRed = HObjectRed.ConcatObj(hObject);
                         break;
+
                     case ColorResult.yellow:
                         HObjectYellow = HObjectYellow.ConcatObj(hObject);
                         break;
+
                     case ColorResult.green:
                         HObjectGreen = HObjectGreen.ConcatObj(hObject);
                         break;
+
                     case ColorResult.blue:
                         HObjectBlue = HObjectBlue.ConcatObj(hObject);
                         break;
+
                     default:
                         AddObj(hObject, color.ToString());
                         break;
@@ -293,23 +354,32 @@ namespace Vision2.vision
             {
             }
         }
-        HObject Colrrs = new HObject();
+
+        private HObject Colrrs = new HObject();
+
         public void SetCross(HObject hObject)
         {
             Colrrs = hObject;
         }
-    
+
         public void AddObj(HObject hObject, HTuple color = null)
         {
             ListHobj.Add(new Hobjt_Colro(hObject, color));
         }
-        public void AddNameOBJ(string  name, HObject hObject, HTuple colr=null)
+
+        /// <summary>
+        /// 添加带名称的区域
+        /// </summary>
+        /// <param name="name">区域名称</param>
+        /// <param name="hObject">区域</param>
+        /// <param name="colr">颜色</param>
+        public void AddNameOBJ(string name, HObject hObject, HTuple colr = null)
         {
             try
             {
                 if (Dick.ContainsKey(name))
                 {
-                    Dick[name]=new Hobjt_Colro(hObject, colr);
+                    Dick[name] = new Hobjt_Colro(hObject, colr);
                 }
                 else
                 {
@@ -320,7 +390,14 @@ namespace Vision2.vision
             {
             }
         }
-        public void AddNameOBJ(string name, HObject hObject, ColorResult colr )
+
+        /// <summary>
+        /// 添加带名称的区域
+        /// </summary>
+        /// <param name="name">区域名称</param>
+        /// <param name="hObject">区域</param>
+        /// <param name="colr">颜色</param>
+        public void AddNameOBJ(string name, HObject hObject, ColorResult colr)
         {
             try
             {
@@ -337,29 +414,40 @@ namespace Vision2.vision
             {
             }
         }
+
+        /// <summary>
+        /// 添加信息到图像左上方
+        /// </summary>
+        /// <param name="massage"></param>
         public void AddMeassge(HTuple massage)
         {
             Massage.Append(massage);
         }
-        public HalconRun GetHalcon(HalconRun halcon=null)
+
+        public HalconRun GetHalcon(HalconRun halcon = null)
         {
-            if (halcon!=null)
+            if (halcon != null)
             {
                 Halcon = halcon;
-
             }
             return Halcon;
         }
-        HalconRun Halcon;
+
+        private HalconRun Halcon;
+
         public HTuple GetCaliConstMM(HTuple values)
         {
-           return Halcon.GetCaliConstMM(values);
+            return Halcon.GetCaliConstMM(values);
         }
 
         public HTuple GetCaliConstPx(HTuple values)
         {
             return Halcon.GetCaliConstPx(values);
         }
+
+        /// <summary>
+        ///
+        /// </summary>
         public void ClearAllObj()
         {
             HObjectYellow.GenEmptyObj();
@@ -376,6 +464,7 @@ namespace Vision2.vision
             ListHobj.Clear();
             oneContOBJs.DicOnes.Clear();
         }
+
         public void ClearImageMassage()
         {
             MaGreen = new MassageText();
@@ -383,6 +472,7 @@ namespace Vision2.vision
             MaYellow = new MassageText();
             MaBlue = new MassageText();
         }
+
         public void Dispose()
         {
             try
@@ -401,8 +491,10 @@ namespace Vision2.vision
             {
             }
         }
-        HObject HObject;
-        void SelectOBJ(HObject hObject, HTuple hWindowHalconID, int rowi, int coli, bool ismove)
+
+        private HObject HObject;
+
+        private void SelectOBJ(HObject hObject, HTuple hWindowHalconID, int rowi, int coli, bool ismove)
         {
             HTuple intd = new HTuple();
             if (ismove)
@@ -446,10 +538,10 @@ namespace Vision2.vision
                 catch (Exception ex)
                 {
                 }
-
             }
             HOperatorSet.DispObj(hObject, hWindowHalconID);
         }
+
         public void ShowAll(HTuple hWindowHalconID, int rowi = 0, int coli = 0, bool ismovet = false)
         {
             try
@@ -468,8 +560,6 @@ namespace Vision2.vision
                 HSystem.SetSystem("flush_graphic", "true");
                 //
 
-
-
                 if (!IsXLDOrImage)
                 {
                     ShouOBJ(hWindowHalconID, rowi, coli, ismovet);
@@ -486,8 +576,9 @@ namespace Vision2.vision
                 ErosProjcetDLL.Project.AlarmText.AddTextNewLine("HalconResult显示故障:" + ex.Message);
             }
         }
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="hWindowHalconID"></param>
         /// <param name="rowi"></param>
@@ -504,7 +595,7 @@ namespace Vision2.vision
                     HObject.GenEmptyObj();
                 }
                 //HSystem.SetSystem("flush_graphic", "false");
-        
+
                 HOperatorSet.SetColor(hWindowHalconID, "green");
                 SelectOBJ(HObjectGreen, hWindowHalconID, rowi, coli, ismovet);
                 HOperatorSet.SetColor(hWindowHalconID, "yellow");
@@ -596,13 +687,13 @@ namespace Vision2.vision
                     MaBlue.ShowMassage(hWindowHalconID);
                     MaYellow.ShowMassage(hWindowHalconID);
                 }
-
             }
             catch (Exception ex)
             {
                 ErosProjcetDLL.Project.AlarmText.AddTextNewLine("HalconResult显示故障:" + ex.StackTrace);
             }
         }
+
         /// <summary>
         /// 查看细节
         /// </summary>
@@ -649,22 +740,16 @@ namespace Vision2.vision
                 HOperatorSet.GenCrossContourXld(out HObject cross, row, colum, 20, 0);
                 HOperatorSet.DispObj(cross, hWindowHalconID);
                 HOperatorSet.DispObj(HObject, hWindowHalconID);
-
             }
             catch (Exception)
             {
-
-
             }
-
         }
 
         public static void ShowImae(HTuple hWindowHalconID, HObject image)
         {
             try
             {
-
-
                 HSystem.SetSystem("flush_graphic", "false");
                 //Massage = new HTuple();
                 if (Vision.IsObjectValided(image))
@@ -679,8 +764,6 @@ namespace Vision2.vision
             }
             catch (Exception)
             {
-
-
             }
         }
 
@@ -688,11 +771,40 @@ namespace Vision2.vision
 
         public int Width;
 
+        public void AddImage(HObject hObject)
+        {
+            imageS.Add(hObject);
+        }
+
+        public void ClerImage()
+        {
+            imageS.Clear();
+        }
+
+        /// <summary>
+        /// 红色区域
+        /// </summary>
         public HObject HObjectRed { get; set; }
+
+        /// <summary>
+        /// 主图像
+        /// </summary>
         public HObject Image { get; set; }
+
+        /// <summary>
+        /// 绿色区域
+        /// </summary>
         public HObject HObjectGreen { get; set; } = new HObject();
 
+        /// <summary>
+        /// 黄色区域
+        /// </summary>
+
         public HObject HObjectYellow { get; set; } = new HObject();
+
+        /// <summary>
+        /// 蓝色区域
+        /// </summary>
         public HObject HObjectBlue { get; set; } = new HObject();
 
         public MassageText MaRed { get; set; } = new MassageText();
@@ -716,21 +828,24 @@ namespace Vision2.vision
                 {
                     Color = color;
                 }
-
             }
+
             public HObject Object = new HObject();
             public HTuple Color = new HTuple("green");
         }
-        public Dictionary<string, Hobjt_Colro> GetKeyHobj(Dictionary<string, Hobjt_Colro> keyValuePairs =null   )
+
+        public Dictionary<string, Hobjt_Colro> GetKeyHobj(Dictionary<string, Hobjt_Colro> keyValuePairs = null)
         {
-            if (keyValuePairs!=null)
+            if (keyValuePairs != null)
             {
                 Dick = keyValuePairs;
             }
             return Dick;
         }
-        Dictionary<string, Hobjt_Colro> Dick = new Dictionary<string, Hobjt_Colro>();
-        List<Hobjt_Colro> ListHobj = new List<Hobjt_Colro>();
+
+        private Dictionary<string, Hobjt_Colro> Dick = new Dictionary<string, Hobjt_Colro>();
+        private List<Hobjt_Colro> ListHobj = new List<Hobjt_Colro>();
+
         ~OneResultOBj()
         {
             //if (HObject != null)
@@ -739,5 +854,4 @@ namespace Vision2.vision
             //}
         }
     }
-
 }

@@ -25,18 +25,15 @@ namespace Vision2.vision.Calib
                     }
                     for (int i = 0; i < _Coordinate.Rows.Length; i++)
                     {
-
                         dataGridView1.Rows[i].Cells[0].Value = _Coordinate.Rows.TupleSelect(i);
                     }
                     for (int i = 0; i < _Coordinate.Columns.Length; i++)
                     {
-
                         dataGridView1.Rows[i].Cells[1].Value = _Coordinate.Columns.TupleSelect(i);
                     }
 
                     for (int i = 0; i < _Coordinate.Xs.Length; i++)
                     {
-
                         dataGridView1.Rows[i].Cells[2].Value = _Coordinate.Xs.TupleSelect(i);
                     }
                     for (int i = 0; i < _Coordinate.Ys.Length; i++)
@@ -44,13 +41,10 @@ namespace Vision2.vision.Calib
                         dataGridView1.Rows[i].Cells[3].Value = _Coordinate.Ys.TupleSelect(i);
                     }
                 }
-
             }
             catch (Exception)
             {
-
             }
-
         }
 
         private void button3_Click(object sender, System.EventArgs e)
@@ -73,7 +67,6 @@ namespace Vision2.vision.Calib
                     Ymm.Append(double.Parse(dataGridView1.Rows[i].Cells[3].Value.ToString()));
                 }
 
-
                 _Coordinate.VectorToHomMat2d(rowP, ColP, Ymm, Xmm);
                 HTuple HomMat = _Coordinate.CoordHanMat2DXY;
                 HOperatorSet.HomMat2dToAffinePar(_Coordinate.CoordHanMat2DXY, out HTuple sx, out HTuple sy, out HTuple phi, out HTuple theta, out HTuple tx, out HTuple ty);
@@ -85,8 +78,6 @@ namespace Vision2.vision.Calib
             }
             catch (Exception)
             {
-
-
             }
         }
 
@@ -103,10 +94,7 @@ namespace Vision2.vision.Calib
             }
             catch (Exception)
             {
-
-
             }
-
         }
     }
 }

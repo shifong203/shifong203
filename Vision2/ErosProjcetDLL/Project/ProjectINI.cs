@@ -11,12 +11,8 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
 
-
-
 namespace Vision2.ErosProjcetDLL.Project
 {
-
-
     /// <summary>
     /// 解决方案框架
     /// </summary>
@@ -57,10 +53,11 @@ namespace Vision2.ErosProjcetDLL.Project
             }
             set { iNI = value; }
         }
+
         [DllImport("kernel32")]
         public static extern void GlobalMemoryStatus(ref MEMORY_INFO meminfo);
 
-        //定义内存的信息结构 
+        //定义内存的信息结构
         [StructLayout(LayoutKind.Sequential)]
         public struct MEMORY_INFO
         {
@@ -89,15 +86,16 @@ namespace Vision2.ErosProjcetDLL.Project
             text += "未用虚拟内存有" + GetMB(MemInfo.dwAvailVirtual).ToString() + "MB" + Environment.NewLine;
             return text;
         }
+
         public static double GetMB(uint valut)
         {
-
             for (int i = 0; i < 2; i++)
             {
                 valut /= 1024;
             }
             return valut;
         }
+
         public static uint GetMemoryDW()
         {
             MEMORY_INFO MemInfo;
@@ -105,17 +103,18 @@ namespace Vision2.ErosProjcetDLL.Project
             GlobalMemoryStatus(ref MemInfo);
             return MemInfo.dwMemoryLoad;
         }
+
         /// <summary>
         /// 获取当前使用的内存
         /// </summary>
         /// <returns></returns>
         public static string GetMemory()
         {
-            long b=0;
+            long b = 0;
             try
             {
                 Process proc = Process.GetCurrentProcess();
-                 b = proc.PrivateMemorySize64;
+                b = proc.PrivateMemorySize64;
                 for (int i = 0; i < 2; i++)
                 {
                     b /= 1024;
@@ -123,23 +122,22 @@ namespace Vision2.ErosProjcetDLL.Project
             }
             catch (Exception)
             {
-
             }
             //proc.m
             return b + "MB";
-
-
         }
+
         public static bool DebugMode { get; set; }
 
         private static ProjectINI iNI;
+
         /// <summary>
         /// 设置数据到INI文件
         /// </summary>
         /// <param name="item">节点</param>
         /// <param name="key">键</param>
         /// <param name="data">值</param>
-        public static void SetTempPrjectDataINI(string item,string key,string data)
+        public static void SetTempPrjectDataINI(string item, string key, string data)
         {
             try
             {
@@ -149,13 +147,14 @@ namespace Vision2.ErosProjcetDLL.Project
             {
             }
         }
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="item"></param>
         /// <param name="key"></param>
         /// <param name="data"></param>
-        public static void GetTempPrjectDataINI(string item, string key,out string data)
+        public static void GetTempPrjectDataINI(string item, string key, out string data)
         {
             StringBuilder stringBuilder = new StringBuilder();
             data = "";
@@ -169,7 +168,7 @@ namespace Vision2.ErosProjcetDLL.Project
             data = stringBuilder.ToString();
         }
 
-        public static string GetInI(string path,string item,string key)
+        public static string GetInI(string path, string item, string key)
         {
             StringBuilder stringBuilder = new StringBuilder();
 
@@ -182,31 +181,50 @@ namespace Vision2.ErosProjcetDLL.Project
             }
             return stringBuilder.ToString();
         }
+
+        public string GetText(string path, string key, string name)
+        {
+            try
+            {
+                if (File.Exists(path))
+                {
+                    string[] da = File.ReadAllLines(path);
+                    if (da.Contains("[" + key + "]"))
+                    {
+                    }
+                }
+            }
+            catch (Exception)
+            {
+            }
+            return "";
+        }
+
         public static string TempPath
         {
             get
             {
-                Directory.CreateDirectory(ProjietPath + "\\Temp\\");
-                return ProjietPath + "\\Temp\\";
+                Directory.CreateDirectory(ProjietPath + "Temp\\");
+                return ProjietPath + "Temp\\";
             }
         }
-
 
         /// <summary>
         /// 链接委托
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        /// 
+        ///
         public delegate bool ModeEven(string kay, bool selpMode);
 
         public event ModeEven ModeEvenT;
+
         //public static Form MainFrom;
 
         public string Language { get; set; } = "US-En";
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="key"></param>
         /// <param name="selpMode"></param>
@@ -220,9 +238,9 @@ namespace Vision2.ErosProjcetDLL.Project
 
             ModeEvenT?.Invoke(key, SelpMode);
 
-
             return SelpMode;
         }
+
         public static bool Enbt
         {
             get
@@ -237,6 +255,7 @@ namespace Vision2.ErosProjcetDLL.Project
                 }
             }
         }
+
         public static bool AdminEnbt
         {
             get
@@ -251,6 +270,7 @@ namespace Vision2.ErosProjcetDLL.Project
                 }
             }
         }
+
         /// <summary>
         /// 权限限制
         /// </summary>
@@ -265,7 +285,9 @@ namespace Vision2.ErosProjcetDLL.Project
 
             return false;
         }
-        static Form form;
+
+        private static Form form;
+
         public static Form Form(Form formT = null)
         {
             if (formT != null)
@@ -283,7 +305,7 @@ namespace Vision2.ErosProjcetDLL.Project
         public UserData UsData { get; set; } = new UserData();
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public class UserData
         {
@@ -299,18 +321,17 @@ namespace Vision2.ErosProjcetDLL.Project
             Dic_Project_Path.Add("AppRun1", "\\AppRun1");
             this.RunName = "AppRun1";
         }
+
         public static string ProjietPath = "C:\\Vision2\\";
 
         ///// <summary>
-        ///// 
+        /////
         ///// </summary>
         //private string ConstPathStr = Application.StartupPath + "\\ProjectInI\\ProjectName.Project";
         /// <summary>
-        /// 
+        ///
         /// </summary>
         private string ConstPathStr = ProjietPath + "ProjectInI\\ProjectName.Project";
-
-
 
         /// <summary>
         /// 解决方案集合
@@ -344,7 +365,7 @@ namespace Vision2.ErosProjcetDLL.Project
         /// <summary>
         /// 运行地址
         /// </summary>
-        public string ProjectPathRun
+        public static string ProjectPathRun
         {
             get { return ProjietPath + "Project\\" + ProjectINI.In.ProjectName + "\\" + ProjectINI.In.RunName; }
         }
@@ -378,13 +399,16 @@ namespace Vision2.ErosProjcetDLL.Project
         /// </summary>
         [Description("用户权限集合"), Category("用户管理"), DisplayName("权限"), ReadOnly(true)]
         public List<string> ListRight { get; set; } = new List<string>();
+
         [Description("当前用户权限"), Category("用户管理"), DisplayName("当前权限"), ReadOnly(true)]
         public string Right { get; set; } = "";
+
         /// <summary>
         /// 用户名
         /// </summary>
         [Description("用户名称"), Category("用户管理"), DisplayName("用户名"), ReadOnly(true)]
         public string UserName { get; set; } = string.Empty;
+
         /// <summary>
         /// 用户ID
         /// </summary>
@@ -396,26 +420,27 @@ namespace Vision2.ErosProjcetDLL.Project
         /// </summary>
         [Description("用户部门"), Category("用户管理"), DisplayName("用户部门"), ReadOnly(true)]
         public string UserDepartment { get; set; } = string.Empty;
+
         #region 报警文本管理
+
         [Description("报警文本显示最大上限"), Category("报警显示"), DisplayName("报警文本上限")]
         public int MaxText { get; set; } = 100;
+
         [DescriptionAttribute("报警信息框显示。"), Category("报警显示"), DisplayName("是否显示信息框")]
         public bool IsAlramText { get; set; }
-
-
 
         [DescriptionAttribute("报警灯IO。"), Category("报警显示"), DisplayName("报警灯IO")]
         /// <summary>
         /// 是否弹出错误提示框
         /// </summary>
         public int AlarmIntS { get; set; } = -1;
-        #endregion
+
+        #endregion 报警文本管理
 
         /// <summary>
         /// 用户权限组
         /// </summary>
         public User User = new User();
-
 
         /// <summary>
         /// 程序集合
@@ -552,8 +577,6 @@ namespace Vision2.ErosProjcetDLL.Project
             }
         }
 
-
-
         /// <summary>
         /// 保存项目，项目文件保存为Path地址，其他文件保存到项目名称下FileName
         /// </summary>
@@ -563,7 +586,6 @@ namespace Vision2.ErosProjcetDLL.Project
         {
             try
             {
-
                 ClassToJsonSavePath(this, path);
                 if (FileName == null)
                 {
@@ -595,6 +617,7 @@ namespace Vision2.ErosProjcetDLL.Project
         {
             SaveProjectAll(ProjietPath + "ProjectInI\\ProjectName.Project");
         }
+
         /// <summary>
         /// 另存项目
         /// </summary>
@@ -603,8 +626,9 @@ namespace Vision2.ErosProjcetDLL.Project
         {
             SaveProjectAll(ProjietPath + "ProjectInI\\ProjectName.Project", fileNmae);
         }
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="path"></param>
         public void SaveThis(string path = null)
@@ -615,6 +639,7 @@ namespace Vision2.ErosProjcetDLL.Project
             }
             ClassToJsonSavePath(this, path);
         }
+
         /// <summary>
         ///
         /// </summary>
@@ -626,6 +651,7 @@ namespace Vision2.ErosProjcetDLL.Project
             }
             Process.GetCurrentProcess().Kill();
         }
+
         /// <summary>
         /// 保存零时文件
         /// </summary>
@@ -635,6 +661,7 @@ namespace Vision2.ErosProjcetDLL.Project
         {
             File.WriteAllText(ProjectINI.TempPath + filename, text);
         }
+
         /// <summary>
         /// 读取临时文件
         /// </summary>
@@ -650,8 +677,8 @@ namespace Vision2.ErosProjcetDLL.Project
             {
             }
             return "";
-
         }
+
         /// <summary>
         /// 读取json文件转换为类
         /// </summary>
@@ -713,13 +740,14 @@ namespace Vision2.ErosProjcetDLL.Project
             string jsonStr = "";
             try
             {
-                 jsonStr = JsonConvert.SerializeObject(obje);
+                jsonStr = JsonConvert.SerializeObject(obje);
             }
-            catch (Exception  ex)
+            catch (Exception ex)
             {
             }
             return jsonStr;
         }
+
         // <summary>
         /// 将一个实体类复制到另一个实体类
         /// </summary>
@@ -754,15 +782,15 @@ namespace Vision2.ErosProjcetDLL.Project
             catch (Exception ex)
             {
             }
-       
         }
+
         public static bool StringJsonToCalss<T>(string Jonstring, out T obje)/* where T : new()*/
         {
             obje = default(T);
             try
             {
                 obje = JsonConvert.DeserializeObject<T>(Jonstring);
-                    //登录窗口中 读取语言资源文件
+                //登录窗口中 读取语言资源文件
                 return true;
             }
             catch (Exception ex)
@@ -807,8 +835,6 @@ namespace Vision2.ErosProjcetDLL.Project
         [System.Runtime.InteropServices.DllImport("user32.dll", CharSet = CharSet.Auto)]
         private static extern bool SwitchToThisWindow(IntPtr hWnd, bool fAltTab);
 
-
-
         /// <summary>
         /// 保存项目到目标地址
         /// </summary>
@@ -840,7 +866,6 @@ namespace Vision2.ErosProjcetDLL.Project
                 //dSave(path);
             }
         }
-
 
         /// <summary>
         /// 查询StringBuilder数组变量
@@ -881,6 +906,7 @@ namespace Vision2.ErosProjcetDLL.Project
             int.TryParse(dsts, out intsd);
             return intsd;
         }
+
         /// <summary>
         /// 获取字符结尾数值并加1返回新字符
         /// </summary>
@@ -891,6 +917,7 @@ namespace Vision2.ErosProjcetDLL.Project
             int d = GetStrReturnInt(name, out string nameStr);
             return nameStr += d.ToString();
         }
+
         /// <summary>
         /// 返回字符串中结尾数值和字符串
         /// </summary>
@@ -917,8 +944,6 @@ namespace Vision2.ErosProjcetDLL.Project
                     }
                     break;
                 }
-
-
             }
             if (intsd == 0)
             {
@@ -1080,10 +1105,7 @@ namespace Vision2.ErosProjcetDLL.Project
             return entity;
         }
 
-
         public static DataTable LanguageResources = new DataTable();
-
-
 
         public static void GetLanguageText<T>(T obj)
         {
@@ -1152,7 +1174,6 @@ namespace Vision2.ErosProjcetDLL.Project
                     {
                         c.Text = drs[0][ProjectINI.In.Language].ToString();
                     }
-
                 }
                 if (typeof(ToolStripMenuItem) == obj.GetType().BaseType
                   || typeof(ToolStripMenuItem) == obj.GetType())
@@ -1184,12 +1205,12 @@ namespace Vision2.ErosProjcetDLL.Project
                         }
                     }
                 }
-
             }
             catch (Exception ex)
             {
             }
         }
+
         #region ini 文件读写函数
 
         //再一种声明，使用string作为缓冲区的类型同char[]
@@ -1203,7 +1224,7 @@ namespace Vision2.ErosProjcetDLL.Project
         /// <param name="nSize">内容缓冲区的长度</param>
         /// <param name="lpFileName">INI文件名</param>
         /// <returns>实际读取到的长度</returns>
-        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
         public static extern uint GetPrivateProfileString(string lpAppName, string lpKeyName, string lpDefault, [In, Out] char[] lpReturnedString, uint nSize, string lpFileName);
 
         //另一种声明方式,使用 StringBuilder 作为缓冲区类型的缺点是不能接受\0字符，会将\0及其后的字符截断,
@@ -1218,7 +1239,7 @@ namespace Vision2.ErosProjcetDLL.Project
         /// <param name="nSize">内容缓冲区的长度</param>
         /// <param name="lpFileName">INI文件名</param>
         /// <returns>实际读取到的长度</returns>
-        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
         public static extern uint GetPrivateProfileString(string lpAppName, string lpKeyName, string lpDefault, StringBuilder lpReturnedString, uint nSize, string lpFileName);
 
         /// <summary>
@@ -1231,7 +1252,7 @@ namespace Vision2.ErosProjcetDLL.Project
         /// <param name="nSize">内容缓冲区的长度</param>
         /// <param name="lpFileName">INI文件名</param>
         /// <returns>实际读取到的长度</returns>
-        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
         public static extern uint GetPrivateProfileString(string lpAppName, string lpKeyName, string lpDefault, string lpReturnedString, uint nSize, string lpFileName);
 
         /// <summary>
@@ -1242,12 +1263,10 @@ namespace Vision2.ErosProjcetDLL.Project
         /// <param name="lpString">值内容。如果为null，则删除指定节点中指定的键。</param>
         /// <param name="lpFileName">INI文件</param>
         /// <returns>操作是否成功</returns>
-        [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool WritePrivateProfileString(string lpAppName, string lpKeyName, string lpString, string lpFileName);
 
         #endregion ini 文件读写函数
-
-
     }
 }

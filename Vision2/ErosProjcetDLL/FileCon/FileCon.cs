@@ -42,6 +42,7 @@ namespace Vision2.ErosProjcetDLL.FileCon
         {
             return GetFilesArrayPath(path).Where(item => item.EndsWith(sele, StringComparison.Ordinal)).ToArray();
         }
+
         /// <summary>
         /// 将地址文件夹以及文件递归显示在TreeView上
         /// </summary>
@@ -49,7 +50,6 @@ namespace Vision2.ErosProjcetDLL.FileCon
         /// <param name="path"></param>
         public static void GetFilesToTreeNode(TreeNode tree, string path)
         {
-
             string[] itemPaths = Directory.GetDirectories(path);
             string[] itemPaths1 = Directory.GetFiles(path);
 
@@ -61,7 +61,6 @@ namespace Vision2.ErosProjcetDLL.FileCon
                 treeNode.Name = treeNode.Text = Path.GetFileName(itemPaths1[i]);
                 treeNode.Tag = itemPaths1[i];
                 tree.Nodes.Add(treeNode);
-
             }
             for (int i = 0; i < itemPaths.Length; i++)
             {
@@ -76,8 +75,8 @@ namespace Vision2.ErosProjcetDLL.FileCon
         {
             public CustomFilesNameComparer()
             {
-
             }
+
             // Calls CaseInsensitiveComparer.Compare with the parameters reversed.
             ///<summary>
             ///比较两个字符串，如果含用数字，则数字按数字的大小来比较。
@@ -119,7 +118,6 @@ namespace Vision2.ErosProjcetDLL.FileCon
                         {
                             return -1;
                         }
-
                     }
                     else
                     {
@@ -134,9 +132,7 @@ namespace Vision2.ErosProjcetDLL.FileCon
                         }
                         i++;
                         j++;
-
                     }
-
                 }
                 if (arr1.Length == arr2.Length)
                 {
@@ -148,17 +144,20 @@ namespace Vision2.ErosProjcetDLL.FileCon
                 }
             }
         }
+
         public class CustomComparer : System.Collections.IComparer
         {
             public CustomComparer()
             {
-
             }
-            string sele;
+
+            private string sele;
+
             public CustomComparer(string selestr)
             {
                 sele = selestr;
             }
+
             // Calls CaseInsensitiveComparer.Compare with the parameters reversed.
             ///<summary>
             ///比较两个字符串，如果含用数字，则数字按数字的大小来比较。
@@ -199,7 +198,6 @@ namespace Vision2.ErosProjcetDLL.FileCon
                 return -1;
             }
         }
-
 
         /// <summary>
         /// 获得文件夹下所有赛选文件地址
@@ -280,7 +278,6 @@ namespace Vision2.ErosProjcetDLL.FileCon
                 files.Add(fileList[i].FullName);
             }
 
-
             if (files.Count != 0)
             {
                 List<string> filesSeles = new List<string>();
@@ -300,10 +297,11 @@ namespace Vision2.ErosProjcetDLL.FileCon
             var paths = Directory.GetDirectories(path);
             for (int i = 0; i < paths.Length; i++)
             {
-                fileslist.AddRange ( GetFilesListPath(paths[i], sele));
+                fileslist.AddRange(GetFilesListPath(paths[i], sele));
             }
             return fileslist;
         }
+
         public class FileComparer : IComparer
         {
             /// <summary>

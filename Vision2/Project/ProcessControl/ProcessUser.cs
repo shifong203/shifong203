@@ -32,6 +32,7 @@ namespace Vision2.Project.ProcessControl
         {
             This = this;
         }
+
         [DescriptionAttribute(""), Category("EAP"), DisplayName("启动EAPStub"),]
         public bool EndbEap { get; set; }
 
@@ -58,23 +59,30 @@ namespace Vision2.Project.ProcessControl
                 qrCode = value;
             }
         }
-        static String qrCode = "";
 
+        private static String qrCode = "";
+
+        /// <summary>
+        ///
+        /// </summary>
         public string ExcelPath { get; set; } = Application.StartupPath;
+
         /// <summary>
         /// 托盘ID名称
         /// </summary>
         public string CarrierQRIDName { get; set; } = "Sputter Carrier";
+
         /// <summary>
         /// 分割符号
         /// </summary>
         public string Split_Symbol { get; set; } = "=";
+
         /// <summary>
         /// 托盘前缀名称
         /// </summary>
         public string SN_Name { get; set; } = "SN";
 
-        static ProcessUser This;
+        private static ProcessUser This;
 
         /// <summary>
         /// 更新参数节点
@@ -91,10 +99,13 @@ namespace Vision2.Project.ProcessControl
                 MessageBox.Show(this.Name + "刷新错误:" + ex.Message);
             }
         }
-        ProcessControl userVisionManagement;
+
+        private ProcessControl userVisionManagement;
+
         [DescriptionAttribute("读取产品ID的地址指针。（可自定多个地址读取，以,分割）"), Category("触发器"), DisplayName("产品ID地址名称"),]
         [Editor(typeof(ErosSocket.ErosConLink.LinkName_ValuesNameUserControl.Editor), typeof(UITypeEditor))]
         public string ReadName { get; set; } = string.Empty;
+
         [DescriptionAttribute("载具ID的地址指针。"), Category("触发器"), DisplayName("载具地址名称"),]
         [Editor(typeof(ErosSocket.ErosConLink.LinkName_ValuesNameUserControl.Editor), typeof(UITypeEditor))]
         public string ReadPairsName { get; set; } = string.Empty;
@@ -102,6 +113,7 @@ namespace Vision2.Project.ProcessControl
         [DescriptionAttribute("读取二维码地址。"), Category("触发器"), DisplayName("触发读取二维码"),]
         [Editor(typeof(ErosSocket.ErosConLink.LinkName_ValuesNameUserControl.Editor), typeof(UITypeEditor))]
         public string GetQRCodeName { get; set; } = string.Empty;
+
         [DescriptionAttribute("读取完成。"), Category("触发器"), DisplayName("读取完成"),]
         [Editor(typeof(ErosSocket.ErosConLink.LinkName_ValuesNameUserControl.Editor), typeof(UITypeEditor))]
         public string SetQRCodeDoneName { get; set; } = string.Empty;
@@ -109,25 +121,29 @@ namespace Vision2.Project.ProcessControl
         [DescriptionAttribute("是否启用Eap功能地址。"), Category("Eap"), DisplayName("启用Eap地址"),]
         [Editor(typeof(ErosSocket.ErosConLink.LinkName_ValuesNameUserControl.Editor), typeof(UITypeEditor))]
         public string EapEnName { get; set; } = string.Empty;
+
         [DescriptionAttribute("Eap加工请求开始标志。"), Category("Eap"), DisplayName("请求开始标识地址"),]
         [Editor(typeof(ErosSocket.ErosConLink.LinkName_ValuesNameUserControl.Editor), typeof(UITypeEditor))]
         public string EapGetQRSName { get; set; } = string.Empty;
+
         [DescriptionAttribute("Eap加工请求码地址标识。"), Category("Eap"), DisplayName("请求码地址"),]
         [Editor(typeof(ErosSocket.ErosConLink.LinkName_ValuesNameUserControl.Editor), typeof(UITypeEditor))]
         public string EapGetQRCodeName { get; set; } = string.Empty;
+
         [DescriptionAttribute("EAP返回可加工地址。"), Category("Eap"), DisplayName("返回允许执行地址"),]
         [Editor(typeof(ErosSocket.ErosConLink.LinkName_ValuesNameUserControl.Editor), typeof(UITypeEditor))]
         public string EapGetOKName { get; set; } = string.Empty;
+
         [DescriptionAttribute("EAP返回不可加工地址。"), Category("Eap"), DisplayName("返回不允许执行地址"),]
         [Editor(typeof(ErosSocket.ErosConLink.LinkName_ValuesNameUserControl.Editor), typeof(UITypeEditor))]
         public string EapGetNGName { get; set; } = string.Empty;
 
-
         /// <summary>
         /// 载具码
         /// </summary>
-        Dictionary<string, Dictionary<string, string>> TrayID =
+        private Dictionary<string, Dictionary<string, string>> TrayID =
             new Dictionary<string, Dictionary<string, string>>();
+
         /// <summary>
         /// 获得托盘码集合
         /// </summary>
@@ -150,6 +166,7 @@ namespace Vision2.Project.ProcessControl
             }
             return null;
         }
+
         /// <summary>
         /// 历史数据采集
         /// </summary>
@@ -163,13 +180,13 @@ namespace Vision2.Project.ProcessControl
                 userVisionManagement = new ProcessControl(this);
             }
             this.ProductMessage.Clear();
-            if (File.Exists(ProjectINI.In.ProjectPathRun + "\\过程记录\\码.Txt"))
+            if (File.Exists(ErosProjcetDLL.Project.ProjectINI.ProjectPathRun + "\\过程记录\\码.Txt"))
             {
-                ProjectINI.ReadPathJsonToCalss(ProjectINI.In.ProjectPathRun + "\\过程记录\\码.Txt", out this.ProductMessage);
+                ProjectINI.ReadPathJsonToCalss(ErosProjcetDLL.Project.ProjectINI.ProjectPathRun + "\\过程记录\\码.Txt", out this.ProductMessage);
             }
-            if (File.Exists(ProjectINI.In.ProjectPathRun + "\\过程记录\\载具码.Txt"))
+            if (File.Exists(ErosProjcetDLL.Project.ProjectINI.ProjectPathRun + "\\过程记录\\载具码.Txt"))
             {
-                ProjectINI.ReadPathJsonToCalss(ProjectINI.In.ProjectPathRun + "\\过程记录\\载具码.Txt", out this.TrayID);
+                ProjectINI.ReadPathJsonToCalss(ErosProjcetDLL.Project.ProjectINI.ProjectPathRun + "\\过程记录\\载具码.Txt", out this.TrayID);
             }
             RunData();
             RunPData();
@@ -184,15 +201,18 @@ namespace Vision2.Project.ProcessControl
             /// 触发历史数据名，如果为数字则为定时触发
             /// </summary>
             public string ValueIsName;
+
             /// <summary>
             /// 文件名
             /// </summary>
             public string FileName;
+
             /// <summary>
             /// 历史数据名称与地址集合
             /// </summary>
             public Dictionary<string, formula.Product.StructTypeValue> keyValuePa;
         }
+
         /// <summary>
         /// 过程数据采集
         /// </summary>
@@ -202,6 +222,7 @@ namespace Vision2.Project.ProcessControl
             /// 采集地址
             /// </summary>
             public string ValueName;
+
             /// <summary>
             /// 触发地址
             /// </summary>
@@ -217,10 +238,12 @@ namespace Vision2.Project.ProcessControl
         /// 产品ID和参数
         /// </summary>
         public Dictionary<string, Dictionary<string, string>> ProductMessage = new Dictionary<string, Dictionary<string, string>>();
+
         /// <summary>
         /// 历史
         /// </summary>
-        Dictionary<string, Dictionary<string, string>> DataProductMessage = new Dictionary<string, Dictionary<string, string>>();
+        private Dictionary<string, Dictionary<string, string>> DataProductMessage = new Dictionary<string, Dictionary<string, string>>();
+
         /// <summary>
         /// 获取历史数据
         /// </summary>
@@ -229,8 +252,9 @@ namespace Vision2.Project.ProcessControl
         {
             return DataProductMessage;
         }
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="code"></param>
         public static void AddProt(string code)
@@ -245,8 +269,6 @@ namespace Vision2.Project.ProcessControl
             }
         }
 
-        static object obk = new object();
-
         /// <summary>
         /// 删除产品ID过程数据
         /// </summary>
@@ -258,6 +280,7 @@ namespace Vision2.Project.ProcessControl
                 This.ProductMessage.Remove(name);
             }
         }
+
         /// <summary>
         /// 删除载具
         /// </summary>
@@ -269,41 +292,43 @@ namespace Vision2.Project.ProcessControl
                 This.TrayID.Remove(name);
             }
         }
+
         /// <summary>
         /// 获取唯一实例
         /// </summary>
         /// <returns></returns>
-        public static ProcessUser GetThis()
+        public static ProcessUser Instancen
         {
-            if (This == null)
+            get
             {
-                This = new ProcessUser();
-            }
+                if (This == null)
+                {
+                    This = new ProcessUser();
+                }
 
-            lock (obk)
-            {
                 return This;
             }
-
         }
+
         /// <summary>
         /// 清除数据
         /// </summary>
         public static void ClearAll()
         {
             This.DataProductMessage.Clear();
-            if (File.Exists(Vision2.ErosProjcetDLL.Project.ProjectINI.In.ProjectPathRun + "\\过程记录\\码.Txt"))
+            if (File.Exists(ProjectINI.ProjectPathRun + "\\过程记录\\码.Txt"))
             {
-                System.IO.File.Delete(Vision2.ErosProjcetDLL.Project.ProjectINI.In.ProjectPathRun + "\\过程记录\\码.Txt");
+                System.IO.File.Delete(ProjectINI.ProjectPathRun + "\\过程记录\\码.Txt");
             }
-            if (File.Exists(Vision2.ErosProjcetDLL.Project.ProjectINI.In.ProjectPathRun + "\\过程记录\\载具码.Txt"))
+            if (File.Exists(ProjectINI.ProjectPathRun + "\\过程记录\\载具码.Txt"))
             {
-                System.IO.File.Delete(Vision2.ErosProjcetDLL.Project.ProjectINI.In.ProjectPathRun + "\\过程记录\\载具码.Txt");
+                System.IO.File.Delete(ProjectINI.ProjectPathRun + "\\过程记录\\载具码.Txt");
             }
 
             This.ProductMessage.Clear();
             This.TrayID.Clear();
         }
+
         /// <summary>
         /// 查询产品ID的过程数据
         /// </summary>
@@ -320,6 +345,7 @@ namespace Vision2.Project.ProcessControl
                 return null;
             }
         }
+
         /// <summary>
         /// 查询id,指定到属性
         /// </summary>
@@ -347,6 +373,7 @@ namespace Vision2.Project.ProcessControl
         {
             return GetPidPrag("载具码", code, "位置");
         }
+
         /// <summary>
         /// 根据载具码返回指定的字段属性
         /// </summary>
@@ -392,7 +419,6 @@ namespace Vision2.Project.ProcessControl
                         {
                             lt.Add(item.Key + "=" + item.Value[keyP]);
                         }
-
                     }
                 }
                 return lt;
@@ -403,6 +429,7 @@ namespace Vision2.Project.ProcessControl
 
             return null;
         }
+
         /// <summary>
         /// 写入载具码数据记录
         /// </summary>
@@ -423,12 +450,13 @@ namespace Vision2.Project.ProcessControl
                     This.TrayID.Add(id, new Dictionary<string, string>());
                 }
                 This.TrayID[id][pName] = value;
-                ProjectINI.ClassToJsonSavePath(This.TrayID, ProjectINI.In.ProjectPathRun + "\\过程记录\\载具码.Txt");
+                ProjectINI.ClassToJsonSavePath(This.TrayID, ErosProjcetDLL.Project.ProjectINI.ProjectPathRun + "\\过程记录\\载具码.Txt");
             }
             catch (Exception)
             {
             }
         }
+
         /// <summary>
         /// 写入载具码数据记录
         /// </summary>
@@ -449,7 +477,7 @@ namespace Vision2.Project.ProcessControl
                     {
                         This.TrayID[id][pName[i]] = value[i];
                     }
-                    ProjectINI.ClassToJsonSavePath(This.TrayID, ProjectINI.In.ProjectPathRun + "\\过程记录\\载具码.Txt");
+                    ProjectINI.ClassToJsonSavePath(This.TrayID, ErosProjcetDLL.Project.ProjectINI.ProjectPathRun + "\\过程记录\\载具码.Txt");
                 }
                 else
                 {
@@ -480,7 +508,6 @@ namespace Vision2.Project.ProcessControl
                 {
                     if (!This.DataProductMessage.ContainsKey(code))
                     {
-
                         List<string> dataNames = new List<string>();
                         dataNames.Add(DateTime.Now.ToLongTimeString());
                         dataNames.Add("ID码{" + code + "}");
@@ -488,16 +515,16 @@ namespace Vision2.Project.ProcessControl
                         {
                             dataNames.Add(item.Key + "{" + item.Value + "}");
                         }
-                        if (!File.Exists(ProjectINI.In.ProjectPathRun + "\\过程记录\\ 码信息" + DateTime.Now.ToLongDateString() + ".xls"))
+                        if (!File.Exists(ErosProjcetDLL.Project.ProjectINI.ProjectPathRun + "\\过程记录\\ 码信息" + DateTime.Now.ToLongDateString() + ".xls"))
                         {
                             //List<string> dataColumn = new List<string>();
                             //dataColumn.Add("时间");
                             //dataColumn.Add("ID码");
-                            //Vision2.ErosProjcetDLL.Excel.Npoi.AddWriteColumnToExcel(ProjectINI.In.ProjectPathRun + "\\过程记录\\ 码信息" + DateTime.Now.ToLongDateString() 
+                            //Vision2.ErosProjcetDLL.Excel.Npoi.AddWriteColumnToExcel( ErosProjcetDLL.Project.ProjectINI.ProjectPathRun + "\\过程记录\\ 码信息" + DateTime.Now.ToLongDateString()
                             //    + ".xls", "过程码",
                             // dataColumn.ToArray());
                         }
-                        Vision2.ErosProjcetDLL.Excel.Npoi.AddRosWriteToExcel(ProjectINI.In.ProjectPathRun + "\\过程记录\\ 码信息" + DateTime.Now.ToLongDateString() + ".xls", "过程码",
+                        Vision2.ErosProjcetDLL.Excel.Npoi.AddRosWriteToExcel(ErosProjcetDLL.Project.ProjectINI.ProjectPathRun + "\\过程记录\\ 码信息" + DateTime.Now.ToLongDateString() + ".xls", "过程码",
                         dataNames.ToArray());
                     }
                     //Remove(code);
@@ -507,12 +534,13 @@ namespace Vision2.Project.ProcessControl
                     This.AddTyID(value);
                 }
 
-                ProjectINI.ClassToJsonSavePath(This.ProductMessage, ProjectINI.In.ProjectPathRun + "\\过程记录\\码.Txt");
+                ProjectINI.ClassToJsonSavePath(This.ProductMessage, ErosProjcetDLL.Project.ProjectINI.ProjectPathRun + "\\过程记录\\码.Txt");
             }
             catch (Exception ex)
             {
             }
         }
+
         /// <summary>
         /// 添加托盘ID
         /// </summary>
@@ -530,7 +558,7 @@ namespace Vision2.Project.ProcessControl
             }
         }
 
-        void setID(string id)
+        private void setID(string id)
         {
             string times = DateTime.Now.ToLongDateString() + DateTime.Now.ToLongTimeString();
             SetTrayIDP(id, "出站时间", times);
@@ -554,6 +582,7 @@ namespace Vision2.Project.ProcessControl
             }
             //Stub.StubManager.getEAP().PushResult(jsDataS.ToString());
         }
+
         /// <summary>
         /// 发送上报信息并清除处理信息
         /// </summary>
@@ -598,7 +627,6 @@ namespace Vision2.Project.ProcessControl
                 GetTyayIDP(id)["出站时间"], datas);//将多个产品信息SML添加到载具码上；
 
                 ProcessControl.StaticProcessThis.textBox7.Text = dataS;
-
             }
             catch (Exception)
             {
@@ -645,10 +673,10 @@ namespace Vision2.Project.ProcessControl
                 {
                     data += string.Format(@"  <A'{0}'>" + Environment.NewLine, value[i]);
                 }
-
             }
             return data + ">" + Environment.NewLine;
         }
+
         /// <summary>
         /// 写入多个过程数据，长度不等时不添加
         /// </summary>
@@ -674,8 +702,7 @@ namespace Vision2.Project.ProcessControl
                         }
                         This.ProductMessage[code][proNames[i]] = values[i];
                     }
-                    ProjectINI.ClassToJsonSavePath(This.ProductMessage, ProjectINI.In.ProjectPathRun + "\\过程记录\\码.Txt");
-
+                    ProjectINI.ClassToJsonSavePath(This.ProductMessage, ErosProjcetDLL.Project.ProjectINI.ProjectPathRun + "\\过程记录\\码.Txt");
                 }
             }
             catch (Exception ex)
@@ -683,8 +710,9 @@ namespace Vision2.Project.ProcessControl
                 Vision2.ErosProjcetDLL.Project.AlarmText.AddTextNewLine(ex.Message);
             }
         }
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="code"></param>
         /// <returns></returns>
@@ -693,7 +721,6 @@ namespace Vision2.Project.ProcessControl
             string err = "";
             try
             {
-
                 DebugCompiler.dicstr = null;
                 AlarmText.AddTextNewLine(code + "进站查询");
                 //Stub.StubManager.getEAP().SetSVIDValue("TrayID", code);
@@ -704,7 +731,7 @@ namespace Vision2.Project.ProcessControl
             {
             }
             Thread.Sleep(2000);
-            if (!ProcessUser.GetThis().LinkFEap)
+            if (!ProcessUser.Instancen.LinkFEap)
             {
                 if (DebugCompiler.dicstr != null)
                 {
@@ -759,7 +786,6 @@ namespace Vision2.Project.ProcessControl
         /// <param name="data"></param>
         public void UpProperty(PropertyForm pertyForm, object data = null)
         {
-
             //TabPage tabPage = new TabPage();
             //tabPage.Name = "外部Dll";
             //tabPage.Text = "外部Dll";
@@ -767,18 +793,22 @@ namespace Vision2.Project.ProcessControl
             pertyForm.tabPage1.Controls.Add(new ManageProcess(this) { Dock = DockStyle.Top });
             //pertyForm.tabPage1.Controls.Add();
         }
+
         public Control GetThisControl()
         {
             return new ManageProcess(this) { Dock = DockStyle.Top };
         }
+
         /// <summary>
         /// 开始运行
         /// </summary>
-        bool IsRun;
+        private bool IsRun;
+
         /// <summary>
         /// 等待关闭
         /// </summary>
-        bool CorsCon;
+        private bool CorsCon;
+
         /// <summary>
         /// 更新状态
         /// </summary>
@@ -804,7 +834,6 @@ namespace Vision2.Project.ProcessControl
                 {
                     try
                     {
-
                         //EapEnName = "点胶机.启动MES";
                         //EapGetQRSName = "点胶机.Ask Mes前段托盘请求允许点胶";
                         //EapGetQRCodeName = "点胶机.当前载具码";
@@ -1013,16 +1042,18 @@ namespace Vision2.Project.ProcessControl
             });
             thread.IsBackground = true;
             thread.Start();
-
         }
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
-        bool IsRunPdat;
+        private bool IsRunPdat;
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
-        bool CorsConPdata;
+        private bool CorsConPdata;
+
         /// <summary>
         /// 执行线程历史记录
         /// </summary>
@@ -1043,7 +1074,6 @@ namespace Vision2.Project.ProcessControl
                 d++;
                 Thread thread = new Thread(() =>
                 {
-
                     while (IsRunPdat)
                     {
                         try
@@ -1057,7 +1087,7 @@ namespace Vision2.Project.ProcessControl
                                 string timedey = DateTime.Now.ToString("yy年MM月dd日");
                                 bool cerName = false;
                                 datas.Add(timeStr);
-                                if (!File.Exists(ProjectINI.In.ProjectPathRun + "\\过程记录\\" + item.Value.FileName + "\\" + timedey + ".xls"))
+                                if (!File.Exists(ErosProjcetDLL.Project.ProjectINI.ProjectPathRun + "\\过程记录\\" + item.Value.FileName + "\\" + timedey + ".xls"))
                                 {
                                     cerName = true;
                                     dataNames.Add("时间");
@@ -1076,9 +1106,11 @@ namespace Vision2.Project.ProcessControl
                                 }
                                 if (cerName)
                                 {
-                                    Vision2.ErosProjcetDLL.Excel.Npoi.AddWriteColumnToExcel(ProjectINI.In.ProjectPathRun + "\\过程记录\\" + item.Value.FileName + "\\" + timedey + ".xls", item.Value.FileName, dataNames.ToArray());
+                                    ErosProjcetDLL.Excel.Npoi.AddWriteColumnToExcel(ProjectINI.ProjectPathRun + "\\过程记录\\" +
+                                        item.Value.FileName + "\\" + timedey + ".xls", item.Value.FileName, dataNames.ToArray());
                                 }
-                                Vision2.ErosProjcetDLL.Excel.Npoi.AddRosWriteToExcel(ProjectINI.In.ProjectPathRun + "\\过程记录\\" + item.Value.FileName + "\\" + timedey + ".xls", item.Value.FileName, datas.ToArray());
+                                ErosProjcetDLL.Excel.Npoi.AddRosWriteToExcel(ProjectINI.ProjectPathRun +
+                                    "\\过程记录\\" + item.Value.FileName + "\\" + timedey + ".xls", item.Value.FileName, datas.ToArray());
                                 StaticCon.SetLingkValue(item.Value.ValueIsName, false.ToString(), out string err);
                             }
                         }
@@ -1096,7 +1128,6 @@ namespace Vision2.Project.ProcessControl
                 thread.IsBackground = true;
                 thread.Start();
             }
-
         }
     }
 }

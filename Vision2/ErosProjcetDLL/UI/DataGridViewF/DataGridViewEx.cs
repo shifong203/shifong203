@@ -11,6 +11,7 @@ namespace Vision2.ErosProjcetDLL.UI.DataGridViewF
     public class DataGridViewEx : DataGridView
     {
         private bool showRowHeaderNumbers;
+
         /// <summary>
         /// 是否显示行号
         /// </summary>
@@ -25,6 +26,7 @@ namespace Vision2.ErosProjcetDLL.UI.DataGridViewF
                 showRowHeaderNumbers = value;
             }
         }
+
         public DataGridViewEx()
         {
             showRowHeaderNumbers = true;

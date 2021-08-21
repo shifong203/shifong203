@@ -12,8 +12,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
     [System.Runtime.InteropServices.Guid("AC6A3902-2C4B-4CBA-81B6-FA66F18E18CA")]
     public class Waves : RunProgram
     {
-
-        public override Control GetControl( HalconRun halconRun)
+        public override Control GetControl(IDrawHalcon halconRun)
         {
             return null;
         }
@@ -34,8 +33,9 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         public bool IsDis { get; set; }
 
         public static string constStrPath = Application.StartupPath + "/Vision/Waves/";
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="control"></param>
         /// <param name="data"></param>
@@ -82,7 +82,6 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 measureConTrolEx.Up();
             }
         }
-
 
         public Waves()
         {
@@ -141,7 +140,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         /// </summary>
         /// <param name="hImage"></param>
         /// <returns></returns>
-        public override bool RunHProgram( OneResultOBj oneResultOBj, out List<OneRObj> oneRObjs, AoiObj aoiObj)
+        public override bool RunHProgram(OneResultOBj oneResultOBj, out List<OneRObj> oneRObjs, AoiObj aoiObj)
         {
             oneRObjs = new List<OneRObj>();
             try
@@ -174,7 +173,6 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         item.Value.Distance = 0;
                     }
                 }
-
 
                 for (int i = 1; i < 26; i++)
                 {
@@ -252,7 +250,6 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 }
                 if (this["0.4结果"].ToString().Contains("OK") && this["0.2结果"].ToString().Contains("OK"))
                 {
-                   
                     //oneResultOBj.Result = "OK";
                 }
                 else
@@ -268,7 +265,6 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 }
 
                 return true;
-
             }
             catch (Exception ex)
             {
@@ -279,19 +275,15 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
 
         private System.Diagnostics.Stopwatch watchts = new System.Diagnostics.Stopwatch();
 
-
-
-        
         public void ShowMesager(HalconRun halcon)
         {
             nGRoi.GenEmptyObj();
             foreach (var item in this.Dic_Measure.Keys_Measure)
             {
-                nGRoi = nGRoi.ConcatObj(item.Value.MeasureObj(halcon,halcon.GetOneImageR())._HObject);
+                nGRoi = nGRoi.ConcatObj(item.Value.MeasureObj(halcon, halcon.GetOneImageR())._HObject);
             }
             halcon.AddObj(nGRoi);
         }
-
 
         // Short Description: 测量边缘输出边缘数组点
         public void rake(HObject ho_Image, out HObject ho_Regions, HTuple hv_Elements,
@@ -794,7 +786,6 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             return true;
         }
 
-  
         // Short Description: 测量顶点
         public void peak(HObject ho_Image, HTuple hv_Row, HTuple hv_Coloumn, HTuple hv_Phi,
             HTuple hv_Length1, HTuple hv_Length2, HTuple hv_DetectWidth, HTuple hv_Sigma,
@@ -935,6 +926,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
 
             return;
         }
+
         public override RunProgram UpSatrt<T>(string PATH)
         {
             throw new NotImplementedException();

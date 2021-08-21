@@ -8,21 +8,21 @@ namespace Vision2.Project.formula
 {
     public partial class SynchronizationForm : Form
     {
-
         public string formulaName = "";
+
         /// <summary>
         /// 通信接口
         /// </summary>
-        List<ErosSocket.ErosConLink.IErosLinkNet> erosLinkNet;
-        bool off;
+        private List<ErosSocket.ErosConLink.IErosLinkNet> erosLinkNet;
+
+        private bool off;
+
         public SynchronizationForm()
         {
             InitializeComponent();
             progressBar1.BackColor = Color.Red;
             progressBar1.ForeColor = Color.Red;
         }
-
-
 
         public void Updatas(string name)
         {
@@ -50,16 +50,14 @@ namespace Vision2.Project.formula
                         }
                     }
                 }
-
             }
             catch (Exception)
             {
             }
         }
 
-        void Setd()
+        private void Setd()
         {
-
             List<string> listErr = new List<string>();
 
             progressBar2.Maximum = dataGridView1.Rows.Count;
@@ -117,7 +115,6 @@ namespace Vision2.Project.formula
                                     //  erosLinkNet[it].SetValue(dataGridView1[ds, i].Value.ToString(),
                                     //    dataGridView1.Rows[i].Cells[1].Value.ToString(), out string errs);
                                     //}
-
                                 }
                             }
                             catch (Exception ec)
@@ -221,10 +218,8 @@ namespace Vision2.Project.formula
                             //    }
 
                             //}
-
                         }
                     }
-
                 }
                 if (erosLinkNet[it] is ErosSocket.ErosConLink.SocketClint)
                 {
@@ -255,8 +250,6 @@ namespace Vision2.Project.formula
                             }
                         }
                     }
-
-
                 }
             }
 
@@ -299,7 +292,6 @@ namespace Vision2.Project.formula
         /// </summary>
         public void Setdata()
         {
-
             threadStop = true;
             Thread thread = new Thread(() =>
             {
@@ -310,16 +302,15 @@ namespace Vision2.Project.formula
                 }
                 catch (Exception ex)
                 {
-
                     MessageBox.Show(ex.Message);
                 }
-
             });
             thread.Priority = ThreadPriority.Highest;
             thread.Start();
         }
 
-        bool threadStop = false;
+        private bool threadStop = false;
+
         public void ShowDialogSet(string[] linkNames, string formula_Name)
         {
             formulaName = formula_Name;
@@ -327,9 +318,8 @@ namespace Vision2.Project.formula
             erosLinkNet = new List<ErosSocket.ErosConLink.IErosLinkNet>();
             foreach (var item in linkNames)
             {
-
                 DataGridViewTextBoxColumn column1 = new DataGridViewTextBoxColumn();
-                //     DataGridViewComboEditBoxColumn column1 = new DataGridViewComboEditBoxColumn(); 
+                //     DataGridViewComboEditBoxColumn column1 = new DataGridViewComboEditBoxColumn();
                 column1.Name = item;
                 column1.HeaderText = item;
                 column1.Width = 150;
@@ -363,7 +353,6 @@ namespace Vision2.Project.formula
             }
             this.Setdata();
             this.ShowDialog();
-
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -380,7 +369,6 @@ namespace Vision2.Project.formula
 
         private void SynchronizationForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-
             if (!threadStop)
             {
                 return;
@@ -391,7 +379,6 @@ namespace Vision2.Project.formula
 
         private void dataGridView1_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
-
         }
     }
 }

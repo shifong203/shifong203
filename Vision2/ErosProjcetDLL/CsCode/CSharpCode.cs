@@ -10,11 +10,13 @@ namespace Vision2.ErosProjcetDLL.CsCode
 {
     public class CSharpCode
     {
-        Assembly objAssembly;
-        CompilerParameters objCompilerParameters;
-        dynamic objHelloWorld;
+        private Assembly objAssembly;
+        private CompilerParameters objCompilerParameters;
+        private dynamic objHelloWorld;
+
         public List<string> ListDll { get; set; } = new List<string> { "System.dll", "System.Windows.Forms.dll" ,
              "HalconDotNet.dll"};
+
         /// <summary>
         /// 编译程序集
         /// </summary>
@@ -54,7 +56,6 @@ namespace Vision2.ErosProjcetDLL.CsCode
             }
             else
             {
-
                 objAssembly = cr.CompiledAssembly;
                 errString += "编译成功;" + Environment.NewLine;
                 return objAssembly;
@@ -125,12 +126,12 @@ namespace Vision2.ErosProjcetDLL.CsCode
                     {
                         return objMI.Invoke(objHelloWorld, data);
                     }
-
                 }
                 errString += "未找到对象" + Environment.NewLine;
             }
             return null;
         }
+
         public bool AddDll(string dll)
         {
             if (ListDll.Contains(dll))
@@ -141,6 +142,7 @@ namespace Vision2.ErosProjcetDLL.CsCode
             ListDll.Add(dll);
             return false;
         }
+
         public bool AddDll(string[] dlls)
         {
             for (int i = 0; i < dlls.Length; i++)
@@ -152,6 +154,7 @@ namespace Vision2.ErosProjcetDLL.CsCode
             }
             return true;
         }
+
         public static string GenerateCode()
         {
             string code = "";
@@ -211,17 +214,16 @@ namespace Vision2.ErosProjcetDLL.CsCode
                 //Console.WriteLine();
             }
 
-
             return code;
         }
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <returns></returns>
         public Assembly GetAssembly()
         {
             return objAssembly;
         }
-
     }
 }

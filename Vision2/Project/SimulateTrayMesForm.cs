@@ -15,36 +15,39 @@ namespace Vision2.Project
         {
             InitializeComponent();
         }
-        /// <summary>
-        /// 判断结束
-        /// </summary>
-        public static bool RresOK = false;
-        /// <summary>
-        /// 放行等待
-        /// </summary>
-        public static bool RresWait = false;
+
+        ///// <summary>
+        ///// 判断结束
+        ///// </summary>
+        //public static bool RresOK = false;
+
+        ///// <summary>
+        ///// 放行等待
+        ///// </summary>
+        // static bool RresWait = false;
+
         private void checkedListBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-
         }
-        ErosSocket.DebugPLC.Robot.TrayData trayRobot1;
+
+        private ErosSocket.DebugPLC.Robot.TrayData trayRobot1;
+
         public static void ShowMesabe(string text, ErosSocket.DebugPLC.Robot.TrayData trayRobot, bool await = false)
         {
             try
             {
-     
                 if (trayRobot.OK)
                 {
                     if (RecipeCompiler.Instance.GetMes() != null)
                     {
                         RecipeCompiler.Instance.GetMes().WrietMesAll(trayRobot, ProcessControl.ProcessUser.QRCode, Product.ProductionName);
                     }
-                    RresOK = true;
-                    RresWait = false;
+                    DebugF.IO.DODIAxis.RresOK = true;
+                    DebugF.IO.DODIAxis.RresWait = false;
                     return;
                 }
-                RresOK = false;
-                RresWait = true;
+                DebugF.IO.DODIAxis.RresOK = false;
+                DebugF.IO.DODIAxis.RresWait = true;
                 void Show()
                 {
                     MainForm1.MainFormF.Invoke(new Action(() =>
@@ -101,7 +104,6 @@ namespace Vision2.Project
                     {
                         try
                         {
-                
                             if (checkBox1.Checked)
                             {
                                 checkBox1.BackColor = Color.Red;
@@ -122,6 +124,7 @@ namespace Vision2.Project
             {
             }
         }
+
         private void button1_Click(object sender, EventArgs e)
         {
             if (RecipeCompiler.Instance.RsetSever)
@@ -140,7 +143,7 @@ namespace Vision2.Project
                 }
             }
 
-            RresOK = true;
+            DebugF.IO.DODIAxis.RresOK = true;
             this.DialogResult = DialogResult.Yes;
             this.Close();
         }
@@ -148,7 +151,7 @@ namespace Vision2.Project
         private void button2_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.No;
-            RresOK = true;
+            DebugF.IO.DODIAxis.RresOK = true;
             this.Close();
         }
 
@@ -158,20 +161,15 @@ namespace Vision2.Project
             {
                 if (e.Button == MouseButtons.Right)
                 {
-
-
                 }
             }
             catch (Exception)
             {
-
-
             }
         }
 
         private void checkedListBox1_MouseDown(object sender, MouseEventArgs e)
         {
-
             try
             {
                 if (e.Button == MouseButtons.Right)
@@ -192,7 +190,6 @@ namespace Vision2.Project
                             List<double> vs = trayRobot.GetDataVales()[id].Data as List<double>;
                             if (vs != null)
                             {
-
                                 for (int i = 0; i < vs.Count; i++)
                                 {
                                     try
@@ -233,18 +230,13 @@ namespace Vision2.Project
                         }
                     }
 
-
-
                     //Control control=     checkedListBox1.GetChildAtPoint(e.Location);
                     //checkedListBox1.g
                 }
             }
             catch (Exception)
             {
-
-
             }
-
         }
 
         private void simulateQRForm_KeyDown(object sender, KeyEventArgs e)
@@ -272,7 +264,6 @@ namespace Vision2.Project
         {
             try
             {
-
                 ErosSocket.DebugPLC.Robot.TrayData trayRobot = checkedListBox1.Tag as ErosSocket.DebugPLC.Robot.TrayData;
                 for (int i = 0; i < checkedListBox1.Items.Count; i++)
                 {
@@ -305,7 +296,6 @@ namespace Vision2.Project
         {
             try
             {
-
                 ErosSocket.DebugPLC.Robot.TrayData trayRobot = checkedListBox1.Tag as ErosSocket.DebugPLC.Robot.TrayData;
                 for (int i = 0; i < checkedListBox1.Items.Count; i++)
                 {
@@ -335,10 +325,9 @@ namespace Vision2.Project
         {
             try
             {
+                DebugF.DebugCompiler.Instance.DDAxis.WritDO(DebugF.DebugCompiler.Instance.RunButton.ANmen, false);
 
-                DebugF.DebugCompiler.GetThis().DDAxis.WritDO(DebugF.DebugCompiler.GetThis().RunButton.ANmen, false);
-
-                if (DebugF.DebugCompiler.GetThis().DDAxis.Out[DebugF.DebugCompiler.GetThis().RunButton.ANmen])
+                if (DebugF.DebugCompiler.Instance.DDAxis.Out[DebugF.DebugCompiler.Instance.RunButton.ANmen])
                 {
                     button4.BackColor = Color.Green;
                 }
@@ -346,7 +335,6 @@ namespace Vision2.Project
                 {
                     button4.BackColor = Color.Red;
                 }
-
             }
             catch (Exception)
             {
@@ -355,12 +343,12 @@ namespace Vision2.Project
 
         private void button5_Click(object sender, EventArgs e)
         {
-            RresOK = true;
+            DebugF.IO.DODIAxis.RresOK = true;
         }
 
         private void SimulateTrayMesForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            RresWait = false;
+            DebugF.IO.DODIAxis.RresWait = false;
             DebugF.DebugCompiler.Buzzer = false;
         }
 

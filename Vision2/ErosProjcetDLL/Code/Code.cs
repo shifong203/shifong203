@@ -6,14 +6,15 @@ namespace Vision2.ErosProjcetDLL.Code
     public class Code : ICode
     {
         public Dictionary<string, string> Ketd { get { return ketd; } set { ketd = value; } }
-        Dictionary<string, string> ketd = new Dictionary<string, string>();
+        private Dictionary<string, string> ketd = new Dictionary<string, string>();
         public Dictionary<string, string> PModet { get { return pModet; } set { pModet = value; } }
-        Dictionary<string, string> pModet = new Dictionary<string, string>();
+        private Dictionary<string, string> pModet = new Dictionary<string, string>();
         public Dictionary<string, string> PProgma { get { return pProgma; } set { pProgma = value; } }
-        Dictionary<string, string> pProgma = new Dictionary<string, string>();
+        private Dictionary<string, string> pProgma = new Dictionary<string, string>();
         public string CodeStr { get; set; }
         public string Name { get; set; }
         public List<string> Lines { get; set; }
+
         public Tmo GetTmo(string code)
         {
             Tmo tmo = new Tmo();

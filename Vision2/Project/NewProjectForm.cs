@@ -13,26 +13,24 @@ namespace Vision2.Project
         {
             InitializeComponent();
         }
+
         public string SeleName = "";
         public string NewName = "";
         public string ProjectName = "";
 
         private void button1_Click(object sender, System.EventArgs e)
         {
-
             NewName = textBox1.Text;
 
             this.Close();
         }
 
-
-
         private void NewProjectForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             NewName = "";
             ProjectName = "";
-
         }
+
         /// <summary>
         /// 更新程序
         /// </summary>
@@ -78,7 +76,6 @@ namespace Vision2.Project
             {
                 UpProject();
                 MainForm1.MainFormF.Up();
-
             }
             catch (Exception ex)
             {
@@ -98,15 +95,13 @@ namespace Vision2.Project
         {
             Cursor = Cursors.WaitCursor;
 
-            ProjectINI.In.SaveProjectAll(ProjectINI.ProjietPath + "\\Project\\" + ProjectINI.In.ProjectName +"备份");
+            ProjectINI.In.SaveProjectAll(ProjectINI.ProjietPath + "\\Project\\" + ProjectINI.In.ProjectName + "备份");
             foreach (var item in ProjectINI.In.GetListRun())
             {
-                item.Value.SaveThis(ProjectINI.ProjietPath + "\\Project\\" + ProjectINI.In.ProjectName +  "备份");
+                item.Value.SaveThis(ProjectINI.ProjietPath + "\\Project\\" + ProjectINI.In.ProjectName + "备份");
             }
             Cursor = Cursors.Arrow;
         }
-
-
 
         public static TreeNode AddNode(TreeNode tree, string name, bool sea = false)
         {
@@ -124,7 +119,6 @@ namespace Vision2.Project
             }
             return trees;
         }
-
 
         private void tVProject_AfterLabelEdit(object sender, NodeLabelEditEventArgs e)
         {
@@ -177,7 +171,6 @@ namespace Vision2.Project
 
                         if (CurrentNode != null)
                         {
-
                             groupBox2.Controls.Clear();
                             TreeNode CurrentNodeP = CurrentNode.Parent;
                             ProjectNodet.IClickNodeProject clickNode = CurrentNode.Tag as ProjectNodet.IClickNodeProject;
@@ -192,24 +185,17 @@ namespace Vision2.Project
                                     groupBox2.Controls.Add(control);
                                 }
                             }
-
                         }
                     }));
-
                 });
-
             }
             catch (Exception)
             {
             }
         }
 
-
-
-
         private void AddProjectButton_Click(object sender, EventArgs e)
         {
-
         }
 
         private void tVProject_KeyDown_1(object sender, KeyEventArgs e)
@@ -243,7 +229,6 @@ namespace Vision2.Project
 
         private void splitContainer1_SplitterMoved(object sender, SplitterEventArgs e)
         {
-
         }
     }
 }

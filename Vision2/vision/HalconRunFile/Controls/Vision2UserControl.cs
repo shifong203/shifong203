@@ -7,7 +7,6 @@ using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 using Vision2.ErosProjcetDLL.Project;
-using Vision2.Project.Mes;
 using Vision2.vision.HalconRunFile.RunProgramFile;
 
 namespace Vision2.vision.HalconRunFile.Controls
@@ -18,22 +17,23 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             InitializeComponent();
         }
-        HalconRun halcon;
 
-        public void Setprat(int row,int col,int row2,int col2)
+        private HalconRun halcon;
+
+        public void Setprat(int row, int col, int row2, int col2)
         {
             try
             {
-               HOperatorSet.SetPart(halcon.hWindowHalcon(), row, col, row2, col2);
-               Rectangle rect = this.visionUserControl1.ImagePart;
+                HOperatorSet.SetPart(halcon.hWindowHalcon(), row, col, row2, col2);
+                Rectangle rect = this.visionUserControl1.ImagePart;
                 rect.X = row;
                 rect.Y = col;
             }
             catch (Exception)
             {
             }
-         
         }
+
         public void UPOneImage(OneResultOBj oneImage)
         {
             try
@@ -141,17 +141,17 @@ namespace Vision2.vision.HalconRunFile.Controls
                     {
                     }
                 }
-
             }
             catch (Exception)
             {
-
             }
         }
+
         public void PanelClear()
         {
             panel2.Controls.Clear();
         }
+
         public void UPImage(OneResultOBj HResult, int runid, Dictionary<string, bool> listResultBool)
         {
             try
@@ -248,7 +248,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 //            HResult.Image.Dispose();
                 //        }
                 //    }
-               
+
                 //    void HWindowControl_HMouseDownD(object sender, HMouseEventArgs e)
                 //    {
                 //        try
@@ -292,7 +292,6 @@ namespace Vision2.vision.HalconRunFile.Controls
             }
         }
 
-
         public HWindowControl GetNmaeWindowControl(string name)
         {
             try
@@ -320,9 +319,11 @@ namespace Vision2.vision.HalconRunFile.Controls
             }
             return null;
         }
+
         public List<string> ListImagePath = new List<string>();
 
-        string path = "";
+        private string path = "";
+
         private void imageFielNumber_Click(object sender, EventArgs e)
         {
             try
@@ -367,7 +368,7 @@ namespace Vision2.vision.HalconRunFile.Controls
             }
         }
 
-        void ToolStrip_Click(object sender, EventArgs e)
+        private void ToolStrip_Click(object sender, EventArgs e)
         {
             if (halcon == null)
             {
@@ -385,6 +386,7 @@ namespace Vision2.vision.HalconRunFile.Controls
             Vision.Instance.ShowFocusRun(halcon.Name);
             this.visionUserControl1.Focus();
         }
+
         private void toolStripButton2_Click(object sender, EventArgs e)
         {
             if (halcon == null)
@@ -394,7 +396,6 @@ namespace Vision2.vision.HalconRunFile.Controls
             }
             halcon.HobjClear();
             halcon.ShowObj();
-
         }
 
         private void 保存图片ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -425,7 +426,6 @@ namespace Vision2.vision.HalconRunFile.Controls
             {
                 MessageBox.Show(ex.Message);
             }
-
         }
 
         private void 导入XLDToolStripMenuItem_Click(object sender, EventArgs e)
@@ -445,7 +445,6 @@ namespace Vision2.vision.HalconRunFile.Controls
             }
         }
 
-
         /// <summary>
         /// 执行完成事件
         /// </summary>
@@ -461,7 +460,6 @@ namespace Vision2.vision.HalconRunFile.Controls
             {
                 try
                 {
-
                     if (hRun.GetCam() != null && hRun.GetCam().Grabbing)
                     {
                         toolStripButton6.Text = "停止";
@@ -470,17 +468,13 @@ namespace Vision2.vision.HalconRunFile.Controls
                     {
                         toolStripButton6.Text = "实时采图";
                     }
-
                 }
                 catch (Exception exx)
                 {
                 }
-
             }
             return null;
         }
-
-
 
         /// <summary>
         /// 更新绑定程序
@@ -500,7 +494,8 @@ namespace Vision2.vision.HalconRunFile.Controls
                 dse(hRun);
             }
         }
-        void dse(HalconRun hRun = null)
+
+        private void dse(HalconRun hRun = null)
         {
             try
             {
@@ -523,21 +518,22 @@ namespace Vision2.vision.HalconRunFile.Controls
                 halcon.hWindowHalcon(this.visionUserControl1.HalconWindow);
                 halcon.SetWindow(this);
                 visionUserControl1.UpHalcon(halcon);
-                if (width.Length!= 0)
+                if (width.Length != 0)
                 {
                     halcon.Width = width.TupleInt();
                     halcon.Height = heigth.TupleInt();
                 }
 
                 this.Focus();
-
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
         }
-        Panel panel2;
+
+        private Panel panel2;
+
         private void toolStripButton6_Click(object sender, EventArgs e)
         {
             try
@@ -561,15 +557,12 @@ namespace Vision2.vision.HalconRunFile.Controls
             catch (Exception)
             {
             }
-
         }
-
 
         private void visionUserControl1_HMouseMove(object sender, HMouseEventArgs e)
         {
             try
             {
-
                 if (halcon == null)
                 {
                     return;
@@ -643,8 +636,6 @@ namespace Vision2.vision.HalconRunFile.Controls
                 }
                 if (Vision2.ErosProjcetDLL.Project.ProjectINI.GetUserJurisdiction("管理") && e.Control)
                 {
-
-
                     if (e.KeyCode == Keys.Left)
                     {
                         AxisX.JogAdd(true, toolStripButton4.Checked, 1);
@@ -673,13 +664,12 @@ namespace Vision2.vision.HalconRunFile.Controls
                         AxisZ.JogAdd(true, toolStripButton4.Checked, 1);
                     }
                 }
-
             }
             catch (Exception)
             {
-
             }
         }
+
         /// <summary>
         /// 按键执行事件
         /// </summary>
@@ -721,7 +711,6 @@ namespace Vision2.vision.HalconRunFile.Controls
                 {
                     tcbRunType.SelectedIndex = 1;
                     if (Cambueys) return;
- 
                 }
                 else if (Keys.F7 == e.KeyCode)
                 {
@@ -749,7 +738,6 @@ namespace Vision2.vision.HalconRunFile.Controls
                 }
                 else if (Keys.F8 == e.KeyCode)
                 {
-
                     tcbRunType.SelectedIndex = 3;
                     if (Cambueys) return;
                     Thread thread = new Thread(() =>
@@ -758,7 +746,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                         {
                             Cambueys = true;
                             halcon.GetCam().Key = "One";
-                            halcon.ReadCamImage("One",0);
+                            halcon.ReadCamImage("One", 0);
                             halcon.ShowImage();
                         }
                         catch (Exception)
@@ -801,7 +789,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                     {
                         AxisX.Stop();
                         AxisY.Stop();
-                        if (AxisZ!=null)
+                        if (AxisZ != null)
                         {
                             AxisZ.Stop();
                         }
@@ -843,10 +831,12 @@ namespace Vision2.vision.HalconRunFile.Controls
                 MessageBox.Show(ex.Message);
             }
         }
-        ErosSocket.DebugPLC.IAxis AxisX;
-        ErosSocket.DebugPLC.IAxis AxisY;
-        ErosSocket.DebugPLC.IAxis AxisZ;
-        ErosSocket.DebugPLC.IAxis AxisU;
+
+        private ErosSocket.DebugPLC.IAxis AxisX;
+        private ErosSocket.DebugPLC.IAxis AxisY;
+        private ErosSocket.DebugPLC.IAxis AxisZ;
+        private ErosSocket.DebugPLC.IAxis AxisU;
+
         private void Vision2UserControl_Load(object sender, EventArgs e)
         {
             Control.CheckForIllegalCrossThreadCalls = false;
@@ -865,10 +855,10 @@ namespace Vision2.vision.HalconRunFile.Controls
                             }
                             if (AxisX == null)
                             {
-                                AxisX = Project.DebugF.DebugCompiler.GetThis().DDAxis.GetAxisGrotNameEx(Vision.GetSaveImageInfo(halcon.Name).AxisGrot, ErosSocket.DebugPLC.EnumAxisType.X);
-                                AxisY = Project.DebugF.DebugCompiler.GetThis().DDAxis.GetAxisGrotNameEx(Vision.GetSaveImageInfo(halcon.Name).AxisGrot, ErosSocket.DebugPLC.EnumAxisType.Y);
-                                AxisZ = Project.DebugF.DebugCompiler.GetThis().DDAxis.GetAxisGrotNameEx(Vision.GetSaveImageInfo(halcon.Name).AxisGrot, ErosSocket.DebugPLC.EnumAxisType.Z);
-                                AxisU = Project.DebugF.DebugCompiler.GetThis().DDAxis.GetAxisGrotNameEx(Vision.GetSaveImageInfo(halcon.Name).AxisGrot, ErosSocket.DebugPLC.EnumAxisType.U);
+                                AxisX = Project.DebugF.DebugCompiler.Instance.DDAxis.GetAxisGrotNameEx(Vision.GetSaveImageInfo(halcon.Name).AxisGrot, ErosSocket.DebugPLC.EnumAxisType.X);
+                                AxisY = Project.DebugF.DebugCompiler.Instance.DDAxis.GetAxisGrotNameEx(Vision.GetSaveImageInfo(halcon.Name).AxisGrot, ErosSocket.DebugPLC.EnumAxisType.Y);
+                                AxisZ = Project.DebugF.DebugCompiler.Instance.DDAxis.GetAxisGrotNameEx(Vision.GetSaveImageInfo(halcon.Name).AxisGrot, ErosSocket.DebugPLC.EnumAxisType.Z);
+                                AxisU = Project.DebugF.DebugCompiler.Instance.DDAxis.GetAxisGrotNameEx(Vision.GetSaveImageInfo(halcon.Name).AxisGrot, ErosSocket.DebugPLC.EnumAxisType.U);
                             }
                             if (AxisX == null)
                             {
@@ -920,7 +910,6 @@ namespace Vision2.vision.HalconRunFile.Controls
                     catch (Exception)
                     {
                     }
-
                 }
             });
             thread.IsBackground = true;
@@ -935,6 +924,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 halcon.ShowObj();
             }
         }
+
         private void toolStRowCol_SelectedIndexChanged(object sender, EventArgs e)
         {
             try
@@ -949,21 +939,22 @@ namespace Vision2.vision.HalconRunFile.Controls
                     case "隐藏坐标系":
                         halcon.CoordinatePXY.CoordinateTeyp = Coordinate.Coordinate_Type.Hide;
                         break;
+
                     case "图像坐标系RC":
                         halcon.CoordinatePXY.CoordinateTeyp = Coordinate.Coordinate_Type.PixelRC;
                         break;
+
                     case "笛卡尔坐标系XY":
                         halcon.CoordinatePXY.CoordinateTeyp = Coordinate.Coordinate_Type.XYU2D;
                         break;
+
                     default:
                         break;
                 }
             }
             catch (Exception)
             {
-
             }
-
         }
 
         private void 测试图像ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -976,7 +967,6 @@ namespace Vision2.vision.HalconRunFile.Controls
             {
                 MessageBox.Show(ex.Message);
             }
-
         }
 
         private void visionUserControl1_HMouseDown(object sender, HMouseEventArgs e)
@@ -987,31 +977,22 @@ namespace Vision2.vision.HalconRunFile.Controls
                 {
                     halcon.Drawing = false;
                 }
-
             }
             catch (Exception)
             {
-
-
             }
-
         }
-
 
         private void 遍历文件夹执行ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
             {
-
                 ForImageForm1 forImageForm1 = new ForImageForm1(halcon);
                 forImageForm1.Show();
             }
             catch (Exception)
             {
-
-
             }
-
         }
 
         private void imageFielNumber_MouseMove(object sender, MouseEventArgs e)
@@ -1042,6 +1023,7 @@ namespace Vision2.vision.HalconRunFile.Controls
             {
             }
         }
+
         private 算子表 算子;
 
         private void 铺满ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1055,7 +1037,6 @@ namespace Vision2.vision.HalconRunFile.Controls
                 }
                 VisionControl(1f);
                 halcon.ShowObj();
-
             }
             catch
             {
@@ -1106,7 +1087,6 @@ namespace Vision2.vision.HalconRunFile.Controls
                 try
                 {
                     VisionControl();
-
                 }
                 catch (Exception)
                 {
@@ -1154,7 +1134,6 @@ namespace Vision2.vision.HalconRunFile.Controls
                 {
                     halcon.Width = 3648;
                     halcon.Height = 2736;
-
                 }
                 if (scea >= 0.6)
                 {
@@ -1167,7 +1146,6 @@ namespace Vision2.vision.HalconRunFile.Controls
                 {
                     this.Dock = DockStyle.Fill;
                     this.visionUserControl1.Dock = DockStyle.Fill;
-
                 }
 
                 this.visionUserControl1.Width = (int)(halcon.Width * scea);
@@ -1177,10 +1155,9 @@ namespace Vision2.vision.HalconRunFile.Controls
             }
             catch (Exception)
             {
-
-
             }
         }
+
         private void toolStripMenuItem3_Click(object sender, EventArgs e)
         {
             try
@@ -1221,7 +1198,6 @@ namespace Vision2.vision.HalconRunFile.Controls
             toolStripDropDownButton1.ShowDropDown();
         }
 
-
         private void 铺满ToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             try
@@ -1239,6 +1215,7 @@ namespace Vision2.vision.HalconRunFile.Controls
             {
             }
         }
+
         private void 生成二维码ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
@@ -1251,9 +1228,7 @@ namespace Vision2.vision.HalconRunFile.Controls
             }
             catch (Exception ex)
             {
-
             }
-
         }
 
         private void toolStripButton1_Click_1(object sender, EventArgs e)
@@ -1271,11 +1246,7 @@ namespace Vision2.vision.HalconRunFile.Controls
             }
             catch (Exception)
             {
-
-
             }
-
-
         }
 
         private void toolStripSplitButton1_ButtonClick(object sender, EventArgs e)
@@ -1283,7 +1254,8 @@ namespace Vision2.vision.HalconRunFile.Controls
             toolStripSplitButton1.ShowDropDown();
         }
 
-        ImageForm1 ImageForm1 = new ImageForm1();
+        private ImageForm1 ImageForm1 = new ImageForm1();
+
         private void toolStripButton3_Click(object sender, EventArgs e)
         {
             Vision2.ErosProjcetDLL.UI.UICon.WindosFormerShow(ref ImageForm1);
@@ -1324,7 +1296,6 @@ namespace Vision2.vision.HalconRunFile.Controls
             if (path == "") return;    //地址为空返回
             try
             {
-
                 //saveFile.FileName
                 Vision.SaveWindow(path, halcon.hWindowHalcon(), Path.GetExtension(path));
             }
@@ -1332,7 +1303,6 @@ namespace Vision2.vision.HalconRunFile.Controls
             {
                 MessageBox.Show(ex.Message);
             }
-
         }
 
         private void toolStripButton4_Click(object sender, EventArgs e)
@@ -1370,8 +1340,6 @@ namespace Vision2.vision.HalconRunFile.Controls
             }
         }
 
-    
-
         private void 清除序列ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
@@ -1381,13 +1349,10 @@ namespace Vision2.vision.HalconRunFile.Controls
                 {
                     panel2.Dispose();
                 }
-        
             }
             catch (Exception)
             {
-
             }
- 
         }
 
         private void 模拟图像ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1408,7 +1373,7 @@ namespace Vision2.vision.HalconRunFile.Controls
             saveFile.InitialDirectory = Vision.VisionPath + "Image\\";  //默认路径
             //    openFileDialog.Filter = "图片文件|*.jpg;*.tif;*.tiff;*.gif;*.bmp;*.jpg;*.jpeg;*.jp2;*.png;*.pcx;*.pgm;*.ppm;*.pbm;*.xwd;*.ima;*.hobj";
             saveFile.Filter = Vision.Instance.DicSaveType[halcon.Name].SaveImageType + "|*." +
-                Vision.Instance.DicSaveType[halcon.Name].SaveImageType + 
+                Vision.Instance.DicSaveType[halcon.Name].SaveImageType +
                 "|BMP|*.bmp|tif|*.tif|tiff|*.tiff|hobj|*.hobj|所有文件|*.*";   //筛选器
             saveFile.FileName = halcon.Name + "拼图.jpg";
             saveFile.ShowDialog();    //弹出对话框
@@ -1424,7 +1389,6 @@ namespace Vision2.vision.HalconRunFile.Controls
             {
                 MessageBox.Show(ex.Message);
             }
-
         }
 
         private void visionUserControl1_Load(object sender, EventArgs e)
@@ -1440,9 +1404,24 @@ namespace Vision2.vision.HalconRunFile.Controls
             }
             catch (Exception)
             {
-
             }
-    
+        }
+
+        private RunVisionPrForm runVisionPrForm;
+
+        private void 库调试ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (runVisionPrForm == null)
+                {
+                    runVisionPrForm = new RunVisionPrForm();
+                }
+                runVisionPrForm.Show();
+            }
+            catch (Exception)
+            {
+            }
         }
     }
 }

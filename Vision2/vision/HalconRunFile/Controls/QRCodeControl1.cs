@@ -5,15 +5,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using Vision2.vision.HalconRunFile.RunProgramFile;
-using static Vision2.vision.HalconRunFile.RunProgramFile.RunProgram;
-using static Vision2.vision.Vision;
 
 namespace Vision2.vision.HalconRunFile.Controls
 {
     public partial class QRCodeControl1 : UserControl
     {
-        HWindID HWindID = new HWindID();
-        HWindID HWindIDTS = new HWindID();
+        private HWindID HWindID = new HWindID();
+        private HWindID HWindIDTS = new HWindID();
+
         public QRCodeControl1(QRCode qRCode, HalconRun halc)
         {
             isCheave = true;
@@ -32,7 +31,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 propertyGrid1.SelectedObject = Code.One_QR;
                 checkBox2.Checked = Code.Is2D;
                 comboBox2.SelectedIndex = Code.DiscernType;
-            
+
                 HWindID.Initialize(hWindowControl1);
                 HWindID.SetImaage(halcon.Image());
                 numericUpDown1.Value = Code.Emphasizefactor;
@@ -63,12 +62,12 @@ namespace Vision2.vision.HalconRunFile.Controls
                     }
                     for (int i = 0; i < Code.Rows.Length; i++)
                     {
-                        if (Code.TrayIDS.Count>i)
+                        if (Code.TrayIDS.Count > i)
                         {
                             dataGridView2.Rows[i].Cells[1].Value = (Code.TrayIDS[i]);
                         }
-         
-                        if (Code.IsEt.Count>i)
+
+                        if (Code.IsEt.Count > i)
                         {
                             dataGridView2.Rows[i].Cells[2].Value = (Code.IsEt[i]);
                         }
@@ -90,7 +89,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 checkBox7.Checked = Code.IsOpen_image;
                 numericUpDown20.Value = (decimal)Code.Sub_Mult;
                 numericUpDown21.Value = (decimal)Code.Sub_Add;
-                numericUpDown19.Value =(decimal) Code.Median_imageVa;
+                numericUpDown19.Value = (decimal)Code.Median_imageVa;
                 numericUpDown12.Value = trackBar4.Value;
                 numericUpDown11.Value = trackBar5.Value;
                 GetP();
@@ -101,7 +100,8 @@ namespace Vision2.vision.HalconRunFile.Controls
             }
             isCheave = false;
         }
-        bool isCheave = true;
+
+        private bool isCheave = true;
 
         private QRCode Code;
         private HalconRun halcon;
@@ -125,7 +125,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 HWindID.OneResIamge.HObjectRed = Code.XLD;
                 HWindID.ShowImage();
                 //dataGridView2.Rows.Clear();
-                if (dataGridView2.Rows.Count< Code.IDValue)
+                if (dataGridView2.Rows.Count < Code.IDValue)
                 {
                     dataGridView2.Rows.Add(Code.IDValue - dataGridView2.Rows.Count);
                 }
@@ -155,7 +155,6 @@ namespace Vision2.vision.HalconRunFile.Controls
 
         private void button3_Click(object sender, EventArgs e)
         {
-
             try
             {
                 //halcon.Image(Vision.GenImageInterleaved(BarcodeHelper.Generate1(textBox1.Text.ToString(), 1000, 1000)));
@@ -166,9 +165,6 @@ namespace Vision2.vision.HalconRunFile.Controls
                 MessageBox.Show("生成失败:" + ex.Message);
             }
         }
-
-
-
 
         private void QRCodeControl1_Load(object sender, EventArgs e)
         {
@@ -188,6 +184,7 @@ namespace Vision2.vision.HalconRunFile.Controls
             }
             isCheave = false;
         }
+
         public void GetP()
         {
             try
@@ -196,7 +193,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 checkBox5.Checked = Code.Enble;
 
                 dataGridView1.Rows.Clear();
-                if (Code.MarkName.Count!=0)
+                if (Code.MarkName.Count != 0)
                 {
                     dataGridView1.Rows.Add(Code.MarkName.Count);
                     for (int i = 0; i < Code.MarkName.Count; i++)
@@ -211,13 +208,11 @@ namespace Vision2.vision.HalconRunFile.Controls
                 numericUpDown7.Value = Code.YInterval;
                 numericUpDown8.Value = Code.XLocation;
                 numericUpDown9.Value = Code.YLocation;
-
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
-          
         }
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -227,7 +222,6 @@ namespace Vision2.vision.HalconRunFile.Controls
                 if (listBox1.SelectedItem != null && listBox1.SelectedItem.ToString() != "")
                 {
                     HOperatorSet.DispObj(Code.KeyHObject[listBox1.SelectedItem.ToString()], halcon.hWindowHalcon());
-
                 }
             }
             catch (Exception)
@@ -263,7 +257,6 @@ namespace Vision2.vision.HalconRunFile.Controls
             }
         }
 
-
         private void 删除ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
@@ -278,8 +271,6 @@ namespace Vision2.vision.HalconRunFile.Controls
             {
             }
         }
-
-
 
         /// <summary>
         /// 绘制
@@ -328,8 +319,6 @@ namespace Vision2.vision.HalconRunFile.Controls
             }
         }
 
-     
-
         private void button9_Click(object sender, EventArgs e)
         {
             try
@@ -344,13 +333,11 @@ namespace Vision2.vision.HalconRunFile.Controls
             catch (Exception)
             {
             }
-
         }
 
         public List<HObject> images = new List<HObject>();
 
         public List<HObject> OBJs = new List<HObject>();
-   
 
         private void checkBox2_CheckedChanged(object sender, EventArgs e)
         {
@@ -359,10 +346,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 return;
             }
             Code.Is2D = checkBox2.Checked;
-
         }
-
-
 
         private void trackBar1_Scroll(object sender, EventArgs e)
         {
@@ -435,16 +419,13 @@ namespace Vision2.vision.HalconRunFile.Controls
                     Code.Cols.Append(pointFile1[i].Y);
                 }
 
-
                 halcon.ShowObj();
-
             }
             catch (Exception)
             {
-
             }
-
         }
+
         public void SetP()
         {
             try
@@ -458,9 +439,7 @@ namespace Vision2.vision.HalconRunFile.Controls
             }
             catch (Exception)
             {
-
             }
-
         }
 
         private void button8_Click(object sender, EventArgs e)
@@ -493,7 +472,6 @@ namespace Vision2.vision.HalconRunFile.Controls
                 SetP();
                 for (int i = 0; i < Code.XNumber * Code.YNumber; i++)
                 {
-
                     HOperatorSet.GenRectangle1(out hObject, pointFile1[i].X - Code.Height, pointFile1[i].Y - Code.Height, pointFile1[i].X + Code.Height, pointFile1[i].Y + Code.Height);
                     halcon.AddObj(hObject);
                     if (Code.Rows == null)
@@ -513,23 +491,18 @@ namespace Vision2.vision.HalconRunFile.Controls
             halcon.Drawing = false;
         }
 
-
         private void groupBox1_Enter(object sender, EventArgs e)
         {
-
         }
 
         private void 删除全部ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
             listBox1.Items.Clear();
         }
 
         private void numericUpDown6_ValueChanged(object sender, EventArgs e)
         {
-
         }
-
 
         private void numericUpDown14_ValueChanged(object sender, EventArgs e)
         {
@@ -548,7 +521,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 {
                     return;
                 }
-                string dante=      ((Control)sender).Text;
+                string dante = ((Control)sender).Text;
                 string DAET = ((Control)sender).Name;
                 Code.ISCont = (int)numericUpDown10.Value;
                 Code.TrayNumber = (int)numericUpDown16.Value;
@@ -593,7 +566,6 @@ namespace Vision2.vision.HalconRunFile.Controls
 
         private void dataGridView2_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-
         }
 
         private void dataGridView2_CellValueChanged(object sender, DataGridViewCellEventArgs e)
@@ -625,6 +597,7 @@ namespace Vision2.vision.HalconRunFile.Controls
             {
             }
         }
+
         private void button10_Click_1(object sender, EventArgs e)
         {
         }
@@ -646,7 +619,7 @@ namespace Vision2.vision.HalconRunFile.Controls
             }
             halcon.HobjClear();
             Code.MatrixType = (int)comboBox3.SelectedIndex;
-            if (Code.DiscernType==1)
+            if (Code.DiscernType == 1)
             {
                 Code.SrotCode(halcon.GetOneImageR());
                 halcon.ShowObj();
@@ -655,12 +628,10 @@ namespace Vision2.vision.HalconRunFile.Controls
 
         private void dataGridView2_CurrentCellChanged(object sender, EventArgs e)
         {
-
         }
 
         private void tabPage3_Click(object sender, EventArgs e)
         {
-
         }
 
         private void numericUpDown4_ValueChanged(object sender, EventArgs e)
@@ -697,13 +668,12 @@ namespace Vision2.vision.HalconRunFile.Controls
                 Code.TrainQRCode(Code.GetEmset(halcon.Image()), halcon.GetOneImageR(), out HObject hObject1, images, OBJs);
                 for (int i = 0; i < images.Count; i++)
                 {
-                    listBox2.Items.Add(i+1);
+                    listBox2.Items.Add(i + 1);
                 }
                 listBox2.SelectedIndex = 0;
                 Code.GenParamName = name;
                 halcon.GetOneImageR().AddMeassge(Code.DecodedDataString.ToString());
                 halcon.ShowObj();
-
             }
             catch (Exception)
             {
@@ -715,7 +685,7 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             try
             {
-                if (listBox2.SelectedIndex<0)
+                if (listBox2.SelectedIndex < 0)
                 {
                     return;
                 }
@@ -734,15 +704,15 @@ namespace Vision2.vision.HalconRunFile.Controls
             {
                 HOperatorSet.GenRectangle1(out HObject hObject3, Code.Rows - Code.Height, Code.Cols - Code.Height, Code.Rows + Code.Height, Code.Cols + Code.Height);
                 HObject hObject = RunProgram.DragMoveOBJS(halcon, hObject3);
-                HOperatorSet.AreaCenter(hObject,  out HTuple area, out HTuple rows, out HTuple colus);
+                HOperatorSet.AreaCenter(hObject, out HTuple area, out HTuple rows, out HTuple colus);
                 Code.Rows = rows;
                 Code.Cols = colus;
                 HTuple id = new HTuple();
                 for (int i = 0; i < rows.Length; i++)
                 {
-                    if (Code.TrayIDS.Count<=i)
+                    if (Code.TrayIDS.Count <= i)
                     {
-                        Code.TrayIDS.Add(Code.TrayIDS[i-1]+1);
+                        Code.TrayIDS.Add(Code.TrayIDS[i - 1] + 1);
                     }
                     id.Append(Code.TrayIDS[i]);
                 }
@@ -755,19 +725,20 @@ namespace Vision2.vision.HalconRunFile.Controls
             {
             }
         }
+
         private void 插入ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
             {
-                Code.Rows= Code.Rows.TupleInsert(dataGridView2.SelectedCells[0].RowIndex+1, Code.Rows[dataGridView2.SelectedCells[0].RowIndex] + 60);
-                Code.Cols = Code.Cols.TupleInsert(dataGridView2.SelectedCells[0].RowIndex+1, Code.Cols[dataGridView2.SelectedCells[0].RowIndex] + 60);
+                Code.Rows = Code.Rows.TupleInsert(dataGridView2.SelectedCells[0].RowIndex + 1, Code.Rows[dataGridView2.SelectedCells[0].RowIndex] + 60);
+                Code.Cols = Code.Cols.TupleInsert(dataGridView2.SelectedCells[0].RowIndex + 1, Code.Cols[dataGridView2.SelectedCells[0].RowIndex] + 60);
                 int det = dataGridView2.SelectedCells[0].RowIndex + 2;
-                Code.IsEt.Insert(dataGridView2.SelectedCells[0].RowIndex + 1,true);
-                dataGridView2.Rows.Insert(dataGridView2.SelectedCells[0].RowIndex+1,"", dataGridView2.SelectedCells[0].RowIndex+2,true,
-                    Code.Rows[dataGridView2.SelectedCells[0].RowIndex]+60, Code.Cols[dataGridView2.SelectedCells[0].RowIndex] + 60);
+                Code.IsEt.Insert(dataGridView2.SelectedCells[0].RowIndex + 1, true);
+                dataGridView2.Rows.Insert(dataGridView2.SelectedCells[0].RowIndex + 1, "", dataGridView2.SelectedCells[0].RowIndex + 2, true,
+                    Code.Rows[dataGridView2.SelectedCells[0].RowIndex] + 60, Code.Cols[dataGridView2.SelectedCells[0].RowIndex] + 60);
                 for (int i = det; i < dataGridView2.Rows.Count; i++)
                 {
-                    if (dataGridView2.Rows[i].Cells[1].Value!=null)
+                    if (dataGridView2.Rows[i].Cells[1].Value != null)
                     {
                         if (int.TryParse(dataGridView2.Rows[i].Cells[1].Value.ToString(), out int trayNubmer))
                         {
@@ -785,11 +756,10 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             try
             {
-                Code.Rows.TupleRemove(dataGridView2.SelectedCells[0].RowIndex );
-                Code.Cols.TupleRemove(dataGridView2.SelectedCells[0].RowIndex );
-                Code.IsEt.RemoveAt(dataGridView2.SelectedCells[0].RowIndex );
+                Code.Rows.TupleRemove(dataGridView2.SelectedCells[0].RowIndex);
+                Code.Cols.TupleRemove(dataGridView2.SelectedCells[0].RowIndex);
+                Code.IsEt.RemoveAt(dataGridView2.SelectedCells[0].RowIndex);
                 dataGridView2.Rows.RemoveAt(dataGridView2.SelectedCells[0].RowIndex);
-
             }
             catch (Exception)
             {
@@ -819,7 +789,7 @@ namespace Vision2.vision.HalconRunFile.Controls
 
         private void toolStripButton2_Click(object sender, EventArgs e)
         {
-            if (toolStripButton2.Text== "开始实时识别")
+            if (toolStripButton2.Text == "开始实时识别")
             {
                 toolStripButton2.Text = "停止";
                 //halcon.StratThread();
@@ -829,7 +799,6 @@ namespace Vision2.vision.HalconRunFile.Controls
                 toolStripButton2.Text = "开始实时识别";
                 halcon.Stop();
             }
-       
         }
 
         private void toolStripButton3_Click(object sender, EventArgs e)
@@ -871,17 +840,13 @@ namespace Vision2.vision.HalconRunFile.Controls
             {
                 MessageBox.Show(ex.Message);
             }
-     
         }
-
-   
- 
-     
 
         private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
         {
             Code.DiscernType = comboBox2.SelectedIndex;
         }
+
         private void comboBox4_SelectedIndexChanged_1(object sender, EventArgs e)
         {
             if (isCheave)
@@ -895,12 +860,11 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             try
             {
-                if (dataGridView2.SelectedCells.Count>2)
+                if (dataGridView2.SelectedCells.Count > 2)
                 {
-
-                    if (int.TryParse(dataGridView2.Rows[dataGridView2.SelectedCells[dataGridView2.SelectedCells.Count-1].RowIndex].Cells[1].Value.ToString(),out int strIndtd))
+                    if (int.TryParse(dataGridView2.Rows[dataGridView2.SelectedCells[dataGridView2.SelectedCells.Count - 1].RowIndex].Cells[1].Value.ToString(), out int strIndtd))
                     {
-                        for (int i = dataGridView2.SelectedCells.Count-1; i >= 0; i--)
+                        for (int i = dataGridView2.SelectedCells.Count - 1; i >= 0; i--)
                         {
                             dataGridView2.Rows[dataGridView2.SelectedCells[i].RowIndex].Cells[1].Value = strIndtd++;
                         }
@@ -919,7 +883,6 @@ namespace Vision2.vision.HalconRunFile.Controls
             {
                 if (dataGridView2.SelectedCells.Count > 2)
                 {
-
                     if (int.TryParse(dataGridView2.Rows[dataGridView2.SelectedCells[dataGridView2.SelectedCells.Count - 1].RowIndex].Cells[1].Value.ToString(), out int strIndtd))
                     {
                         for (int i = dataGridView2.SelectedCells.Count - 1; i >= 0; i--)
@@ -934,7 +897,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 MessageBox.Show(ex.Message);
             }
         }
-       
+
         private void button2_Click_1(object sender, EventArgs e)
         {
             try
@@ -977,7 +940,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                                 HOperatorSet.DistancePp(Code.Rows, Code.Cols, hTupleR, hTupleC, out HTuple dipp);
                                 HTuple intex = dipp.TupleFind(dipp.TupleMin());
 
-                                intd.Append((intex + 1) + ":" +( ding[i]-160));
+                                intd.Append((intex + 1) + ":" + (ding[i] - 160));
                                 dingpp.Append(ding[i]);
                             }
                         }
@@ -986,9 +949,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                         Code.GetPThis().AddObj(hObject2);
                     }
                     Code.GetPThis().ShowObj();
-
                 }
-
             }
             catch (Exception ex)
             {

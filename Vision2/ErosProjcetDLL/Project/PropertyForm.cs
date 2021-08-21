@@ -15,7 +15,6 @@ namespace Vision2.ErosProjcetDLL.Project
             this.TopLevel = false;
             this.Name = "PT";
             contro.Controls.Add(this);
-
         }
 
         private void PropertyForm_HelpButtonClicked(object sender, System.ComponentModel.CancelEventArgs e)
@@ -44,14 +43,10 @@ namespace Vision2.ErosProjcetDLL.Project
             }
         }
 
-
-
-
         private ProjectNodet.IClickNodeProject attributeUI;
 
         public static PropertyForm ThisForm
         {
-
             get
             {
                 if (form == null || form.IsDisposed)
@@ -60,15 +55,15 @@ namespace Vision2.ErosProjcetDLL.Project
                     form.TopLevel = false;
                     ProjectINI.Form().Controls.Add(form);
                     form.Location = new System.Drawing.Point(800, 0);
-
                 }
                 return form;
             }
 
             set { form = value; }
-
         }
-        static PropertyForm form;
+
+        private static PropertyForm form;
+
         /// <summary>
         /// 对象集合
         /// </summary>
@@ -112,7 +107,6 @@ namespace Vision2.ErosProjcetDLL.Project
                         tabPage.Text = tabPage.Name = "调试窗口";
                         ThisForm.tabControl1.TabPages.Add(tabPage);
 
-
                         tabPage.Controls.Add(ThisForm.attributeUI.GetThisControl());
                         ThisForm.tabControl1.SelectedTab = tabPage;
                     }
@@ -139,9 +133,8 @@ namespace Vision2.ErosProjcetDLL.Project
             }
         }
 
-
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="data"></param>
         /// <param name="text"></param>
@@ -154,7 +147,6 @@ namespace Vision2.ErosProjcetDLL.Project
                 Data = data;
                 ProjectINI.Form().Invoke(new Action(() =>
                 {
-
                     this.attributeUI = data as ProjectNodet.IClickNodeProject;
                     if (this.attributeUI != null)
                     {
@@ -178,14 +170,15 @@ namespace Vision2.ErosProjcetDLL.Project
                     this.propertyGrid1.SelectedObject = data;
                     tabControl1.Dock = DockStyle.Fill;
                 }));
-
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
         }
-        object Data;
+
+        private object Data;
+
         /// <summary>
         ///
         /// </summary>
@@ -209,7 +202,6 @@ namespace Vision2.ErosProjcetDLL.Project
             }
         }
 
-
         /// <summary>
         ///
         /// </summary>
@@ -221,7 +213,6 @@ namespace Vision2.ErosProjcetDLL.Project
 
         private void PropertyForm_KeyPress(object sender, KeyPressEventArgs e)
         {
-
         }
 
         private void PropertyForm_KeyDown(object sender, KeyEventArgs e)
@@ -231,7 +222,8 @@ namespace Vision2.ErosProjcetDLL.Project
                 ShouHelp();
             }
         }
-        void ShouHelp()
+
+        private void ShouHelp()
         {
             IHelp help = Data as Project.IHelp;
             if (help != null)
@@ -242,7 +234,6 @@ namespace Vision2.ErosProjcetDLL.Project
             {
                 CHMHelp.ShowHelp();
             }
-
         }
     }
 }

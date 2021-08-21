@@ -1,13 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Vision2.vision.HalconRunFile.RunProgramFile;
 
@@ -15,12 +9,14 @@ namespace Vision2.vision
 {
     public partial class LibraryFormAdd : Form
     {
-        public LibraryFormAdd(HalconRunFile.RunProgramFile.HalconRun halconRun )
+        public LibraryFormAdd(HalconRunFile.RunProgramFile.HalconRun halconRun)
         {
             halcon = halconRun;
             InitializeComponent();
         }
-        HalconRunFile.RunProgramFile.HalconRun halcon;
+
+        private HalconRunFile.RunProgramFile.HalconRun halcon;
+
         private void button1_Click(object sender, EventArgs e)
         {
             try
@@ -37,28 +33,27 @@ namespace Vision2.vision
                             Assembly assembly = Assembly.GetExecutingAssembly(); // 获取当前程序集
                             StringBuilder stdt = new StringBuilder(100);
                             try
+                            {
+                                ErosProjcetDLL.Excel.Npoi.GetPrivateProfileString("视觉库", name, "", stdt, 500, Library.LibraryBasics.PathStr + "\\Library.ini");
+                                string ntype = stdt.ToString();     /*item.Value.Split('.')[item.Value.Split('.').Length - 1];*/
+                                dynamic obj = assembly.CreateInstance(/*halcon.GetType().Namespace + "." +*/ ntype); // 创建类的实例
+                                if (obj != null)
                                 {
-                                   ErosProjcetDLL.Excel.Npoi.GetPrivateProfileString("视觉库", name, "", stdt, 500, Library.LibraryBasics.PathStr + "\\Library.ini");
-                                    string ntype = stdt.ToString();     /*item.Value.Split('.')[item.Value.Split('.').Length - 1];*/
-                                        dynamic obj = assembly.CreateInstance(/*halcon.GetType().Namespace + "." +*/ ntype); // 创建类的实例                            
-                                        if (obj != null)
-                                        {
-                                            runProgram = obj.UpSatrt<RunProgram>(Library.LibraryBasics.PathStr + name + "\\" + name);
-                                        }
-                                        else
-                                        {
-                                            obj = assembly.CreateInstance(ntype); // 创建类的实例     
-                                            runProgram = obj.UpSatrt<RunProgram>(Library.LibraryBasics.PathStr + name + "\\" + name);
-                                        }
-                                        runProgram.SetPThis(halcon);
-                                        //runProgram.Name = item.Key;
-                                      halcon.GetRunProgram().Add(runProgram.Name, runProgram);
-                                 }
-                                catch (Exception ex)
-                                {
-                                    MessageBox.Show(name + "读取错误:" + ex.Message);
+                                    runProgram = obj.UpSatrt<RunProgram>(Library.LibraryBasics.PathStr + name + "\\" + name);
                                 }
-               
+                                else
+                                {
+                                    obj = assembly.CreateInstance(ntype); // 创建类的实例
+                                    runProgram = obj.UpSatrt<RunProgram>(Library.LibraryBasics.PathStr + name + "\\" + name);
+                                }
+                                runProgram.SetPThis(halcon);
+                                //runProgram.Name = item.Key;
+                                halcon.GetRunProgram().Add(runProgram.Name, runProgram);
+                            }
+                            catch (Exception ex)
+                            {
+                                MessageBox.Show(name + "读取错误:" + ex.Message);
+                            }
                         }
                         else
                         {
@@ -70,14 +65,14 @@ namespace Vision2.vision
                             {
                                 ErosProjcetDLL.Excel.Npoi.GetPrivateProfileString("视觉库", name, "", stdt, 500, Library.LibraryBasics.PathStr + "\\Library.ini");
                                 string ntype = stdt.ToString();     /*item.Value.Split('.')[item.Value.Split('.').Length - 1];*/
-                                dynamic obj = assembly.CreateInstance(/*halcon.GetType().Namespace + "." +*/ ntype); // 创建类的实例                            
+                                dynamic obj = assembly.CreateInstance(/*halcon.GetType().Namespace + "." +*/ ntype); // 创建类的实例
                                 if (obj != null)
                                 {
                                     runProgram = obj.UpSatrt<RunProgram>(Library.LibraryBasics.PathStr + name + "\\" + name);
                                 }
                                 else
                                 {
-                                    obj = assembly.CreateInstance(ntype); // 创建类的实例     
+                                    obj = assembly.CreateInstance(ntype); // 创建类的实例
                                     runProgram = obj.UpSatrt<RunProgram>(Library.LibraryBasics.PathStr + name + "\\" + name);
                                 }
                                 runProgram.SetPThis(halcon);
@@ -87,15 +82,13 @@ namespace Vision2.vision
                             {
                                 MessageBox.Show(name + "读取错误:" + ex.Message);
                             }
-                  
-
                         }
-                        mes += checkedListBox1.Items[i]+";";
+                        mes += checkedListBox1.Items[i] + ";";
                     }
                 }
-                if (mes!="")
+                if (mes != "")
                 {
-                    MessageBox.Show(mes+"导入成功");
+                    MessageBox.Show(mes + "导入成功");
                     this.Close();
                     return;
                 }
@@ -104,8 +97,8 @@ namespace Vision2.vision
             {
                 MessageBox.Show(ex.Message + "导入失败");
             }
-
         }
+
         public void UPData()
         {
             try
@@ -137,6 +130,7 @@ namespace Vision2.vision
                 MessageBox.Show(ex.Message);
             }
         }
+
         private void LibraryFormAdd_Load(object sender, EventArgs e)
         {
             try

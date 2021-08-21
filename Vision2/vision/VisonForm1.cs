@@ -18,7 +18,6 @@ namespace Vision2.vision
                 foreach (var item in Vision.Instance.VisionPr)
                 {
                     checkedListBox1.Items.Add(item.Key, item.Value);
-
                 }
             }
             catch (Exception)
@@ -28,7 +27,6 @@ namespace Vision2.vision
 
         private void checkedListBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-
         }
 
         private void VisonForm1_FormClosing(object sender, FormClosingEventArgs e)
@@ -37,17 +35,12 @@ namespace Vision2.vision
             {
                 for (int i = 0; i < checkedListBox1.Items.Count; i++)
                 {
-
                     Vision.Instance.VisionPr[checkedListBox1.Items[i].ToString()] = checkedListBox1.GetItemChecked(i);
-
                 }
             }
             catch (Exception)
             {
-
             }
-
-
         }
     }
 }

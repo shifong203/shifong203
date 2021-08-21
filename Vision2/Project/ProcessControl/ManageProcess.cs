@@ -18,10 +18,11 @@ namespace Vision2.Project.ProcessControl
             }
             Up();
         }
+
         /// <summary>
         /// 刷新
         /// </summary>
-        void Up()
+        private void Up()
         {
             try
             {
@@ -45,18 +46,17 @@ namespace Vision2.Project.ProcessControl
                     dataGridView1.Rows[it].Cells[1].Value = item.Value.ValueName;
                     dataGridView1.Rows[it].Cells[2].Value = item.Value.ValueIsName;
                 }
-
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
-
         }
 
         public ProcessUser Proce;
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -65,7 +65,6 @@ namespace Vision2.Project.ProcessControl
             Proce.kValues.Clear();
             try
             {
-
                 for (int i = 0; i < dataGridView1.Rows.Count; i++)
                 {
                     if (dataGridView1.Rows[i].Cells[0].Value != null && dataGridView1.Rows[i].Cells[1].Value != null)
@@ -91,15 +90,11 @@ namespace Vision2.Project.ProcessControl
                         }
                     }
                 }
-
             }
             catch (Exception)
             {
-
             }
-
         }
-
 
         private void Tool_Click(object sender, EventArgs e)
         {
@@ -152,8 +147,10 @@ namespace Vision2.Project.ProcessControl
                 MessageBox.Show(ex.Message);
             }
         }
-        int y;
-        int x;
+
+        private int y;
+        private int x;
+
         private void dataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             if (e.ColumnIndex != 1 && e.ColumnIndex != 2)
@@ -254,13 +251,10 @@ namespace Vision2.Project.ProcessControl
                     Proce.DIcSewS.Add(sd, new ProcessUser.MyProcessU() { FileName = sd });
                     Up();
                 }
-
             }
             catch (Exception)
             {
             }
-
-
         }
     }
 }

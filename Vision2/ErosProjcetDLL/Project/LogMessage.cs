@@ -17,14 +17,12 @@ namespace Vision2.ErosProjcetDLL.Project
                 }
                 else
                 {
-
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
-
         }
 
         public LogMessageForm()

@@ -4,18 +4,18 @@ using System.Windows.Forms;
 
 namespace Vision2.ErosProjcetDLL.Project
 {
-
     public interface IHelp
     {
         void ShowHelp();
-
     }
+
     public class CHMHelp
     {
         public static void ShowHelp()
         {
             Help.ShowHelp(null, Application.StartupPath + @"\help.chm");
         }
+
         public static void ShowHelp(string helpFile)
         {
             if (System.Environment.OSVersion.Platform == System.PlatformID.Win32NT)

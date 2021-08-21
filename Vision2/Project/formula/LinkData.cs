@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using Vision2.Project.Mes;
 using Vision2.vision.HalconRunFile.RunProgramFile;
+
 namespace Vision2.Project.formula
 {
     /// <summary>
@@ -9,10 +9,9 @@ namespace Vision2.Project.formula
     /// </summary>
     public class LinkData
     {
-
         public string LinkName { get; set; } = "";
 
-        public void SetData( List <DataMinMax> data)
+        public void SetData(List<DataMinMax> data)
         {
             ListDatV = data;
         }
@@ -23,10 +22,10 @@ namespace Vision2.Project.formula
             {
                 LinkName = "";
             }
-
         }
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="text"></param>
         public void AddData(string text)
@@ -43,13 +42,15 @@ namespace Vision2.Project.formula
             }
             EventAddValue?.Invoke(ListDatV);
         }
+
         public void AddData(List<double> datas)
         {
-               AddObj(datas);
-               EventAddValue?.Invoke(ListDatV);
+            AddObj(datas);
+            EventAddValue?.Invoke(ListDatV);
         }
-         public void AddObj( List<string> vaset  )
-         {
+
+        public void AddObj(List<string> vaset)
+        {
             int idex = 0;
             int idex2 = 0;
             for (int i = 0; i < vaset.Count; i++)
@@ -82,7 +83,8 @@ namespace Vision2.Project.formula
                 }
                 idex++;
             }
-         }
+        }
+
         public void AddObj(List<double> vaset)
         {
             int idex = 0;
@@ -113,18 +115,19 @@ namespace Vision2.Project.formula
                 idex++;
             }
         }
+
         /// <summary>
         /// 添加数据到元件
         /// </summary>
         /// <param name="index">元件序号</param>
         /// <param name="datas">元件数据</param>
-        public void AddData(int index,List<string> datas)
+        public void AddData(int index, List<string> datas)
         {
             int idex = 0;
             int idex2 = index;
             for (int i = index; i < ListDatV.Count; i++)
             {
-                if (ListDatV[i].ValueStrs.Count>= ListDatV[i].Reference_Name.Count)
+                if (ListDatV[i].ValueStrs.Count >= ListDatV[i].Reference_Name.Count)
                 {
                     idex2++;
                 }
@@ -178,13 +181,14 @@ namespace Vision2.Project.formula
             AddObj(new List<double>() { datas });
             EventAddValue?.Invoke(ListDatV);
         }
+
         public void OnEnver()
         {
             try
             {
                 EventAddValue?.Invoke(ListDatV);
             }
-            catch (Exception) {}
+            catch (Exception) { }
         }
 
         public void Clear()
@@ -193,9 +197,10 @@ namespace Vision2.Project.formula
             {
                 ListDatV[i].Clear();
             }
-          
-                  EventAddValue?.Invoke(ListDatV);
+
+            EventAddValue?.Invoke(ListDatV);
         }
+
         public bool GetChet(List<float> xs, List<float> ys, List<float> zs)
         {
             bool valset = true;
@@ -208,6 +213,7 @@ namespace Vision2.Project.formula
             }
             return valset;
         }
+
         public bool GetChet()
         {
             bool valset = true;
@@ -226,13 +232,14 @@ namespace Vision2.Project.formula
             }
             return valset;
         }
+
         public bool GetChet(int number)
         {
             try
             {
                 return ListDatV[number].GetRsetOK();
             }
-            catch (Exception) {  }
+            catch (Exception) { }
             return false;
         }
 
@@ -245,19 +252,22 @@ namespace Vision2.Project.formula
                     return ListDatV[number];
                 }
             }
-            catch (Exception ex){ }
+            catch (Exception ex) { }
             return null;
         }
+
         ///// <summary>
-        ///// 
+        /////
         ///// </summary>
         //public List<double> Values = new List<double>();
         /// <summary>
-        /// 
+        ///
         /// </summary>
-        List<string> DataStr = new List<string>();
+        private List<string> DataStr = new List<string>();
+
         public bool IsChe { get; set; }
         public List<CheCalss> CheCalssT = new List<CheCalss>();
+
         public class CheCalss
         {
             public int StrartNumber { get; set; }
@@ -289,10 +299,12 @@ namespace Vision2.Project.formula
                 }
                 return true;
             }
-            float fun(float[] m, Point3D A)
+
+            private float fun(float[] m, Point3D A)
             {
                 return m[0] + m[1] * A.x + m[2] * A.y - A.z;
             }
+
             public struct coordinate
             {
                 public coordinate(int CONT)
@@ -301,17 +313,19 @@ namespace Vision2.Project.formula
                     y = new float[CONT];
                     z = new float[CONT];
                 }
+
                 public float[] x;
                 public float[] y;
                 public float[] z;
             };
+
             public class Point3D
             {
-
                 public float x;
                 public float y;
                 public float z;
             };
+
             public double FlatnessResult(float[] fOriginal, float[] fx, float[] fy, int iDataNumber)
             {
                 coordinate Axis = new coordinate(fOriginal.Length);
@@ -399,7 +413,6 @@ namespace Vision2.Project.formula
                     valuse.Append(higher[i]);
                 }
 
-
                 //top_higher = higher[0];
                 top_higher = (valuse.TupleMax());
                 //for ( int   i = 0; i < point_num; i++)
@@ -412,6 +425,7 @@ namespace Vision2.Project.formula
 
                 return top_higher;
             }
+
             public bool GetChet()
             {
                 if (Value > MaxValue)
@@ -420,11 +434,11 @@ namespace Vision2.Project.formula
                 }
                 return true;
             }
-            void Least_squares(Point3D[] v_Point, out float[] M)
+
+            private void Least_squares(Point3D[] v_Point, out float[] M)
             {
                 List<float[]> c = new List<float[]>();
                 M = new float[3];
-
 
                 for (int i = 0; i < 3; i++)
                 {
@@ -475,9 +489,10 @@ namespace Vision2.Project.formula
                 //delete[] c;
                 //c = NULL;
             }
+
             //列主元高斯消去法求逆矩阵
             //void column_principle_gauss(float a[][N+1])
-            void column_principle_gauss(int N, List<float[]> a)
+            private void column_principle_gauss(int N, List<float[]> a)
             {
                 int k = 0, i = 0, r = 0, j = 0;
                 float t;
@@ -522,9 +537,9 @@ namespace Vision2.Project.formula
                     a[k][N] = (a[k][N] - he) / a[k][k];
                 }
             }
+
             public static class DataHandxxxx
             {
-
                 /// <summary>
                 /// 求拟合平面
                 /// </summary>
@@ -540,7 +555,9 @@ namespace Vision2.Project.formula
                     float xi = 0; float yi = 0; float zi = 0;
                     float xi_xi = 0; float yi_yi = 0; float zi_zi = 0;
                     float xi_yi = 0; float xi_zi = 0; float yi_zi = 0;
-                    #region  矩阵方程对角线求法            
+
+                    #region 矩阵方程对角线求法
+
                     for (int i = 0; i < docCount; i++)
                     {
                         xi = xi + x[i];
@@ -560,8 +577,11 @@ namespace Vision2.Project.formula
                     a[0] = Dx / D;    //x坐标系数
                     a[1] = Dy / D;    //y坐标系数
                     a[2] = Dc / D;    //常数
-                    #endregion
+
+                    #endregion 矩阵方程对角线求法
+
                     #region 逆矩阵求法
+
                     //float[][] nijuzheng = new float[3][];
                     //nijuzheng[0] = new float[] { 0, 0, 0 };
                     //nijuzheng[1] = new float[] { 0, 0, 0 };
@@ -598,7 +618,8 @@ namespace Vision2.Project.formula
                     //        }
                     //    }
                     //}
-                    #endregion
+
+                    #endregion 逆矩阵求法
 
                     return a;
                 }
@@ -617,12 +638,13 @@ namespace Vision2.Project.formula
                     List<float> DnToMaxArray = new List<float>();
                     for (int i = 0; i < z.Length; i++)
                     {
-                        theoryZ[i] = (coefficient[0] * x[i]) + (coefficient[1] * y[i]) - z[i] + coefficient[2];   //指定坐标在拟合平面上的理论z方向数值                          
-                        DnToMaxArray.Add(Math.Abs(theoryZ[i]) / Convert.ToSingle(Math.Sqrt((coefficient[0] * coefficient[0]) + (coefficient[1] * coefficient[1]) + 1)));   //点面距离                        
+                        theoryZ[i] = (coefficient[0] * x[i]) + (coefficient[1] * y[i]) - z[i] + coefficient[2];   //指定坐标在拟合平面上的理论z方向数值
+                        DnToMaxArray.Add(Math.Abs(theoryZ[i]) / Convert.ToSingle(Math.Sqrt((coefficient[0] * coefficient[0]) + (coefficient[1] * coefficient[1]) + 1)));   //点面距离
                     }
                     DnToMaxArray.Sort();
                     return DnToMaxArray[DnToMaxArray.Count - 1] - DnToMaxArray[0];
                 }
+
                 /// <summary>
                 /// 厚度--z坐标相加
                 /// </summary>
@@ -635,17 +657,21 @@ namespace Vision2.Project.formula
                 }
             }
         }
+
         public event ChangeValue EventAddValue;
+
         /// <summary>
         /// 值改变委托
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
         public delegate void ChangeValue(List<DataMinMax> text);
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public List<DataMinMax> ListDatV = new List<DataMinMax>();
+
         //public int Number { get; set; }
         //public List<double> Reference_ValueMin { get; set; } = new List<double>();
         //public List<double> Reference_ValueMax { get; set; } = new List<double>();
@@ -658,32 +684,32 @@ namespace Vision2.Project.formula
         //public List<string> PointXID { get; set; } = new List<string>();
         //public List<string> PointYID { get; set; } = new List<string>();
     }
+
     public class DataMinMax
     {
         public List<string> GetStringData()
         {
             List<string> vs = new List<string>();
-            vs.Add(ComponentName + ":"+RunNameOBJ+":"+Reference_Name.Count+";");
+            vs.Add(ComponentName + ":" + RunNameOBJ + ":" + Reference_Name.Count + ";");
             for (int i2 = 0; i2 < Reference_Name.Count; i2++)
             {
-                vs.Add( (i2+1) +":"+ Reference_Name[i2] + ":" +Reference_ValueMin[i2] + ">" + ValueStrs + "<" + Reference_ValueMax[i2]);
+                vs.Add((i2 + 1) + ":" + Reference_Name[i2] + ":" + Reference_ValueMin[i2] + ">" + ValueStrs + "<" + Reference_ValueMax[i2]);
             }
             return vs;
         }
 
-
-        public  OneRObj GetOneRObj()
+        public OneRObj GetOneRObj()
         {
             OneRObj oneRObj = new OneRObj()
             {
                 NGText = RunNameOBJ,
                 ComponentID = ComponentName,
-                RestText = ComponentName,
+                RestText = "OK",
                 RestStrings = Reference_Name,
             };
             if (RunNameOBJ != null && RunNameOBJ.Contains("."))
             {
-                string[] vs =RunNameOBJ.Split('.');
+                string[] vs = RunNameOBJ.Split('.');
                 if (vs.Length == 2)
                 {
                     oneRObj.NGROI = RecipeCompiler.GetProductEX().Key_Navigation_Picture[vs[0]].KeyRoi[vs[1]].Clone();
@@ -694,10 +720,12 @@ namespace Vision2.Project.formula
             oneRObj.dataMinMax = this;
             return oneRObj;
         }
+
         /// <summary>
         /// 轨迹区域名称
         /// </summary>
         public string RunNameOBJ { get; set; } = "";
+
         /// <summary>
         /// 元件名称
         /// </summary>
@@ -707,7 +735,9 @@ namespace Vision2.Project.formula
         /// 最小标准值
         /// </summary>
         public List<double> Reference_ValueMin { get; set; } = new List<double>();
+
         public List<double> Reference_ValueMax { get; set; } = new List<double>();
+
         /// <summary>
         /// 数据点名称
         /// </summary>
@@ -716,20 +746,19 @@ namespace Vision2.Project.formula
         public List<string> ValueStrs
         {
             get { return valueStrs; }
-            set {
-
+            set
+            {
                 if (doubleV.Count < valueStrs.Count)
                 {
                     doubleV.Add(valueStrs.Count - doubleV.Count);
                 }
                 else if (doubleV.Count > valueStrs.Count)
                 {
-                    doubleV.RemoveRange(valueStrs.Count-1, doubleV.Count- valueStrs.Count);
+                    doubleV.RemoveRange(valueStrs.Count - 1, doubleV.Count - valueStrs.Count);
                 }
                 for (int i = 0; i < ValueStrs.Count; i++)
                 {
-                  
-                    if (double.TryParse(ValueStrs[i],out double vael))
+                    if (double.TryParse(ValueStrs[i], out double vael))
                     {
                         doubleV[i] = vael;
                     }
@@ -741,8 +770,9 @@ namespace Vision2.Project.formula
             }
         }
 
-        List<string> valueStrs=new List<string>();
-        public List< double?> doubleV { get; set; } = new List<double?>();
+        private List<string> valueStrs = new List<string>();
+        public List<double?> doubleV { get; set; } = new List<double?>();
+
         public bool GetRsetOK()
         {
             if (Done)
@@ -751,18 +781,20 @@ namespace Vision2.Project.formula
             }
             for (int i = 0; i < Reference_ValueMin.Count; i++)
             {
-                if (GetRsetNumber(i)!=0)
+                if (GetRsetNumber(i) != 0)
                 {
                     return false;
                 }
             }
             return true;
         }
+
         public void SetResetOK()
         {
             Done = true;
             OK = true;
         }
+
         public void SetResetNG()
         {
             Done = true;
@@ -773,9 +805,9 @@ namespace Vision2.Project.formula
 
         public bool Done { get; set; }
 
-        public int  GetRset()
+        public int GetRset()
         {
-            if (Reference_ValueMin.Count>ValueStrs.Count)
+            if (Reference_ValueMin.Count > ValueStrs.Count)
             {
                 return 0;
             }
@@ -788,22 +820,23 @@ namespace Vision2.Project.formula
             }
             return 1;
         }
+
         /// <summary>
         /// 获取标准值
         /// </summary>
         /// <param name="indxe"></param>
         /// <returns>返回0=OK，-1=空值,返回-2小于下限，返回-3大于上限</returns>
-        public int  GetRsetNumber(int indxe)
+        public int GetRsetNumber(int indxe)
         {
             if (indxe >= doubleV.Count)
             {
                 return -1;
             }
-            if (doubleV[indxe]==null)
+            if (doubleV[indxe] == null)
             {
                 return -4;
             }
-            if (Reference_ValueMin[indxe] >  doubleV[indxe] )
+            if (Reference_ValueMin[indxe] > doubleV[indxe])
             {
                 return -2;
             }
@@ -813,7 +846,8 @@ namespace Vision2.Project.formula
             }
             return 0;
         }
-        public void AddData(string name,double value,double datamin,double datamxa)
+
+        public void AddData(string name, double value, double datamin, double datamxa)
         {
             Reference_Name.Add(name);
             Reference_ValueMin.Add(datamin);
@@ -821,6 +855,7 @@ namespace Vision2.Project.formula
             ValueStrs.Add(value.ToString());
             doubleV.Add(value);
         }
+
         public void Clear()
         {
             ValueStrs.Clear();

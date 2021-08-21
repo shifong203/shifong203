@@ -9,49 +9,47 @@ namespace Vision2.Project.DebugF.IO
         /// <summary>
         /// 伸出Q变量名
         /// </summary>
-        /// 
+        ///
         [DescriptionAttribute("伸出气缸变量名。"), Category("控制"), DisplayName("伸出Q")]
-
         public string ProtrudeQ { get; set; }
 
         /// <summary>
         /// 缩回Q变量名
         /// </summary>
         [DescriptionAttribute("缩回气缸变量名。"), Category("控制"), DisplayName("缩回Q")]
-
         public string AnastoleQ { get; set; }
+
         /// <summary>
         /// 伸出I变量名
         /// </summary>
         [DescriptionAttribute("伸出信号变量名。"), Category("控制"), DisplayName("伸出I")]
-
         public string ProtrudeI { get; set; }
+
         /// <summary>
         /// 缩回I变量名
         /// </summary>
         [DescriptionAttribute("缩回信号变量名。"), Category("控制"), DisplayName("缩回I")]
-
         public string AnastoleI { get; set; }
+
         /// <summary>
         /// 伸出M变量名
         /// </summary>
         [DescriptionAttribute("伸出信号变量名。"), Category("控制"), DisplayName("伸出M")]
-
         public string ProtrudeM { get; set; }
+
         /// <summary>
         /// 缩回M变量名
         /// </summary>
         [DescriptionAttribute("缩回信号变量名。"), Category("控制"), DisplayName("缩回M")]
-
         public string AnastoleM { get; set; }
+
         /// <summary>
         /// 气缸报警状态
         /// </summary>
         [DescriptionAttribute("缩回信号变量名。"), Category("控制"), DisplayName("气缸报警状态")]
-
         public string CylinderAlram { get; set; }
-        [DescriptionAttribute("单点控制只控制伸出。"), Category("控制"), DisplayName("是否单点控制")]
 
+        [DescriptionAttribute("单点控制只控制伸出。"), Category("控制"), DisplayName("是否单点控制")]
         public bool ISOne { get; set; }
 
         /// <summary>
@@ -75,8 +73,6 @@ namespace Vision2.Project.DebugF.IO
 
                     Thread thread = new Thread(() =>
                     {
-
-
                         Thread.Sleep(1000);
                         int errTime = 0;
                         while (!DebugCompiler.GetDoDi().Int[ProtInt])
@@ -120,7 +116,6 @@ namespace Vision2.Project.DebugF.IO
             }
             catch (Exception ex)
             {
-
                 //CylinderAlram = "伸出失败"+ex.Message;
                 throw (new Exception(ex.Message));
             }
@@ -152,7 +147,6 @@ namespace Vision2.Project.DebugF.IO
                     }
                     Thread thread = new Thread(() =>
                     {
-
                         int errTime = 0;
                         Thread.Sleep(1000);
                         while (!DebugCompiler.GetDoDi().Int[AnI])
@@ -201,12 +195,14 @@ namespace Vision2.Project.DebugF.IO
             OnAlRam(CylinderAlram);
             return false;
         }
-        int AnI = -10;
-        int AnOut = -10;
 
-        int ProtInt = -10;
+        private int AnI = -10;
+        private int AnOut = -10;
 
-        int ProtOut = -10;
+        private int ProtInt = -10;
+
+        private int ProtOut = -10;
+
         public bool ToInt()
         {
             if (int.TryParse(ProtrudeQ, out ProtOut) && int.TryParse(ProtrudeI, out ProtInt) &&
@@ -218,8 +214,8 @@ namespace Vision2.Project.DebugF.IO
             {
                 return false;
             }
-
         }
+
         /// <summary>
         /// 获得缩回
         /// </summary>
@@ -236,8 +232,9 @@ namespace Vision2.Project.DebugF.IO
                 return DebugCompiler.GetDoDi().Int[AnI];
             }
         }
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <returns></returns>
         public bool PrValue

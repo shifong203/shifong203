@@ -20,19 +20,22 @@ namespace Vision2.vision.HalconRunFile.Controls
     public partial class HalconRunProgram : UserControl
     {
         private HalconRun halconRun;
+
         public HalconRunProgram()
         {
             Movable = true;
             InitializeComponent();
             checkBox2.Checked = ErosProjcetDLL.Project.ProjectINI.DebugMode;
-            ErosProjcetDLL.UI.DataGridViewF.StCon.AddCon(dataGridView1);
-            ErosProjcetDLL.UI.DataGridViewF.StCon.AddCon(dataGridView2);
-            ErosProjcetDLL.UI.DataGridViewF.StCon.AddCon(dataGridView3);
+            StCon.AddCon(dataGridView1);
+            StCon.AddCon(dataGridView2);
+            StCon.AddCon(dataGridView3);
             dataGridView3.CellValueChanged += DataGridView3_CellValueChanged;
             dataGridView3.CurrentCellDirtyStateChanged += DataGridView3_CurrentCellDirtyStateChanged; ;
         }
-        int y;
-        int x;
+
+        private int y;
+        private int x;
+
         private void Tool_Click(object sender, EventArgs e)
         {
             string[] text;
@@ -86,73 +89,73 @@ namespace Vision2.vision.HalconRunFile.Controls
                 MessageBox.Show(ex.Message);
             }
         }
+
         private void DataGridView3_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-             try
+            try
+            {
+                ErosProjcetDLL.UI.UICon.GetCursorPos(out ErosProjcetDLL.UI.UICon.POINT pOINT);
+                int X = dataGridView3.CurrentCellAddress.X;
+                int Y = dataGridView3.CurrentCellAddress.Y;
+                if ((Y != -1 && X != -1) && dataGridView3.Rows[Y].Cells[X] != null && dataGridView3.Rows[Y].Cells[X].Value != null)
                 {
-                    ErosProjcetDLL.UI.UICon.GetCursorPos(out ErosProjcetDLL.UI.UICon.POINT pOINT);
-                    int X = dataGridView3.CurrentCellAddress.X;
-                    int Y = dataGridView3.CurrentCellAddress.Y;
-                    if ((Y != -1 && X != -1) && dataGridView3.Rows[Y].Cells[X] != null && dataGridView3.Rows[Y].Cells[X].Value != null)
+                    ContextMenuStrip contextMenuStrip = new ContextMenuStrip();
+                    if (dataGridView3.Rows[Y].Cells[X].Value.ToString().Contains("."))
                     {
-                        ContextMenuStrip contextMenuStrip = new ContextMenuStrip();
-                        if (dataGridView3.Rows[Y].Cells[X].Value.ToString().Contains("."))
+                        string[] keys = dataGridView3.Rows[Y].Cells[X].Value.ToString().Split('.');
+                        if (keys.Length == 1)
                         {
-                            string[] keys = dataGridView3.Rows[Y].Cells[X].Value.ToString().Split('.');
-                            if (keys.Length == 1)
+                            if (RecipeCompiler.Instance.ProductEX[Project.formula.Product.ProductionName].Key_Navigation_Picture.ContainsKey(keys[0]))
                             {
-
-                                if (RecipeCompiler.Instance.ProductEX[Project.formula.Product.ProductionName].Key_Navigation_Picture.ContainsKey(keys[0]))
+                                foreach (var item2 in RecipeCompiler.GetProductEX().Key_Navigation_Picture[keys[0]].KeyRoi.Keys)
                                 {
-                                    foreach (var item2 in RecipeCompiler.GetProductEX().Key_Navigation_Picture[keys[0]].KeyRoi.Keys)
-                                    {
-                                        ToolStripMenuItem tool = new ToolStripMenuItem();
-                                        tool.Text = item2;
-                                        tool.Click += Tool_Click;
-                                        contextMenuStrip.Items.Add(tool);
-                                    }
-                                }
-                                else
-                                {
-                                    foreach (var item in RecipeCompiler.GetProductEX().Key_Navigation_Picture.Keys)
-                                    {
-                                        ToolStripMenuItem tool = new ToolStripMenuItem();
-                                        tool.Text = item;
-                                        tool.Click += Tool_Click;
-                                        contextMenuStrip.Items.Add(tool);
-                                    }
+                                    ToolStripMenuItem tool = new ToolStripMenuItem();
+                                    tool.Text = item2;
+                                    tool.Click += Tool_Click;
+                                    contextMenuStrip.Items.Add(tool);
                                 }
                             }
                             else
                             {
-                                if (RecipeCompiler.GetProductEX().Key_Navigation_Picture.ContainsKey(keys[0]) ||
-                                    RecipeCompiler.GetProductEX().Key_Navigation_Picture[keys[0]].KeyRoi.ContainsKey(keys[1]))
+                                foreach (var item in RecipeCompiler.GetProductEX().Key_Navigation_Picture.Keys)
                                 {
-                                    return;
+                                    ToolStripMenuItem tool = new ToolStripMenuItem();
+                                    tool.Text = item;
+                                    tool.Click += Tool_Click;
+                                    contextMenuStrip.Items.Add(tool);
                                 }
                             }
                         }
                         else
                         {
-                            foreach (var item in RecipeCompiler.GetProductEX().Key_Navigation_Picture.Keys)
+                            if (RecipeCompiler.GetProductEX().Key_Navigation_Picture.ContainsKey(keys[0]) ||
+                                RecipeCompiler.GetProductEX().Key_Navigation_Picture[keys[0]].KeyRoi.ContainsKey(keys[1]))
                             {
-                                ToolStripMenuItem tool = new ToolStripMenuItem();
-                                tool.Text = item;
-                                tool.Click += Tool_Click;
-                                contextMenuStrip.Items.Add(tool);
+                                return;
                             }
                         }
-                        Rectangle rectangle = dataGridView3.GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex, false);
-                        x = e.ColumnIndex;
-                        y = e.RowIndex;
-                        Rectangle rectangle2 = dataGridView3.RectangleToScreen(rectangle);
-                        contextMenuStrip.Show(rectangle2.X, rectangle2.Y + this.dataGridView3.Rows[e.RowIndex].Height);
-                        //contextMenuStrip.Show(pOINT.X, pOINT.Y);
                     }
+                    else
+                    {
+                        foreach (var item in RecipeCompiler.GetProductEX().Key_Navigation_Picture.Keys)
+                        {
+                            ToolStripMenuItem tool = new ToolStripMenuItem();
+                            tool.Text = item;
+                            tool.Click += Tool_Click;
+                            contextMenuStrip.Items.Add(tool);
+                        }
+                    }
+                    Rectangle rectangle = dataGridView3.GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex, false);
+                    x = e.ColumnIndex;
+                    y = e.RowIndex;
+                    Rectangle rectangle2 = dataGridView3.RectangleToScreen(rectangle);
+                    contextMenuStrip.Show(rectangle2.X, rectangle2.Y + this.dataGridView3.Rows[e.RowIndex].Height);
+                    //contextMenuStrip.Show(pOINT.X, pOINT.Y);
                 }
-                catch (Exception es)
-                {
-                }
+            }
+            catch (Exception es)
+            {
+            }
         }
 
         private void DataGridView3_CurrentCellDirtyStateChanged(object sender, EventArgs e)
@@ -179,7 +182,7 @@ namespace Vision2.vision.HalconRunFile.Controls
             }
         }
 
-        private void ContextMenuStrip_Click(HalconRun halcon,RunProgram run)
+        private void ContextMenuStrip_Click(HalconRun halcon, RunProgram run)
         {
             Movable = true;
             //halconRun.UpData(dataGridViewHalcon);
@@ -193,8 +196,8 @@ namespace Vision2.vision.HalconRunFile.Controls
             Updata();
             halconRun.EventShowObj += HalconRun_EventShowObj;
             this.Disposed += MeasureControl_Disposed;
-
         }
+
         private HalconDotNet.HObject HalconRun_EventShowObj(HalconRun halcon, string objName)
         {
             Movable = true;
@@ -217,13 +220,13 @@ namespace Vision2.vision.HalconRunFile.Controls
                 isChanged = true;
                 Column22.Items.Clear();
                 Column22.Items.AddRange(Vision.Instance.DicLightSource.Keys.ToArray());
-                if (halconRun.GetSaveImageInfo().ListCamData.Count!=0)
+                if (halconRun.GetSaveImageInfo().ListCamData.Count != 0)
                 {
                     dataGridView5.Rows.Add(halconRun.GetSaveImageInfo().ListCamData.Count);
                 }
                 for (int i = 0; i < halconRun.GetSaveImageInfo().ListCamData.Count; i++)
                 {
-                   dataGridView5.Rows[i].Cells[0].Value = i + 1;
+                    dataGridView5.Rows[i].Cells[0].Value = i + 1;
                     dataGridView5.Rows[i].Cells[1].Value =
                         halconRun.GetSaveImageInfo().ListCamData[i].ExposureTime;
                     dataGridView5.Rows[i].Cells[2].Value =
@@ -246,7 +249,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                     dataGridView6.Rows[nIndex].Cells[3].Value = item.Value.H3;
                     dataGridView6.Rows[nIndex].Cells[4].Value = item.Value.H4;
                     nIndex++;
-                }   
+                }
                 listBox1.Items.Clear();
                 foreach (var item in Vision.Instance.DicDrawbackNameS)
                 {
@@ -266,13 +269,13 @@ namespace Vision2.vision.HalconRunFile.Controls
                 }
                 //listBox1.Items.Clear();
                 propertyGrid2.SelectedObject = halconRun.TiffeOffsetImageEX;
-                checkBox3.Checked = halconRun.EnbExposureTime;
-                numericUpDown4.Value = (decimal)halconRun.CamData. ExposureTime;
-                numericUpDown5.Value =  (decimal)halconRun.CamData.Gain;
+
+                numericUpDown4.Value = (decimal)halconRun.CamData.ExposureTime;
+                numericUpDown5.Value = (decimal)halconRun.CamData.Gain;
                 numericUpDown6.Value = (decimal)halconRun.CamData.Gamma;
-                hSBExposure.Value = (int)(halconRun.CamData.ExposureTime*100);
-                hSBGain.Value =  (int)halconRun.CamData.Gain*10;
-                hScrollBar1.Value =  (int)(halconRun.CamData.Gamma*100);
+                hSBExposure.Value = (int)(halconRun.CamData.ExposureTime * 100);
+                hSBGain.Value = (int)halconRun.CamData.Gain * 10;
+                hScrollBar1.Value = (int)(halconRun.CamData.Gamma * 100);
 
                 halconRun.UpData(dataGridViewHalcon);
                 numericUpDown1.Value = halconRun.MaxRunID;
@@ -290,7 +293,6 @@ namespace Vision2.vision.HalconRunFile.Controls
                 {
                     Vision.Instance.ListPrY.Add(halconRun.Name, new System.Collections.Generic.List<string>());
                 }
-
 
                 while (halconRun.ReNmae.Count < halconRun.MaxRunID)
                 {
@@ -367,8 +369,6 @@ namespace Vision2.vision.HalconRunFile.Controls
                     {
                         dataGridView1.Columns.RemoveAt(7);
                     }
-
-
                 }
                 for (int i = 0; i < Vision.Instance.ListPrX[halconRun.Name].Count; i++)
                 {
@@ -391,7 +391,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                         dataGridView1.Rows[i].Cells[5].Value = Project.formula.Product.GetProd()[Vision.Instance.ListPrX[halconRun.Name][i]];
                     }
                 }
-         
+
                 this.numericUpDown2.Value = halconRun.TiffeOffsetImageEX.ImageNumberCol;
                 this.numericUpDown3.Value = halconRun.TiffeOffsetImageEX.ImageNumberROW;
 
@@ -415,7 +415,6 @@ namespace Vision2.vision.HalconRunFile.Controls
                 }
                 propertyGrid1.SelectedObject = Vision.GetSaveImageInfo(halconRun.Name);
                 Movable = false;
-
             }
             catch (Exception ex)
             {
@@ -450,7 +449,6 @@ namespace Vision2.vision.HalconRunFile.Controls
             base.OnPaint(pe);
         }
 
-
         /// <summary>
         ///
         /// </summary>
@@ -463,8 +461,6 @@ namespace Vision2.vision.HalconRunFile.Controls
         private void MeasureControl_Load(object sender, EventArgs e)
         {
             Movable = false;
-         
-
         }
 
         private void MeasureControl_MouseMove(object sender, MouseEventArgs e)
@@ -482,6 +478,7 @@ namespace Vision2.vision.HalconRunFile.Controls
         private void dataGridViewHalcon_MouseDown(object sender, MouseEventArgs e)
         {
         }
+
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             try
@@ -494,8 +491,9 @@ namespace Vision2.vision.HalconRunFile.Controls
                     if (runProgram != null)
                     {
                         halconRun.UPStart();
-                        halconRun.ShowVision(runProgram.Name ,halconRun.GetOneImageR() );
+                        halconRun.ShowVision(runProgram.Name, halconRun.GetOneImageR());
                         halconRun.EndChanged(halconRun.GetOneImageR());
+                        halconRun.ShowObj();
                         dataGridViewHalcon.Rows[e.RowIndex].Cells[4].Value = runProgram.RunTime;
                         if (runProgram.ErrBool)
                         {
@@ -507,7 +505,6 @@ namespace Vision2.vision.HalconRunFile.Controls
                 {
                     if (halconRun.GetRunProgram().ContainsKey(dataGridViewHalcon.Rows[e.RowIndex].Cells[1].Value.ToString()))
                     {
-                    
                         RunProgram runProgram = halconRun.GetRunProgram()[dataGridViewHalcon.Rows[e.RowIndex].Cells[1].Value.ToString()];
                         //if (true)
                         //{
@@ -531,6 +528,7 @@ namespace Vision2.vision.HalconRunFile.Controls
             {
             }
         }
+
         private void button3_Click(object sender, EventArgs e)
         {
             try
@@ -543,7 +541,6 @@ namespace Vision2.vision.HalconRunFile.Controls
             catch (Exception)
             {
             }
-
         }
 
         private void dataGridViewHalcon_CellValueChanged(object sender, DataGridViewCellEventArgs e)
@@ -590,7 +587,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                     {
                         halconRun.HobjClear();
 
-                        halconRun.ReadCamImage((e.RowIndex + 1).ToString(), e.RowIndex +1);
+                        halconRun.ReadCamImage((e.RowIndex + 1).ToString(), e.RowIndex + 1);
                         //halconRun.CamImageEvent(e.RowIndex.ToString(), null, e.RowIndex + 1, false);
                         dataGridView1.Rows[e.RowIndex].Cells[3].Value = halconRun.RunTimeI;
                     }
@@ -599,7 +596,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                         OneResultOBj oneResultOBj = new OneResultOBj();
                         oneResultOBj.Image = halconRun.GetOneImageR().Image;
 
-                        halconRun.CamImageEvent((e.RowIndex+1).ToString(), oneResultOBj, e.RowIndex +1, false);
+                        halconRun.CamImageEvent((e.RowIndex + 1).ToString(), oneResultOBj, e.RowIndex + 1, false);
                         dataGridView1.Rows[e.RowIndex].Cells[3].Value = halconRun.RunTimeI;
                     }
                 }
@@ -621,7 +618,6 @@ namespace Vision2.vision.HalconRunFile.Controls
 
                 if (e.ColumnIndex == 4)
                 {
-
                     while (halconRun.RunName.Count <= e.RowIndex)
                     {
                         halconRun.RunName.Add(dataGridView1.Rows[halconRun.RunName.Count].Cells[e.ColumnIndex].Value.ToString());
@@ -630,8 +626,6 @@ namespace Vision2.vision.HalconRunFile.Controls
                 }
                 else if (e.ColumnIndex == 0)
                 {
-
-
                     string[] datas = dataGridView1.Rows[e.RowIndex].Cells[0].Value.ToString().Split(';');
                     string names = "";
                     for (int i = 0; i < datas.Length; i++)
@@ -687,7 +681,6 @@ namespace Vision2.vision.HalconRunFile.Controls
                     {
                         Vision.Instance.ListPrX[halconRun.Name][e.RowIndex] = dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString();
                     }
-
                 }
                 else if (e.ColumnIndex == 8)
                 {
@@ -699,7 +692,6 @@ namespace Vision2.vision.HalconRunFile.Controls
                     {
                         Vision.Instance.ListPrY[halconRun.Name][e.RowIndex] = dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString();
                     }
-
                 }
                 else if (e.ColumnIndex == 6)
                 {
@@ -710,13 +702,11 @@ namespace Vision2.vision.HalconRunFile.Controls
                 }
                 else if (e.ColumnIndex == 5)
                 {
-
                     if (Project.formula.Product.GetProd().ContainsKey(Vision.Instance.ListPrX[halconRun.Name][e.RowIndex]))
                     {
                         Project.formula.Product.GetProd()[Vision.Instance.ListPrX[halconRun.Name][e.RowIndex]] = dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString();
                     }
                 }
-
             }
             catch (Exception ex)
             {
@@ -727,6 +717,7 @@ namespace Vision2.vision.HalconRunFile.Controls
         private void dataGridView1_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
         }
+
         private void dataGridViewHalcon_CellMouseUp(object sender, DataGridViewCellMouseEventArgs e)
         {
             try
@@ -747,6 +738,7 @@ namespace Vision2.vision.HalconRunFile.Controls
             {
             }
         }
+
         private void 打开程序ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
@@ -804,9 +796,9 @@ namespace Vision2.vision.HalconRunFile.Controls
             {
             }
         }
+
         private void label1_Click(object sender, EventArgs e)
         {
-
         }
 
         private void numericUpDown1_ValueChanged(object sender, EventArgs e)
@@ -822,7 +814,6 @@ namespace Vision2.vision.HalconRunFile.Controls
             catch (Exception)
             {
             }
-
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -834,12 +825,13 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             ErosProjcetDLL.Project.ProjectINI.DebugMode = checkBox2.Checked;
         }
-        int DET;
+
+        private int DET;
+
         private void button2_Click(object sender, EventArgs e)
         {
             try
             {
-
                 halconRun.CamImageEvent(dataGridView1.Rows[0].Cells[0].Value.ToString(), null, DET, false);
                 dataGridView1.Rows[0].Cells[3].Value = halconRun.RunTimeI;
                 DET++;
@@ -847,10 +839,7 @@ namespace Vision2.vision.HalconRunFile.Controls
             }
             catch (Exception)
             {
-
-
             }
-
         }
 
         private void numericUpDown2_ValueChanged(object sender, EventArgs e)
@@ -863,7 +852,6 @@ namespace Vision2.vision.HalconRunFile.Controls
                 }
                 halconRun.TiffeOffsetImageEX.ImageNumberROW = (int)numericUpDown3.Value;
                 halconRun.TiffeOffsetImageEX.ImageNumberCol = (int)numericUpDown2.Value;
-
             }
             catch (Exception)
             {
@@ -890,7 +878,6 @@ namespace Vision2.vision.HalconRunFile.Controls
             {
                 MessageBox.Show(ex.Message);
             }
-
         }
 
         private void button5_Click(object sender, EventArgs e)
@@ -905,20 +892,17 @@ namespace Vision2.vision.HalconRunFile.Controls
                 dataGridView2.Rows[dataGridView2.SelectedCells[0].RowIndex].Cells[3].Value = 0;
                 dataGridView2.Rows[dataGridView2.SelectedCells[0].RowIndex].Cells[4].Value = row2 - Double.Parse(dataGridView2.Rows[dataGridView2.SelectedCells[0].RowIndex].Cells[0].Value.ToString());
                 dataGridView2.Rows[dataGridView2.SelectedCells[0].RowIndex].Cells[5].Value = col2 - Double.Parse(dataGridView2.Rows[dataGridView2.SelectedCells[0].RowIndex].Cells[1].Value.ToString());
-
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
-
         }
 
         private void button6_Click(object sender, EventArgs e)
         {
             try
             {
-
                 halconRun.Image(halconRun.TiffeOffsetImageEX.TiffeOffsetImage());
                 halconRun.ShowImage();
             }
@@ -932,18 +916,18 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             SetCamPraegrm();
         }
+
         public void SetCamPraegrm()
         {
             try
             {
-
                 if (_movable)
                 {
                     return;
                 }
                 _movable = true;
-                halconRun.EnbExposureTime = checkBox3.Checked;
-                hSBExposure.Value  =(int) numericUpDown4.Value*100;
+
+                hSBExposure.Value = (int)numericUpDown4.Value * 100;
                 hScrollBar1.Value = (int)numericUpDown6.Value * 100;
                 hSBGain.Value = (int)numericUpDown5.Value * 10;
 
@@ -979,7 +963,6 @@ namespace Vision2.vision.HalconRunFile.Controls
                 {
                     halconRun.TiffeOffsetImageEX.Rows1[e.RowIndex] = double.Parse(dataGridView2.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString());
                 }
-
                 else if (e.ColumnIndex == 3)
                 {
                     halconRun.TiffeOffsetImageEX.Cols1[e.RowIndex] = double.Parse(dataGridView2.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString());
@@ -1016,7 +999,6 @@ namespace Vision2.vision.HalconRunFile.Controls
                 openFileDialog.Filter = "图片文件|*.jpg;*.tif;*.tiff;*.gif;*.bmp;*.jpg;*.jpeg;*.jp2;*.png;*.pcx;*.pgm;*.ppm;*.pbm;*.xwd;*.ima;*.hobj";
                 if (openFileDialog.ShowDialog() != DialogResult.OK) return;
 
-
                 for (int i = 0; i < openFileDialog.FileNames.Length; i++)
                 {
                     HOperatorSet.ReadImage(out HObject hObject, openFileDialog.FileNames[i]);
@@ -1029,27 +1011,23 @@ namespace Vision2.vision.HalconRunFile.Controls
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
-
             }
         }
 
         private void dataGridView2_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-
         }
 
         private void button8_Click(object sender, EventArgs e)
         {
             try
             {
-
                 halconRun.TiffeOffsetImageEX.Rows = new HalconDotNet.HTuple();
                 halconRun.TiffeOffsetImageEX.Cols = new HalconDotNet.HTuple();
                 if (true)
                 {
-
                 }
-                halconRun.TiffeOffsetImageEX.ImageHeightI = halconRun.GetCam(). Height;
+                halconRun.TiffeOffsetImageEX.ImageHeightI = halconRun.GetCam().Height;
                 halconRun.TiffeOffsetImageEX.ImageWidthI = halconRun.GetCam().Width;
 
                 for (int i = 0; i < numericUpDown2.Value * numericUpDown3.Value; i++)
@@ -1097,7 +1075,6 @@ namespace Vision2.vision.HalconRunFile.Controls
 
         private void camControl1_Load(object sender, EventArgs e)
         {
-
         }
 
         private void button10_Click(object sender, EventArgs e)
@@ -1110,7 +1087,6 @@ namespace Vision2.vision.HalconRunFile.Controls
             {
                 MessageBox.Show(ex.Message);
             }
-
         }
 
         private void button11_Click(object sender, EventArgs e)
@@ -1151,7 +1127,6 @@ namespace Vision2.vision.HalconRunFile.Controls
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
-
             }
         }
 
@@ -1167,6 +1142,7 @@ namespace Vision2.vision.HalconRunFile.Controls
             {
             }
         }
+
         private void dataGridView3_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
         }
@@ -1209,7 +1185,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 FolderBrowserDialog fbd = new FolderBrowserDialog();
                 fbd.Description = "请选择图像文件夹";
                 fbd.SelectedPath = halconRun.ImagePaths;
-                if (fbd.SelectedPath=="")
+                if (fbd.SelectedPath == "")
                 {
                     fbd.SelectedPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
                 }
@@ -1220,22 +1196,20 @@ namespace Vision2.vision.HalconRunFile.Controls
                     paths = ErosProjcetDLL.FileCon.FileConStatic.GetFilesListPath(halconRun.ImagePaths, ".jpg,.tif,.tiff,.gif,.bmp,.jpg,.jpeg,.jp2,.png,.pcx,.pgm,.ppm,.pbm,.xwd,.ima,.hobj");
                     ImageIndx = 0;
                     List<string> list = new List<string>();
-                    List<int> RunIDt= new List<int>();
-                
+                    List<int> RunIDt = new List<int>();
+
                     for (int i = 0; i < paths.Count; i++)
                     {
                         if (paths[i].Contains(halconRun.Name))
                         {
-
                             if (!paths[i].Contains("拼图"))
                             {
                                 list.Add(paths[i]);
                                 string ata = Path.GetFileNameWithoutExtension(paths[i]);
-                                 ata = ata.Remove(ata.LastIndexOf('-'), ata.Length - ata.LastIndexOf('-'));
-                                int dtw= ErosProjcetDLL.Project.ProjectINI.GetStrReturnInt(ata);
+                                ata = ata.Remove(ata.LastIndexOf('-'), ata.Length - ata.LastIndexOf('-'));
+                                int dtw = ErosProjcetDLL.Project.ProjectINI.GetStrReturnInt(ata);
                                 RunIDt.Add(dtw);
                             }
-
                         }
                     }
                     string[] pahts = new string[RunIDt.Count];
@@ -1249,22 +1223,20 @@ namespace Vision2.vision.HalconRunFile.Controls
                     toolStripDropDownButton1.DropDownItems.Clear();
                     for (int i = 0; i < paths.Count; i++)
                     {
-                        if (i>30)
+                        if (i > 30)
                         {
                             break;
                         }
-                        ToolStripItem toolStripItem= toolStripDropDownButton1.DropDownItems.Add(paths[i]);
+                        ToolStripItem toolStripItem = toolStripDropDownButton1.DropDownItems.Add(paths[i]);
                         toolStripItem.Click += ToolStripItem_Click;
                         void ToolStripItem_Click(object sender, EventArgs e)
                         {
                             try
                             {
-                               int index= toolStripDropDownButton1.DropDownItems.IndexOf(toolStripItem);
+                                int index = toolStripDropDownButton1.DropDownItems.IndexOf(toolStripItem);
                                 ImageIndx = index;
                                 if (ImageIndx >= 0)
                                 {
-
-
                                     OneResultOBj oneResultOBj = new OneResultOBj();
                                     oneResultOBj.ReadImage(paths[ImageIndx]);
                                     string name = Path.GetFileNameWithoutExtension(paths[ImageIndx]);
@@ -1287,11 +1259,10 @@ namespace Vision2.vision.HalconRunFile.Controls
                             {
                                 MessageBox.Show(ex.Message);
                             }
-
                         }
                     }
-     
-                    toolStripDropDownButton1.Text =  "{" + paths.Count + "/" + (ImageIndx + 1) + "}";
+
+                    toolStripDropDownButton1.Text = "{" + paths.Count + "/" + (ImageIndx + 1) + "}";
                 }
             }
             catch (Exception ex)
@@ -1300,22 +1271,20 @@ namespace Vision2.vision.HalconRunFile.Controls
             }
         }
 
-       
+        private int ImageIndx;
 
-        int ImageIndx;
         private void tsButton2_Click(object sender, EventArgs e)
         {
             try
             {
- 
-                if (ImageIndx >1)
+                if (ImageIndx > 1)
                 {
                     ImageIndx--;
                     //halconRun.ReadImage(paths[ImageIndx-1]);
                     OneResultOBj oneResultOBj = new OneResultOBj();
                     oneResultOBj.ReadImage(paths[ImageIndx - 1]);
-                    string name = Path.GetFileNameWithoutExtension(paths[ImageIndx-1]);
-                    toolStripDropDownButton1.Text = name + "{" + paths.Count + "/" + (ImageIndx ) + "}";
+                    string name = Path.GetFileNameWithoutExtension(paths[ImageIndx - 1]);
+                    toolStripDropDownButton1.Text = name + "{" + paths.Count + "/" + (ImageIndx) + "}";
                     if (!name.Contains("拼图"))
                     {
                         int liID = ErosProjcetDLL.Project.ProjectINI.GetStrReturnInt(name);
@@ -1334,10 +1303,10 @@ namespace Vision2.vision.HalconRunFile.Controls
             {
                 MessageBox.Show(ex.Message);
             }
-       
         }
 
-        List<string> paths;
+        private List<string> paths;
+
         private void tsButton1_Click(object sender, EventArgs e)
         {
             try
@@ -1348,8 +1317,8 @@ namespace Vision2.vision.HalconRunFile.Controls
                     //halconRun.ReadImage(paths[ImageIndx-1]);
                     OneResultOBj oneResultOBj = new OneResultOBj();
                     oneResultOBj.ReadImage(paths[ImageIndx - 1]);
-                    string name = Path.GetFileNameWithoutExtension(paths[ImageIndx-1]);
-                    toolStripDropDownButton1.Text = name + "{" + paths.Count + "/" + (ImageIndx ) + "}";
+                    string name = Path.GetFileNameWithoutExtension(paths[ImageIndx - 1]);
+                    toolStripDropDownButton1.Text = name + "{" + paths.Count + "/" + (ImageIndx) + "}";
                     if (!name.Contains("拼图"))
                     {
                         int liID = ErosProjcetDLL.Project.ProjectINI.GetStrReturnInt(name);
@@ -1361,7 +1330,6 @@ namespace Vision2.vision.HalconRunFile.Controls
                         }
                         halconRun.CamImageEvent(liID.ToString(), oneResultOBj, data, toolStripCheckbox2.GetBase().Checked);
                     }
-         
                 }
                 halconRun.ShowObj();
             }
@@ -1370,7 +1338,8 @@ namespace Vision2.vision.HalconRunFile.Controls
                 MessageBox.Show(ex.Message);
             }
         }
-        bool RunBool;
+
+        private bool RunBool;
 
         private void tsButton3_Click(object sender, EventArgs e)
         {
@@ -1381,7 +1350,8 @@ namespace Vision2.vision.HalconRunFile.Controls
                     RunBool = false;
                     return;
                 }
-                Thread thread = new Thread(() => {
+                Thread thread = new Thread(() =>
+                {
                     try
                     {
                         RunBool = true;
@@ -1394,8 +1364,8 @@ namespace Vision2.vision.HalconRunFile.Controls
                                 //halconRun.ReadImage(paths[ImageIndx-1]);
                                 OneResultOBj oneResultOBj = new OneResultOBj();
                                 oneResultOBj.ReadImage(paths[ImageIndx - 1]);
-                                string name = Path.GetFileNameWithoutExtension(paths[ImageIndx-1]);
-                                toolStripDropDownButton1.Text = name + "{" + paths.Count + "/" + (ImageIndx ) + "}";
+                                string name = Path.GetFileNameWithoutExtension(paths[ImageIndx - 1]);
+                                toolStripDropDownButton1.Text = name + "{" + paths.Count + "/" + (ImageIndx) + "}";
                                 if (!name.Contains("拼图"))
                                 {
                                     int liID = ErosProjcetDLL.Project.ProjectINI.GetStrReturnInt(name);
@@ -1407,7 +1377,6 @@ namespace Vision2.vision.HalconRunFile.Controls
                                     }
                                     halconRun.CamImageEvent(liID.ToString(), oneResultOBj, data, toolStripCheckbox2.GetBase().Checked);
                                 }
-
                             }
                             halconRun.ShowObj();
                             if (toolStripCheckbox1.GetBase().Checked)
@@ -1438,7 +1407,9 @@ namespace Vision2.vision.HalconRunFile.Controls
                 MessageBox.Show(ex.Message);
             }
         }
-        int iDNX = 0;
+
+        private int iDNX = 0;
+
         private void button12_Click_1(object sender, EventArgs e)
         {
             try
@@ -1453,16 +1424,16 @@ namespace Vision2.vision.HalconRunFile.Controls
 
         private void 注册图像ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-                try
-                {
-                    string path = Vision.VisionPath+"Image\\"+ halconRun.Name+(dataGridView1.SelectedRows[0].Index+1);
-                    Directory.CreateDirectory(Path.GetDirectoryName(path));
-                    HOperatorSet.WriteImage(halconRun.Image(), "bmp", 0, path);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                }
+            try
+            {
+                string path = Vision.VisionPath + "Image\\" + halconRun.Name + (dataGridView1.SelectedRows[0].Index + 1);
+                Directory.CreateDirectory(Path.GetDirectoryName(path));
+                HOperatorSet.WriteImage(halconRun.Image(), "bmp", 0, path);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void 读取注册图像ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1471,7 +1442,7 @@ namespace Vision2.vision.HalconRunFile.Controls
             {
                 //halconRun.HobjClear();
 
-                string path = Vision.VisionPath + "Image\\" +halconRun.Name+ (dataGridView1.SelectedRows[0].Index + 1)+ ".bmp";
+                string path = Vision.VisionPath + "Image\\" + halconRun.Name + (dataGridView1.SelectedRows[0].Index + 1) + ".bmp";
 
                 if (File.Exists(path))
                 {
@@ -1483,7 +1454,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 }
                 else
                 {
-                    MessageBox.Show(Path.GetFileName(path) +"图片未注册");
+                    MessageBox.Show(Path.GetFileName(path) + "图片未注册");
                 }
                 halconRun.ShowImage();
             }
@@ -1503,10 +1474,10 @@ namespace Vision2.vision.HalconRunFile.Controls
             {
                 MessageBox.Show(ex.Message);
             }
-         
         }
 
-        bool isChanged ; 
+        private bool isChanged;
+
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             try
@@ -1514,11 +1485,11 @@ namespace Vision2.vision.HalconRunFile.Controls
                 isChanged = true;
                 drawBackSt = Vision.Instance.DicDrawbackNameS[listBox1.SelectedItem.ToString()];
                 dataGridView4.Rows.Clear();
-                if (drawBackSt.DicDrawbackName.Count!=0)
+                if (drawBackSt.DicDrawbackName.Count != 0)
                 {
                     dataGridView4.Rows.Add(drawBackSt.DicDrawbackName.Count);
                 }
-           
+
                 for (int i = 0; i < drawBackSt.DicDrawbackName.Count; i++)
                 {
                     dataGridView4.Rows[i].Cells[0].Value = drawBackSt.DicDrawbackIndex[i];
@@ -1537,7 +1508,7 @@ namespace Vision2.vision.HalconRunFile.Controls
             try
             {
                 string name = Interaction.InputBox("请输入新名称", "缺陷类型", "缺陷1", 100, 100);
-                if (name!="")
+                if (name != "")
                 {
                     if (!Vision.Instance.DicDrawbackNameS.ContainsKey(name))
                     {
@@ -1546,7 +1517,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                     }
                     else
                     {
-                        MessageBox.Show("已存在"+name);
+                        MessageBox.Show("已存在" + name);
                     }
                 }
             }
@@ -1555,7 +1526,9 @@ namespace Vision2.vision.HalconRunFile.Controls
                 MessageBox.Show(ex.Message);
             }
         }
-        DrawBackSt drawBackSt;
+
+        private DrawBackSt drawBackSt;
+
         private void 删除ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
@@ -1580,11 +1553,11 @@ namespace Vision2.vision.HalconRunFile.Controls
                 {
                     return;
                 }
-                if (drawBackSt!=null)
+                if (drawBackSt != null)
                 {
                     for (int i = 0; i < dataGridView4.Rows.Count; i++)
                     {
-                        if (dataGridView4.Rows[i].Cells[0].Value!=null)
+                        if (dataGridView4.Rows[i].Cells[0].Value != null)
                         {
                             if (drawBackSt.DicDrawbackIndex.Count <= i)
                             {
@@ -1615,7 +1588,6 @@ namespace Vision2.vision.HalconRunFile.Controls
             }
         }
 
-
         private void 删除缺陷类型ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
@@ -1623,7 +1595,6 @@ namespace Vision2.vision.HalconRunFile.Controls
                 drawBackSt.DicDrawbackIndex.RemoveAt(dataGridView4.SelectedCells[0].RowIndex);
                 drawBackSt.DicDrawbackName.RemoveAt(dataGridView4.SelectedCells[0].RowIndex);
                 dataGridView4.Rows.RemoveAt(dataGridView4.SelectedCells[0].RowIndex);
-                
             }
             catch (Exception)
             {
@@ -1660,7 +1631,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                     return;
                 }
                 _movable = true;
-                numericUpDown5.Value = (decimal)(hSBGain.Value*0.1);
+                numericUpDown5.Value = (decimal)(hSBGain.Value * 0.1);
                 halconRun.CamData.Gain = (double)numericUpDown5.Value;
 
                 halconRun.SetCamPraegrm();
@@ -1671,9 +1642,6 @@ namespace Vision2.vision.HalconRunFile.Controls
             }
             _movable = false;
         }
-
-
-
 
         private void hScrollBar1_Scroll_1(object sender, ScrollEventArgs e)
         {
@@ -1716,7 +1684,7 @@ namespace Vision2.vision.HalconRunFile.Controls
             {
                 isChanged = true;
                 halconRun.GetSaveImageInfo().ListCamData.Add(new Cams.CamData());
-                int indext=  dataGridView5.Rows.Add();
+                int indext = dataGridView5.Rows.Add();
                 dataGridView5.Rows[indext].Cells[0].Value = indext;
                 dataGridView5.Rows[indext].Cells[1].Value = halconRun.GetSaveImageInfo().ListCamData[
                     indext].ExposureTime;
@@ -1734,8 +1702,6 @@ namespace Vision2.vision.HalconRunFile.Controls
             isChanged = false;
         }
 
-
-
         private void 删除ToolStripMenuItem2_Click(object sender, EventArgs e)
         {
             try
@@ -1743,13 +1709,11 @@ namespace Vision2.vision.HalconRunFile.Controls
                 string key = dataGridView6.Rows[dataGridView6.SelectedCells[0].RowIndex].Cells[0].Value.ToString();
                 dataGridView6.Rows.RemoveAt(dataGridView6.SelectedCells[0].RowIndex);
                 Vision.Instance.DicLightSource.Remove(key);
-
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
-
         }
 
         private void 添加ToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -1778,17 +1742,16 @@ namespace Vision2.vision.HalconRunFile.Controls
                 MessageBox.Show(ex.Message);
             }
             isChanged = false;
-
         }
 
         private void dataGridView6_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             try
             {
-                if (e.ColumnIndex==5)
+                if (e.ColumnIndex == 5)
                 {
-                   string key= dataGridView6.Rows[e.RowIndex].Cells[0].Value.ToString();
-                   Vision.SetLight(key);
+                    string key = dataGridView6.Rows[e.RowIndex].Cells[0].Value.ToString();
+                    Vision.SetLight(key);
                 }
             }
             catch (Exception ex)
@@ -1801,9 +1764,9 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             try
             {
-                if (e.ColumnIndex==5)
+                if (e.ColumnIndex == 5)
                 {
-                    halconRun.SetCamPraegrm(e.RowIndex+1);
+                    halconRun.SetCamPraegrm(e.RowIndex + 1);
                     Thread.Sleep(400);
                     HObject imaget = halconRun.GetCam().GetImage();
                     OneResultOBj oneResultOBj = new OneResultOBj();
@@ -1854,7 +1817,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 }
                 for (int i = 0; i < dataGridView6.RowCount; i++)
                 {
-                    if (dataGridView6.Rows[i].Cells[0].Value==null)
+                    if (dataGridView6.Rows[i].Cells[0].Value == null)
                     {
                         continue;
                     }
@@ -1879,15 +1842,16 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             try
             {
-                Thread thread=new Thread(()=> {
+                Thread thread = new Thread(() =>
+                {
                     halconRun.HobjClear();
                     Stopwatch stopwatch = new Stopwatch();
-                    stopwatch.Restart(); 
+                    stopwatch.Restart();
                     for (int i = 0; i < dataGridView5.RowCount; i++)
                     {
                         OneResultOBj oneResultOBj = new OneResultOBj();
                         oneResultOBj.LiyID = 0;
-                        oneResultOBj.RunID = i+1;
+                        oneResultOBj.RunID = i + 1;
                         halconRun.SetResultOBj(oneResultOBj);
                         halconRun.GetStopwatch().Restart();
                         halconRun.SetCamPraegrm(i + 1);
@@ -1898,10 +1862,10 @@ namespace Vision2.vision.HalconRunFile.Controls
                             continue;
                         }
                         halconRun.SetImages(oneResultOBj, dse);
-                        halconRun.AddMeassge((i+1)+":"+halconRun.GetStopwatch().ElapsedMilliseconds + "ms");
+                        halconRun.AddMeassge((i + 1) + ":" + halconRun.GetStopwatch().ElapsedMilliseconds + "ms");
                     }
                     stopwatch.Stop();
-                    halconRun.AddMeassge( "总时间:" + stopwatch.ElapsedMilliseconds + "ms");
+                    halconRun.AddMeassge("总时间:" + stopwatch.ElapsedMilliseconds + "ms");
                     halconRun.ShowObj();
                 });
                 thread.IsBackground = true;
@@ -1917,7 +1881,8 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             try
             {
-                Thread thread = new Thread(() => {
+                Thread thread = new Thread(() =>
+                {
                     halconRun.HobjClear();
                     Stopwatch stopwatch = new Stopwatch();
                     stopwatch.Restart();
@@ -1935,8 +1900,8 @@ namespace Vision2.vision.HalconRunFile.Controls
                         {
                             continue;
                         }
-                       HObject hObject=  halconRun.GetCam().IGrabbedRawDataTOImage(dse);
-                        oneResultOBj.Image= oneResultOBj.Image.ConcatObj(hObject);
+                        HObject hObject = halconRun.GetCam().IGrabbedRawDataTOImage(dse);
+                        oneResultOBj.Image = oneResultOBj.Image.ConcatObj(hObject);
                         //halconRun.SetImages(oneResultOBj, dse);
                         halconRun.AddMeassge((i + 1) + ":" + halconRun.GetStopwatch().ElapsedMilliseconds + "ms");
                     }
@@ -1951,7 +1916,6 @@ namespace Vision2.vision.HalconRunFile.Controls
             {
                 MessageBox.Show(ex.Message);
             }
-
         }
 
         private void button16_Click(object sender, EventArgs e)

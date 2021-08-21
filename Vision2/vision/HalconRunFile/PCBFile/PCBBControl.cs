@@ -1,17 +1,11 @@
-﻿using Microsoft.VisualBasic;
+﻿using HalconDotNet;
+using Microsoft.VisualBasic;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Vision2.ErosProjcetDLL.Project;
 using Vision2.vision.HalconRunFile.RunProgramFile;
-using HalconDotNet;
 
 namespace Vision2.vision.HalconRunFile.PCBFile
 {
@@ -21,15 +15,18 @@ namespace Vision2.vision.HalconRunFile.PCBFile
         {
             InitializeComponent();
         }
-        public PCBBControl( PCBAEX pCBAEX):this()
+
+        public PCBBControl(PCBAEX pCBAEX) : this()
         {
             pCBAEX1 = pCBAEX;
             halcon = pCBAEX1.GetPThis();
             UPdata();
         }
-        HalconRun halcon;
-        PCBAEX pCBAEX1;
-        TreeNode CurrentNode;
+
+        private HalconRun halcon;
+        private PCBAEX pCBAEX1;
+        private TreeNode CurrentNode;
+
         public void UPdata()
         {
             try
@@ -49,7 +46,6 @@ namespace Vision2.vision.HalconRunFile.PCBFile
 
         private void PCBBControl_Load(object sender, EventArgs e)
         {
-      
         }
 
         private void toolStripButton1_Click(object sender, EventArgs e)
@@ -68,7 +64,7 @@ namespace Vision2.vision.HalconRunFile.PCBFile
                 halcon.HobjClear();
                 Library.LibraryVisionBase Capacit = CurrentNode.Tag as Library.LibraryVisionBase;
                 propertyGrid1.SelectedObject = Capacit;
-             
+
                 Task.Run(() =>
                 {
                     this.Invoke(new Action(() =>
@@ -89,10 +85,10 @@ namespace Vision2.vision.HalconRunFile.PCBFile
                                     control.Dock = DockStyle.Fill;
                                     Capacit.Run(halcon.GetOneImageR());
                                 }
-                             
+
                                 halcon.AddObj(Capacit.GetAOI().SelseAoi);
                                 halcon.AddImageMassage(Capacit.Row, Capacit.Col, Capacit.Name);
-                      
+
                                 //halcon.AddObj(bPCBoJB.TestingRoi);
                                 halcon.ShowObj();
                             }
@@ -103,7 +99,6 @@ namespace Vision2.vision.HalconRunFile.PCBFile
             catch (Exception)
             {
             }
-
         }
 
         private void 添加ICToolStripMenuItem_Click(object sender, EventArgs e)
@@ -117,7 +112,7 @@ namespace Vision2.vision.HalconRunFile.PCBFile
                 if (pCBAEX1.DictRoi.ContainsKey(dsts))
                 {
                     int ds = ProjectINI.GetStrReturnInt(name, out dsts);
-                    stret:
+                stret:
                     if (pCBAEX1.DictRoi.ContainsKey(dsts + (++ds)))
                     {
                         goto stret;
@@ -152,7 +147,7 @@ namespace Vision2.vision.HalconRunFile.PCBFile
             {
                 if (CurrentNode == null) return;
                 string dsts = "重命名";
-                 stret:
+            stret:
                 string name = Interaction.InputBox("请输入新名称", dsts, CurrentNode.Text, 100, 100);
                 if (name == "") return;
                 Library.LibraryVisionBase bPCBoJB = CurrentNode.Tag as Library.LibraryVisionBase;
@@ -196,16 +191,14 @@ namespace Vision2.vision.HalconRunFile.PCBFile
 
         private void treeView1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-                try
-                {
-                    if (e.Button == MouseButtons.Right) return;
-                  
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                }
-            
+            try
+            {
+                if (e.Button == MouseButtons.Right) return;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void toolStripButton2_Click(object sender, EventArgs e)
@@ -213,7 +206,7 @@ namespace Vision2.vision.HalconRunFile.PCBFile
             try
             {
                 Library.LibraryVisionBase Capacit = CurrentNode.Tag as Library.LibraryVisionBase;
-          
+
                 HObject hObject = RunProgram.DragMoveOBJ(halcon, Capacit.GetRoi());
                 HOperatorSet.AreaCenter(hObject, out HTuple area, out HTuple row, out HTuple column);
                 Capacit.Row = row;
@@ -222,7 +215,6 @@ namespace Vision2.vision.HalconRunFile.PCBFile
             catch (Exception)
             {
             }
-           
         }
     }
 }

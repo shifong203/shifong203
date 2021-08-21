@@ -3,7 +3,6 @@ using System;
 using System.Windows.Forms;
 using Vision2.ErosProjcetDLL.UI.DataGridViewF;
 using Vision2.vision.HalconRunFile.RunProgramFile;
-using static Vision2.vision.HalconRunFile.RunProgramFile.RunProgram;
 
 namespace Vision2.vision.HalconRunFile.Controls
 {
@@ -14,14 +13,17 @@ namespace Vision2.vision.HalconRunFile.Controls
             ismove = true;
             InitializeComponent();
         }
+
         public Wire_Solder_Control(Wire_Solder wire_) : this()
         {
             Wire_S = wire_;
             Halcon = (HalconRun)Wire_S.GetPThis();
         }
-        Wire_Solder Wire_S;
+
+        private Wire_Solder Wire_S;
         public HalconRun Halcon;
-        bool ismove = false;
+        private bool ismove = false;
+
         public void Set_Pragram(int runid)
         {
             if (ismove)
@@ -85,7 +87,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 HOperatorSet.SetColor(visionUserControlS.HalconWindow, "green");
                 HOperatorSet.SetColor(visionUserControlV.HalconWindow, "green");
 
-                bool DWET = Wire_S.RunP(Halcon.GetOneImageR(), new AoiObj() { DebugID=runid}, visionUserControl1.HalconWindow, visionUserControlS.HalconWindow, visionUserControlV.HalconWindow, visionUserControlRGB.HalconWindow);
+                bool DWET = Wire_S.RunP(Halcon.GetOneImageR(), new AoiObj() { DebugID = runid }, visionUserControl1.HalconWindow, visionUserControlS.HalconWindow, visionUserControlV.HalconWindow, visionUserControlRGB.HalconWindow);
                 HOperatorSet.AreaCenter(Wire.HObject, out HTuple area, out HTuple row, out HTuple column);
 
                 Halcon.AddImageMassage(row + 200, column, listBoxPoints.SelectedIndex + 1, ColorResult.blue, "true");
@@ -133,7 +135,8 @@ namespace Vision2.vision.HalconRunFile.Controls
             }
             ismove = false;
         }
-        Wire_Solder.Wire_S Wire;
+
+        private Wire_Solder.Wire_S Wire;
 
         private void Wire_Solder_Control_Load(object sender, EventArgs e)
         {
@@ -148,7 +151,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 {
                     Column1.Items.Add(Project.formula.RecipeCompiler.Instance.Data.ListDatV[i].ComponentName);
                 }
-        
+
                 for (int i = 0; i < Wire_S.listWelding.Count; i++)
                 {
                     listBoxPoints.Items.Add(i + 1);
@@ -168,9 +171,10 @@ namespace Vision2.vision.HalconRunFile.Controls
             {
                 MessageBox.Show(ex.Message);
             }
-
         }
-        HObject hObjectImage;
+
+        private HObject hObjectImage;
+
         private void buttonNewPoint_Click(object sender, EventArgs e)
         {
             try
@@ -205,7 +209,6 @@ namespace Vision2.vision.HalconRunFile.Controls
             {
             }
             Halcon.Drawing = false;
-
         }
 
         private void buttonMovePoint_Click(object sender, EventArgs e)
@@ -219,7 +222,6 @@ namespace Vision2.vision.HalconRunFile.Controls
             }
             catch (Exception)
             {
-
             }
         }
 
@@ -227,7 +229,6 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             try
             {
-
                 Wire_S.AOIObj = RunProgram.DrawModOBJ(Halcon, HalconRun.EnumDrawType.Rectangle2, Wire_S.AOIObj);
             }
             catch (Exception)
@@ -239,15 +240,12 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             try
             {
-
                 Wire_S.listWelding.Remove(Wire);
                 listBoxPoints.Items.Clear();
                 for (int i = 0; i < Wire_S.listWelding.Count; i++)
                 {
                     listBoxPoints.Items.Add(i + 1);
                 }
-
-
             }
             catch (Exception)
             {
@@ -276,7 +274,6 @@ namespace Vision2.vision.HalconRunFile.Controls
             {
             }
             Set_Pragram(1);
-
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -285,7 +282,6 @@ namespace Vision2.vision.HalconRunFile.Controls
             {
                 Halcon.HobjClear();
                 Wire_S.DrawObj = RunProgram.DrawModOBJ(Halcon, HalconRun.EnumDrawType.Rectangle2, Wire_S.DrawObj);
-
             }
             catch (Exception)
             {
@@ -294,12 +290,8 @@ namespace Vision2.vision.HalconRunFile.Controls
 
         private void Set2ValueChanged(object sender, EventArgs e)
         {
-
             Set_Pragram(2);
-
         }
-
-
 
         private void button2_Click(object sender, EventArgs e)
         {
@@ -307,7 +299,6 @@ namespace Vision2.vision.HalconRunFile.Controls
             Halcon.AddObj(Wire_S.DrawObj);
             Halcon.ShowObj();
         }
-
 
         private void Set3_ValueChanged(object sender, EventArgs e)
         {
@@ -318,9 +309,6 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             Set_Pragram(2);
         }
-
-
-
 
         private void dataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
@@ -350,14 +338,11 @@ namespace Vision2.vision.HalconRunFile.Controls
                     Wire.List3DName.RemoveAt(dataGridView1.SelectedCells[0].RowIndex);
                     dataGridView1.Rows.RemoveAt(dataGridView1.SelectedCells[0].RowIndex);
                 }
-
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
-
-
         }
     }
 }

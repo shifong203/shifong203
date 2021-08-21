@@ -7,7 +7,6 @@ using System.Windows.Forms;
 using Vision2.ErosProjcetDLL.Project;
 using Vision2.vision.HalconRunFile.RunProgramFile;
 using static Vision2.ErosProjcetDLL.FileCon.FileConStatic;
-using static Vision2.vision.HalconRunFile.RunProgramFile.RunProgram;
 
 namespace Vision2.vision.Calib
 {
@@ -16,6 +15,7 @@ namespace Vision2.vision.Calib
         public string Name { get; set; }
 
         public const string FileName = "CalibFile";
+
         public static string GetFileName()
         {
             Directory.CreateDirectory(Vision.GetFilePath() + "CalibFile\\");
@@ -29,6 +29,7 @@ namespace Vision2.vision.Calib
         public string TRobotCall { get; set; }
 
         public string MRobotCall { get; set; }
+
         /// <summary>
         /// 标定类型
         /// </summary>
@@ -38,10 +39,12 @@ namespace Vision2.vision.Calib
             固定相机 = 1,
             移动放置 = 2,
         }
+
         /// <summary>
         /// 相机标定句柄
         /// </summary>
-        HTuple calibDataID;
+        private HTuple calibDataID;
+
         #region 移动相机
 
         /// <summary>
@@ -49,15 +52,18 @@ namespace Vision2.vision.Calib
         /// </summary>
         [DisplayName("相机内参"), DescriptionAttribute(""), Category("移动相机")]
         public HTuple CamParamT { get { return camParam; } }
+
         /// <summary>
         /// 相机内参
         /// </summary>
         public HTuple camParam;
+
         /// <summary>
         /// 相机Tool坐标
         /// </summary>
         [DisplayName("相机Tool坐标"), DescriptionAttribute(""), Category("移动相机")]
         public HTuple ToolInCamPoseT { get { return ToolInCamPose; } }
+
         /// <summary>
         /// 相机Tool坐标
         /// </summary>
@@ -68,40 +74,52 @@ namespace Vision2.vision.Calib
         /// </summary>
         [DisplayName("标定板到相机位置"), DescriptionAttribute(""), Category("移动相机")]
         public HTuple CalibInCamPose { get { return calibInCamPose; } }
+
         /// <summary>
         /// 移动标定板到相机位置
         /// </summary>
         public HTuple calibInCamPose;
 
-        #endregion
+        #endregion 移动相机
+
         #region 固定相机
+
         [DisplayName("相机内参"), DescriptionAttribute(""), Category("固定相机")]
         public HTuple TCamParam { get { return tCamParam; } set { tCamParam = value; } }
+
         /// <summary>
         /// 固定相机位置
         /// </summary>
         [DisplayName("相机到机械手坐标"), DescriptionAttribute(""), Category("固定相机")]
         public HTuple TBaseInCamPose { get { return tBaseInCamPose; } }
+
         /// <summary>
         /// 固定相机位置
         /// </summary>
         public HTuple tBaseInCamPose;
+
         /// <summary>
         /// 固定相机
         /// </summary>
-        HTuple tCamParam;
+        private HTuple tCamParam;
+
         [DisplayName("标定板到相机位置"), DescriptionAttribute(""), Category("固定相机")]
         public HTuple TCalibInCamPose { get { return tCalibInCamPose; } set { tCalibInCamPose = value; } }
+
         /// <summary>
         /// 固定相机标定板位置
         /// </summary>
         public HTuple tCalibInCamPose;
+
         [DisplayName("动态Tool位置"), DescriptionAttribute(""), Category("固定相机")]
         public HTuple Tool1Base { get; set; }
-        #endregion
+
+        #endregion 固定相机
+
         public HTuple Errs;
-        string[] lPaths;
-        string[] lPoses;
+        private string[] lPaths;
+        private string[] lPoses;
+
         /// <summary>
         ///  保存全部相机，标定坐标参数存储到文件
         /// </summary>
@@ -109,14 +127,12 @@ namespace Vision2.vision.Calib
         /// <returns></returns>
         public bool SaveCalib(string pathDirectory, bool misT)
         {
-
             try
             {
                 Directory.CreateDirectory(pathDirectory + "固定相机\\");
                 Directory.CreateDirectory(pathDirectory + "移动相机\\");
                 if (misT)
                 {
-
                     HOperatorSet.WriteCamPar(tCamParam, pathDirectory + "固定相机\\final_campar.dat");
                     HOperatorSet.WritePose(tCalibInCamPose, pathDirectory + "固定相机\\CalibInCamPose.dat");
                     HOperatorSet.WritePose(this.tBaseInCamPose, pathDirectory + "固定相机\\toolInbasePoseBaseInCamPose.dat");
@@ -167,6 +183,7 @@ namespace Vision2.vision.Calib
             }
             return false;
         }
+
         /// <summary>
         /// 读取固定相机和移动相机的标定参数
         /// </summary>
@@ -186,6 +203,7 @@ namespace Vision2.vision.Calib
             }
             return true;
         }
+
         /// <summary>
         /// 读取相机内参
         /// </summary>
@@ -212,8 +230,8 @@ namespace Vision2.vision.Calib
 
         public void RunCalibCamPar()
         {
-
         }
+
         /// <summary>
         ///自动标定固定相机
         /// </summary>
@@ -324,7 +342,6 @@ namespace Vision2.vision.Calib
                 HOperatorSet.ClearCalibData(calibDataID);
             }
             return false;
-
         }
 
         /// <summary>
@@ -393,7 +410,6 @@ namespace Vision2.vision.Calib
                 }
                 else
                 {
-
                     HOperatorSet.GetCalibData(calibDataID, "camera", 0, "params", out camParam);//获取相机内部参数
                     HOperatorSet.GetCalibData(calibDataID, "camera", 0, "tool_in_cam_pose", out ToolInCamPose);//获取相机的工具坐标
                     HOperatorSet.GetCalibData(calibDataID, "calib_obj", 0, "obj_in_base_pose", out calibInCamPose);//获取对象目标的基础坐标
@@ -428,31 +444,34 @@ namespace Vision2.vision.Calib
             HOperatorSet.ClearCalibData(calibDataID);
             return false;
         }
-        HObject Object = new HObject();
-        HObject ObjectY = new HObject();
-        HObject ObjectZ = new HObject();
-        HObject ObjectX = new HObject();
+
+        private HObject Object = new HObject();
+        private HObject ObjectY = new HObject();
+        private HObject ObjectZ = new HObject();
+        private HObject ObjectX = new HObject();
+
         public HObject GeT3d()
         {
             return Object;
         }
+
         public HalconRun.ObjectColor Get3DX()
         {
             return new HalconRun.ObjectColor() { _HObject = ObjectX, HobjectColot = "red" };
         }
+
         public HalconRun.ObjectColor Get3DY()
         {
             return new HalconRun.ObjectColor() { _HObject = ObjectY, HobjectColot = "green" };
         }
+
         public HalconRun.ObjectColor Get3DZ()
         {
-
             return new HalconRun.ObjectColor() { _HObject = ObjectZ, HobjectColot = "blue" };
-
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="image"></param>
         /// <param name="calibPaht"></param>
@@ -487,6 +506,7 @@ namespace Vision2.vision.Calib
             HOperatorSet.ClearCalibData(calibDataID);
             return false;
         }
+
         /// <summary>
         /// 初始化读取相机参数和标定板参数
         /// </summary>
@@ -526,6 +546,7 @@ namespace Vision2.vision.Calib
             }
             return false;
         }
+
         /// <summary>
         /// 计算像素在标定后的3D世界坐标
         /// </summary>
@@ -557,7 +578,6 @@ namespace Vision2.vision.Calib
             {
                 return RunMode1(rows, cols, toolInBasePose, out x, out y, out z, out u, out v, out w, halconRun);
             }
-
         }
 
         /// <summary>
@@ -573,7 +593,7 @@ namespace Vision2.vision.Calib
         /// <param name="v"></param>
         /// <param name="w"></param>
         /// <returns></returns>
-        bool RunMode1(HTuple row, HTuple col, HTuple toolInBasePose, out HTuple x, out HTuple y, out HTuple z, out HTuple u, out HTuple v, out HTuple w, HalconRun halconRun = null)
+        private bool RunMode1(HTuple row, HTuple col, HTuple toolInBasePose, out HTuple x, out HTuple y, out HTuple z, out HTuple u, out HTuple v, out HTuple w, HalconRun halconRun = null)
         {
             z = x = y = u = v = w = null;
             try
@@ -617,7 +637,7 @@ namespace Vision2.vision.Calib
         /// <param name="v"></param>
         /// <param name="w"></param>
         /// <returns></returns>
-        bool RunMode2(HTuple row, HTuple col, HTuple toolInBasePose, out HTuple x, out HTuple y, out HTuple z, out HTuple u, out HTuple v, out HTuple w, HalconRun halconRun = null)
+        private bool RunMode2(HTuple row, HTuple col, HTuple toolInBasePose, out HTuple x, out HTuple y, out HTuple z, out HTuple u, out HTuple v, out HTuple w, HalconRun halconRun = null)
         {
             z = x = y = u = v = w = null;
             if (RunSetTool(row, col, toolInBasePose, halconRun))
@@ -635,6 +655,7 @@ namespace Vision2.vision.Calib
             }
             return false;
         }
+
         /// <summary>
         /// 固定加放置相机
         /// </summary>
@@ -649,7 +670,7 @@ namespace Vision2.vision.Calib
         /// <param name="w"></param>
         /// <param name="hWindID">窗口句柄</param>
         /// <returns>成功返回true</returns>
-        bool RunMode3(HTuple rows, HTuple cols, HTuple phi, HTuple toolInBasePose, out HTuple x, out HTuple y, out HTuple z,
+        private bool RunMode3(HTuple rows, HTuple cols, HTuple phi, HTuple toolInBasePose, out HTuple x, out HTuple y, out HTuple z,
             out HTuple u, out HTuple v, out HTuple w, HalconRun halconRun = null)
         {
             z = x = y = u = v = w = 0;
@@ -680,6 +701,7 @@ namespace Vision2.vision.Calib
             }
             return false;
         }
+
         /// <summary>
         /// 计算像素在标定后的3D世界坐标
         /// </summary>
@@ -731,6 +753,7 @@ namespace Vision2.vision.Calib
             }
             return false;
         }
+
         /// <summary>
         /// Pose转3D
         /// </summary>
@@ -775,6 +798,7 @@ namespace Vision2.vision.Calib
             }
             return false;
         }
+
         /// <summary>
         /// 合并2个位置获得绝对位置
         /// </summary>
@@ -841,6 +865,7 @@ namespace Vision2.vision.Calib
             }
             return Object;
         }
+
         /// <summary>
         /// 合并翻转坐标
         /// </summary>
@@ -857,8 +882,9 @@ namespace Vision2.vision.Calib
             HOperatorSet.ConvertPoseType(hTuple, "Rp+T", "gba", "point", out hTuple);
             return hTuple;
         }
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <returns></returns>
         public static HTuple Calc_calplate_pose_stationarycam(HTuple ObjInToolPose, HTuple BaseInCamPose, HTuple ToolInBasePose)
@@ -868,6 +894,7 @@ namespace Vision2.vision.Calib
             HOperatorSet.PoseCompose(ToolInCamPose, ObjInToolPose, out ToolInCamPose);
             return ToolInCamPose;
         }
+
         /// <summary>
         /// 检测是校准是否合格
         /// </summary>
@@ -882,20 +909,17 @@ namespace Vision2.vision.Calib
         }
 
         // Chapter: Calibration / Camera Parameters
-        // Short Description: Get the value of a specified camera parameter from the camera parameter tuple. 
+        // Short Description: Get the value of a specified camera parameter from the camera parameter tuple.
         public static void Get_cam_par_data(HTuple hv_CameraParam, HTuple hv_ParamName, out HTuple hv_ParamValue)
         {
+            // Local iconic variables
 
-
-
-            // Local iconic variables 
-
-            // Local control variables 
+            // Local control variables
 
             HTuple hv_CameraType = null, hv_CameraParamNames = null;
             HTuple hv_Index = null, hv_ParamNameInd = new HTuple();
             HTuple hv_I = new HTuple();
-            // Initialize local and output iconic variables 
+            // Initialize local and output iconic variables
             //get_cam_par_data returns in ParamValue the value of the
             //parameter that is given in ParamName from the tuple of
             //camera parameters that is given in CameraParam.
@@ -930,12 +954,12 @@ namespace Vision2.vision.Calib
         }
 
         // Chapter: Calibration / Camera Parameters
-        // Short Description: Get the names of the parameters in a camera parameter tuple. 
+        // Short Description: Get the names of the parameters in a camera parameter tuple.
         public static void get_cam_par_names(HTuple hv_CameraParam, out HTuple hv_CameraType,
             out HTuple hv_ParamNames)
         {
-            // Local iconic variables 
-            // Local control variables 
+            // Local iconic variables
+            // Local control variables
             HTuple hv_CameraParamAreaScanDivision = null;
             HTuple hv_CameraParamAreaScanPolynomial = null, hv_CameraParamAreaScanTelecentricDivision = null;
             HTuple hv_CameraParamAreaScanTelecentricPolynomial = null;
@@ -952,7 +976,7 @@ namespace Vision2.vision.Calib
             HTuple hv_CameraParamAreaScanTelecentricPolynomialLegacy = null;
             HTuple hv_CameraParamAreaScanBilateralTelecentricTiltDivisionLegacy = null;
             HTuple hv_CameraParamAreaScanBilateralTelecentricTiltPolynomialLegacy = null;
-            // Initialize local and output iconic variables 
+            // Initialize local and output iconic variables
             hv_CameraType = new HTuple();
             hv_ParamNames = new HTuple();
             //get_cam_par_names returns for each element in the camera
@@ -1327,6 +1351,7 @@ namespace Vision2.vision.Calib
                             hv_CameraType = "area_scan_telecentric_division";
                         }
                         break;
+
                     case 10:
                         //CameraType: 'area_scan_tilt_division' or 'area_scan_telecentric_tilt_division'
                         if ((int)(new HTuple(((hv_CameraParam.TupleSelect(0))).TupleNotEqual(0.0))) != 0)
@@ -1340,6 +1365,7 @@ namespace Vision2.vision.Calib
                             hv_CameraType = "area_scan_tilt_bilateral_telecentric_division";
                         }
                         break;
+
                     case 12:
                         //CameraType: 'area_scan_polynomial' or 'area_scan_telecentric_polynomial'
                         if ((int)(new HTuple(((hv_CameraParam.TupleSelect(0))).TupleNotEqual(0.0))) != 0)
@@ -1353,6 +1379,7 @@ namespace Vision2.vision.Calib
                             hv_CameraType = "area_scan_telecentric_polynomial";
                         }
                         break;
+
                     case 14:
                         //CameraType: 'area_scan_tilt_polynomial' or 'area_scan_telecentric_tilt_polynomial'
                         if ((int)(new HTuple(((hv_CameraParam.TupleSelect(0))).TupleNotEqual(0.0))) != 0)
@@ -1373,9 +1400,9 @@ namespace Vision2.vision.Calib
                         hv_ParamNames = hv_CameraParamLinesScan.Clone();
                         hv_CameraType = "line_scan";
                         break;
+
                     default:
                         throw new HalconException("Wrong number of values in CameraParam.");
-
                 }
             }
             else
@@ -1535,12 +1562,12 @@ namespace Vision2.vision.Calib
         }
 
         // Chapter: Graphics / Output
-        // Short Description: Display the axes of a 3d coordinate system 
+        // Short Description: Display the axes of a 3d coordinate system
         public static HObject Disp3DCoordSystem(HTuple hv_CamParam, HTuple hv_Pose,
             HTuple hv_CoordAxesLength, HTuple hv_WindowHandle = null)
         {
-            // Local iconic variables 
-            // Local control variables 
+            // Local iconic variables
+            // Local control variables
             HTuple hv_CameraType = null, hv_IsTelecentric = null;
             HTuple hv_TransWorld2Cam = null, hv_OrigCamX = null, hv_OrigCamY = null;
             HTuple hv_OrigCamZ = null, hv_Row0 = null, hv_Column0 = null;
@@ -1548,7 +1575,7 @@ namespace Vision2.vision.Calib
             HTuple hv_ColumnAxX = null, hv_RowAxY = null, hv_ColumnAxY = null;
             HTuple hv_RowAxZ = null, hv_ColumnAxZ = null, hv_Distance = null;
             HTuple hv_HeadLength = null;
-            // Initialize local and output iconic variables 
+            // Initialize local and output iconic variables
 
             try
             {
@@ -1631,7 +1658,6 @@ namespace Vision2.vision.Calib
                        "blue", "box");
                 }
 
-
                 return ho_ArrowsX.ConcatObj(ho_ArrowsY).ConcatObj(ho_ArrowsZ);
             }
             catch (HalconException HDevExpDefaultException)
@@ -1640,14 +1666,13 @@ namespace Vision2.vision.Calib
 
                 throw HDevExpDefaultException;
             }
-
         }
 
         public static void Disp3DCoordSystem(HTuple hv_CamParam, HTuple hv_Pose,
         HTuple hv_CoordAxesLength, out HObject ho_ArrowsX, out HObject ho_ArrowsY, out HObject ho_ArrowsZ, HalconRun halconRun = null)
         {
-            // Local iconic variables 
-            // Local control variables 
+            // Local iconic variables
+            // Local control variables
             HTuple hv_CameraType = null, hv_IsTelecentric = null;
             HTuple hv_TransWorld2Cam = null, hv_OrigCamX = null, hv_OrigCamY = null;
             HTuple hv_OrigCamZ = null, hv_Row0 = null, hv_Column0 = null;
@@ -1658,7 +1683,7 @@ namespace Vision2.vision.Calib
             ho_ArrowsX = new HObject();
             ho_ArrowsY = new HObject();
             ho_ArrowsZ = new HObject();
-            // Initialize local and output iconic variables 
+            // Initialize local and output iconic variables
             try
             {
                 //
@@ -1735,20 +1760,19 @@ namespace Vision2.vision.Calib
                 //      Vision.Disp_message(hv_WindowHandle, "Z", hv_RowAxZ + 3, (hv_ColumnAxZ + 3) + 3, false,
                 //         "blue", "box");
                 //  }
-
             }
             catch (HalconException HDevExpDefaultException)
             {
                 //ho_Arrows.Dispose();
                 throw HDevExpDefaultException;
             }
-
         }
+
         public static void Disp3DCoordSystem(HTuple hv_CamParam, HTuple hv_Pose,
     HTuple hv_CoordAxesLength, HalconRun halconRun)
         {
-            // Local iconic variables 
-            // Local control variables 
+            // Local iconic variables
+            // Local control variables
             HTuple hv_CameraType = null, hv_IsTelecentric = null;
             HTuple hv_TransWorld2Cam = null, hv_OrigCamX = null, hv_OrigCamY = null;
             HTuple hv_OrigCamZ = null, hv_Row0 = null, hv_Column0 = null;
@@ -1759,7 +1783,7 @@ namespace Vision2.vision.Calib
             HObject ho_ArrowsX = new HObject();
             HObject ho_ArrowsY = new HObject();
             HObject ho_ArrowsZ = new HObject();
-            // Initialize local and output iconic variables 
+            // Initialize local and output iconic variables
             try
             {
                 //
@@ -1830,7 +1854,6 @@ namespace Vision2.vision.Calib
                 //ho_Arrows.Dispose();
                 throw HDevExpDefaultException;
             }
-
         }
 
         public Control GetThisControl()

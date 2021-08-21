@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Forms;
 using Vision2.vision.HalconRunFile.Controls;
-using static Vision2.vision.Vision;
 
 namespace Vision2.vision.HalconRunFile.RunProgramFile
 {
@@ -23,44 +22,49 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             NoNeedle_H_thr_max = 40;
             NoNeedle_area_min = 400;
         }
+
         public override string ShowHelpText()
         {
             return "2.4_焊点识别";
         }
-        public override Control GetControl(HalconRun halcon )
+
+        public override Control GetControl(IDrawHalcon halcon)
         {
             return new Welding_Spot_Control1(this);
         }
 
-
         [Description("显示NG或详细信息"), Category("显示"), DisplayName("显示结果")]
         public bool IsScdet { get; set; }
+
         [Description("显示Row偏移位置"), Category("显示"), DisplayName("显示Row偏移")]
         public int DispRow { get; set; } = -600;
+
         [Description("显示Col偏移位置"), Category("显示"), DisplayName("显示Col偏移")]
         public int DispCow { get; set; } = +600;
+
         public byte R_threa_min { get; set; }
         public byte R_threa_max { get; set; } = 150;
         public bool H_enabled { get; set; } = true;
         public byte H_threa_min { get; set; }
         public byte H_threa_max { get; set; } = 150;
+
         /// <summary>
         /// 少焊点面积筛选
         /// </summary>
         public HTuple H_sele_area_min { get; set; } = new HTuple(10);
+
         /// <summary>
         /// 无针点面积筛选
         /// </summary>
         public HTuple H_sele_area_max { get; set; } = new HTuple(999999);
+
         public bool S_enabled { get; set; } = true;
         public byte S_threa_min { get; set; }
         public byte S_threa_max { get; set; } = 150;
 
-
         public bool V_enabled { get; set; } = true;
         public byte V_threa_min { get; set; }
         public byte V_threa_max { get; set; } = 150;
-
 
         public byte H_area_compute_thr_min { get; set; }
         public byte H_area_compute_thr_max { get; set; } = 100;
@@ -80,14 +84,17 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         /// 少焊园筛选
         /// </summary>
         public double Welding_ra { get; set; } = 60;
+
         /// <summary>
         /// 溢焊面积
         /// </summary>
         public double Overflow_Welding_Area { get; set; } = 800;
+
         /// <summary>
         /// 无针检测
         /// </summary>
         public byte NoNeedle_V_thr_max { get; set; }
+
         public byte NoNeedle_V_thr_min { get; set; }
         public byte NoNeedle_S_thr_max { get; set; }
         public byte NoNeedle_S_thr_min { get; set; }
@@ -95,7 +102,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         public byte NoNeedle_H_thr_min { get; set; }
         public double NoNeedle_area_min { get; set; }
 
-        public override bool RunHProgram( OneResultOBj oneResultOBj, out List<OneRObj> oneRObjs, AoiObj aoiObj)
+        public override bool RunHProgram(OneResultOBj oneResultOBj, out List<OneRObj> oneRObjs, AoiObj aoiObj)
         {
             oneRObjs = new List<OneRObj>();
             List<bool> restle = new List<bool>();
@@ -122,7 +129,6 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     oneResultOBj.AddObj(this.GetPThis().GetModelHaoMatRegion(HomName, listWelding[i].HObject), ColorResult.red);
                 }
                 //halcon.TrayRestData.ListVerData.Add(text);
-               
             }
             for (int i = 0; i < restle.Count; i++)
             {
@@ -134,9 +140,11 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             }
             return true;
         }
-        HObject Image1 = new HObject();
-        HObject Image2 = new HObject();
-        HObject Image3 = new HObject();
+
+        private HObject Image1 = new HObject();
+        private HObject Image2 = new HObject();
+        private HObject Image3 = new HObject();
+
         /// <summary>
         /// HSV通道转换
         /// </summary>
@@ -158,13 +166,16 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 case 'H':
                     hObjectt = H;
                     break;
+
                 case 'V':
                     hObjectt = V;
 
                     break;
+
                 case 'S':
                     hObjectt = S;
                     break;
+
                 default:
                     hObjectt = H;
                     break;
@@ -177,19 +188,21 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         {
             return base.ReadThis<Welding_Spot>(Path);
         }
+
         //public HObject HObject { get; set; } = new HObject();
         public List<WeldingCC> listWelding { get; set; } = new List<WeldingCC>();
+
         public class WeldingCC
         {
             /// <summary>
             /// 绘制焊点的区域
             /// </summary>
             public HObject HObject { get; set; } = new HObject();
+
             /// <summary>
             /// 点集合
             /// </summary>
             public List<HObject> ListHObj { get; set; } = new List<HObject>();
-
 
             public bool IsEllIpse { get; set; } = false;
 
@@ -197,8 +210,9 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             public double CiericRInt { get; set; } = 20;
             public double Phi { get; set; } = 0;
             public double Radius2 { get; set; } = 80;
+
             /// <summary>
-            /// 
+            ///
             /// </summary>
             public byte Number { get; set; } = 1;
 
@@ -215,7 +229,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             /// <param name="hwV"></param>
             /// <returns></returns>
             public bool Solder_joint_inspection(Welding_Spot welding_Spo, OneResultOBj Halcon, out bool is_Conglutination,
-                out bool is_less_defend,out HTuple areas, HWindID hwH = null, ImageTypeObj hSVRGB = ImageTypeObj.R, int runID = 0)
+                out bool is_less_defend, out HTuple areas, HWindID hwH = null, ImageTypeObj hSVRGB = ImageTypeObj.R, int runID = 0)
             {
                 is_less_defend = is_Conglutination = false;
                 areas = new HTuple();
@@ -245,7 +259,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     hwH.SetPerpetualPart(row1, column1, row2, column2);
                     hwH.HobjClear();
                 }
-                    if (runID == 3)
+                if (runID == 3)
                 {
                     if (hwH != null)
                     {
@@ -254,24 +268,30 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                             case ImageTypeObj.R:
                                 hwH.SetImaage(ImageR);
                                 break;
+
                             case ImageTypeObj.G:
                                 hwH.SetImaage(ImageG);
                                 break;
+
                             case ImageTypeObj.B:
                                 hwH.SetImaage(ImageB);
                                 break;
+
                             case ImageTypeObj.H:
-                                hwH.SetImaage(H); 
+                                hwH.SetImaage(H);
                                 hwH.OneResIamge.AddObj(hObject);
                                 break;
+
                             case ImageTypeObj.S:
                                 hwH.SetImaage(S);
                                 hwH.OneResIamge.AddObj(hObjectS);
                                 break;
+
                             case ImageTypeObj.V:
                                 hwH.SetImaage(V);
                                 hwH.OneResIamge.AddObj(hObjectV);
                                 break;
+
                             default:
                                 break;
                         }
@@ -320,31 +340,37 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                             case ImageTypeObj.R:
                                 hwH.SetImaage(ImageR);
                                 break;
+
                             case ImageTypeObj.G:
                                 hwH.SetImaage(ImageG);
                                 break;
+
                             case ImageTypeObj.B:
                                 hwH.SetImaage(ImageB);
                                 hwH.OneResIamge.AddObj(hObjectB);
                                 break;
+
                             case ImageTypeObj.H:
                                 hwH.SetImaage(H);
                                 hwH.OneResIamge.AddObj(hObjectHCompute);
                                 break;
+
                             case ImageTypeObj.S:
                                 hwH.SetImaage(S);
                                 hwH.OneResIamge.AddObj(hObjectSCompute);
                                 break;
+
                             case ImageTypeObj.V:
                                 hwH.SetImaage(V);
                                 hwH.OneResIamge.AddObj(hObjectVCompute);
                                 break;
+
                             default:
                                 break;
                         }
                     }
                 }
-            
+
                 HOperatorSet.Intersection(hObjectHCompute, hObjectSCompute, out HObject hObject2);
                 HOperatorSet.Intersection(hObject2, hObjectVCompute, out hObject2);
                 HOperatorSet.Intersection(hObject2, hObjectB, out hObject2);
@@ -373,25 +399,31 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                             case ImageTypeObj.R:
                                 hwH.SetImaage(ImageR);
                                 break;
+
                             case ImageTypeObj.G:
                                 hwH.SetImaage(ImageG);
                                 break;
+
                             case ImageTypeObj.B:
                                 hwH.SetImaage(ImageB);
                                 hwH.OneResIamge.AddObj(hObjectB);
                                 break;
+
                             case ImageTypeObj.H:
                                 hwH.SetImaage(H);
                                 hwH.OneResIamge.AddObj(hObjectH1);
                                 break;
+
                             case ImageTypeObj.S:
                                 hwH.SetImaage(S);
                                 hwH.OneResIamge.AddObj(hObjectS1);
                                 break;
+
                             case ImageTypeObj.V:
                                 hwH.SetImaage(V);
                                 hwH.OneResIamge.AddObj(hObjectV1);
                                 break;
+
                             default:
                                 break;
                         }
@@ -404,7 +436,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 for (int i = 0; i < ListHObj.Count; i++)
                 {
                     string magetStr = (i + 1).ToString();
-                  HObject hObject10=       Halcon.GetHalcon().GetModelHaoMatRegion(welding_Spo.HomName, ListHObj[i]);
+                    HObject hObject10 = Halcon.GetHalcon().GetModelHaoMatRegion(welding_Spo.HomName, ListHObj[i]);
                     HOperatorSet.AreaCenter(hObject10, out HTuple area, out HTuple rowt, out HTuple columnt);
                     if (rowt.Length == 0)
                     {
@@ -532,7 +564,6 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     {
                         if (this.IsEllIpse)
                         {
-
                             HOperatorSet.GenEllipse(out hObject6, rowt, columnt, new HTuple(Phi).TupleRad(), new HTuple(this.CiericROut), Radius2);
                         }
                         else
@@ -560,7 +591,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     }
                     if (areaH > welding_Spo.Overflow_Welding_Area)
                     {
-                        magetStr += "溢焊:" + areaH;  Halcon.AddObj(hObject5, ColorResult.red);    is_less_defend = true;
+                        magetStr += "溢焊:" + areaH; Halcon.AddObj(hObject5, ColorResult.red); is_less_defend = true;
                     }
                     if (magetStr.Length > 2)
                     {
@@ -583,7 +614,6 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     }
                     else
                     {
-
                         Halcon.AddImageMassage(row + welding_Spo.DispRow, column + welding_Spo.DispCow, magetSText.TupleInsert(0, "NG"), ColorResult.red);
                     }
                 }
@@ -591,7 +621,6 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 {
                     hwH.ShowImage();
                     hwH.ShowObj();
-                
                 }
                 if (is_Conglutination || is_less_defend)
                 {
@@ -599,9 +628,6 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 }
                 return false;
             }
-
-
         }
-
     }
 }

@@ -13,12 +13,14 @@ namespace Vision2.ErosProjcetDLL.Project
             ListRightGroup.Add("工程师");
             UserRightGroup.Add("操作员", new List<string> { "基本权限" });
         }
+
         /// <summary>
         /// 链接委托
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
         public delegate void DelegateLog(bool isLog);
+
         /// <summary>
         /// 登录事件
         /// </summary>
@@ -38,12 +40,14 @@ namespace Vision2.ErosProjcetDLL.Project
             }
             return false;
         }
+
         public static void Del()
         {
             ProjectINI.In.UserRight.Clear();
             ProjectINI.In.UserName = "未登陆";
             //MainForm1.MainFormF.Up();
         }
+
         /// <summary>
         /// 登陆
         /// </summary>
@@ -88,6 +92,7 @@ namespace Vision2.ErosProjcetDLL.Project
 
             return false;
         }
+
         /// <summary>
         /// 用户名与密码
         /// </summary>
@@ -155,35 +160,41 @@ namespace Vision2.ErosProjcetDLL.Project
             }
         }
 
-        Dictionary<string, Users> keyValuePairs = new Dictionary<string, Users>();
+        private Dictionary<string, Users> keyValuePairs = new Dictionary<string, Users>();
+
         public class Users
         {
             /// <summary>
             /// 名称
             /// </summary>
             public string name;
+
             /// <summary>
             /// 用户名
             /// </summary>
             public string uersName;
+
             /// <summary>
             /// 密码
             /// </summary>
             public string passWord;
+
             /// <summary>
             /// 权限组
             /// </summary>
             public string UserRightGroup;
+
             /// <summary>
             /// 工号
             /// </summary>
             public string UserID;
+
             /// <summary>
             /// 部门
             /// </summary>
             public string UserDepartment;
-
         }
+
         /// <summary>
         /// 权限组
         /// </summary>
@@ -202,7 +213,6 @@ namespace Vision2.ErosProjcetDLL.Project
                 if (userRightGroup.ContainsKey("管理员"))
                 {
                     userRightGroup["管理员"] = ListRightGroup.ToList();
-
                 }
                 else
                 {
@@ -214,10 +224,11 @@ namespace Vision2.ErosProjcetDLL.Project
 
             set { userRightGroup = value; }
         }
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
-        Dictionary<string, List<string>> userRightGroup = new Dictionary<string, List<string>>();
+        private Dictionary<string, List<string>> userRightGroup = new Dictionary<string, List<string>>();
 
         /// <summary>
         /// 权限集合

@@ -1,17 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Vision2.Project.formula;
 using Vision2.Project.Mes;
-using Vision2.vision.HalconRunFile.RunProgramFile;
-using ErosSocket.DebugPLC.Robot;
 
 namespace Vision2.vision
 {
@@ -21,17 +14,19 @@ namespace Vision2.vision
         {
             InitializeComponent();
         }
-        HWindID HWindd = new HWindID();
-        HWindID HWindIDt = new HWindID();
-        static Queue<OneDataVale> trayDataVales = new Queue<OneDataVale>();
- 
-        static OneDataVale data;
+
+        private HWindID HWindd = new HWindID();
+        private HWindID HWindIDt = new HWindID();
+        private static Queue<OneDataVale> trayDataVales = new Queue<OneDataVale>();
+
+        private static OneDataVale data;
+
         public void SetImage()
         {
-
         }
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="dat"></param>
         public void ShowImage(OneDataVale dat)
@@ -87,6 +82,7 @@ namespace Vision2.vision
                 ErosProjcetDLL.Project.AlarmText.AddTextNewLine("复判窗口:" + ex.Message, Color.Red);
             }
         }
+
         public static void Clser()
         {
             try
@@ -100,9 +96,9 @@ namespace Vision2.vision
 
         private void hWindowControl3_HMouseMove(object sender, HalconDotNet.HMouseEventArgs e)
         {
-
         }
-        void UpData()
+
+        private void UpData()
         {
             double dee = HWindd.HeigthImage / HWindd.WidthImage;
             hWindowControl1.Height = (int)(hWindowControl1.Width * dee);
@@ -131,7 +127,9 @@ namespace Vision2.vision
             HWindIDt.ShowImage();
             HWindd.ShowImage();
         }
-        int det = 0;
+
+        private int det = 0;
+
         private void RsetListObjForm_Load(object sender, EventArgs e)
         {
             try
@@ -141,17 +139,15 @@ namespace Vision2.vision
                 {
                     try
                     {
-                        //Vision.GetRunNameVision(data.Result.RunName).EventShow += RestObjImage_EventShow; 
+                        //Vision.GetRunNameVision(data.Result.RunName).EventShow += RestObjImage_EventShow;
                         while (!this.IsDisposed)
                         {
                             try
                             {
-
                                 if (data == null || data.Done)
                                 {
                                     if (trayDataVales.Count != 0)
                                     {
-
                                         data = trayDataVales.Dequeue();
                                         det = 0;
                                         this.Invoke(new Action(() =>
@@ -164,15 +160,13 @@ namespace Vision2.vision
                                             dataGridView1.Rows.Clear();
                                             foreach (var item in data.GetNGCompData().DicOnes)
                                             {
-                                            
-                                                    if (!item.Value.OK)
-                                                    {
-                                                        int dt = dataGridView1.Rows.Add();
-                                                        //dataGridView1.Rows[dt].Cells[0].Value = item.Value + ":" + item.RunID;
-                                                        //dataGridView1.Rows[dt].Cells[0].Tag = itemt.Value;
-                                                        //dataGridView1.Rows[dt].Cells[1].Value = itemt.Value.NGText;
-                                                    }
-                                                
+                                                if (!item.Value.OK)
+                                                {
+                                                    int dt = dataGridView1.Rows.Add();
+                                                    //dataGridView1.Rows[dt].Cells[0].Value = item.Value + ":" + item.RunID;
+                                                    //dataGridView1.Rows[dt].Cells[0].Tag = itemt.Value;
+                                                    //dataGridView1.Rows[dt].Cells[1].Value = itemt.Value.NGText;
+                                                }
                                             }
                                             string[] datStr = dataGridView1.Rows[0].Cells[0].Value.ToString().Split(':');
                                             OneResultOBj halconResult = dataGridView1.Rows[0].Cells[0].Tag as OneResultOBj;
@@ -186,7 +180,6 @@ namespace Vision2.vision
                                             ErosProjcetDLL.UI.UICon.SwitchToThisWindow(RestObjImage.RestObjImageFrom.Handle, true);
                                             RestObjImage.RestObjImageFrom.Show();
                                         }));
-
                                     }
                                 }
                                 Thread.Sleep(100);

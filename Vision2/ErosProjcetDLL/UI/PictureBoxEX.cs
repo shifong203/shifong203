@@ -6,10 +6,7 @@ namespace Vision2.ErosProjcetDLL.UI
 {
     public class PictureBoxEX : PictureBox
     {
-
-
         public override string Text { get; set; }
-
 
         protected override void OnPaint(PaintEventArgs pe)
         {
@@ -28,6 +25,5 @@ namespace Vision2.ErosProjcetDLL.UI
             gfx.SmoothingMode = SmoothingMode.HighQuality;
             gfx.DrawString("wetsfsfdsdddass", new Font("Arial ", 10, FontStyle.Bold), brush, new PointF(20, 30));
         }
-
     }
 }

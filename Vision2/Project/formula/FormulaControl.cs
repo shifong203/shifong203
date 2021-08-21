@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using Vision2.ErosProjcetDLL.Project;
 using Vision2.Project.DebugF.IO;
 
 namespace Vision2.Project.formula
@@ -37,7 +38,7 @@ namespace Vision2.Project.formula
                     {
                         RecipeCompiler.Instance.ProductEX.Add(item.Key, new ProductEX());
 
-                        string da=  ErosProjcetDLL.Project.ProjectINI.ClassToJsonString(PEX);
+                        string da = ErosProjcetDLL.Project.ProjectINI.ClassToJsonString(PEX);
                         ProductEX Prod = new ProductEX();
                         ErosProjcetDLL.Project.ProjectINI.StringJsonToCalss<ProductEX>(da, out Prod);
                         RecipeCompiler.Instance.ProductEX[item.Key] = Prod;
@@ -57,11 +58,11 @@ namespace Vision2.Project.formula
             {
                 MessageBox.Show(ex.Message);
             }
-
         }
-        List<XYZPoint> xYZPoints1;
-        ProductEX PEX;
-        
+
+        private List<XYZPoint> xYZPoints1;
+        private ProductEX PEX;
+
         private void toolStripSplitButton1_ButtonClick(object sender, EventArgs e)
         {
             string name = Product.ProductionName;
@@ -92,7 +93,6 @@ namespace Vision2.Project.formula
             {
                 MessageBox.Show(ex.Message);
             }
-
         }
 
         private void 删除产品ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -110,7 +110,7 @@ namespace Vision2.Project.formula
             Cursor = Cursors.WaitCursor;
             if (Vision2.ErosProjcetDLL.Project.ProjectINI.Enbt || Vision2.ErosProjcetDLL.Project.ProjectINI.GetUserJurisdiction("管理权限"))
             {
-                Product.SaveDicExcel(Vision2.ErosProjcetDLL.Project.ProjectINI.In.ProjectPathRun + "\\产品配方\\产品文件");
+                Product.SaveDicExcel(ProjectINI.ProjectPathRun + "\\产品配方\\产品文件");
             }
             else
             {
@@ -125,7 +125,7 @@ namespace Vision2.Project.formula
 
             try
             {
-                openFileDialog.InitialDirectory = Vision2.ErosProjcetDLL.Project.ProjectINI.In.ProjectPathRun + "\\产品配方\\";
+                openFileDialog.InitialDirectory = ProjectINI.ProjectPathRun + "\\产品配方\\";
                 openFileDialog.Filter = "文件|*";
                 DialogResult dialog = openFileDialog.ShowDialog();
                 if (dialog == DialogResult.OK)
@@ -159,24 +159,19 @@ namespace Vision2.Project.formula
                 {
                     Product.Aotu(listBox1.SelectedItem.ToString(), ErosSocket.ErosConLink.DicSocket.Instance.SocketClint);
                 }
-
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
-
             }
-
         }
-
-
 
         private void toolStripButton5_Click(object sender, EventArgs e)
         {
             try
             {
-                Directory.CreateDirectory(Vision2.ErosProjcetDLL.Project.ProjectINI.In.ProjectPathRun + "\\产品配方");
-                System.Diagnostics.Process.Start(Vision2.ErosProjcetDLL.Project.ProjectINI.In.ProjectPathRun + "\\产品配方");
+                Directory.CreateDirectory(ProjectINI.ProjectPathRun + "\\产品配方");
+                System.Diagnostics.Process.Start(ProjectINI.ProjectPathRun + "\\产品配方");
             }
             catch (Exception)
             {
@@ -196,7 +191,6 @@ namespace Vision2.Project.formula
 
         private void groupBox1_Enter(object sender, EventArgs e)
         {
-
         }
 
         private void 重命名ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -206,9 +200,9 @@ namespace Vision2.Project.formula
                 string NewName = Product.AmendName(listBox1.SelectedItem.ToString());
                 if (NewName != "")
                 {
-                    string path = Vision2.ErosProjcetDLL.Project.ProjectINI.In.ProjectPathRun + "\\" + vision.Vision.Instance.FileName + 
+                    string path = ProjectINI.ProjectPathRun + "\\" + vision.Vision.Instance.FileName +
                         "\\" + listBox1.SelectedItem.ToString();
-                    Product.SaveDicExcel(Vision2.ErosProjcetDLL.Project.ProjectINI.In.ProjectPathRun + "\\产品配方\\产品文件");
+                    Product.SaveDicExcel(ProjectINI.ProjectPathRun + "\\产品配方\\产品文件");
                     if (!Directory.Exists(path))
                     {
                         MessageBox.Show("未创建图像程序[" + listBox1.SelectedItem.ToString() + "]", "错误", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -217,7 +211,7 @@ namespace Vision2.Project.formula
                     {
                         if (MessageBox.Show("是否修改图像程序名？", NewName, MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
                         {
-                            string Newpath = Vision2.ErosProjcetDLL.Project.ProjectINI.In.ProjectPathRun + "\\" + 
+                            string Newpath = ProjectINI.ProjectPathRun + "\\" +
                                 vision.Vision.Instance.FileName + "\\" + NewName;
                             Directory.Move(path, Newpath);
                         }
@@ -235,7 +229,6 @@ namespace Vision2.Project.formula
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
-
             }
         }
 
@@ -248,13 +241,10 @@ namespace Vision2.Project.formula
                     string url = Application.StartupPath + @"\help.chm::调试1.htm";
                     //Vision2.ErosProjcetDLL.Project. CHMHelp.ShowHelp(url);
                     Help.ShowHelp(this, Application.StartupPath + @"\help.chm", HelpNavigator.Topic, "3_调试位置.htm");
-
                 }
             }
             catch (Exception ex)
             {
-
-
             }
         }
 
@@ -262,7 +252,7 @@ namespace Vision2.Project.formula
         {
             try
             {
-                if (Vision2.ErosProjcetDLL.Project.ProjectINI.ClassToJsonSavePath(Product.GetThisP(), Vision2.ErosProjcetDLL.Project.ProjectINI.In.ProjectPathRun + "\\产品配方\\配方备份\\配方文件" + DateTime.Now.ToString("yy年MM月dd日HH时mm分ss秒")))
+                if (Vision2.ErosProjcetDLL.Project.ProjectINI.ClassToJsonSavePath(Product.GetThisP(), ProjectINI.ProjectPathRun + "\\产品配方\\配方备份\\配方文件" + DateTime.Now.ToString("yy年MM月dd日HH时mm分ss秒")))
                 {
                     MessageBox.Show("备份成功");
                 }
@@ -278,13 +268,13 @@ namespace Vision2.Project.formula
             {
                 Dictionary<string, Dictionary<string, string>> keyValuePairs = new Dictionary<string, Dictionary<string, string>>();
                 OpenFileDialog openFileDialog = new OpenFileDialog();
-                if (Directory.Exists(ErosProjcetDLL.Project.ProjectINI.In.ProjectPathRun + "\\产品配方\\配方备份\\"))
+                if (Directory.Exists(ProjectINI.ProjectPathRun + "\\产品配方\\配方备份\\"))
                 {
-                    openFileDialog.InitialDirectory = ErosProjcetDLL.Project.ProjectINI.In.ProjectPathRun + "\\产品配方\\配方备份\\";
+                    openFileDialog.InitialDirectory = ProjectINI.ProjectPathRun + "\\产品配方\\配方备份\\";
                 }
                 else
                 {
-                    openFileDialog.InitialDirectory = ErosProjcetDLL.Project.ProjectINI.In.ProjectPathRun + "\\产品配方\\";
+                    openFileDialog.InitialDirectory = ProjectINI.ProjectPathRun + "\\产品配方\\";
                 }
                 openFileDialog.Filter = "文件|*.txt";
                 DialogResult dialog = openFileDialog.ShowDialog();
@@ -309,21 +299,21 @@ namespace Vision2.Project.formula
             {
                 System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
                 fbd.Description = "请选择文件夹";
-                fbd.SelectedPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory)+"\\"+listBox1.SelectedItem.ToString();
+                fbd.SelectedPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + "\\" + listBox1.SelectedItem.ToString();
                 System.Windows.Forms.DialogResult dialog = Vision2.ErosProjcetDLL.UI.PropertyGrid.FolderBrowserLauncher.ShowFolderBrowser(fbd);
                 if (dialog == System.Windows.Forms.DialogResult.OK)
                 {
                     if (true)
                     {
-                        ErosProjcetDLL.Project.ProjectINI.ClassToJsonSavePath(RecipeCompiler.Instance.Produc[listBox1.SelectedItem.ToString()], fbd.SelectedPath+"\\配方参数");
-                        string path = Vision2.ErosProjcetDLL.Project.ProjectINI.In.ProjectPathRun + "\\" + vision.Vision.Instance.FileName + "\\" + listBox1.SelectedItem.ToString();
+                        ErosProjcetDLL.Project.ProjectINI.ClassToJsonSavePath(RecipeCompiler.Instance.Produc[listBox1.SelectedItem.ToString()], fbd.SelectedPath + "\\配方参数");
+                        string path = ProjectINI.ProjectPathRun + "\\" + vision.Vision.Instance.FileName + "\\" + listBox1.SelectedItem.ToString();
                         CopyFolder2(path, fbd.SelectedPath);
-                        //Product.SaveDicExcel(Vision2.ErosProjcetDLL.Project.ProjectINI.In.ProjectPathRun + "\\产品配方\\产品文件");
-                 
+                        //Product.SaveDicExcel(ProjectINI.ProjectPathRun + "\\产品配方\\产品文件");
+
                         if (RecipeCompiler.Instance.ProductEX.ContainsKey(listBox1.SelectedItem.ToString()))
                         {
                             ProductEX xYZPoints = RecipeCompiler.Instance.ProductEX[listBox1.SelectedItem.ToString()];
-                            ErosProjcetDLL.Project.ProjectINI.ClassToJsonSavePath(xYZPoints, fbd.SelectedPath+"\\产品参数");
+                            ErosProjcetDLL.Project.ProjectINI.ClassToJsonSavePath(xYZPoints, fbd.SelectedPath + "\\产品参数");
                         }
                     }
                 }
@@ -332,6 +322,7 @@ namespace Vision2.Project.formula
             {
             }
         }
+
         /// <summary>
         /// 复制文件夹及文件
         /// </summary>
@@ -363,7 +354,7 @@ namespace Vision2.Project.formula
                         {
                             System.IO.Directory.CreateDirectory(destfolderdir);
                         }
-                        System.IO.File.Copy(file, srcfileName,true);
+                        System.IO.File.Copy(file, srcfileName, true);
                     }
                 }
 
@@ -371,15 +362,13 @@ namespace Vision2.Project.formula
             }
             catch (Exception e)
             {
-
                 MessageBox.Show(e.Message);
                 return 0;
             }
-
         }
+
         private void formulaEditorControl1_Load(object sender, EventArgs e)
         {
-
         }
     }
 }

@@ -2,12 +2,9 @@
 using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Windows.Forms;
 using Vision2.vision.HalconRunFile.RunProgramFile;
 using static Vision2.vision.HalconRunFile.RunProgramFile.Color_Detection;
-using static Vision2.vision.HalconRunFile.RunProgramFile.RunProgram;
-using static Vision2.vision.Vision;
 
 namespace Vision2.vision.HalconRunFile.Controls
 {
@@ -19,25 +16,25 @@ namespace Vision2.vision.HalconRunFile.Controls
             thresholdControl1.evValue += ThresholdControl1_evalue;
             hWindID.Initialize(hWindowControl1);
         }
-        List<HObject> hObjects = new List<HObject>();
 
+        private List<HObject> hObjects = new List<HObject>();
 
-        private void ThresholdControl1_evalue( List<Threshold_Min_Max> threshold_Min_s)
+        private void ThresholdControl1_evalue(List<Threshold_Min_Max> threshold_Min_s)
         {
             try
             {
                 halcon.HobjClear();
                 AoiObj aoiObj = new AoiObj();
                 aoiObj.SelseAoi = _Classify.DrawObj;
-              
+
                 aoiObj.CiName = _Classify.Name;
                 _Classify.Classify(halcon.GetOneImageR(), aoiObj,
                     Color_detection, out HObject hObject,
                     hObjects);
-        
-                    hWindID.ShowImage();
-                    hWindID.ShowObj();
-                
+
+                hWindID.ShowImage();
+                hWindID.ShowObj();
+
                 halcon.AddObj(hObject, _Classify.color);
                 HOperatorSet.AreaCenter(hObject, out HTuple area, out HTuple row, out HTuple column);
                 HOperatorSet.EllipticAxis(hObject, out HTuple ra, out HTuple rb, out HTuple phi);
@@ -55,7 +52,9 @@ namespace Vision2.vision.HalconRunFile.Controls
             catch (Exception ex)
             { }
         }
-        HWindID hWindID = new HWindID();
+
+        private HWindID hWindID = new HWindID();
+
         //public List<HWindID> hWindIDs = new List<HWindID>();
         public Color_DetectionUserControl(Color_Detection color_Detection) : this()
         {
@@ -68,12 +67,13 @@ namespace Vision2.vision.HalconRunFile.Controls
             }
             comboBox1.Items.Clear();
             comboBox1.Items.AddRange(Enum.GetNames(typeof(ImageTypeObj)));
-
         }
+
         public HalconRun halcon;
         public Color_Detection Color_detection;
         public Color_classify _Classify;
-        bool isMove = false;
+        private bool isMove = false;
+
         public void Get_Pragram(Color_classify color_Classify)
         {
             isMove = true;
@@ -88,7 +88,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                         ImageTypeObj = ImageTypeObj.H,
                         Min = color_Classify.Threshold_H.Min,
                         Max = color_Classify.Threshold_H.Max,
-                    }); 
+                    });
                 }
                 if (color_Classify.V_enabled)
                 {
@@ -110,9 +110,9 @@ namespace Vision2.vision.HalconRunFile.Controls
                         Max = color_Classify.Threshold_S.Max,
                     }); ;
                 }
-                checkBox6.Checked = _Classify.Enble; 
+                checkBox6.Checked = _Classify.Enble;
                 checkBox5.Checked = _Classify.IsColt;
-                    thresholdControl1.SetData(color_Classify.threshold_Min_Maxes);
+                thresholdControl1.SetData(color_Classify.threshold_Min_Maxes);
                 select_obj_type1.SetData(color_Classify.Max_area);
                 numericUpDown2.Value = color_Classify.ColorNumber;
                 button3.BackColor = color_Classify.COlorES;
@@ -121,7 +121,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 checkBox3.Checked = color_Classify.EnbleSelect;
                 numericUpDown4.Value = color_Classify.ThresSelectMin;
                 numericUpDown5.Value = color_Classify.ThresSelectMax;
-                numericUpDown7.Value =(decimal) color_Classify.SelectMax;
+                numericUpDown7.Value = (decimal)color_Classify.SelectMax;
                 numericUpDown8.Value = (decimal)color_Classify.SelectMin;
                 numericUpDown6.Value = (decimal)color_Classify.ClosingCir;
                 checkBox1.Checked = color_Classify.ISFillUp;
@@ -134,6 +134,7 @@ namespace Vision2.vision.HalconRunFile.Controls
             }
             isMove = false;
         }
+
         public void Set_Pragram(Color_classify color_Classify)
         {
             if (isMove)
@@ -149,7 +150,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 _Classify.IsColt = checkBox5.Checked;
                 _Classify.ISSelecRoiFillUP = checkBox4.Checked;
                 _Classify.Enble = checkBox6.Checked;
-                _Classify.ThresSelectMin =(byte) numericUpDown4.Value;
+                _Classify.ThresSelectMin = (byte)numericUpDown4.Value;
                 _Classify.ThresSelectMax = (byte)numericUpDown5.Value;
                 _Classify.SelectMin = (double)numericUpDown8.Value;
                 _Classify.SelectMax = (double)numericUpDown7.Value;
@@ -163,19 +164,21 @@ namespace Vision2.vision.HalconRunFile.Controls
                 aoiObj.SelseAoi = _Classify.DrawObj;
 
                 aoiObj.CiName = _Classify.Name;
-                _Classify.Classify( halcon.GetOneImageR(), aoiObj,   Color_detection, out HObject hObject, hObjects);
+                _Classify.Classify(halcon.GetOneImageR(), aoiObj, Color_detection, out HObject hObject, hObjects);
                 halcon.AddObj(hObject);
                 halcon.ShowImage();
                 halcon.ShowObj();
             }
-            catch (Exception ex)  {  }
+            catch (Exception ex) { }
         }
 
         public Color_DetectionUserControl(RunProgramFile.Welding_Spot welding_Spot) : this()
         {
             UpDataOBJ(welding_Spot);
         }
-        RunProgramFile.Welding_Spot Welding;
+
+        private RunProgramFile.Welding_Spot Welding;
+
         public void UpDataOBJ(RunProgramFile.Welding_Spot welding_Spot)
         {
             Welding = welding_Spot;
@@ -195,7 +198,6 @@ namespace Vision2.vision.HalconRunFile.Controls
             catch (Exception)
             {
             }
-
         }
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -230,29 +232,29 @@ namespace Vision2.vision.HalconRunFile.Controls
                 AoiObj aoiObj = new AoiObj();
                 aoiObj.SelseAoi = _Classify.DrawObj;
                 aoiObj.CiName = _Classify.Name;
-                _Classify.Classify( halcon.GetOneImageR(), aoiObj, Color_detection, out HObject hObject,
+                _Classify.Classify(halcon.GetOneImageR(), aoiObj, Color_detection, out HObject hObject,
                 this.hObjects);
                 listBox2.SelectedIndex = 0;
                 hWindID.ShowImage();
-                 hWindID.ShowObj();
+                hWindID.ShowObj();
                 halcon.AddObj(hObject, _Classify.color);
                 HOperatorSet.AreaCenter(hObject, out HTuple area, out HTuple row, out HTuple column);
                 HOperatorSet.EllipticAxis(hObject, out HTuple ra, out HTuple rb, out HTuple phi);
                 //HOperatorSet.SmallestRectangle2(hObject, out row, out column, out HTuple  phi2,out HTuple length1,out  HTuple length2);
-                HOperatorSet.HeightWidthRatio(hObject, out HTuple height, out HTuple width,out HTuple cir);
-                HOperatorSet.SmallestCircle(hObject, out row,out  column, out HTuple radius);
+                HOperatorSet.HeightWidthRatio(hObject, out HTuple height, out HTuple width, out HTuple cir);
+                HOperatorSet.SmallestCircle(hObject, out row, out column, out HTuple radius);
                 HTuple id = new HTuple();
-                if (area.Length!=0)
+                if (area.Length != 0)
                 {
                     id = HTuple.TupleGenConst(area.Length, _Classify.Color_ID);
                     //halcon.AddMessage("ID:" + id + "面积:" + area + "长度:" + ra + "宽度:" + rb + "角度:" + phi.TupleDeg());
                     halcon.GetOneImageR().AddImageMassage(row, column, "面积" + area.TupleString("0.3f") + "ra" + ra.TupleString("0.3f") + "rb" + rb.TupleString("0.3f") + "高" +
                         height.TupleString("0.3f") + "宽" + width.TupleString("0.3f") + "半径" + radius.TupleString("0.3f"));
-                    halcon.GetOneImageR().AddImageMassage(row + 40, column, "MM:面积" + Math.Sqrt(halcon.GetCaliConstMM(area)).ToString("0.000") + "ra" + halcon.GetCaliConstMM(ra ).TupleString("0.3f")
+                    halcon.GetOneImageR().AddImageMassage(row + 40, column, "MM:面积" + Math.Sqrt(halcon.GetCaliConstMM(area)).ToString("0.000") + "ra" + halcon.GetCaliConstMM(ra).TupleString("0.3f")
                         + "rb" + halcon.GetCaliConstMM(rb).TupleString("0.3f") + "高" + halcon.GetCaliConstMM(height).TupleString("0.3f") + "宽" + halcon.GetCaliConstMM(width).TupleString("0.3f") +
                         "半径" + halcon.GetCaliConstMM(radius).TupleString("0.3f"));
                 }
-       
+
                 halcon.ShowImage();
                 halcon.ShowObj();
             }
@@ -261,6 +263,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 MessageBox.Show(ex.Message);
             }
         }
+
         private void 添加颜色ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
@@ -279,13 +282,14 @@ namespace Vision2.vision.HalconRunFile.Controls
                         meassge = "名称已存在";
                         goto st;
                     }
-                    Color_detection.keyColor.Add(sd, new Color_Detection.Color_classify() {
+                    Color_detection.keyColor.Add(sd, new Color_Detection.Color_classify()
+                    {
                         Name = sd,
                         Color_ID = (byte)(Color_detection.keyColor.Count + 1),
                         threshold_Min_Maxes = new List<Threshold_Min_Max> { new Threshold_Min_Max() { ImageTypeObj=ImageTypeObj.H,
                     },new Threshold_Min_Max(){ ImageTypeObj=ImageTypeObj.S,},
                         new Threshold_Min_Max(){ ImageTypeObj=ImageTypeObj.V} }
-                    }) ;
+                    });
                     listBox1.Items.Add(sd);
                 }
                 else
@@ -297,12 +301,13 @@ namespace Vision2.vision.HalconRunFile.Controls
             {
             }
         }
+
         private void 重命名ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
             {
                 string meassge = "重命名";
-               st:
+            st:
                 string sd = Interaction.InputBox("请输入新名称", meassge, listBox1.SelectedItem.ToString(), 100, 100);
                 if (sd == "")
                 {
@@ -399,16 +404,16 @@ namespace Vision2.vision.HalconRunFile.Controls
                 Set_Pragram(Color_detection.keyColor[listBox1.SelectedItem.ToString()]);
             }
         }
+
         private void button4_Click(object sender, EventArgs e)
         {
-
             try
             {
-                if (listBox1.SelectedItem==null)
+                if (listBox1.SelectedItem == null)
                 {
                     return;
                 }
-                _Classify.DrawObj=       
+                _Classify.DrawObj =
                  RunProgram.DragMoveOBJ(halcon, _Classify.DrawObj);
             }
             catch (Exception ex)
@@ -418,7 +423,6 @@ namespace Vision2.vision.HalconRunFile.Controls
 
         private void panel1_Paint(object sender, PaintEventArgs e)
         {
-
         }
 
         private void button5_Click(object sender, EventArgs e)
@@ -440,7 +444,7 @@ namespace Vision2.vision.HalconRunFile.Controls
             try
             {
                 halcon.HobjClear();
-                if (_Classify!=null)
+                if (_Classify != null)
                 {
                     _Classify.SeleRoi = RunProgram.DrawHObj(halcon, _Classify.SeleRoi);
                 }
@@ -456,7 +460,6 @@ namespace Vision2.vision.HalconRunFile.Controls
 
         private void thresholdControl1_Load(object sender, EventArgs e)
         {
-
         }
 
         private void listBox2_SelectedIndexChanged(object sender, EventArgs e)
@@ -465,7 +468,7 @@ namespace Vision2.vision.HalconRunFile.Controls
             {
                 hWindID.HobjClear();
                 HOperatorSet.SmallestRectangle1(_Classify.DrawObj, out HTuple row, out HTuple col1, out HTuple row2, out HTuple col2);
-                if (listBox2.SelectedIndex==0)
+                if (listBox2.SelectedIndex == 0)
                 {
                     hWindID.SetImaage(halcon.Image());
                 }
@@ -474,12 +477,11 @@ namespace Vision2.vision.HalconRunFile.Controls
                     hWindID.SetImaage(halcon.GetImageOBJ((ImageTypeObj)Enum.Parse(typeof(ImageTypeObj), listBox2.SelectedItem.ToString())));
                 }
                 groupBox3.Text = listBox2.SelectedItem.ToString();
-                hWindID.SetPerpetualPart(row-100, col1-100, row2+100, col2+100);
+                hWindID.SetPerpetualPart(row - 100, col1 - 100, row2 + 100, col2 + 100);
                 hWindID.SetDraw(checkBox2.Checked);
-                hWindID.OneResIamge.AddObj(_Classify.DrawObj,ColorResult.blue);
+                hWindID.OneResIamge.AddObj(_Classify.DrawObj, ColorResult.blue);
                 hWindID.OneResIamge.AddObj(hObjects[listBox2.SelectedIndex]);
                 hWindID.ShowObj();
-
             }
             catch (Exception)
             {
@@ -490,8 +492,8 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             try
             {
-                string meassge = "复制{"+listBox1.SelectedItem.ToString()+"}";
-                st:
+                string meassge = "复制{" + listBox1.SelectedItem.ToString() + "}";
+            st:
                 string sd = Interaction.InputBox("请输入新名称", meassge, listBox1.SelectedItem.ToString(), 100, 100);
                 if (sd == "")
                 {
@@ -505,16 +507,16 @@ namespace Vision2.vision.HalconRunFile.Controls
                         goto st;
                     }
                     _Classify.Name = sd;
-     
+
                     ErosProjcetDLL.Project.ProjectINI.StringJsonToCalss(ErosProjcetDLL.Project.ProjectINI.ClassToJsonString(_Classify), out Color_classify _Cla);
-                    if (_Cla!=null)
+                    if (_Cla != null)
                     {
                         Color_detection.keyColor.Add(sd, _Cla);
                         listBox1.Items.Add(sd);
                     }
                     else
                     {
-                        MessageBox.Show( "失败");
+                        MessageBox.Show("失败");
                     }
                 }
                 else
@@ -530,7 +532,6 @@ namespace Vision2.vision.HalconRunFile.Controls
 
         private void checkBox4_CheckedChanged(object sender, EventArgs e)
         {
-
         }
     }
 }

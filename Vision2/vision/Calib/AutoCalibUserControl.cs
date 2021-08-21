@@ -80,11 +80,7 @@ namespace Vision2.vision.Calib
             }
             catch (Exception)
             {
-
-
             }
         }
-
-
     }
 }

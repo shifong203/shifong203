@@ -10,7 +10,9 @@ namespace Vision2.ProductionManagement
         {
             InitializeComponent();
         }
-        FormulaForm formulaForm;
+
+        private FormulaForm formulaForm;
+
         private void toolStripButton1_Click(object sender, EventArgs e)
         {
             if (formulaForm == null)
@@ -18,12 +20,10 @@ namespace Vision2.ProductionManagement
                 formulaForm = new FormulaForm();
             }
             Vision2.ErosProjcetDLL.UI.UICon.WindosFormerShow(ref formulaForm);
-
         }
 
         public void Up()
         {
-
         }
     }
 }

@@ -18,6 +18,7 @@ namespace Vision2.ErosProjcetDLL.Project
         /// 文件夹名称
         /// </summary>
         public override abstract string FileName { get; }
+
         ///// <summary>
         ///// 名称
         ///// </summary>
@@ -26,6 +27,7 @@ namespace Vision2.ErosProjcetDLL.Project
         /// 文件后缀名
         /// </summary>
         public override abstract string SuffixName { get; }
+
         /// <summary>
         /// 类名
         /// </summary>
@@ -33,18 +35,15 @@ namespace Vision2.ErosProjcetDLL.Project
 
         public ProjectObj()
         {
-
         }
+
         public override abstract void initialization();
-
-
-
     }
 
     /// <summary>
     /// 程序集访问
     /// </summary>
-    public  class ProjectC : IUpProjetNode, IDisposable
+    public class ProjectC : IUpProjetNode, IDisposable
     {
         [DescriptionAttribute("程序名称。唯一程序名"), Category("程序参数"), DisplayName("程序名")]
         /// <summary>
@@ -72,10 +71,12 @@ namespace Vision2.ErosProjcetDLL.Project
         /// 后缀名
         /// </summary>
         public virtual string SuffixName { get; }
+
         [DescriptionAttribute("程序类显示说明"), Category("程序参数"), DisplayName("类信息"), Browsable(false)]
         public virtual string Information { get; set; } = "程序基类,程序框架的实现";
 
         protected string[] ListCode { get; set; }
+
         [Browsable(false)]
         /// <summary>
         /// 程序集合
@@ -84,8 +85,8 @@ namespace Vision2.ErosProjcetDLL.Project
 
         public ProjectC()
         {
-
         }
+
         public virtual void NewProject_Click(object sender, EventArgs e)
         {
             ToolStripItem toolStripItem = (ToolStripItem)sender;
@@ -145,7 +146,7 @@ namespace Vision2.ErosProjcetDLL.Project
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="path"></param>
         public virtual void ReadCode(string path)
@@ -155,15 +156,17 @@ namespace Vision2.ErosProjcetDLL.Project
                 ListCode = System.IO.File.ReadAllLines(path);
             }
         }
+
         public string[] GetCode()
         {
             return ListCode;
         }
+
         public virtual void SaveCode(string[] codes, string path = null)
         {
             if (path == null)
             {
-                path = ProjectINI.In.ProjectPathRun;
+                path = ErosProjcetDLL.Project.ProjectINI.ProjectPathRun;
             }
             ListCode = codes;
             if (ListCode != null)
@@ -172,9 +175,6 @@ namespace Vision2.ErosProjcetDLL.Project
                 System.IO.File.WriteAllLines(path + "\\" + FileName + "\\" + "CSarp.Cs", ListCode);
             }
         }
-    
-
-
 
         protected TreeView TreeView;
         protected TreeNode Node;
@@ -185,9 +185,7 @@ namespace Vision2.ErosProjcetDLL.Project
         /// </summary>
         public virtual void initialization()
         {
-
         }
-
 
         /// <summary>
         ///载入错误信息
@@ -195,16 +193,18 @@ namespace Vision2.ErosProjcetDLL.Project
         /// <param name="exception"></param>
         public void LogErr(Exception exception)
         {
-            LogErr(exception.Message+exception.StackTrace);
+            LogErr(exception.Message + exception.StackTrace);
         }
+
         /// <summary>
         ///载入错误信息
         /// </summary>
         /// <param name="exception"></param>
         public void LogErr(string message, Exception exception)
         {
-            LogErr(message + ":" + exception.Message+ exception.StackTrace);
+            LogErr(message + ":" + exception.Message + exception.StackTrace);
         }
+
         /// <summary>
         /// 载入错误信息
         /// </summary>
@@ -213,6 +213,7 @@ namespace Vision2.ErosProjcetDLL.Project
         {
             AlarmText.LogErr(text, "类型" + this.GetType() + "名称:" + this.Name);
         }
+
         /// <summary>
         /// 登入文本信息
         /// </summary>
@@ -221,6 +222,7 @@ namespace Vision2.ErosProjcetDLL.Project
         {
             AlarmText.AddTextNewLine(this.Name + ":" + text);
         }
+
         /// <summary>
         /// 登入警告信息
         /// </summary>
@@ -229,6 +231,7 @@ namespace Vision2.ErosProjcetDLL.Project
         {
             AlarmText.LogWarning(this.Name, text);
         }
+
         /// <summary>
         /// 登入警告信息
         /// </summary>
@@ -240,7 +243,6 @@ namespace Vision2.ErosProjcetDLL.Project
 
         public TreeNode GetNode()
         {
-
             Node = new TreeNode();
             Node.Name = Node.Text = this.Name;
 
@@ -253,6 +255,7 @@ namespace Vision2.ErosProjcetDLL.Project
 
             return Node;
         }
+
         /// <summary>
         ///显示程序数
         /// </summary>
@@ -294,16 +297,13 @@ namespace Vision2.ErosProjcetDLL.Project
                     Node.Toggle();
                 }
             }
-
         }
-
 
         /// <summary>
         /// 关闭释放资源
         /// </summary>
         public virtual void Close()
         {
-
         }
 
         /// <summary>
@@ -335,7 +335,6 @@ namespace Vision2.ErosProjcetDLL.Project
         {
             NewPragram newPragram = new NewPragram();
             newPragram.ShowDialog();
-
         }
 
         /// <summary>
@@ -350,6 +349,7 @@ namespace Vision2.ErosProjcetDLL.Project
             T dynamic = default(T);
             ReadThis(path, dynamic);
         }
+
         /// <summary>
         /// 释放对象
         /// </summary>
@@ -376,6 +376,7 @@ namespace Vision2.ErosProjcetDLL.Project
             ProjectClass = null;
             GC.SuppressFinalize(this);
         }
+
         /// <summary>
         /// 超时执行
         /// </summary>
@@ -404,6 +405,5 @@ namespace Vision2.ErosProjcetDLL.Project
                 throw new TimeoutException();
             }
         }
-
     }
 }

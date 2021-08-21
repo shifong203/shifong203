@@ -69,15 +69,15 @@
             this.propertyGrid1.Dock = System.Windows.Forms.DockStyle.Left;
             this.propertyGrid1.Location = new System.Drawing.Point(3, 3);
             this.propertyGrid1.Name = "propertyGrid1";
-            this.propertyGrid1.Size = new System.Drawing.Size(365, 568);
+            this.propertyGrid1.Size = new System.Drawing.Size(478, 568);
             this.propertyGrid1.TabIndex = 0;
             // 
             // richTextBox1
             // 
             this.richTextBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.richTextBox1.Location = new System.Drawing.Point(3, 130);
+            this.richTextBox1.Location = new System.Drawing.Point(3, 85);
             this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(867, 441);
+            this.richTextBox1.Size = new System.Drawing.Size(867, 486);
             this.richTextBox1.TabIndex = 1;
             this.richTextBox1.Text = "";
             // 
@@ -120,7 +120,7 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(3, 3);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(867, 127);
+            this.panel1.Size = new System.Drawing.Size(867, 82);
             this.panel1.TabIndex = 55;
             // 
             // button5
@@ -267,7 +267,7 @@
             this.dataGridView1.Location = new System.Drawing.Point(130, 1);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowTemplate.Height = 23;
-            this.dataGridView1.Size = new System.Drawing.Size(640, 154);
+            this.dataGridView1.Size = new System.Drawing.Size(674, 154);
             this.dataGridView1.TabIndex = 64;
             this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
             // 

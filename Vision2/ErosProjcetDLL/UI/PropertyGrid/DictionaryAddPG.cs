@@ -157,6 +157,4 @@ namespace Vision2.ErosProjcetDLL.UI.PropertyGrid
             return false;
         }
     }
-
-
 }

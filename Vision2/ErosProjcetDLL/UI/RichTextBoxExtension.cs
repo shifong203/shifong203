@@ -35,7 +35,5 @@ namespace Vision2.ErosProjcetDLL.UI
             rtBox.SelectionBackColor = rtBox.BackColor;
             rtBox.SelectionFont = thisfont;
         }
-
-
     }
 }

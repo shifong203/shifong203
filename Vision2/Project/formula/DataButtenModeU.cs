@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Vision2.Project.formula
@@ -17,17 +11,19 @@ namespace Vision2.Project.formula
             InitializeComponent();
             button6.Enabled = button10.Enabled = false;
         }
-        Mes.OneDataVale dataVale;
+
+        private Mes.OneDataVale dataVale;
+
         public void Set(Mes.OneDataVale data)
         {
             dataVale = data;
             groupBox1.Text = dataVale.TrayLocation.ToString();
             label1.BackColor = Color.Transparent;
-            label1.Text = dataVale.TrayLocation.ToString()+"-";
+            label1.Text = dataVale.TrayLocation.ToString() + "-";
             if (data.NotNull)
             {
                 if (!data.Done)
-                { 
+                {
                     if (data.AutoOK)
                     {
                         label1.Text += "OK";
@@ -36,34 +32,32 @@ namespace Vision2.Project.formula
                     else
                     {
                         button6.Enabled = button10.Enabled = true;
-                        label1.Text+= "NG";
+                        label1.Text += "NG";
                         label1.BackColor = Color.Red;
                     }
+                }
+                else
+                {
+                    if (data.OK)
+                    {
+                        label1.Text += "OK";
+                        label1.BackColor = Color.Green;
                     }
                     else
                     {
-                        if (data.OK)
-                        {
-                        label1.Text += "OK";
-                            label1.BackColor = Color.Green;
-                        }
-                        else
-                        {
-
                         label1.Text += "NG";
-                            label1.BackColor = Color.Red;
-                        }
+                        label1.BackColor = Color.Red;
                     }
+                }
             }
             label1.Text += "SN:" + dataVale.PanelID;
-         
         }
 
         private void button10_Click(object sender, EventArgs e)
         {
             try
             {
-                if (dataVale.PanelID=="")
+                if (dataVale.PanelID == "")
                 {
                     MessageBox.Show("SN未识别");
                     return;
@@ -99,6 +93,6 @@ namespace Vision2.Project.formula
             {
                 MessageBox.Show(ex.Message);
             }
-}
+        }
     }
 }

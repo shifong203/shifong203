@@ -14,6 +14,7 @@ namespace Vision2.Project
         {
             InitializeComponent();
         }
+
         private void ProjectForm_Load(object sender, EventArgs e)
         {
             this.UpDataP();
@@ -23,7 +24,9 @@ namespace Vision2.Project
         private void 新建项目ToolStripMenuItem_Click(object sender, EventArgs e)
         {
         }
-        bool isCheand = true;
+
+        private bool isCheand = true;
+
         // Token: 0x060008E4 RID: 2276 RVA: 0x00077628 File Offset: 0x00075828
         private void UpDataP()
         {
@@ -124,7 +127,6 @@ namespace Vision2.Project
 
         private void toolStripComboBox1_Click(object sender, EventArgs e)
         {
-
         }
 
         private void toolStripComboBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -154,7 +156,6 @@ namespace Vision2.Project
                         Application.ExitThread();
                         this.Restart();
                     }
-
                 }
             }
             catch (Exception)

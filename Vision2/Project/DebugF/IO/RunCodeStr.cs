@@ -10,7 +10,6 @@ using System.Threading;
 using System.Windows.Forms;
 using Vision2.Project.formula;
 using Vision2.vision.HalconRunFile.RunProgramFile;
-using static Vision2.Project.DebugF.IO.RunCodeStr.ThreadData;
 
 namespace Vision2.Project.DebugF.IO
 {
@@ -19,20 +18,22 @@ namespace Vision2.Project.DebugF.IO
         public List<string> CodeStr { get; set; } = new List<string>();
 
         public string Name { get; set; } = "";
+
         /// <summary>
         /// 下一步
         /// </summary>
         public bool NextStep;
+
         /// <summary>
         /// 运行步
         /// </summary>
         public int StepInt;
 
-
         /// <summary>
         /// 单步模式
         /// </summary>
         public bool Single_step;
+
         /// <summary>
         /// 执行 0=IF或者 1=Else
         /// </summary>
@@ -42,10 +43,12 @@ namespace Vision2.Project.DebugF.IO
         /// 是否跳过行
         /// </summary>
         public int IfRowInt;
+
         /// <summary>
         /// 是否是IF指令
         /// </summary>
         public bool ISif;
+
         /// <summary>
         /// 等待超时
         /// </summary>
@@ -60,11 +63,11 @@ namespace Vision2.Project.DebugF.IO
 
         public double RunTime;
 
-
         /// <summary>
         /// 运行中
         /// </summary>
         public bool Runing;
+
         /// <summary>
         /// 跟新状态委托
         /// </summary>
@@ -76,57 +79,73 @@ namespace Vision2.Project.DebugF.IO
         ///开始执行状态
         /// </summary>
         public event RunCodeOne RunStratCode;
+
         /// <summary>
         /// 跟新状态
         /// </summary>
         public event RunCodeOne RunCode;
+
         /// <summary>
         /// 跟新状态
         /// </summary>
         public event RunCodeOne RunDone;
+
         /// <summary>
         /// 异步等待
         /// </summary>
         public class ThreadData
         {
-            public ThreadData(string codename,int outTimeMs=5000)
+            public ThreadData(string codename, int outTimeMs = 5000)
             {
                 CodeName = codename;
                 OutTime = outTimeMs;
                 WatchT.Restart();
             }
-           /// <summary>
-           /// 异步等待时间毫秒
-           /// </summary>
+
+            /// <summary>
+            /// 异步等待时间毫秒
+            /// </summary>
             public int OutTime = 5000;
-            System.Diagnostics.Stopwatch WatchT = new System.Diagnostics.Stopwatch();
+
+            private System.Diagnostics.Stopwatch WatchT = new System.Diagnostics.Stopwatch();
+
             /// <summary>
             /// 代码名称
             /// </summary>
             public string CodeName { get; }
-          
-            public  bool End 
-            { get
-                 {
-                 
-                        if (Number==0)
+
+            public bool End
+            {
+                get
+                {
+                    if (Number == 0)
+                    {
+                        WatchT.Stop();
+                        return true;
+                    }
+                    if (WatchT.ElapsedMilliseconds > OutTime)
+                    {
+                        string err = "";
+                        for (int i = 0; i < ThreadDataS.Count; i++)
                         {
-                              WatchT.Stop();
-                            return true;
+                            if (!ThreadDataS[i].Done)
+                            {
+                                err += ThreadDataS[i].Code;
+                            }
                         }
-                        if (WatchT.ElapsedMilliseconds > OutTime)
-                        {
-                            ErosProjcetDLL.Project.AlarmText.AddTextNewLine(CodeName+ "超时" + WatchT.ElapsedMilliseconds);
-                            return true;
-                        }
-                        return  false;
-                 }
+                        ErosProjcetDLL.Project.AlarmText.AddTextNewLine(CodeName + "超时" + WatchT.ElapsedMilliseconds + err);
+                        return true;
+                    }
+                    return false;
+                }
             }
 
             /// <summary>
             /// 剩余数量
             /// </summary>
-            public int Number { get
+            public int Number
+            {
+                get
                 {
                     int number = 0;
                     for (int i = 0; i < ThreadDataS.Count; i++)
@@ -136,23 +155,31 @@ namespace Vision2.Project.DebugF.IO
                             number++;
                         }
                     }
-                    return number;    } 
+                    return number;
+                }
             }
-           /// <summary>
-           /// 异步数量
-           /// </summary>
+
+            /// <summary>
+            /// 异步数量
+            /// </summary>
             public int Count { get { return ThreadDataS.Count; } }
+
             /// <summary>
             /// 增加异步指令代码
             /// </summary>
             public void Add(string code)
             {
-                ThreadDataS.Add(new RunErr() { Code=code});
+                ThreadDataS.Add(new RunErr() { Code = code });
             }
-            public long RunTime { get
+
+            public long RunTime
+            {
+                get
                 {
-                    return WatchT.ElapsedMilliseconds; }
+                    return WatchT.ElapsedMilliseconds;
+                }
             }
+
             /// <summary>
             /// 指令参数
             /// </summary>
@@ -171,7 +198,9 @@ namespace Vision2.Project.DebugF.IO
                 return err;
             }
         }
+
         public System.Diagnostics.Stopwatch Watch = new System.Diagnostics.Stopwatch();
+
         public static dynamic ToDoubleP(string pragrm)
         {
             try
@@ -209,37 +238,35 @@ namespace Vision2.Project.DebugF.IO
                     if (date.Contains('.'))
                     {
                         string dateTC = pragrm.Split('.')[1];
-                        for (int i = 0; i < DebugCompiler.GetThis().DDAxis.XyzPoints.Count; i++)
+                        for (int i = 0; i < DebugCompiler.Instance.DDAxis.XyzPoints.Count; i++)
                         {
-                            if (DebugCompiler.GetThis().DDAxis.XyzPoints[i].Name == date)
+                            if (DebugCompiler.Instance.DDAxis.XyzPoints[i].Name == date)
                             {
                                 if (dateTC == "X")
                                 {
-                                    return DebugCompiler.GetThis().DDAxis.XyzPoints[i].X;
+                                    return DebugCompiler.Instance.DDAxis.XyzPoints[i].X;
                                 }
                                 else if (dateTC == "Y")
                                 {
-                                    return DebugCompiler.GetThis().DDAxis.XyzPoints[i].Y;
+                                    return DebugCompiler.Instance.DDAxis.XyzPoints[i].Y;
                                 }
                                 else if (dateTC == "Z")
                                 {
-                                    return DebugCompiler.GetThis().DDAxis.XyzPoints[i].Z;
+                                    return DebugCompiler.Instance.DDAxis.XyzPoints[i].Z;
                                 }
                             }
                         }
                     }
                     else
                     {
-                        for (int i = 0; i < DebugCompiler.GetThis().DDAxis.XyzPoints.Count; i++)
+                        for (int i = 0; i < DebugCompiler.Instance.DDAxis.XyzPoints.Count; i++)
                         {
-                            if (DebugCompiler.GetThis().DDAxis.XyzPoints[i].Name == date)
+                            if (DebugCompiler.Instance.DDAxis.XyzPoints[i].Name == date)
                             {
-                                return DebugCompiler.GetThis().DDAxis.XyzPoints[i];
+                                return DebugCompiler.Instance.DDAxis.XyzPoints[i];
                             }
                         }
-               
                     }
-              
                 }
                 //产品点位
                 else if (pragrm.ToLower().StartsWith("pf["))
@@ -249,7 +276,7 @@ namespace Vision2.Project.DebugF.IO
                     string dateTC = pragrm;
                     if (pragrm.Contains('.'))
                     {
-                        dateTC = pragrm.Split('.')[1]; 
+                        dateTC = pragrm.Split('.')[1];
                         for (int i = 0; i < points.Count; i++)
                         {
                             if (points[i].Name == date)
@@ -285,7 +312,7 @@ namespace Vision2.Project.DebugF.IO
                 {
                     string date = pragrm.Remove(0, 4);
                     int det = (int)ToDoubleP(date);
-                    return DebugCompiler.GetThis().DDAxis.GetTrayInxt(det).Count;
+                    return DebugCompiler.Instance.DDAxis.GetTrayInxt(det).Count;
                 }
                 //特殊参数
                 else if (pragrm.ToLower().StartsWith("pt["))
@@ -293,16 +320,17 @@ namespace Vision2.Project.DebugF.IO
                     string date = pragrm.Substring(3, pragrm.IndexOf(']') - pragrm.IndexOf('[') - 1).ToLower();
                     string[] dataStrs = date.Split('.');
                     int idnex = 0;
-                    if (date=="qr")
+                    if (date == "qr")
                     {
                         return ProcessControl.ProcessUser.QRCode;
-                    }else if (dataStrs[0] == "trayid")
+                    }
+                    else if (dataStrs[0] == "trayid")
                     {
-                        if (dataStrs.Length>=2)
+                        if (dataStrs.Length >= 2)
                         {
-                            idnex= ToDoubleP(dataStrs[1]);
+                            idnex = ToDoubleP(dataStrs[1]);
                         }
-                        return DebugCompiler.GetThis().DDAxis.GetTrayInxt(idnex).GetTrayData().TrayIDQR;
+                        return DebugCompiler.Instance.DDAxis.GetTrayInxt(idnex).GetTrayData().TrayIDQR;
                     }
                     else if (dataStrs[0] == "trayqr")
                     {
@@ -311,26 +339,26 @@ namespace Vision2.Project.DebugF.IO
                         {
                             idnex = ToDoubleP(dataStrs[1]);
                         }
-                        if (dataStrs.Length>=3)
+                        if (dataStrs.Length >= 3)
                         {
                             idnexD = ToDoubleP(dataStrs[2]);
                         }
-                        if (idnexD!=0)
+                        if (idnexD != 0)
                         {
-                            return DebugCompiler.GetThis().DDAxis.GetTrayInxt(idnex).GetTrayData().GetDataVales()[idnexD - 1].PanelID;
+                            return DebugCompiler.Instance.DDAxis.GetTrayInxt(idnex).GetTrayData().GetDataVales()[idnexD - 1].PanelID;
                         }
                         else
                         {
                             string datas = "";
-                            for (int i = 0; i < DebugCompiler.GetThis().DDAxis.GetTrayInxt(idnex).Count; i++)
+                            for (int i = 0; i < DebugCompiler.Instance.DDAxis.GetTrayInxt(idnex).Count; i++)
                             {
-                                if (DebugCompiler.GetThis().DDAxis.GetTrayInxt(idnex).GetTrayData().GetDataVales()[i]!=null)
+                                if (DebugCompiler.Instance.DDAxis.GetTrayInxt(idnex).GetTrayData().GetDataVales()[i] != null)
                                 {
-                                    datas += DebugCompiler.GetThis().DDAxis.GetTrayInxt(idnex).GetTrayData().GetDataVales()[i].PanelID + ",";
+                                    datas += DebugCompiler.Instance.DDAxis.GetTrayInxt(idnex).GetTrayData().GetDataVales()[i].PanelID + ",";
                                 }
                                 else
                                 {
-                                    datas +=  ",";
+                                    datas += ",";
                                 }
                             }
                             return datas;
@@ -340,9 +368,9 @@ namespace Vision2.Project.DebugF.IO
                 //变量参数
                 else
                 {
-                    if (DebugCompiler.GetThis().DDAxis.KeyVales.ContainsKey(pragrm))
+                    if (DebugCompiler.Instance.DDAxis.KeyVales.ContainsKey(pragrm))
                     {
-                        return DebugCompiler.GetThis().DDAxis.KeyVales[pragrm];
+                        return DebugCompiler.Instance.DDAxis.KeyVales[pragrm];
                     }
                     else
                     {
@@ -354,7 +382,6 @@ namespace Vision2.Project.DebugF.IO
             {
             }
             return null;
-
         }
 
         public static bool ToPoint(string pragrm, out double? x, out double? y, out double? z, out double? u, out EnumXYZUMoveType enumXYZUMoveType)
@@ -367,86 +394,86 @@ namespace Vision2.Project.DebugF.IO
             string[] tdat = pragrm.Split(',');
             try
             {
-                    for (int i = 0; i < tdat.Length; i++)
+                for (int i = 0; i < tdat.Length; i++)
+                {
+                    tdat[i] = tdat[i].Trim();
+                }
+                if (pragrm.Contains("tray"))
+                {
+                    string datat = pragrm.Substring(pragrm.IndexOf("tray") + 4, 2);
+                    string datatNumber = pragrm.Substring(pragrm.IndexOf("tray") + 4);
+                    string[] doute = datatNumber.Split(',');
+                    if (!int.TryParse(doute[1], out int point))
                     {
-                        tdat[i] = tdat[i].Trim();
-                    }
-                    if (pragrm.Contains("tray"))
-                    {
-                        string datat = pragrm.Substring(pragrm.IndexOf("tray") + 4, 2);
-                        string datatNumber = pragrm.Substring(pragrm.IndexOf("tray") + 4);
-                        string[] doute = datatNumber.Split(',');
-                        if (!int.TryParse(doute[1], out int point))
+                        if (DebugCompiler.Instance.DDAxis.KeyVales.ContainsKey(doute[1]))
                         {
-                            if (DebugCompiler.GetThis().DDAxis.KeyVales.ContainsKey(doute[1]))
-                            {
-                                point = DebugCompiler.GetThis().DDAxis.KeyVales[doute[1]];
-                            }
-                        }
-                        int tyNumbre = ToDoubleP(doute[0]);
-                        ErosSocket.DebugPLC.PointFile pointFile = DebugCompiler.GetThis().DDAxis.GetTrayInxt(tyNumbre).GetPoint(point);
-                        x = pointFile.X;
-                        y = pointFile.Y;
-                        z = pointFile.Z;
-                        u = pointFile.U;
-                        return true;
-                    }
-                    else if (tdat[1].ToLower().StartsWith("pi["))
-                    {
-                        string dname = tdat[1].Substring(3, tdat[1].Length - 4);
-                        for (int i2 = 0; i2 < DebugCompiler.GetThis().DDAxis.XyzPoints.Count; i2++)
-                        {
-                            if (DebugCompiler.GetThis().DDAxis.XyzPoints[i2].Name == dname)
-                            {
-                                x = DebugCompiler.GetThis().DDAxis.XyzPoints[i2].X;
-                                y = DebugCompiler.GetThis().DDAxis.XyzPoints[i2].Y;
-                                z = DebugCompiler.GetThis().DDAxis.XyzPoints[i2].Z;
-                                u = DebugCompiler.GetThis().DDAxis.XyzPoints[i2].U;
-                                enumXYZUMoveType = DebugCompiler.GetThis().DDAxis.XyzPoints[i2].isMove;
-                                return true;
-                            }
+                            point = DebugCompiler.Instance.DDAxis.KeyVales[doute[1]];
                         }
                     }
-                    else if (tdat[1].ToLower().StartsWith("pf["))
+                    int tyNumbre = ToDoubleP(doute[0]);
+                    ErosSocket.DebugPLC.PointFile pointFile = DebugCompiler.Instance.DDAxis.GetTrayInxt(tyNumbre).GetPoint(point);
+                    x = pointFile.X;
+                    y = pointFile.Y;
+                    z = pointFile.Z;
+                    u = pointFile.U;
+                    return true;
+                }
+                else if (tdat[1].ToLower().StartsWith("pi["))
+                {
+                    string dname = tdat[1].Substring(3, tdat[1].Length - 4);
+                    for (int i2 = 0; i2 < DebugCompiler.Instance.DDAxis.XyzPoints.Count; i2++)
                     {
-                        string dname = tdat[1].Substring(3, tdat[1].Length - 4);
-                        List<XYZPoint> points = RecipeCompiler.GetProductEX().DPoint;
-                        for (int i2 = 0; i2 < points.Count; i2++)
+                        if (DebugCompiler.Instance.DDAxis.XyzPoints[i2].Name == dname)
                         {
-                            if (points[i2].Name == dname)
-                            {
-                                x = points[i2].X;
-                                y = points[i2].Y;
-                                z = points[i2].Z;
-                                u = points[i2].U;
-                                return true;
-                            }
+                            x = DebugCompiler.Instance.DDAxis.XyzPoints[i2].X;
+                            y = DebugCompiler.Instance.DDAxis.XyzPoints[i2].Y;
+                            z = DebugCompiler.Instance.DDAxis.XyzPoints[i2].Z;
+                            u = DebugCompiler.Instance.DDAxis.XyzPoints[i2].U;
+                            enumXYZUMoveType = DebugCompiler.Instance.DDAxis.XyzPoints[i2].isMove;
+                            return true;
                         }
                     }
-                    else
+                }
+                else if (tdat[1].ToLower().StartsWith("pf["))
+                {
+                    string dname = tdat[1].Substring(3, tdat[1].Length - 4);
+                    List<XYZPoint> points = RecipeCompiler.GetProductEX().DPoint;
+                    for (int i2 = 0; i2 < points.Count; i2++)
                     {
-                        for (int i2 = 1; i2 < tdat.Length; i2++)
+                        if (points[i2].Name == dname)
                         {
-                            string[] doute = tdat[i2].Split('=');
-                            if (doute[0].ToLower() == "x")
-                            {
-                                x = ToDoubleP(doute[1]);
-                            }
-                            if (doute[0].ToLower() == "y")
-                            {
-                                y = ToDoubleP(doute[1]);
-                            }
-                            if (doute[0].ToLower() == "z")
-                            {
-                                z = ToDoubleP(doute[1]);
-                            }
-                            if (doute[0].ToLower() == "u")
-                            {
-                                u = ToDoubleP(doute[1]);
-                            }
+                            x = points[i2].X;
+                            y = points[i2].Y;
+                            z = points[i2].Z;
+                            u = points[i2].U;
+                            return true;
                         }
-                        return true;
                     }
+                }
+                else
+                {
+                    for (int i2 = 1; i2 < tdat.Length; i2++)
+                    {
+                        string[] doute = tdat[i2].Split('=');
+                        if (doute[0].ToLower() == "x")
+                        {
+                            x = ToDoubleP(doute[1]);
+                        }
+                        if (doute[0].ToLower() == "y")
+                        {
+                            y = ToDoubleP(doute[1]);
+                        }
+                        if (doute[0].ToLower() == "z")
+                        {
+                            z = ToDoubleP(doute[1]);
+                        }
+                        if (doute[0].ToLower() == "u")
+                        {
+                            u = ToDoubleP(doute[1]);
+                        }
+                    }
+                    return true;
+                }
             }
             catch (Exception)
             {
@@ -455,34 +482,36 @@ namespace Vision2.Project.DebugF.IO
         }
 
         #region 轴组指令
+
         public void GoS(RunErr runErr)
         {
-            ThreadData threadDatas = new  ThreadData("GO",10000);
-                try
+            ThreadData threadDatas = new ThreadData("GO", 10000);
+            try
+            {
+                string[] Codesdata = runErr.Code.Remove(0, 3).Trim(';').Split(';');
+                for (int i = 0; i < Codesdata.Length; i++)
                 {
-                    string[] Codesdata= runErr.Code.Remove(0,3).Trim(';').Split(';');
-                    for (int i = 0; i < Codesdata.Length; i++)
-                    {
-                        threadDatas.Add(Codesdata[i]);
-                        ThreadPool.QueueUserWorkItem(new WaitCallback(Go), threadDatas.ThreadDataS[i]);
-                    }
-                     while (!threadDatas.End)
+                    threadDatas.Add(Codesdata[i]);
+                    ThreadPool.QueueUserWorkItem(new WaitCallback(Go), threadDatas.ThreadDataS[i]);
+                }
+                while (!threadDatas.End)
                 {
                     if (Abort)
                     {
                         break;
                     }
                 }
-                    //ErosProjcetDLL.Project.AlarmText.AddTextNewLine("结束");
-                }
-                catch (Exception ex)
-                {
-                    runErr.ErrStr += ex.Message;
-                }
-                 runErr.ErrStr += threadDatas.GetErr();
+                //ErosProjcetDLL.Project.AlarmText.AddTextNewLine("结束");
+            }
+            catch (Exception ex)
+            {
+                runErr.ErrStr += ex.Message;
+            }
+            runErr.ErrStr += threadDatas.GetErr();
         }
 
         public int GoOutTime = 10;
+
         public void Go(object codeStr)
         {
             RunErr runErr = codeStr as RunErr;
@@ -497,7 +526,7 @@ namespace Vision2.Project.DebugF.IO
                 {
                     if (!IsSimulate)
                     {
-                        if (!DebugCompiler.GetThis().DDAxis.SetXYZ1Points(imtey[0], GoOutTime, x, y, z, u, enumXYZUMoveType))
+                        if (!DebugCompiler.Instance.DDAxis.SetXYZ1Points(imtey[0], GoOutTime, x, y, z, u, enumXYZUMoveType))
                         {
                             if (DebugCompiler.EquipmentStatus != ErosSocket.ErosConLink.EnumEquipmentStatus.已停止)
                             {
@@ -510,7 +539,6 @@ namespace Vision2.Project.DebugF.IO
                 {
                     runErr.ErrStr += "未找到点位数据:" + runErr.Code;
                 }
-
             }
             catch (Exception ex)
             {
@@ -518,6 +546,7 @@ namespace Vision2.Project.DebugF.IO
             }
             runErr.Done = true;
         }
+
         public void LocusMove(out string errStr, params string[] visionNmae)
         {
             errStr = "";
@@ -541,17 +570,17 @@ namespace Vision2.Project.DebugF.IO
                         string axisGroupName = vision.Vision.GetSaveImageInfo(halconRun.Name).AxisGrot;
                         if (points[0].AxisGrabName == axisGroupName)
                         {
-                            if (DebugCompiler.GetThis().DDAxis.SetXYZ1Points(axisGroupName, 10, points[0].X, points[0].Y, points[0].Z, points[0].U, points[0].isMove))
+                            if (DebugCompiler.Instance.DDAxis.SetXYZ1Points(axisGroupName, 10, points[0].X, points[0].Y, points[0].Z, points[0].U, points[0].isMove))
                             {
-                                Thread.Sleep(DebugCompiler.GetThis().MarkWait);
+                                Thread.Sleep(DebugCompiler.Instance.MarkWait);
                                 halconRun.AsysReadCamImage(1, 1, asyncRestImage => { });
-                                Thread.Sleep(DebugCompiler.GetThis().CamWait);
+                                Thread.Sleep(DebugCompiler.Instance.CamWait);
                             }
                             else
                             {
                                 if (DebugCompiler.RunStop)
                                 {
-                                    return ;
+                                    return;
                                 }
                                 if (DebugCompiler.EquipmentStatus != ErosSocket.ErosConLink.EnumEquipmentStatus.已停止)
                                 {
@@ -621,14 +650,14 @@ namespace Vision2.Project.DebugF.IO
                                 {
                                     break;
                                 }
-                                if (DebugCompiler.GetThis().DDAxis.SetXYZ1Points(axisGroupName, 10, item.X, item.Y, item.Z, item.U, item.isMove))
+                                if (DebugCompiler.Instance.DDAxis.SetXYZ1Points(axisGroupName, 10, item.X, item.Y, item.Z, item.U, item.isMove))
                                 {
                                     if (item.ID != -1)
                                     {
                                         i++;
-                                        Thread.Sleep(DebugCompiler.GetThis().MarkWait);
+                                        Thread.Sleep(DebugCompiler.Instance.MarkWait);
                                         halconRun.AsysReadCamImage(i, (i), asyncRestImage => { });
-                                        Thread.Sleep(DebugCompiler.GetThis().CamWait);
+                                        Thread.Sleep(DebugCompiler.Instance.CamWait);
                                     }
                                 }
                                 else
@@ -637,10 +666,10 @@ namespace Vision2.Project.DebugF.IO
                                     {
                                         return;
                                     }
-                                       if (DebugCompiler.EquipmentStatus != ErosSocket.ErosConLink.EnumEquipmentStatus.已停止)
-                                        {
-                                            ErosProjcetDLL.Project.AlarmListBoxt.AddAlarmText(item.Name + ":LocusMove失败!");
-                                        }
+                                    if (DebugCompiler.EquipmentStatus != ErosSocket.ErosConLink.EnumEquipmentStatus.已停止)
+                                    {
+                                        ErosProjcetDLL.Project.AlarmListBoxt.AddAlarmText(item.Name + ":LocusMove失败!");
+                                    }
                                 }
                             }
                         }
@@ -661,8 +690,8 @@ namespace Vision2.Project.DebugF.IO
             {
                 errStr += ex.Message + ":失败!";
             }
-
         }
+
         /// <summary>
         /// 轨迹
         /// </summary>
@@ -717,17 +746,17 @@ namespace Vision2.Project.DebugF.IO
                                 {
                                     break;
                                 }
-                                if (DebugCompiler.GetThis().DDAxis.SetXYZ1Points(axisGroupName, 10, item.X, item.Y, item.Z, item.U, item.isMove))
+                                if (DebugCompiler.Instance.DDAxis.SetXYZ1Points(axisGroupName, 10, item.X, item.Y, item.Z, item.U, item.isMove))
                                 {
                                     if (item.ID != -1)
                                     {
                                         i++;
-                                        Thread.Sleep(DebugCompiler.GetThis().MarkWait);
+                                        Thread.Sleep(DebugCompiler.Instance.MarkWait);
                                         halconRun.AsysReadCamImage(0, -1, asyncRestImage =>
                                         {
                                             halconRun.TiffeOffsetImageEX.SetTiffeOff(asyncRestImage.Image, i);
                                         });
-                                        Thread.Sleep(DebugCompiler.GetThis().CamWait);
+                                        Thread.Sleep(DebugCompiler.Instance.CamWait);
                                     }
                                     else
                                     {
@@ -792,11 +821,11 @@ namespace Vision2.Project.DebugF.IO
                         string axisGroupName = vision.Vision.GetSaveImageInfo(halconRun.Name).AxisGrot;
                         if (points[0].AxisGrabName == axisGroupName)
                         {
-                            if (DebugCompiler.GetThis().DDAxis.SetXYZ1Points(axisGroupName, 10, points[0].X, points[0].Y, points[0].Z, points[0].U, points[0].isMove))
+                            if (DebugCompiler.Instance.DDAxis.SetXYZ1Points(axisGroupName, 10, points[0].X, points[0].Y, points[0].Z, points[0].U, points[0].isMove))
                             {
-                                Thread.Sleep(DebugCompiler.GetThis().MarkWait);
+                                Thread.Sleep(DebugCompiler.Instance.MarkWait);
                                 halconRun.AsysReadCamImage(1, 1, asyncRestImage => { });
-                                Thread.Sleep(DebugCompiler.GetThis().CamWait);
+                                Thread.Sleep(DebugCompiler.Instance.CamWait);
                             }
                             else
                             {
@@ -860,14 +889,14 @@ namespace Vision2.Project.DebugF.IO
                                 {
                                     break;
                                 }
-                                if (DebugCompiler.GetThis().DDAxis.SetXYZ1Points(axisGroupName, 10, item.X, item.Y, item.Z, item.U, item.isMove))
+                                if (DebugCompiler.Instance.DDAxis.SetXYZ1Points(axisGroupName, 10, item.X, item.Y, item.Z, item.U, item.isMove))
                                 {
                                     if (item.ID != -1)
                                     {
                                         i++;
-                                        Thread.Sleep(DebugCompiler.GetThis().MarkWait);
+                                        Thread.Sleep(DebugCompiler.Instance.MarkWait);
                                         halconRun.AsysReadCamImage(i, (i), asyncRestImage => { });
-                                        Thread.Sleep(DebugCompiler.GetThis().CamWait);
+                                        Thread.Sleep(DebugCompiler.Instance.CamWait);
                                     }
                                 }
                                 else
@@ -896,7 +925,6 @@ namespace Vision2.Project.DebugF.IO
             {
                 errStr += ex.Message + ":失败!";
             }
-
         }
 
         /// <summary>
@@ -945,10 +973,10 @@ namespace Vision2.Project.DebugF.IO
                         RunCode?.Invoke(runErr);
                         if (points[0].AxisGrabName == axisGroupName)
                         {
-                            Axis AxisX = DebugCompiler.GetThis().DDAxis.GetAxisGrotNameEx(axisGroupName, ErosSocket.DebugPLC.EnumAxisType.X);
-                            Axis AxisY = DebugCompiler.GetThis().DDAxis.GetAxisGrotNameEx(axisGroupName, ErosSocket.DebugPLC.EnumAxisType.Y);
-                            Axis AxisZ = DebugCompiler.GetThis().DDAxis.GetAxisGrotNameEx(axisGroupName, ErosSocket.DebugPLC.EnumAxisType.Z);
-                            Axis AxisU = DebugCompiler.GetThis().DDAxis.GetAxisGrotNameEx(axisGroupName, ErosSocket.DebugPLC.EnumAxisType.U);
+                            Axis AxisX = DebugCompiler.Instance.DDAxis.GetAxisGrotNameEx(axisGroupName, ErosSocket.DebugPLC.EnumAxisType.X);
+                            Axis AxisY = DebugCompiler.Instance.DDAxis.GetAxisGrotNameEx(axisGroupName, ErosSocket.DebugPLC.EnumAxisType.Y);
+                            Axis AxisZ = DebugCompiler.Instance.DDAxis.GetAxisGrotNameEx(axisGroupName, ErosSocket.DebugPLC.EnumAxisType.Z);
+                            Axis AxisU = DebugCompiler.Instance.DDAxis.GetAxisGrotNameEx(axisGroupName, ErosSocket.DebugPLC.EnumAxisType.U);
                             double ValeZ = points[0].Z;
                             if (AxisZ != null)
                             {
@@ -959,21 +987,21 @@ namespace Vision2.Project.DebugF.IO
                             {
                                 ValeU += AxisU.Point;
                             }
-                            if (DebugCompiler.GetThis().DDAxis.SetXYZ1Points(axisGroupName, 10, AxisX.Point + points[0].X, AxisY.Point + points[0].Y,
+                            if (DebugCompiler.Instance.DDAxis.SetXYZ1Points(axisGroupName, 10, AxisX.Point + points[0].X, AxisY.Point + points[0].Y,
                               ValeZ, ValeU, points[0].isMove))
                             {
-                                Thread.Sleep(DebugCompiler.GetThis().MarkWait);
+                                Thread.Sleep(DebugCompiler.Instance.MarkWait);
                                 if (halconRun.PaleMode)
                                 {
                                     if (halconRun.TrayID >= 0)
                                     {
-                                        int dt = DebugCompiler.GetThis().DDAxis.GetTrayInxt(halconRun.TrayID).Number;
+                                        int dt = DebugCompiler.Instance.DDAxis.GetTrayInxt(halconRun.TrayID).Number;
                                         int det = ((dt - 1) * halconRun.MaxRunID + runID) / LiyID;
                                         runID = ((dt - 1) * halconRun.PaleID + LiyID);
                                     }
                                 }
                                 halconRun.AsysReadCamImage(LiyID, runID, asyncRestImage => { });
-                                Thread.Sleep(DebugCompiler.GetThis().CamWait);
+                                Thread.Sleep(DebugCompiler.Instance.CamWait);
                             }
                             else
                             {
@@ -1009,11 +1037,12 @@ namespace Vision2.Project.DebugF.IO
                 errStr.ErrStr += ex.Message + ":失败!";
             }
         }
+
         /// <summary>
         /// 移动轨迹指令;参数类型RunErr:Code=轨迹名称,ParName=轴名称，
         /// </summary>
         /// <param name="codeStr"> 参数类型RunErr:Code=轨迹名称,ParName=轴名称，</param>
-        public void RelativeLocusTs(object codeStr )
+        public void RelativeLocusTs(object codeStr)
         {
             int runID = 1;
             int LiyID = 1;
@@ -1033,7 +1062,7 @@ namespace Vision2.Project.DebugF.IO
                 }
                 if (halconRun == null)
                 {
-                    threadData.ErrStr  = "视觉程序不存在:" + names;
+                    threadData.ErrStr = "视觉程序不存在:" + names;
                     return;
                 }
                 string axisGroupName = vision.Vision.GetSaveImageInfo(halconRun.Name).AxisGrot;
@@ -1056,10 +1085,10 @@ namespace Vision2.Project.DebugF.IO
                     {
                         break;
                     }
-                    Axis AxisX = DebugCompiler.GetThis().DDAxis.GetAxisGrotNameEx(axisGroupName, ErosSocket.DebugPLC.EnumAxisType.X);
-                    Axis AxisY = DebugCompiler.GetThis().DDAxis.GetAxisGrotNameEx(axisGroupName, ErosSocket.DebugPLC.EnumAxisType.Y);
-                    Axis AxisZ = DebugCompiler.GetThis().DDAxis.GetAxisGrotNameEx(axisGroupName, ErosSocket.DebugPLC.EnumAxisType.Z);
-                    Axis AxisU = DebugCompiler.GetThis().DDAxis.GetAxisGrotNameEx(axisGroupName, ErosSocket.DebugPLC.EnumAxisType.U);
+                    Axis AxisX = DebugCompiler.Instance.DDAxis.GetAxisGrotNameEx(axisGroupName, ErosSocket.DebugPLC.EnumAxisType.X);
+                    Axis AxisY = DebugCompiler.Instance.DDAxis.GetAxisGrotNameEx(axisGroupName, ErosSocket.DebugPLC.EnumAxisType.Y);
+                    Axis AxisZ = DebugCompiler.Instance.DDAxis.GetAxisGrotNameEx(axisGroupName, ErosSocket.DebugPLC.EnumAxisType.Z);
+                    Axis AxisU = DebugCompiler.Instance.DDAxis.GetAxisGrotNameEx(axisGroupName, ErosSocket.DebugPLC.EnumAxisType.U);
                     double ValeZ = item.Z;
                     if (AxisZ != null)
                     {
@@ -1071,18 +1100,20 @@ namespace Vision2.Project.DebugF.IO
                         ValeU += AxisU.Point;
                     }
                     i++;
-                    threadData.RunState ="点位:"+ i + "轨迹:" + halconRun.Name + ";"+ item.GetPointStr(); 
+                    threadData.RunState = "点位:" + i + "轨迹:" + halconRun.Name + ";" + item.GetPointStr();
                     RunCode?.Invoke(threadData);
-                    if (DebugCompiler.GetThis().DDAxis.SetXYZ1Points(axisGroupName, 10, item.X + AxisX.Point, item.Y + AxisY.Point, ValeZ, ValeU, item.isMove))
+                    if (DebugCompiler.Instance.DDAxis.SetXYZ1Points(axisGroupName, 10, item.X + AxisX.Point, item.Y + AxisY.Point, ValeZ, ValeU, item.isMove))
                     {
-                          LiyID = i;
-                          runID = i;
-                          Thread.Sleep(DebugCompiler.GetThis().MarkWait);
-                          if (halconRun.PaleMode)
-                          {
-                               if (halconRun.TrayID >= 0)
+                        if (item.ID != -1)
+                        {
+                            LiyID = i;
+                            runID = i;
+                            Thread.Sleep(DebugCompiler.Instance.MarkWait);
+                            if (halconRun.PaleMode)
+                            {
+                                if (halconRun.TrayID >= 0)
                                 {
-                                    int dt = DebugCompiler.GetThis().DDAxis.GetTrayInxt(halconRun.TrayID).Number;
+                                    int dt = DebugCompiler.Instance.DDAxis.GetTrayInxt(halconRun.TrayID).Number;
                                     runID = ((dt - 1) * halconRun.PaleID + LiyID);
                                     //if (halconRun.PaleID == LiyID)
                                     //{
@@ -1093,9 +1124,10 @@ namespace Vision2.Project.DebugF.IO
                                         ErosProjcetDLL.Project.AlarmText.AddTextNewLine("托盘数:" + dt + ":" + runID + ":" + LiyID);
                                     }
                                 }
-                          }
-                          halconRun.AsysReadCamImage(LiyID, runID, asyncRestImage => { });
-                          Thread.Sleep(DebugCompiler.GetThis().CamWait);
+                            }
+                            halconRun.AsysReadCamImage(LiyID, runID, asyncRestImage => { });
+                            Thread.Sleep(DebugCompiler.Instance.CamWait);
+                        }
                     }
                     else
                     {
@@ -1104,7 +1136,6 @@ namespace Vision2.Project.DebugF.IO
                             ErosProjcetDLL.Project.AlarmListBoxt.AddAlarmText(item.Name + ":移动失败!");
                         }
                     }
-           
                 }
             }
             catch (Exception ex)
@@ -1119,30 +1150,30 @@ namespace Vision2.Project.DebugF.IO
             try
             {
                 ThreadData threadDatas = new ThreadData("TrayToCamRelativeLocus", 500000000);
-                string[] errStrdt = errStr.Code.Remove(0,23).Trim(';').Split(';');
+                string[] errStrdt = errStr.Code.Remove(0, 23).Trim(';').Split(';');
 
                 //runErr.Code = errStrdt[0];
                 for (int j = 1; j < errStrdt.Length; j++)
                 {
                     threadDatas.Add(errStrdt[j]);
-                    threadDatas.ThreadDataS[j-1].ParName = errStrdt[0];
-                    ThreadPool.QueueUserWorkItem(new WaitCallback(TrayToCamRelativelocus), threadDatas.ThreadDataS[j-1]);
+                    threadDatas.ThreadDataS[j - 1].ParName = errStrdt[0];
+                    ThreadPool.QueueUserWorkItem(new WaitCallback(TrayToCamRelativelocus), threadDatas.ThreadDataS[j - 1]);
                 }
                 while (!threadDatas.End)
                 {
                     if (Abort)
                     {
-                        break ;
+                        break;
                     }
                 }
                 errStr.ErrStr += threadDatas.GetErr();
                 ErosProjcetDLL.Project.AlarmText.AddTextNewLine("结束");
-
             }
             catch (Exception)
             {
             }
         }
+
         /// <summary>
         /// 移动轴组到托盘位置并移动轨迹并拍照
         /// </summary>
@@ -1159,12 +1190,11 @@ namespace Vision2.Project.DebugF.IO
                 TrayRobot trayRobot = DebugCompiler.GetTray(trayid);
                 for (int i = 0; i < trayRobot.Count; i++)
                 {
-                
-                    PointFile poinFile=     trayRobot.GetPoint(i+1);
-                    threadData.RunState =  "开始移动托盘ID" +trayid + ";位置" +(i+1)+";";
+                    PointFile poinFile = trayRobot.GetPoint(i + 1);
+                    threadData.RunState = "开始移动托盘ID" + trayid + ";位置" + (i + 1) + ";";
                     RunCode?.Invoke(threadData);
 
-                    if (!DebugCompiler.GetThis().DDAxis.SetXYZ1Points(axisName, GoOutTime, 
+                    if (!DebugCompiler.Instance.DDAxis.SetXYZ1Points(axisName, GoOutTime,
                         poinFile.X, poinFile.Y, poinFile.Z, poinFile.U, EnumXYZUMoveType.直接移动))
                     {
                         if (DebugCompiler.EquipmentStatus != ErosSocket.ErosConLink.EnumEquipmentStatus.已停止)
@@ -1175,7 +1205,7 @@ namespace Vision2.Project.DebugF.IO
                     }
                     else
                     {
-                        RelativeLocusTs(new RunErr() { Code= threadData.ParName,ParName= axisName });
+                        RelativeLocusTs(new RunErr() { Code = threadData.ParName, ParName = axisName });
                     }
                 }
             }
@@ -1186,14 +1216,14 @@ namespace Vision2.Project.DebugF.IO
             threadData.Done = true;
         }
 
-        #endregion
+        #endregion 轴组指令
 
         /// <summary>
         /// 是否终止执行,true=停止，false继续
         /// </summary>
         /// <returns></returns>
-         bool Abort
-         {
+        private bool Abort
+        {
             get
             {
                 try
@@ -1231,44 +1261,45 @@ namespace Vision2.Project.DebugF.IO
                 }
                 return false;
             }
-         }
-           #region 图像指令
+        }
 
-            public void Cams( RunErr runErr )
+        #region 图像指令
+
+        public void Cams(RunErr runErr)
+        {
+            ThreadData threadDatas = new ThreadData("Cam");
+            try
             {
-               ThreadData threadDatas =  new    ThreadData("Cam");
-                try
+                string[] Cmas = runErr.Code.Remove(0, 4).Trim(';').Split(';');
+                for (int i = 0; i < Cmas.Length; i++)
                 {
-                    string[] Cmas = runErr.Code.Remove(0,4).Trim(';').Split(';');
-                    for (int i = 0; i < Cmas.Length; i++)
-                    {
-                        threadDatas .Add(Cmas[i].Trim());
-                     ThreadPool.QueueUserWorkItem(new WaitCallback(Cam), threadDatas.ThreadDataS[i]);
-                    }
-                    while (!threadDatas.End)
+                    threadDatas.Add(Cmas[i].Trim());
+                    ThreadPool.QueueUserWorkItem(new WaitCallback(Cam), threadDatas.ThreadDataS[i]);
+                }
+                while (!threadDatas.End)
                 {
                     if (Abort)
                     {
                         break;
                     }
                 }
-                  ErosProjcetDLL.Project.AlarmText.AddTextNewLine("结束");
-                }
-                catch (Exception ex)
-                {
-                    runErr.ErrStr += ex.Message;
-                }
-
-                runErr.ErrStr += threadDatas.GetErr();
-         }
-   
-            private void Cam(object state)
+                ErosProjcetDLL.Project.AlarmText.AddTextNewLine("结束");
+            }
+            catch (Exception ex)
             {
-               RunErr threadData = state as RunErr;
-                try
+                runErr.ErrStr += ex.Message;
+            }
+
+            runErr.ErrStr += threadDatas.GetErr();
+        }
+
+        private void Cam(object state)
+        {
+            RunErr threadData = state as RunErr;
+            try
+            {
+                if (threadData != null)
                 {
-                    if (threadData != null)
-                    {
                     string[] tdat = threadData.Code.Trim(',').Split(',');
                     HalconRun hate = vision.Vision.GetRunNameVision(tdat[1]);
                     if (hate != null)
@@ -1293,23 +1324,24 @@ namespace Vision2.Project.DebugF.IO
                         }
                         //hate.ShowImage();
                     }
-                 
+
                     ErosProjcetDLL.Project.AlarmText.AddTextNewLine(threadData.Code.ToString());
-                    }
                 }
-                catch (Exception ex)
-                {
-                    threadData.ErrStr = ex.Message;
-                }
+            }
+            catch (Exception ex)
+            {
+                threadData.ErrStr = ex.Message;
+            }
             threadData.Done = true;
         }
-           public void Calls(RunErr runErr)
-          {
-            ThreadData threadDatas = new ThreadData("Call");
+
+        public void Calls(RunErr runErr)
+        {
+            ThreadData threadDatas = new ThreadData("Call", 10000);
             try
             {
                 string[] Cmas = runErr.Code.Remove(0, 5).Trim(';').Split(';');
-           
+
                 for (int i = 0; i < Cmas.Length; i++)
                 {
                     threadDatas.Add(Cmas[i].Trim().Trim(','));
@@ -1322,7 +1354,7 @@ namespace Vision2.Project.DebugF.IO
                         break;
                     }
                 }
-                runErr.RunState = threadDatas.CodeName+":"+ threadDatas.RunTime.ToString();
+                runErr.RunState = threadDatas.CodeName + ":" + threadDatas.RunTime.ToString();
                 RunCode?.Invoke(runErr);
                 //ErosProjcetDLL.Project.AlarmText.AddTextNewLine("结束");
             }
@@ -1332,61 +1364,61 @@ namespace Vision2.Project.DebugF.IO
             }
             runErr.ErrStr += threadDatas.GetErr();
         }
-            private void Call(object state)
+
+        private void Call(object state)
+        {
+            RunErr threadData = state as RunErr;
+            try
             {
-                RunErr threadData = state as RunErr;
-                try
-                {
-                    if (threadData!=null)
+                if (threadData != null)
                 {
                     string[] tdat = threadData.Code.Split(',');
                     int LiayID = ToDoubleP(tdat[1]);
                     int RunID = LiayID;
-                    if (tdat.Length>=3)
+                    if (tdat.Length >= 3)
                     {
                         RunID = ToDoubleP(tdat[2]);
                     }
 
-      
                     HalconRun halconRun = vision.Vision.GetRunNameVision(tdat[0]);
 
                     halconRun.GetCam().Key = RunID.ToString();
                     if (!IsSimulate)
                     {
-                        halconRun.ReadCamImage( LiayID.ToString(), RunID);
+                        halconRun.ReadCamImage(LiayID.ToString(), RunID);
                     }
                     else
                     {
-                        string path = vision. Vision.VisionPath + "Image\\" + halconRun .Name+ LiayID + ".bmp";
-                        if (System.IO. File.Exists(path))
+                        string path = vision.Vision.VisionPath + "Image\\" + halconRun.Name + LiayID + ".bmp";
+                        if (System.IO.File.Exists(path))
                         {
                             HOperatorSet.ReadImage(out HObject hObject, path);
                             halconRun.Image(hObject);
-                         }
+                        }
                         halconRun.CamImageEvent(LiayID.ToString(), halconRun.GetOneImageR(), RunID);
                     }
-                     //ErosProjcetDLL.Project.AlarmText.AddTextNewLine(threadData.Code.ToString());
-                    }
-                }
-                catch (Exception ex)
-                {
-                    threadData.ErrStr = ex.Message;
-                }
-            threadData.Done = true;
-
-        }
- 
-            public void SetLight(string lightName)
-            {
-                try
-                {
-                   vision.Vision.SetLight(lightName);
-                }
-                catch (Exception)
-                {
+                    //ErosProjcetDLL.Project.AlarmText.AddTextNewLine(threadData.Code.ToString());
                 }
             }
-        #endregion
+            catch (Exception ex)
+            {
+                threadData.ErrStr = ex.Message;
+            }
+            threadData.Done = true;
+        }
+
+        public void SetLight(string lightName)
+        {
+            try
+            {
+                vision.Vision.SetLight(lightName);
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        #endregion 图像指令
 
         public RunErr RunSingle(string text, int rowindex)
         {
@@ -1397,6 +1429,11 @@ namespace Vision2.Project.DebugF.IO
             RunErr runErr = new RunErr();
             try
             {
+                if (text.Contains("//"))
+                {
+                    int d = text.IndexOf("//");
+                    text = text.Remove(d, text.Length - d);
+                }
                 StepInt = rowindex;
                 runErr.RowIndx = rowindex;
                 runErr.Code = text;
@@ -1446,7 +1483,6 @@ namespace Vision2.Project.DebugF.IO
                     {
                         if (Stoping)
                         {
-
                             Runing = false;
                             goto End;
                         }
@@ -1517,7 +1553,7 @@ namespace Vision2.Project.DebugF.IO
                     ToPoint(datas, out x, out y, out z, out u, out EnumXYZUMoveType enumXYZUMoveType);
                     if (!IsSimulate)
                     {
-                        if (!DebugCompiler.GetThis().DDAxis.SetXYZ1Points(imtey[1], 10, x, y, z, u, EnumXYZUMoveType.跳跃门型, Jz))
+                        if (!DebugCompiler.Instance.DDAxis.SetXYZ1Points(imtey[1], 10, x, y, z, u, EnumXYZUMoveType.跳跃门型, Jz))
                         {
                             if (DebugCompiler.EquipmentStatus != ErosSocket.ErosConLink.EnumEquipmentStatus.已停止)
                             {
@@ -1528,7 +1564,6 @@ namespace Vision2.Project.DebugF.IO
                 }
                 else if (imtey[0] == "move")
                 {
-
                 }
                 else if (imtey[0] == "locusmove")
                 {
@@ -1544,7 +1579,7 @@ namespace Vision2.Project.DebugF.IO
                     Array.Copy(tdat, 1, visionNmae, 0, visionNmae.Length);
                     LocusMoveImage(out string err, visionNmae);
                 }
-                else if(imtey[0]== "relativelocusmove")
+                else if (imtey[0] == "relativelocusmove")
                 {
                     RelativeLocusMove(runErr, tdat[1]);
                 }
@@ -1565,8 +1600,6 @@ namespace Vision2.Project.DebugF.IO
                 }
                 else if (imtey[0] == "movematrix")
                 {
-
-
                 }
                 else if (text == "else")
                 {
@@ -1594,7 +1627,6 @@ namespace Vision2.Project.DebugF.IO
                     {
                         if (imtey.Length >= 2 && imtey[1] == "sys")
                         {
-
                             Await = true;
                         }
                         simulateQRForm.ShowMesabe(text.Remove(0, imtey[0].Length), Await);
@@ -1629,13 +1661,13 @@ namespace Vision2.Project.DebugF.IO
                     }
                     int TrayIndex = -1;
                     int StopIS = -1;
-                    if (tdat.Length==2)
+                    if (tdat.Length == 2)
                     {
                         if (tdat[1].ToLower() == "stop")
                         {
                             StopIS = 1;
                         }
-                        else if(tdat[1].ToLower() == "pause")
+                        else if (tdat[1].ToLower() == "pause")
                         {
                             StopIS = 0;
                         }
@@ -1663,7 +1695,7 @@ namespace Vision2.Project.DebugF.IO
                             StopIS = 0;
                         }
                     }
-            
+
                     bool rsetOk = false;
                     string restMest = "";
                     if (TrayIndex < 0)
@@ -1672,16 +1704,16 @@ namespace Vision2.Project.DebugF.IO
                     }
                     else
                     {
-                        rsetOk = RecipeCompiler.Instance.GetMes().ReadMes(DebugCompiler.GetThis().DDAxis.GetTrayInxt(TyraID).GetTrayData().GetDataVales()[TrayIndex - 1].PanelID, out restMest);
+                        rsetOk = RecipeCompiler.Instance.GetMes().ReadMes(DebugCompiler.Instance.DDAxis.GetTrayInxt(TyraID).GetTrayData().GetDataVales()[TrayIndex - 1].PanelID, out restMest);
                     }
                     if (!rsetOk)
                     {
                         simulateQRForm.ShowMesabe(restMest);
-                        if (StopIS==1)
+                        if (StopIS == 1)
                         {
                             DebugCompiler.Stop(true);
                         }
-                        else if(StopIS == 0)
+                        else if (StopIS == 0)
                         {
                             DebugCompiler.Pause();
                         }
@@ -1710,8 +1742,8 @@ namespace Vision2.Project.DebugF.IO
                         }
                         int TyraID = ToDoubleP(tdat[1]);
                         SimulateTrayMesForm.ShowMesabe(text.Remove(0, text.ToLower().IndexOf("{") + 1),
-                            DebugCompiler.GetThis().DDAxis.GetTrayInxt(TyraID).GetTrayData(), Await);
-                        while (!SimulateTrayMesForm.RresOK)
+                        DebugCompiler.Instance.DDAxis.GetTrayInxt(TyraID).GetTrayData(), Await);
+                        while (!DODIAxis.RresOK)
                         {
                             Thread.Sleep(1);
                         }
@@ -1721,10 +1753,19 @@ namespace Vision2.Project.DebugF.IO
                 {
                     if (tdat.Length >= 2)
                     {
-                        Color color = Color.FromName(tdat[1]);
                         if (text.Contains("{"))
                         {
+                            Color color = Color.FromName(tdat[1]);
                             ErosProjcetDLL.Project.AlarmText.AddTextNewLine(text.Remove(0, text.IndexOf('{') + 1), color);
+                        }
+                        else
+                        {
+                            string data = imtey[1];
+                            for (int i = 1; i < tdat.Length; i++)
+                            {
+                                data += ToDoubleP(tdat[i]).ToString();
+                            }
+                            ErosProjcetDLL.Project.AlarmText.AddTextNewLine(data);
                         }
                     }
                     else
@@ -1771,14 +1812,14 @@ namespace Vision2.Project.DebugF.IO
                         {
                             datte = tdat[i].Split('+');
                             double det = RunCodeStr.ToDoubleP(datte[1]);
-                            det = DebugCompiler.GetThis().DDAxis.GetAxisPoint(datte[0].Trim()) + det;
+                            det = DebugCompiler.Instance.DDAxis.GetAxisPoint(datte[0].Trim()) + det;
                             datte[1] = det.ToString();
                         }
                         else if (tdat[i].Contains("-"))
                         {
                             datte = tdat[i].Split('-');
                             double det = RunCodeStr.ToDoubleP(datte[1]);
-                            det = DebugCompiler.GetThis().DDAxis.GetAxisPoint(datte[0].Trim()) - det;
+                            det = DebugCompiler.Instance.DDAxis.GetAxisPoint(datte[0].Trim()) - det;
                             datte[1] = det.ToString();
                         }
                         if (datte.Length != 2)
@@ -1790,7 +1831,7 @@ namespace Vision2.Project.DebugF.IO
                     }
                     if (!IsSimulate)
                     {
-                        if (!DebugCompiler.GetThis().DDAxis.AxisSycnGo(names.ToArray(), points.ToArray()))
+                        if (!DebugCompiler.Instance.DDAxis.AxisSycnGo(names.ToArray(), points.ToArray()))
                         {
                             runErr.ErrStr = "移动失败";
                         }
@@ -1801,11 +1842,11 @@ namespace Vision2.Project.DebugF.IO
                     int det = 0;
                     int.TryParse(imtey[1], out det);
                     det = (int)ToDoubleP(imtey[1]);
-                    if (tdat.Length==3)
+                    if (tdat.Length == 3)
                     {
                         int xNumber = (int)ToDoubleP(tdat[1]);
                         int YNumber = (int)ToDoubleP(tdat[2]);
-                        DebugCompiler.GetThis().DDAxis.SetTray(det,  xNumber.ToString(), YNumber.ToString());
+                        DebugCompiler.Instance.DDAxis.SetTray(det, xNumber.ToString(), YNumber.ToString());
                     }
                     else
                     {
@@ -1815,15 +1856,16 @@ namespace Vision2.Project.DebugF.IO
                         {
                             int x2Number = (int)ToDoubleP(tdat[11]);
                             int Y2Number = (int)ToDoubleP(tdat[12]);
-                            DebugCompiler.GetThis().DDAxis.SetTray(det, tdat[1], tdat[2], tdat[3], tdat[4], xNumber.ToString(), YNumber.ToString(),
+                            DebugCompiler.Instance.DDAxis.SetTray(det, tdat[1], tdat[2], tdat[3], tdat[4], xNumber.ToString(), YNumber.ToString(),
                                 tdat[7], tdat[8], tdat[9], tdat[10], x2Number.ToString(), Y2Number.ToString());
                         }
                         else
                         {
-                            DebugCompiler.GetThis().DDAxis.SetTray(det, tdat[1], tdat[2], tdat[3], tdat[4], xNumber.ToString(), YNumber.ToString());
+                            DebugCompiler.Instance.DDAxis.SetTray(det, tdat[1], tdat[2], tdat[3], tdat[4], xNumber.ToString(), YNumber.ToString());
                         }
                     }
-                }else if (imtey[0]== "setlight")
+                }
+                else if (imtey[0] == "setlight")
                 {
                     SetLight(tdat[1]);
                 }
@@ -1833,18 +1875,17 @@ namespace Vision2.Project.DebugF.IO
                     {
                         if (tdat.Length == 1)
                         {
-                            DebugCompiler.GetThis().DDAxis.AxisGo(imtey[1], yutData[1]);
+                            DebugCompiler.Instance.DDAxis.AxisGo(imtey[1], yutData[1]);
                         }
                         else if (tdat.Length == 2)
                         {
-                            DebugCompiler.GetThis().DDAxis.AxisGo(imtey[1], yutData[1], tdat[1]);
+                            DebugCompiler.Instance.DDAxis.AxisGo(imtey[1], yutData[1], tdat[1]);
                         }
                     }
                 }
-
                 else if (imtey[0] == "axisstop")
                 {
-                    DebugCompiler.GetThis().DDAxis.GetAxisName(imtey[1]).Stop();
+                    DebugCompiler.Instance.DDAxis.GetAxisName(imtey[1]).Stop();
                 }
                 else if (imtey[0] == "sleep")
                 {
@@ -1867,11 +1908,11 @@ namespace Vision2.Project.DebugF.IO
                                 {
                                     selp[i2] = ToDoubleP(datS[i2]);
                                 }
-                                DebugCompiler.GetThis().DDAxis.AxisSeelp(dat[0], selp[0].Value, selp[1], selp[2], selp[3]);
+                                DebugCompiler.Instance.DDAxis.AxisSeelp(dat[0], selp[0].Value, selp[1], selp[2], selp[3]);
                             }
                             else
                             {
-                                DebugCompiler.GetThis().DDAxis.AxisSeelp(dat[0]);
+                                DebugCompiler.Instance.DDAxis.AxisSeelp(dat[0]);
                             }
                         }
                     }
@@ -1886,17 +1927,17 @@ namespace Vision2.Project.DebugF.IO
                             {
                                 selp[i2] = ToDoubleP(datS[i2]);
                             }
-                            DebugCompiler.GetThis().DDAxis.AxisSeelp(imtey[1], selp[0].Value, selp[1], selp[2], selp[3]);
+                            DebugCompiler.Instance.DDAxis.AxisSeelp(imtey[1], selp[0].Value, selp[1], selp[2], selp[3]);
                         }
                         else
                         {
                             if (imtey.Length == 1)
                             {
-                                DebugCompiler.GetThis().SetSeelp();
+                                DebugCompiler.Instance.SetSeelp();
                             }
                             else
                             {
-                                DebugCompiler.GetThis().DDAxis.AxisSeelp(imtey[1]);
+                                DebugCompiler.Instance.DDAxis.AxisSeelp(imtey[1]);
                             }
                         }
                     }
@@ -1908,10 +1949,7 @@ namespace Vision2.Project.DebugF.IO
                     {
                         for (int i = 0; i < tdat.Length; i++)
                         {
-
-                            DebugCompiler.GetThis().DDAxis.GetAxisName(tdat[i]).SetHome();
-
-
+                            DebugCompiler.Instance.DDAxis.GetAxisName(tdat[i]).SetHome();
                         }
                         Thread.Sleep(1000);
                         int homeInt = 0;
@@ -1920,7 +1958,7 @@ namespace Vision2.Project.DebugF.IO
                             homeInt = 0;
                             for (int i = 0; i < tdat.Length; i++)
                             {
-                                if (DebugCompiler.GetThis().DDAxis.GetAxisName(tdat[i]).IsHome)
+                                if (DebugCompiler.Instance.DDAxis.GetAxisName(tdat[i]).IsHome)
                                 {
                                     homeInt++;
                                 }
@@ -1937,7 +1975,7 @@ namespace Vision2.Project.DebugF.IO
                 {
                     if (!IsSimulate)
                     {
-                        if (!DebugCompiler.GetThis().DDAxis.Cyp(yutData[1].Trim(), true))
+                        if (!DebugCompiler.Instance.DDAxis.Cyp(yutData[1].Trim(), true))
                         {
                             runErr.ErrStr += yutData[1] + "气缸执行失败";
                         }
@@ -1947,7 +1985,7 @@ namespace Vision2.Project.DebugF.IO
                 {
                     if (!IsSimulate)
                     {
-                        if (!DebugCompiler.GetThis().DDAxis.Cyp(yutData[1].Trim(), false))
+                        if (!DebugCompiler.Instance.DDAxis.Cyp(yutData[1].Trim(), false))
                         {
                             runErr.ErrStr += yutData[1] + ":气缸执行失败";
                         }
@@ -2054,7 +2092,7 @@ namespace Vision2.Project.DebugF.IO
                             }
                             if (!DebugCompiler.GetDoDi().WritDO(det, vat))
                             {
-                                runErr.ErrStr += "Do写入命令失败:" ;
+                                runErr.ErrStr += "Do写入命令失败:";
                             }
                         }
                     }
@@ -2103,7 +2141,7 @@ namespace Vision2.Project.DebugF.IO
                 {
                     int det = 0;
                     det = ToDoubleP(imtey[1]);
-                    DebugCompiler.GetTray(det).GetTrayData().WriatTary(ProcessControl.ProcessUser.GetThis().ExcelPath + "\\", text,
+                    DebugCompiler.GetTray(det).GetTrayData().WriatTary(ProcessControl.ProcessUser.Instancen.ExcelPath + "\\", text,
                         DebugCompiler.GetTray(det).GetTrayData(), out runErr.ErrStr);
                 }//等待读取文件
                 else if (imtey[0] == "awaitread")
@@ -2118,7 +2156,7 @@ namespace Vision2.Project.DebugF.IO
                     string rset = "";
                     char Sipe = ',';
                     string StartsWith = "";
-                    string filePaht = ProcessControl.ProcessUser.GetThis().ExcelPath + "\\";
+                    string filePaht = ProcessControl.ProcessUser.Instancen.ExcelPath + "\\";
                     //   AwaitRead 5, Tray 2 { 行=2; 分割==;数据列=1; 结果=OK; StartsWith=SPUTTERING_Result_; }
                     if (text.Contains("{"))
                     {
@@ -2145,7 +2183,6 @@ namespace Vision2.Project.DebugF.IO
                                         {
                                             Sipe = dtast[1].Trim()[0];
                                         }
-
                                     }
                                     else if (dtast[0] == "数据列")
                                     {
@@ -2208,8 +2245,8 @@ namespace Vision2.Project.DebugF.IO
                                                 UserFormulaContrsl.SetOK(3);
                                             }
                                             DebugCompiler.GetTray(0).GetITrayRobot().SetValue(ListR);
-                                            System.IO.Directory.CreateDirectory(ProcessControl.ProcessUser.GetThis().ExcelPath + "\\历史记录\\");
-                                            System.IO.File.Move(Pahts[i], ProcessControl.ProcessUser.GetThis().ExcelPath + "\\历史记录\\" + System.IO.Path.GetFileName(Pahts[i]));
+                                            System.IO.Directory.CreateDirectory(ProcessControl.ProcessUser.Instancen.ExcelPath + "\\历史记录\\");
+                                            System.IO.File.Move(Pahts[i], ProcessControl.ProcessUser.Instancen.ExcelPath + "\\历史记录\\" + System.IO.Path.GetFileName(Pahts[i]));
                                             Vision2.ErosProjcetDLL.Project.AlarmText.AddTextNewLine("SIFS过站完成" + textT[0], Color.Green);
                                             Done = true;
                                         }
@@ -2217,11 +2254,11 @@ namespace Vision2.Project.DebugF.IO
                                 }
                             }
                         }
-                        else if (DebugCompiler.GetThis().DDAxis.KeyVales.ContainsKey(tdat[2].Trim(' ')))
+                        else if (DebugCompiler.Instance.DDAxis.KeyVales.ContainsKey(tdat[2].Trim(' ')))
                         {
                             if (Vision2.ErosProjcetDLL.Excel.Npoi.ReadText(imtey[1], out string textT))
                             {
-                                DebugCompiler.GetThis().DDAxis.KeyVales.DictionaryValueD[tdat[2]].Value = textT;
+                                DebugCompiler.Instance.DDAxis.KeyVales.DictionaryValueD[tdat[2]].Value = textT;
                                 break;
                             }
                         }
@@ -2247,7 +2284,7 @@ namespace Vision2.Project.DebugF.IO
                     }
                 }
                 //等待超时信号
-                else if (imtey[0] == "await") 
+                else if (imtey[0] == "await")
                 {
                     AwaitOut = false; double det = 0; int dindex = 0; bool ischet = true; double outTime = 0;
                     if (tdat.Length >= 2)
@@ -2291,7 +2328,6 @@ namespace Vision2.Project.DebugF.IO
                                 break;
                             }
                         }
-
                     }
                     else if (imtey[1].ToLower().StartsWith("do"))
                     {
@@ -2326,9 +2362,9 @@ namespace Vision2.Project.DebugF.IO
                         string dsa = ErosSocket.ErosConLink.StaticCon.GetSocketClint(imtey[1]).AlwaysReceive((int)outTime * 1000);
                         if (tdat.Length >= 3)
                         {
-                            if (DebugCompiler.GetThis().DDAxis.KeyVales.ContainsKey(tdat[2].Trim(' ')))
+                            if (DebugCompiler.Instance.DDAxis.KeyVales.ContainsKey(tdat[2].Trim(' ')))
                             {
-                                if (!DebugCompiler.GetThis().DDAxis.KeyVales.DictionaryValueD[tdat[2].Trim(' ')].InitialValue(dsa))
+                                if (!DebugCompiler.Instance.DDAxis.KeyVales.DictionaryValueD[tdat[2].Trim(' ')].InitialValue(dsa))
                                 {
                                     runErr.ErrStr += "接受值与变量类型不符!";
                                 }
@@ -2352,7 +2388,6 @@ namespace Vision2.Project.DebugF.IO
                     {
                         if (imtey.Length == 3)
                         {
-
                         }
 
                         if (int.TryParse(imtey[2], out dindex))
@@ -2420,11 +2455,9 @@ namespace Vision2.Project.DebugF.IO
                                 {
                                     break;
                                 }
-
                             }
                         }
                     }
-
                 }
                 else if (imtey[0] == "if")
                 {
@@ -2501,11 +2534,11 @@ namespace Vision2.Project.DebugF.IO
                         if (ifType == 1)
                         {
                             int det = 0;
-                            for (int i = 0; i < DebugCompiler.GetThis().DDAxis.GetTrayInxt(idet).GetTrayData().GetDataVales().Count; i++)
+                            for (int i = 0; i < DebugCompiler.Instance.DDAxis.GetTrayInxt(idet).GetTrayData().GetDataVales().Count; i++)
                             {
-                                if (DebugCompiler.GetThis().DDAxis.GetTrayInxt(idet).GetTrayData().GetDataVales()[i] != null 
-                                    && DebugCompiler.GetThis().DDAxis.GetTrayInxt(idet).GetTrayData().GetDataVales()[i].PanelID != null &&
-                                    DebugCompiler.GetThis().DDAxis.GetTrayInxt(idet).GetTrayData().GetDataVales()[i].PanelID.ToString() != "")
+                                if (DebugCompiler.Instance.DDAxis.GetTrayInxt(idet).GetTrayData().GetDataVales()[i] != null
+                                    && DebugCompiler.Instance.DDAxis.GetTrayInxt(idet).GetTrayData().GetDataVales()[i].PanelID != null &&
+                                    DebugCompiler.Instance.DDAxis.GetTrayInxt(idet).GetTrayData().GetDataVales()[i].PanelID.ToString() != "")
                                 {
                                     det++;
                                 }
@@ -2523,11 +2556,10 @@ namespace Vision2.Project.DebugF.IO
                         {
                             if (tdat.Length == 2)
                             {
-
                                 if (int.TryParse(ToDoubleP(tdat[1]), out int idt))
                                 {
-                                    if (DebugCompiler.GetThis().DDAxis.GetTrayInxt(idet).GetTrayData().GetDataVales()[idt] == null ||
-                                        DebugCompiler.GetThis().DDAxis.GetTrayInxt(idet).GetTrayData().GetDataVales()[idt].OK)
+                                    if (DebugCompiler.Instance.DDAxis.GetTrayInxt(idet).GetTrayData().GetDataVales()[idt] == null ||
+                                        DebugCompiler.Instance.DDAxis.GetTrayInxt(idet).GetTrayData().GetDataVales()[idt].OK)
                                     {
                                         IFElseBool = false;
                                     }
@@ -2539,7 +2571,7 @@ namespace Vision2.Project.DebugF.IO
                                 else if (tdat[1] == "id")
                                 {
                                     bool isDone = true;
-                                    ErosSocket.DebugPLC.Robot.TrayRobot trayRobot = DebugCompiler.GetThis().DDAxis.GetTrayInxt(idet);
+                                    ErosSocket.DebugPLC.Robot.TrayRobot trayRobot = DebugCompiler.Instance.DDAxis.GetTrayInxt(idet);
                                     for (int i = 0; i < trayRobot.Count; i++)
                                     {
                                         isDone = false;
@@ -2564,7 +2596,7 @@ namespace Vision2.Project.DebugF.IO
                             }
                             else
                             {
-                                if (DebugCompiler.GetThis().DDAxis.GetTrayInxt(idet).GetTrayData().OK)
+                                if (DebugCompiler.Instance.DDAxis.GetTrayInxt(idet).GetTrayData().OK)
                                 {
                                     IFElseBool = false;
                                 }
@@ -2575,11 +2607,11 @@ namespace Vision2.Project.DebugF.IO
                             }
                         }
                     }
-                    else if (DebugCompiler.GetThis().DDAxis.KeyVales.ContainsKey(imtey[1]))
+                    else if (DebugCompiler.Instance.DDAxis.KeyVales.ContainsKey(imtey[1]))
                     {
-                        ErosSocket.ErosConLink.UClass.GetTypeValue(DebugCompiler.GetThis().DDAxis.KeyVales[imtey[1]]._Type, yutData[1], out dynamic dynamic);
+                        ErosSocket.ErosConLink.UClass.GetTypeValue(DebugCompiler.Instance.DDAxis.KeyVales[imtey[1]]._Type, yutData[1], out dynamic dynamic);
 
-                        if (DebugCompiler.GetThis().DDAxis.KeyVales[imtey[1]].Value == dynamic)
+                        if (DebugCompiler.Instance.DDAxis.KeyVales[imtey[1]].Value == dynamic)
                         {
                             IFElseBool = false;
                         }
@@ -2608,105 +2640,105 @@ namespace Vision2.Project.DebugF.IO
                 }
                 else if (imtey[0] == "int")
                 {
-                    if (!DebugCompiler.GetThis().DDAxis.KeyVales.ContainsKey(imtey[1]))
+                    if (!DebugCompiler.Instance.DDAxis.KeyVales.ContainsKey(imtey[1]))
                     {
-                        DebugCompiler.GetThis().DDAxis.KeyVales.Add(imtey[1]
+                        DebugCompiler.Instance.DDAxis.KeyVales.Add(imtey[1]
                             , new ErosSocket.ErosConLink.UClass.ErosValues.ErosValueD() { _Type = ErosSocket.ErosConLink.UClass.Int16 });
                     }
                     if (yutData.Length == 2)
                     {
-                        DebugCompiler.GetThis().DDAxis.KeyVales.DictionaryValueD[imtey[1]].Default = yutData[1];
+                        DebugCompiler.Instance.DDAxis.KeyVales.DictionaryValueD[imtey[1]].Default = yutData[1];
                     }
-                    if (DebugCompiler.GetThis().DDAxis.KeyVales.DictionaryValueD[imtey[1]].Value == null)
+                    if (DebugCompiler.Instance.DDAxis.KeyVales.DictionaryValueD[imtey[1]].Value == null)
                     {
-                        DebugCompiler.GetThis().DDAxis.KeyVales.DictionaryValueD[imtey[1]].InitialValue();
+                        DebugCompiler.Instance.DDAxis.KeyVales.DictionaryValueD[imtey[1]].InitialValue();
                     }
-                    DebugCompiler.GetThis().DDAxis.KeyVales.DictionaryValueD[imtey[1]].Name = imtey[1];
+                    DebugCompiler.Instance.DDAxis.KeyVales.DictionaryValueD[imtey[1]].Name = imtey[1];
                 }
                 else if (imtey[0] == "bool")
                 {
-                    if (!DebugCompiler.GetThis().DDAxis.KeyVales.ContainsKey(imtey[1]))
+                    if (!DebugCompiler.Instance.DDAxis.KeyVales.ContainsKey(imtey[1]))
                     {
-                        DebugCompiler.GetThis().DDAxis.KeyVales.Add(imtey[1]
+                        DebugCompiler.Instance.DDAxis.KeyVales.Add(imtey[1]
                             , new ErosSocket.ErosConLink.UClass.ErosValues.ErosValueD() { _Type = ErosSocket.ErosConLink.UClass.Boolean });
                     }
                     if (yutData.Length == 2)
                     {
-                        DebugCompiler.GetThis().DDAxis.KeyVales.DictionaryValueD[imtey[1]].Default = yutData[1];
+                        DebugCompiler.Instance.DDAxis.KeyVales.DictionaryValueD[imtey[1]].Default = yutData[1];
                     }
-                    if (DebugCompiler.GetThis().DDAxis.KeyVales.DictionaryValueD[imtey[1]].Value == null)
+                    if (DebugCompiler.Instance.DDAxis.KeyVales.DictionaryValueD[imtey[1]].Value == null)
                     {
-                        DebugCompiler.GetThis().DDAxis.KeyVales.DictionaryValueD[imtey[1]].InitialValue();
+                        DebugCompiler.Instance.DDAxis.KeyVales.DictionaryValueD[imtey[1]].InitialValue();
                     }
-                    DebugCompiler.GetThis().DDAxis.KeyVales.DictionaryValueD[imtey[1]].Name = imtey[1];
+                    DebugCompiler.Instance.DDAxis.KeyVales.DictionaryValueD[imtey[1]].Name = imtey[1];
                 }
                 else if (imtey[0] == "double")
                 {
-                    if (!DebugCompiler.GetThis().DDAxis.KeyVales.ContainsKey(imtey[1]))
+                    if (!DebugCompiler.Instance.DDAxis.KeyVales.ContainsKey(imtey[1]))
                     {
-                        DebugCompiler.GetThis().DDAxis.KeyVales.Add(imtey[1]
+                        DebugCompiler.Instance.DDAxis.KeyVales.Add(imtey[1]
                             , new ErosSocket.ErosConLink.UClass.ErosValues.ErosValueD() { _Type = ErosSocket.ErosConLink.UClass.Double });
                     }
                     if (yutData.Length == 2)
                     {
-                        DebugCompiler.GetThis().DDAxis.KeyVales.DictionaryValueD[imtey[1]].Default = yutData[1];
+                        DebugCompiler.Instance.DDAxis.KeyVales.DictionaryValueD[imtey[1]].Default = yutData[1];
                     }
-                    if (DebugCompiler.GetThis().DDAxis.KeyVales.DictionaryValueD[imtey[1]].Value == null)
+                    if (DebugCompiler.Instance.DDAxis.KeyVales.DictionaryValueD[imtey[1]].Value == null)
                     {
-                        DebugCompiler.GetThis().DDAxis.KeyVales.DictionaryValueD[imtey[1]].InitialValue();
+                        DebugCompiler.Instance.DDAxis.KeyVales.DictionaryValueD[imtey[1]].InitialValue();
                     }
-                    DebugCompiler.GetThis().DDAxis.KeyVales.DictionaryValueD[imtey[1]].Name = imtey[1];
+                    DebugCompiler.Instance.DDAxis.KeyVales.DictionaryValueD[imtey[1]].Name = imtey[1];
                 }
                 else if (imtey[0] == "single")
                 {
-                    if (!DebugCompiler.GetThis().DDAxis.KeyVales.ContainsKey(imtey[1]))
+                    if (!DebugCompiler.Instance.DDAxis.KeyVales.ContainsKey(imtey[1]))
                     {
-                        DebugCompiler.GetThis().DDAxis.KeyVales.Add(imtey[1]
+                        DebugCompiler.Instance.DDAxis.KeyVales.Add(imtey[1]
                             , new ErosSocket.ErosConLink.UClass.ErosValues.ErosValueD() { _Type = ErosSocket.ErosConLink.UClass.Single });
                     }
                     if (yutData.Length == 2)
                     {
-                        DebugCompiler.GetThis().DDAxis.KeyVales.DictionaryValueD[imtey[1]].Default = yutData[1];
+                        DebugCompiler.Instance.DDAxis.KeyVales.DictionaryValueD[imtey[1]].Default = yutData[1];
                     }
-                    if (DebugCompiler.GetThis().DDAxis.KeyVales.DictionaryValueD[imtey[1]].Value == null)
+                    if (DebugCompiler.Instance.DDAxis.KeyVales.DictionaryValueD[imtey[1]].Value == null)
                     {
-                        DebugCompiler.GetThis().DDAxis.KeyVales.DictionaryValueD[imtey[1]].InitialValue();
+                        DebugCompiler.Instance.DDAxis.KeyVales.DictionaryValueD[imtey[1]].InitialValue();
                     }
-                    DebugCompiler.GetThis().DDAxis.KeyVales.DictionaryValueD[imtey[1]].Name = imtey[1];
+                    DebugCompiler.Instance.DDAxis.KeyVales.DictionaryValueD[imtey[1]].Name = imtey[1];
                 }
                 else if (imtey[0] == "byte")
                 {
-                    if (!DebugCompiler.GetThis().DDAxis.KeyVales.ContainsKey(imtey[1]))
+                    if (!DebugCompiler.Instance.DDAxis.KeyVales.ContainsKey(imtey[1]))
                     {
-                        DebugCompiler.GetThis().DDAxis.KeyVales.Add(imtey[1]
+                        DebugCompiler.Instance.DDAxis.KeyVales.Add(imtey[1]
                             , new ErosSocket.ErosConLink.UClass.ErosValues.ErosValueD() { _Type = ErosSocket.ErosConLink.UClass.Byte });
                     }
                     if (yutData.Length == 2)
                     {
-                        DebugCompiler.GetThis().DDAxis.KeyVales.DictionaryValueD[imtey[1]].Default = yutData[1];
+                        DebugCompiler.Instance.DDAxis.KeyVales.DictionaryValueD[imtey[1]].Default = yutData[1];
                     }
-                    if (DebugCompiler.GetThis().DDAxis.KeyVales.DictionaryValueD[imtey[1]].Value == null)
+                    if (DebugCompiler.Instance.DDAxis.KeyVales.DictionaryValueD[imtey[1]].Value == null)
                     {
-                        DebugCompiler.GetThis().DDAxis.KeyVales.DictionaryValueD[imtey[1]].InitialValue();
+                        DebugCompiler.Instance.DDAxis.KeyVales.DictionaryValueD[imtey[1]].InitialValue();
                     }
-                    DebugCompiler.GetThis().DDAxis.KeyVales.DictionaryValueD[imtey[1]].Name = imtey[1];
+                    DebugCompiler.Instance.DDAxis.KeyVales.DictionaryValueD[imtey[1]].Name = imtey[1];
                 }
                 else if (imtey[0] == "string")
                 {
-                    if (!DebugCompiler.GetThis().DDAxis.KeyVales.ContainsKey(imtey[1]))
+                    if (!DebugCompiler.Instance.DDAxis.KeyVales.ContainsKey(imtey[1]))
                     {
-                        DebugCompiler.GetThis().DDAxis.KeyVales.Add(imtey[1]
+                        DebugCompiler.Instance.DDAxis.KeyVales.Add(imtey[1]
                             , new ErosSocket.ErosConLink.UClass.ErosValues.ErosValueD() { _Type = ErosSocket.ErosConLink.UClass.String });
                     }
                     if (yutData.Length == 2)
                     {
-                        DebugCompiler.GetThis().DDAxis.KeyVales.DictionaryValueD[imtey[1]].Default = yutData[1];
+                        DebugCompiler.Instance.DDAxis.KeyVales.DictionaryValueD[imtey[1]].Default = yutData[1];
                     }
-                    if (DebugCompiler.GetThis().DDAxis.KeyVales.DictionaryValueD[imtey[1]].Value == null)
+                    if (DebugCompiler.Instance.DDAxis.KeyVales.DictionaryValueD[imtey[1]].Value == null)
                     {
-                        DebugCompiler.GetThis().DDAxis.KeyVales.DictionaryValueD[imtey[1]].InitialValue();
+                        DebugCompiler.Instance.DDAxis.KeyVales.DictionaryValueD[imtey[1]].InitialValue();
                     }
-                    DebugCompiler.GetThis().DDAxis.KeyVales.DictionaryValueD[imtey[1]].Name = imtey[1];
+                    DebugCompiler.Instance.DDAxis.KeyVales.DictionaryValueD[imtey[1]].Name = imtey[1];
                 }
                 else if (imtey[0] == "trayvalue")
                 {
@@ -2738,11 +2770,11 @@ namespace Vision2.Project.DebugF.IO
                             }
                         }
                     }
-                    DebugCompiler.GetThis().DDAxis.GetTrayInxt(dindex).GetTrayData().SetNumberValue((int)ToDoubleP(tdat[1]), ischet, vat);
+                    DebugCompiler.Instance.DDAxis.GetTrayInxt(dindex).GetTrayData().SetNumberValue((int)ToDoubleP(tdat[1]), ischet, vat);
                 }
                 else if (imtey[0] == "trayimage")
                 {
-                    int dindex = 0; 
+                    int dindex = 0;
                     if (imtey.Length >= 2)
                     {
                         dindex = (int)ToDoubleP(imtey[1]);
@@ -2757,9 +2789,9 @@ namespace Vision2.Project.DebugF.IO
                         TrayDataUserControl TrayData;
                         MainForm1.MainFormF.Invoke(new Action(() =>
                         {
-                            if (!MainForm1.MainFormF.tabControl1.TabPages.ContainsKey("托盘"+ trayID))
+                            if (!MainForm1.MainFormF.tabControl1.TabPages.ContainsKey("托盘" + trayID))
                             {
-                                TrayData=  new TrayDataUserControl();
+                                TrayData = new TrayDataUserControl();
                                 TrayData.Dock = DockStyle.Fill;
                                 TabPage tabPage = new TabPage();
                                 tabPage.Text = tabPage.Name = "托盘" + trayID;
@@ -2769,7 +2801,7 @@ namespace Vision2.Project.DebugF.IO
                             }
                             else
                             {
-                                TrayData= MainForm1.MainFormF.tabControl1.TabPages["托盘" + trayID].Tag as TrayDataUserControl;
+                                TrayData = MainForm1.MainFormF.tabControl1.TabPages["托盘" + trayID].Tag as TrayDataUserControl;
                             }
                             TrayData.SetTray(DebugCompiler.GetTray(trayID).GetTrayData());
                             //DebugCompiler.GetTrayDataUserControl(TrayData);
@@ -2778,35 +2810,46 @@ namespace Vision2.Project.DebugF.IO
                                 TrayData.SetMinMax(ToDoubleP(tdat[1]), ToDoubleP(tdat[2]));
                             }
                         }));
-                       
                     }
                 }
                 else if (imtey[0] == "cleartray")
                 {
                     if (tdat.Length == 2)
                     {
-                        DebugCompiler.GetThis().DDAxis.GetTrayInxt((int)ToDoubleP(tdat[1])).GetTrayData().RestValue();
+                        DebugCompiler.Instance.DDAxis.GetTrayInxt((int)ToDoubleP(tdat[1])).GetTrayData().RestValue();
+                    }
+                }
+                else if (imtey[0] == "wrietmes")
+                {
+                    if (RecipeCompiler.Instance.GetMes() != null)
+                    {
+                        RecipeCompiler.Instance.GetMes().WrietMes(DebugCompiler.Instance.DDAxis.GetTrayInxt((int)ToDoubleP(tdat[1])).GetTrayData(), Product.ProductionName);
                     }
                 }
                 else if (imtey[0] == "selectbpage")
                 {
                     MainForm1.MainFormF.Invoke(new Action(() =>
                     {
-                            if (int.TryParse(tdat[1],out int selindex))
+                        if (int.TryParse(tdat[1], out int selindex))
                         {
                             MainForm1.MainFormF.tabControl1.SelectedIndex = selindex;
                         }
                         else
                         {
-                            MainForm1.MainFormF.tabControl1.SelectTab (tdat[1]);
+                            if (MainForm1.MainFormF.tabControl1.TabPages.ContainsKey(tdat[1]))
+                            {
+                                MainForm1.MainFormF.tabControl1.SelectTab(tdat[1]);
+                            }
+                            else
+                            {
+                                runErr.ErrStr += tdat[1] + "选项栏不存在！";
+                            }
                         }
                     }));
-
                 }
                 else if (imtey[0] == "settraynumber")
                 {
                     DebugCompiler.GetTray((int)ToDoubleP(tdat[1])).Number = (int)ToDoubleP(tdat[2]);
-                 
                 }
                 else if (imtey[0] == "submitresults")
                 {
@@ -2822,9 +2865,9 @@ namespace Vision2.Project.DebugF.IO
                 }
                 else if (imtey[0] == "settiffeimage")
                 {
-                    HObject hObject=vision.Vision.GetRunNameVision(tdat[1]).TiffeOffsetImageEX.TiffeOffsetImage();
+                    HObject hObject = vision.Vision.GetRunNameVision(tdat[1]).TiffeOffsetImageEX.TiffeOffsetImage();
                     //vision.Vision.OneProductVale.ImagePlus = hObject;
-                    vision.Vision.GetSaveImageInfo(tdat[1]).SaveImage(hObject, 0, "拼图", tdat[1],DateTime.Now);
+                    vision.Vision.GetSaveImageInfo(tdat[1]).SaveImage(hObject, 0, "拼图", tdat[1], DateTime.Now);
                     vision.Vision.GetRunNameVision(tdat[1]).Image(hObject);
                     vision.Vision.GetRunNameVision(tdat[1]).ShowImage();
                 }
@@ -2861,16 +2904,16 @@ namespace Vision2.Project.DebugF.IO
                         {
                             int.TryParse(yutData[1], out Stratdt);
                         }
-                        if (DebugCompiler.GetThis().DDAxis.KeyVales.ContainsKey(forName))
+                        if (DebugCompiler.Instance.DDAxis.KeyVales.ContainsKey(forName))
                         {
-                            DebugCompiler.GetThis().DDAxis.KeyVales[forName] = Stratdt;
+                            DebugCompiler.Instance.DDAxis.KeyVales[forName] = Stratdt;
                         }
                         else
                         {
-                            DebugCompiler.GetThis().DDAxis.KeyVales[forName] = Stratdt;
+                            DebugCompiler.Instance.DDAxis.KeyVales[forName] = Stratdt;
                         }
                     }
-                    Stratdt = DebugCompiler.GetThis().DDAxis.KeyVales[forName];
+                    Stratdt = DebugCompiler.Instance.DDAxis.KeyVales[forName];
                     for (int i = Stratdt; i < forInt + 1; i++)
                     {
                         for (int it = 0; it < ForCode.Count; it++)
@@ -2885,48 +2928,48 @@ namespace Vision2.Project.DebugF.IO
                         {
                             break;
                         }
-                        DebugCompiler.GetThis().DDAxis.KeyVales[forName]++;
+                        DebugCompiler.Instance.DDAxis.KeyVales[forName]++;
                     }
                     StepInt = endInt;
                 }
-                else if (DebugCompiler.GetThis().DDAxis.KeyVales.ContainsKey(imtey[0]) && yutData.Length == 2)//全局赋值
+                else if (DebugCompiler.Instance.DDAxis.KeyVales.ContainsKey(imtey[0]) && yutData.Length == 2)//全局赋值
                 {
-                        if (yutData[1].Contains('*'))
-                        {
-                           string []datas= yutData[1].Split('*');
-                           dynamic dava=    ToDoubleP(datas[0])*ToDoubleP(datas[1]);
-                            DebugCompiler.GetThis().DDAxis.KeyVales.DictionaryValueD[imtey[0]].Value = dava;
-                        }
-                        else    if (yutData[1].Contains('+'))
-                        {
-                            string[] datas = yutData[1].Split('+');
-                            dynamic dava = ToDoubleP(datas[0]) + ToDoubleP(datas[1]);
-                            DebugCompiler.GetThis().DDAxis.KeyVales.DictionaryValueD[imtey[0]].Value = dava;
-                        }
-                        else    if (yutData[1].Contains('-'))
-                        {
-                            string[] datas = yutData[1].Split('-');
-                            dynamic dava = ToDoubleP(datas[0]) - ToDoubleP(datas[1]);
-                            DebugCompiler.GetThis().DDAxis.KeyVales.DictionaryValueD[imtey[0]].Value = dava;
-                        }
-                        else      if (yutData[1].Contains('/'))
-                        {
-                            string[] datas = yutData[1].Split('/');
-                            dynamic dava = ToDoubleP(datas[0]) / ToDoubleP(datas[1]);
-                            DebugCompiler.GetThis().DDAxis.KeyVales.DictionaryValueD[imtey[0]].Value = dava;
-                        }
-                        else      if (yutData[1].Contains('%'))
-                        {
-                            string[] datas = yutData[1].Split('%');
-                            dynamic dava = ToDoubleP(datas[0]) % ToDoubleP(datas[1]);
-                            DebugCompiler.GetThis().DDAxis.KeyVales.DictionaryValueD[imtey[0]].Value = dava;
-                        }
-                        else
+                    if (yutData[1].Contains('*'))
                     {
-                        if (ErosSocket.ErosConLink.UClass.GetTypeValue(DebugCompiler.GetThis().DDAxis.KeyVales.DictionaryValueD[imtey[0]]._Type, yutData[1], out dynamic valyt))
+                        string[] datas = yutData[1].Split('*');
+                        dynamic dava = ToDoubleP(datas[0]) * ToDoubleP(datas[1]);
+                        DebugCompiler.Instance.DDAxis.KeyVales.DictionaryValueD[imtey[0]].Value = dava;
+                    }
+                    else if (yutData[1].Contains('+'))
+                    {
+                        string[] datas = yutData[1].Split('+');
+                        dynamic dava = ToDoubleP(datas[0]) + ToDoubleP(datas[1]);
+                        DebugCompiler.Instance.DDAxis.KeyVales.DictionaryValueD[imtey[0]].Value = dava;
+                    }
+                    else if (yutData[1].Contains('-'))
+                    {
+                        string[] datas = yutData[1].Split('-');
+                        dynamic dava = ToDoubleP(datas[0]) - ToDoubleP(datas[1]);
+                        DebugCompiler.Instance.DDAxis.KeyVales.DictionaryValueD[imtey[0]].Value = dava;
+                    }
+                    else if (yutData[1].Contains('/'))
+                    {
+                        string[] datas = yutData[1].Split('/');
+                        dynamic dava = ToDoubleP(datas[0]) / ToDoubleP(datas[1]);
+                        DebugCompiler.Instance.DDAxis.KeyVales.DictionaryValueD[imtey[0]].Value = dava;
+                    }
+                    else if (yutData[1].Contains('%'))
+                    {
+                        string[] datas = yutData[1].Split('%');
+                        dynamic dava = ToDoubleP(datas[0]) % ToDoubleP(datas[1]);
+                        DebugCompiler.Instance.DDAxis.KeyVales.DictionaryValueD[imtey[0]].Value = dava;
+                    }
+                    else
+                    {
+                        if (ErosSocket.ErosConLink.UClass.GetTypeValue(DebugCompiler.Instance.DDAxis.KeyVales.DictionaryValueD[imtey[0]]._Type, yutData[1], out dynamic valyt))
                         {
-                            DebugCompiler.GetThis().DDAxis.KeyVales.DictionaryValueD[imtey[0]].Name = imtey[0];
-                            DebugCompiler.GetThis().DDAxis.KeyVales.DictionaryValueD[imtey[0]].Value = valyt;
+                            DebugCompiler.Instance.DDAxis.KeyVales.DictionaryValueD[imtey[0]].Name = imtey[0];
+                            DebugCompiler.Instance.DDAxis.KeyVales.DictionaryValueD[imtey[0]].Value = valyt;
                         }
                         else
                         {
@@ -2964,12 +3007,14 @@ namespace Vision2.Project.DebugF.IO
                 runErr.Err = true;
             }
             RunCode?.Invoke(runErr);
-            End:
+        End:
             Watch.Stop();
             return runErr;
         }
+
         public bool StopIng { get { return Stoping; } }
-        bool Stoping;
+        private bool Stoping;
+
         public void Stop()
 
         {
@@ -2977,11 +3022,12 @@ namespace Vision2.Project.DebugF.IO
             StepInt = 0;
             Runing = false;
         }
+
         public void Paseu()
         {
-
             Paseub = true;
         }
+
         public void Contr()
         {
             Paseub = false;
@@ -3062,15 +3108,16 @@ namespace Vision2.Project.DebugF.IO
             return false;
         }
 
-
         public class RunErr
         {
             public string ErrStr = "";
             public string RunState = "";
+
             /// <summary>
             /// 代码
             /// </summary>
             public string Code = "";
+
             public string ParName = "";
             public bool Err;
             public bool Done;
@@ -3079,11 +3126,12 @@ namespace Vision2.Project.DebugF.IO
             public double RunTime;
             public RunCoStr runCoStr;
         }
+
         public enum RunCoStr
         {
-            执行中=0,
-            执行完成=1,
-            执行错误=2,
+            执行中 = 0,
+            执行完成 = 1,
+            执行错误 = 2,
         }
     }
 }

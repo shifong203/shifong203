@@ -11,7 +11,6 @@ namespace Vision2.ErosProjcetDLL.Project
 {
     public partial class 数据分析 : Form
     {
-
         private RealTimeImageMaker rti;
         private Color backColor = Color.Black;//指定绘制曲线图的背景色  
 

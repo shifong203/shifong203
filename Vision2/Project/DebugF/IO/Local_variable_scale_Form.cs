@@ -7,7 +7,6 @@ namespace Vision2.Project.DebugF.IO
 {
     public partial class Local_variable_scale_Form : Form
     {
-
         public Local_variable_scale_Form(ErosSocket.ErosConLink.UClass.ErosValues erosValueDs)
         {
             InitializeComponent();
@@ -18,9 +17,8 @@ namespace Vision2.Project.DebugF.IO
             dataGridView1.DataSource = bindSource;
         }
 
+        private ErosSocket.ErosConLink.UClass.ErosValues keyValues;
 
-
-        ErosSocket.ErosConLink.UClass.ErosValues keyValues;
         public void SetData(ErosSocket.ErosConLink.UClass.ErosValues erosValueDs)
         {
             keyValues = erosValueDs;
@@ -93,14 +91,12 @@ namespace Vision2.Project.DebugF.IO
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-
         }
 
         private void dataGridView1_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
         {
             if (e.ColumnIndex == 3)
             {
-
             }
         }
     }

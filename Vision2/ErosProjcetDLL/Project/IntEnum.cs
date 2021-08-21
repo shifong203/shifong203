@@ -30,6 +30,7 @@ namespace Vision2.ErosProjcetDLL.Project
                 }
             }
         }
+
         public void RemovAll()
         {
             kaayValue.Clear();
@@ -45,7 +46,6 @@ namespace Vision2.ErosProjcetDLL.Project
                 dataGridView.Rows[dnumve].Cells[0].Value = item.Key;
                 dataGridView.Rows[dnumve].Cells[1].Value = item.Value;
             }
-
         }
 
         public void SetDataGiev(DataGridView dataGridView)
@@ -72,7 +72,6 @@ namespace Vision2.ErosProjcetDLL.Project
             {
                 MessageBox.Show("更改失败:" + ex.Message);
             }
-
         }
     }
 }

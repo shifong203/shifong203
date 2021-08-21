@@ -9,19 +9,18 @@ namespace Vision2.Project.DebugF.PLC
         [DescriptionAttribute("。"), Category("PLC地址"), DisplayName("读写名称")]
         public string LinkNameStr { get; set; } = "";
 
-        bool ISCT;
+        private bool ISCT;
+
         private dynamic TextPlc_ValueCyEvent(UClass.ErosValues.ErosValueD key)
         {
             this.Invoke(new Action(() =>
             {
-
                 ISCT = true;
                 this.Text = key.Value.ToString();
                 ISCT = false;
             }));
 
             return key.Value;
-
         }
 
         protected override void CreateHandle()
@@ -29,7 +28,6 @@ namespace Vision2.Project.DebugF.PLC
             base.CreateHandle();
             this.Invoke(new Action(() =>
             {
-
                 try
                 {
                     String[] TAS = LinkNameStr.Split('.');
@@ -44,14 +42,12 @@ namespace Vision2.Project.DebugF.PLC
                 {
                 }
             }));
-
-
         }
+
         protected override void OnTextChanged(EventArgs e)
         {
             this.Invoke(new Action(() =>
             {
-
                 String[] TAS = LinkNameStr.Split('.');
                 string valueName = LinkNameStr.Remove(0, TAS[0].Length + 1);
                 if (StaticCon.GetSocketClint(TAS[0]).KeysValues.DictionaryValueD.ContainsKey(valueName))
@@ -72,15 +68,11 @@ namespace Vision2.Project.DebugF.PLC
                 }
                 else
                 {
-
                 }
                 ISCT = false;
-
-
             }));
-
-
         }
+
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);

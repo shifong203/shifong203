@@ -44,6 +44,7 @@ namespace Vision2.Project
             {
             }
         }
+
         public static void ShowMesabe(string text, bool await = false)
         {
             try
@@ -52,7 +53,6 @@ namespace Vision2.Project
                 {
                     Thread thread = new Thread(() =>
                     {
-
                         MainForm1.MainFormF.Invoke(new Action(() =>
                         {
                             simulateQRForm simulateQRForm = new simulateQRForm();
@@ -67,7 +67,6 @@ namespace Vision2.Project
                     });
                     thread.IsBackground = true;
                     thread.Start();
-
                 }
                 else
                 {
@@ -82,15 +81,12 @@ namespace Vision2.Project
                         Vision2.ErosProjcetDLL.UI.UICon.SwitchToThisWindow(simulateQRForm.Handle, true);
                         simulateQRForm.ShowDialog();
                     }));
-
                 }
-
             }
             catch (Exception)
             {
             }
         }
-
 
         public static bool ShowMesabe(string text, out string restText)
         {
@@ -149,13 +145,10 @@ namespace Vision2.Project
                     {
                         checkBox1.Checked = true;
                     }
-
                 }
             }
             catch (Exception)
             {
-
-
             }
         }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+
 /// <summary>
 /// 生产管理
 /// </summary>
@@ -10,7 +11,7 @@ namespace Vision2.ProductionManagement
     /// </summary>
     public class Productive_Task
     {
-        Dictionary<string, Productive_Task> ThisDic = new Dictionary<string, Productive_Task>();
+        private Dictionary<string, Productive_Task> ThisDic = new Dictionary<string, Productive_Task>();
 
         public DateTime StratTime { get; set; }
 
@@ -37,7 +38,6 @@ namespace Vision2.ProductionManagement
         //            }
         //            else
         //            {
-
         //                if (ErosUI.FormTextProgram.ThisStatic.tabControl1.TabPages.ContainsKey("生产任务"))
         //                {
         //                    ErosUI.FormTextProgram.ThisStatic.tabControl1.TabPages.RemoveByKey("生产任务");
@@ -67,7 +67,6 @@ namespace Vision2.ProductionManagement
         //            }
         //            else
         //            {
-
         //                if (ErosUI.FormTextProgram.ThisStatic.tabControl1.TabPages.ContainsKey("生产任务"))
         //                {
         //                    ErosUI.FormTextProgram.ThisStatic.tabControl1.TabPages.RemoveByKey("生产任务");
@@ -80,5 +79,4 @@ namespace Vision2.ProductionManagement
         //}
         //static bool visible;
     }
-
 }

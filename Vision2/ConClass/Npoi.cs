@@ -212,7 +212,6 @@ namespace Vision2.ConClass
                                 }
                                 if (dataGridView.SelectedRows[0] != null && dataGridView.SelectedRows[0].Cells[0] != null)
                                 {
-
                                     string dsd = Vision.Instance.DicSaveType[halcon.Name].SavePath + @"\" + dataGridView.Name.Trim('\'').Remove(dataGridView.Name.Length - 3) + "\\" + dataGridView.SelectedRows[0].Cells[0].Value.ToString();
 
                                     vision.Vision.GetRunNameVision().ShowImage(dsd + ".bmp");

@@ -4,7 +4,6 @@ namespace Vision2.ErosProjcetDLL.Code
 {
     public class Combox : ContextMenuStrip
     {
-        //public override 
-
+        //public override
     }
 }

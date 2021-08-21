@@ -159,6 +159,9 @@
     </Compile>
     <Compile Include="ErosProjcetDLL\UI\PropertyGrid\Class1.cs" />
     <Compile Include="ErosProjcetDLL\UI\PropertyGrid\ExportAttribute.cs" />
+    <Compile Include="ErosProjcetDLL\UI\ToolStrip\LabelEX.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="ErosUI\DataTimeForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -194,12 +197,6 @@
     </Compile>
     <Compile Include="ErosUI\RealTimeImageMaker.cs" />
     <Compile Include="ErosUI\UICon.cs" />
-    <Compile Include="Form1.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
-    </Compile>
     <Compile Include="ErosProjcetDLL\Bytes\ByteHelper.cs" />
     <Compile Include="ErosProjcetDLL\Code\Code.cs" />
     <Compile Include="ErosProjcetDLL\Code\Combox.cs">
@@ -461,6 +458,12 @@
     </Compile>
     <Compile Include="Project\DebugF\IO\FY6400.cs" />
     <Compile Include="Project\DebugF\IO\IAxisGrub.cs" />
+    <Compile Include="Project\DebugF\IO\IOForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Project\DebugF\IO\IOForm.Designer.cs">
+      <DependentUpon>IOForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Project\DebugF\IO\Local_variable_scale_Form.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -579,11 +582,18 @@
       <DependentUpon>FormulaPrForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Project\Mes\IMesData.cs" />
+    <Compile Include="SocketFiledata\ErosConLink\三菱FX3U.cs" />
     <Compile Include="vision\RestVisionForm\OneNGDataMinMaxControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="vision\RestVisionForm\OneNGDataMinMaxControl.Designer.cs">
       <DependentUpon>OneNGDataMinMaxControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="vision\RunVisionPrForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="vision\RunVisionPrForm.Designer.cs">
+      <DependentUpon>RunVisionPrForm.cs</DependentUpon>
     </Compile>
     <Compile Include="捷普\CXAMForm.cs">
       <SubType>Form</SubType>
@@ -722,324 +732,324 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Socket\DebugPLC\CommandControl1.cs">
+    <Compile Include="SocketFiledata\DebugPLC\CommandControl1.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Socket\DebugPLC\CommandControl1.Designer.cs">
+    <Compile Include="SocketFiledata\DebugPLC\CommandControl1.Designer.cs">
       <DependentUpon>CommandControl1.cs</DependentUpon>
     </Compile>
-    <Compile Include="Socket\DebugPLC\DebugComp.cs" />
-    <Compile Include="Socket\DebugPLC\DIDO\abstract_Axis.cs" />
-    <Compile Include="Socket\DebugPLC\DIDO\C154Axis.cs" />
-    <Compile Include="Socket\DebugPLC\DIDO\C154_AxisGrub.cs" />
-    <Compile Include="Socket\DebugPLC\DIDO\DIDOUserControl.cs">
+    <Compile Include="SocketFiledata\DebugPLC\DebugComp.cs" />
+    <Compile Include="SocketFiledata\DebugPLC\DIDO\abstract_Axis.cs" />
+    <Compile Include="SocketFiledata\DebugPLC\DIDO\C154Axis.cs" />
+    <Compile Include="SocketFiledata\DebugPLC\DIDO\C154_AxisGrub.cs" />
+    <Compile Include="SocketFiledata\DebugPLC\DIDO\DIDOUserControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Socket\DebugPLC\DIDO\DIDOUserControl.Designer.cs">
+    <Compile Include="SocketFiledata\DebugPLC\DIDO\DIDOUserControl.Designer.cs">
       <DependentUpon>DIDOUserControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Socket\DebugPLC\DIDO\IDIDO.cs" />
-    <Compile Include="Socket\DebugPLC\DIDO\MP_C154.cs" />
-    <Compile Include="Socket\DebugPLC\EnumTextUserControl1.cs">
+    <Compile Include="SocketFiledata\DebugPLC\DIDO\IDIDO.cs" />
+    <Compile Include="SocketFiledata\DebugPLC\DIDO\MP_C154.cs" />
+    <Compile Include="SocketFiledata\DebugPLC\EnumTextUserControl1.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Socket\DebugPLC\EnumTextUserControl1.Designer.cs">
+    <Compile Include="SocketFiledata\DebugPLC\EnumTextUserControl1.Designer.cs">
       <DependentUpon>EnumTextUserControl1.cs</DependentUpon>
     </Compile>
-    <Compile Include="Socket\DebugPLC\GExCode.cs" />
-    <Compile Include="Socket\DebugPLC\IAxis.cs" />
-    <Compile Include="Socket\DebugPLC\IAxisGrub.cs" />
-    <Compile Include="Socket\DebugPLC\ICylinder.cs" />
-    <Compile Include="Socket\DebugPLC\InterfacePLCUserControl.cs">
+    <Compile Include="SocketFiledata\DebugPLC\GExCode.cs" />
+    <Compile Include="SocketFiledata\DebugPLC\IAxis.cs" />
+    <Compile Include="SocketFiledata\DebugPLC\IAxisGrub.cs" />
+    <Compile Include="SocketFiledata\DebugPLC\ICylinder.cs" />
+    <Compile Include="SocketFiledata\DebugPLC\InterfacePLCUserControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Socket\DebugPLC\InterfacePLCUserControl.Designer.cs">
+    <Compile Include="SocketFiledata\DebugPLC\InterfacePLCUserControl.Designer.cs">
       <DependentUpon>InterfacePLCUserControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Socket\DebugPLC\InterfacePlcUserControl2.cs">
+    <Compile Include="SocketFiledata\DebugPLC\InterfacePlcUserControl2.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Socket\DebugPLC\InterfacePlcUserControl2.Designer.cs">
+    <Compile Include="SocketFiledata\DebugPLC\InterfacePlcUserControl2.Designer.cs">
       <DependentUpon>InterfacePlcUserControl2.cs</DependentUpon>
     </Compile>
-    <Compile Include="Socket\DebugPLC\IPLCInterface.cs" />
-    <Compile Include="Socket\DebugPLC\PLCRun.cs" />
-    <Compile Include="Socket\DebugPLC\PLC\AxisControl.cs">
+    <Compile Include="SocketFiledata\DebugPLC\IPLCInterface.cs" />
+    <Compile Include="SocketFiledata\DebugPLC\PLCRun.cs" />
+    <Compile Include="SocketFiledata\DebugPLC\PLC\AxisControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Socket\DebugPLC\PLC\AxisControl.Designer.cs">
+    <Compile Include="SocketFiledata\DebugPLC\PLC\AxisControl.Designer.cs">
       <DependentUpon>AxisControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Socket\DebugPLC\PLC\CylinderControl.cs">
+    <Compile Include="SocketFiledata\DebugPLC\PLC\CylinderControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Socket\DebugPLC\PLC\CylinderControl.Designer.cs">
+    <Compile Include="SocketFiledata\DebugPLC\PLC\CylinderControl.Designer.cs">
       <DependentUpon>CylinderControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Socket\DebugPLC\PLC\ListCyinderControl.cs">
+    <Compile Include="SocketFiledata\DebugPLC\PLC\ListCyinderControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Socket\DebugPLC\PLC\ListCyinderControl.Designer.cs">
+    <Compile Include="SocketFiledata\DebugPLC\PLC\ListCyinderControl.Designer.cs">
       <DependentUpon>ListCyinderControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Socket\DebugPLC\PLC\ListPLCIOUserControl1.cs">
+    <Compile Include="SocketFiledata\DebugPLC\PLC\ListPLCIOUserControl1.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Socket\DebugPLC\PLC\ListPLCIOUserControl1.Designer.cs">
+    <Compile Include="SocketFiledata\DebugPLC\PLC\ListPLCIOUserControl1.Designer.cs">
       <DependentUpon>ListPLCIOUserControl1.cs</DependentUpon>
     </Compile>
-    <Compile Include="Socket\DebugPLC\PLC\Pf.cs">
+    <Compile Include="SocketFiledata\DebugPLC\PLC\Pf.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Socket\DebugPLC\PLC\Pf.Designer.cs">
+    <Compile Include="SocketFiledata\DebugPLC\PLC\Pf.Designer.cs">
       <DependentUpon>Pf.cs</DependentUpon>
     </Compile>
-    <Compile Include="Socket\DebugPLC\PLC\PLCAxis.cs" />
-    <Compile Include="Socket\DebugPLC\PLC\PLCButtonV2.cs">
+    <Compile Include="SocketFiledata\DebugPLC\PLC\PLCAxis.cs" />
+    <Compile Include="SocketFiledata\DebugPLC\PLC\PLCButtonV2.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Socket\DebugPLC\PLC\PLCIO.cs" />
-    <Compile Include="Socket\DebugPLC\PLC\PLCIOUserControl1.cs">
+    <Compile Include="SocketFiledata\DebugPLC\PLC\PLCIO.cs" />
+    <Compile Include="SocketFiledata\DebugPLC\PLC\PLCIOUserControl1.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Socket\DebugPLC\PLC\PLCIOUserControl1.Designer.cs">
+    <Compile Include="SocketFiledata\DebugPLC\PLC\PLCIOUserControl1.Designer.cs">
       <DependentUpon>PLCIOUserControl1.cs</DependentUpon>
     </Compile>
-    <Compile Include="Socket\DebugPLC\PLC\PLCText.cs">
+    <Compile Include="SocketFiledata\DebugPLC\PLC\PLCText.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Socket\DebugPLC\PointFile.cs" />
-    <Compile Include="Socket\DebugPLC\pop-UpWindow.cs">
+    <Compile Include="SocketFiledata\DebugPLC\PointFile.cs" />
+    <Compile Include="SocketFiledata\DebugPLC\pop-UpWindow.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Socket\DebugPLC\pop-UpWindow.Designer.cs">
+    <Compile Include="SocketFiledata\DebugPLC\pop-UpWindow.Designer.cs">
       <DependentUpon>pop-UpWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="Socket\DebugPLC\Robot\Axis4PUserControl1.cs">
+    <Compile Include="SocketFiledata\DebugPLC\Robot\Axis4PUserControl1.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Socket\DebugPLC\Robot\Axis4PUserControl1.Designer.cs">
+    <Compile Include="SocketFiledata\DebugPLC\Robot\Axis4PUserControl1.Designer.cs">
       <DependentUpon>Axis4PUserControl1.cs</DependentUpon>
     </Compile>
-    <Compile Include="Socket\DebugPLC\Robot\Axis6PUserControl.cs">
+    <Compile Include="SocketFiledata\DebugPLC\Robot\Axis6PUserControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Socket\DebugPLC\Robot\Axis6PUserControl.Designer.cs">
+    <Compile Include="SocketFiledata\DebugPLC\Robot\Axis6PUserControl.Designer.cs">
       <DependentUpon>Axis6PUserControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Socket\DebugPLC\Robot\AxisSPD.cs" />
-    <Compile Include="Socket\DebugPLC\Robot\DebugRobot.cs">
+    <Compile Include="SocketFiledata\DebugPLC\Robot\AxisSPD.cs" />
+    <Compile Include="SocketFiledata\DebugPLC\Robot\DebugRobot.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Socket\DebugPLC\Robot\DebugRobot.Designer.cs">
+    <Compile Include="SocketFiledata\DebugPLC\Robot\DebugRobot.Designer.cs">
       <DependentUpon>DebugRobot.cs</DependentUpon>
     </Compile>
-    <Compile Include="Socket\DebugPLC\Robot\EpsenRobot6.cs" />
-    <Compile Include="Socket\DebugPLC\Robot\ExecnteControl.cs">
+    <Compile Include="SocketFiledata\DebugPLC\Robot\EpsenRobot6.cs" />
+    <Compile Include="SocketFiledata\DebugPLC\Robot\ExecnteControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Socket\DebugPLC\Robot\ExecnteControl.Designer.cs">
+    <Compile Include="SocketFiledata\DebugPLC\Robot\ExecnteControl.Designer.cs">
       <DependentUpon>ExecnteControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Socket\DebugPLC\Robot\Execnte_Program_Control.cs">
+    <Compile Include="SocketFiledata\DebugPLC\Robot\Execnte_Program_Control.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Socket\DebugPLC\Robot\Execnte_Program_Control.Designer.cs">
+    <Compile Include="SocketFiledata\DebugPLC\Robot\Execnte_Program_Control.Designer.cs">
       <DependentUpon>Execnte_Program_Control.cs</DependentUpon>
     </Compile>
-    <Compile Include="Socket\DebugPLC\Robot\Sequential_programme.cs" />
-    <Compile Include="Socket\DebugPLC\Robot\SetToolForm1.cs">
+    <Compile Include="SocketFiledata\DebugPLC\Robot\Sequential_programme.cs" />
+    <Compile Include="SocketFiledata\DebugPLC\Robot\SetToolForm1.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Socket\DebugPLC\Robot\SetToolForm1.Designer.cs">
+    <Compile Include="SocketFiledata\DebugPLC\Robot\SetToolForm1.Designer.cs">
       <DependentUpon>SetToolForm1.cs</DependentUpon>
     </Compile>
-    <Compile Include="Socket\DebugPLC\Robot\SteppingControl.cs">
+    <Compile Include="SocketFiledata\DebugPLC\Robot\SteppingControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Socket\DebugPLC\Robot\SteppingControl.Designer.cs">
+    <Compile Include="SocketFiledata\DebugPLC\Robot\SteppingControl.Designer.cs">
       <DependentUpon>SteppingControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Socket\DebugPLC\Robot\TrayControl.cs">
+    <Compile Include="SocketFiledata\DebugPLC\Robot\TrayControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Socket\DebugPLC\Robot\TrayControl.Designer.cs">
+    <Compile Include="SocketFiledata\DebugPLC\Robot\TrayControl.Designer.cs">
       <DependentUpon>TrayControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Socket\DebugPLC\Robot\TrayRobot.cs" />
-    <Compile Include="Socket\DebugPLC\Robot\UserRobotControl.cs">
+    <Compile Include="SocketFiledata\DebugPLC\Robot\TrayRobot.cs" />
+    <Compile Include="SocketFiledata\DebugPLC\Robot\UserRobotControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Socket\DebugPLC\Robot\UserRobotControl.Designer.cs">
+    <Compile Include="SocketFiledata\DebugPLC\Robot\UserRobotControl.Designer.cs">
       <DependentUpon>UserRobotControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Socket\DebugPLC\UserControl1.cs">
+    <Compile Include="SocketFiledata\DebugPLC\UserControl1.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Socket\DebugPLC\UserControl1.Designer.cs">
+    <Compile Include="SocketFiledata\DebugPLC\UserControl1.Designer.cs">
       <DependentUpon>UserControl1.cs</DependentUpon>
     </Compile>
-    <Compile Include="Socket\ErosConLink\AsyncTCPClient.cs" />
-    <Compile Include="Socket\ErosConLink\Check.cs" />
-    <Compile Include="Socket\ErosConLink\Clcd9700.cs" />
-    <Compile Include="Socket\ErosConLink\ConnDB.cs" />
-    <Compile Include="Socket\ErosConLink\DoubleBufferListView.cs" />
-    <Compile Include="Socket\ErosConLink\EquipmentStatus.cs" />
-    <Compile Include="Socket\ErosConLink\ErosRunType.cs" />
-    <Compile Include="Socket\ErosConLink\FY6400.cs" />
-    <Compile Include="Socket\ErosConLink\IDEnumUserControl1.cs">
+    <Compile Include="SocketFiledata\ErosConLink\AsyncTCPClient.cs" />
+    <Compile Include="SocketFiledata\ErosConLink\Check.cs" />
+    <Compile Include="SocketFiledata\ErosConLink\Clcd9700.cs" />
+    <Compile Include="SocketFiledata\ErosConLink\ConnDB.cs" />
+    <Compile Include="SocketFiledata\ErosConLink\DoubleBufferListView.cs" />
+    <Compile Include="SocketFiledata\ErosConLink\EquipmentStatus.cs" />
+    <Compile Include="SocketFiledata\ErosConLink\ErosRunType.cs" />
+    <Compile Include="SocketFiledata\ErosConLink\FY6400.cs" />
+    <Compile Include="SocketFiledata\ErosConLink\IDEnumUserControl1.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Socket\ErosConLink\IDEnumUserControl1.Designer.cs">
+    <Compile Include="SocketFiledata\ErosConLink\IDEnumUserControl1.Designer.cs">
       <DependentUpon>IDEnumUserControl1.cs</DependentUpon>
     </Compile>
-    <Compile Include="Socket\ErosConLink\JsonCon.cs" />
-    <Compile Include="Socket\ErosConLink\LinkIDValueControl.cs">
+    <Compile Include="SocketFiledata\ErosConLink\JsonCon.cs" />
+    <Compile Include="SocketFiledata\ErosConLink\LinkIDValueControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Socket\ErosConLink\LinkIDValueControl.Designer.cs">
+    <Compile Include="SocketFiledata\ErosConLink\LinkIDValueControl.Designer.cs">
       <DependentUpon>LinkIDValueControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Socket\ErosConLink\LinkNameAddreControl.cs">
+    <Compile Include="SocketFiledata\ErosConLink\LinkNameAddreControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Socket\ErosConLink\LinkNameAddreControl.Designer.cs">
+    <Compile Include="SocketFiledata\ErosConLink\LinkNameAddreControl.Designer.cs">
       <DependentUpon>LinkNameAddreControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Socket\ErosConLink\LinkNameAddresControl.cs">
+    <Compile Include="SocketFiledata\ErosConLink\LinkNameAddresControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Socket\ErosConLink\LinkNameAddresControl.Designer.cs">
+    <Compile Include="SocketFiledata\ErosConLink\LinkNameAddresControl.Designer.cs">
       <DependentUpon>LinkNameAddresControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Socket\ErosConLink\LinkNameListValueNameUserControl1.cs">
+    <Compile Include="SocketFiledata\ErosConLink\LinkNameListValueNameUserControl1.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Socket\ErosConLink\LinkNameListValueNameUserControl1.Designer.cs">
+    <Compile Include="SocketFiledata\ErosConLink\LinkNameListValueNameUserControl1.Designer.cs">
       <DependentUpon>LinkNameListValueNameUserControl1.cs</DependentUpon>
     </Compile>
-    <Compile Include="Socket\ErosConLink\LinkNamesControl.cs">
+    <Compile Include="SocketFiledata\ErosConLink\LinkNamesControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Socket\ErosConLink\LinkNamesControl.Designer.cs">
+    <Compile Include="SocketFiledata\ErosConLink\LinkNamesControl.Designer.cs">
       <DependentUpon>LinkNamesControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Socket\ErosConLink\LinkName_ValuesNameUserControl.cs">
+    <Compile Include="SocketFiledata\ErosConLink\LinkName_ValuesNameUserControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Socket\ErosConLink\LinkName_ValuesNameUserControl.Designer.cs">
+    <Compile Include="SocketFiledata\ErosConLink\LinkName_ValuesNameUserControl.Designer.cs">
       <DependentUpon>LinkName_ValuesNameUserControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Socket\ErosConLink\ModbusTCPClint.cs" />
-    <Compile Include="Socket\ErosConLink\PCIDIDO.cs" />
-    <Compile Include="Socket\ErosConLink\PLcPC.cs" />
-    <Compile Include="Socket\ErosConLink\RS232Con.cs" />
-    <Compile Include="Socket\ErosConLink\RS232ConF\RS232ConControl.cs">
+    <Compile Include="SocketFiledata\ErosConLink\ModbusTCPClint.cs" />
+    <Compile Include="SocketFiledata\ErosConLink\PCIDIDO.cs" />
+    <Compile Include="SocketFiledata\ErosConLink\PLcPC.cs" />
+    <Compile Include="SocketFiledata\ErosConLink\RS232Con.cs" />
+    <Compile Include="SocketFiledata\ErosConLink\RS232ConF\RS232ConControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Socket\ErosConLink\RS232ConF\RS232ConControl.Designer.cs">
+    <Compile Include="SocketFiledata\ErosConLink\RS232ConF\RS232ConControl.Designer.cs">
       <DependentUpon>RS232ConControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Socket\ErosConLink\S71200.cs" />
-    <Compile Include="Socket\ErosConLink\S7200PPI.cs" />
-    <Compile Include="Socket\ErosConLink\SECS_GEM.cs" />
-    <Compile Include="Socket\ErosConLink\Sharp7.cs" />
-    <Compile Include="Socket\ErosConLink\SocketClint.cs" />
-    <Compile Include="Socket\ErosConLink\SocketServer.cs" />
-    <Compile Include="Socket\ErosConLink\StaticCon.cs" />
-    <Compile Include="Socket\ErosConLink\UClass.cs" />
-    <Compile Include="Socket\ErosConLink\三菱MC.cs" />
-    <Compile Include="Socket\ErosConLink\海达U700.cs" />
-    <Compile Include="Socket\ErosConLink\环境传感器.cs" />
-    <Compile Include="Socket\ErosUI\ErosBtn.cs" />
-    <Compile Include="Socket\ErosUI\ErosNewFrom.cs">
+    <Compile Include="SocketFiledata\ErosConLink\S71200.cs" />
+    <Compile Include="SocketFiledata\ErosConLink\S7200PPI.cs" />
+    <Compile Include="SocketFiledata\ErosConLink\SECS_GEM.cs" />
+    <Compile Include="SocketFiledata\ErosConLink\Sharp7.cs" />
+    <Compile Include="SocketFiledata\ErosConLink\SocketClint.cs" />
+    <Compile Include="SocketFiledata\ErosConLink\SocketServer.cs" />
+    <Compile Include="SocketFiledata\ErosConLink\StaticCon.cs" />
+    <Compile Include="SocketFiledata\ErosConLink\UClass.cs" />
+    <Compile Include="SocketFiledata\ErosConLink\三菱MC.cs" />
+    <Compile Include="SocketFiledata\ErosConLink\海达U700.cs" />
+    <Compile Include="SocketFiledata\ErosConLink\环境传感器.cs" />
+    <Compile Include="SocketFiledata\ErosUI\ErosBtn.cs" />
+    <Compile Include="SocketFiledata\ErosUI\ErosNewFrom.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Socket\ErosUI\ErosNewFrom.Designer.cs">
+    <Compile Include="SocketFiledata\ErosUI\ErosNewFrom.Designer.cs">
       <DependentUpon>ErosNewFrom.cs</DependentUpon>
     </Compile>
-    <Compile Include="Socket\ErosUI\GolbalVariable.cs" />
-    <Compile Include="Socket\ErosUI\LinkPLC.cs" />
-    <Compile Include="Socket\ErosUI\MouseHook.cs" />
-    <Compile Include="Socket\ErosUI\MyControlAttibute.cs" />
-    <Compile Include="Socket\ErosUI\PLCBtn.cs">
+    <Compile Include="SocketFiledata\ErosUI\GolbalVariable.cs" />
+    <Compile Include="SocketFiledata\ErosUI\LinkPLC.cs" />
+    <Compile Include="SocketFiledata\ErosUI\MouseHook.cs" />
+    <Compile Include="SocketFiledata\ErosUI\MyControlAttibute.cs" />
+    <Compile Include="SocketFiledata\ErosUI\PLCBtn.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Socket\ErosUI\PropertyBase.cs" />
-    <Compile Include="Socket\ErosUI\PropertyGridDateItem.cs" />
-    <Compile Include="Socket\ErosUI\retxtForm.cs">
+    <Compile Include="SocketFiledata\ErosUI\PropertyBase.cs" />
+    <Compile Include="SocketFiledata\ErosUI\PropertyGridDateItem.cs" />
+    <Compile Include="SocketFiledata\ErosUI\retxtForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Socket\ErosUI\retxtForm.Designer.cs">
+    <Compile Include="SocketFiledata\ErosUI\retxtForm.Designer.cs">
       <DependentUpon>retxtForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Socket\ErosUI\SettingService.cs" />
-    <Compile Include="Socket\ErosUI\TextBoxProperty.cs" />
-    <Compile Include="Socket\ErosUI\ToolForm.cs">
+    <Compile Include="SocketFiledata\ErosUI\SettingService.cs" />
+    <Compile Include="SocketFiledata\ErosUI\TextBoxProperty.cs" />
+    <Compile Include="SocketFiledata\ErosUI\ToolForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Socket\ErosUI\ToolForm.Designer.cs">
+    <Compile Include="SocketFiledata\ErosUI\ToolForm.Designer.cs">
       <DependentUpon>ToolForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Socket\ErosUI\UIMoveKnob.cs" />
-    <Compile Include="Socket\ErosUI\UISizeDot.cs">
+    <Compile Include="SocketFiledata\ErosUI\UIMoveKnob.cs" />
+    <Compile Include="SocketFiledata\ErosUI\UISizeDot.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Socket\ErosUI\UISizeDot.Designer.cs">
+    <Compile Include="SocketFiledata\ErosUI\UISizeDot.Designer.cs">
       <DependentUpon>UISizeDot.cs</DependentUpon>
     </Compile>
-    <Compile Include="Socket\ErosUI\UserInterfaceControl.cs">
+    <Compile Include="SocketFiledata\ErosUI\UserInterfaceControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Socket\ErosUI\UserInterfaceControl.Designer.cs">
+    <Compile Include="SocketFiledata\ErosUI\UserInterfaceControl.Designer.cs">
       <DependentUpon>UserInterfaceControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Socket\ErosUI\曲线窗口.cs">
+    <Compile Include="SocketFiledata\ErosUI\曲线窗口.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Socket\ErosUI\曲线窗口.Designer.cs">
+    <Compile Include="SocketFiledata\ErosUI\曲线窗口.Designer.cs">
       <DependentUpon>曲线窗口.cs</DependentUpon>
     </Compile>
-    <Compile Include="Socket\LocalIPForm.cs">
+    <Compile Include="SocketFiledata\LocalIPForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Socket\LocalIPForm.Designer.cs">
+    <Compile Include="SocketFiledata\LocalIPForm.Designer.cs">
       <DependentUpon>LocalIPForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Socket\Modbus.cs">
+    <Compile Include="SocketFiledata\Modbus.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Socket\Modbus.Designer.cs">
+    <Compile Include="SocketFiledata\Modbus.Designer.cs">
       <DependentUpon>Modbus.cs</DependentUpon>
     </Compile>
-    <Compile Include="Socket\ModbusTCPIP.cs">
+    <Compile Include="SocketFiledata\ModbusTCPIP.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Socket\ModbusTCPIP.Designer.cs">
+    <Compile Include="SocketFiledata\ModbusTCPIP.Designer.cs">
       <DependentUpon>ModbusTCPIP.cs</DependentUpon>
     </Compile>
-    <Compile Include="Socket\newSocketForm.cs">
+    <Compile Include="SocketFiledata\newSocketForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Socket\newSocketForm.Designer.cs">
+    <Compile Include="SocketFiledata\newSocketForm.Designer.cs">
       <DependentUpon>newSocketForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Socket\SocketConnectForm.cs">
+    <Compile Include="SocketFiledata\SocketConnectForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Socket\SocketConnectForm.Designer.cs">
+    <Compile Include="SocketFiledata\SocketConnectForm.Designer.cs">
       <DependentUpon>SocketConnectForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Socket\SocketServerForm.cs">
+    <Compile Include="SocketFiledata\SocketServerForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Socket\SocketServerForm.Designer.cs">
+    <Compile Include="SocketFiledata\SocketServerForm.Designer.cs">
       <DependentUpon>SocketServerForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Socket\Values.cs">
+    <Compile Include="SocketFiledata\Values.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Socket\Values.Designer.cs">
+    <Compile Include="SocketFiledata\Values.Designer.cs">
       <DependentUpon>Values.cs</DependentUpon>
     </Compile>
     <Compile Include="visionLink\EquipmentManagement.cs" />
@@ -1638,6 +1648,9 @@
     <EmbeddedResource Include="Project\DebugF\IO\Form1C154DIDO.resx">
       <DependentUpon>Form1C154DIDO.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Project\DebugF\IO\IOForm.resx">
+      <DependentUpon>IOForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Project\DebugF\IO\Local_variable_scale_Form.resx">
       <DependentUpon>Local_variable_scale_Form.cs</DependentUpon>
     </EmbeddedResource>
@@ -1694,6 +1707,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="vision\RestVisionForm\OneNGDataMinMaxControl.resx">
       <DependentUpon>OneNGDataMinMaxControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="vision\RunVisionPrForm.resx">
+      <DependentUpon>RunVisionPrForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="捷普\CXAMForm.resx">
       <DependentUpon>CXAMForm.cs</DependentUpon>
@@ -1767,130 +1783,130 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources2.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Socket\DebugPLC\CommandControl1.resx">
+    <EmbeddedResource Include="SocketFiledata\DebugPLC\CommandControl1.resx">
       <DependentUpon>CommandControl1.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Socket\DebugPLC\DIDO\DIDOUserControl.resx">
+    <EmbeddedResource Include="SocketFiledata\DebugPLC\DIDO\DIDOUserControl.resx">
       <DependentUpon>DIDOUserControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Socket\DebugPLC\EnumTextUserControl1.resx">
+    <EmbeddedResource Include="SocketFiledata\DebugPLC\EnumTextUserControl1.resx">
       <DependentUpon>EnumTextUserControl1.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Socket\DebugPLC\InterfacePLCUserControl.resx">
+    <EmbeddedResource Include="SocketFiledata\DebugPLC\InterfacePLCUserControl.resx">
       <DependentUpon>InterfacePLCUserControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Socket\DebugPLC\InterfacePlcUserControl2.resx">
+    <EmbeddedResource Include="SocketFiledata\DebugPLC\InterfacePlcUserControl2.resx">
       <DependentUpon>InterfacePlcUserControl2.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Socket\DebugPLC\PLC\AxisControl.resx">
+    <EmbeddedResource Include="SocketFiledata\DebugPLC\PLC\AxisControl.resx">
       <DependentUpon>AxisControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Socket\DebugPLC\PLC\CylinderControl.resx">
+    <EmbeddedResource Include="SocketFiledata\DebugPLC\PLC\CylinderControl.resx">
       <DependentUpon>CylinderControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Socket\DebugPLC\PLC\ListCyinderControl.resx">
+    <EmbeddedResource Include="SocketFiledata\DebugPLC\PLC\ListCyinderControl.resx">
       <DependentUpon>ListCyinderControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Socket\DebugPLC\PLC\ListPLCIOUserControl1.resx">
+    <EmbeddedResource Include="SocketFiledata\DebugPLC\PLC\ListPLCIOUserControl1.resx">
       <DependentUpon>ListPLCIOUserControl1.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Socket\DebugPLC\PLC\Pf.resx">
+    <EmbeddedResource Include="SocketFiledata\DebugPLC\PLC\Pf.resx">
       <DependentUpon>Pf.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Socket\DebugPLC\PLC\PLCIOUserControl1.resx">
+    <EmbeddedResource Include="SocketFiledata\DebugPLC\PLC\PLCIOUserControl1.resx">
       <DependentUpon>PLCIOUserControl1.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Socket\DebugPLC\pop-UpWindow.resx">
+    <EmbeddedResource Include="SocketFiledata\DebugPLC\pop-UpWindow.resx">
       <DependentUpon>pop-UpWindow.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Socket\DebugPLC\Robot\Axis4PUserControl1.resx">
+    <EmbeddedResource Include="SocketFiledata\DebugPLC\Robot\Axis4PUserControl1.resx">
       <DependentUpon>Axis4PUserControl1.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Socket\DebugPLC\Robot\Axis6PUserControl.resx">
+    <EmbeddedResource Include="SocketFiledata\DebugPLC\Robot\Axis6PUserControl.resx">
       <DependentUpon>Axis6PUserControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Socket\DebugPLC\Robot\DebugRobot.resx">
+    <EmbeddedResource Include="SocketFiledata\DebugPLC\Robot\DebugRobot.resx">
       <DependentUpon>DebugRobot.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Socket\DebugPLC\Robot\ExecnteControl.resx">
+    <EmbeddedResource Include="SocketFiledata\DebugPLC\Robot\ExecnteControl.resx">
       <DependentUpon>ExecnteControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Socket\DebugPLC\Robot\Execnte_Program_Control.resx">
+    <EmbeddedResource Include="SocketFiledata\DebugPLC\Robot\Execnte_Program_Control.resx">
       <DependentUpon>Execnte_Program_Control.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Socket\DebugPLC\Robot\SetToolForm1.resx">
+    <EmbeddedResource Include="SocketFiledata\DebugPLC\Robot\SetToolForm1.resx">
       <DependentUpon>SetToolForm1.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Socket\DebugPLC\Robot\SteppingControl.resx">
+    <EmbeddedResource Include="SocketFiledata\DebugPLC\Robot\SteppingControl.resx">
       <DependentUpon>SteppingControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Socket\DebugPLC\Robot\TrayControl.resx">
+    <EmbeddedResource Include="SocketFiledata\DebugPLC\Robot\TrayControl.resx">
       <DependentUpon>TrayControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Socket\DebugPLC\Robot\UserRobotControl.resx">
+    <EmbeddedResource Include="SocketFiledata\DebugPLC\Robot\UserRobotControl.resx">
       <DependentUpon>UserRobotControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Socket\DebugPLC\UserControl1.resx">
+    <EmbeddedResource Include="SocketFiledata\DebugPLC\UserControl1.resx">
       <DependentUpon>UserControl1.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Socket\ErosConLink\IDEnumUserControl1.resx">
+    <EmbeddedResource Include="SocketFiledata\ErosConLink\IDEnumUserControl1.resx">
       <DependentUpon>IDEnumUserControl1.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Socket\ErosConLink\LinkIDValueControl.resx">
+    <EmbeddedResource Include="SocketFiledata\ErosConLink\LinkIDValueControl.resx">
       <DependentUpon>LinkIDValueControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Socket\ErosConLink\LinkNameAddreControl.resx">
+    <EmbeddedResource Include="SocketFiledata\ErosConLink\LinkNameAddreControl.resx">
       <DependentUpon>LinkNameAddreControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Socket\ErosConLink\LinkNameAddresControl.resx">
+    <EmbeddedResource Include="SocketFiledata\ErosConLink\LinkNameAddresControl.resx">
       <DependentUpon>LinkNameAddresControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Socket\ErosConLink\LinkNameListValueNameUserControl1.resx">
+    <EmbeddedResource Include="SocketFiledata\ErosConLink\LinkNameListValueNameUserControl1.resx">
       <DependentUpon>LinkNameListValueNameUserControl1.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Socket\ErosConLink\LinkNamesControl.resx">
+    <EmbeddedResource Include="SocketFiledata\ErosConLink\LinkNamesControl.resx">
       <DependentUpon>LinkNamesControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Socket\ErosConLink\LinkName_ValuesNameUserControl.resx">
+    <EmbeddedResource Include="SocketFiledata\ErosConLink\LinkName_ValuesNameUserControl.resx">
       <DependentUpon>LinkName_ValuesNameUserControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Socket\ErosConLink\RS232ConF\RS232ConControl.resx">
+    <EmbeddedResource Include="SocketFiledata\ErosConLink\RS232ConF\RS232ConControl.resx">
       <DependentUpon>RS232ConControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Socket\ErosUI\ErosNewFrom.resx">
+    <EmbeddedResource Include="SocketFiledata\ErosUI\ErosNewFrom.resx">
       <DependentUpon>ErosNewFrom.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Socket\ErosUI\retxtForm.resx">
+    <EmbeddedResource Include="SocketFiledata\ErosUI\retxtForm.resx">
       <DependentUpon>retxtForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Socket\ErosUI\ToolForm.resx">
+    <EmbeddedResource Include="SocketFiledata\ErosUI\ToolForm.resx">
       <DependentUpon>ToolForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Socket\ErosUI\UserInterfaceControl.resx">
+    <EmbeddedResource Include="SocketFiledata\ErosUI\UserInterfaceControl.resx">
       <DependentUpon>UserInterfaceControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Socket\ErosUI\曲线窗口.resx">
+    <EmbeddedResource Include="SocketFiledata\ErosUI\曲线窗口.resx">
       <DependentUpon>曲线窗口.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Socket\LocalIPForm.resx">
+    <EmbeddedResource Include="SocketFiledata\LocalIPForm.resx">
       <DependentUpon>LocalIPForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Socket\Modbus.resx">
+    <EmbeddedResource Include="SocketFiledata\Modbus.resx">
       <DependentUpon>Modbus.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Socket\ModbusTCPIP.resx">
+    <EmbeddedResource Include="SocketFiledata\ModbusTCPIP.resx">
       <DependentUpon>ModbusTCPIP.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Socket\newSocketForm.resx">
+    <EmbeddedResource Include="SocketFiledata\newSocketForm.resx">
       <DependentUpon>newSocketForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Socket\SocketConnectForm.resx">
+    <EmbeddedResource Include="SocketFiledata\SocketConnectForm.resx">
       <DependentUpon>SocketConnectForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Socket\SocketServerForm.resx">
+    <EmbeddedResource Include="SocketFiledata\SocketServerForm.resx">
       <DependentUpon>SocketServerForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Socket\Values.resx">
+    <EmbeddedResource Include="SocketFiledata\Values.resx">
       <DependentUpon>Values.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="vision\Calib\AutoCalibForm.resx">

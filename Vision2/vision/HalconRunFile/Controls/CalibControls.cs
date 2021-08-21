@@ -15,11 +15,10 @@ namespace Vision2.vision.HalconRunFile.Controls
             InitializeComponent();
         }
 
+        private AutoCalibPoint AutoCalibPoint = new AutoCalibPoint();
+        private string path = "";
+        private HTuple ToolInBasePose;
 
-
-        AutoCalibPoint AutoCalibPoint = new AutoCalibPoint();
-        string path = "";
-        HTuple ToolInBasePose;
         private void CalibControls_Load(object sender, EventArgs e)
         {
             PuData();
@@ -48,11 +47,13 @@ namespace Vision2.vision.HalconRunFile.Controls
                 MessageBox.Show(ex.Message);
             }
         }
+
         private void toolStripButton1_Click(object sender, EventArgs e)
         {
-
         }
-        bool DRW;
+
+        private bool DRW;
+
         private void button1_Click_1(object sender, EventArgs e)
         {
             try
@@ -77,14 +78,10 @@ namespace Vision2.vision.HalconRunFile.Controls
             {
                 MessageBox.Show(ex.Message);
             }
-
         }
-
-
 
         private void 保存标定ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -108,7 +105,6 @@ namespace Vision2.vision.HalconRunFile.Controls
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
-
             }
             DRW = false;
         }
@@ -124,8 +120,6 @@ namespace Vision2.vision.HalconRunFile.Controls
             }
             catch (Exception)
             {
-
-
             }
         }
 
@@ -141,7 +135,6 @@ namespace Vision2.vision.HalconRunFile.Controls
                         {
                             Vision.Instance.DicCalib3D.Remove(treeView2.SelectedNode.Text);
                             treeView2.SelectedNode.Remove();
-
                         }
                         else
                         {
@@ -151,10 +144,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 }
                 catch (Exception)
                 {
-
-
                 }
-
             }
             catch (Exception)
             {
@@ -165,7 +155,6 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             try
             {
-
                 TreeNode sdf = Vision2.ErosProjcetDLL.Project.INodeNew.NewTreeNodeProject(Vision.Instance.DicCalib3D.Keys.ToList(), "新建标定");
                 if (sdf != null)
                 {
@@ -180,7 +169,6 @@ namespace Vision2.vision.HalconRunFile.Controls
             }
             catch (Exception)
             {
-
             }
         }
 
@@ -260,19 +248,18 @@ namespace Vision2.vision.HalconRunFile.Controls
             catch (Exception)
             {
             }
-
         }
 
         private void 新建标定文件ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
         }
 
         private void toolStripButton2_Click(object sender, EventArgs e)
         {
             PuData();
         }
-        void PuData()
+
+        private void PuData()
         {
             try
             {
@@ -295,14 +282,11 @@ namespace Vision2.vision.HalconRunFile.Controls
             }
             catch (Exception)
             {
-
-
             }
         }
 
         private void 读取标定ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
         }
 
         private void toolStripButton1_Click_1(object sender, EventArgs e)
@@ -311,5 +295,4 @@ namespace Vision2.vision.HalconRunFile.Controls
             visionWindowP.Show();
         }
     }
-
 }

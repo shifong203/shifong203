@@ -8,6 +8,7 @@ using System.Linq;
 using System.Windows.Forms;
 using System.Windows.Forms.Design;
 using Vision2.ErosProjcetDLL.Excel;
+using Vision2.ErosProjcetDLL.Project;
 using static Vision2.Project.formula.Product;
 
 namespace Vision2.Project.formula
@@ -19,10 +20,12 @@ namespace Vision2.Project.formula
             InitializeComponent();
             dataGridView1.CurrentCellDirtyStateChanged += dataGridView1_CurrentCellDirtyStateChanged;
         }
-        string Formname;
-        int y;
-        int x;
-        bool upT;
+
+        private string Formname;
+        private int y;
+        private int x;
+        private bool upT;
+
         /// <summary>
         /// 更改中发生
         /// </summary>
@@ -67,7 +70,6 @@ namespace Vision2.Project.formula
                                     int itd = Y + 1;
                                     for (int i = 0; i < ids; i++)
                                     {
-
                                         if (itd + 1 >= dataGridView1.Rows.Count)
                                         {
                                             itd = dataGridView1.Rows.Add();
@@ -80,7 +82,6 @@ namespace Vision2.Project.formula
                                         {
                                             Type type = ErosSocket.ErosConLink.UClass.GetTypeByString(dataGridView1.Rows[Y].Cells[1].Value.ToString());
                                             dataGridView1.Rows[itd].Cells[1].Value = Activator.CreateInstance(type).ToString();
-
                                         }
                                         else
                                         {
@@ -88,10 +89,7 @@ namespace Vision2.Project.formula
                                         }
                                         itd++;
                                     }
-
-
                                 }
-
                             }
                             //contextMenuStrip.Show(pOINT.X, pOINT.Y);
                         }
@@ -137,9 +135,6 @@ namespace Vision2.Project.formula
                         y = rowt;
                         Rectangle rectangle2 = dataGridView1.RectangleToScreen(rectangle);
                         contextMenuStrip.Show(rectangle2.X, rectangle2.Y + this.dataGridView1.Rows[rowt].Height);
-
-
-
                     }
                     catch (Exception es)
                     {
@@ -177,7 +172,6 @@ namespace Vision2.Project.formula
                             }
                             else
                             {
-
                                 Product.GetProd(Formname)[dataGridView1.Rows[e.RowIndex].Cells[0].Value.ToString()] = dataGridView1.Rows[e.RowIndex].Cells[1].Value.ToString();
                                 dataGridView1[e.ColumnIndex, e.RowIndex].Style.BackColor = Color.Green;
                             }
@@ -192,23 +186,20 @@ namespace Vision2.Project.formula
                             Product.GetProd(Formname)[dataGridView1.Rows[e.RowIndex].Cells[0].Value.ToString()] = dataGridView1.Rows[e.RowIndex].Cells[1].Value.ToString();
                             dataGridView1[e.ColumnIndex, e.RowIndex].Style.BackColor = Color.Green;
                         }
-
                     }
-
                 }
                 else if (e.ColumnIndex == 1)
                 {
-
                 }
             }
             catch (Exception ex)
             {
                 dataGridView1[e.ColumnIndex, e.RowIndex].Style.BackColor = Color.Red;
             }
-
         }
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -225,7 +216,6 @@ namespace Vision2.Project.formula
                 }
                 else
                 {
-
                     int colum = dataGridView1.SelectedCells[0].ColumnIndex;
                     int rowt = dataGridView1.SelectedCells[0].RowIndex;
                     if (colum == 0)
@@ -249,7 +239,6 @@ namespace Vision2.Project.formula
                                 {
                                     liatsName.Add(dataGridView1.Rows[i].Cells[0].Value.ToString());
                                 }
-
                             }
                             ContextMenuStrip contextMenuStrip = new ContextMenuStrip();
                             if (dataGridView1.Rows[Y].Cells[0].Value == null)
@@ -268,28 +257,22 @@ namespace Vision2.Project.formula
                                         tool.Click += Tool_Click;
                                         contextMenuStrip.Items.Add(tool);
                                     }
-
                                 }
                                 Rectangle rectangle = dataGridView1.GetCellDisplayRectangle(colum, rowt, false);
                                 x = colum;
                                 y = rowt;
                                 Rectangle rectangle2 = dataGridView1.RectangleToScreen(rectangle);
                                 contextMenuStrip.Show(rectangle2.X, rectangle2.Y + this.dataGridView1.Rows[rowt].Height);
-
                             }
-
-
                         }
                         catch (Exception es)
                         {
                         }
                     }
                 }
-
             }
             catch (Exception)
             {
-
             }
         }
 
@@ -354,11 +337,12 @@ namespace Vision2.Project.formula
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public List<string> links;
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="name"></param>
         public FormulaEditorControl(string name) : this()
@@ -386,7 +370,6 @@ namespace Vision2.Project.formula
                     dataGridView1.Rows[i].Cells[1].Value = item.Value;
                     if (Product.GetParameters().ContainsKey(item.Key))
                     {
-
                         string dat = Product.GetParameters()[item.Key].TypeStr + ",参考值=" + Product.GetParameters()[item.Key].ValueStr + ",";
                         if (Product.GetParameters()[item.Key].minValue != null && Product.GetParameters()[item.Key].minValue != "")
                         {
@@ -432,14 +415,10 @@ namespace Vision2.Project.formula
                     Product.GetParameters().Remove(dataGridView1.SelectedCells[0].Value.ToString());
                     dataGridView1.Rows.RemoveAt(dataGridView1.SelectedCells[0].RowIndex);
                 }
-
             }
             catch (Exception)
             {
-
-
             }
-
         }
 
         /// <summary>
@@ -454,7 +433,6 @@ namespace Vision2.Project.formula
 
             foreach (var item in linkNames)
             {
-
                 ToolStripButton toolStripButton = new ToolStripButton();
                 toolStripButton.Name = toolStripButton.Text = item;
                 tool1.DropDownItems.Add(toolStripButton);
@@ -495,10 +473,8 @@ namespace Vision2.Project.formula
                                         }
                                         for (int i = 0; i < dataGridView1.Rows.Count; i++)
                                         {
-
                                             if (dataGridView1.Rows[i].Cells[0].Value != null)
                                             {
-
                                                 string key = dataGridView1.Rows[i].Cells[0].Value.ToString();
                                                 if (Product.GetProduct().Parameter_Dic.ParameterMap[item].ContainsKey(key))
                                                 {
@@ -533,18 +509,14 @@ namespace Vision2.Project.formula
                             }
                             catch (Exception ex)
                             {
-
                                 MessageBox.Show(ex.Message);
                             }
                         }));
-
                     });
                     thread.IsBackground = true;
                     thread.Start();
                 }
             }
-
-
         }
 
         public void Updatas()
@@ -562,6 +534,7 @@ namespace Vision2.Project.formula
             {
                 return UITypeEditorEditStyle.DropDown;
             }
+
             public override object EditValue(ITypeDescriptorContext context, IServiceProvider provider, object value)
             {
                 IWindowsFormsEditorService service = provider.GetService(typeof(IWindowsFormsEditorService)) as IWindowsFormsEditorService;
@@ -576,7 +549,7 @@ namespace Vision2.Project.formula
         private void toolStripButton1_Click(object sender, EventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.InitialDirectory = Vision2.ErosProjcetDLL.Project.ProjectINI.In.ProjectPathRun + "\\产品配方\\";
+            openFileDialog.InitialDirectory = ProjectINI.ProjectPathRun + "\\产品配方\\";
             openFileDialog.Filter = "Excel文件|*.xls";
             DialogResult dialog = openFileDialog.ShowDialog();
             try
@@ -689,19 +662,16 @@ namespace Vision2.Project.formula
                 MessageBox.Show(ex.Message);
             }
         }
+
         private void dataGridView1_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
             try
             {
-
             }
             catch (Exception)
             {
-
-
             }
         }
-
 
         private void dataGridView1_MouseUp(object sender, MouseEventArgs e)
         {
@@ -752,7 +722,6 @@ namespace Vision2.Project.formula
                             dat += "描述=" + Product.GetParameters()[key].Pst + ",";
                         }
 
-
                         dat = dat.TrimEnd(',') + "}";
                         if (dat == "")
                         {
@@ -765,14 +734,10 @@ namespace Vision2.Project.formula
                         contextMenuStrip.Show(rectangle2.X, rectangle2.Y + this.dataGridView1.Rows[0].Height);
                     }
                 }
-
             }
             catch (Exception)
             {
-
-
             }
-
         }
 
         private void tool1_MouseMove(object sender, MouseEventArgs e)
@@ -782,19 +747,14 @@ namespace Vision2.Project.formula
 
         private void dataGridView1_MouseMove(object sender, MouseEventArgs e)
         {
-
-
         }
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-
         }
 
         private void 删除ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
         }
     }
-
 }

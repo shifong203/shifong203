@@ -10,7 +10,9 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             InitializeComponent();
         }
-        Pin_Round_brush_needlecs pint_Round_BrushControl;
+
+        private Pin_Round_brush_needlecs pint_Round_BrushControl;
+
         public Pint_Round_brushControl(Pin_Round_brush_needlecs pint_Round) : this()
         {
             isChave = true;
@@ -19,8 +21,9 @@ namespace Vision2.vision.HalconRunFile.Controls
             GetProjiet();
             isChave = false;
         }
-        bool isChave;
-        HalconRun Halcon;
+
+        private bool isChave;
+        private HalconRun Halcon;
 
         public void SetProjie(int id)
         {
@@ -43,15 +46,15 @@ namespace Vision2.vision.HalconRunFile.Controls
                 pint_Round_BrushControl.FillArea = (double)numericUpDown9.Value;
                 pint_Round_BrushControl.Threshold_MinG.Min = (byte)numericUpDown6.Value;
                 pint_Round_BrushControl.Threshold_MinG.Max = (byte)numericUpDown5.Value;
-                pint_Round_BrushControl.Run(Halcon.GetOneImageR(), new AoiObj() { DebugID=id});
+                pint_Round_BrushControl.Run(Halcon.GetOneImageR(), new AoiObj() { DebugID = id });
                 Halcon.ShowObj();
-      
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
         }
+
         public void GetProjiet()
         {
             try
@@ -76,8 +79,6 @@ namespace Vision2.vision.HalconRunFile.Controls
             {
                 MessageBox.Show(ex.Message);
             }
-
-
         }
 
         private void numericUpDownThrMin_ValueChanged(object sender, EventArgs e)

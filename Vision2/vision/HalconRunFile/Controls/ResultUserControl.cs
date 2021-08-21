@@ -1,16 +1,18 @@
 ﻿using System;
 using System.Windows.Forms;
 using Vision2.vision.HalconRunFile.RunProgramFile;
+
 namespace Vision2.vision.HalconRunFile.Controls
 {
     public partial class ResultUserControl : UserControl
     {
-
         public ResultUserControl()
         {
             InitializeComponent();
         }
-        HalconRun halconR;
+
+        private HalconRun halconR;
+
         public void UP(HalconRun halcon)
         {
             if (this.Created)
@@ -25,7 +27,8 @@ namespace Vision2.vision.HalconRunFile.Controls
                 upD(halcon);
             }
         }
-        void upD(HalconRun halcon)
+
+        private void upD(HalconRun halcon)
         {
             try
             {
@@ -67,7 +70,6 @@ namespace Vision2.vision.HalconRunFile.Controls
             catch (Exception)
             {
             }
-
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -85,9 +87,7 @@ namespace Vision2.vision.HalconRunFile.Controls
             }
             catch (Exception)
             {
-
             }
-
         }
     }
 }

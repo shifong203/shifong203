@@ -45,6 +45,7 @@ namespace Vision2.ErosProjcetDLL.Dynamic
             }
             return null;
         }
+
         /// <summary>
         /// 判断动态类型中是否存在属性
         /// </summary>
@@ -59,6 +60,7 @@ namespace Vision2.ErosProjcetDLL.Dynamic
             }
             return data.GetType().GetField(propertyName, BindingFlags.Instance | BindingFlags.GetField) != null;
         }
+
         ///// <summary>
         ///// 读取字段
         ///// </summary>
@@ -81,7 +83,6 @@ namespace Vision2.ErosProjcetDLL.Dynamic
         //    return null;
         //}
 
-
         /// <summary>
         /// 动态对象的属性赋值，
         /// </summary>
@@ -102,7 +103,6 @@ namespace Vision2.ErosProjcetDLL.Dynamic
             {
                 //if (item.Name== "linkType")
                 //{
-
                 //}
                 //给属性赋值
                 if (Vision2.ErosProjcetDLL.Dynamic.ErosDynamic.IsPropertyExist(collection, item.Name))
@@ -116,6 +116,7 @@ namespace Vision2.ErosProjcetDLL.Dynamic
             }
             return entity;
         }
+
         /// <summary>
         /// 获得DisplayName名称
         /// </summary>
@@ -183,6 +184,7 @@ namespace Vision2.ErosProjcetDLL.Dynamic
             values = Values.ToArray();
             return dispNames.ToArray();
         }
+
         /// <summary>
         /// 写入对应DisplayName的属性
         /// </summary>
@@ -210,13 +212,10 @@ namespace Vision2.ErosProjcetDLL.Dynamic
                             {
                                 System.Reflection.PropertyInfo propertyInfo = entity.GetType().GetProperty(var.Name);
 
-
-
                                 if (dats.DisplayName == item.Key)
                                 {
                                     if (propertyInfo.SetMethod != null)
                                     {
-
                                         if (item.Value != "null")
                                         {
                                             object defaultVal = null;
@@ -273,21 +272,16 @@ namespace Vision2.ErosProjcetDLL.Dynamic
                                         {
                                             propertyInfo.SetValue(entity, null);
                                         }
-
                                     }
                                 }
                             }
                             catch (Exception ex)
                             {
-
-
                             }
                         }
                     }
                 }
-
             }
-
         }
 
         /// <summary>
@@ -337,18 +331,16 @@ namespace Vision2.ErosProjcetDLL.Dynamic
 
             return entity;
         }
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="entity"></param>
         /// <returns></returns>
         public static dynamic GetDisPlayNameValue<T>(T entity)
         {
-
-
             return null;
-
         }
     }
 }

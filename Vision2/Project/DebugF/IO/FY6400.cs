@@ -8,7 +8,6 @@ namespace Vision2.Project.DebugF.IO
 {
     public class FY6400 : IDIDO
     {
-
         //函数体的声明
         [DllImport("FY6400.dll")]
         public static extern IntPtr FY6400_OpenDevice(Int32 Devnum);
@@ -25,7 +24,6 @@ namespace Vision2.Project.DebugF.IO
         [DllImport("FY6400.DLL")]
         public static extern Int32 FY6400_DO(IntPtr hDevice, Int32 dodata);
 
-
         [DllImport("FY6400.DLL")]
         public static extern Int32 FY6400_DO_Bit(IntPtr hDevice, Int32 dochdata, Int32 doch);
 
@@ -40,10 +38,12 @@ namespace Vision2.Project.DebugF.IO
 
         [DllImport("FY6400.DLL")]
         public static extern Int32 FY6400_CNT_Read(IntPtr hDevice, Int32 cntch, Int32[] cdata);
+
         [DllImport("FY6400.DLL")]
         public static extern Int32 FY6400_RDO(IntPtr hDevice);
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="hDevice">doch：</param>
         /// <param name="doch">入口参数 ，DO 通道号。范围 0--15代表输出通道 0--输出通道 15。</param>
@@ -63,7 +63,6 @@ namespace Vision2.Project.DebugF.IO
                 hDevice = FY6400_OpenDevice(ID);
                 if (hDevice == (IntPtr)(-1))
                 {
-
                     Vision2.ErosProjcetDLL.Project.AlarmText.AddTextNewLine("FY6400板卡初始化失败", System.Drawing.Color.Red);
                 }
                 else
@@ -97,12 +96,9 @@ namespace Vision2.Project.DebugF.IO
             catch (Exception)
             {
             }
-
         }
-        IntPtr hDevice;//句柄
 
-
-
+        private IntPtr hDevice;//句柄
 
         public bool IsInitialBool { get; private set; }
         public NameBool Int { get; set; }
@@ -119,7 +115,9 @@ namespace Vision2.Project.DebugF.IO
 
             return Convert.ToBoolean(d);
         }
-        int errInt;
+
+        private int errInt;
+
         public bool WritDO(int intex, int inde, bool value)
         {
             if (value)
@@ -133,7 +131,7 @@ namespace Vision2.Project.DebugF.IO
 
             if (errInt != 0)
             {
-                Vision2.ErosProjcetDLL.Project.AlarmText.AddTextNewLine("写入DO " + inde + "失败");
+                ErosProjcetDLL.Project.AlarmText.AddTextNewLine("写入DO " + inde + "失败");
                 return false;
             }
             return true;
@@ -147,7 +145,7 @@ namespace Vision2.Project.DebugF.IO
             }
             if (!this.IsInitialBool)
             {
-                Vision2.ErosProjcetDLL.Project.AlarmText.AddTextNewLine("未初始化成功,写入输出" + intex + "失败");
+                ErosProjcetDLL.Project.AlarmText.AddTextNewLine("未初始化成功,写入输出" + intex + "失败");
                 return false;
             }
 
@@ -161,7 +159,7 @@ namespace Vision2.Project.DebugF.IO
             }
             if (errInt != 0)
             {
-                Vision2.ErosProjcetDLL.Project.AlarmText.AddTextNewLine("写入DO " + intex + "失败");
+                ErosProjcetDLL.Project.AlarmText.AddTextNewLine("写入DO " + intex + "失败");
                 return false;
             }
             return true;

@@ -58,6 +58,7 @@ namespace Vision2.ErosProjcetDLL.PLCUI
         {
             return null;
         }
+
         public override void initialization()
         {
             foreach (var item in HControl)

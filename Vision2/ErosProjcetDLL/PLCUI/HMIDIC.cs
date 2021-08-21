@@ -12,6 +12,7 @@ namespace Vision2.ErosProjcetDLL.PLCUI
 
         [CategoryAttribute("调试控制界面"), DisplayName("调试")]
         public bool Debug { get; set; }
+
         public Dictionary<string, PLCIntEnum> DicPLCEnum { get; set; } = new Dictionary<string, PLCIntEnum>();
 
         public static HMIDIC This { get; set; }
@@ -31,6 +32,7 @@ namespace Vision2.ErosProjcetDLL.PLCUI
 
         public override string ProjectTypeName => "HMI";
         public override string Name => "界面管理";
+
         public HMIDIC()
         {
             This = this;
@@ -57,10 +59,12 @@ namespace Vision2.ErosProjcetDLL.PLCUI
             }
             base.SaveThis(path);
         }
+
         public override void UpProjectNode(TreeNode tree)
         {
             base.UpProjectNode(tree);
         }
+
         //public override void UpProperty(PropertyForm pertyForm, object data = null)
         //{
         //    base.UpProperty(pertyForm, data);
@@ -75,6 +79,7 @@ namespace Vision2.ErosProjcetDLL.PLCUI
         {
             return new IntEnumUserControl(this.DicPLCEnum);
         }
+
         public override void initialization()
         {
             if (ProjectClass == null)
@@ -97,7 +102,5 @@ namespace Vision2.ErosProjcetDLL.PLCUI
         {
             base.Close();
         }
-
-
     }
 }

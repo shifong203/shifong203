@@ -13,16 +13,18 @@ namespace Vision2.Project.DebugF.IO
         {
             InitializeComponent();
         }
-        vision.HWindID HWindID2 = new vision.HWindID();
 
-        bool isChange = true;
+        private vision.HWindID HWindID2 = new vision.HWindID();
+
+        private bool isChange = true;
+
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             try
             {
-                axisControl1.UpAxisData(DebugCompiler.GetThis().DDAxis.AxisS[listBox1.SelectedIndex]);
-                propertyGrid1.SelectedObject = DebugCompiler.GetThis().DDAxis.AxisS[listBox1.SelectedIndex];
-                AxisT = DebugCompiler.GetThis().DDAxis.AxisS[listBox1.SelectedIndex];
+                axisControl1.UpAxisData(DebugCompiler.Instance.DDAxis.AxisS[listBox1.SelectedIndex]);
+                propertyGrid1.SelectedObject = DebugCompiler.Instance.DDAxis.AxisS[listBox1.SelectedIndex];
+                AxisT = DebugCompiler.Instance.DDAxis.AxisS[listBox1.SelectedIndex];
             }
             catch (Exception)
             {
@@ -30,7 +32,7 @@ namespace Vision2.Project.DebugF.IO
             isChange = false;
         }
 
-        Axis AxisT;
+        private Axis AxisT;
 
         private void Form1C154DIDO_Load(object sender, EventArgs e)
         {
@@ -43,32 +45,32 @@ namespace Vision2.Project.DebugF.IO
                 //HWindID2.SetImaage
                 listBox1.ContextMenuStrip = contextMenuStrip1;
                 this.didoUserControl1.setDODI(DebugCompiler.GetDoDi());
-                DebugCompiler.GetThis().DDAxis.UpCycle += DDAxis_UpCycle;
+                DebugCompiler.Instance.DDAxis.UpCycle += DDAxis_UpCycle;
                 listBox2.Items.Clear();
                 Column1.Items.Clear();
                 listBox1.Items.Clear();
-                for (int i = 0; i < DebugCompiler.GetThis().DDAxis.AxisS.Count; i++)
+                for (int i = 0; i < DebugCompiler.Instance.DDAxis.AxisS.Count; i++)
                 {
-                    listBox1.Items.Add(DebugCompiler.GetThis().DDAxis.AxisS[i].Name);
-                    Column1.Items.Add(DebugCompiler.GetThis().DDAxis.AxisS[i].Name);
+                    listBox1.Items.Add(DebugCompiler.Instance.DDAxis.AxisS[i].Name);
+                    Column1.Items.Add(DebugCompiler.Instance.DDAxis.AxisS[i].Name);
                 }
-                foreach (var item in DebugCompiler.GetThis().DDAxis.AxisGrot)
+                foreach (var item in DebugCompiler.Instance.DDAxis.AxisGrot)
                 {
                     listBox2.Items.Add(item.Key);
                 }
-                foreach (var item in DebugCompiler.GetThis().DDAxis.Cylinders)
+                foreach (var item in DebugCompiler.Instance.DDAxis.Cylinders)
                 {
                     listBox4.Items.Add(item.Name);
                 }
                 listBox5.Items.Clear();
 
-                for (int it = 0; it < DebugCompiler.GetThis().DDAxis.ListTray.Count; it++)
+                for (int it = 0; it < DebugCompiler.Instance.DDAxis.ListTray.Count; it++)
                 {
                     listBox5.Items.Add(it);
                 }
 
                 listBox6.Items.Clear();
-                for (int it = 0; it < DebugCompiler.GetThis().ListMatrix.Count; it++)
+                for (int it = 0; it < DebugCompiler.Instance.ListMatrix.Count; it++)
                 {
                     listBox6.Items.Add(it);
                 }
@@ -77,13 +79,14 @@ namespace Vision2.Project.DebugF.IO
             {
             }
         }
+
         private void DDAxis_UpCycle(DODIAxis key)
         {
             try
             {
                 if (this.IsDisposed)
                 {
-                    DebugCompiler.GetThis().DDAxis.UpCycle -= DDAxis_UpCycle;
+                    DebugCompiler.Instance.DDAxis.UpCycle -= DDAxis_UpCycle;
                 }
                 if (AxisT != null)
                 {
@@ -111,12 +114,10 @@ namespace Vision2.Project.DebugF.IO
                     {
                         label9.BackColor = Color.Gray;
                     }
-
                 }
             }
             catch (Exception)
             {
-
             }
         }
 
@@ -124,13 +125,11 @@ namespace Vision2.Project.DebugF.IO
         {
             try
             {
-
-                DebugCompiler.GetThis().DDAxis.AxisS.Add(new Axis());
-                listBox1.Items.Add(DebugCompiler.GetThis().DDAxis.AxisS[DebugCompiler.GetThis().DDAxis.AxisS.Count - 1].Name);
+                DebugCompiler.Instance.DDAxis.AxisS.Add(new Axis());
+                listBox1.Items.Add(DebugCompiler.Instance.DDAxis.AxisS[DebugCompiler.Instance.DDAxis.AxisS.Count - 1].Name);
             }
             catch (Exception)
             {
-
             }
         }
 
@@ -138,11 +137,11 @@ namespace Vision2.Project.DebugF.IO
         {
             try
             {
-                for (int i = 0; i < DebugCompiler.GetThis().DDAxis.AxisS.Count; i++)
+                for (int i = 0; i < DebugCompiler.Instance.DDAxis.AxisS.Count; i++)
                 {
-                    if (listBox1.SelectedItem.ToString() == DebugCompiler.GetThis().DDAxis.AxisS[i].Name)
+                    if (listBox1.SelectedItem.ToString() == DebugCompiler.Instance.DDAxis.AxisS[i].Name)
                     {
-                        DebugCompiler.GetThis().DDAxis.AxisS.RemoveAt(i);
+                        DebugCompiler.Instance.DDAxis.AxisS.RemoveAt(i);
                     }
                 }
 
@@ -151,35 +150,28 @@ namespace Vision2.Project.DebugF.IO
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
-
             }
-
         }
 
         private void tsButton1_Click(object sender, EventArgs e)
         {
-
-            if (DebugCompiler.GetThis().ListKat == "FY6400")
+            if (DebugCompiler.Instance.ListKat == "FY6400")
             {
-                Run_project run_Project = DebugCompiler.GetThis().DDAxis as Run_project;
+                Run_project run_Project = DebugCompiler.Instance.DDAxis as Run_project;
                 DebugCompiler.GetRunP(run_Project);
                 ////socketClint.initialization();
                 IO.FY6400 fY6400 = new IO.FY6400() { ID = 0, };
 
                 fY6400.Initial();
-                fY6400.Int = DebugCompiler.GetThis().DDAxis.Int;
-                fY6400.Out = DebugCompiler.GetThis().DDAxis.Out;
+                fY6400.Int = DebugCompiler.Instance.DDAxis.Int;
+                fY6400.Out = DebugCompiler.Instance.DDAxis.Out;
                 DebugCompiler.GetDoDi(fY6400 as IDIDO);
             }
             else
             {
-                DebugCompiler.GetThis().DDAxis.Initial();
+                DebugCompiler.Instance.DDAxis.Initial();
             }
-
-
         }
-
-
 
         private void listBox2_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -189,12 +181,11 @@ namespace Vision2.Project.DebugF.IO
                 {
                     return;
                 }
-                if (DebugCompiler.GetThis().DDAxis.AxisGrot.ContainsKey(listBox2.SelectedItem.ToString()))
+                if (DebugCompiler.Instance.DDAxis.AxisGrot.ContainsKey(listBox2.SelectedItem.ToString()))
                 {
                     textBox1.Text = listBox2.SelectedItem.ToString();
-                    UpDataAxisGrot(DebugCompiler.GetThis().DDAxis.AxisGrot[listBox2.SelectedItem.ToString()]);
+                    UpDataAxisGrot(DebugCompiler.Instance.DDAxis.AxisGrot[listBox2.SelectedItem.ToString()]);
                 }
-
             }
             catch (Exception)
             {
@@ -202,7 +193,7 @@ namespace Vision2.Project.DebugF.IO
             isChange = false;
         }
 
-        void UpDataAxisGrot(List<string> vs)
+        private void UpDataAxisGrot(List<string> vs)
         {
             isChange = true;
             dataGridView1.Rows.Clear();
@@ -211,12 +202,12 @@ namespace Vision2.Project.DebugF.IO
                 int dt = dataGridView1.Rows.Add();
                 dataGridView1.Rows[dt].Cells[0].Value = vs[i];
 
-                for (int it = 0; it < DebugCompiler.GetThis().DDAxis.AxisS.Count; it++)
+                for (int it = 0; it < DebugCompiler.Instance.DDAxis.AxisS.Count; it++)
                 {
-                    if (DebugCompiler.GetThis().DDAxis.AxisS[it].Name == vs[i])
+                    if (DebugCompiler.Instance.DDAxis.AxisS[it].Name == vs[i])
                     {
-                        dataGridView1.Rows[dt].Cells[1].Value = DebugCompiler.GetThis().DDAxis.AxisS[it].AxisType;
-                        dataGridView1.Rows[dt].Cells[2].Value = DebugCompiler.GetThis().DDAxis.AxisS[it].AxisNo;
+                        dataGridView1.Rows[dt].Cells[1].Value = DebugCompiler.Instance.DDAxis.AxisS[it].AxisType;
+                        dataGridView1.Rows[dt].Cells[2].Value = DebugCompiler.Instance.DDAxis.AxisS[it].AxisNo;
                         break;
                     }
                 }
@@ -227,7 +218,7 @@ namespace Vision2.Project.DebugF.IO
         {
             try
             {
-                if (DebugCompiler.GetThis().DDAxis.AxisGrot.ContainsKey(listBox2.SelectedItem.ToString()))
+                if (DebugCompiler.Instance.DDAxis.AxisGrot.ContainsKey(listBox2.SelectedItem.ToString()))
                 {
                     dataGridView1.Rows.Add();
                 }
@@ -235,12 +226,10 @@ namespace Vision2.Project.DebugF.IO
             catch (Exception)
             {
             }
-
         }
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-
         }
 
         private void dataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
@@ -253,36 +242,28 @@ namespace Vision2.Project.DebugF.IO
                 }
                 if (e.ColumnIndex == 0)
                 {
-
-                    DebugCompiler.GetThis().DDAxis.AxisGrot[textBox1.Text].Clear();
-                    for (int it = 0; it < DebugCompiler.GetThis().DDAxis.AxisS.Count; it++)
+                    DebugCompiler.Instance.DDAxis.AxisGrot[textBox1.Text].Clear();
+                    for (int it = 0; it < DebugCompiler.Instance.DDAxis.AxisS.Count; it++)
                     {
-
-
-                        if (DebugCompiler.GetThis().DDAxis.AxisS[it].Name == dataGridView1.Rows[e.RowIndex].Cells[0].Value.ToString())
+                        if (DebugCompiler.Instance.DDAxis.AxisS[it].Name == dataGridView1.Rows[e.RowIndex].Cells[0].Value.ToString())
                         {
-                            dataGridView1.Rows[e.RowIndex].Cells[1].Value = DebugCompiler.GetThis().DDAxis.AxisS[it].AxisType;
-                            dataGridView1.Rows[e.RowIndex].Cells[2].Value = DebugCompiler.GetThis().DDAxis.AxisS[it].AxisNo;
-
+                            dataGridView1.Rows[e.RowIndex].Cells[1].Value = DebugCompiler.Instance.DDAxis.AxisS[it].AxisType;
+                            dataGridView1.Rows[e.RowIndex].Cells[2].Value = DebugCompiler.Instance.DDAxis.AxisS[it].AxisNo;
 
                             break;
                         }
                     }
                     for (int i = 0; i < dataGridView1.Rows.Count; i++)
                     {
-                        if (DebugCompiler.GetThis().DDAxis.AxisGrot.ContainsKey(textBox1.Text))
+                        if (DebugCompiler.Instance.DDAxis.AxisGrot.ContainsKey(textBox1.Text))
                         {
-                            DebugCompiler.GetThis().DDAxis.AxisGrot[textBox1.Text].Add(dataGridView1.Rows[i].Cells[0].Value.ToString());
+                            DebugCompiler.Instance.DDAxis.AxisGrot[textBox1.Text].Add(dataGridView1.Rows[i].Cells[0].Value.ToString());
                         }
                     }
                 }
-
-
-
             }
             catch (Exception)
             {
-
             }
         }
 
@@ -290,24 +271,19 @@ namespace Vision2.Project.DebugF.IO
         {
             try
             {
-
-                if (!DebugCompiler.GetThis().DDAxis.AxisGrot.ContainsKey(textBox1.Text))
+                if (!DebugCompiler.Instance.DDAxis.AxisGrot.ContainsKey(textBox1.Text))
                 {
-                    DebugCompiler.GetThis().DDAxis.AxisGrot.Add(textBox1.Text, new List<string>());
+                    DebugCompiler.Instance.DDAxis.AxisGrot.Add(textBox1.Text, new List<string>());
                     listBox2.Items.Add(textBox1.Text);
                 }
-
             }
             catch (Exception)
             {
             }
         }
 
-
-
         private void dataGridView1_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
-
         }
 
         private void 删除ToolStripMenuItem2_Click(object sender, EventArgs e)
@@ -318,9 +294,9 @@ namespace Vision2.Project.DebugF.IO
                 {
                     return;
                 }
-                if (DebugCompiler.GetThis().DDAxis.AxisGrot.ContainsKey(listBox2.SelectedItem.ToString()))
+                if (DebugCompiler.Instance.DDAxis.AxisGrot.ContainsKey(listBox2.SelectedItem.ToString()))
                 {
-                    DebugCompiler.GetThis().DDAxis.AxisGrot.Remove(listBox2.SelectedItem.ToString());
+                    DebugCompiler.Instance.DDAxis.AxisGrot.Remove(listBox2.SelectedItem.ToString());
                 }
                 listBox2.Items.Remove(listBox2.SelectedItem);
             }
@@ -333,11 +309,10 @@ namespace Vision2.Project.DebugF.IO
         {
             try
             {
-                if (DebugCompiler.GetThis().DDAxis.AxisGrot[textBox1.Text].Contains(dataGridView1.Rows[dataGridView1.SelectedCells[0].RowIndex].Cells[0].Value.ToString()))
+                if (DebugCompiler.Instance.DDAxis.AxisGrot[textBox1.Text].Contains(dataGridView1.Rows[dataGridView1.SelectedCells[0].RowIndex].Cells[0].Value.ToString()))
                 {
-
                 }
-                DebugCompiler.GetThis().DDAxis.AxisGrot[textBox1.Text].Remove(dataGridView1.Rows[dataGridView1.SelectedCells[0].RowIndex].Cells[0].Value.ToString());
+                DebugCompiler.Instance.DDAxis.AxisGrot[textBox1.Text].Remove(dataGridView1.Rows[dataGridView1.SelectedCells[0].RowIndex].Cells[0].Value.ToString());
                 dataGridView1.Rows.RemoveAt(dataGridView1.SelectedCells[0].RowIndex);
             }
             catch (Exception)
@@ -349,21 +324,20 @@ namespace Vision2.Project.DebugF.IO
         {
             try
             {
-
                 listBox2.Items.Clear();
                 Column1.Items.Clear();
                 listBox4.Items.Clear();
                 listBox1.Items.Clear();
-                for (int i = 0; i < DebugCompiler.GetThis().DDAxis.AxisS.Count; i++)
+                for (int i = 0; i < DebugCompiler.Instance.DDAxis.AxisS.Count; i++)
                 {
-                    listBox1.Items.Add(DebugCompiler.GetThis().DDAxis.AxisS[i].Name);
-                    Column1.Items.Add(DebugCompiler.GetThis().DDAxis.AxisS[i].Name);
+                    listBox1.Items.Add(DebugCompiler.Instance.DDAxis.AxisS[i].Name);
+                    Column1.Items.Add(DebugCompiler.Instance.DDAxis.AxisS[i].Name);
                 }
-                foreach (var item in DebugCompiler.GetThis().DDAxis.AxisGrot)
+                foreach (var item in DebugCompiler.Instance.DDAxis.AxisGrot)
                 {
                     listBox2.Items.Add(item.Key);
                 }
-                foreach (var item in DebugCompiler.GetThis().DDAxis.Cylinders)
+                foreach (var item in DebugCompiler.Instance.DDAxis.Cylinders)
                 {
                     if (item.Name == null)
                     {
@@ -375,24 +349,20 @@ namespace Vision2.Project.DebugF.IO
             }
             catch (Exception)
             {
-
-
             }
-
         }
 
         private void listBox3_SelectedIndexChanged(object sender, EventArgs e)
         {
-
         }
 
         private void 添加气缸ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
             {
-                DebugCompiler.GetThis().DDAxis.Cylinders.Add(new C154Cylinder { Name = "气缸1" });
+                DebugCompiler.Instance.DDAxis.Cylinders.Add(new C154Cylinder { Name = "气缸1" });
                 listBox4.Items.Clear();
-                foreach (var item in DebugCompiler.GetThis().DDAxis.Cylinders)
+                foreach (var item in DebugCompiler.Instance.DDAxis.Cylinders)
                 {
                     listBox4.Items.Add(item.Name);
                 }
@@ -401,8 +371,6 @@ namespace Vision2.Project.DebugF.IO
             {
                 MessageBox.Show(ex.Message);
             }
-
-
         }
 
         private void listBox4_SelectedIndexChanged(object sender, EventArgs e)
@@ -413,8 +381,8 @@ namespace Vision2.Project.DebugF.IO
                 {
                     return;
                 }
-                propertyGrid2.SelectedObject = DebugCompiler.GetThis().DDAxis.Cylinders[listBox4.SelectedIndex];
-                cylinderControl1.Up(DebugCompiler.GetThis().DDAxis.Cylinders[listBox4.SelectedIndex]);
+                propertyGrid2.SelectedObject = DebugCompiler.Instance.DDAxis.Cylinders[listBox4.SelectedIndex];
+                cylinderControl1.Up(DebugCompiler.Instance.DDAxis.Cylinders[listBox4.SelectedIndex]);
             }
             catch (Exception)
             {
@@ -430,9 +398,8 @@ namespace Vision2.Project.DebugF.IO
                 {
                     return;
                 }
-                DebugCompiler.GetThis().DDAxis.Cylinders.RemoveAt(listBox4.SelectedIndex);
+                DebugCompiler.Instance.DDAxis.Cylinders.RemoveAt(listBox4.SelectedIndex);
                 listBox4.Items.RemoveAt(listBox4.SelectedIndex);
-
             }
             catch (Exception)
             {
@@ -443,8 +410,8 @@ namespace Vision2.Project.DebugF.IO
         {
             try
             {
-                propertyGrid3.SelectedObject = DebugCompiler.GetThis().DDAxis.ListTray[listBox5.SelectedIndex];
-                trayControl1.SetTray(DebugCompiler.GetThis().DDAxis.ListTray[listBox5.SelectedIndex]);
+                propertyGrid3.SelectedObject = DebugCompiler.Instance.DDAxis.ListTray[listBox5.SelectedIndex];
+                trayControl1.SetTray(DebugCompiler.Instance.DDAxis.ListTray[listBox5.SelectedIndex]);
             }
             catch (Exception)
             {
@@ -458,12 +425,12 @@ namespace Vision2.Project.DebugF.IO
 
         private void trayControl1_Load(object sender, EventArgs e)
         {
-
         }
-        工艺库.MatrixC MatrixC;
+
+        private 工艺库.MatrixC MatrixC;
+
         private void button2_Click(object sender, EventArgs e)
         {
-
             try
             {
                 HWindID2.HeigthImage = (int)numericUpDown3.Value;
@@ -492,21 +459,20 @@ namespace Vision2.Project.DebugF.IO
         {
             try
             {
-                MatrixC = DebugCompiler.GetThis().ListMatrix[listBox6.SelectedIndex];
+                MatrixC = DebugCompiler.Instance.ListMatrix[listBox6.SelectedIndex];
                 propertyGrid4.SelectedObject = MatrixC;
             }
             catch (Exception)
             {
             }
-
         }
 
         private void 添加点ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
             {
-                DebugCompiler.GetThis().ListMatrix.Add(new 工艺库.MatrixC());
-                listBox6.Items.Add(DebugCompiler.GetThis().ListMatrix.Count - 1);
+                DebugCompiler.Instance.ListMatrix.Add(new 工艺库.MatrixC());
+                listBox6.Items.Add(DebugCompiler.Instance.ListMatrix.Count - 1);
             }
             catch (Exception)
             {
@@ -517,7 +483,7 @@ namespace Vision2.Project.DebugF.IO
         {
             try
             {
-                DebugCompiler.GetThis().ListMatrix.RemoveAt(listBox6.SelectedIndex);
+                DebugCompiler.Instance.ListMatrix.RemoveAt(listBox6.SelectedIndex);
                 listBox6.Items.RemoveAt(listBox6.SelectedIndex);
             }
             catch (Exception)

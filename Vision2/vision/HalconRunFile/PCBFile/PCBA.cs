@@ -1,20 +1,23 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
 using System.Windows.Forms;
 using Vision2.vision.HalconRunFile.Controls;
-using HalconDotNet;
-using System.Reflection;
-using System.IO;
 using Vision2.vision.HalconRunFile.PCBFile;
-using System;
 
 namespace Vision2.vision.HalconRunFile.RunProgramFile
 {
+    /// <summary>
+    ///
+    /// </summary>
     public class PCBA : RunProgram
     {
-        public override Control GetControl(HalconRun halcon)
+        public override Control GetControl(IDrawHalcon halcon)
         {
             return new PCBAControl(this);
         }
+
         public override RunProgram UpSatrt<T>(string path)
         {
             RunProgram pCBA = base.ReadThis<PCBA>(path);
@@ -32,12 +35,12 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 {
                     try
                     {
-                        if (item.Key!="")
+                        if (item.Key != "")
                         {
-                            dynamic obj = assembly.CreateInstance(item.Value); // 创建类的实例                            
+                            dynamic obj = assembly.CreateInstance(item.Value); // 创建类的实例
                             if (obj != null)
                             {
-                                DictR.Add(item.Key, obj.UpSatrt<RunProgram>(path + "\\" + item.Key+"\\"+item.Key));
+                                DictR.Add(item.Key, obj.UpSatrt<RunProgram>(path + "\\" + item.Key + "\\" + item.Key));
                                 DictR[item.Key].GetRunProgram(this);
                             }
                         }
@@ -58,31 +61,31 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         {
             foreach (var item in DictRoi)
             {
-
                 if (!DicPCBType.ContainsKey(item.Key))
                 {
                     DicPCBType.Add(item.Key, item.Value.GetType().ToString());
                 }
                 item.Value.Name = item.Key;
-                InterfacePCBA interfacePCBA =item.Value as InterfacePCBA;
-                if (interfacePCBA!=null)
+                InterfacePCBA interfacePCBA = item.Value as InterfacePCBA;
+                if (interfacePCBA != null)
                 {
-                    interfacePCBA.SaveThis(path + "\\"+this.Name);
+                    interfacePCBA.SaveThis(path + "\\" + this.Name);
                 }
-
             }
 
             base.SaveThis(path);
         }
+
         public Dictionary<string, RunProgram> GetDicPCBA()
         {
-
             return DictRoi;
         }
-        Dictionary <string, RunProgram> DictRoi { get; set; } = new Dictionary<string, RunProgram>();
+
+        private Dictionary<string, RunProgram> DictRoi { get; set; } = new Dictionary<string, RunProgram>();
 
         public Dictionary<string, string> DicPCBType { get; set; } = new Dictionary<string, string>();
-        public override bool RunHProgram( OneResultOBj oneResultOBj, out List< OneRObj> oneRObj, AoiObj aoiObj)
+
+        public override bool RunHProgram(OneResultOBj oneResultOBj, out List<OneRObj> oneRObj, AoiObj aoiObj)
         {
             oneRObj = new List<OneRObj>();
             Dictionary<string, bool> keyValue = new Dictionary<string, bool>();
@@ -90,19 +93,16 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             foreach (var item in DictRoi)
             {
                 item.Value.Name = item.Key;
-                bool rok=item.Value.Run( oneResultOBj);
-                 if (!rok)
-                 {
+                bool rok = item.Value.Run(oneResultOBj);
+                if (!rok)
+                {
+                    oneResultOBj.AddImageMassage(item.Value.GetAoi().AoiRow, item.Value.GetAoi().AoiCol, item.Value.GetAoi().CiName);
                     //oneResultOBj.AddNGOBJ(new OneRObj() { NGText = this.Name + "." + item.Key,ROI=ErrROI,NGROI= ErrROI });
-                   OK = false;
-                 }
+                    OK = false;
+                }
                 keyValue.Add(item.Key, rok);
             }
             return OK;
         }
-     
-
-   
-
     }
 }

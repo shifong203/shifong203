@@ -1,9 +1,6 @@
 ﻿using HalconDotNet;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Vision2.vision.RestVisionForm
 {
@@ -20,7 +17,6 @@ namespace Vision2.vision.RestVisionForm
 
         public Dictionary<string, HObject> P1keysOBj { get; set; } = new Dictionary<string, HObject>();
 
-
         public string PCNamePath { get; set; }
 
         public string ImageModePath { get; set; }
@@ -33,14 +29,13 @@ namespace Vision2.vision.RestVisionForm
         /// 生产名称
         /// </summary>
         public string Name { get; set; }
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public string LineName { get; set; }
 
-
         public int XNumber { get; set; }
         public int YNumber { get; set; }
-
     }
 }

@@ -510,7 +510,7 @@ namespace Vision2.捷普
             // loingToolStripMenuItem
             // 
             this.loingToolStripMenuItem.Name = "loingToolStripMenuItem";
-            this.loingToolStripMenuItem.Size = new System.Drawing.Size(180, 24);
+            this.loingToolStripMenuItem.Size = new System.Drawing.Size(128, 24);
             this.loingToolStripMenuItem.Text = "Login";
             this.loingToolStripMenuItem.Click += new System.EventHandler(this.loingToolStripMenuItem_Click);
             // 

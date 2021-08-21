@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
 using Vision2.vision.HalconRunFile.RunProgramFile;
+
 namespace Vision2.vision.HalconRunFile.Controls
 {
     /// <summary>
@@ -100,7 +101,6 @@ namespace Vision2.vision.HalconRunFile.Controls
                     {
                         try
                         {
-
                             int ds = 0;
 
                             dataGridView1.Rows.Clear();
@@ -183,7 +183,6 @@ namespace Vision2.vision.HalconRunFile.Controls
 
         private void toolStripButton2_Click(object sender, EventArgs e)
         {
-
         }
 
         private void toolStripSplitButton1_ButtonClick(object sender, EventArgs e)

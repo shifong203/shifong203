@@ -33,12 +33,13 @@ namespace Vision2.ErosProjcetDLL.Project
         /// </summary>
         public interface IUpProjetNode : IDoubleClickUpForm
         {
-
             string Name { get; }
+
             /// <summary>
             /// 程序类型名
             /// </summary>
             string ProjectTypeName { get; }
+
             /// <summary>
             /// 后缀名
             /// </summary>
@@ -53,6 +54,7 @@ namespace Vision2.ErosProjcetDLL.Project
             /// 后缀名
             /// </summary>
             string SuffixName { get; }
+
             /// <summary>
             /// 说明信息
             /// </summary>
@@ -218,7 +220,6 @@ namespace Vision2.ErosProjcetDLL.Project
         {
             try
             {
-
                 //Point ClickPoint = new Point(e.X, e.Y);
                 //TreeNode CurrentNode = tVProject.GetNodeAt(ClickPoint);
                 //isDrawNod = true;
@@ -320,7 +321,6 @@ namespace Vision2.ErosProjcetDLL.Project
         /// <param name="tree"></param>
         private void ProjectCalssNet(ProjectObj project, TreeNode tree)
         {
-
             if (project.ProjectClass != null)
             {
                 foreach (var itemk in project.ProjectClass)
@@ -421,12 +421,9 @@ namespace Vision2.ErosProjcetDLL.Project
                             {
                                 PropertyForm.UPProperty(CurrentNode.Tag);
                             }
-
                         }
                     }));
-
                 });
-
             }
             catch (Exception)
             {
@@ -491,7 +488,7 @@ namespace Vision2.ErosProjcetDLL.Project
         private void OpenProjectButton_Click(object sender, EventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.InitialDirectory = Vision2.ErosProjcetDLL.Project.ProjectINI.In.ProjectPathRun;
+            openFileDialog.InitialDirectory = ProjectINI.ProjectPathRun;
             DialogResult dialogResult = openFileDialog.ShowDialog();
             if (dialogResult == DialogResult.OK)
             {

@@ -80,6 +80,7 @@ namespace Vision2.ErosProjcetDLL.Project
 
             return dt;
         }
+
         /// <summary>
         /// 解析一行CSV数据
         /// </summary>
@@ -135,7 +136,6 @@ namespace Vision2.ErosProjcetDLL.Project
                             csvLiDesc.Add(ReplaceQuote(Reverse(revStr.Substring(lastIndex, i - lastIndex + 1))));
                             lastIndex = i + 1;
                         }
-
                     }
                     string[] tmpStrs = csvLiDesc.ToArray();
                     Array.Reverse(tmpStrs);
@@ -145,6 +145,7 @@ namespace Vision2.ErosProjcetDLL.Project
 
             return csvLiAsc.ToArray();
         }
+
         /// <summary>
         /// 反转字符串
         /// </summary>
@@ -159,6 +160,7 @@ namespace Vision2.ErosProjcetDLL.Project
             }
             return revStr;
         }
+
         /// <summary>
         /// 替换CSV中的双引号转义符为正常双引号,并去掉左右双引号
         /// </summary>
@@ -181,7 +183,6 @@ namespace Vision2.ErosProjcetDLL.Project
                 }
             }
             return rtnStr;
-
         }
     }
 }

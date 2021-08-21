@@ -1,7 +1,4 @@
-﻿using System;
-using System.ComponentModel;
-
-namespace Vision2.ErosProjcetDLL.UI.PropertyGrid
+﻿namespace Vision2.ErosProjcetDLL.UI.PropertyGrid
 {
     #region Helper Class - PropertyOrderPair
 

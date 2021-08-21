@@ -11,8 +11,10 @@ namespace Vision2.vision.Cams
         {
             InitializeComponent();
         }
-        ICamera Cam;
-        vision.HWindID HWindI;
+
+        private ICamera Cam;
+        private vision.HWindID HWindI;
+
         public CamProUI(ICamera camParam) : this()
         {
             Cam = camParam;
@@ -29,10 +31,10 @@ namespace Vision2.vision.Cams
             {
                 comboBox1.Items.Add(System.IO.Path.GetFileNameWithoutExtension(Files[i]));
             }
-
-
         }
-        List<HObject> LisImage { get; set; } = new List<HObject>();
+
+        private List<HObject> LisImage { get; set; } = new List<HObject>();
+
         private void button1_Click(object sender, EventArgs e)
         {
             try
@@ -48,11 +50,10 @@ namespace Vision2.vision.Cams
                 vision.Calib.AutoCalibPoint.Disp3DCoordSystem(StartParameters, pose, 0.5, out HObject x, out HObject y, out HObject z);
                 HWindI.OneResIamge.AddObj(x, ColorResult.red);
                 HWindI.OneResIamge.AddObj(y, ColorResult.green);
-                HWindI.OneResIamge.AddObj(z,ColorResult.blue);
+                HWindI.OneResIamge.AddObj(z, ColorResult.blue);
                 HWindI.OneResIamge.AddObj(Circle);
                 HWindI.OneResIamge.AddObj(hObject, "green");
                 HWindI.ShowImage();
-
             }
             catch (Exception ex)
             {
@@ -64,7 +65,6 @@ namespace Vision2.vision.Cams
         {
             try
             {
-
                 for (int i = 0; i < LisImage.Count; i++)
                 {
                     HWindI.HobjClear();
@@ -74,12 +74,11 @@ namespace Vision2.vision.Cams
                     HOperatorSet.GenCircle(out HObject Circle, rows, Cols, HTuple.TupleGenConst(rows.Length, 2));
                     vision.Calib.AutoCalibPoint.Disp3DCoordSystem(StartParameters, pose, 0.5, out HObject x, out HObject y, out HObject z);
                     HWindI.OneResIamge.AddObj(x, ColorResult.red);
-                    HWindI.OneResIamge.AddObj(y,ColorResult.green);
+                    HWindI.OneResIamge.AddObj(y, ColorResult.green);
                     HWindI.OneResIamge.AddObj(z, ColorResult.blue);
                     HWindI.OneResIamge.AddObj(Circle);
                     HWindI.OneResIamge.AddObj(hObject, "green");
                     HWindI.ShowImage();
-
                 }
                 HOperatorSet.CalibrateCameras(calibDataID, out HTuple error);
                 HOperatorSet.GetCalibData(calibDataID, "camera", 0, "params", out CamParam);
@@ -104,9 +103,11 @@ namespace Vision2.vision.Cams
                 MessageBox.Show(ex.Message);
             }
         }
-        HTuple StartParameters = new HTuple();
-        HTuple CamParam;
-        HTuple calibDataID;
+
+        private HTuple StartParameters = new HTuple();
+        private HTuple CamParam;
+        private HTuple calibDataID;
+
         private void button3_Click(object sender, EventArgs e)
         {
             try
@@ -114,7 +115,6 @@ namespace Vision2.vision.Cams
                 //LisImage.Clear();
                 //listBox1.Items.Clear();
                 StartParameters = new HTuple();
-
 
                 HOperatorSet.CreateCalibData("calibration_object", 1, 1, out calibDataID);
                 StartParameters.Append("area_scan_division");
@@ -154,7 +154,7 @@ namespace Vision2.vision.Cams
                 HOperatorSet.GenCircle(out HObject Circle, rows, Cols, HTuple.TupleGenConst(rows.Length, 2));
                 vision.Calib.AutoCalibPoint.Disp3DCoordSystem(StartParameters, pose, 0.5, out HObject x, out HObject y, out HObject z);
                 HWindI.OneResIamge.AddObj(x, ColorResult.red);
-                HWindI.OneResIamge.AddObj(y,ColorResult.green);
+                HWindI.OneResIamge.AddObj(y, ColorResult.green);
                 HWindI.OneResIamge.AddObj(z, ColorResult.blue);
                 HWindI.OneResIamge.AddObj(Circle);
                 HWindI.OneResIamge.AddObj(hObject, "green");
@@ -162,9 +162,7 @@ namespace Vision2.vision.Cams
             }
             catch (Exception ex)
             {
-
             }
-
         }
 
         private void button4_Click(object sender, EventArgs e)
@@ -218,7 +216,6 @@ namespace Vision2.vision.Cams
                 HOperatorSet.ImagePointsToWorldPlane(CamParam, FinalPose, 0, 0, "m", out HTuple xx, out HTuple yy);
                 HOperatorSet.SetOriginPose(FinalPose, xx, yy, 0, out HTuple PoseTemp);
                 HOperatorSet.GenImageToWorldPlaneMap(out HObject map, CamParam, PoseTemp, Cam.Width, Cam.Height, Cam.Width, Cam.Height, ScaleOrigin, "bilinear");
-
 
                 //HOperatorSet.GenRadialDistortionMap(out  map, StartParameters, CamParam, "bilinear");
                 Cam.Map = map;

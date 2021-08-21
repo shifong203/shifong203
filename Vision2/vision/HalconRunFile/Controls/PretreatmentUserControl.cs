@@ -10,6 +10,7 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             InitializeComponent();
         }
+
         public void SetData(RunProgramFile.RunProgram run, HWindID userC)
         {
             RunProgram = run;
@@ -29,10 +30,12 @@ namespace Vision2.vision.HalconRunFile.Controls
             trackBar4.Value = (int)numericUpDown12.Value;
             isCheave = false;
         }
-        RunProgramFile.RunProgram RunProgram;
-        bool isCheave;
 
-        HWindID visionUserC1;
+        private RunProgramFile.RunProgram RunProgram;
+        private bool isCheave;
+
+        private HWindID visionUserC1;
+
         private void trackBar1_Scroll(object sender, EventArgs e)
         {
             try
@@ -70,22 +73,18 @@ namespace Vision2.vision.HalconRunFile.Controls
                 HObject image = RunProgram.GetEmset(RunProgram.GetPThis().Image());
                 visionUserC1.SetImaage(image);
                 visionUserC1.ShowImage();
-             
             }
             catch (Exception)
             {
             }
-
         }
 
         private void label10_Click(object sender, EventArgs e)
         {
-
         }
 
         private void label11_Click(object sender, EventArgs e)
         {
-
         }
     }
 }

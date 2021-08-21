@@ -7,17 +7,6 @@ namespace Vision2.Project.DebugF.工艺库
         public AxisDPUserControl1()
         {
             InitializeComponent();
-
         }
-
-
-
-
-
-
-
-
     }
-
-
 }

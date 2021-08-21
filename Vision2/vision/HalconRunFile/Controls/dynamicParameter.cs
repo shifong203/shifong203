@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using Vision2.vision.HalconRunFile.RunProgramFile;
+
 namespace Vision2.vision.HalconRunFile.Controls
 {
     public partial class DynamicParameter : UserControl
@@ -11,9 +12,11 @@ namespace Vision2.vision.HalconRunFile.Controls
             dataGridView1.CellValueChanged += dataGridView1_CellValueChanged;
             //dataGridView1.CurrentCellDirtyStateChanged += dataGridView1_CurrentCellDirtyStateChanged;
         }
-        bool isEnb;
+
+        private bool isEnb;
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public void SetUpData(DicHtuple dicHtuple)
         {
@@ -22,7 +25,9 @@ namespace Vision2.vision.HalconRunFile.Controls
             dicHtuple.UpData(this.dataGridView1);
             isEnb = false;
         }
-        DicHtuple dHtuple;
+
+        private DicHtuple dHtuple;
+
         private void dataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             try
@@ -36,7 +41,6 @@ namespace Vision2.vision.HalconRunFile.Controls
                     if (dataGridView1.Rows[e.RowIndex].Cells[0].Value != null && dataGridView1.Rows[e.RowIndex].Cells[3].Value != null
                     && dataGridView1.Rows[e.RowIndex].Cells[0].Value.ToString() != "")
                     {
-
                         string key = dataGridView1.Rows[e.RowIndex].Cells[0].Value.ToString();
                         if (!dHtuple.DirectoryHTup.ContainsKey(key))
                         {
@@ -65,7 +69,6 @@ namespace Vision2.vision.HalconRunFile.Controls
                                     if (double.TryParse(datas[i2], out double doubes))
                                     {
                                         hTuple.Append(doubes);
-
                                     }
                                     else
                                     {
@@ -87,10 +90,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                             dHtuple.DirectoryHTup[key].DirectoryHTuple = hTuple;
                         }
                     }
-
                 }
-
-
             }
             catch (Exception ex)
             {
@@ -112,7 +112,6 @@ namespace Vision2.vision.HalconRunFile.Controls
             }
             catch (Exception)
             {
-
             }
         }
     }

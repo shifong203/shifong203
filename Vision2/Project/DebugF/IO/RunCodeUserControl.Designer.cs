@@ -57,7 +57,6 @@
             this.tsButton6 = new Vision2.ErosProjcetDLL.UI.ToolStrip.TSButton();
             this.tsButton7 = new Vision2.ErosProjcetDLL.UI.ToolStrip.TSButton();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.panel3 = new System.Windows.Forms.Panel();
             this.groupBox1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
@@ -71,18 +70,17 @@
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Margin = new System.Windows.Forms.Padding(2);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(53, 454);
+            this.panel1.Size = new System.Drawing.Size(73, 598);
             this.panel1.TabIndex = 60;
             // 
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.richTextBox2);
-            this.groupBox1.Controls.Add(this.statusStrip1);
-            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Right;
             this.groupBox1.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.groupBox1.Location = new System.Drawing.Point(0, 486);
+            this.groupBox1.Location = new System.Drawing.Point(646, 32);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(865, 170);
+            this.groupBox1.Size = new System.Drawing.Size(219, 598);
             this.groupBox1.TabIndex = 58;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "状态栏";
@@ -92,7 +90,7 @@
             this.richTextBox2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.richTextBox2.Location = new System.Drawing.Point(3, 22);
             this.richTextBox2.Name = "richTextBox2";
-            this.richTextBox2.Size = new System.Drawing.Size(859, 119);
+            this.richTextBox2.Size = new System.Drawing.Size(213, 573);
             this.richTextBox2.TabIndex = 47;
             this.richTextBox2.Text = "";
             // 
@@ -104,9 +102,9 @@
             this.toolStripStatusLabel3,
             this.toolStripStatusLabel2,
             this.toolStripStatusLabel4});
-            this.statusStrip1.Location = new System.Drawing.Point(3, 141);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 630);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(859, 26);
+            this.statusStrip1.Size = new System.Drawing.Size(865, 26);
             this.statusStrip1.TabIndex = 48;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -139,10 +137,10 @@
             this.richTextBox1.BackColor = System.Drawing.Color.Silver;
             this.richTextBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.richTextBox1.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.richTextBox1.Location = new System.Drawing.Point(53, 0);
+            this.richTextBox1.Location = new System.Drawing.Point(73, 0);
             this.richTextBox1.Name = "richTextBox1";
             this.richTextBox1.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedBoth;
-            this.richTextBox1.Size = new System.Drawing.Size(759, 454);
+            this.richTextBox1.Size = new System.Drawing.Size(573, 598);
             this.richTextBox1.TabIndex = 53;
             this.richTextBox1.Text = "";
             this.richTextBox1.VScroll += new System.EventHandler(this.richTextBox1_VScroll);
@@ -252,36 +250,25 @@
             // 
             this.panel2.Controls.Add(this.richTextBox1);
             this.panel2.Controls.Add(this.panel1);
-            this.panel2.Controls.Add(this.panel3);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel2.Location = new System.Drawing.Point(0, 32);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(865, 454);
+            this.panel2.Size = new System.Drawing.Size(646, 598);
             this.panel2.TabIndex = 64;
-            // 
-            // panel3
-            // 
-            this.panel3.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.panel3.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panel3.Location = new System.Drawing.Point(812, 0);
-            this.panel3.Margin = new System.Windows.Forms.Padding(2);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(53, 454);
-            this.panel3.TabIndex = 61;
             // 
             // RunCodeUserControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.panel2);
-            this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.statusStrip1);
+            this.Controls.Add(this.toolStrip1);
             this.Name = "RunCodeUserControl";
             this.Size = new System.Drawing.Size(865, 656);
             this.Load += new System.EventHandler(this.RunCodeUserControl_Load);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.RunCodeUserControl_Paint);
             this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             this.toolStrip1.ResumeLayout(false);
@@ -312,6 +299,5 @@
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel4;
         private Vision2.ErosProjcetDLL.UI.ToolStrip.TSButton tsButton7;
         private Vision2.ErosProjcetDLL.UI.ToolStrip.ToolStripCheckbox toolStripCheckbox1;
-        private System.Windows.Forms.Panel panel3;
     }
 }

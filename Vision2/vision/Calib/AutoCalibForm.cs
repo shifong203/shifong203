@@ -46,22 +46,20 @@ namespace Vision2.vision.Calib
             }
             catch (Exception)
             {
-
             }
             return "";
         }
 
-        HalconRunFile.RunProgramFile.HalconRun Halcon;
+        private HalconRunFile.RunProgramFile.HalconRun Halcon;
 
-        AutoCalibPoint AutoCali = new AutoCalibPoint();
+        private AutoCalibPoint AutoCali = new AutoCalibPoint();
+
         private void calibControls1_Load(object sender, EventArgs e)
         {
-
         }
 
         private void textBox5_TextChanged(object sender, EventArgs e)
         {
-
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -75,17 +73,16 @@ namespace Vision2.vision.Calib
                     return;
                 }
                 PuData();
-
             }
             catch (Exception)
             {
             }
         }
 
-        string camPath = "";
+        private string camPath = "";
+
         private void button3_Click(object sender, EventArgs e)
         {
-
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.InitialDirectory = AutoCalibPoint.GetFileName();
             openFileDialog.Filter = "相机内参.dat|*.dat";
@@ -102,10 +99,7 @@ namespace Vision2.vision.Calib
                 {
                     textBox7.Text = AutoCali.camParam.ToString();
                 }
-
             }
-
-
         }
 
         private void button4_Click(object sender, EventArgs e)
@@ -126,15 +120,12 @@ namespace Vision2.vision.Calib
             {
                 AutoCali.MCalibPaht = textBox3.Text;
             }
-
-
         }
 
         private void button6_Click(object sender, EventArgs e)
         {
             try
             {
-
                 HTuple hTuple = Halcon.GetRobotBaesPose();
                 if (hTuple == null)
                 {
@@ -149,14 +140,11 @@ namespace Vision2.vision.Calib
                 HOperatorSet.WritePose(hTuple, AutoCalibPoint.GetFileName() + "\\" + textBox5.Text + "\\" + numericUpDown2.Value.ToString() + ".dat");
                 numericUpDown2.Value++;
                 PuData();
-
             }
             catch (Exception ex)
             {
-
                 MessageBox.Show(ex.Message);
             }
-
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -194,8 +182,6 @@ namespace Vision2.vision.Calib
             {
                 MessageBox.Show(ex.Message);
             }
-
-
         }
 
         private void button8_Click(object sender, EventArgs e)
@@ -209,9 +195,10 @@ namespace Vision2.vision.Calib
             {
                 MessageBox.Show("创建失败");
             }
-
         }
-        HTuple ToolInBasePose;
+
+        private HTuple ToolInBasePose;
+
         private void treeView1_MouseUp(object sender, MouseEventArgs e)
         {
             try
@@ -246,15 +233,16 @@ namespace Vision2.vision.Calib
                         textBox5.Text = treeNode.Text;
                     }
                 }
-
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
         }
-        string path = "";
-        void PuData()
+
+        private string path = "";
+
+        private void PuData()
         {
             try
             {
@@ -284,8 +272,6 @@ namespace Vision2.vision.Calib
             }
             catch (Exception)
             {
-
-
             }
         }
 
@@ -320,16 +306,15 @@ namespace Vision2.vision.Calib
                         }
                         MessageBox.Show("创建成功");
                     }
-
                 });
-
             }
             catch (Exception)
             {
-
             }
         }
-        bool DRW;
+
+        private bool DRW;
+
         private void button9_Click(object sender, EventArgs e)
         {
             try
@@ -350,7 +335,6 @@ namespace Vision2.vision.Calib
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
-
             }
             DRW = false;
         }
@@ -359,7 +343,6 @@ namespace Vision2.vision.Calib
         {
             try
             {
-
                 if (ToolInBasePose == null)
                 {
                     MessageBox.Show("未选择机器人坐标");
@@ -383,7 +366,6 @@ namespace Vision2.vision.Calib
 
         private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
         {
-
         }
 
         private void button11_Click(object sender, EventArgs e)
@@ -395,16 +377,11 @@ namespace Vision2.vision.Calib
                     ToolInBasePose = Halcon.GetRobotBaesPose();
                     textBox9.Text = ToolInBasePose.ToString();
                 }
-
             }
             catch (Exception)
             {
-
             }
         }
-
-
-
 
         private void button14_Click(object sender, EventArgs e)
         {
@@ -419,7 +396,6 @@ namespace Vision2.vision.Calib
             catch (Exception)
             {
             }
-
         }
 
         private void button12_Click(object sender, EventArgs e)
@@ -474,7 +450,7 @@ namespace Vision2.vision.Calib
                 }
 
                 //HOperatorSet.HomMat2dRotate(item.CoordHanMat2DXY, new HTuple(u-180).TupleRad(), colCenter2, rowCenter2, out HTuple hommat);
-                //HOperatorSet.AffineTransPoint2d(hommat, rows.TupleSelect(rows.Length-1), col.TupleSelect(rows.Length - 1), 
+                //HOperatorSet.AffineTransPoint2d(hommat, rows.TupleSelect(rows.Length-1), col.TupleSelect(rows.Length - 1),
                 //    out HTuple qx, out HTuple qy);
                 //HOperatorSet.AffineTransPoint2d(hommat, rows.TupleSelect(rows.Length - 1), col.TupleSelect(rows.Length - 1), out qx, out qy);
                 //HOperatorSet.HomMat2dTranslate(hommat, qx, qy, out  hommat);
@@ -492,21 +468,16 @@ namespace Vision2.vision.Calib
                 //HOperatorSet.AffineTransPoint2d(hommat, rowCenter, colCenter, out  qx, out  qy);
                 //HOperatorSet.HomMat2dTranslate(item.CoordHanMat2DXY, rowCenter, colCenter, out  hommat);
                 //HOperatorSet.HomMat2dRotate(hommat, 0, rowCenter, colCenter, out hommat);
-
             }
             catch (Exception)
             {
-
-
             }
-
         }
 
         private void button13_Click(object sender, EventArgs e)
         {
             try
             {
-
                 OpenFileDialog openFileDialog = new OpenFileDialog();
                 openFileDialog.InitialDirectory = AutoCalibPoint.GetFileName();
                 openFileDialog.Filter = "相机工具.dat|*.dat";
@@ -519,17 +490,13 @@ namespace Vision2.vision.Calib
             }
             catch (Exception)
             {
-
-
             }
-
         }
 
         private void button15_Click(object sender, EventArgs e)
         {
             try
             {
-
                 Halcon = Vision.GetRunNameVision(textBox28.Text);
                 Halcon.ShowImage();
                 if (AutoCali.ReadCamCalib(Halcon.Image(), textBox3.Text, checkBox1.Checked))
@@ -554,9 +521,6 @@ namespace Vision2.vision.Calib
                 {
                     MessageBox.Show("读取出错");
                 }
-
-
-
             }
             catch (Exception)
             {
@@ -565,7 +529,6 @@ namespace Vision2.vision.Calib
 
         private void groupBox4_Enter(object sender, EventArgs e)
         {
-
         }
 
         private void button7_Click(object sender, EventArgs e)
@@ -581,11 +544,9 @@ namespace Vision2.vision.Calib
                 {
                     MessageBox.Show(textBox5.Text + "已存在添加失败！");
                 }
-
             }
             catch (Exception)
             {
-
                 throw;
             }
         }
@@ -611,7 +572,6 @@ namespace Vision2.vision.Calib
             catch (Exception tx)
             {
             }
-
         }
 
         private void button17_Click(object sender, EventArgs e)
@@ -657,15 +617,11 @@ namespace Vision2.vision.Calib
 
                 if (e.Button == MouseButtons.Right)
                 {
-
                 }
-
             }
             catch (Exception)
             {
-
             }
-
         }
 
         private void 读取标定ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -725,7 +681,6 @@ namespace Vision2.vision.Calib
                         {
                             Vision.Instance.DicCalib3D.Remove(treeView2.SelectedNode.Text);
                             treeView2.SelectedNode.Remove();
-
                         }
                         else
                         {
@@ -735,10 +690,7 @@ namespace Vision2.vision.Calib
                 }
                 catch (Exception)
                 {
-
-
                 }
-
             }
             catch (Exception)
             {
@@ -754,11 +706,9 @@ namespace Vision2.vision.Calib
                     ToolInBasePose = Halcon.GetRobotBaesPose();
                     //textBox17.Text = ToolInBasePose.ToString();
                 }
-
             }
             catch (Exception)
             {
-
             }
         }
 
@@ -782,10 +732,6 @@ namespace Vision2.vision.Calib
             }
             DRW = false;
         }
-
-
-
-
 
         private void button22_Click(object sender, EventArgs e)
         {
@@ -846,7 +792,6 @@ namespace Vision2.vision.Calib
         {
             try
             {
-
                 if (AutoCali == null)
                 {
                     AutoCali = new AutoCalibPoint();
@@ -911,7 +856,6 @@ namespace Vision2.vision.Calib
             catch (Exception tx)
             {
             }
-
         }
 
         private void button21_Click_1(object sender, EventArgs e)
@@ -937,7 +881,6 @@ namespace Vision2.vision.Calib
             catch (Exception tx)
             {
             }
-
         }
 
         private void button27_Click(object sender, EventArgs e)
@@ -978,7 +921,6 @@ namespace Vision2.vision.Calib
 
         private void button29_Click(object sender, EventArgs e)
         {
-
         }
 
         private void 执行九点标定ToolStripMenuItem_Click(object sender, EventArgs e)

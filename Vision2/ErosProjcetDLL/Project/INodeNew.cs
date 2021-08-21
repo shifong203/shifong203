@@ -33,10 +33,10 @@ namespace Vision2.ErosProjcetDLL.Project
             if (treeNode != null)
             {
                 treeNode.Tag = NewProjectNode(treeNode.Text);
-
             }
             return treeNode;
         }
+
         /// <summary>
         /// 新建对象，并返回节点
         /// </summary>
@@ -44,7 +44,6 @@ namespace Vision2.ErosProjcetDLL.Project
         /// <returns></returns>
         public static TreeNode NewTreeNodeProject(List<string> listAxes, string name)
         {
-
             string nameStr = Interaction.InputBox("请输入点名称", "新建" + name, name, 100, 100);
         str:
             if (nameStr == "")
@@ -67,15 +66,16 @@ namespace Vision2.ErosProjcetDLL.Project
         {
             if (text == "")
             {
-
                 return;
             }
             Vision2.ErosProjcetDLL.Project.AlarmListBoxt.AddAlarmText(new Vision2.ErosProjcetDLL.Project.AlarmText.alarmStruct() { Name = Name, Text = text, Time = DateTime.Now.ToLongDateString() });
         }
+
         public virtual void Reset()
         {
             Vision2.ErosProjcetDLL.Project.AlarmListBoxt.RomveAlarm(this.Name);
         }
+
         public virtual void Remove(TreeNode treeNode)
         {
             treeNode.Remove();

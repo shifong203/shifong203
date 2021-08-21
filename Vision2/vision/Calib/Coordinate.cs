@@ -12,8 +12,8 @@ namespace Vision2.vision
     /// </summary>
     public class Coordinate : ProjectNodet.IClickNodeProject
     {
-
         public string Name { get; set; }
+
         public class CpointXY
         {
             public double X { get; set; } = 0;
@@ -103,8 +103,8 @@ namespace Vision2.vision
             get { return coordHanMat2DXY; }
             set { coordHanMat2DXY = value; }
         }
-        private HTuple coordHanMat2DXY = new HTuple();
 
+        private HTuple coordHanMat2DXY = new HTuple();
 
         [Description("图像彷射转换"), Category("2d坐标"), DisplayName("图像彷射转换")]
         public HTuple CoordHanMat2d { get; set; }
@@ -126,6 +126,7 @@ namespace Vision2.vision
 
         [Description("原点Y"), Category("原点"), DisplayName("原点Y")]
         public double aSY { get; set; } = 0;
+
         [Description("坐标转换系数"), Category("图像坐标"), DisplayName("转换系数")]
         /// <summary>
         /// 缩放
@@ -140,12 +141,16 @@ namespace Vision2.vision
 
         [Description("像素坐标Ros"), Category("坐标转换"), DisplayName("图像彷射点Rows")]
         public HTuple Rows { get; set; }
+
         [Description("像素坐标Cols"), Category("坐标转换"), DisplayName("图像彷射点Cols")]
         public HTuple Columns { get; set; }
+
         [Description("机械坐标Xs"), Category("坐标转换"), DisplayName("机械坐标点Xs")]
         public HTuple Xs { get; set; }
+
         [Description("机械坐标Ys"), Category("坐标转换"), DisplayName("机械坐标点Ys")]
         public HTuple Ys { get; set; }
+
         /// <summary>
         /// 绘制坐标原点
         /// </summary>
@@ -196,6 +201,7 @@ namespace Vision2.vision
             }
             this.Scale = s;
         }
+
         /// <summary>
         /// 计算转换
         /// </summary>
@@ -207,7 +213,6 @@ namespace Vision2.vision
             Xs = Xst;
             HOperatorSet.VectorToHomMat2d(this.Rows, this.Columns, this.Ys, this.Xs, out HTuple HomMat);
             CoordHanMat2DXY = HomMat;
-
 
             Mat2dPar();
         }
@@ -236,6 +241,7 @@ namespace Vision2.vision
             this.RCU = phi.TupleDeg();
             this.RCScale = theat;
         }
+
         public string GetMatHomString()
         {
             HOperatorSet.HomMat2dToAffinePar(this.CoordHanMat2DXY, out HTuple sx, out HTuple sy,
@@ -244,6 +250,7 @@ namespace Vision2.vision
             return string.Format("坐标斜切X:{0}斜切Y:{1}角度旋转:{2}斜度:{3}偏移y:{4}偏移x:{5}"
                 , sx.TupleString("0.02f"), sy.TupleString("0.02f"), phi.TupleDeg().TupleString("0.02f"), theta.TupleDeg().TupleString("0.02f"), tx.TupleString("0.02f"), ty.TupleString("0.02f"));
         }
+
         public string GetRCMatHomString()
         {
             HOperatorSet.HomMat2dToAffinePar(this.CoordHanMat2d, out HTuple sx, out HTuple sy,
@@ -356,6 +363,7 @@ namespace Vision2.vision
                 halcon.LogErr(ex);
             }
         }
+
         /// <summary>
         /// 显示区域
         /// </summary>
@@ -447,6 +455,7 @@ namespace Vision2.vision
             }
             return c2D;
         }
+
         public void GetPointXYtoRC(double Y, double X, out HTuple rows, out HTuple cols)
         {
             rows = new HTuple();
@@ -455,7 +464,6 @@ namespace Vision2.vision
             {
                 HOperatorSet.AffineTransPixel(this.CoordHanMat2d, Y, X, out rows, out cols);
                 //HOperatorSet.AffineTransPoint2d(this.coordHanMat2d, Y, X, out HTuple qx, out HTuple qy);
-
             }
             catch (Exception)
             {
@@ -464,7 +472,6 @@ namespace Vision2.vision
 
         public HTuple GetContrs(HTuple value)
         {
-
             try
             {
                 HOperatorSet.AffineTransPixel(this.CoordHanMat2d, value, HTuple.TupleGenConst(value.Length, 0), out HTuple rows, out HTuple cols);
@@ -473,7 +480,6 @@ namespace Vision2.vision
             }
             catch (Exception)
             {
-
             }
             return new HTuple();
         }
@@ -482,8 +488,6 @@ namespace Vision2.vision
         {
             values.TupleDiv(Scale);
             return values.TupleMult(Scale);
-
-
         }
 
         /// <summary>
@@ -519,7 +523,6 @@ namespace Vision2.vision
             {
             }
         }
-
 
         public Control GetThisControl()
         {

@@ -12,7 +12,6 @@ namespace Vision2.Project.formula
 
         private void formulaContrsl1_Load(object sender, EventArgs e)
         {
-
         }
     }
 }

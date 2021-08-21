@@ -15,12 +15,15 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             " 'lanser1', 'lanser2', 'mshen', 'shen', 'sobel_fast'"),
             Category("视觉参数"), DisplayName("边缘算法")]
         public string Filter { get; set; } = "canny";
+
         [DescriptionAttribute("过滤器参数:小的值导致强大的平滑，因此更少的细节(相反的'精明')。"),
             Category("视觉参数"), DisplayName("过滤器")]
         public double Alpha { get; set; } = 4.0;
+
         [DescriptionAttribute("非最大抑制(“none”，如果不需要)。 'hvnms', 'inms', 'nms', 'none'"),
          Category("视觉参数"), DisplayName("最大抑制")]
         public string NMS { get; set; } = "nms";
+
         [DescriptionAttribute("低阈值的迟滞阈值操作(如果不需要阈值操作为负)。1 ≤ Low ≤ 255"),
         Category("视觉参数"), DisplayName("低阀值")]
         public double Low { get; set; } = 20;
@@ -28,14 +31,16 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         [DescriptionAttribute("滞回阈值操作的上阈值(如果不需要阈值操作为负)。 1 ≤ High ≤ 255"),
         Category("视觉参数"), DisplayName("高阀值")]
         public double High { get; set; } = 40;
+
         [DescriptionAttribute("二值化 1 ≤ Low ≤ 255"),
         Category("视觉参数"), DisplayName("二值化下限")]
         public byte thresholdLow { get; set; } = 1;
+
         [DescriptionAttribute("二值化上限 1 ≤ High ≤ 255"),
         Category("视觉参数"), DisplayName("二值化上限")]
         public byte thresholdHigh { get; set; } = 255;
 
-        public override bool RunHProgram( OneResultOBj oneResultOBj, out List<OneRObj> oneRObjs, AoiObj aoiObj)
+        public override bool RunHProgram(OneResultOBj oneResultOBj, out List<OneRObj> oneRObjs, AoiObj aoiObj)
         {
             oneRObjs = new List<OneRObj>();
             try
@@ -53,7 +58,8 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             }
             return false;
         }
-        public override Control GetControl(HalconRun halcon)
+
+        public override Control GetControl(IDrawHalcon halcon)
         {
             return new CalculateUserControl(this);
         }

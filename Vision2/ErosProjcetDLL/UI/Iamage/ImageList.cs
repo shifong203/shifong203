@@ -12,8 +12,8 @@ namespace Vision2.ErosProjcetDLL.UI.Iamage
         {
             InitializeComponent();
             Size size = this.Size;
-
         }
+
         public List<Image> Images;
         public List<string> Paths;
 
@@ -22,6 +22,7 @@ namespace Vision2.ErosProjcetDLL.UI.Iamage
         /// 水平还是垂直fales水平，ture垂直
         /// </summary>
         public bool Orientation { get; set; }
+
         /// <summary>
         /// 显示图片组合
         /// </summary>
@@ -68,7 +69,6 @@ namespace Vision2.ErosProjcetDLL.UI.Iamage
             this.AutoScroll = true;
             for (int i = 0; i < paths.Count; i++)
             {
-
                 PictureBox pictureBox = new PictureBox();
                 pictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
                 ///垂直或水平
@@ -91,9 +91,9 @@ namespace Vision2.ErosProjcetDLL.UI.Iamage
                     pictureBox.LoadAsync(@"D:\WindowsFormsApp5\NokidaE\Iamge\favicon-20180531010245196.ico");
                 }
                 this.Controls.Add(pictureBox);
-
             }
         }
+
         /// <summary>
         /// 更新指定地址Paths显示的图片
         /// </summary>
@@ -103,7 +103,6 @@ namespace Vision2.ErosProjcetDLL.UI.Iamage
             {
                 RefreshIamge(Paths);
             }
-
         }
     }
 }

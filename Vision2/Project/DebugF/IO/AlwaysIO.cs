@@ -36,9 +36,11 @@ namespace Vision2.Project.DebugF.IO
                 }
             }
         }
+
         public sbyte Dnumber { get; set; }
         public double TimeS { get; set; } = 0.1;
         public bool ISValue { get; set; } = true;
+
         public bool Value
         {
             get
@@ -57,8 +59,9 @@ namespace Vision2.Project.DebugF.IO
                 }
             }
         }
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public bool TimeValue
         {
@@ -89,9 +92,10 @@ namespace Vision2.Project.DebugF.IO
         }
 
         public bool Enbelr = true;
-        System.Diagnostics.Stopwatch WatchT = new System.Diagnostics.Stopwatch();
-        bool Runing;
-        bool valtM;
+        private System.Diagnostics.Stopwatch WatchT = new System.Diagnostics.Stopwatch();
+        private bool Runing;
+        private bool valtM;
+
         public void Always()
         {
             if (Runing)

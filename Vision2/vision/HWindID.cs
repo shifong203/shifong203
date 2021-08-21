@@ -2,15 +2,17 @@
 using System;
 using System.Windows.Forms;
 using Vision2.vision.HalconRunFile.RunProgramFile;
+
 namespace Vision2.vision
 {
-    public class HWindID :IDrawHalcon
+    public class HWindID : IDrawHalcon
     {
         public HWindID()
         {
             hObject = new HObject();
             hObject.GenEmptyObj();
         }
+
         public static void DispImage(HTuple hv_WindowHandle, HObject iamge)
         {
             try
@@ -39,10 +41,11 @@ namespace Vision2.vision
         private HTuple ptX, ptY;
         private HTuple m_ImageRow0, m_ImageCol0;
         private HTuple hv_Button;
-        bool meuseBool;
-        bool WhidowAdd;
+        private bool meuseBool;
+        private bool WhidowAdd;
         public double WidthImage = 2000;
         public double HeigthImage = 2000;
+
         //public HObject image;
         public string Mesgage;
 
@@ -52,7 +55,8 @@ namespace Vision2.vision
         }
 
         //HWindowControl hWindowControl1;
-        HWindow hWindow;
+        private HWindow hWindow;
+
         //public void Initialize(HWindowControl hWindowControl)
         //{
         //    //hWindowControl1 = hWindowControl;
@@ -93,8 +97,7 @@ namespace Vision2.vision
             hSmartWindowControl.KeyUp += HWindowControl1_KeyUp;
         }
 
-        HWindowControl hSmartWindowControl;
-
+        private HWindowControl hSmartWindowControl;
 
         public void SetDraw(bool isMargin)
         {
@@ -113,7 +116,8 @@ namespace Vision2.vision
             {
             }
         }
-        public void SetPart(HTuple rowStrat,HTuple colStrat,HTuple rowEnd,HTuple colEnd)
+
+        public void SetPart(HTuple rowStrat, HTuple colStrat, HTuple rowEnd, HTuple colEnd)
         {
             try
             {
@@ -123,6 +127,7 @@ namespace Vision2.vision
             {
             }
         }
+
         public void SetPerpetualPart(HTuple rowStrat, HTuple colStrat, HTuple rowEnd, HTuple colEnd)
         {
             try
@@ -137,9 +142,9 @@ namespace Vision2.vision
             {
             }
         }
+
         private void HWindowControl1_KeyUp(object sender, KeyEventArgs e)
         {
-
             if (e.KeyCode == Keys.ControlKey)
             {
                 WhidowAdd = false;
@@ -161,15 +166,15 @@ namespace Vision2.vision
             {
                 this.OneResIamge.IsXLDOrImage = true;
             }
-            if (e.Control&&e.KeyCode==Keys.Q)
+            if (e.Control && e.KeyCode == Keys.Q)
             {
                 try
                 {
                     foreach (var item in OneResIamge.GetKeyHobj())
                     {
                         HOperatorSet.AreaCenter(item.Value.Object, out HTuple area, out HTuple row, out HTuple col);
-                        HOperatorSet.DispText(this.hWindow, 
-                           item.Key,"image", row, col , "black", new HTuple(), new HTuple());
+                        HOperatorSet.DispText(this.hWindow,
+                           item.Key, "image", row, col, "black", new HTuple(), new HTuple());
                     }
                 }
                 catch (Exception)
@@ -182,6 +187,7 @@ namespace Vision2.vision
         {
             meuseBool = false;
         }
+
         private void hWindowControl1_MouseDown(object sender, HMouseEventArgs e)
         {
             try
@@ -224,13 +230,10 @@ namespace Vision2.vision
             catch (Exception ex)
             {
             }
-
         }
-
 
         private void hWindowControl4_HMouseMove(object sender, HMouseEventArgs e)
         {
-
             try
             {
                 if (!WhidowAdd)
@@ -249,7 +252,7 @@ namespace Vision2.vision
                             m_ImageRow1 = WidthImage;
                             m_ImageCol1 = HeigthImage;
                         }
-                    
+
                         System.Drawing.Rectangle rect2 = hSmartWindowControl.ImagePart;
                         HTuple row = rect2.Y + -motionY;
                         HTuple colum = rect2.X + -motionX;
@@ -262,10 +265,10 @@ namespace Vision2.vision
                 }
                 ShowImage();
                 string data = "C:" + e.X.ToString("0.0") + "R:" + e.Y.ToString("0.0");
-                if (Vision.GetRunNameVision()!=null)
+                if (Vision.GetRunNameVision() != null)
                 {
                     Vision.GetRunNameVision().GetCalib().GetPointRctoXY(e.Y, e.X, out HTuple ys, out HTuple xs);
-                    Vision.Disp_message(hWindow, "X:" + xs.TupleString("0.02f") + 
+                    Vision.Disp_message(hWindow, "X:" + xs.TupleString("0.02f") +
                         "Y:" + ys.TupleString("0.02f"), 5,
                         hSmartWindowControl.Width / 4, true, "red", "false");
                 }
@@ -278,19 +281,20 @@ namespace Vision2.vision
                     }
                     else if (Grey.Length == 1)
                     {
-                        data+= "B:" + Grey.D.ToString("000");
+                        data += "B:" + Grey.D.ToString("000");
                     }
                 }
                 catch (Exception)
                 {
                 }
-             
+
                 Vision.Disp_message(hWindow, data, hSmartWindowControl.Height - 25, hSmartWindowControl.Width / 4, true, "red", "false");
             }
             catch (Exception)
             {
             }
         }
+
         private void hWindowControl2_HMouseWheel(object sender, HalconDotNet.HMouseEventArgs e)
         {
             try
@@ -313,7 +317,6 @@ namespace Vision2.vision
                 //向上滑动滚轮，图像缩小。以当前鼠标的坐标为支点进行缩小或放大
                 if (e.Delta > 0)
                 {
-
                     //重新计算缩小后的图像区域
                     Row0_1 = ptY - 1 / (1 - H_Scale) * (ptY - m_ImageRow0);
                     Row1_1 = ptY - 1 / (1 - H_Scale) * (ptY - m_ImageRow1);
@@ -355,6 +358,7 @@ namespace Vision2.vision
             {
             }
         }
+
         public int ImageRowStrat = 0;
         public int ImageColStrat = 0;
 
@@ -381,42 +385,43 @@ namespace Vision2.vision
             {
             }
         }
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public OneResultOBj OneResIamge = new OneResultOBj();
 
-        HObject hObject;
+        private HObject hObject;
 
-        public bool Drawing { get ; set ; }
-        public int DrawType { get ; set ; }
-        public bool DrawErasure { get ; set ; }
+        public bool Drawing { get; set; }
+        public int DrawType { get; set; }
+        public bool DrawErasure { get; set; }
 
         public void ShowImage()
         {
             try
             {
-                if (hWindow!=null)
+                if (hWindow != null)
                 {
                     OneResIamge.ShowAll(hWindow);
                 }
-       
             }
             catch (Exception)
             {
             }
         }
+
         public void ShowObj()
         {
             try
             {
                 OneResIamge.ShowAll(hWindow);
-
             }
             catch (Exception)
             {
             }
         }
+
         public void HobjClear()
         {
             OneResIamge.ClearAllObj();
@@ -435,30 +440,28 @@ namespace Vision2.vision
 
         public HTuple hWindowHalcon(HTuple hawid = null)
         {
-           return this.hWindow;
+            return this.hWindow;
         }
 
         public HObject Image(HObject hObject = null)
         {
-            if (hObject!=null)
+            if (hObject != null)
             {
                 OneResIamge.Image = hObject;
             }
-            if (OneResIamge==null)
+            if (OneResIamge == null)
             {
                 OneResIamge = new OneResultOBj();
             }
-          return     OneResIamge.Image;
+            return OneResIamge.Image;
         }
-
-    
 
         public void AddMeassge(HTuple text)
         {
             OneResIamge.AddMeassge(text);
         }
 
-        public void AddObj(HObject hObject,ColorResult colorResult = ColorResult.green)
+        public void AddObj(HObject hObject, ColorResult colorResult = ColorResult.green)
         {
             OneResIamge.AddObj(hObject, colorResult);
         }

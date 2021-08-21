@@ -118,7 +118,6 @@ namespace Vision2.ErosProjcetDLL.PLCUI
         {
         }
 
-
         /// <summary>
         ///
         /// </summary>

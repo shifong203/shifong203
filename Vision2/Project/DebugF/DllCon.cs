@@ -15,7 +15,9 @@ namespace Vision2.Project.DebugF
             DllS = dllUers;
             UpData();
         }
-        List<DllUers> DllS;
+
+        private List<DllUers> DllS;
+
         private void button1_Click(object sender, EventArgs e)
         {
             try
@@ -35,7 +37,6 @@ namespace Vision2.Project.DebugF
             }
             catch (Exception)
             {
-
                 throw;
             }
         }
@@ -62,7 +63,8 @@ namespace Vision2.Project.DebugF
                 UpData();
             }
         }
-        void UpData()
+
+        private void UpData()
         {
             listBox1.Items.Clear();
             foreach (var item in DllS)
@@ -126,12 +128,10 @@ namespace Vision2.Project.DebugF
                     return;
                 }
             }
-
         }
 
         private void button5_Click(object sender, EventArgs e)
         {
-
         }
     }
 }

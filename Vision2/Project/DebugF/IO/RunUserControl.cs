@@ -11,6 +11,7 @@ namespace Vision2.Project.DebugF.IO
         {
             InitializeComponent();
         }
+
         private void RunUserControl_Load(object sender, EventArgs e)
         {
             try
@@ -25,9 +26,9 @@ namespace Vision2.Project.DebugF.IO
                         {
                             number++;
                             Thread.Sleep(2);
-                            label3.Text = DebugCompiler.GetThis().DDAxis.runID.ToString();
-                            label1.Text = "CT:" + DebugCompiler.GetThis().DDAxis.WatchT.Elapsed.TotalSeconds;
-                            if (DebugCompiler.GetThis().DDAxis.AlwaysIODot.Value)
+                            label3.Text = DebugCompiler.Instance.DDAxis.runID.ToString();
+                            label1.Text = "CT:" + DebugCompiler.Instance.DDAxis.WatchT.Elapsed.TotalSeconds;
+                            if (DebugCompiler.Instance.DDAxis.AlwaysIODot.Value)
                             {
                                 pictureBox2.BackColor = Color.GreenYellow;
                             }
@@ -35,7 +36,7 @@ namespace Vision2.Project.DebugF.IO
                             {
                                 pictureBox2.BackColor = Color.Gray;
                             }
-                            if (DebugCompiler.GetThis().DDAxis.AlwaysIOInt.Value)
+                            if (DebugCompiler.Instance.DDAxis.AlwaysIOInt.Value)
                             {
                                 label2.BackColor = Color.GreenYellow;
                             }
@@ -43,17 +44,15 @@ namespace Vision2.Project.DebugF.IO
                             {
                                 label2.BackColor = Color.Gray;
                             }
-                            if (DebugCompiler.GetThis().DDAxis.AlwaysIOOut.Value)
+                            if (DebugCompiler.Instance.DDAxis.AlwaysIOOut.Value)
                             {
-                                if (!DebugCompiler.GetThis().DDAxis.Int[DebugCompiler.GetThis().To_Board_DI])
+                                if (!DebugCompiler.Instance.DDAxis.Int[DebugCompiler.Instance.To_Board_DI])
                                 {
                                     if (DebugCompiler.EquipmentStatus == ErosSocket.ErosConLink.EnumEquipmentStatus.运行中)
                                     {
                                         //if (DebugCompiler.GetThis().DDAxis.runID>6&& DebugCompiler.GetThis().DDAxis.runID>=1)
                                         //{
-                                            DebugCompiler.GetThis().DDAxis.MoveAxisStop();
-                             
-                     
+                                        DebugCompiler.Instance.DDAxis.MoveAxisStop();
                                     }
                                 }
                                 label4.BackColor = Color.GreenYellow;
@@ -64,11 +63,20 @@ namespace Vision2.Project.DebugF.IO
                             }
                             this.Invoke(new Action(() =>
                             {
-                                label4.Text = "出" + DebugCompiler.GetThis().DDAxis.AlwaysIOOut.RunTime.ToString("00.0");
+                                if (DODIAxis.RresWait)
+                                {
+                                    label5.Visible = true;
+                                    label5.BackColor = Color.Green;
+                                }
+                                else
+                                {
+                                    label5.Visible = false;
+                                }
+                                label4.Text = "出" + DebugCompiler.Instance.DDAxis.AlwaysIOOut.RunTime.ToString("00.0");
                                 //label3.Text = "" + DebugCompiler.GetThis().DDAxis.AlwaysIODot.RunTime.ToString("00.0");
-                                label2.Text = "进" + DebugCompiler.GetThis().DDAxis.AlwaysIOInt.RunTime.ToString("00.0");
+                                label2.Text = "进" + DebugCompiler.Instance.DDAxis.AlwaysIOInt.RunTime.ToString("00.0");
                             }));
-                            if (DebugCompiler.GetThis().DDAxis.Int[DebugCompiler.GetThis().To_Board_DI])
+                            if (DebugCompiler.Instance.DDAxis.Int[DebugCompiler.Instance.To_Board_DI])
                             {
                                 pictureBox5.BackColor = Color.GreenYellow;
                             }
@@ -76,7 +84,7 @@ namespace Vision2.Project.DebugF.IO
                             {
                                 pictureBox5.BackColor = Color.Gray;
                             }
-                            if (DebugCompiler.GetThis().DDAxis.Out[DebugCompiler.GetThis().To_Board_DO])
+                            if (DebugCompiler.Instance.DDAxis.Out[DebugCompiler.Instance.To_Board_DO])
                             {
                                 pictureBox8.BackColor = Color.GreenYellow;
                             }
@@ -86,7 +94,7 @@ namespace Vision2.Project.DebugF.IO
                             }
                             if (DebugCompiler.EquipmentStatus == ErosSocket.ErosConLink.EnumEquipmentStatus.运行中)
                             {
-                                if (!DebugCompiler.GetThis().DDAxis.RunCodeT.Runing)
+                                if (!DebugCompiler.Instance.DDAxis.RunCodeT.Runing)
                                 {
                                     ndtr++;
                                     if (ndtr >= 600)
@@ -94,24 +102,24 @@ namespace Vision2.Project.DebugF.IO
                                         if (number / 10 % 2 > 0)
                                         {
                                             pictureYel.BackColor = Color.Yellow;
-                                            DebugCompiler.GetDoDi().WritDO(DebugCompiler.GetThis().RunButton.yellow, true);
+                                            DebugCompiler.GetDoDi().WritDO(DebugCompiler.Instance.RunButton.yellow, true);
                                         }
                                         else
                                         {
                                             pictureYel.BackColor = Color.Olive;
-                                            DebugCompiler.GetDoDi().WritDO(DebugCompiler.GetThis().RunButton.yellow, false);
+                                            DebugCompiler.GetDoDi().WritDO(DebugCompiler.Instance.RunButton.yellow, false);
                                         }
                                     }
                                 }
                                 else
                                 {
-                                    DebugCompiler.GetDoDi().WritDO(DebugCompiler.GetThis().RunButton.yellow, false);
+                                    DebugCompiler.GetDoDi().WritDO(DebugCompiler.Instance.RunButton.yellow, false);
                                     ndtr = 0;
                                 }
                             }
-                            if (DebugCompiler.GetThis().DDAxis.GetCylinderName(DebugCompiler.GetThis().RCylinder) != null)
+                            if (DebugCompiler.Instance.DDAxis.GetCylinderName(DebugCompiler.Instance.RCylinder) != null)
                             {
-                                if (DebugCompiler.GetThis().DDAxis.GetCylinderName(DebugCompiler.GetThis().RCylinder).AnValue)
+                                if (DebugCompiler.Instance.DDAxis.GetCylinderName(DebugCompiler.Instance.RCylinder).AnValue)
                                 {
                                     pictureBox4.BackColor = Color.GreenYellow;
 
@@ -126,9 +134,9 @@ namespace Vision2.Project.DebugF.IO
                             {
                                 pictureBox4.Visible = false;
                             }
-                            if (DebugCompiler.GetThis().DDAxis.GetCylinderName(DebugCompiler.GetThis().LoctionCylinder) != null)
+                            if (DebugCompiler.Instance.DDAxis.GetCylinderName(DebugCompiler.Instance.LoctionCylinder) != null)
                             {
-                                if (DebugCompiler.GetThis().DDAxis.GetCylinderName(DebugCompiler.GetThis().LoctionCylinder).AnValue)
+                                if (DebugCompiler.Instance.DDAxis.GetCylinderName(DebugCompiler.Instance.LoctionCylinder).AnValue)
                                 {
                                     pictureBox6.BackColor = Color.GreenYellow;
 
@@ -156,7 +164,7 @@ namespace Vision2.Project.DebugF.IO
                     {
                         try
                         {
-                            if (DebugCompiler.GetThis().DDAxis.IsMove)
+                            if (DebugCompiler.Instance.DDAxis.IsMove)
                             {
                                 dnumber++;
                                 for (int i = 0; i < 7; i++)
@@ -182,7 +190,7 @@ namespace Vision2.Project.DebugF.IO
 
                                 if (dnumber >= 5)
                                 {
-                                    if (DebugCompiler.GetThis().DDAxis.AlwaysIOOut.Value && DebugCompiler.GetThis().DDAxis.AlwaysIODot.RunTime >= 15)
+                                    if (DebugCompiler.Instance.DDAxis.AlwaysIOOut.Value && DebugCompiler.Instance.DDAxis.AlwaysIODot.RunTime >= 15)
                                     {
                                         ErosProjcetDLL.Project.AlarmListBoxt.AddAlarmText("出板线体卡板");
                                     }
@@ -215,18 +223,17 @@ namespace Vision2.Project.DebugF.IO
         {
             try
             {
-                if (DebugCompiler.GetThis().DDAxis.Out[DebugCompiler.GetThis().To_Board_DO])
+                if (DebugCompiler.Instance.DDAxis.Out[DebugCompiler.Instance.To_Board_DO])
                 {
-                    DebugCompiler.GetThis().DDAxis.WritDO(DebugCompiler.GetThis().To_Board_DO, false);
+                    DebugCompiler.Instance.DDAxis.WritDO(DebugCompiler.Instance.To_Board_DO, false);
                 }
                 else
                 {
-                    DebugCompiler.GetThis().DDAxis.WritDO(DebugCompiler.GetThis().To_Board_DO, true);
+                    DebugCompiler.Instance.DDAxis.WritDO(DebugCompiler.Instance.To_Board_DO, true);
                 }
             }
             catch (Exception)
             {
-
             }
         }
     }

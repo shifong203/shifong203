@@ -1,8 +1,8 @@
-﻿using System;
+﻿using ErosSocket.DebugPLC.Robot;
+using System;
 using System.Collections.Generic;
-using Vision2.Project.formula;
-using ErosSocket.DebugPLC.Robot;
 using System.Windows.Forms;
+using Vision2.Project.formula;
 
 namespace Vision2.Project.Mes
 {
@@ -15,13 +15,13 @@ namespace Vision2.Project.Mes
             return null;
         }
 
-        public override bool ReadMes(string SerialNumber, out string resetMesString)
+        public override bool ReadMes(out string resetMesString, TrayData trayData)
         {
             resetMesString = "";
             return true;
         }
 
-        public override bool ReadMes(out string resetMesString)
+        public override bool ReadMes(string sn, out string resetMesString)
         {
             resetMesString = "";
             return true;
@@ -32,10 +32,10 @@ namespace Vision2.Project.Mes
             List<string> ListText = new List<string>();
             string timeStr = DateTime.Now.ToString();
             string timeLong = DateTime.Now.ToLongDateString();
-            string paht = ProcessControl.ProcessUser.GetThis().ExcelPath + "//" + QRCODE;
+            string paht = ProcessControl.ProcessUser.Instancen.ExcelPath + "//" + QRCODE;
             if (RecipeCompiler.Instance.TrayQRType == RecipeCompiler.TrayEnumType.多个流程一个产品)
             {
-                paht = ProcessControl.ProcessUser.GetThis().ExcelPath + "//" + DateTime.Now.ToString("yy年MM月dd日HH时mm分ss秒");
+                paht = ProcessControl.ProcessUser.Instancen.ExcelPath + "//" + DateTime.Now.ToString("yy年MM月dd日HH时mm分ss秒");
             }
             if (System.IO.File.Exists(paht))
             {
@@ -139,17 +139,14 @@ namespace Vision2.Project.Mes
             {
                 Vision2.ErosProjcetDLL.Project.AlarmText.LogErr("写入Mes错误长度1", "写入数据");
             }
-
         }
 
         public override void WrietMes(OneDataVale data, string Product_Name)
         {
-
         }
 
         public override void WrietMes(TrayData trayData, string Product_Name)
         {
-         
         }
 
         public override void WrietMesAll<T>(T data, string QRCODE, string product_Name)
@@ -158,14 +155,13 @@ namespace Vision2.Project.Mes
             {
                 TrayRobot dataVale = data as TrayRobot;
 
-
                 List<string> ListText = new List<string>();
-                string timeStr = DebugF.DebugCompiler.GetThis().DDAxis.StartTime.ToString();
+                string timeStr = DebugF.DebugCompiler.Instance.DDAxis.StartTime.ToString();
                 string timeLong = DateTime.Now.ToLongDateString();
-                string paht = ProcessControl.ProcessUser.GetThis().ExcelPath + "//" + QRCODE;
+                string paht = ProcessControl.ProcessUser.Instancen.ExcelPath + "//" + QRCODE;
                 if (RecipeCompiler.Instance.TrayQRType == RecipeCompiler.TrayEnumType.多个流程一个产品)
                 {
-                    paht = ProcessControl.ProcessUser.GetThis().ExcelPath + "//" + DateTime.Now.ToString("yy年MM月dd日HH时mm分ss秒");
+                    paht = ProcessControl.ProcessUser.Instancen.ExcelPath + "//" + DateTime.Now.ToString("yy年MM月dd日HH时mm分ss秒");
                 }
                 if (System.IO.File.Exists(paht))
                 {

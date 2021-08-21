@@ -1,16 +1,8 @@
 ﻿using HalconDotNet;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Vision2.vision.HalconRunFile.RunProgramFile;
 using static Vision2.vision.HalconRunFile.PCBFile.ICPint;
-using static Vision2.vision.Vision;
 
 namespace Vision2.vision.HalconRunFile.PCBFile
 {
@@ -20,15 +12,17 @@ namespace Vision2.vision.HalconRunFile.PCBFile
         {
             InitializeComponent();
         }
-        public ICPintControl(ICPint iCPint , HalconRun halconRun) : this()
+
+        public ICPintControl(ICPint iCPint, IDrawHalcon halconRun) : this()
         {
             ICPintT = iCPint;
-            halcon = halconRun;
+            halcon = halconRun as HalconRun;
             select_obj_type1.SetData(ICPintT.select_Shape_Min_);
             GetParm();
         }
-        HalconRun halcon;
-        ICPint ICPintT;
+
+        private HalconRun halcon;
+        private ICPint ICPintT;
 
         public void GetParm()
         {
@@ -43,7 +37,7 @@ namespace Vision2.vision.HalconRunFile.PCBFile
                 //numericUpDown6.Value = (decimal)ICPintT.Watih;
                 //numericUpDown8.Value = (decimal)ICPintT.Phi;
                 numericUpDown3.Value = ICPintT.Threshold_Min_Max.Min;
-                numericUpDown7.Value = ICPintT.Threshold_Min_Max.Max ;
+                numericUpDown7.Value = ICPintT.Threshold_Min_Max.Max;
                 checkBox1.Checked = ICPintT.IsZpint;
             }
             catch (Exception ex)
@@ -61,8 +55,8 @@ namespace Vision2.vision.HalconRunFile.PCBFile
                     out HTuple phi, out HTuple lengt1, out HTuple lengt2);
                 if (row.Length == 0)
                 {
-                HOperatorSet.DrawRectangle2(halcon.hWindowHalcon(),  out row, out colu,
-                    out phi, out lengt1, out lengt2);
+                    HOperatorSet.DrawRectangle2(halcon.hWindowHalcon(), out row, out colu,
+                        out phi, out lengt1, out lengt2);
                 }
                 else
                 {
@@ -73,7 +67,6 @@ namespace Vision2.vision.HalconRunFile.PCBFile
                 ICPintT.Phi = phi;
                 HOperatorSet.GenRectangle2(out HObject circle, row, colu, ICPintT.Phi, lengt1, lengt2);
                 ICPintT.AOIObj = circle;
-      
             }
             catch (Exception ex)
             {
@@ -83,10 +76,11 @@ namespace Vision2.vision.HalconRunFile.PCBFile
 
         private void numericUpDown6_ValueChanged(object sender, EventArgs e)
         {
-
         }
-        bool isChev = true;
-        void Set()
+
+        private bool isChev = true;
+
+        private void Set()
         {
             try
             {
@@ -98,8 +92,8 @@ namespace Vision2.vision.HalconRunFile.PCBFile
                 //ICPintT.Watih = (double)numericUpDown6.Value;
                 //ICPintT.Phi = (byte)numericUpDown8.Value;
                 ICPintT.IsZpint = checkBox1.Checked;
-                ICPintT. Threshold_Min_Max.Min = (byte)numericUpDown3.Value;
-                ICPintT.Threshold_Min_Max.Max =  (byte)numericUpDown7.Value;
+                ICPintT.Threshold_Min_Max.Min = (byte)numericUpDown3.Value;
+                ICPintT.Threshold_Min_Max.Max = (byte)numericUpDown7.Value;
             }
             catch (Exception ex)
             {
@@ -109,8 +103,8 @@ namespace Vision2.vision.HalconRunFile.PCBFile
 
         private void button5_Click(object sender, EventArgs e)
         {
-
         }
+
         private void button7_Click(object sender, EventArgs e)
         {
             try
@@ -121,6 +115,7 @@ namespace Vision2.vision.HalconRunFile.PCBFile
             {
             }
         }
+
         private void button1_Click(object sender, EventArgs e)
         {
             try
@@ -131,7 +126,9 @@ namespace Vision2.vision.HalconRunFile.PCBFile
             {
             }
         }
-        ICPint.ZiPoint ziPoint;
+
+        private ICPint.ZiPoint ziPoint;
+
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             try
@@ -139,7 +136,7 @@ namespace Vision2.vision.HalconRunFile.PCBFile
                 halcon.HobjClear();
                 ziPoint = ICPintT.ziPoints[listBox1.SelectedIndex];
                 ziPoint.PintRun(halcon.GetImageOBJ(ICPintT.Threshold_Min_Max.ImageTypeObj),
-                    ICPintT.homMat2D,  ICPintT, halcon.GetOneImageR(), out HObject errDobj, out HObject obj,1);;
+                    ICPintT.homMat2D, ICPintT, halcon.GetOneImageR(), out HObject errDobj, out HObject obj, 1); ;
                 halcon.ShowObj();
                 propertyGrid1.SelectedObject = ziPoint;
             }
@@ -165,7 +162,6 @@ namespace Vision2.vision.HalconRunFile.PCBFile
                 //halcon.AddObj(obj);
                 halcon.ShowObj();
                 propertyGrid1.SelectedObject = ziPoint;
-
             }
             catch (Exception ex)
             {
@@ -177,10 +173,8 @@ namespace Vision2.vision.HalconRunFile.PCBFile
         {
             try
             {
-                ICPintT. ziPoints.Add(new ZiPoint());
+                ICPintT.ziPoints.Add(new ZiPoint());
                 listBox1.Items.Add(listBox1.Items.Count);
-
-
             }
             catch (Exception)
             {
@@ -215,7 +209,6 @@ namespace Vision2.vision.HalconRunFile.PCBFile
             try
             {
                 ziPoint.ICOBJ1 = RunProgram.DrawModOBJ(halcon, HalconRun.EnumDrawType.Rectangle2, ziPoint.ICOBJ1);
-       
             }
             catch (Exception)
             {
@@ -237,7 +230,6 @@ namespace Vision2.vision.HalconRunFile.PCBFile
             {
                 MessageBox.Show(ex.Message);
             }
-     
         }
     }
 }

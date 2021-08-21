@@ -3,16 +3,14 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using Vision2.vision.HalconRunFile.Controls;
-using static Vision2.vision.Vision;
 
 namespace Vision2.vision.HalconRunFile.RunProgramFile
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public class Pin_Round_brush_needlecs : RunProgram
     {
-
         /// <summary>
         /// 空洞灰度
         /// </summary>
@@ -22,6 +20,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         /// 铜圈灰度
         /// </summary>
         public Threshold_Min_Max Threshold_Min_Max2 { get; set; } = new Threshold_Min_Max();
+
         /// <summary>
         /// 铜针灰度
         /// </summary>
@@ -41,10 +40,12 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         /// 首次筛选
         /// </summary>
         public Select_shape_Min_Max select_Shape_ = new Select_shape_Min_Max();
+
         /// <summary>
         /// 多铜赛选
         /// </summary>
         public Select_shape_Min_Max select_Shape_arae2 = new Select_shape_Min_Max();
+
         public Pin_Round_brush_needlecs()
         {
             Threshold_Min_Max.Max = 60;
@@ -65,7 +66,8 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
 
         public double ClosCircle { get; set; } = 10;
         public double FillArea { get; set; } = 9999;
-        public override Control GetControl(HalconRun halcon)
+
+        public override Control GetControl(IDrawHalcon halcon)
         {
             return new Pint_Round_brushControl(this);
         }
@@ -75,7 +77,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             return base.ReadThis<Pin_Round_brush_needlecs>(path);
         }
 
-        public override bool RunHProgram( OneResultOBj oneResultOBj, out List<OneRObj> oneRObjs, AoiObj aoiObj)
+        public override bool RunHProgram(OneResultOBj oneResultOBj, out List<OneRObj> oneRObjs, AoiObj aoiObj)
         {
             oneRObjs = new List<OneRObj>();
             try
@@ -148,7 +150,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 {
                     oneResultOBj.AddMeassge("空洞:" + hObject.CountObj());
                     errNumager++;
-                    HOperatorSet.DilationRectangle1(hObject, out HObject hObject4, 60,60);
+                    HOperatorSet.DilationRectangle1(hObject, out HObject hObject4, 60, 60);
                     oneResultOBj.AddObj(hObject4, ColorResult.red);
                 }
                 if (aoiObj.DebugID == 5)
@@ -183,7 +185,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     oneResultOBj.AddObj(hObject);
                     return false;
                 }
-                oneResultOBj.AddMeassge("孔数:"+row2.Length);
+                oneResultOBj.AddMeassge("孔数:" + row2.Length);
                 if (aoiObj.DebugID == 9)
                 {
                     Rows = row2;
@@ -193,7 +195,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     oneResultOBj.AddObj(hObject4);
                     return false;
                 }
-                if (Number>=1)
+                if (Number >= 1)
                 {
                     if (Number != row2.Length)
                     {
@@ -205,7 +207,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 {
                     return true;
                 }
-                HOperatorSet.Connection(hObject,out  hObject);
+                HOperatorSet.Connection(hObject, out hObject);
                 oneResultOBj.AddMeassge("跪角:" + hObject.CountObj());
                 HOperatorSet.DilationCircle(hObject, out hObject, 60);
                 XLD = XLD.ConcatObj(hObject);

@@ -3,6 +3,7 @@ using ErosSocket.DebugPLC.PLC;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+
 namespace Vision2.Project.DebugF.PLC
 {
     public partial class PLCDebug : UserControl
@@ -14,24 +15,20 @@ namespace Vision2.Project.DebugF.PLC
 
         private void userControl11_Load(object sender, EventArgs e)
         {
-
         }
 
         private void tabPage2_Click(object sender, EventArgs e)
         {
-
         }
 
         private void PLCDebug_Load(object sender, EventArgs e)
         {
-
             try
             {
                 int i = 0;
                 //DebugCompiler debugCompiler = DebugCompiler.GetThis();
                 foreach (var item in DebugComp.GetThis().DicAxes)
                 {
-
                     AxisControl axis = new AxisControl(item.Value);
                     tabPage2.Controls.Add(axis);
                     int sd = i / 3;
@@ -44,7 +41,6 @@ namespace Vision2.Project.DebugF.PLC
 
                 foreach (var item in DebugComp.GetThis().DicCylinder)
                 {
-
                     CylinderControl cylinder = new CylinderControl(item.Value);
                     tabPage4.Controls.Add(cylinder);
                     int sd = i / 4;

@@ -12,10 +12,8 @@ namespace Vision2.Project.formula
     /// </summary>
     public class ProductEX
     {
-
         public ProductEX()
         {
-
         }
 
         [Description("。"), Category("产品尺寸"), DisplayName("产品宽度")]
@@ -23,16 +21,19 @@ namespace Vision2.Project.formula
         /// 产品宽度mm
         /// </summary>
         public int ProductWidth { get; set; } = 100;
+
         [Description("。"), Category("产品尺寸"), DisplayName("产品高度")]
         /// <summary>
         /// 产品高度mm
         /// </summary>
         public int ProductHeight { get; set; } = 10;
+
         [Description("。"), Category("产品尺寸"), DisplayName("产品长度")]
         /// <summary>
         /// 产品长度mm
         /// </summary>
         public int ProductLength { get; set; } = 100;
+
         [Description("。"), Category("产品尺寸"), DisplayName("托盘产品数量")]
         /// <summary>
         /// 产品总数
@@ -45,8 +46,7 @@ namespace Vision2.Project.formula
         /// </summary>
         public int ProductNumber { get; set; } = 1;
 
-
-        public List<LightSource.LightSourceData> lightSourceDatas { get; set; } 
+        public List<LightSource.LightSourceData> lightSourceDatas { get; set; }
             = new List<LightSource.LightSourceData>();
 
         /// <summary>
@@ -72,6 +72,7 @@ namespace Vision2.Project.formula
             }
             return vs;
         }
+
         /// <summary>
         /// 根据点位名称获取点
         /// </summary>
@@ -79,7 +80,6 @@ namespace Vision2.Project.formula
         /// <returns></returns>
         public XYZPoint GetPoint(string name)
         {
-
             for (int i = 0; i < DPoint.Count; i++)
             {
                 if (DPoint[i].Name == name)
@@ -89,6 +89,7 @@ namespace Vision2.Project.formula
             }
             return null;
         }
+
         /// <summary>
         /// 获取点位序号
         /// </summary>
@@ -106,13 +107,11 @@ namespace Vision2.Project.formula
             }
             return -1;
         }
+
         /// <summary>
         /// 轨迹
         /// </summary>
         public Relatively Relativel { get; set; } = new Relatively();
-
-        
-
 
         /// <summary>
         /// 导航图面
@@ -123,21 +122,22 @@ namespace Vision2.Project.formula
         /// 配方参数
         /// </summary>
         public Dictionary<string, string> Produc { get; set; } = new Dictionary<string, string>();
+
         /// <summary>
         /// 导航图
         /// </summary>
         public class Navigation_Picture
         {
-
             public Navigation_Picture()
             {
             }
+
             /// <summary>
             /// 导航图面
             /// </summary>
             public Dictionary<string, HObject> KeyRoi { get; set; } = new Dictionary<string, HObject>();
 
-            HObject ImageTimff;
+            private HObject ImageTimff;
 
             public HObject GetHObject()
             {
@@ -167,13 +167,10 @@ namespace Vision2.Project.formula
                 }
                 catch (Exception)
                 {
-
                 }
-
             }
+
             public string ImagePath { get; set; } = "";
-
-
         }
 
         /// <summary>
@@ -189,6 +186,7 @@ namespace Vision2.Project.formula
                 过程点 = 3,
                 同时执行 = 4,
             }
+
             /// <summary>
             /// 起点
             /// </summary>
@@ -203,6 +201,7 @@ namespace Vision2.Project.formula
             /// 轨迹流程
             /// </summary>
             public List<List<PointType>> ListListPointName { get; set; } = new List<List<PointType>>();
+
             /// <summary>
             /// 轨迹ID
             /// </summary>
@@ -213,9 +212,6 @@ namespace Vision2.Project.formula
             /// </summary>
 
             public Dictionary<string, List<XYZPoint>> DicRelativelyPoint = new Dictionary<string, List<XYZPoint>>();
-
-
         }
-
     }
 }

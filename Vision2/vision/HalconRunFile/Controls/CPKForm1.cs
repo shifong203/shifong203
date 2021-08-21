@@ -10,14 +10,12 @@ namespace Vision2.vision.HalconRunFile.Controls
             InitializeComponent();
         }
 
-
         public HalconRunFile.RunProgramFile.HalconRun HalconRun;
 
         private void button1_Click(object sender, EventArgs e)
         {
             try
             {
-                
                 button4.Enabled = false;
                 if (checkBox1.Checked)
                 {
@@ -29,11 +27,11 @@ namespace Vision2.vision.HalconRunFile.Controls
                             MessageBox.Show("已完成");
                             return;
                         }
-                    
+
                         HalconRun.ReadImage(dataGridView2.Rows[(int)numericUpDown2.Value].Cells[0].Value.ToString());
                         HalconRun.GetOneImageR().LiyID = (int)numericUpDown1.Value;
                         HalconRun.GetOneImageR().RunID = (int)numericUpDown1.Value;
-                        HalconRun.CamImageEvent(HalconRun.GetOneImageR());
+                        HalconRun.CamImageEvent(HalconRun.GetOneImageR(), false);
                         if (numericUpDown2.Value == 0)
                         {
                             dataGridView1.Columns.Clear();
@@ -53,13 +51,12 @@ namespace Vision2.vision.HalconRunFile.Controls
                                 {
                                     for (int i = 0; i < itemd.dataMinMax.Reference_Name.Count; i++)
                                     {
-                                         dataGridTextBoxColumn = new DataGridViewTextBoxColumn();
+                                        dataGridTextBoxColumn = new DataGridViewTextBoxColumn();
                                         dataGridTextBoxColumn.Name = item.Key + "." + itemd.dataMinMax.Reference_Name[i];
                                         dataGridTextBoxColumn.HeaderText = dataGridTextBoxColumn.Name;
                                         dataGridTextBoxColumn.SortMode = DataGridViewColumnSortMode.NotSortable;
                                         dataGridView1.Columns.Add(dataGridTextBoxColumn);
                                     }
-
                                 }
                             }
                             dataGridView1.Rows.Clear();
@@ -102,13 +99,12 @@ namespace Vision2.vision.HalconRunFile.Controls
                                             }
                                         }
                                     }
-                                    if (hTuple.Length>=1)
+                                    if (hTuple.Length >= 1)
                                     {
                                         dataGridView1.Rows[dataGridView1.Rows.Count - 4].Cells[i2].Value = hTuple.TupleMin();
                                         dataGridView1.Rows[dataGridView1.Rows.Count - 3].Cells[i2].Value = hTuple.TupleMean();
                                         dataGridView1.Rows[dataGridView1.Rows.Count - 2].Cells[i2].Value = hTuple.TupleMax();
                                         dataGridView1.Rows[dataGridView1.Rows.Count - 1].Cells[i2].Value = hTuple.TupleMax() - hTuple.TupleMin();
-
                                     }
                                 }
                                 dataGridView1.Rows[dataGridView1.Rows.Count - 4].Cells[0].Value = "最小值";
@@ -120,11 +116,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                                 return;
                             }
                         }
-
                     }
-
-            
-                   
                 }
                 else
                 {
@@ -148,9 +140,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                                     dataGridTextBoxColumn.HeaderText = dataGridTextBoxColumn.Name;
                                     dataGridTextBoxColumn.SortMode = DataGridViewColumnSortMode.NotSortable;
                                     dataGridView1.Columns.Add(dataGridTextBoxColumn);
-
                                 }
-
                             }
                         }
                         dataGridView1.Rows.Clear();
@@ -174,16 +164,12 @@ namespace Vision2.vision.HalconRunFile.Controls
                     }
                     numericUpDown2.Value++;
                 }
-           
+
                 //HalconRun.CamImageEvent(numericUpDown1.Value.ToString(), null, (int)numericUpDown1.Value);
             }
             catch (Exception ex)
             {
-
             }
-
-
-
         }
 
         private void CPKForm1_Load(object sender, EventArgs e)
@@ -196,7 +182,6 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             try
             {
-
                 //foreach (var item in halcon.keyValuePairs1)
                 //{
                 //    if (!dataGridView1.Columns.Contains(item.Key))
@@ -256,12 +241,9 @@ namespace Vision2.vision.HalconRunFile.Controls
                 {
                     dataGridView1.Rows[de].Cells[i2].Value = hTupleCt.TupleSelect(i2);
                 }
-
             }
             catch (Exception)
             {
-
-
             }
         }
 
@@ -274,16 +256,10 @@ namespace Vision2.vision.HalconRunFile.Controls
                 for (int i = 0; i < ddew; i++)
                 {
                     dataGridView1.Rows.Remove(dataGridView1.SelectedRows[0]);
-
                 }
-
-
-
-
             }
             catch (Exception)
             {
-
             }
         }
 
@@ -298,7 +274,6 @@ namespace Vision2.vision.HalconRunFile.Controls
                 DialogResult dialogResult = openFileDialog.ShowDialog();
                 if (dialogResult == DialogResult.OK)
                 {
-
                     Vision2.ErosProjcetDLL.Excel.Npoi.DataGridViewExportExcel(openFileDialog.FileName, "CPK", dataGridView1);
                 }
             }
@@ -323,7 +298,6 @@ namespace Vision2.vision.HalconRunFile.Controls
                 {
                     dataGridView2.Rows[i].Cells[0].Value = openFileDialog.FileNames[i];
                 }
-
             }
             catch (Exception)
             {
@@ -336,8 +310,8 @@ namespace Vision2.vision.HalconRunFile.Controls
             {
                 SaveFileDialog openFileDialog = new SaveFileDialog();
                 openFileDialog.Filter = "Exlce文件|*.xls;*.xlsx";
-            
-                openFileDialog.FileName = DateTime.Now.ToString("yy年MM月dd日")+ "CPK.xls";
+
+                openFileDialog.FileName = DateTime.Now.ToString("yy年MM月dd日") + "CPK.xls";
                 DialogResult dialogResult = openFileDialog.ShowDialog();
                 if (dialogResult == DialogResult.OK)
                 {
@@ -347,6 +321,109 @@ namespace Vision2.vision.HalconRunFile.Controls
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+            }
+        }
+
+        private bool isStra;
+
+        private void dataGridView2_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            try
+            {
+                if (isStra)
+                {
+                    return;
+                }
+                HalconRun.ReadImage(dataGridView2.Rows[(int)e.RowIndex].Cells[0].Value.ToString());
+                HalconRun.GetOneImageR().LiyID = (int)numericUpDown1.Value;
+                HalconRun.GetOneImageR().RunID = (int)numericUpDown1.Value;
+                HalconRun.CamImageEvent(HalconRun.GetOneImageR(), false);
+                if (numericUpDown2.Value == 0)
+                {
+                    dataGridView1.Columns.Clear();
+                    DataGridViewTextBoxColumn dataGridTextBoxColumn = new DataGridViewTextBoxColumn();
+                    dataGridTextBoxColumn.Name = "序号";
+                    dataGridTextBoxColumn.HeaderText = dataGridTextBoxColumn.Name;
+                    dataGridTextBoxColumn.SortMode = DataGridViewColumnSortMode.NotSortable;
+                    dataGridView1.Columns.Add(dataGridTextBoxColumn);
+                    foreach (var item in HalconRun.GetOneImageR().GetNgOBJS().DicOnes)
+                    {
+                        //DataGridViewTextBoxColumn dataGridTextBoxColumn = new DataGridViewTextBoxColumn();
+                        //dataGridTextBoxColumn.Name = item.Value.ComponentID;
+                        //dataGridTextBoxColumn.HeaderText = dataGridTextBoxColumn.Name;
+                        //dataGridTextBoxColumn.SortMode = DataGridViewColumnSortMode.NotSortable;
+                        //dataGridView1.Columns.Add(dataGridTextBoxColumn);
+                        foreach (var itemd in item.Value.oneRObjs)
+                        {
+                            for (int i = 0; i < itemd.dataMinMax.Reference_Name.Count; i++)
+                            {
+                                dataGridTextBoxColumn = new DataGridViewTextBoxColumn();
+                                dataGridTextBoxColumn.Name = item.Key + "." + itemd.dataMinMax.Reference_Name[i];
+                                dataGridTextBoxColumn.HeaderText = dataGridTextBoxColumn.Name;
+                                dataGridTextBoxColumn.SortMode = DataGridViewColumnSortMode.NotSortable;
+                                dataGridView1.Columns.Add(dataGridTextBoxColumn);
+                            }
+                        }
+                    }
+                    dataGridView1.Rows.Clear();
+                }
+                int det = dataGridView1.Rows.Add();
+                dataGridView1.Rows[det].Cells[0].Value = System.IO.Path.GetFileNameWithoutExtension(dataGridView2.Rows[e.RowIndex].Cells[0].Value.ToString());
+                int cellIndex = 1;
+                foreach (var item in HalconRun.GetOneImageR().GetNgOBJS().DicOnes)
+                {
+                    foreach (var itemd in item.Value.oneRObjs)
+                    {
+                        for (int i = 0; i < itemd.dataMinMax.ValueStrs.Count; i++)
+                        {
+                            dataGridView1.Rows[det].Cells[cellIndex].Value = itemd.dataMinMax.ValueStrs[i];
+                            cellIndex++;
+                        }
+                    }
+                }
+                if (checkBox1.Checked)
+                {
+                    if (e.RowIndex >= dataGridView2.Rows.Count)
+                    {
+                        HalconDotNet.HTuple hTupleC = new HalconDotNet.HTuple();
+                        if (dataGridView1.Rows.Count == dataGridView2.Rows.Count)
+                        {
+                            dataGridView1.Rows.Add(4);
+                        }
+                        for (int i2 = 1; i2 < dataGridView1.Columns.Count; i2++)
+                        {
+                            HalconDotNet.HTuple hTuple = new HalconDotNet.HTuple();
+                            for (int i = 0; i < dataGridView1.Rows.Count - 3; i++)
+                            {
+                                if (dataGridView1.Rows[i].Cells[i2].Value != null)
+                                {
+                                    if (double.TryParse(dataGridView1.Rows[i].Cells[i2].Value.ToString()
+                                 , out double dvaet))
+                                    {
+                                        hTuple.Append(dvaet);
+                                    }
+                                }
+                            }
+                            if (hTuple.Length >= 1)
+                            {
+                                dataGridView1.Rows[dataGridView1.Rows.Count - 4].Cells[i2].Value = hTuple.TupleMin();
+                                dataGridView1.Rows[dataGridView1.Rows.Count - 3].Cells[i2].Value = hTuple.TupleMean();
+                                dataGridView1.Rows[dataGridView1.Rows.Count - 2].Cells[i2].Value = hTuple.TupleMax();
+                                dataGridView1.Rows[dataGridView1.Rows.Count - 1].Cells[i2].Value = hTuple.TupleMax() - hTuple.TupleMin();
+                            }
+                        }
+                        dataGridView1.Rows[dataGridView1.Rows.Count - 4].Cells[0].Value = "最小值";
+                        dataGridView1.Rows[dataGridView1.Rows.Count - 3].Cells[0].Value = "平均值";
+                        dataGridView1.Rows[dataGridView1.Rows.Count - 2].Cells[0].Value = "最大值";
+                        dataGridView1.Rows[dataGridView1.Rows.Count - 1].Cells[0].Value = "差";
+                        button4.Enabled = true;
+                        MessageBox.Show("已完成");
+                        return;
+                    }
+                }
+            }
+            catch (Exception)
+            {
             }
         }
     }

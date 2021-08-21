@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO.Ports;
-using System.Linq;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Vision2.vision.Cams
@@ -18,6 +13,7 @@ namespace Vision2.vision.Cams
         {
             InitializeComponent();
         }
+
         public void GetData(LightSource lightSo)
         {
             try
@@ -44,6 +40,7 @@ namespace Vision2.vision.Cams
             }
             iscont = false;
         }
+
         private void trackBar1_Scroll(object sender, EventArgs e)
         {
             try
@@ -54,9 +51,11 @@ namespace Vision2.vision.Cams
             {
             }
         }
-        bool iscont = false;
-        LightSource lightSource;
-        void SetScroll()
+
+        private bool iscont = false;
+        private LightSource lightSource;
+
+        private void SetScroll()
         {
             try
             {
@@ -80,9 +79,9 @@ namespace Vision2.vision.Cams
                 MessageBox.Show(ex.Message);
             }
             iscont = false;
-
         }
-        void SetP()
+
+        private void SetP()
         {
             try
             {
@@ -110,8 +109,6 @@ namespace Vision2.vision.Cams
                 MessageBox.Show(ex.Message);
             }
             iscont = false;
-
-
         }
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
@@ -122,15 +119,14 @@ namespace Vision2.vision.Cams
         private void button1_Click(object sender, EventArgs e)
         {
             iscont = true;
-            checkBox4.Checked= checkBox3.Checked= 
-                checkBox2.Checked= checkBox1.Checked = true;
+            checkBox4.Checked = checkBox3.Checked =
+                checkBox2.Checked = checkBox1.Checked = true;
             trackBar1.Value = 255;
             trackBar2.Value = 255;
             trackBar3.Value = 255;
             trackBar4.Value = 255;
             iscont = false;
-            SetP();
-    
+            SetScroll();
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -143,8 +139,7 @@ namespace Vision2.vision.Cams
             trackBar3.Value = 0;
             trackBar4.Value = 0;
             iscont = false;
-            SetP();
-         
+            SetScroll();
         }
 
         private void trackBar2_Scroll(object sender, EventArgs e)
@@ -167,6 +162,7 @@ namespace Vision2.vision.Cams
             SetP();
         }
     }
+
     public class LightSource
     {
         public class LightSourceData
@@ -175,28 +171,31 @@ namespace Vision2.vision.Cams
             public Int16 H1 { get; set; }
 
             [DescriptionAttribute("光源控制器1通道。"), Category("光源控制"), DisplayName("2通道")]
-            public Int16 H2 { get; set; } 
+            public Int16 H2 { get; set; }
 
             [DescriptionAttribute("光源控制器1通道。"), Category("光源控制"), DisplayName("3通道")]
-            public Int16 H3 { get; set; } 
+            public Int16 H3 { get; set; }
 
             [DescriptionAttribute("光源控制器1通道。"), Category("光源控制"), DisplayName("4通道")]
             public Int16 H4 { get; set; }
-                
         }
-        SerialPortHelper serialPort;
+
+        private SerialPortHelper serialPort;
 
         //public string OffName = "浮根";
         public string Rs232Name = "COM1";
+
         public LightSource(int com)
         {
             Rs232Name = "COM" + com;
             serialPort = new SerialPortHelper(com, 15600, out string errr);
         }
+
         public LightSource()
         {
             serialPort = new SerialPortHelper(0, 15600, out string errr);
         }
+
         /// <summary>
         /// 浮根
         /// </summary>
@@ -240,6 +239,7 @@ namespace Vision2.vision.Cams
 
             return data + "C#";
         }
+
         /// <summary>
         /// 凯威
         /// </summary>
@@ -251,7 +251,6 @@ namespace Vision2.vision.Cams
             {
                 data += H1.ToString("000") + "T";
                 serialPort.Write("#1106411");
-
             }
             else
             {
@@ -262,7 +261,6 @@ namespace Vision2.vision.Cams
             Thread.Sleep(100);
             if (H2Off)
             {
-
                 serialPort.Write("#1206412");
                 data += H2.ToString("000") + "T";
             }
@@ -285,7 +283,6 @@ namespace Vision2.vision.Cams
             Thread.Sleep(100);
             if (H4Off)
             {
-
                 serialPort.Write("#1406414");
                 data += H4.ToString("000") + "T";
             }
@@ -297,35 +294,42 @@ namespace Vision2.vision.Cams
 
             return data;
         }
+
         public void Opne()
         {
-            if (!serialPort.IsOpen)
+            try
             {
-                if (Vision.Instance.OffName == "浮根")
+                if (!serialPort.IsOpen)
                 {
-                    serialPort.Parity = Parity.None;
-                    serialPort.BaudRate = 19200;
-                    serialPort.StopBits = StopBits.One;
+                    if (Vision.Instance.OffName == "浮根")
+                    {
+                        serialPort.Parity = Parity.None;
+                        serialPort.BaudRate = 19200;
+                        serialPort.StopBits = StopBits.One;
+                    }
+                    else if (Vision.Instance.OffName == "浮根")
+                    {
+                        serialPort.BaudRate = 9600;
+                        serialPort.DataBits = 8;
+                        serialPort.Parity = Parity.None;
+                    }
+                    else
+                    {
+                        serialPort.BaudRate = 9600;
+                        serialPort.DataBits = 8;
+                        serialPort.Parity = Parity.None;
+                    }
+                    serialPort.PortName = Rs232Name;
+                    serialPort.Open();
                 }
-                else if (Vision.Instance.OffName == "浮根")
-                {
-                    serialPort.BaudRate = 9600;
-                    serialPort.DataBits = 8;
-                    serialPort.Parity = Parity.None;
-                }
-                else
-                {
-                    serialPort.BaudRate = 9600;
-                    serialPort.DataBits = 8;
-                    serialPort.Parity = Parity.None;
-                }
-                serialPort.PortName = Rs232Name;
-                serialPort.Open();
+            }
+            catch (Exception)
+            {
             }
         }
+
         public void SetHx()
         {
-
             Opne();
             if (Vision.Instance.OffName == "浮根")
             {
@@ -340,6 +344,7 @@ namespace Vision2.vision.Cams
                 CheckChKWData();
             }
         }
+
         public void SetOFF()
         {
             Opne();
@@ -349,22 +354,22 @@ namespace Vision2.vision.Cams
             }
             else if (Vision.Instance.OffName == "嘉历")
             {
-                SetTimeValue('2', '1', H1.ToString("000"));
-                SetTimeValue('2', '2', H2.ToString("000"));
-                SetTimeValue('2', '3', H3.ToString("000"));
-                SetTimeValue('2', '4', H4.ToString("000"));
+                SetTimeValue('2', '1', "000");
+                SetTimeValue('2', '2', "000");
+                SetTimeValue('2', '3', "000");
+                SetTimeValue('2', '4', "000");
             }
             else
             {
                 CheckChKWData();
             }
-           
         }
-        public void SetLightSource(LightSourceData lightSource )
+
+        public void SetLightSource(LightSourceData lightSource)
         {
             try
             {
-                H1 = lightSource.H1; 
+                H1 = lightSource.H1;
                 H2 = lightSource.H2;
                 H3 = lightSource.H3;
                 H4 = lightSource.H4;
@@ -387,21 +392,21 @@ namespace Vision2.vision.Cams
         [DescriptionAttribute("光源控制器1通道。"), Category("光源控制"), DisplayName("4通道")]
         public Int16 H4 { get; set; } = 255;
 
-        short h1 = -10;
-        short h2 = -10;
-        short h3 = -10;
-        short h4 = -10;
+        private short h1 = -10;
+        private short h2 = -10;
+        private short h3 = -10;
+        private short h4 = -10;
         public bool H1Off;
- 
 
         public bool H2Off;
-   
+
         public bool H3Off;
 
         public bool H4Off;
-       
-        StringBuilder DataUsing = new StringBuilder();
-        //设置频闪时间模块    
+
+        private StringBuilder DataUsing = new StringBuilder();
+
+        //设置频闪时间模块
         /// <summary>
         /// 嘉丽光源控制
         /// </summary>
@@ -411,9 +416,8 @@ namespace Vision2.vision.Cams
         /// 4：读出对应通道亮度参数</param>
         /// <param name="Chanel">2~4通道</param>
         /// <param name="Value">0~255</param>
-        public void SetTimeValue(char code,char Chanel, string Value)
+        public void SetTimeValue(char code, char Chanel, string Value)
         {
-
             DataUsing.Clear();
             DataUsing.Append("$");
             DataUsing.Append(code);
@@ -434,18 +438,17 @@ namespace Vision2.vision.Cams
                 serialPort.WriteLine(b);//发送数据
                 //Thread.Sleep(100);
                 //richTextBox1.AppendText(b + "\r\n");
-
             }
             catch (Exception)
             { }
-
         }
+
         /// <summary>
         /// 设置光源参数
         /// </summary>
         public void SetLightV()
         {
-            if (H1>=0)
+            if (H1 >= 0)
             {
                 if (H1 > 0)
                 {
@@ -459,7 +462,6 @@ namespace Vision2.vision.Cams
 
             if (H2 >= 0)
             {
-           
                 if (H2 > 0)
                 {
                     SetTimeValue('1', '2', H2.ToString("000"));
@@ -480,7 +482,6 @@ namespace Vision2.vision.Cams
                 {
                     SetTimeValue('2', '3', H3.ToString("000"));
                 }
-
             }
             if (H4 >= 0)
             {
@@ -494,6 +495,7 @@ namespace Vision2.vision.Cams
                 }
             }
         }
+
         //异或校验
         private string xorCheack(string str)
         {
@@ -510,9 +512,6 @@ namespace Vision2.vision.Cams
             // MessageBox.Show();
 
             return str + xorResult.ToString("X");
-
         }
-
-
     }
 }

@@ -35,13 +35,11 @@ namespace Vision2.EPSON_Robot_Remote_TCPIP
                 //else
                 //{
                 //}
-
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
         }
-
     }
 }

@@ -2,23 +2,21 @@
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using static Vision2.vision.HalconRunFile.RunProgramFile.RunProgram;
-using static Vision2.vision.Vision;
 
 namespace Vision2.vision.HalconRunFile.Controls
 {
     public partial class OCRTextModeUserContro : UserControl
     {
-        public OCRTextModeUserContro(RunProgramFile.HalconRun halcon_, RunProgramFile.Text_Model text_)
+        public OCRTextModeUserContro(RunProgramFile.IDrawHalcon halcon_, RunProgramFile.Text_Model text_)
         {
             InitializeComponent();
-            SetData(halcon_, text_);
+            SetData(halcon_ as HalconRunFile.RunProgramFile.HalconRun, text_);
             propertyGrid1.SelectedObject = text_;
-
         }
-        HWindID HWindID = new HWindID();
-        RunProgramFile.Text_Model text_Mode;
-        HalconRunFile.RunProgramFile.HalconRun halcon;
+
+        private HWindID HWindID = new HWindID();
+        private RunProgramFile.Text_Model text_Mode;
+        private HalconRunFile.RunProgramFile.HalconRun halcon;
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -36,11 +34,9 @@ namespace Vision2.vision.HalconRunFile.Controls
                 {
                     text_Mode.ListhObjects[listBox1.SelectedIndex] = text_Mode.DrawHomObj(halcon, listBox1.SelectedIndex);
                 }
-
             }
             catch (Exception)
             {
-
             }
         }
 
@@ -48,24 +44,17 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             try
             {
-
-
                 text_Mode.GetHomObj(halcon);
-
-
             }
             catch (Exception ex)
             {
-
-
             }
-
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
-
         }
+
         public void SetData(RunProgramFile.HalconRun halcon_, RunProgramFile.Text_Model text_)
         {
             isCheave = true;
@@ -92,15 +81,16 @@ namespace Vision2.vision.HalconRunFile.Controls
             catch (Exception ex)
             {
             }
-
         }
-        bool isCheave = true;
+
+        private bool isCheave = true;
+
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             try
             {
                 halcon.HobjClear();
-            
+
                 try
                 {
                     HWindID.HobjClear();
@@ -140,11 +130,9 @@ namespace Vision2.vision.HalconRunFile.Controls
                                 HWindID.OneResIamge.AddImageMassage(row[i2] - 100, column[i2], textStr, ColorResult.blue, "true");
                             }
                         }
-
                     }
 
                     halcon.ShowObj();
-
                 }
                 catch (Exception EX)
                 {
@@ -153,9 +141,7 @@ namespace Vision2.vision.HalconRunFile.Controls
             }
             catch (Exception)
             {
-
             }
-
         }
 
         private void 删除区域ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -170,7 +156,6 @@ namespace Vision2.vision.HalconRunFile.Controls
                 text_Mode.Length2.TupleRemove(listBox1.SelectedIndex);
 
                 listBox1.Items.RemoveAt(listBox1.SelectedIndex);
-
             }
             catch (Exception ex)
             {
@@ -189,15 +174,13 @@ namespace Vision2.vision.HalconRunFile.Controls
             text_Mode.ModeText = textBox1.Text;
         }
 
-
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
             if (isCheave)
             {
                 return;
             }
-            text_Mode. QRMode =checkBox1.Checked;
-
+            text_Mode.QRMode = checkBox1.Checked;
         }
     }
 }

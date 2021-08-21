@@ -2,30 +2,25 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Vision2.ErosProjcetDLL.UI.PropertyGrid;
-using static Vision2.vision.HalconRunFile.RunProgramFile.RunProgram;
 
 namespace Vision2.vision.HalconRunFile.RunProgramFile
 {
-   public class MeasureTyoes
+    public class MeasureTyoes
     {
-
         public enum MeasureEnum
         {
-            空=0,
-            点于线垂足=1,
-            测长=3,
-            线平行=4,
-            夹角=5,
-            点距离=6,
-            点与点距离=7,
-            圆直径=8,
+            空 = 0,
+            点于线垂足 = 1,
+            测长 = 3,
+            线平行 = 4,
+            夹角 = 5,
+            点距离 = 6,
+            点与点距离 = 7,
+            圆直径 = 8,
             同心圆 = 2,
-
         }
+
         public class MeasureClass
         {
             public string Name { get; set; }
@@ -44,23 +39,24 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
 
             [DescriptionAttribute("测量点固定补偿。"), Category("测量关系"), DisplayName("测量点补偿")]
             public double AddOreM { get; set; } = 0;
+
             /// <summary>
             /// 测量1目标名称
             /// </summary>
             [DescriptionAttribute("测量点对象名称1。"), Category("测量关系"), DisplayName("测量点名称1")]
             public string MeasureName1 { get; set; } = "";
+
             /// <summary>
             /// 测量2目标名称
             /// </summary>
             [DescriptionAttribute("测量点对象名称2。"), Category("测量关系"), DisplayName("测量点名称2")]
             public string MeasureName2 { get; set; } = "";
 
-
             public string SelePointName { get; set; } = "全部";
 
             /// <summary>
             /// 点与线之间的垂足
-            /// 
+            ///
             /// </summary>
             /// <param name="halcon">程序</param>
             /// <param name="OutRows">直线Rows</param>
@@ -114,6 +110,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 //halcon.SendMesage("Goto", "0.0");
                 return false;
             }
+
             /// <summary>
             /// 线平行测量
             /// </summary>
@@ -146,7 +143,6 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     distMM3 = halcon.GetCaliConstMM(dist3);
                     HOperatorSet.GenCrossContourXld(out corss, new HTuple(projectRow2, dinRow2), new HTuple(projectCol02, dinCol2), 50, 0);
                     halcon.AddTData(distMM.D, distMM2.D, distMM3.D);
-
                 }
                 catch (Exception)
                 {
@@ -154,7 +150,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 //bool OK = true;
                 //if (SelePointName == "结束点" || SelePointName == "全部")
                 //{
-                //    
+                //
 
                 //    if (angleD > AngleMax || angleD < AngleMin || DistM2 < DistanceMin || DistM2 > DistanceMax)
                 //    {
@@ -170,7 +166,6 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 //}
                 //if (SelePointName == "第一点" || SelePointName == "全部")
                 //{
-
                 //    HOperatorSet.GenCrossContourXld(out corss, new HTuple(projectRow, dinRow1), new HTuple(projectCol0, dinCol1), 50, 0);
 
                 //    if (angleD > AngleMax || angleD < AngleMin || DistM < DistanceMin || DistM > DistanceMax)
@@ -207,8 +202,6 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 //}
                 return false;
             }
-
         }
-
     }
 }

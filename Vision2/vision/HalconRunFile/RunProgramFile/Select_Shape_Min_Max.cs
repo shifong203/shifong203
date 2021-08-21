@@ -1,9 +1,5 @@
 ﻿using HalconDotNet;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Vision2.vision.HalconRunFile.RunProgramFile
@@ -17,6 +13,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         {
             AddSelectType(Enum_Select_Type.area, 100, 999999);
         }
+
         public void AddDataG(DataGridView dataGridView)
         {
             int de = dataGridView.Rows.Add();
@@ -24,6 +21,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             dataGridView.Rows[de].Cells[1].Value = Min;
             dataGridView.Rows[de].Cells[2].Value = Max;
         }
+
         public static List<string> GetList()
         {
             List<string> listValues = new List<string>();
@@ -81,12 +79,14 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         {
             AddSelectType(enum_Select_Type.ToString(), min, max);
         }
+
         public void AddSelectType(string enum_Select_Type, double min, double max)
         {
             Select_Type.Append(enum_Select_Type);
             Min.Append(min);
             Max.Append(max);
         }
+
         public bool AddSelectType(string enum_Select_Type, string min, string max)
         {
             if (double.TryParse(min, out double minRelset) && double.TryParse(max, out double maxrelst))
@@ -101,19 +101,21 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 return false;
             }
         }
+
         public void Clear()
         {
             Select_Type = new HTuple();
             Min = new HTuple();
             Max = new HTuple();
         }
+
         public HTuple Select_Type { get; set; } = new HTuple();
         public bool and_OR { get; set; }
         public HTuple Min { get; set; } = new HTuple();
         public HTuple Max { get; set; } = new HTuple();
+
         public HObject select_shape(HObject hObject, int runid = -1)
         {
-
             HObject hObject1;
             string Operation = "and";
             if (and_OR)

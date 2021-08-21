@@ -1,5 +1,4 @@
 using System;
-using System.IO.Ports;
 using System.Windows.Forms;
 
 namespace Vision2.vision
@@ -11,17 +10,18 @@ namespace Vision2.vision
             InitializeComponent();
 
             //propertyGrid1.SelectedObject = Vision.Instance.GetSerPort();
-
         }
+
         public VisionUserControl1(vision.Vision vision) : this()
         {
             Vision = vision;
-
         }
-        Vision Vision;
- 
-        bool iscont = false;
-        void SetP()
+
+        private Vision Vision;
+
+        private bool iscont = false;
+
+        private void SetP()
         {
             try
             {
@@ -30,7 +30,6 @@ namespace Vision2.vision
                     return;
                 }
                 iscont = true;
-
             }
             catch (Exception)
             {
@@ -42,8 +41,6 @@ namespace Vision2.vision
         {
             try
             {
-      
-          
                 checkedListBox1.Items.Clear();
                 foreach (var item in Vision.Instance.VisionPr)
                 {
@@ -55,6 +52,7 @@ namespace Vision2.vision
                 MessageBox.Show(ex.Message);
             }
         }
+
         private void checkedListBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             try
@@ -66,7 +64,6 @@ namespace Vision2.vision
             }
             catch (Exception)
             {
-
             }
         }
     }

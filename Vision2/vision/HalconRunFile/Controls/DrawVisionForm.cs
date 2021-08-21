@@ -1,12 +1,5 @@
 ﻿using HalconDotNet;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Vision2.vision.HalconRunFile.RunProgramFile;
 
@@ -19,16 +12,18 @@ namespace Vision2.vision.HalconRunFile.Controls
             InitializeComponent();
             HWindI.Initialize(hWindowControl1);
         }
-        HWindID HWindI = new HWindID();
-        HalconRun halcon;
-        RunProgram runPa;
+
+        private HWindID HWindI = new HWindID();
+        private HalconRun halcon;
+        private RunProgram runPa;
+
         public DrawVisionForm(RunProgram run) : this()
         {
             runPa = run;
             halcon = run.GetPThis();
-          
+
             HWindI.SetImaage(halcon.Image());
-            Control control = run. GetControl(halcon);
+            Control control = run.GetControl(halcon);
             if (control != null)
             {
                 control.Dock = DockStyle.Fill;
@@ -44,10 +39,12 @@ namespace Vision2.vision.HalconRunFile.Controls
             RunProgram.Circl_Rire = trackBar.Value;
             trackBar.Scroll += TrackBar_Scroll;
         }
+
         private void DrawVisionForm_Load(object sender, EventArgs e)
         {
             //HWindI.Initialize(hSmartWindowControl1);
         }
+
         private void TrackBar_Scroll(object sender, EventArgs e)
         {
             try
@@ -60,6 +57,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 MessageBox.Show(ex.Message);
             }
         }
+
         private void toolStripDropDownButton1_Click(object sender, EventArgs e)
         {
             try
@@ -130,19 +128,16 @@ namespace Vision2.vision.HalconRunFile.Controls
 
         private void toolStripComboBox1_Click(object sender, EventArgs e)
         {
-
         }
 
         private void toolStripSplitButton1_ButtonClick(object sender, EventArgs e)
         {
-
         }
 
         private void toolStripComboBox1_DropDownClosed(object sender, EventArgs e)
         {
             try
             {
-
                 HWindI.SetImaage(halcon.GetImageOBJ((ImageTypeObj)Enum.Parse(typeof(ImageTypeObj),
                     toolStripComboBox1.SelectedItem.ToString())));
             }

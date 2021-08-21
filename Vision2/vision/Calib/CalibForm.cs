@@ -11,6 +11,5 @@ namespace Vision2.vision.Calib
         }
 
         public static CalibForm ThisForm = new CalibForm();
-
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using Vision2.vision.HalconRunFile.RunProgramFile;
+
 namespace Vision2.vision.HalconRunFile.Controls
 {
     public partial class ObjDataGr : UserControl
@@ -20,7 +21,6 @@ namespace Vision2.vision.HalconRunFile.Controls
                 if (dicHObject != null)
                 {
                     int ds = 0;
-
                 }
                 else
                 {

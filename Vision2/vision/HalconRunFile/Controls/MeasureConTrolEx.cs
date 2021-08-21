@@ -19,6 +19,7 @@ namespace Vision2.vision.HalconRunFile.Controls
             measure = meas;
             Updata(meas, halcon);
         }
+
         public MeasureConTrolEx()
         {
             InitializeComponent();
@@ -37,6 +38,7 @@ namespace Vision2.vision.HalconRunFile.Controls
             {
             }
         }
+
         private void button1_Click(object sender, EventArgs e)
         {
             try
@@ -76,12 +78,15 @@ namespace Vision2.vision.HalconRunFile.Controls
                         comboBox3.SelectedIndex = 0;
 
                         break;
+
                     case Measure.Select.first:
                         comboBox3.SelectedIndex = 1;
                         break;
+
                     case Measure.Select.last:
                         comboBox3.SelectedIndex = 2;
                         break;
+
                     default:
                         break;
                 }
@@ -90,12 +95,15 @@ namespace Vision2.vision.HalconRunFile.Controls
                     case Transition.all:
                         comboBox2.SelectedIndex = 0;
                         break;
+
                     case Transition.negative:
                         comboBox2.SelectedIndex = 1;
                         break;
+
                     case Transition.positive:
                         comboBox2.SelectedIndex = 2;
                         break;
+
                     default:
                         break;
                 }
@@ -116,6 +124,7 @@ namespace Vision2.vision.HalconRunFile.Controls
             }
             IsChanged = false;
         }
+
         private void button2_Click(object sender, EventArgs e)
         {
             try
@@ -136,7 +145,6 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             try
             {
-
                 measure.DrawModObj(halconRun);
                 halconRun.ShowImage();
                 halconRun.ShowObj();
@@ -145,7 +153,6 @@ namespace Vision2.vision.HalconRunFile.Controls
             {
                 MessageBox.Show(ex.Message);
             }
-
         }
 
         private void 显示测量点_Click(object sender, EventArgs e)
@@ -175,7 +182,9 @@ namespace Vision2.vision.HalconRunFile.Controls
                 MessageBox.Show(ex.Message);
             }
         }
-        bool IsChanged = false;
+
+        private bool IsChanged = false;
+
         private void button5_Click(object sender, EventArgs e)
         {
             try
@@ -223,7 +232,6 @@ namespace Vision2.vision.HalconRunFile.Controls
             }
 
             measure.Measure_Type = (MeasureType)Enum.Parse(typeof(MeasureType), comboBox1.SelectedItem.ToString());
-
         }
 
         private void checkBox2_CheckedChanged(object sender, EventArgs e)
@@ -244,7 +252,6 @@ namespace Vision2.vision.HalconRunFile.Controls
             }
             measure.Sigma = (double)trackBar1.Value / 10;
             label1.Text = "平滑:" + measure.Sigma;
-
         }
 
         private void trackBar2_Scroll(object sender, EventArgs e)
@@ -268,14 +275,15 @@ namespace Vision2.vision.HalconRunFile.Controls
                 case 1:
                     measure.TransitionStr = Transition.negative;
                     break;
+
                 case 2:
                     measure.TransitionStr = Transition.positive;
                     break;
+
                 default:
                     measure.TransitionStr = Transition.all;
                     break;
             }
-
         }
 
         private void comboBox3_SelectedIndexChanged(object sender, EventArgs e)
@@ -289,14 +297,15 @@ namespace Vision2.vision.HalconRunFile.Controls
                 case 1:
                     measure.SelectStr = Measure.Select.first;
                     break;
+
                 case 2:
                     measure.SelectStr = Measure.Select.last;
                     break;
+
                 default:
                     measure.SelectStr = Measure.Select.all;
                     break;
             }
-
         }
 
         private void numericUpDown2_ValueChanged(object sender, EventArgs e)
@@ -306,7 +315,6 @@ namespace Vision2.vision.HalconRunFile.Controls
                 return;
             }
             measure.MeasurePointNumber = (double)numericUpDown2.Value;
-
         }
 
         private void numericUpDown3_ValueChanged(object sender, EventArgs e)
@@ -316,7 +324,6 @@ namespace Vision2.vision.HalconRunFile.Controls
                 return;
             }
             measure.Measure_Heigth = (double)numericUpDown3.Value;
-
         }
     }
 }

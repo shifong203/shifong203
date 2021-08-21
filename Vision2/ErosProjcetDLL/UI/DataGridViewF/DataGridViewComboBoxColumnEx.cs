@@ -28,14 +28,13 @@ namespace Vision2.ErosProjcetDLL.UI.DataGridViewF
         {
             dropDownStyle = ComboBoxStyle.DropDownList;
         }
-
     }
+
     /// <summary>
     /// 自定义可编辑下拉框单元
     /// </summary>
-    class DataGridViewComboEditBoxCell : DataGridViewComboBoxCell
+    internal class DataGridViewComboEditBoxCell : DataGridViewComboBoxCell
     {
-
         public override void InitializeEditingControl(int rowIndex, object initialFormattedValue,
             DataGridViewCellStyle dataGridViewCellStyle)
         {
@@ -63,7 +62,6 @@ namespace Vision2.ErosProjcetDLL.UI.DataGridViewF
                     DataGridViewComboBoxColumn col = (DataGridViewComboBoxColumn)OwningColumn;
                     col.Items.Add(value);
                 }
-
             }
 
             return base.GetFormattedValue(value, rowIndex, ref cellStyle, valueTypeConverter, formattedValueTypeConverter, context);
@@ -89,28 +87,22 @@ namespace Vision2.ErosProjcetDLL.UI.DataGridViewF
                 }
 
                 grid.CurrentCell.Value = value;
-
             }
         }
     }
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public class DataGridViewComboEditBoxColumn : DataGridViewComboBoxColumn
     {
-
-
         public DataGridViewComboEditBoxColumn()
         {
             DataGridViewComboEditBoxCell obj = new DataGridViewComboEditBoxCell();
 
             this.CellTemplate = obj;
-
         }
     }
-
-
 
     /// <summary>
     /// 可分组的列 (该列必须是 Grid 的第一列)
@@ -459,7 +451,6 @@ namespace Vision2.ErosProjcetDLL.UI.DataGridViewF
         public static void DoubleBuffered(this DataGridView dgv, bool setting)
 
         {
-
             Type dgvType = dgv.GetType();
 
             PropertyInfo pi = dgvType.GetProperty("DoubleBuffered",
@@ -467,7 +458,6 @@ namespace Vision2.ErosProjcetDLL.UI.DataGridViewF
             BindingFlags.Instance | BindingFlags.NonPublic);
 
             pi.SetValue(dgv, setting, null);
-
         }
     }
 }

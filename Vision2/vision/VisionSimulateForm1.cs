@@ -1,15 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using HalconDotNet;
 using Vision2.Project.DebugF;
 
 namespace Vision2.vision
@@ -21,18 +15,20 @@ namespace Vision2.vision
             InitializeComponent();
             toolStripComboBox1.SelectedIndex = 0;
         }
-        bool Cambueys;
-        string TraversalExecutionPath = "";
-        List<string> imagePath = new List<string>();
+
+        private bool Cambueys;
+        private string TraversalExecutionPath = "";
+        private List<string> imagePath = new List<string>();
+
         private void toolStripButton1_Click(object sender, EventArgs e)
         {
             try
             {
-            
-            FolderBrowserDialog dialog = new FolderBrowserDialog();
+                FolderBrowserDialog dialog = new FolderBrowserDialog();
                 if (TraversalExecutionPath == "")
                 {
-                    ErosProjcetDLL.Project.ProjectINI.GetTempPrjectDataINI("视觉", "模拟文件夹地址",out  TraversalExecutionPath);
+                    //TempPath + "PrjectData.ini"
+                    ErosProjcetDLL.Project.ProjectINI.GetTempPrjectDataINI("视觉", "模拟文件夹地址", out TraversalExecutionPath);
                     //TraversalExecutionPath = Vision.Instance.DicSaveType[Vision.GetRunNameVision().Name].SavePath;
                 }
                 if (System.IO.Directory.Exists(TraversalExecutionPath))
@@ -40,13 +36,13 @@ namespace Vision2.vision
                     dialog.SelectedPath = TraversalExecutionPath;
                 }
                 dialog.Description = "请选择Txt所在文件夹";
-                System.Windows.Forms.DialogResult dialoge = Vision2.ErosProjcetDLL.UI.PropertyGrid.FolderBrowserLauncher.ShowFolderBrowser(dialog);
-                if (dialoge != System.Windows.Forms.DialogResult.OK) return;
+                DialogResult dialoge = ErosProjcetDLL.UI.PropertyGrid.FolderBrowserLauncher.ShowFolderBrowser(dialog);
+                if (dialoge != DialogResult.OK) return;
                 TraversalExecutionPath = dialog.SelectedPath;
                 ErosProjcetDLL.Project.ProjectINI.SetTempPrjectDataINI("视觉", "模拟文件夹地址", TraversalExecutionPath);
 
                 this.Text = TraversalExecutionPath;
-                var det = Vision2.ErosProjcetDLL.FileCon.FileConStatic.GetFilesDicListPath(TraversalExecutionPath, ".bmp,.jpg");
+                var det = ErosProjcetDLL.FileCon.FileConStatic.GetFilesDicListPath(TraversalExecutionPath, ".bmp,.jpg");
                 if (det.Count == 0)
                 {
                     Cambueys = false;
@@ -92,24 +88,24 @@ namespace Vision2.vision
                 foreach (var item in dicFile)
                 {
                     int ds = dataGridView1.Rows.Add();
-                    dataGridView1.Rows[ds].Cells[0].Value = Path.GetFileName( item.Key);
+                    dataGridView1.Rows[ds].Cells[0].Value = Path.GetFileName(item.Key);
+                    //dataGridView1.Rows[ds].Cells[1].Value = Path.GetFileName(item.Key);
                     for (int i = 0; i < item.Value.Count; i++)
                     {
-                      
                         if (toolStripComboBox1.SelectedIndex == 0)
                         {
                             imagePath.Add(item.Value[i]);
                         }
                         else
                         {
-                          if (!item.Value[i].Contains(toolStripComboBox1.SelectedItem.ToString()))
-                          {
+                            if (!item.Value[i].Contains(toolStripComboBox1.SelectedItem.ToString()))
+                            {
                                 continue;
-                          }
+                            }
                         }
                         numbers++;
                         imagePath.Add(item.Value[i]);
-                    }              
+                    }
                 }
                 toolStripLabel1.Text = "总数:" + numbers + ";" + "文件夹数量：" + det.Count + "";
                 Demo(dicFile);
@@ -119,36 +115,42 @@ namespace Vision2.vision
                 MessageBox.Show(ex.Message);
             }
         }
-        Dictionary<string, List<string>> keyValuePath;
+
+        private Dictionary<string, List<string>> keyValuePath;
+
+        /// <summary>
+        /// 读取图片
+        /// </summary>
+        /// <param name="path"></param>
         private void Demo(Dictionary<string, List<string>> path)
         {
             try
             {
-                this.tabPage1.Controls.Clear();      
+                this.tabPage1.Controls.Clear();
                 int idRow = 0;
-                foreach (var item in path)
-                {
-                    for (int i = 0; i < item.Value.Count; i++)
-                    {
-                        string picFileName = item.Value[i];//图片文件名路路径
-                        PictureBox pic = new PictureBox();
-                        Label label = new Label();
-                        pic.SizeMode = PictureBoxSizeMode.Zoom;
-                        pic.Name = "PicBox" + i.ToString();
-                        pic.Size = new System.Drawing.Size(450, 300);
-                        Point picLocatoin = new Point(i * 460, idRow * 340);
-                        pic.Location = picLocatoin;
-                        label.Location = new Point(i * 460+40, idRow * 340+310);
-                        label.Text = picFileName;
-                        label.AutoSize = true;
-                        //加载图片
-                        pic.Image = new Bitmap(picFileName);
-                        //窗体类加子控件添加该picBox控件
-                        this.tabPage1.Controls.Add(pic);
-                        this.tabPage1.Controls.Add(label);
-                    }
-                    idRow++;
-                }
+                //foreach (var item in path)
+                //{
+                //    for (int i = 0; i < item.Value.Count; i++)
+                //    {
+                //        string picFileName = item.Value[i];//图片文件名路路径
+                //        PictureBox pic = new PictureBox();
+                //        Label label = new Label();
+                //        pic.SizeMode = PictureBoxSizeMode.Zoom;
+                //        pic.Name = "PicBox" + i.ToString();
+                //        pic.Size = new System.Drawing.Size(450, 300);
+                //        Point picLocatoin = new Point(i * 460, idRow * 340);
+                //        pic.Location = picLocatoin;
+                //        label.Location = new Point(i * 460 + 40, idRow * 340 + 310);
+                //        label.Text = picFileName;
+                //        label.AutoSize = true;
+                //        //加载图片
+                //        pic.Image = new Bitmap(picFileName);
+                //        //窗体类加子控件添加该picBox控件
+                //        this.tabPage1.Controls.Add(pic);
+                //        this.tabPage1.Controls.Add(label);
+                //    }
+                //    idRow++;
+                //}
                 keyValuePath = path;
             }
             catch (Exception ex)
@@ -157,18 +159,39 @@ namespace Vision2.vision
             }
         }
 
+        private bool isThra;
+        private bool stop;
+
         private void toolStripButton4_Click(object sender, EventArgs e)
         {
             try
             {
-                Thread thread = new Thread(() => {
+                if (isThra)
+                {
+                    stop = true;
 
+                    return;
+                }
+                this.toolStripButton4.Text = "停止执行";
+                stop = false;
+                Thread thread = new Thread(() =>
+                {
+                    isThra = true;
                     foreach (var item in keyValuePath)
                     {
                         for (int i = 0; i < item.Value.Count; i++)
                         {
                             foreach (var itemd in Vision.GetHimageList().Values)
                             {
+                                if (stop)
+                                {
+                                    this.Invoke(new Action(() =>
+                                    {
+                                        this.toolStripButton4.Text = "开始模拟执行";
+                                    }));
+                                    isThra = false;
+                                    return;
+                                }
                                 if (item.Value[i].Contains(itemd.Name))
                                 {
                                     OneResultOBj oneResultOBj = new OneResultOBj();
@@ -182,19 +205,22 @@ namespace Vision2.vision
                                         string dat = name.Split('-')[0];
                                         oneResultOBj.RunID = ErosProjcetDLL.Project.ProjectINI.GetStrReturnInt(dat);
                                     }
-                                    Thread.Sleep(DebugCompiler.GetThis().MarkWait);
+                                    Thread.Sleep(DebugCompiler.Instance.MarkWait);
                                     itemd.AsysReadCamImage(oneResultOBj.LiyID, oneResultOBj.RunID, asyncRestImage => { }, oneResultOBj);
-                                    Thread.Sleep(DebugCompiler.GetThis().CamWait);
-                                    //itemd.CamImageEvent(oneResultOBj);  
+                                    Thread.Sleep(DebugCompiler.Instance.CamWait);
+                                    //itemd.CamImageEvent(oneResultOBj);
                                 }
                             }
                         }
                     }
+                    this.Invoke(new Action(() =>
+                    {
+                        this.toolStripButton4.Text = "开始模拟执行";
+                    }));
+                    isThra = false;
                 });
                 thread.IsBackground = true;
                 thread.Start();
-
-
             }
             catch (Exception ex)
             {
@@ -206,7 +232,7 @@ namespace Vision2.vision
         {
             try
             {
-                string SN= dataGridView1.Rows[dataGridView1.SelectedCells[0].RowIndex].Cells[0].Value.ToString();
+                string SN = dataGridView1.Rows[dataGridView1.SelectedCells[0].RowIndex].Cells[0].Value.ToString();
                 Thread thread = new Thread(() =>
                 {
                     for (int i = 0; i < keyValuePath[SN].Count; i++)
@@ -218,27 +244,30 @@ namespace Vision2.vision
                                 OneResultOBj oneResultOBj = new OneResultOBj();
                                 oneResultOBj.ReadImage(keyValuePath[SN][i]);
                                 string name = Path.GetFileNameWithoutExtension(keyValuePath[SN][i]);
-                                oneResultOBj.RunID =oneResultOBj.LiyID = ErosProjcetDLL.Project.ProjectINI.GetStrReturnInt(name);
+                                oneResultOBj.RunID = oneResultOBj.LiyID = ErosProjcetDLL.Project.ProjectINI.GetStrReturnInt(name);
                                 if (name.Contains('-'))
                                 {
                                     string dat = name.Split('-')[0];
                                     oneResultOBj.RunID = ErosProjcetDLL.Project.ProjectINI.GetStrReturnInt(dat);
                                 }
-                                itemd.CamImageEvent( oneResultOBj);
+                                itemd.CamImageEvent(oneResultOBj, false);
                                 Thread.Sleep(500);
                             }
                         }
                     }
                 });
-                  thread.IsBackground = true;
+                thread.IsBackground = true;
                 thread.Start();
-
-
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
+        }
+
+        private void toolStripButton5_Click(object sender, EventArgs e)
+        {
+            Vision.ShowVisionResetForm();
         }
     }
 }

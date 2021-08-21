@@ -1,14 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Vision2.vision.HalconRunFile.RunProgramFile;
-using HalconDotNet;
 
 namespace Vision2.vision.HalconRunFile.Controls
 {
@@ -18,7 +11,9 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             InitializeComponent();
         }
-        VisionContainer vision1;
+
+        private VisionContainer vision1;
+
         public VisionContainerControl(VisionContainer vision) : this()
         {
             try
@@ -31,7 +26,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 foreach (var item in vision1.ListRunName)
                 {
                     listBox1.Items.Add(item.Key);
-                }   
+                }
             }
             catch (Exception ex)
             {
@@ -45,10 +40,10 @@ namespace Vision2.vision.HalconRunFile.Controls
             {
                 vision1.UpHalconRunProgram -= Vision_UpHalconRunProgram;
             }
-            catch (Exception){  }
+            catch (Exception) { }
         }
 
-        private void Vision_UpHalconRunProgram(HalconRun halcon,RunProgram run)
+        private void Vision_UpHalconRunProgram(HalconRun halcon, RunProgram run)
         {
             try
             {
@@ -58,25 +53,25 @@ namespace Vision2.vision.HalconRunFile.Controls
                     listBox1.Items.Add(item.Key);
                 }
             }
-            catch (Exception)  {}
+            catch (Exception) { }
         }
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             try
             {
-                if (listBox1.SelectedItem==null)
+                if (listBox1.SelectedItem == null)
                 {
                     return;
                 }
                 if (vision1.GetRunProgram().ContainsKey(listBox1.SelectedItem.ToString()))
                 {
                     RunProgram runProgram = vision1.GetRunProgram()[listBox1.SelectedItem.ToString()];
-                    Control control=  runProgram.GetThisControl();
+                    Control control = runProgram.GetThisControl();
                     groupBox2.Controls.Clear();
                     groupBox2.Controls.Add(control);
                     control.Dock = DockStyle.Fill;
-                }   
+                }
             }
             catch (Exception)
             {
@@ -87,7 +82,7 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             try
             {
-                if (listBox1.SelectedItem==null)
+                if (listBox1.SelectedItem == null)
                 {
                     return;
                 }

@@ -45,6 +45,7 @@ namespace Vision2.Project
                 MessageBox.Show(ex.Message);
             }
         }
+
         private void OpenProjectButton_Click(object sender, EventArgs e)
         {
             ProjectForm projectForm = new ProjectForm();
@@ -53,7 +54,6 @@ namespace Vision2.Project
 
         private void AddProjectButton_Click(object sender, EventArgs e)
         {
-
         }
 
         private void RedrawProjectButton_Click(object sender, EventArgs e)
@@ -107,7 +107,6 @@ namespace Vision2.Project
             }
         }
 
-
         public static TreeNode AddNode(TreeNode tree, string name, bool sea = false)
         {
             TreeNode trees;
@@ -124,7 +123,6 @@ namespace Vision2.Project
             }
             return trees;
         }
-
 
         private void tVProject_AfterLabelEdit(object sender, NodeLabelEditEventArgs e)
         {
@@ -185,19 +183,14 @@ namespace Vision2.Project
                             {
                                 PropertyForm.UPProperty(CurrentNode.Tag);
                             }
-
                         }
                     }));
-
                 });
-
             }
             catch (Exception)
             {
             }
         }
-
-
 
         /// <summary>
         /// 双击节点

@@ -1,20 +1,16 @@
-﻿using System;
+﻿using HalconDotNet;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Vision2.vision.HalconRunFile.RunProgramFile;
-using HalconDotNet;
 using System.ComponentModel;
-using Vision2.ErosProjcetDLL.UI.PropertyGrid;
 using System.Windows.Forms;
+using Vision2.ErosProjcetDLL.UI.PropertyGrid;
+using Vision2.vision.HalconRunFile.RunProgramFile;
 
 namespace Vision2.vision.Library
 {
-     public  class LibraryVisionBase : DicHtuple
-     {
-
-        public Control GetControl(HalconRun halconRun=null)
+    public class LibraryVisionBase : DicHtuple
+    {
+        public Control GetControl(HalconRun halconRun = null)
         {
             try
             {
@@ -24,6 +20,7 @@ namespace Vision2.vision.Library
             { }
             return null;
         }
+
         public RunProgram GetRun()
         {
             try
@@ -34,6 +31,7 @@ namespace Vision2.vision.Library
             { }
             return null;
         }
+
         public HObject GetRoi()
         {
             RunProgram run = GetRun();
@@ -46,7 +44,7 @@ namespace Vision2.vision.Library
                     Length2 = length2.TupleInt();
                 }
             }
-         
+
             HOperatorSet.GenRectangle2(out HObject recaoi, Row, Col, new HTuple(Angle).TupleRad(), Length1, Length2);
             return recaoi;
         }
@@ -71,15 +69,15 @@ namespace Vision2.vision.Library
         {
             get
             {
-                    List<string> listS = new List<string>();
-                    foreach (var item in Vision.GetLibrary())
+                List<string> listS = new List<string>();
+                foreach (var item in Vision.GetLibrary())
+                {
+                    if (item.Value is RunProgram)
                     {
-                        if (item.Value is RunProgram)
-                        {
-                            listS.Add(item.Key);
-                        }
+                        listS.Add(item.Key);
                     }
-                    return listS;
+                }
+                return listS;
             }
         }
 
@@ -87,7 +85,7 @@ namespace Vision2.vision.Library
 
         public bool RestBool;
 
-        public AoiObj Run( OneResultOBj oneResultO)
+        public AoiObj Run(OneResultOBj oneResultO)
         {
             AoiObj aoiObj = new AoiObj();
             aoiObj.AoiRow = Row;
@@ -98,39 +96,39 @@ namespace Vision2.vision.Library
             RestBool = false;
             try
             {
-                    if (LibraryName ==null)
+                if (LibraryName == null)
+                {
+                    aoiObj.RestBool = true;
+                    return aoiObj;
+                }
+                if (LibraryName != "")
+                {
+                    aoiObj.RPName = LibraryName;
+                    HOperatorSet.Union1(Vision.GetLibrary()[LibraryName].AOIObj, out aoiObj.SelseAoi);
+                    HOperatorSet.Union1(Vision.GetLibrary()[LibraryName].DrawObj, out aoiObj.Drow);
+                    HOperatorSet.AreaCenter(aoiObj.SelseAoi, out HTuple area, out HTuple row, out HTuple col);
+                    if (row.Length == 1)
                     {
-                        aoiObj.RestBool = true;
-                        return aoiObj;
+                        HOperatorSet.VectorAngleToRigid(row, col, 0, Row, Col, new HTuple(Angle).TupleRad(), out HTuple hom2dt);
+                        aoiObj.Homt2D = hom2dt;
+                        HOperatorSet.AffineTransRegion(aoiObj.SelseAoi, out aoiObj.SelseAoi, hom2dt, "nearest_neighbor");
+                        HOperatorSet.AffineTransRegion(aoiObj.Drow, out aoiObj.Drow, hom2dt, "nearest_neighbor");
                     }
-                    if (LibraryName!="")
-                    {
-                        aoiObj.RPName = LibraryName;
-                        HOperatorSet.Union1(Vision.GetLibrary()[LibraryName].AOIObj, out aoiObj.SelseAoi);
-                        HOperatorSet.Union1(Vision.GetLibrary()[LibraryName].DrawObj, out aoiObj.Drow);
-                        HOperatorSet.AreaCenter(aoiObj.SelseAoi, out HTuple area, out HTuple row, out HTuple col);
-                        if (row.Length==1)
-                        {
-                            HOperatorSet.VectorAngleToRigid(row, col, 0, Row, Col, new HTuple(Angle).TupleRad(), out HTuple hom2dt);
-                             aoiObj.Homt2D = hom2dt;
-                            HOperatorSet.AffineTransRegion(aoiObj.SelseAoi, out aoiObj.SelseAoi, hom2dt, "nearest_neighbor");
-                            HOperatorSet.AffineTransRegion(aoiObj.Drow, out aoiObj.Drow, hom2dt, "nearest_neighbor");
-                        }
-                        //oneResultO.AddObj(aoiObj.Aoi, ColorResult.blue);
-                        //oneResultO.AddObj(aoiObj.Drow, ColorResult.yellow);
-                        RestBool = Vision.GetLibrary()[LibraryName].Run(oneResultO, aoiObj);
-                    }
-                    else
-                    {
-                        aoiObj.RestBool = true;
-                    }
+                    //oneResultO.AddObj(aoiObj.Aoi, ColorResult.blue);
+                    //oneResultO.AddObj(aoiObj.Drow, ColorResult.yellow);
+                    RestBool = Vision.GetLibrary()[LibraryName].Run(oneResultO, aoiObj);
+                }
+                else
+                {
+                    aoiObj.RestBool = true;
+                }
             }
             catch (Exception ex)
             { }
             return aoiObj;
         }
 
-        public AoiObj Run(IDrawHalcon drawHalcon )
+        public AoiObj Run(IDrawHalcon drawHalcon)
         {
             AoiObj aoiObj = new AoiObj();
             RestBool = false;
@@ -179,6 +177,5 @@ namespace Vision2.vision.Library
             }
             return aoiObj;
         }
-
     }
 }

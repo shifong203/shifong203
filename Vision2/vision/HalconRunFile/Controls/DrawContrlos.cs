@@ -1,9 +1,7 @@
 ﻿using HalconDotNet;
 using System;
-using System.Collections.Generic;
 using System.Windows.Forms;
 using Vision2.vision.HalconRunFile.RunProgramFile;
-
 
 namespace Vision2.vision.HalconRunFile.Controls
 {
@@ -14,7 +12,7 @@ namespace Vision2.vision.HalconRunFile.Controls
             InitializeComponent();
         }
 
-        HWindID HWindI = new HWindID();
+        private HWindID HWindI = new HWindID();
 
         public DrawContrlos(RunProgram run) : this()
         {
@@ -27,7 +25,7 @@ namespace Vision2.vision.HalconRunFile.Controls
             toolStripTrackBar1.GetBase().TickStyle = TickStyle.None;
             //toolStripLabel1.Text = trackBar.Value.ToString();
             RunProgram.Circl_Rire = trackBar.Value;
-            trackBar.Scroll += TrackBar_Scroll;    
+            trackBar.Scroll += TrackBar_Scroll;
         }
 
         private void TrackBar_Scroll(object sender, EventArgs e)
@@ -44,8 +42,9 @@ namespace Vision2.vision.HalconRunFile.Controls
             }
         }
 
-        HalconRun halcon;
-        RunProgram runPa;
+        private HalconRun halcon;
+        private RunProgram runPa;
+
         private void tsButton1_Click(object sender, EventArgs e)
         {
             try
@@ -57,7 +56,6 @@ namespace Vision2.vision.HalconRunFile.Controls
                 MessageBox.Show(ex.Message);
             }
         }
-      
 
         private void tsButton3_Click(object sender, EventArgs e)
         {
@@ -69,13 +67,10 @@ namespace Vision2.vision.HalconRunFile.Controls
             {
                 MessageBox.Show(ex.Message);
             }
-
         }
-
 
         private void 绘制椭圆ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
             try
             {
                 HTuple hv_Row = null, hv_Column = null;
@@ -105,7 +100,6 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             try
             {
-
                 HTuple hv_Row = null, hv_Column = null;
                 halcon.DrawType = 2;
                 if (halcon.Drawing)
@@ -128,13 +122,10 @@ namespace Vision2.vision.HalconRunFile.Controls
                 MessageBox.Show(ex.Message);
             }
             halcon.Drawing = false;
-
         }
 
         private void 绘制方矩形ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-  
-
         }
 
         private void 绘制角度矩形ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -166,7 +157,6 @@ namespace Vision2.vision.HalconRunFile.Controls
 
         private void 绘制区域ToolStripMenuItem_Click(object sender, EventArgs e)
         {
- 
         }
 
         private void 绘制NBSToolStripMenuItem_Click(object sender, EventArgs e)
@@ -239,24 +229,13 @@ namespace Vision2.vision.HalconRunFile.Controls
             halcon.Drawing = false;
         }
 
-   
-
-    
-
-   
-
-      
-
         private void tsButton6_Click_1(object sender, EventArgs e)
         {
             runPa.ShowHelp();
         }
 
-
-
         private void toolStripTrackBar1_Click(object sender, EventArgs e)
         {
-
         }
 
         private void DrawContrlos_Load(object sender, EventArgs e)
@@ -266,7 +245,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 HWindI.Initialize(hWindowControl1);
                 HWindI.SetImaage(halcon.Image());
             }
-            catch (Exception ex )
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
@@ -276,8 +255,7 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             try
             {
-               
-                HWindI.SetImaage(halcon.GetImageOBJ((ImageTypeObj)Enum.Parse(typeof(ImageTypeObj), 
+                HWindI.SetImaage(halcon.GetImageOBJ((ImageTypeObj)Enum.Parse(typeof(ImageTypeObj),
                     toolStripComboBox1.SelectedItem.ToString())));
             }
             catch (Exception ex)
@@ -308,12 +286,10 @@ namespace Vision2.vision.HalconRunFile.Controls
 
         private void tsButton5_Click(object sender, EventArgs e)
         {
-      
         }
 
         private void toolStripButton1_Click(object sender, EventArgs e)
         {
-
         }
 
         private void toolStripDropDownButton1_Click(object sender, EventArgs e)
@@ -333,22 +309,18 @@ namespace Vision2.vision.HalconRunFile.Controls
 
         private void 移动区域ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-          
         }
 
         private void 清除掩模ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-         
         }
 
         private void 绘制ToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-      
         }
 
         private void 绘制掩模方型ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-     
         }
 
         private void toolStripDropDownButton1_MouseMove(object sender, MouseEventArgs e)
@@ -462,12 +434,10 @@ namespace Vision2.vision.HalconRunFile.Controls
 
         private void toolStripSplitButton1_ButtonClick(object sender, EventArgs e)
         {
-
         }
 
         private void toolStripComboBox1_Click(object sender, EventArgs e)
         {
-
         }
     }
 }

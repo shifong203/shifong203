@@ -6,7 +6,8 @@ namespace Vision2.ErosProjcetDLL.Project
 {
     public partial class IntEnumUserControl : System.Windows.Forms.UserControl
     {
-        Dictionary<string, PLCIntEnum> item;
+        private Dictionary<string, PLCIntEnum> item;
+
         public IntEnumUserControl(Dictionary<string, PLCIntEnum> dicPLCINT)
         {
             InitializeComponent();
@@ -21,7 +22,6 @@ namespace Vision2.ErosProjcetDLL.Project
                 treeView1.Nodes.Add(treeNod);
             }
             treeView1.ContextMenuStrip.Items.Add("添加枚举").Click += PLCIntEnumUserControl_Click;
-
         }
 
         private void PLCIntEnumUserControl_Click(object sender, EventArgs e)
@@ -47,14 +47,11 @@ namespace Vision2.ErosProjcetDLL.Project
                     treeNode.Tag = item[sd];
                     treeView1.Nodes.Add(treeNode);
                 }
-
             }
             catch (Exception)
             {
-
             }
         }
-
 
         private void 导出ToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -68,12 +65,9 @@ namespace Vision2.ErosProjcetDLL.Project
                 {
                     Vision2.ErosProjcetDLL.Excel.Npoi.DataGridViewExportExcel(openFileDialog.FileName, treeView1.SelectedNode.Text, dataGridView1);
                 }
-
             }
             catch (Exception)
             {
-
-
             }
         }
 
@@ -94,13 +88,10 @@ namespace Vision2.ErosProjcetDLL.Project
                         PLCIntEnum pLCIntEnum = (PLCIntEnum)treeView1.SelectedNode.Tag;
                         pLCIntEnum.SetDataGiev(dataGridView1);
                     }
-
                 }
             }
             catch (Exception)
             {
-
-
             }
         }
 
@@ -119,7 +110,6 @@ namespace Vision2.ErosProjcetDLL.Project
                     groupBox1.Text = getNode.Text;
                     pLCIntEnum.UpDataGiev(dataGridView1);
                 }
-
             }
             catch (Exception)
             {
@@ -135,13 +125,10 @@ namespace Vision2.ErosProjcetDLL.Project
                     item.Add(groupBox1.Text, new PLCIntEnum());
                 }
                 item[groupBox1.Text].SetDataGiev(dataGridView1);
-
             }
             catch (Exception)
             {
-
             }
-
         }
     }
 }

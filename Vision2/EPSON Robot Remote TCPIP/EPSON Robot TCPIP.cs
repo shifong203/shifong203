@@ -1,17 +1,10 @@
-﻿
-
-namespace Vision2.EPSON_Robot_Remote_TCPIP
+﻿namespace Vision2.EPSON_Robot_Remote_TCPIP
 {
     internal class EPSON_Robot_TCPIP : ErosSocket.ErosConLink.SocketClint
     {
-
-
         public void link()
         {
-
         }
-
-
 
         public override void Receive()
         {

@@ -1,12 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Vision2.ErosProjcetDLL.Project;
 using Vision2.Project.DebugF;
@@ -28,7 +21,8 @@ namespace Vision2.捷普
         {
             try
             {
-                Thread thread = new Thread(() => {
+                Thread thread = new Thread(() =>
+                {
                     bool Donet = false;
                     dataGridView1.Rows.Clear();
                     int number = 0;
@@ -61,7 +55,7 @@ namespace Vision2.捷普
                                             MeasureMlet measureMlet = item.Value as MeasureMlet;
                                             dataGridView1.Rows[dwt].Cells[0].Value = measureMlet.ValuePP;
                                             p1Diff.Append(measureMlet.ValuePP);
-                                            p1DiffIn.Append( measureMlet.ScaleMM(measureMlet.ValuePP ));
+                                            p1DiffIn.Append(measureMlet.ScaleMM(measureMlet.ValuePP));
                                             dataGridView1.Rows[dwt].Cells[4].Value = measureMlet.ScaleMM(measureMlet.ValuePP);
                                             //double vaet = (double)numericUpDown1.Value / measureMlet.ValuePP;
                                             //label5.Text = "校准值:" + vaet + "=" + numericUpDown1.Value + "/" + measureMlet.ValuePP;
@@ -75,7 +69,6 @@ namespace Vision2.捷普
                                             p2Diff.Append(measureMlet.ValuePP);
                                             p2DiffIn.Append(measureMlet.ScaleMM(measureMlet.ValuePP));
                                             dataGridView1.Rows[dwt].Cells[5].Value = measureMlet.ScaleMM(measureMlet.ValuePP);
-
                                         }
                                         else if (item.Key == "P3_dist")
                                         {
@@ -85,7 +78,6 @@ namespace Vision2.捷普
                                             p3Diff.Append(measureMlet.ValuePP);
                                             p3DiffIn.Append(measureMlet.ScaleMM(measureMlet.ValuePP));
                                             dataGridView1.Rows[dwt].Cells[6].Value = measureMlet.ScaleMM(measureMlet.ValuePP);
-
                                         }
                                         else if (item.Key == "P4_dist")
                                         {
@@ -97,30 +89,30 @@ namespace Vision2.捷普
                                             dataGridView1.Rows[dwt].Cells[7].Value = measureMlet.ScaleMM(measureMlet.ValuePP);
                                         }
                                     }
-                                    label9.Text = "执行"+number;
+                                    label9.Text = "执行" + number;
                                 }
                             }
-                            if (number>=numericUpDown5.Value)
+                            if (number >= numericUpDown5.Value)
                             {
-                       
-                                this.Invoke(new Action(() => {
+                                this.Invoke(new Action(() =>
+                                {
                                     richTextBox1.AppendText("像素精度" + Environment.NewLine);
-                                    richTextBox1.AppendText("P1:Min" + p1Diff.TupleMin() + "Men" + p1Diff.TupleMean() + "max" + p1Diff.TupleMax() 
-                                        + "差值" + p1Diff.TupleMax() .TupleSub( p1Diff.TupleMin()).TupleString("0.06f") + Environment.NewLine);
-                                    richTextBox1.AppendText("P2:Min" + p2Diff.TupleMin() + "Men" +p2Diff.TupleMean() + "max" + p2Diff.TupleMax() 
+                                    richTextBox1.AppendText("P1:Min" + p1Diff.TupleMin() + "Men" + p1Diff.TupleMean() + "max" + p1Diff.TupleMax()
+                                        + "差值" + p1Diff.TupleMax().TupleSub(p1Diff.TupleMin()).TupleString("0.06f") + Environment.NewLine);
+                                    richTextBox1.AppendText("P2:Min" + p2Diff.TupleMin() + "Men" + p2Diff.TupleMean() + "max" + p2Diff.TupleMax()
                                         + "差值" + p2Diff.TupleMax().TupleSub(p2Diff.TupleMin()).TupleString("0.06f") + Environment.NewLine);
-                                    richTextBox1.AppendText("P3:Min" + p3Diff.TupleMin() + "Men" +p3Diff.TupleMean() + "max" + p3Diff.TupleMax() 
-                                        + "差值" + p3Diff.TupleMax().TupleSub( p3Diff.TupleMin()).TupleString("0.06f") + Environment.NewLine);
-                                    richTextBox1.AppendText("P4:Min" + p1Diff.TupleMin() + "Men" + p4Diff.TupleMean() + "max" + p4Diff.TupleMax() 
-                                        + "差值" + p4Diff.TupleMax().TupleSub( p4Diff.TupleMin()).TupleString("0.06f") + Environment.NewLine);
+                                    richTextBox1.AppendText("P3:Min" + p3Diff.TupleMin() + "Men" + p3Diff.TupleMean() + "max" + p3Diff.TupleMax()
+                                        + "差值" + p3Diff.TupleMax().TupleSub(p3Diff.TupleMin()).TupleString("0.06f") + Environment.NewLine);
+                                    richTextBox1.AppendText("P4:Min" + p1Diff.TupleMin() + "Men" + p4Diff.TupleMean() + "max" + p4Diff.TupleMax()
+                                        + "差值" + p4Diff.TupleMax().TupleSub(p4Diff.TupleMin()).TupleString("0.06f") + Environment.NewLine);
                                     richTextBox1.AppendText("实际精度" + Environment.NewLine);
-                                    richTextBox1.AppendText("P1:Min" + p1DiffIn.TupleMin() + "Men" + p1DiffIn.TupleMean() + "max" + p1DiffIn.TupleMax() 
+                                    richTextBox1.AppendText("P1:Min" + p1DiffIn.TupleMin() + "Men" + p1DiffIn.TupleMean() + "max" + p1DiffIn.TupleMax()
                                         + "差值" + p1DiffIn.TupleMax().TupleSub(p1DiffIn.TupleMin()).TupleString("0.06f") + Environment.NewLine);
-                                    richTextBox1.AppendText("P2:Min" + p2DiffIn.TupleMin() + "Men" + p2DiffIn.TupleMean() + "max" + p2DiffIn.TupleMax() + 
+                                    richTextBox1.AppendText("P2:Min" + p2DiffIn.TupleMin() + "Men" + p2DiffIn.TupleMean() + "max" + p2DiffIn.TupleMax() +
                                    "差值" + p2DiffIn.TupleMax().TupleSub(p2DiffIn.TupleMin()).TupleString("0.06f") + Environment.NewLine);
-                                    richTextBox1.AppendText("P3:Min" + p3DiffIn.TupleMin() + "Men" + p3DiffIn.TupleMean() + "max" + p3DiffIn.TupleMax() 
+                                    richTextBox1.AppendText("P3:Min" + p3DiffIn.TupleMin() + "Men" + p3DiffIn.TupleMean() + "max" + p3DiffIn.TupleMax()
                                         + "差值" + p3DiffIn.TupleMax().TupleSub(p3DiffIn.TupleMin()).TupleString("0.06f") + Environment.NewLine);
-                                    richTextBox1.AppendText("P4:Min" + p4DiffIn.TupleMin() + "Men" + p4DiffIn.TupleMean() + "max" + p4DiffIn.TupleMax() 
+                                    richTextBox1.AppendText("P4:Min" + p4DiffIn.TupleMin() + "Men" + p4DiffIn.TupleMean() + "max" + p4DiffIn.TupleMax()
                                         + "差值" + p4DiffIn.TupleMax().TupleSub(p4DiffIn.TupleMin()).TupleString("0.06f") + Environment.NewLine);
                                 }));
 
@@ -164,7 +156,6 @@ namespace Vision2.捷普
                         { }
                         Thread.Sleep(10);
                     }
-                
                 });
                 thread.IsBackground = true;
                 thread.Start();
@@ -180,10 +171,10 @@ namespace Vision2.捷普
             {
                 UserFormulaContrsl.StaticAddQRCode("校验");
                 DebugCompiler.Start();
-                HalconRun   halconRun = Vision.GetRunNameVision();
+                HalconRun halconRun = Vision.GetRunNameVision();
                 foreach (var item in halconRun.GetRunProgram())
                 {
-                    if (item.Key=="P1_dist")
+                    if (item.Key == "P1_dist")
                     {
                         item.Value.Run(halconRun.GetOneImageR(), new AoiObj());
                         MeasureMlet measureMlet = item.Value as MeasureMlet;
@@ -236,25 +227,22 @@ namespace Vision2.捷普
                 foreach (var item in halconRun.GetRunProgram())
                 {
                     MeasureMlet measureMlet = item.Value as MeasureMlet;
-                    if (measureMlet==null)
+                    if (measureMlet == null)
                     {
                         continue;
                     }
                     if (item.Key == "P1_dist")
                     {
-                        ProjectINI.WritePrivateProfileString("cal_data_mm", "P1_dist_pixels", measureMlet.Scale.ToString(), Application.StartupPath+@"\setting.ini");
+                        ProjectINI.WritePrivateProfileString("cal_data_mm", "P1_dist_pixels", measureMlet.Scale.ToString(), Application.StartupPath + @"\setting.ini");
                         ProjectINI.WritePrivateProfileString("dist_mm", "P1_dist", measureMlet.ResValue.ToString(), Application.StartupPath + @"\setting.ini");
-
                     }
                     else if (item.Key == "P2_dist")
                     {
-                      
                         ProjectINI.WritePrivateProfileString("cal_data_mm", "P2_dist_pixels", measureMlet.Scale.ToString(), Application.StartupPath + @"\setting.ini");
                         ProjectINI.WritePrivateProfileString("dist_mm", "P2_dist", measureMlet.ResValue.ToString(), Application.StartupPath + @"\setting.ini");
                     }
                     else if (item.Key == "P3_dist")
                     {
-                       
                         ProjectINI.WritePrivateProfileString("cal_data_mm", "P3_dist_pixels", measureMlet.Scale.ToString(), Application.StartupPath + @"\setting.ini");
                         ProjectINI.WritePrivateProfileString("dist_mm", "P3_dist", measureMlet.ResValue.ToString(), Application.StartupPath + @"\setting.ini");
                     }
@@ -269,26 +257,22 @@ namespace Vision2.捷普
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message+"保存失败");
+                MessageBox.Show(ex.Message + "保存失败");
             }
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
-
         }
 
         private void numericUpDown5_ValueChanged(object sender, EventArgs e)
         {
-
         }
 
         private void CRRForm_Load(object sender, EventArgs e)
         {
             try
             {
-
-
             }
             catch (Exception)
             {

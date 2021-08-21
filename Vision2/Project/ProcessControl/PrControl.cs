@@ -4,13 +4,15 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
+using Vision2.ErosProjcetDLL.Project;
 using static Vision2.Project.ProcessControl.ProcessUser;
 
 namespace Vision2.Project.ProcessControl
 {
     public partial class PrControl : UserControl
     {
-        string nameT;
+        private string nameT;
+
         public PrControl(string name)
         {
             try
@@ -20,27 +22,22 @@ namespace Vision2.Project.ProcessControl
                 nameT = name;
                 toolStripTextBox1.Text = name;
 
-                if (GetThis().DIcSewS.ContainsKey(name))
+                if (Instancen.DIcSewS.ContainsKey(name))
                 {
                     int d = 0;
-                    foreach (var item in GetThis().DIcSewS[name].keyValuePa)
+                    foreach (var item in Instancen.DIcSewS[name].keyValuePa)
                     {
                         d = dataGridView1.Rows.Add();
                         dataGridView1.Rows[d].Cells[0].Value = item.Key;
                         dataGridView1.Rows[d].Cells[1].Value = item.Value.TypeStr;
                         dataGridView1.Rows[d].Cells[2].Value = item.Value.ValueStr;
                     }
-                    toolStripTextBox2.Text = GetThis().DIcSewS[name].ValueIsName;
+                    toolStripTextBox2.Text = Instancen.DIcSewS[name].ValueIsName;
                 }
-
             }
             catch (Exception)
             {
-
-
             }
-
-
         }
 
         private void Tool_Click(object sender, EventArgs e)
@@ -93,8 +90,10 @@ namespace Vision2.Project.ProcessControl
                 MessageBox.Show(ex.Message);
             }
         }
-        int y;
-        int x;
+
+        private int y;
+        private int x;
+
         private void dataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             if (e.ColumnIndex != 2)
@@ -165,6 +164,7 @@ namespace Vision2.Project.ProcessControl
             {
             }
         }
+
         private void dataGridView1_CurrentCellDirtyStateChanged(object sender, EventArgs e)
         {
             if (dataGridView1.IsCurrentCellDirty)
@@ -177,8 +177,8 @@ namespace Vision2.Project.ProcessControl
         {
             try
             {
-                Directory.CreateDirectory(Vision2.ErosProjcetDLL.Project.ProjectINI.In.ProjectPathRun + "\\历史数据");
-                System.Diagnostics.Process.Start(Vision2.ErosProjcetDLL.Project.ProjectINI.In.ProjectPathRun + "\\历史数据");
+                Directory.CreateDirectory(ProjectINI.ProjectPathRun + "\\历史数据");
+                System.Diagnostics.Process.Start(ProjectINI.ProjectPathRun + "\\历史数据");
             }
             catch (Exception)
             {
@@ -189,7 +189,6 @@ namespace Vision2.Project.ProcessControl
         {
             try
             {
-
             }
             catch (Exception)
             {
@@ -229,8 +228,8 @@ namespace Vision2.Project.ProcessControl
                 }
                 if (nameT == toolStripTextBox1.Text)
                 {
-                    GetThis().DIcSewS.Remove(nameT);
-                    GetThis().DIcSewS.Add(toolStripTextBox1.Text, new MyProcessU()
+                    Instancen.DIcSewS.Remove(nameT);
+                    Instancen.DIcSewS.Add(toolStripTextBox1.Text, new MyProcessU()
                     {
                         FileName = toolStripTextBox1.Text,
                         ValueIsName = toolStripTextBox2.Text,
@@ -238,17 +237,17 @@ namespace Vision2.Project.ProcessControl
                     });
                     return;
                 }
-                if (nameT != toolStripTextBox1.Text && GetThis().DIcSewS.ContainsKey(toolStripTextBox1.Text))
+                if (nameT != toolStripTextBox1.Text && Instancen.DIcSewS.ContainsKey(toolStripTextBox1.Text))
                 {
                     MessageBox.Show(toolStripTextBox1.Text + "名称已存在");
                     return;
                 }
-                if (GetThis().DIcSewS.ContainsKey(nameT))
+                if (Instancen.DIcSewS.ContainsKey(nameT))
                 {
                     if (nameT != toolStripTextBox1.Text)
                     {
-                        GetThis().DIcSewS.Remove(nameT);
-                        GetThis().DIcSewS.Add(toolStripTextBox1.Text, new MyProcessU()
+                        Instancen.DIcSewS.Remove(nameT);
+                        Instancen.DIcSewS.Add(toolStripTextBox1.Text, new MyProcessU()
                         {
                             FileName = toolStripTextBox1.Text,
                             ValueIsName = toolStripTextBox2.Text,
@@ -258,21 +257,17 @@ namespace Vision2.Project.ProcessControl
                 }
                 else
                 {
-                    GetThis().DIcSewS.Add(toolStripTextBox1.Text, new MyProcessU()
+                    Instancen.DIcSewS.Add(toolStripTextBox1.Text, new MyProcessU()
                     {
                         FileName = toolStripTextBox1.Text,
                         ValueIsName = toolStripTextBox2.Text,
                         keyValuePa = item
                     });
                 }
-
             }
             catch (Exception)
             {
-
-
             }
-
         }
     }
 }

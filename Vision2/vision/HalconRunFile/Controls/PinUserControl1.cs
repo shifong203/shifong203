@@ -17,13 +17,16 @@ namespace Vision2.vision.HalconRunFile.Controls
             StCon.AddCon(this.dataGridView2);
             height = this.Height;
         }
+
         private PinT PinTTD;
         private HalconRun halconRun;
-        int height;
+        private int height;
+
         public PinUserControl1(PinT pinT) : this()
         {
             this.UpDat(pinT);
         }
+
         public void UpDat(PinT pind)
         {
             try
@@ -42,15 +45,15 @@ namespace Vision2.vision.HalconRunFile.Controls
                     comboBox4.Items.Add(item);
                     comboBox5.Items.Add(item);
                 }
-         
+
                 this.Column1.Items.AddRange(Enum.GetNames(typeof(Enum_Select_Type)));
                 this.halconRun = pind.GetPThis() as HalconRun;
-              
+
                 comboBox2.SelectedItem = this.PinTTD.XAxisName;
                 comboBox3.SelectedItem = this.PinTTD.YAxisName;
                 comboBox4.SelectedItem = this.PinTTD.X2AxisName;
                 comboBox5.SelectedItem = this.PinTTD.Y2AxisName;
-             
+
                 checkBox2.Checked = this.PinTTD.SelsMax;
                 checkBox3.Checked = PinTTD.IsHtoB;
                 numericUpDown17.Value = (decimal)this.PinTTD.CloseCirt;
@@ -129,7 +132,6 @@ namespace Vision2.vision.HalconRunFile.Controls
                 this.numericUpDown8.Value = this.PinTTD.ThrMax2;
                 this.numericUpDown9.Value = this.PinTTD.ThrMin3;
 
-
                 this.numericUpDown2.Value = (decimal)this.PinTTD.PinHeightExternalPercent;
                 this.numericUpDown11.Value = (decimal)this.PinTTD.PinHeightExternal;
                 this.numericUpDown13.Value = this.PinTTD.ThrMinExternal;
@@ -147,8 +149,6 @@ namespace Vision2.vision.HalconRunFile.Controls
                         this.dataGridView1.Rows[num3].Cells[2].Value = this.PinTTD.SelectShapeMax.TupleSelect((HTuple)i).ToString();
                     }
                 }
-
-
             }
             catch (Exception exception)
             {
@@ -156,9 +156,6 @@ namespace Vision2.vision.HalconRunFile.Controls
             }
             this.isup = false;
         }
-
-
-
 
         private void SetValueT(int runID = 0)
         {
@@ -171,7 +168,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 }
                 this.PinTTD.XAxisName = comboBox2.SelectedItem.ToString();
                 this.PinTTD.YAxisName = comboBox3.SelectedItem.ToString();
-                if (comboBox4.SelectedItem!=null)
+                if (comboBox4.SelectedItem != null)
                 {
                     this.PinTTD.X2AxisName = comboBox4.SelectedItem.ToString();
                 }
@@ -202,7 +199,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 this.PinTTD.ColumnMM = (double)this.nudPinCol.Value;
                 this.PinTTD.RowMM = (double)this.nudPinrow.Value;
                 this.PinTTD.ToleranceMM = (double)this.nudPinTol3.Value;
-                if (this.PinTTD.EnveType==0)
+                if (this.PinTTD.EnveType == 0)
                 {
                     this.checkBox1.Enabled = true;
                 }
@@ -264,14 +261,13 @@ namespace Vision2.vision.HalconRunFile.Controls
                     HObject obj3;
                     HObject obj4;
                     HOperatorSet.Decompose3(this.halconRun.Image(null), out obj2, out obj3, out obj4);
-                    this.PinTTD.Run( halconRun.GetOneImageR(), new AoiObj() { DebugID=runID});
+                    this.PinTTD.Run(halconRun.GetOneImageR(), new AoiObj() { DebugID = runID });
                 }
                 else
                 {
-                    this.PinTTD.Run( halconRun.GetOneImageR(), new AoiObj() { DebugID = runID });
+                    this.PinTTD.Run(halconRun.GetOneImageR(), new AoiObj() { DebugID = runID });
                 }
                 this.halconRun.ShowObj();
-
             }
             catch (Exception exception)
             {
@@ -280,10 +276,6 @@ namespace Vision2.vision.HalconRunFile.Controls
         }
 
         private bool isup = true;
-
-
-
-
 
         private void btnDrawROI3_Click(object sender, EventArgs e)
         {
@@ -308,9 +300,6 @@ namespace Vision2.vision.HalconRunFile.Controls
             this.halconRun.Drawing = false;
         }
 
-
-
-
         private void button1_Click_1(object sender, EventArgs e)
         {
             try
@@ -323,15 +312,13 @@ namespace Vision2.vision.HalconRunFile.Controls
                 this.progressBar2.Value++;
                 this.label8.Text = this.progressBar2.Value.ToString() + "/" + this.progressBar2.Maximum.ToString();
                 halconRun.HobjClear();
-                this.PinTTD.Run( halconRun.GetOneImageR(), new AoiObj() { DebugID = this.progressBar2.Value });
+                this.PinTTD.Run(halconRun.GetOneImageR(), new AoiObj() { DebugID = this.progressBar2.Value });
                 halconRun.ShowObj();
             }
             catch (Exception)
             {
             }
         }
-
-
 
         private void button2_Click(object sender, EventArgs e)
         {
@@ -349,9 +336,6 @@ namespace Vision2.vision.HalconRunFile.Controls
             {
             }
         }
-
-
-
 
         private void button4_Click(object sender, EventArgs e)
         {
@@ -404,7 +388,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 if (e.ColumnIndex == 3)
                 {
                     halconRun.HobjClear();
-                    this.PinTTD.Run(halconRun.GetOneImageR(),new AoiObj() { DebugID= 11 + e.RowIndex } );
+                    this.PinTTD.Run(halconRun.GetOneImageR(), new AoiObj() { DebugID = 11 + e.RowIndex });
                     halconRun.ShowObj();
                     halconRun.ShowObj();
                 }
@@ -413,6 +397,7 @@ namespace Vision2.vision.HalconRunFile.Controls
             {
             }
         }
+
         private void dataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             try
@@ -437,7 +422,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                             this.PinTTD.SelectShapeType.Append((HTuple)this.dataGridView1.Rows[i].Cells[0].Value.ToString());
                         }
                     }
-                    this.PinTTD.Run( halconRun.GetOneImageR(),new AoiObj( 10 + e.RowIndex));
+                    this.PinTTD.Run(halconRun.GetOneImageR(), new AoiObj(10 + e.RowIndex));
                 }
             }
             catch (Exception)
@@ -460,6 +445,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 MessageBox.Show(exception.Message);
             }
         }
+
         private void nudPinRow3_ValueChanged(object sender, EventArgs e)
         {
             try
@@ -475,13 +461,13 @@ namespace Vision2.vision.HalconRunFile.Controls
                 MessageBox.Show(exception.Message);
             }
         }
+
         private void nudPinTol3_ValueChanged(object sender, EventArgs e)
         {
             try
             {
                 if (!this.isup)
                 {
-
                     this.SetValueT(0);
                 }
             }
@@ -505,6 +491,7 @@ namespace Vision2.vision.HalconRunFile.Controls
             {
             }
         }
+
         private void numericUpDown10_ValueChanged(object sender, EventArgs e)
         {
             try
@@ -513,13 +500,14 @@ namespace Vision2.vision.HalconRunFile.Controls
                 {
                     this.PinTTD.ThrMin3 = (byte)this.numericUpDown9.Value;
                     this.PinTTD.ThrMax3 = 255;
-                    this.PinTTD.Run( halconRun.GetOneImageR(),new AoiObj( 9));
+                    this.PinTTD.Run(halconRun.GetOneImageR(), new AoiObj(9));
                 }
             }
             catch (Exception)
             {
             }
         }
+
         private void numericUpDown11_ValueChanged(object sender, EventArgs e)
         {
             this.SetValueT(4);
@@ -529,19 +517,16 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             this.SetValueT(5);
         }
+
         private void numericUpDown14_ValueChanged(object sender, EventArgs e)
         {
             this.SetValueT(5);
         }
 
-
         private void numericUpDown2_ValueChanged_2(object sender, EventArgs e)
         {
             this.SetValueT(6);
         }
-
-
-
 
         private void numericUpDown4_ValueChanged_1(object sender, EventArgs e)
         {
@@ -552,7 +537,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                     this.PinTTD.DifferenceRow = (double)this.numericUpDown4.Value;
                     this.PinTTD.DifferenceCol = (double)this.numericUpDown5.Value;
                     this.halconRun.HobjClear();
-                    this.PinTTD.Run(halconRun.GetOneImageR(),new AoiObj( 7));
+                    this.PinTTD.Run(halconRun.GetOneImageR(), new AoiObj(7));
                     this.halconRun.ShowObj();
                 }
             }
@@ -570,15 +555,15 @@ namespace Vision2.vision.HalconRunFile.Controls
                     this.PinTTD.DifferenceRow = (double)this.numericUpDown4.Value;
                     this.PinTTD.DifferenceCol = (double)this.numericUpDown5.Value;
                     this.halconRun.HobjClear();
-                    this.PinTTD.Run( halconRun.GetOneImageR(),new AoiObj( 7));
+                    this.PinTTD.Run(halconRun.GetOneImageR(), new AoiObj(7));
                     this.halconRun.ShowObj();
-
                 }
             }
             catch (Exception)
             {
             }
         }
+
         private void numericUpDown6_ValueChanged(object sender, EventArgs e)
         {
             try
@@ -589,11 +574,11 @@ namespace Vision2.vision.HalconRunFile.Controls
                     this.PinTTD.ColumnNumber = (int)this.numericUpDown1.Value;
                 }
             }
-
             catch (Exception)
             {
             }
         }
+
         private void numericUpDown7_ValueChanged(object sender, EventArgs e)
         {
             try
@@ -603,7 +588,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                     this.PinTTD.ThrMin2 = (byte)this.numericUpDown7.Value;
                     this.PinTTD.ThrMax2 = (byte)this.numericUpDown8.Value;
                     halconRun.HobjClear();
-                    this.PinTTD.Run( halconRun.GetOneImageR(), new AoiObj(8));
+                    this.PinTTD.Run(halconRun.GetOneImageR(), new AoiObj(8));
                     halconRun.ShowObj();
                 }
             }
@@ -611,6 +596,7 @@ namespace Vision2.vision.HalconRunFile.Controls
             {
             }
         }
+
         private void numericUpDown8_ValueChanged(object sender, EventArgs e)
         {
             try
@@ -620,7 +606,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                     halconRun.HobjClear();
                     this.PinTTD.ThrMin2 = (byte)this.numericUpDown7.Value;
                     this.PinTTD.ThrMax2 = (byte)this.numericUpDown8.Value;
-                    this.PinTTD.Run( halconRun.GetOneImageR(), new AoiObj(8));
+                    this.PinTTD.Run(halconRun.GetOneImageR(), new AoiObj(8));
                     halconRun.ShowObj();
                 }
             }
@@ -628,6 +614,7 @@ namespace Vision2.vision.HalconRunFile.Controls
             {
             }
         }
+
         private void numericUpDown9_ValueChanged(object sender, EventArgs e)
         {
             try
@@ -637,7 +624,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                     halconRun.HobjClear();
                     this.PinTTD.ThrMin3 = (byte)this.numericUpDown9.Value;
                     this.PinTTD.ThrMax3 = (byte)255;
-                    this.PinTTD.Run( halconRun.GetOneImageR(),new AoiObj( 10));
+                    this.PinTTD.Run(halconRun.GetOneImageR(), new AoiObj(10));
                     halconRun.ShowObj();
                 }
             }
@@ -645,10 +632,12 @@ namespace Vision2.vision.HalconRunFile.Controls
             {
             }
         }
+
         private void numericUpDownAreaMax_ValueChanged(object sender, EventArgs e)
         {
             this.SetValueT(2);
         }
+
         private void numericUpDownAreaMin_ValueChanged(object sender, EventArgs e)
         {
             this.SetValueT(2);
@@ -658,11 +647,12 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             this.SetValueT(1);
         }
+
         private void numericUpDownThrMin_ValueChanged(object sender, EventArgs e)
         {
             this.SetValueT(1);
-
         }
+
         private void numUpDownHeigthMax_ValueChanged(object sender, EventArgs e)
         {
             this.SetValueT(3);
@@ -675,12 +665,12 @@ namespace Vision2.vision.HalconRunFile.Controls
 
         private void tabPage2_Click(object sender, EventArgs e)
         {
-
         }
 
         private void PinUserControl1_Load(object sender, EventArgs e)
         {
         }
+
         private void numericUpDown3_ValueChanged_2(object sender, EventArgs e)
         {
             this.SetValueT(9);
@@ -688,7 +678,6 @@ namespace Vision2.vision.HalconRunFile.Controls
 
         private void button3_Click(object sender, EventArgs e)
         {
-
             this.SetValueT(5);
         }
 
@@ -697,13 +686,8 @@ namespace Vision2.vision.HalconRunFile.Controls
             this.PinTTD.SelsMax = checkBox2.Checked;
         }
 
-
-
-
-
         private void dataGridView2_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-
         }
 
         private void dataGridView2_CellValueChanged(object sender, DataGridViewCellEventArgs e)
@@ -769,12 +753,9 @@ namespace Vision2.vision.HalconRunFile.Controls
                 halconRun.AddObj(hObject);
                 halconRun.AddObj(hObject1, ColorResult.blue);
                 halconRun.ShowObj();
-
             }
             catch (Exception EX)
             {
-
-
             }
             halconRun.Drawing = false;
         }
@@ -783,7 +764,6 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             try
             {
-
                 halconRun.HobjClear();
                 HOperatorSet.GenCrossContourXld(out HObject hObject, PinTTD.Rows, PinTTD.Columns, 120, 0);
                 HOperatorSet.GenRectangle2(out HObject hObject1, PinTTD.Rows, PinTTD.Columns, HTuple.TupleGenConst(PinTTD.Columns.Length, 0), HTuple.TupleGenConst(PinTTD.Columns.Length, PinTTD.PinHeightExternal), HTuple.TupleGenConst(PinTTD.Columns.Length, PinTTD.PinHeightExternal));
@@ -798,7 +778,6 @@ namespace Vision2.vision.HalconRunFile.Controls
 
         private void button10_Click(object sender, EventArgs e)
         {
-
             PinTTD.Rows = new HTuple();
             PinTTD.Columns = new HTuple();
         }
@@ -812,7 +791,7 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             try
             {
-                if (PinTTD.EnveType==1)
+                if (PinTTD.EnveType == 1)
                 {
                     PinTTD.MRows = PinTTD.ModeRow;
                     PinTTD.MColumns = PinTTD.ModeColumn;
@@ -825,7 +804,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                         halconRun.ShowObj();
                     }
                 }
-                else  if(PinTTD.EnveType == 2)
+                else if (PinTTD.EnveType == 2)
                 {
                     PinTTD.MRows = PinTTD.ModeRow;
                     PinTTD.MColumns = PinTTD.ModeColumn;
@@ -838,7 +817,6 @@ namespace Vision2.vision.HalconRunFile.Controls
                         dataGridView3.Rows[det].Cells[1].Value = this.PinTTD.MRows.TupleSelect(i);
                     }
                 }
-            
             }
             catch (Exception ex)
             {
@@ -870,12 +848,10 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             try
             {
-
                 PinTTD.PintOBj = RunProgram.DrawHObj(halconRun, PinTTD.PintOBj);
             }
             catch (Exception)
             {
-
             }
         }
 
@@ -887,7 +863,6 @@ namespace Vision2.vision.HalconRunFile.Controls
             }
             catch (Exception)
             {
-
             }
         }
 
@@ -904,7 +879,6 @@ namespace Vision2.vision.HalconRunFile.Controls
             }
             catch (Exception)
             {
-
             }
         }
 
@@ -927,7 +901,6 @@ namespace Vision2.vision.HalconRunFile.Controls
                 string nameStr = "";
                 if (PinTTD.Dic_Measure.Keys_Measure.ContainsKey(name))
                 {
-
                     int idx = Vision2.ErosProjcetDLL.Project.ProjectINI.GetStrReturnInt(name, out name);
                     name = name + (idx + 1);
                     goto st;
@@ -995,11 +968,9 @@ namespace Vision2.vision.HalconRunFile.Controls
                     halconRun.AddObj(PinTTD.Dic_Measure[listBox1.SelectedItem.ToString()].GetHamMatDraw());
                     halconRun.ShowObj();
                 }
-
             }
             catch (Exception)
             {
-
             }
         }
 
@@ -1007,6 +978,7 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             SetValueT();
         }
+
         private void dataGridView3_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             if (this.isup)
@@ -1015,7 +987,7 @@ namespace Vision2.vision.HalconRunFile.Controls
             }
             try
             {
-                if (e.ColumnIndex==0)
+                if (e.ColumnIndex == 0)
                 {
                     this.PinTTD.MColumns[e.RowIndex] = double.Parse(dataGridView3.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString());
                 }
@@ -1023,7 +995,6 @@ namespace Vision2.vision.HalconRunFile.Controls
                 {
                     this.PinTTD.MRows[e.RowIndex] = double.Parse(dataGridView3.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString());
                 }
-   
             }
             catch (Exception ex)
             {

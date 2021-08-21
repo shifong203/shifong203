@@ -9,8 +9,9 @@ namespace Vision2.ErosProjcetDLL.UI.PropertyGrid
         private string _PropertyName;
         private string _PropertyDescription;
         private object _DefaultValue;
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="Name"></param>
         /// <param name="Description"></param>

@@ -24,7 +24,6 @@ namespace Vision2.Project.formula
                         textBox2.Text = "匹配成功";
                     }
                     );
-
                 }
                 else
                 {

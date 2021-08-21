@@ -6,47 +6,47 @@ using System.Linq;
 using Vision2.ErosProjcetDLL.UI.PropertyGrid;
 using Vision2.Project.DebugF.IO;
 using Vision2.vision;
-using Vision2.vision.HalconRunFile.RunProgramFile;
-using static Vision2.vision.Vision;
 
 namespace Vision2.Project.DebugF.工艺库
 {
     public class MatrixC
     {
-
-
         /// <summary>
         /// 起点位置
         /// </summary>
         [Description("位置点名称"), Category("起点位置"), DisplayName("起点点名称"),
        TypeConverter(typeof(ErosConverter)), ErosConverter.ThisDropDownAttribute("ListName")]
         public string PointName { get; set; }
+
         public static List<string> ListName
         {
             get
             {
-                return new List<string>(DebugCompiler.GetThis().DDAxis.GetToPointName());
+                return new List<string>(DebugCompiler.Instance.DDAxis.GetToPointName());
             }
         }
-
 
         [Description("结束点名称，并计算出角度"), Category("起点位置"), DisplayName("结束点名称"),
          TypeConverter(typeof(ErosConverter)), ErosConverter.ThisDropDownAttribute("ListName")]
         public string PointNameEnd { get; set; }
+
         [Description("起点位置矩阵方向角度"), Category("起点位置"), DisplayName("角度")]
         public double Angle { get; set; }
 
         [Description("起点位置矩阵X方向步进间距"), Category("位置"), DisplayName("X间距")]
         public double XInterval { get; set; }
+
         [Description("起点位置矩阵Y方向步进间距"), Category("位置"), DisplayName("Y间距")]
         public double YInterval { get; set; }
+
         [Description("矩阵宽度"), Category("位置"), DisplayName("矩阵宽度")]
         public double Width { get; set; }
+
         [Description("矩阵高度"), Category("位置"), DisplayName("矩阵高度")]
         public double Heith { get; set; }
+
         [Description("使用矩阵计算或点位计算"), Category("计算方式"), DisplayName("使用点位计算")]
         public bool IsPointD { get; set; } = true;
-
 
         public List<double> XS { get; set; }
         public List<double> YS { get; set; }
@@ -67,16 +67,16 @@ namespace Vision2.Project.DebugF.工艺库
         [Description("是否平铺图像"), Category("图像"), DisplayName("平铺图像")]
         public bool IsFillImage { get; set; }
 
-
         [Description("轴组名称"), Category("轴组"), DisplayName("轴组名")]
         [TypeConverter(typeof(ErosConverter)), ErosConverter.ThisDropDownAttribute("AxisGrotList", false, true)]
         public string AxisName { get; set; }
+
         public static string[] AxisGrotList
         {
             get
             {
                 List<string> vs = new List<string>();
-                vs = DebugCompiler.GetThis().DDAxis.AxisGrot.Keys.ToList();
+                vs = DebugCompiler.Instance.DDAxis.AxisGrot.Keys.ToList();
                 for (int i = 0; i < ErosSocket.DebugPLC.DebugComp.GetThis().ListAxisP.Count; i++)
                 {
                     vs.Add(ErosSocket.DebugPLC.DebugComp.GetThis().ListAxisP[i].Name);
@@ -85,6 +85,7 @@ namespace Vision2.Project.DebugF.工艺库
                 return vs.ToArray();
             }
         }
+
         public static string[] AxisVisionList
         {
             get
@@ -95,6 +96,7 @@ namespace Vision2.Project.DebugF.工艺库
                 return vs.ToArray();
             }
         }
+
         [Description("视觉程序名"), Category("轴组"), DisplayName("视觉程序")]
         [TypeConverter(typeof(ErosConverter)), ErosConverter.ThisDropDownAttribute("AxisVisionList", false, true)]
         public string VisionName { get; set; }
@@ -104,24 +106,26 @@ namespace Vision2.Project.DebugF.工艺库
 
         public HTuple Rows { get; set; }
         public HTuple Cols { get; set; }
-        List<HObject> iMAGES = new List<HObject>();
-        HTuple Rows1 = new HTuple();
-        HTuple Cols1 = new HTuple();
-        HTuple Rows2 = new HTuple();
-        HTuple Cols2 = new HTuple();
-        double MaxRow;
-        double MaxCol;
-        HTuple hRows;
-        HTuple hCols;
-        HTuple hXs;
-        HTuple hYs;
-        HWindID HWind;
-        HTuple disW;
-        HTuple disH;
+        private List<HObject> iMAGES = new List<HObject>();
+        private HTuple Rows1 = new HTuple();
+        private HTuple Cols1 = new HTuple();
+        private HTuple Rows2 = new HTuple();
+        private HTuple Cols2 = new HTuple();
+        private double MaxRow;
+        private double MaxCol;
+        private HTuple hRows;
+        private HTuple hCols;
+        private HTuple hXs;
+        private HTuple hYs;
+        private HWindID HWind;
+        private HTuple disW;
+        private HTuple disH;
+
         public void SetHwindId(HWindID hWindID)
         {
             HWind = hWindID;
         }
+
         /// <summary>
         /// 计算结果
         /// </summary>
@@ -144,17 +148,20 @@ namespace Vision2.Project.DebugF.工艺库
             }
             return false;
         }
+
         public double mark2Row;
         public double mark2Col;
         public double mark1Row;
         public double mark1Col;
         public double markZPoint { get; set; }
 
-        HObject HObjectRect1;
+        private HObject HObjectRect1;
+
         public HObject GetHObject()
         {
             return HObjectRect1;
         }
+
         public void ShowMark(HWindID hWindID)
         {
             try
@@ -162,14 +169,13 @@ namespace Vision2.Project.DebugF.工艺库
                 HTuple rows;
                 HTuple cols;
 
-
                 Vision.GetRunNameVision(VisionName).GetCalib().ShowCoordinate(hWindID);
                 hWindID.HeigthImage = this.ImageHeith;
                 hWindID.WidthImage = this.ImageWidth;
                 Vision.GetRunNameVision(VisionName).GetCalib().GetPointXYtoRC(5, 0, out HTuple rowT, out HTuple colsT);
                 Vision.GetRunNameVision(VisionName).GetCalib().GetPointXYtoRC(0, 0, out HTuple rowT2, out HTuple colsT2);
                 HOperatorSet.DistancePp(rowT, colsT, rowT2, colsT2, out HTuple disW);
-                XYZPoint point = DebugCompiler.GetThis().DDAxis.GetToPointFileProt(PointName);
+                XYZPoint point = DebugCompiler.Instance.DDAxis.GetToPointFileProt(PointName);
                 if (point != null)
                 {
                     Vision.GetRunNameVision(VisionName).GetCalib().GetPointXYtoRC(point.Y, point.X, out rows, out cols);
@@ -180,7 +186,7 @@ namespace Vision2.Project.DebugF.工艺库
                     mark1Col = cols;
                     hWindID.OneResIamge.AddImageMassage(rows, cols, "MK1");
                 }
-                point = DebugCompiler.GetThis().DDAxis.GetToPointFileProt(this.PointNameEnd);
+                point = DebugCompiler.Instance.DDAxis.GetToPointFileProt(this.PointNameEnd);
                 if (point != null)
                 {
                     Vision.GetRunNameVision(VisionName).GetCalib().GetPointXYtoRC(point.Y, point.X, out rows, out cols);
@@ -210,9 +216,9 @@ namespace Vision2.Project.DebugF.工艺库
                 HTuple cols;
                 XYZPoint point;
 
-                point = DebugCompiler.GetThis().DDAxis.GetToPointFileProt(PointName);
+                point = DebugCompiler.Instance.DDAxis.GetToPointFileProt(PointName);
 
-                XYZPoint point2 = DebugCompiler.GetThis().DDAxis.GetToPointFileProt(PointNameEnd);
+                XYZPoint point2 = DebugCompiler.Instance.DDAxis.GetToPointFileProt(PointNameEnd);
                 if (point == null)
                 {
                     return false;
@@ -344,8 +350,7 @@ namespace Vision2.Project.DebugF.工艺库
 
         public bool MarkMove(string MarkName1, string Mark2Name, string axisName = null, HWindID hWindID = null)
         {
-
-            XYZPoint point = DebugCompiler.GetThis().DDAxis.GetToPointFileProt(MarkName1);
+            XYZPoint point = DebugCompiler.Instance.DDAxis.GetToPointFileProt(MarkName1);
             if (point == null)
             {
                 return false;
@@ -354,10 +359,10 @@ namespace Vision2.Project.DebugF.工艺库
             {
                 axisName = AxisName;
             }
-            if (DebugCompiler.GetThis().DDAxis.SetXYZ1Points(axisName, 10, point.X, point.Y, point.Z))
+            if (DebugCompiler.Instance.DDAxis.SetXYZ1Points(axisName, 10, point.X, point.Y, point.Z))
             {
-                System.Threading.Thread.Sleep(DebugCompiler.GetThis().MarkWait);
-                Vision.GetRunNameVision(VisionName).ReadCamImage("Mark1",1);
+                System.Threading.Thread.Sleep(DebugCompiler.Instance.MarkWait);
+                Vision.GetRunNameVision(VisionName).ReadCamImage("Mark1", 1);
                 //Vision.GetRunNameVision(VisionName).CamImageEvent("Mark1", null, 1);
                 HOperatorSet.GenCircle(out HObject hObject1, point.Y, point.X, 10);
                 HOperatorSet.GenCrossContourXld(out HObject hObjectxs, point.Y, point.X, 10, 0);
@@ -376,10 +381,10 @@ namespace Vision2.Project.DebugF.工艺库
                 {
                     hWindID.OneResIamge.AddObj(hObject1.ConcatObj(hObjectxs), ColorResult.green);
                     hWindID.OneResIamge.AddImageMassage(point.Y, point.X, "Mark1", ColorResult.green);
-                    point = DebugCompiler.GetThis().DDAxis.GetToPointFileProt(Mark2Name);
-                    if (DebugCompiler.GetThis().DDAxis.SetXYZ1Points(axisName, 10, point.X, point.Y, point.Z))
+                    point = DebugCompiler.Instance.DDAxis.GetToPointFileProt(Mark2Name);
+                    if (DebugCompiler.Instance.DDAxis.SetXYZ1Points(axisName, 10, point.X, point.Y, point.Z))
                     {
-                        System.Threading.Thread.Sleep(DebugCompiler.GetThis().MarkWait);
+                        System.Threading.Thread.Sleep(DebugCompiler.Instance.MarkWait);
                         Vision.GetRunNameVision(VisionName).ReadCamImage("Mark2", 2);
                         //Vision.GetRunNameVision(VisionName).CamImageEvent("Mark1", null, 2);
                         HOperatorSet.GenCrossContourXld(out hObjectxs, point.Y, point.X, 10, 0);
@@ -423,20 +428,18 @@ namespace Vision2.Project.DebugF.工艺库
 
         public void Mark1Move(string MarkName1, string axisName = null)
         {
-
-            XYZPoint point = DebugCompiler.GetThis().DDAxis.GetToPointFileProt(MarkName1);
+            XYZPoint point = DebugCompiler.Instance.DDAxis.GetToPointFileProt(MarkName1);
             if (axisName == null)
             {
                 axisName = AxisName;
             }
-            if (DebugCompiler.GetThis().DDAxis.SetXYZ1Points(axisName, 10, point.X, point.Y, point.Z))
+            if (DebugCompiler.Instance.DDAxis.SetXYZ1Points(axisName, 10, point.X, point.Y, point.Z))
             {
-                System.Threading.Thread.Sleep(DebugCompiler.GetThis().MarkWait);
-                Vision.GetRunNameVision(VisionName).ReadCamImage(MarkName1,1);
+                System.Threading.Thread.Sleep(DebugCompiler.Instance.MarkWait);
+                Vision.GetRunNameVision(VisionName).ReadCamImage(MarkName1, 1);
                 //Vision.GetRunNameVision(VisionName).CamImageEvent(MarkName1, null, 1);
                 if (Vision.GetRunNameVision(VisionName).ResultBool)
                 {
-
                 }
                 else
                 {
@@ -451,7 +454,6 @@ namespace Vision2.Project.DebugF.工艺库
 
         public void MarkCiacelbMove(string MarkName1, string axisName = null, HWindID hWindID = null)
         {
-
             if (hWindID != null)
             {
                 hWindID.OneResIamge.ClearAllObj();
@@ -472,7 +474,7 @@ namespace Vision2.Project.DebugF.工艺库
             hYs = new HTuple();
             try
             {
-                XYZPoint point = DebugCompiler.GetThis().DDAxis.GetToPointFileProt(MarkName1);
+                XYZPoint point = DebugCompiler.Instance.DDAxis.GetToPointFileProt(MarkName1);
                 double Seelp = 5;
                 double XD = point.X - Seelp;
                 double YD = point.Y - Seelp;
@@ -481,7 +483,7 @@ namespace Vision2.Project.DebugF.工艺库
                 {
                     double xp = XD + i / 3 * Seelp;
                     double yp = YD + i % 3 * Seelp;
-                    if (DebugCompiler.GetThis().DDAxis.SetXYZ1Points(axisName, 10, xp, yp, point.Z))
+                    if (DebugCompiler.Instance.DDAxis.SetXYZ1Points(axisName, 10, xp, yp, point.Z))
                     {
                         HOperatorSet.GenCrossContourXld(out HObject hObjectxs, yp, xp, 5, 0);
                         HOperatorSet.GenCircle(out HObject hObject1, yp, xp, 2);
@@ -495,12 +497,10 @@ namespace Vision2.Project.DebugF.工艺库
                         Vision.GetRunNameVision(VisionName).CamImageEvent(MarkName1, null, i + 1);
                         if (Vision.GetRunNameVision(VisionName).ResultBool)
                         {
-
                             hRows.Append(Vision.GetRunNameVision(VisionName).GetHomdeMobelEx(MarkName1).Row);
                             hCols.Append(Vision.GetRunNameVision(VisionName).GetHomdeMobelEx(MarkName1).Col);
                             hXs.Append(xp);
                             hYs.Append(yp);
-
                         }
                         else
                         {
@@ -544,18 +544,16 @@ namespace Vision2.Project.DebugF.工艺库
 
                     HOperatorSet.GenCrossContourXld(out HObject hObjectxs, this.hYs, this.hXs, 5, HTuple.TupleGenConst(this.hXs.Length, 1));
                     hWindID.OneResIamge.AddObj(hObjectxs, ColorResult.yellow);
-
                 }
-
             }
             catch (Exception ex)
             {
-
                 Vision2.ErosProjcetDLL.Project.AlarmText.AddTextNewLine(ex.Message);
             }
         }
 
-        System.Diagnostics.Stopwatch watchOut = new System.Diagnostics.Stopwatch();
+        private System.Diagnostics.Stopwatch watchOut = new System.Diagnostics.Stopwatch();
+
         public bool MoveMxet(string axisName = null, HWindID hWindID = null)
         {
             try
@@ -595,7 +593,7 @@ namespace Vision2.Project.DebugF.工艺库
                     }
                     iMAGES.Add(hObject);
                 }
-                XYZPoint point = DebugCompiler.GetThis().DDAxis.GetToPointFileProt(PointName);
+                XYZPoint point = DebugCompiler.Instance.DDAxis.GetToPointFileProt(PointName);
                 if (point == null)
                 {
                     return false;
@@ -610,9 +608,9 @@ namespace Vision2.Project.DebugF.工艺库
                 Cols2 = HTuple.TupleGenConst(XS.Count, -1);
                 for (int i = 0; i < XS.Count; i++)
                 {
-                    if (DebugCompiler.GetThis().DDAxis.SetXYZ1Points(axisName, 10, XS[i], YS[i], point.Z))
+                    if (DebugCompiler.Instance.DDAxis.SetXYZ1Points(axisName, 10, XS[i], YS[i], point.Z))
                     {
-                        System.Threading.Thread.Sleep(DebugCompiler.GetThis().MarkWait);
+                        System.Threading.Thread.Sleep(DebugCompiler.Instance.MarkWait);
                         Vision.GetRunNameVision(VisionName).AsysReadCamImage(0, (i + 1), asyncRestImage =>
                         {
                             try
@@ -629,7 +627,6 @@ namespace Vision2.Project.DebugF.工艺库
                                     hWindID.OneResIamge.AddObj(hObject2, ColorResult.yellow);
                                     if (asyncRestImage.RunID == XS.Count)
                                     {
-
                                         FillIamge(hWindID);
                                         hWindID.OneResIamge.AddMeassge(watchOut.ElapsedMilliseconds + "ms");
                                     }
@@ -640,7 +637,7 @@ namespace Vision2.Project.DebugF.工艺库
                             {
                             }
                         });
-                        System.Threading.Thread.Sleep(DebugCompiler.GetThis().CamWait);
+                        System.Threading.Thread.Sleep(DebugCompiler.Instance.CamWait);
                     }
                     else
                     {
@@ -658,11 +655,10 @@ namespace Vision2.Project.DebugF.工艺库
                 Vision2.ErosProjcetDLL.Project.AlarmText.AddTextNewLine(ex.Message);
             }
             return false;
-
         }
+
         public void FillIamge(HWindID hWindID = null)
         {
-
             HObject hObject = new HObject();
             hObject.GenEmptyObj();
             HObject hObject2 = new HObject();
@@ -713,7 +709,7 @@ namespace Vision2.Project.DebugF.工艺库
                     }
                 }
             }
-            if (disH!=null)
+            if (disH != null)
             {
                 HOperatorSet.GenRectangle2(out hObject2, RowsImage, ColsImage, HTuple.TupleGenConst(Cols.Length, 0), HTuple.TupleGenConst(Cols.Length, disH), HTuple.TupleGenConst(Cols.Length, disW));
             }
@@ -766,11 +762,10 @@ namespace Vision2.Project.DebugF.工艺库
                 HWind.OneResIamge.Image = hObject;
                 HWind.ShowImage();
             }
-
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="originX">起点x</param>
         /// <param name="originY">起点y</param>
@@ -821,7 +816,6 @@ namespace Vision2.Project.DebugF.工艺库
                 if (isHet)
                 {
                     xSeelp = -xSeelp;
-
                 }
                 if (isYHet)
                 {
@@ -851,7 +845,6 @@ namespace Vision2.Project.DebugF.工艺库
             }
             catch (Exception ex)
             {
-
             }
         }
     }

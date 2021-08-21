@@ -5,8 +5,6 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using Vision2.vision.HalconRunFile.RunProgramFile;
-using static Vision2.vision.HalconRunFile.RunProgramFile.RunProgram;
-using static Vision2.vision.Vision;
 
 namespace Vision2.vision.HalconRunFile.Controls
 {
@@ -16,10 +14,12 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             InitializeComponent();
         }
+
         public Welding_Spot_Control1(Welding_Spot welding_Spot) : this()
         {
             UpProgram(welding_Spot);
         }
+
         public void UpProgram(Welding_Spot welding_Spot)
         {
             isMove = true;
@@ -38,11 +38,12 @@ namespace Vision2.vision.HalconRunFile.Controls
             Halcon = (HalconRun)welding_.GetPThis();
             isMove = false;
         }
-        bool isMove;
-        HWindID hWind = new HWindID();
 
-        HalconRun Halcon;
-        Welding_Spot welding_;
+        private bool isMove;
+        private HWindID hWind = new HWindID();
+
+        private HalconRun Halcon;
+        private Welding_Spot welding_;
 
         private void Welding_Spot_Control1_Load(object sender, EventArgs e)
         {
@@ -62,7 +63,8 @@ namespace Vision2.vision.HalconRunFile.Controls
             }
         }
 
-        HObject hObjectImage;
+        private HObject hObjectImage;
+
         private void button1_Click(object sender, EventArgs e)
         {
             try
@@ -107,8 +109,10 @@ namespace Vision2.vision.HalconRunFile.Controls
             Cursor = Cursors.Default;
             Halcon.Drawing = false;
         }
-        ImageTypeObj RGBHSVEnum = ImageTypeObj.R;
-        void SetProgram(sbyte id)
+
+        private ImageTypeObj RGBHSVEnum = ImageTypeObj.R;
+
+        private void SetProgram(sbyte id)
         {
             try
             {
@@ -187,7 +191,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 hWind.SetPerpetualPart(row1, column1, row2, column2);
                 hWind.SetImaage(hObjectImage);
                 hWind.ShowImage();
-                if (WeldingCCT.Solder_joint_inspection(welding_, Halcon.GetOneImageR(), out bool iscon, out bool isless, out HTuple areas,hWind, RGBHSVEnum, id))
+                if (WeldingCCT.Solder_joint_inspection(welding_, Halcon.GetOneImageR(), out bool iscon, out bool isless, out HTuple areas, hWind, RGBHSVEnum, id))
                 {
                     Halcon.AddObj(WeldingCCT.HObject);
                 }
@@ -195,7 +199,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 {
                     Halcon.AddObj(WeldingCCT.HObject, ColorResult.red);
                 }
-         
+
                 Halcon.ShowObj();
             }
             catch (Exception ex)
@@ -203,7 +207,8 @@ namespace Vision2.vision.HalconRunFile.Controls
                 MessageBox.Show(ex.Message);
             }
         }
-        void GetProgram()
+
+        private void GetProgram()
         {
             isMove = true;
             try
@@ -279,9 +284,9 @@ namespace Vision2.vision.HalconRunFile.Controls
 
             isMove = false;
         }
+
         private void button2_Click(object sender, EventArgs e)
         {
-
             try
             {
                 HObject hObject = new HObject();
@@ -377,10 +382,8 @@ namespace Vision2.vision.HalconRunFile.Controls
             }
             Halcon.Drawing = false;
         }
-        Welding_Spot.WeldingCC WeldingCCT;
 
-
-
+        private Welding_Spot.WeldingCC WeldingCCT;
 
         private void checkBox4_CheckedChanged(object sender, EventArgs e)
         {
@@ -415,7 +418,6 @@ namespace Vision2.vision.HalconRunFile.Controls
             }
         }
 
-
         private void 删除ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
@@ -436,13 +438,10 @@ namespace Vision2.vision.HalconRunFile.Controls
             }
         }
 
-
-
         private void button3_Click(object sender, EventArgs e)
         {
             try
             {
-
                 if (WeldingCCT.ListHObj.Count > listBox2.SelectedIndex)
                 {
                     if (!WeldingCCT.ListHObj[listBox2.SelectedIndex].IsInitialized())
@@ -467,7 +466,6 @@ namespace Vision2.vision.HalconRunFile.Controls
             }
             catch (Exception)
             {
-
             }
         }
 
@@ -479,12 +477,9 @@ namespace Vision2.vision.HalconRunFile.Controls
                 Halcon.AddObj(WeldingCCT.ListHObj[listBox2.SelectedIndex], ColorResult.red);
                 Halcon.ShowImage();
                 Halcon.ShowObj();
-
-
             }
             catch (Exception)
             {
-
             }
         }
 
@@ -508,7 +503,6 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             try
             {
-
                 Halcon.HobjClear();
                 if (Halcon.Drawing)
                 {
@@ -516,7 +510,6 @@ namespace Vision2.vision.HalconRunFile.Controls
                 }
 
                 WeldingCCT.HObject = RunProgram.DrawHObj(Halcon, WeldingCCT.HObject);
-
             }
             catch (Exception)
             {
@@ -542,7 +535,7 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             try
             {
-                if (listBox3.SelectedItem==null)
+                if (listBox3.SelectedItem == null)
                 {
                     return;
                 }
@@ -571,7 +564,6 @@ namespace Vision2.vision.HalconRunFile.Controls
 
         private void button6_Click(object sender, EventArgs e)
         {
-
         }
     }
 }

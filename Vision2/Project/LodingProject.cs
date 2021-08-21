@@ -20,8 +20,10 @@ namespace Vision2.Project
         }
 
         //主窗体
-        Vision2.Project.MainForm1 ds;
-        string[] ImageS;
+        private Vision2.Project.MainForm1 ds;
+
+        private string[] ImageS;
+
         private void LodingProject_Load(object sender, EventArgs e)
         {
             ProjectINI.In.UserName = "";
@@ -30,7 +32,7 @@ namespace Vision2.Project
             {
                 LandingForm logMessageForm = new LandingForm(true);
                 logMessageForm.ShowDialog();
-                if (ProjectINI.In.UserName == "未登陆"|| ProjectINI.In.UserName=="")
+                if (ProjectINI.In.UserName == "未登陆" || ProjectINI.In.UserName == "")
                 {
                     MessageBox.Show("未登录！", "退出程序");
                     ProjectINI.In.Clros();
@@ -83,7 +85,7 @@ namespace Vision2.Project
                         Thread.Sleep(100);
                         dss1.progressBar2.Value = i * 10;
                     }
-               
+
                     dss1.progressBar1.Value = 20;
                     if (ImageS.Length > 1)
                     {
@@ -121,7 +123,7 @@ namespace Vision2.Project
                     }
                     dss1.label1.Text = "载入完成;";
                     dss1.progressBar1.Value = 100;
-                
+
                     Thread.Sleep(500);
                     //MainForm1.MainFormF.Invoke(new MethodInvoker(() => {
                     //    RecipeCompiler.GetUserFormulaContrsl().UPSetGetPargam();
@@ -132,8 +134,6 @@ namespace Vision2.Project
                         item.Value.ShowImage(true);
                     }
                     this.Hide();
-              
-
                 }
                 catch (Exception ex)
                 {
@@ -142,6 +142,7 @@ namespace Vision2.Project
             thread2.IsBackground = true;
             thread2.Start();
         }
+
         private void TimeHide()
         {
             try
@@ -158,7 +159,7 @@ namespace Vision2.Project
                 ErosSocket.DebugPLC.DebugComp debugComp = new ErosSocket.DebugPLC.DebugComp();
                 ProcessUser process = new ProcessUser();
 
-                if (!System.IO.Directory.Exists(ProjectINI.In.ProjectPathRun))
+                if (!System.IO.Directory.Exists(ErosProjcetDLL.Project.ProjectINI.ProjectPathRun))
                 {
                     ProjectINI.In.AddProject(debugComp);
                     ProjectINI.In.AddProject(dicSocket);
@@ -168,10 +169,9 @@ namespace Vision2.Project
                 }
                 else
                 {
-                  
                     //加载程序参数
                     //ErosSocket.ErosConLink.StaticCon.StataRunSocket(Application.StartupPath + "\\Project\\" + ProjectINI.In.ProjectName + "\\" + ProjectINI.In.RunName + "\\Socket");
-                    ProjectINI.ReadPathJsonToCalss<DicSocket>(ProjectINI.In.ProjectPathRun + "\\Socket\\SocketLink.socket", out dicSocket);
+                    ProjectINI.ReadPathJsonToCalss<DicSocket>(ProjectINI.ProjectPathRun + "\\Socket\\SocketLink.socket", out dicSocket);
                     dss1.label1.Text = "载入链接信息完成.....";
 
                     if (dicSocket == null)
@@ -182,7 +182,7 @@ namespace Vision2.Project
 
                     dss1.label1.Text = "载入配方信息......";
 
-                    recipeCompiler = recipeCompiler.ReadThis<RecipeCompiler>(ProjectINI.In.ProjectPathRun);
+                    recipeCompiler = recipeCompiler.ReadThis<RecipeCompiler>(ProjectINI.ProjectPathRun);
                     if (recipeCompiler != null)
                     {
                         ProjectINI.In.AddProject(recipeCompiler);
@@ -190,7 +190,7 @@ namespace Vision2.Project
                     recipeCompiler.initialization();
 
                     dss1.label1.Text = "载入视觉信息......";
-                    Vision.Instance.UpReadThis(ProjectINI.In.ProjectPathRun, Product.ProductionName);
+                    Vision.Instance.UpReadThis(ErosProjcetDLL.Project.ProjectINI.ProjectPathRun, Product.ProductionName);
                     if (Vision.Instance.RsetPort >= 0)
                     {
                         MainForm1.MainFormF.Hide();
@@ -198,23 +198,21 @@ namespace Vision2.Project
                     }
                     RecipeCompiler.GetUserFormulaContrsl().AddData(RecipeCompiler.Instance.OKNumber);
 
-                    debugComp = debugComp.ReadThis<ErosSocket.DebugPLC.DebugComp>(ProjectINI.In.ProjectPathRun);
+                    debugComp = debugComp.ReadThis<ErosSocket.DebugPLC.DebugComp>(ErosProjcetDLL.Project.ProjectINI.ProjectPathRun);
                     if (debugComp == null)
                     {
                         debugComp = new ErosSocket.DebugPLC.DebugComp();
                     }
                     debugComp.initialization();
 
-
-                    debugCalss = debugCalss.ReadThis<DebugCompiler>(ProjectINI.In.ProjectPathRun);
+                    debugCalss = debugCalss.ReadThis<DebugCompiler>(ErosProjcetDLL.Project.ProjectINI.ProjectPathRun);
                     if (debugCalss == null)
                     {
                         debugCalss = new DebugCompiler();
                     }
-       
-       
-                    endt:
-                    process = process.ReadThis<ProcessUser>(ProjectINI.In.ProjectPathRun);
+
+                endt:
+                    process = process.ReadThis<ProcessUser>(ErosProjcetDLL.Project.ProjectINI.ProjectPathRun);
                     //添加程序服务
                     ProjectINI.In.AddProject(process);
                     ProjectINI.In.AddProject(Vision.Instance);
@@ -222,7 +220,7 @@ namespace Vision2.Project
                     ProjectINI.In.AddProject(dicSocket);
                     ProjectINI.In.AddProject(debugCalss);
                     //SocketUI.Project.HMIDIC hMIDIC = new SocketUI.Project.HMIDIC();
-                    //hMIDIC = hMIDIC.ReadThis<SocketUI.Project.HMIDIC>(ProjectINI.In.ProjectPathRun);
+                    //hMIDIC = hMIDIC.ReadThis<SocketUI.Project.HMIDIC>( ErosProjcetDLL.Project.ProjectINI.ProjectPathRun);
                     //ProjectINI.In.AddProject(hMIDIC);
                     //添加工具栏
                     //ToolForm.ThisForm.AddKeyConvert("视觉", new VisionWindow(false));
@@ -275,7 +273,6 @@ namespace Vision2.Project
                                 LinKbtn.Text = item.Key + ":" + item.Value.LinkState;
                             }));
 
-
                             return "";
                         }
                     }
@@ -300,11 +297,11 @@ namespace Vision2.Project
                             }
                         }
                     }
-                    if (DebugCompiler.GetThis().Run_Mode == ProjectINI.RunMode.Debug)
+                    if (DebugCompiler.Instance.Run_Mode == ProjectINI.RunMode.Debug)
                     {
-                       User.Loge("Eros", "ErosEE1988");
+                        User.Loge("Eros", "ErosEE1988");
                     }
-       
+
                     //添加运行框
                     //UserInterfaceControl formText = new UserInterfaceControl();
                     //formText.Dock = DockStyle.Top;
@@ -318,14 +315,13 @@ namespace Vision2.Project
                 }));
                 //UserFormulaContrsl.This.tabControl1.TabPages.Remove(UserFormulaContrsl.This.tabPage4);
                 //MainForm1.MainFormF.splitContainer3.Panel2Collapsed = false;
-                AlarmForm.UpDa(Vision2.Project.DebugF.DebugCompiler.GetThis().ErrTextS);
+                AlarmForm.UpDa(Vision2.Project.DebugF.DebugCompiler.Instance.ErrTextS);
 
                 System.GC.Collect();
                 //form.LoadEnd();
                 //UPForm1_EventShowObj(Vision.Instance.GetRunNameVision());
                 Thread.Sleep(100);
 
-              
                 //this.Hide();
                 this.Cursor = Cursors.Default;
                 //MainForm1.MainFormF.UserControl2.tabControl1.SelectedIndex = 0;
@@ -333,7 +329,6 @@ namespace Vision2.Project
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
-
             }
         }
 

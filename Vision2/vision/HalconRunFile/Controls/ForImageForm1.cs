@@ -12,12 +12,14 @@ namespace Vision2.vision.HalconRunFile.Controls
             InitializeComponent();
             halcon = halconRun;
             Vision2.ErosProjcetDLL.UI.DataGridViewF.StCon.AddCon(dataGridView1);
-
         }
-        HalconRunFile.RunProgramFile.HalconRun halcon;
-        string TraversalExecutionPath = "";
-        bool Cambueys = false;
-        bool ist = false;
+
+        private HalconRunFile.RunProgramFile.HalconRun halcon;
+        private string TraversalExecutionPath = "";
+        private bool Cambueys = false;
+        private bool ist = false;
+        private int ok = 0;
+        private int ng = 0;
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -47,6 +49,8 @@ namespace Vision2.vision.HalconRunFile.Controls
                 Thread thread = new Thread(() =>
                 {
                     Cambueys = true;
+                    ok = 0;
+                    ng = 0;
                     try
                     {
                         if (dataGridView1.Rows.Count == 0)
@@ -90,6 +94,14 @@ namespace Vision2.vision.HalconRunFile.Controls
                                     label2.Text = files + "/" + i + ";" + dataGridView1.Rows[i].Cells[0].Value.ToString() + "||" + dataGridView1.Rows.Count + "/" + (i + 1);
                                     //dataGridView1.Rows[cdid-1].Cells[0].Value = item.Value[i];
                                     dataGridView1.Rows[i].Cells[1].Value = halcon.Result;
+                                    if (halcon.Result == "OK")
+                                    {
+                                        ok++;
+                                    }
+                                    else
+                                    {
+                                        ng++;
+                                    }
                                     string dtaT = "";
                                     foreach (var itemt in halcon.TrayRestData.DicBool)
                                     {
@@ -99,6 +111,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                                             dtaT += itemt2.Key + "," + itemt2.Value + ";";
                                         }
                                     }
+                                    upText();
                                     dataGridView1.Rows[i].Cells[2].Value = dtaT;
                                     halcon.SaveDataExcel("遍历数据", halcon.WriteDataCName.Keys.ToArray(), (i + 1).ToString(), halcon.WriteDataCName.Values.ToArray());
                                     halcon.ShowObj();
@@ -118,8 +131,6 @@ namespace Vision2.vision.HalconRunFile.Controls
                     {
                     }
                     Cambueys = false;
-
-
                 });
 
                 thread.Priority = ThreadPriority.Highest;
@@ -134,7 +145,7 @@ namespace Vision2.vision.HalconRunFile.Controls
         private void button3_Click(object sender, EventArgs e)
         {
             try
-             {
+            {
                 System.Windows.Forms.FolderBrowserDialog dialog = new System.Windows.Forms.FolderBrowserDialog();
                 if (TraversalExecutionPath == "")
                 {
@@ -149,7 +160,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 if (dialoge != System.Windows.Forms.DialogResult.OK) return;
                 TraversalExecutionPath = dialog.SelectedPath;
                 this.Text = TraversalExecutionPath;
-                var det = Vision2.ErosProjcetDLL.FileCon.FileConStatic.GetFilesDicListPath(TraversalExecutionPath, ".bmp,.jpg");
+                var det = Vision2.ErosProjcetDLL.FileCon.FileConStatic.GetFilesDicListPath(TraversalExecutionPath, ".bmp,.jpg,.hobj");
                 if (det.Count == 0)
                 {
                     Cambueys = false;
@@ -167,13 +178,12 @@ namespace Vision2.vision.HalconRunFile.Controls
                 }
 
                 foreach (var item in det)
-                {       
+                {
                     for (int i = 0; i < item.Value.Count; i++)
                     {
-
                         if (!checkBox2.Checked || item.Value[i].Contains(halcon.Name))
                         {
-                            if (checkBox1.Checked&&!System.IO.Path.GetFileNameWithoutExtension(item.Value[i]).EndsWith(numericUpDown1.Value.ToString()))
+                            if (checkBox1.Checked && !System.IO.Path.GetFileNameWithoutExtension(item.Value[i]).EndsWith(numericUpDown1.Value.ToString()))
                             {
                                 continue;
                             }
@@ -193,6 +203,14 @@ namespace Vision2.vision.HalconRunFile.Controls
             }
         }
 
+        public void upText()
+        {
+            this.Invoke(new Action(() =>
+            {
+                label5.Text = "OK:" + ok + " NG:" + ng + ";" + ((double)(100.0 / (ok + ng) * (double)ok)).ToString("00.0") + "%";
+            }));
+        }
+
         private void button2_Click(object sender, EventArgs e)
         {
             Cambueys = false;
@@ -204,7 +222,7 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             try
             {
-                if (Cambueys)
+                if (Cambueys && !ist)
                 {
                     return;
                 }
@@ -213,8 +231,25 @@ namespace Vision2.vision.HalconRunFile.Controls
                 {
                     halcon.ReadImage(dataGridView1.Rows[e.RowIndex].Cells[0].Value.ToString());
                     halcon.CamImageEvent(halcon.RunIDStr[(int)numericUpDown1.Value - 1], halcon.GetOneImageR(), (int)numericUpDown1.Value, false);
+                    if (ok > 0 && ng > 0)
+                    {
+                        if (dataGridView1.Rows[e.RowIndex].Cells[1].Value.ToString() != halcon.Result)
+                        {
+                            if (halcon.Result == "OK")
+                            {
+                                ok++;
+                                ng--;
+                            }
+                            else
+                            {
+                                ok--;
+                                ng++;
+                            }
+                        }
+                    }
+
+                    upText();
                     dataGridView1.Rows[e.RowIndex].Cells[1].Value = halcon.Result;
-                    //dataGridView1.Rows[e.RowIndex].Cells[2].Value = halcon.Message;
                 }
             }
             catch (Exception)
@@ -224,7 +259,6 @@ namespace Vision2.vision.HalconRunFile.Controls
 
         private void button4_Click(object sender, EventArgs e)
         {
-
             if (ist)
             {
                 this.button4.Text = "暂停";
@@ -235,12 +269,14 @@ namespace Vision2.vision.HalconRunFile.Controls
                 this.button4.Text = "继续";
                 ist = true;
             }
-
         }
 
         private void ForImageForm1_Load(object sender, EventArgs e)
         {
+        }
 
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
         }
     }
 }

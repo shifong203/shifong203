@@ -3,6 +3,7 @@ using System.IO;
 using System.Windows.Forms;
 using Vision2.ConClass;
 using Vision2.vision.HalconRunFile.RunProgramFile;
+
 namespace Vision2.ErosUI
 {
     public partial class ExclecData : Form
@@ -77,12 +78,10 @@ namespace Vision2.ErosUI
             try
             {
                 //vision.Vision.Instance.Himagelist[ Vision.Instance.RunNameVision].SaveDataExcelImage("历史数据", Vision.Instance.Himagelist[Vision.Instance.RunNameVision].WriteData.TupleMax(), Vision.Instance.Himagelist[Vision.Instance.RunNameVision]["NG数量"], Vision.Instance.Himagelist[Vision.Instance.RunNameVision].WriteData);
-
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
-
             }
         }
 
@@ -122,8 +121,6 @@ namespace Vision2.ErosUI
         private void tabControl1_MouseDown(object sender, MouseEventArgs e)
         {
         }
-
-
 
         private void 打开文件夹ToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -169,15 +166,11 @@ namespace Vision2.ErosUI
             }
             catch (Exception)
             {
-
-
             }
-
         }
 
         private void toolStripButton3_Click(object sender, EventArgs e)
         {
-
         }
     }
 }

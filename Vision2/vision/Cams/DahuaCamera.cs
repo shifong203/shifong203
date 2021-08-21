@@ -11,36 +11,35 @@ using Vision2.vision.HalconRunFile.RunProgramFile;
 
 namespace Vision2.vision.Cams
 {
-
     public class DahuaCamera : Camera, ProjectNodet.IClickNodeProject
     {
-
         private IDevice dahuaCam;     /*  相机设备    */
-
 
         //private string CameraImageFormat = "BayerRG8";
 
         //相机连接丢失事件
 
-        #region  ********************相机连接关闭丢失事件********************
+        #region ********************相机连接关闭丢失事件********************
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void dahuaCam_CameraClosed(object sender, EventArgs e)
+        private void dahuaCam_CameraClosed(object sender, EventArgs e)
         {
             AlarmText.AddTextNewLine(this.name + "相机关闭");
             OnLinkEnvet(false);
 
             OnCameraStatusChanged(this.ID + ":" + e.ToString());
         }
+
         /// <summary>
         /// 相机掉线
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void dahuaCam_ConnectionLost(object sender, EventArgs e)
+        private void dahuaCam_ConnectionLost(object sender, EventArgs e)
         {
             ErosProjcetDLL.Project.AlarmText.AddTextNewLine(this.name + "相机掉线");
 
@@ -48,18 +47,20 @@ namespace Vision2.vision.Cams
             this.OpenCam();
             OnCameraStatusChanged(this.ID + ":" + e.ToString());
         }
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void dahuaCam_CameraOpened(object sender, EventArgs e)
+        private void dahuaCam_CameraOpened(object sender, EventArgs e)
         {
             AlarmText.AddTextNewLine(this.name + "相机打开");
             OnLinkEnvet(true);
             OnCameraStatusChanged(this.ID + ":" + e.ToString());
         }
-        #endregion
+
+        #endregion ********************相机连接关闭丢失事件********************
 
         /// <summary>
         /// dahua相机构造函数
@@ -113,7 +114,7 @@ namespace Vision2.vision.Cams
             {
                 try
                 {
-                    if (balanceWhiteAuto==value)
+                    if (balanceWhiteAuto == value)
                     {
                         return;
                     }
@@ -128,23 +129,27 @@ namespace Vision2.vision.Cams
                 }
                 catch (Exception)
                 {
-
-
                 }
             }
         }
-        string balanceWhiteAuto = "Off";
+
+        private string balanceWhiteAuto = "Off";
+
         [Description("彩色通道"), Category("采图属性"), DisplayName("红色")]
         public double Red { get; set; }
+
         [Description("彩色通道"), Category("采图属性"), DisplayName("蓝色")]
         public double Blue { get; set; }
+
         [Description("彩色通道"), Category("采图属性"), DisplayName("绿色")]
         public double Green { get; set; }
+
         public override string IP
         {
             get;
             set;
         }
+
         /// <summary>
         /// 相机曝光时间
         /// </summary>
@@ -156,7 +161,7 @@ namespace Vision2.vision.Cams
             }
             set
             {
-                if ( expoursetime== value)
+                if (expoursetime == value)
                 {
                     return;
                 }
@@ -171,9 +176,9 @@ namespace Vision2.vision.Cams
             }
         }
 
-
-        public override double Gamma 
-        { get => base.Gamma;
+        public override double Gamma
+        {
+            get => base.Gamma;
             set
             {
                 if (gamma == value)
@@ -213,6 +218,7 @@ namespace Vision2.vision.Cams
                 gain = value;
             }
         }
+
         /// <summary>
         /// 设置相机连接状态
         /// </summary>
@@ -230,6 +236,7 @@ namespace Vision2.vision.Cams
                 }
             }
         }
+
         /// <summary>
         /// 连接相机
         /// </summary>
@@ -307,7 +314,6 @@ namespace Vision2.vision.Cams
 
         private void DahuaCam_StreamArgEvent(object sender, StreamEventArgs e)
         {
-
             ulong uTime = e.Timestamp;
             ulong nId = e.BlockID;
             uint uChannel = e.Channel;
@@ -318,18 +324,23 @@ namespace Vision2.vision.Cams
             {
                 case StreamEventStatus.EN_EVENT_STATUS_NORMAL:
                     break;
+
                 case StreamEventStatus.EN_EVENT_STATUS_LOST_FRAME:
                     das = "缓存被覆盖导致的丢帧";
                     break;
+
                 case StreamEventStatus.EN_EVENT_STATUS_LOST_PACKET:
                     das = "丢包导致的丢帧";
                     break;
+
                 case StreamEventStatus.EN_EVENT_STATUS_IMAGE_ERROR:
                     das = "图像错误";
                     break;
+
                 case StreamEventStatus.EN_EVENT_STATUS_CHANNEL_ERROR:
                     das = "通道错误";
                     break;
+
                 default:
                     break;
             }
@@ -340,6 +351,7 @@ namespace Vision2.vision.Cams
         }
 
         public System.Diagnostics.Stopwatch Watch = new System.Diagnostics.Stopwatch();
+
         /// <summary>
         /// 关闭相机
         /// </summary>
@@ -357,6 +369,7 @@ namespace Vision2.vision.Cams
                 }
             }
         }
+
         /// <summary>
         /// 采集图片
         /// </summary>
@@ -366,9 +379,8 @@ namespace Vision2.vision.Cams
             Watch.Restart();
             if (!this.Grabbing)
             {
-
                 Vision.TriggerSetup(this.FlashLampName, true.ToString());
-                if (FlashLampName!=null&&  FlashLampName != "")
+                if (FlashLampName != null && FlashLampName != "")
                 {
                     Thread.Sleep(FlashLampTime);
                 }
@@ -378,7 +390,7 @@ namespace Vision2.vision.Cams
                 int err = 0;
                 HObject ho_image2 = new HObject();
                 ho_image2.GenEmptyObj();
-                ST:
+            ST:
                 if (dahuaCam != null)
                 {
                     if (!dahuaCam.IsOpen)
@@ -432,8 +444,8 @@ namespace Vision2.vision.Cams
                             CloseCam();
                             OpenCam();
                             err++;
-                             AlarmText.AddTextNewLine("采图失败");
-                            if (err<3)
+                            AlarmText.AddTextNewLine("采图失败");
+                            if (err < 3)
                             {
                                 goto ST;
                             }
@@ -447,7 +459,7 @@ namespace Vision2.vision.Cams
                 }
                 else
                 {
-                    ErosProjcetDLL.Project.AlarmText.AddTextNewLine("程序未关联相机"+this.name);
+                    ErosProjcetDLL.Project.AlarmText.AddTextNewLine("程序未关联相机" + this.name);
                 }
                 return ho_image2;
             }
@@ -459,7 +471,6 @@ namespace Vision2.vision.Cams
             Watch.Restart();
             if (!this.Grabbing)
             {
-
                 Vision.TriggerSetup(this.FlashLampName, true.ToString());
                 if (FlashLampName != null && FlashLampName != "")
                 {
@@ -520,9 +531,9 @@ namespace Vision2.vision.Cams
                 return false;
             }
         }
+
         public override void Straing(HalconRun halconRun)
         {
-
             if (Grabbing)
             {
                 return;
@@ -531,7 +542,6 @@ namespace Vision2.vision.Cams
             base.Straing(halconRun);
             Thread thread = new Thread(() =>
             {
-
                 while (Grabbing)
                 {
                     try
@@ -544,15 +554,12 @@ namespace Vision2.vision.Cams
                     catch (Exception)
                     {
                     }
-
                 }
-
             });
             thread.Priority = ThreadPriority.Highest;
             thread.IsBackground = true;
             thread.Start();
         }
-
 
         public Control GetThisControl()
         {
@@ -575,16 +582,16 @@ namespace Vision2.vision.Cams
             }
             catch (Exception)
             {
-
             }
-
 
             return "";
         }
+
         public override bool SetProgramValue(string pName, string value)
         {
             return false;
         }
+
         public override bool SetProgramValue(string pName, double value)
         {
             return false;
@@ -607,5 +614,4 @@ namespace Vision2.vision.Cams
             return dahuaCam;
         }
     }
-
 }

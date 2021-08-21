@@ -47,17 +47,19 @@
             this.toolStripCheckbox2 = new Vision2.ErosProjcetDLL.UI.ToolStrip.ToolStripCheckbox();
             this.toolStrip2 = new System.Windows.Forms.ToolStrip();
             this.toolStripPictureBox1 = new Vision2.ErosProjcetDLL.UI.ToolStrip.ToolStripPictureBox();
+            this.toolStripLabel9 = new System.Windows.Forms.ToolStripLabel();
             this.toolStripDropDownButton1 = new System.Windows.Forms.ToolStripDropDownButton();
-            this.打开目录文件夹ToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.截取屏幕ToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.查看电气图纸ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.查看操作手册ToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.查看操作手册ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.方案管理ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.库管理ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.窗口分布ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.拆分ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.隐藏工具ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.窗口模式ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.库管理ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.方案管理ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.SaveAll = new System.Windows.Forms.ToolStripButton();
             this.ToolSripButtonHelp = new System.Windows.Forms.ToolStripDropDownButton();
             this.镜头信息ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -277,12 +279,13 @@
             this.toolStrip2.ImageScalingSize = new System.Drawing.Size(40, 40);
             this.toolStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripPictureBox1,
+            this.toolStripLabel9,
             this.toolStripDropDownButton1,
             this.SaveAll,
             this.ToolSripButtonHelp});
             this.toolStrip2.Location = new System.Drawing.Point(0, 0);
             this.toolStrip2.Name = "toolStrip2";
-            this.toolStrip2.Size = new System.Drawing.Size(311, 51);
+            this.toolStrip2.Size = new System.Drawing.Size(366, 51);
             this.toolStrip2.TabIndex = 2;
             this.toolStrip2.Text = "toolStrip2";
             // 
@@ -293,58 +296,72 @@
             this.toolStripPictureBox1.Size = new System.Drawing.Size(60, 60);
             this.toolStripPictureBox1.Text = "toolStripPictureBox1";
             // 
+            // toolStripLabel9
+            // 
+            this.toolStripLabel9.Name = "toolStripLabel9";
+            this.toolStripLabel9.Size = new System.Drawing.Size(64, 48);
+            this.toolStripLabel9.Text = "AVI";
+            // 
             // toolStripDropDownButton1
             // 
             this.toolStripDropDownButton1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.打开目录文件夹ToolStripMenuItem1,
             this.截取屏幕ToolStripMenuItem1,
             this.查看电气图纸ToolStripMenuItem,
+            this.toolStripMenuItem1,
             this.查看操作手册ToolStripMenuItem,
-            this.方案管理ToolStripMenuItem,
+            this.库管理ToolStripMenuItem,
             this.窗口分布ToolStripMenuItem,
-            this.库管理ToolStripMenuItem});
+            this.方案管理ToolStripMenuItem});
             this.toolStripDropDownButton1.Font = new System.Drawing.Font("宋体", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.toolStripDropDownButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripDropDownButton1.Image")));
             this.toolStripDropDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripDropDownButton1.Name = "toolStripDropDownButton1";
             this.toolStripDropDownButton1.Size = new System.Drawing.Size(102, 48);
             this.toolStripDropDownButton1.Text = "工具";
-            // 
-            // 打开目录文件夹ToolStripMenuItem1
-            // 
-            this.打开目录文件夹ToolStripMenuItem1.Name = "打开目录文件夹ToolStripMenuItem1";
-            this.打开目录文件夹ToolStripMenuItem1.Size = new System.Drawing.Size(218, 24);
-            this.打开目录文件夹ToolStripMenuItem1.Text = "打开目录文件夹";
-            this.打开目录文件夹ToolStripMenuItem1.Click += new System.EventHandler(this.打开目录文件夹ToolStripMenuItem1_Click);
+            this.toolStripDropDownButton1.DropDownOpened += new System.EventHandler(this.toolStripDropDownButton1_DropDownOpened);
             // 
             // 截取屏幕ToolStripMenuItem1
             // 
             this.截取屏幕ToolStripMenuItem1.Name = "截取屏幕ToolStripMenuItem1";
-            this.截取屏幕ToolStripMenuItem1.Size = new System.Drawing.Size(218, 24);
+            this.截取屏幕ToolStripMenuItem1.Size = new System.Drawing.Size(198, 24);
             this.截取屏幕ToolStripMenuItem1.Text = "截取屏幕";
             this.截取屏幕ToolStripMenuItem1.Click += new System.EventHandler(this.截取屏幕ToolStripMenuItem_Click);
             // 
             // 查看电气图纸ToolStripMenuItem
             // 
+            this.查看电气图纸ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.查看操作手册ToolStripMenuItem1});
             this.查看电气图纸ToolStripMenuItem.Name = "查看电气图纸ToolStripMenuItem";
-            this.查看电气图纸ToolStripMenuItem.Size = new System.Drawing.Size(218, 24);
+            this.查看电气图纸ToolStripMenuItem.Size = new System.Drawing.Size(198, 24);
             this.查看电气图纸ToolStripMenuItem.Text = "查看电气图纸";
             this.查看电气图纸ToolStripMenuItem.Click += new System.EventHandler(this.查看电气图纸ToolStripMenuItem_Click);
+            // 
+            // 查看操作手册ToolStripMenuItem1
+            // 
+            this.查看操作手册ToolStripMenuItem1.Name = "查看操作手册ToolStripMenuItem1";
+            this.查看操作手册ToolStripMenuItem1.Size = new System.Drawing.Size(198, 24);
+            this.查看操作手册ToolStripMenuItem1.Text = "查看操作手册";
+            this.查看操作手册ToolStripMenuItem1.Click += new System.EventHandler(this.查看操作手册ToolStripMenuItem1_Click);
+            // 
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(198, 24);
+            this.toolStripMenuItem1.Text = "通信管理";
             // 
             // 查看操作手册ToolStripMenuItem
             // 
             this.查看操作手册ToolStripMenuItem.Name = "查看操作手册ToolStripMenuItem";
-            this.查看操作手册ToolStripMenuItem.Size = new System.Drawing.Size(218, 24);
-            this.查看操作手册ToolStripMenuItem.Text = "查看操作手册";
+            this.查看操作手册ToolStripMenuItem.Size = new System.Drawing.Size(198, 24);
+            this.查看操作手册ToolStripMenuItem.Text = "IO调试";
             this.查看操作手册ToolStripMenuItem.Click += new System.EventHandler(this.查看操作手册ToolStripMenuItem_Click);
             // 
-            // 方案管理ToolStripMenuItem
+            // 库管理ToolStripMenuItem
             // 
-            this.方案管理ToolStripMenuItem.Name = "方案管理ToolStripMenuItem";
-            this.方案管理ToolStripMenuItem.Size = new System.Drawing.Size(218, 24);
-            this.方案管理ToolStripMenuItem.Text = "方案管理";
-            this.方案管理ToolStripMenuItem.Visible = false;
-            this.方案管理ToolStripMenuItem.Click += new System.EventHandler(this.方案管理ToolStripMenuItem_Click);
+            this.库管理ToolStripMenuItem.Name = "库管理ToolStripMenuItem";
+            this.库管理ToolStripMenuItem.Size = new System.Drawing.Size(198, 24);
+            this.库管理ToolStripMenuItem.Text = "库管理";
+            this.库管理ToolStripMenuItem.Click += new System.EventHandler(this.库管理ToolStripMenuItem_Click);
             // 
             // 窗口分布ToolStripMenuItem
             // 
@@ -353,7 +370,7 @@
             this.隐藏工具ToolStripMenuItem,
             this.窗口模式ToolStripMenuItem});
             this.窗口分布ToolStripMenuItem.Name = "窗口分布ToolStripMenuItem";
-            this.窗口分布ToolStripMenuItem.Size = new System.Drawing.Size(218, 24);
+            this.窗口分布ToolStripMenuItem.Size = new System.Drawing.Size(198, 24);
             this.窗口分布ToolStripMenuItem.Text = "窗口分布";
             // 
             // 拆分ToolStripMenuItem
@@ -377,12 +394,13 @@
             this.窗口模式ToolStripMenuItem.Text = "窗口模式";
             this.窗口模式ToolStripMenuItem.Click += new System.EventHandler(this.窗口模式ToolStripMenuItem_Click);
             // 
-            // 库管理ToolStripMenuItem
+            // 方案管理ToolStripMenuItem
             // 
-            this.库管理ToolStripMenuItem.Name = "库管理ToolStripMenuItem";
-            this.库管理ToolStripMenuItem.Size = new System.Drawing.Size(218, 24);
-            this.库管理ToolStripMenuItem.Text = "库管理";
-            this.库管理ToolStripMenuItem.Click += new System.EventHandler(this.库管理ToolStripMenuItem_Click);
+            this.方案管理ToolStripMenuItem.Name = "方案管理ToolStripMenuItem";
+            this.方案管理ToolStripMenuItem.Size = new System.Drawing.Size(198, 24);
+            this.方案管理ToolStripMenuItem.Text = "方案管理";
+            this.方案管理ToolStripMenuItem.Visible = false;
+            this.方案管理ToolStripMenuItem.Click += new System.EventHandler(this.方案管理ToolStripMenuItem_Click);
             // 
             // SaveAll
             // 
@@ -452,7 +470,7 @@
             // 
             this.splitContainer2.Panel2.Controls.Add(this.toolStrip4);
             this.splitContainer2.Size = new System.Drawing.Size(1300, 51);
-            this.splitContainer2.SplitterDistance = 311;
+            this.splitContainer2.SplitterDistance = 366;
             this.splitContainer2.TabIndex = 5;
             // 
             // toolStrip4
@@ -478,7 +496,7 @@
             this.Btn_Start});
             this.toolStrip4.Location = new System.Drawing.Point(0, 0);
             this.toolStrip4.Name = "toolStrip4";
-            this.toolStrip4.Size = new System.Drawing.Size(985, 51);
+            this.toolStrip4.Size = new System.Drawing.Size(930, 51);
             this.toolStrip4.TabIndex = 3;
             this.toolStrip4.Text = "toolStrip4";
             this.toolStrip4.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.toolStrip4_ItemClicked);
@@ -731,7 +749,6 @@
         private System.Windows.Forms.ToolStripMenuItem 窗口分布ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 拆分ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 隐藏工具ToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem 打开目录文件夹ToolStripMenuItem1;
         private System.Windows.Forms.Timer timer100;
         private System.Windows.Forms.Timer timer500;
         private System.Windows.Forms.ToolStripMenuItem 窗口模式ToolStripMenuItem;
@@ -751,5 +768,8 @@
         public System.Windows.Forms.ToolStripMenuItem Btn_Initialize;
         public System.Windows.Forms.ToolStripMenuItem Btn_Rest;
         public System.Windows.Forms.ToolStripDropDownButton labelStat1;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
+        private System.Windows.Forms.ToolStripLabel toolStripLabel9;
+        private System.Windows.Forms.ToolStripMenuItem 查看操作手册ToolStripMenuItem1;
     }
 }

@@ -1,15 +1,12 @@
-﻿using System;
+﻿using Microsoft.VisualBasic;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using HalconDotNet;
-using Microsoft.VisualBasic;
-using Newtonsoft.Json;
 using Vision2.ErosProjcetDLL.Project;
 using Vision2.vision.HalconRunFile.Controls;
 using static Vision2.vision.HalconRunFile.RunProgramFile.HalconRun;
@@ -22,15 +19,14 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
          /// </summary>
         public event DelegateAddRun UpHalconRunProgram;
 
-        public override Control GetControl(HalconRun halcon )
+        public override Control GetControl(IDrawHalcon halcon)
         {
-            return new  VisionContainerControl(this);
+            return new VisionContainerControl(this);
         }
 
         public override RunProgram UpSatrt<T>(string path)
         {
-
-            RunProgram visionConta=     base.ReadThis<VisionContainer>(path);
+            RunProgram visionConta = base.ReadThis<VisionContainer>(path);
             VisionContainer visionContainer = visionConta as VisionContainer;
 
             try
@@ -80,14 +76,14 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         if (item.Value != null)
                         {
                             string ntype = item.Value.Split('.')[item.Value.Split('.').Length - 1];
-                            dynamic obj = assembly.CreateInstance(visionContainer.GetType().Namespace + "." + ntype); // 创建类的实例                            
+                            dynamic obj = assembly.CreateInstance(visionContainer.GetType().Namespace + "." + ntype); // 创建类的实例
                             if (obj != null)
                             {
-                                visionContainer.ListRun[item.Key] = obj.UpSatrt<RunProgram>(path+ "\\"+item.Key + "\\" + item.Key);
+                                visionContainer.ListRun[item.Key] = obj.UpSatrt<RunProgram>(path + "\\" + item.Key + "\\" + item.Key);
                             }
                             else
                             {
-                                obj = assembly.CreateInstance(item.Value); // 创建类的实例     
+                                obj = assembly.CreateInstance(item.Value); // 创建类的实例
                                 visionContainer.ListRun[item.Key] = obj.UpSatrt<RunProgram>(path + "\\" + item.Key + "\\" + item.Key);
                             }
                             if (visionContainer.ListRun[item.Key] == null)
@@ -101,7 +97,6 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                             visionContainer.ListRun[item.Key].SetPThis(this.GetPThis());
                             visionContainer.ListRun[item.Key].Name = item.Key;
                             visionContainer.ListRun[item.Key].SetPd(this);
-                    
                         }
                     }
                     catch (Exception ex)
@@ -135,7 +130,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         ListRunName[item.Value.Name] = item.Value.Type;
                     }
                     itemS.Add(item.Value.Name, item.Value);
-                    item.Value.SaveThis(path +"\\"+ this.Name + "\\");
+                    item.Value.SaveThis(path + "\\" + this.Name + "\\");
                 }
                 catch (Exception ex)
                 {
@@ -143,18 +138,16 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 }
             }
             this.ListRun = itemS;
-
-
         }
 
         public Dictionary<string, bool> keyValues = new Dictionary<string, bool>();
-        public override bool RunHProgram( OneResultOBj oneResultOBj, out List<OneRObj> oneRObjs, AoiObj aoiObj)
+
+        public override bool RunHProgram(OneResultOBj oneResultOBj, out List<OneRObj> oneRObjs, AoiObj aoiObj)
         {
             oneRObjs = new List<OneRObj>();
-            if (keyValues==null)
+            if (keyValues == null)
             {
                 keyValues = new Dictionary<string, bool>();
-
             }
             keyValues.Clear();
             //if (name!=null)
@@ -166,29 +159,29 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             //}
             //else
             //{
-                foreach (var item in ListRun)
+            foreach (var item in ListRun)
+            {
+                keyValues.Add(item.Key, item.Value.Run(oneResultOBj, new AoiObj()));
+                if (!keyValues[item.Key])
                 {
-                    keyValues.Add(item.Key, item.Value.Run(oneResultOBj,new AoiObj()));
-                    if (!keyValues[item.Key])
-                    {
-                        ResltBool = false;
-                    }
+                    ResltBool = false;
                 }
+            }
             //}
-            
-        
+
             return ResltBool;
         }
+
         [Browsable(false)]
         public Dictionary<string, string> ListRunName { get; set; } = new Dictionary<string, string>();
 
-        Dictionary<string, RunProgram> ListRun = new Dictionary<string, RunProgram>();
-
+        private Dictionary<string, RunProgram> ListRun = new Dictionary<string, RunProgram>();
 
         public Dictionary<string, RunProgram> GetRunProgram()
         {
             return ListRun;
         }
+
         public ContextMenuStrip GetNewPrajetContextMenuStrip(string name)
         {
             AddRun("添加模板", "模板", typeof(ModelVision));
@@ -238,8 +231,6 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                             //Vision.Instance.ListHalconName.Remove(this.Name);
                             //Vision.Instance.UpProjectNode();
                         }
-
-
                     }
                     catch (Exception)
                     {
@@ -263,17 +254,16 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                             List<string> list = (sender as ToolStripItem).Tag as List<string>;
                             for (int i = 0; i < list.Count; i++)
                             {
-                                this.ListRun[list[i]].SaveThis(ErosProjcetDLL.Project.ProjectINI.In.ProjectPathRun + "\\Library\\Vision\\");
+                                this.ListRun[list[i]].SaveThis(ProjectINI.ProjectPathRun + "\\Library\\Vision\\");
                                 if (!Vision.Instance.ListLibrary.ContainsKey(list[i]))
                                 {
                                     Vision.Instance.ListLibrary.Add(list[i], this.ListRun[list[i]].GetType().ToString());
                                 }
-                                ErosProjcetDLL.Excel.Npoi.WritePrivateProfileString("视觉库", list[i], this.ListRun[list[i]].GetType().ToString(), ProjectINI.In.ProjectPathRun + "\\Library\\Vision\\Library.ini");
+                                ErosProjcetDLL.Excel.Npoi.WritePrivateProfileString("视觉库", list[i], this.ListRun[list[i]].GetType().ToString(), ErosProjcetDLL.Project.ProjectINI.ProjectPathRun + "\\Library\\Vision\\Library.ini");
                             }
                         }
                         else
                         {
-
                         }
                     }
                     catch (Exception)
@@ -293,7 +283,6 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     {
                         LibraryFormAdd libraryFormAdd = new LibraryFormAdd(this.GetPThis());
                         libraryFormAdd.ShowDialog();
-
                     }
                     catch (Exception ex)
                     {
@@ -303,7 +292,8 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             }
             return contextMenuTT;
         }
-        void AddRun(string newName, string pRName, Type type)
+
+        private void AddRun(string newName, string pRName, Type type)
         {
             Vision.AddRunNames(new string[]
                         {
@@ -333,9 +323,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         }
                         catch (Exception)
                         {
-
                         }
-
                     }
                 }
             }
@@ -345,14 +333,14 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             }
         }
 
-    
         /// <summary>
         /// 刷新程序事件
         /// </summary>
         private void OnUpHalconRunPro(RunProgram run)
         {
-            UpHalconRunProgram?.Invoke(this.GetPThis(),run);
+            UpHalconRunProgram?.Invoke(this.GetPThis(), run);
         }
+
         /// <summary>
         ///添加程序
         /// </summary>
@@ -390,12 +378,11 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         }
                     }
                     ListRun[dsts].CDID = maxd;
-                    run.Name = dsts ;
+                    run.Name = dsts;
                 }
                 else
                 {
                     this.ListRun.Add(name, run);
-                
                 }
                 ListRun[run.Name].SetPThis(this.GetPThis());
                 ListRun[run.Name].SetPd(this);
@@ -406,13 +393,11 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             }
             catch (Exception)
             {
-
             }
             if (Node != null)
             {
                 this.UpProjectNode(Node.Parent);
             }
-
 
             return run;
         }

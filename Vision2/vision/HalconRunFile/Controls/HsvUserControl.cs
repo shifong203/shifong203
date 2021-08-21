@@ -9,6 +9,7 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             InitializeComponent();
         }
+
         public void SetHOBJE(HObject RhObject)
         {
             HOperatorSet.Decompose3(RhObject, out HObject Image1, out HObject Image2, out HObject Image3);
@@ -48,8 +49,6 @@ namespace Vision2.vision.HalconRunFile.Controls
             HOperatorSet.DispObj(H, visionUserControl4.HalconWindow);
             HOperatorSet.DispObj(S, visionUserControl5.HalconWindow);
             HOperatorSet.DispObj(V, visionUserControl6.HalconWindow);
-
         }
-
     }
 }

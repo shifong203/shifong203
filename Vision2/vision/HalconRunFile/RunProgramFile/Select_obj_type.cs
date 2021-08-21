@@ -12,17 +12,19 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             isChaer = true;
             InitializeComponent();
 
-
             Column1.Items.AddRange(Enum.GetNames(typeof(Enum_Select_Type)));
             Vision2.ErosProjcetDLL.UI.DataGridViewF.StCon.AddCon(dataGridView1);
             isChaer = false;
         }
-        Select_shape_Min_Max _Min_Max;
-        bool isChaer;
+
+        private Select_shape_Min_Max _Min_Max;
+        private bool isChaer;
+
         public Select_obj_type(Select_shape_Min_Max select_Obj_Type) : this()
         {
             SetData(select_Obj_Type);
         }
+
         public void SetData(Select_shape_Min_Max select_Shape_Min_Max)
         {
             isChaer = true;
@@ -70,25 +72,22 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     {
                         continue;
                     }
-                    if (dataGridView1.Rows[i].Cells[1].Value!=null && dataGridView1.Rows[i].Cells[2].Value!=null)
+                    if (dataGridView1.Rows[i].Cells[1].Value != null && dataGridView1.Rows[i].Cells[2].Value != null)
                     {
                         if (!_Min_Max.AddSelectType(dataGridView1.Rows[i].Cells[0].Value.ToString(), dataGridView1.Rows[i].Cells[1].Value.ToString(), dataGridView1.Rows[i].Cells[2].Value.ToString()))
                         {
                             dataGridView1.Rows[i].DefaultCellStyle.BackColor = Color.Red;
                         }
                     }
-               
                 }
             }
             catch (Exception)
             {
-
             }
         }
 
         private void dataGridView1_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
-
         }
 
         private void 删除ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -113,7 +112,6 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         }
                     }
                 }
-
             }
             catch (Exception)
             {

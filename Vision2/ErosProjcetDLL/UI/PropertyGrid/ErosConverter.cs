@@ -45,7 +45,6 @@ namespace Vision2.ErosProjcetDLL.UI.PropertyGrid
                         {
                             lstValues.Add(item.ToString());
                         }
-
                     }
                     else if (dynamic is string[])
                     {
@@ -53,7 +52,6 @@ namespace Vision2.ErosProjcetDLL.UI.PropertyGrid
                         {
                             lstValues.Add(item.ToString());
                         }
-
                     }
                 }
             }

@@ -1,12 +1,5 @@
 ﻿using HalconDotNet;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Vision2.vision.HalconRunFile.RunProgramFile;
 
@@ -19,28 +12,29 @@ namespace Vision2.vision.HalconRunFile.PCBFile
             InitializeComponent();
         }
 
-        public RectangleCapacitanceControl1(RectangleCapacitance  rectangleCapacitance,HalconRun halconRun) : this()
+        public RectangleCapacitanceControl1(RectangleCapacitance rectangleCapacitance, IDrawHalcon halconRun) : this()
         {
-            halcon= halconRun;
+            halcon = halconRun as HalconRun;
             Run = rectangleCapacitance;
             propertyGrid2.SelectedObject = Run;
             propertyGrid1.SelectedObject = Run.IntCapcitanceMinx;
             select_obj_type1.SetData(Run.select_Shape_Min_Max);
             thresholdControls1.SetData(Run.Threshold_Min_M);
             thresholdControls2.SetData(Run.Threshold_Min_DP);
-            numericUpDown1.Value  = (decimal)Run.IntCapcitanceMinx.AreaCValue;
+            numericUpDown1.Value = (decimal)Run.IntCapcitanceMinx.AreaCValue;
         }
-        HalconRun halcon;
-        RectangleCapacitance Run;
+
+        private HalconRun halcon;
+        private RectangleCapacitance Run;
 
         private void button4_Click(object sender, EventArgs e)
         {
             try
             {
                 HOperatorSet.SmallestRectangle2(Run.Point1, out HTuple row, out HTuple colu, out HTuple phi, out HTuple lengt1, out HTuple lnegt2);
-                if (row.Length==0)
+                if (row.Length == 0)
                 {
-                    HOperatorSet.DrawRectangle2(halcon.hWindowHalcon(), out row, out colu,  out phi, out lengt1, out lnegt2);
+                    HOperatorSet.DrawRectangle2(halcon.hWindowHalcon(), out row, out colu, out phi, out lengt1, out lnegt2);
                 }
                 else
                 {
@@ -71,22 +65,18 @@ namespace Vision2.vision.HalconRunFile.PCBFile
         {
             try
             {
-             
-                
-                AoiObj aoiObj=    Run.GetAoi();
+                AoiObj aoiObj = Run.GetAoi();
                 aoiObj.DebugID = 1;
-                Run.RunDebug( halcon.GetOneImageR(), aoiObj);
+                Run.RunDebug(halcon.GetOneImageR(), aoiObj);
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
-
         }
 
         private void RectangleCapacitanceControl1_Load(object sender, EventArgs e)
         {
-  
         }
 
         private void numericUpDown1_ValueChanged(object sender, EventArgs e)
@@ -96,7 +86,7 @@ namespace Vision2.vision.HalconRunFile.PCBFile
                 Run.IntCapcitanceMinx.AreaCValue = (double)numericUpDown1.Value;
             }
             catch (Exception)
-            {            
+            {
             }
         }
 

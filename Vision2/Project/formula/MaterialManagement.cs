@@ -11,6 +11,7 @@ namespace Vision2.Project.formula
         [Description("首关键字>表示从结尾开始，无表示从首位，ProductName匹配配方名，或其他固定字符"), Category("物料信息"), DisplayName("二维码匹配"),
           TypeConverter(typeof(ErosConverter)), ErosConverter.ThisDropDownAttribute("", false, ">ProductName", "ProductName")]
         public string QRCODE { get; set; } = "ProductName";
+
         /// <summary>
         /// 匹配物料
         /// </summary>

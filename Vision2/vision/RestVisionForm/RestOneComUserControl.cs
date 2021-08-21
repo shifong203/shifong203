@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Vision2.vision.HalconRunFile.RunProgramFile;
 using static Vision2.vision.HalconRunFile.RunProgramFile.OneCompOBJs;
@@ -19,11 +13,13 @@ namespace Vision2.vision.RestVisionForm
             InitializeComponent();
         }
 
-        OneComponent oneContOBJs;
+        private OneComponent oneContOBJs;
+
         /// <summary>
         /// 单个元件
         /// </summary>
-        OneRObj OneRObjT;
+        private OneRObj OneRObjT;
+
         /// <summary>
         /// 关联元件缺陷集合
         /// </summary>
@@ -46,12 +42,9 @@ namespace Vision2.vision.RestVisionForm
             }
             catch (Exception ex)
             {
-
             }
-    
         }
 
-  
         /// <summary>
         /// 刷新显示
         /// </summary>
@@ -66,16 +59,16 @@ namespace Vision2.vision.RestVisionForm
                     OneRObjT = item;
                     Rectangle rectangle = dataGridView1.GetCellDisplayRectangle(1, intd, false);
                     Rectangle rectangle2 = dataGridView1.RectangleToScreen(rectangle);
-                    listBox1.Location = new Point(rectangle.X-50, rectangle.Y+ dataGridView1.ColumnHeadersHeight);
+                    listBox1.Location = new Point(rectangle.X - 50, rectangle.Y + dataGridView1.ColumnHeadersHeight);
                     listBox1.Visible = true;
                     listBox1.Items.Clear();
                     //listBox1.Items.Add(0+ OneRObjT.NGText);
                     //listBox1.SelectedIndex = 0;
                     for (int i = 0; i < OneRObjT.RestStrings.Count; i++)
                     {
-                        if (!listBox1.Items.Contains(i+OneRObjT.RestStrings[i]))
+                        if (!listBox1.Items.Contains(i + OneRObjT.RestStrings[i]))
                         {
-                            listBox1.Items.Add( i +OneRObjT.RestStrings[i]);
+                            listBox1.Items.Add(i + OneRObjT.RestStrings[i]);
                         }
                     }
                     listBox1.SelectedIndex = 0;
@@ -95,21 +88,22 @@ namespace Vision2.vision.RestVisionForm
                 intd++;
             }
         }
+
         public void SetRest(int ngTextItmeIndex)
         {
-            if (ngTextItmeIndex>=0)
+            if (ngTextItmeIndex >= 0)
             {
-                if (listBox1.Items.Count> ngTextItmeIndex)
+                if (listBox1.Items.Count > ngTextItmeIndex)
                 {
                     listBox1.SelectedIndex = ngTextItmeIndex;
                 }
-                if ( ngTextItmeIndex> listBox1.Items.Count )
+                if (ngTextItmeIndex > listBox1.Items.Count)
                 {
                     //OneRObjT.RAddNG(listBox1.SelectedItem.ToString());
                 }
                 else
                 {
-                    oneContOBJs.RAddNG(listBox1.SelectedItem.ToString().Remove(0,1));
+                    oneContOBJs.RAddNG(listBox1.SelectedItem.ToString().Remove(0, 1));
                 }
             }
             else
@@ -119,12 +113,8 @@ namespace Vision2.vision.RestVisionForm
             UpOnes();
         }
 
-
-      
-
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-
         }
 
         private void listBox1_DoubleClick(object sender, EventArgs e)

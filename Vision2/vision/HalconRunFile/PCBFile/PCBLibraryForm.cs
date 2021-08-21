@@ -1,13 +1,9 @@
-﻿using System;
+﻿using HalconDotNet;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using HalconDotNet;
 using Vision2.ConClass;
 
 namespace Vision2.vision.HalconRunFile.PCBFile
@@ -20,31 +16,33 @@ namespace Vision2.vision.HalconRunFile.PCBFile
             HWindID.Initialize(hWindowControl1);
             ErosProjcetDLL.UI.DataGridViewF.StCon.AddCon(dataGridView1);
         }
-        HWindID HWindID = new HWindID();
+
+        private HWindID HWindID = new HWindID();
 
         public PCBLibraryForm(PCBAEX pCBAEX) : this()
         {
             PCBAEX = pCBAEX;
         }
-        PCBAEX PCBAEX;
+
+        private PCBAEX PCBAEX;
 
         public void UPdata()
         {
             try
             {
                 //HWindID.WhidowAdd = true;
-                propertyGrid1.SelectedObject = PCBAEX.GetPThis(). DXFInFoc;
+                propertyGrid1.SelectedObject = PCBAEX.GetPThis().DXFInFoc;
                 HWindID.HobjClear();
                 treeView1.Nodes.Clear();
                 foreach (var item in PCBAEX.DictRoi)
                 {
-                    TreeNode treeNode= treeView1.Nodes.Add(item.Key);
+                    TreeNode treeNode = treeView1.Nodes.Add(item.Key);
                     treeNode.Tag = item.Value;
-                    //HOperatorSet.AffineTransPixel(PCBAEX.GetPThis().DXFInFoc.SetDXF(), item.Value.Row, item.Value.Col, 
+                    //HOperatorSet.AffineTransPixel(PCBAEX.GetPThis().DXFInFoc.SetDXF(), item.Value.Row, item.Value.Col,
                     //    out HTuple rowTrans, out HTuple colTrans);
-                    HOperatorSet.GenRectangle2(out  HObject hObject, item.Value.Row, item.Value.Col, 
+                    HOperatorSet.GenRectangle2(out HObject hObject, item.Value.Row, item.Value.Col,
                        new HTuple(item.Value.Angle).TupleRad(), item.Value.Length1, item.Value.Length2);
-                    HWindID.OneResIamge.AddNameOBJ(item.Key,hObject);
+                    HWindID.OneResIamge.AddNameOBJ(item.Key, hObject);
                 }
             }
             catch (Exception ex)
@@ -56,14 +54,17 @@ namespace Vision2.vision.HalconRunFile.PCBFile
         {
             [DescriptionAttribute("。"), Category("导入索引"), DisplayName("名称索引")]
             public int NameIndex { get; set; } = 0;
+
             [DescriptionAttribute("-1不使用。"), Category("导入索引"), DisplayName("库索引")]
             public int LiNameIndex { get; set; } = -1;
+
             [DescriptionAttribute("-1不使用。"), Category("导入索引"), DisplayName("Row索引")]
             public int RowIndex { get; set; } = 1;
+
             [DescriptionAttribute("-1不使用。"), Category("导入索引"), DisplayName("Col索引")]
             public int ColIndex { get; set; } = 2;
-            [DescriptionAttribute("-1不使用。"), Category("导入索引"), DisplayName("角度索引")]
 
+            [DescriptionAttribute("-1不使用。"), Category("导入索引"), DisplayName("角度索引")]
             public int ApiIndex { get; set; } = 3;
 
             [DescriptionAttribute("-1不使用。"), Category("导入索引"), DisplayName("上下面索引")]
@@ -74,15 +75,19 @@ namespace Vision2.vision.HalconRunFile.PCBFile
 
             [DescriptionAttribute(""), Category("原点参数"), DisplayName("原点Row")]
             public double Row { get; set; } = 0;
+
             [DescriptionAttribute(""), Category("原点参数"), DisplayName("原点Col")]
             public double Col { get; set; } = 0;
+
             [DescriptionAttribute(""), Category("原点参数"), DisplayName("X比例")]
             public double ScaleX { get; set; } = 1;
+
             [DescriptionAttribute(""), Category("原点参数"), DisplayName("Y比例")]
             public double ScaleY { get; set; } = 1;
 
             public HObject DXF { get; set; }
             public HObject DXFMode { get; set; }
+
             public HObject ReadDxf()
             {
                 OpenFileDialog openFileDialog = new OpenFileDialog();
@@ -98,7 +103,6 @@ namespace Vision2.vision.HalconRunFile.PCBFile
                     HOperatorSet.AffineTransContourXld(hObject, out hObject, SetDXF());
                     DXF = hObject;
                     //return SetDXF();
-
                 }
                 catch (Exception ex)
                 {
@@ -106,6 +110,7 @@ namespace Vision2.vision.HalconRunFile.PCBFile
                 }
                 return DXF;
             }
+
             public HTuple SetDXF()
             {
                 HOperatorSet.HomMat2dIdentity(out HTuple HomMat2DIdentity);
@@ -123,21 +128,21 @@ namespace Vision2.vision.HalconRunFile.PCBFile
                 }
                 return HomMat2DIdentity;
             }
-
         }
+
         private void PCBLibraryForm_Load(object sender, EventArgs e)
         {
             try
             {
                 HOperatorSet.HomMat2dIdentity(out Home2D);
-                if (System.IO. File.Exists(Vision.VisionPath + "Image\\" + PCBAEX.GetPThis().Name+ "拼图.jpg"))
+                if (System.IO.File.Exists(Vision.VisionPath + "Image\\" + PCBAEX.GetPThis().Name + "拼图.jpg"))
                 {
                     HOperatorSet.ReadImage(out HObject imaget, Vision.VisionPath + "Image\\" + PCBAEX.GetPThis().Name + "拼图.jpg");
                     HWindID.SetImaage(imaget);
                 }
                 else
                 {
-                    MessageBox.Show("未创建大图:"+ PCBAEX.GetPThis().Name + "拼图.jpg");
+                    MessageBox.Show("未创建大图:" + PCBAEX.GetPThis().Name + "拼图.jpg");
                 }
 
                 UPdata();
@@ -145,14 +150,15 @@ namespace Vision2.vision.HalconRunFile.PCBFile
             catch (Exception)
             {
             }
-           
         }
-        Library.LibraryVisionBase libraryVisionBase;
+
+        private Library.LibraryVisionBase libraryVisionBase;
+
         private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
         {
             try
             {
-                if (libraryVisionBase!=null)
+                if (libraryVisionBase != null)
                 {
                     this.panel1.Controls.Clear();
                     HWindID.OneResIamge.ClearImageMassage();
@@ -163,28 +169,25 @@ namespace Vision2.vision.HalconRunFile.PCBFile
                     HWindID.OneResIamge.AddNameOBJ(libraryVisionBase.Name, hObject);
                 }
                 libraryVisionBase = e.Node.Tag as Library.LibraryVisionBase;
-                if (libraryVisionBase!=null)
+                if (libraryVisionBase != null)
                 {
                     HOperatorSet.AffineTransPixel(PCBAEX.GetPThis().DXFInFoc.SetDXF(), libraryVisionBase.Row, libraryVisionBase.Col,
                       out HTuple rowTrans, out HTuple colTrans);
                     HOperatorSet.GenRectangle2(out HObject hObject, rowTrans, colTrans,
                        new HTuple(libraryVisionBase.Angle).TupleRad(), libraryVisionBase.Length1, libraryVisionBase.Length2);
-                    HWindID.OneResIamge.AddNameOBJ(libraryVisionBase.Name, hObject,ColorResult.red);
+                    HWindID.OneResIamge.AddNameOBJ(libraryVisionBase.Name, hObject, ColorResult.red);
                     HWindID.OneResIamge.AddImageMassage(rowTrans, colTrans, libraryVisionBase.Name);
                     HWindID.SetPart(rowTrans - 500, colTrans - 500, rowTrans + 500, colTrans + 500);
                     propertyGrid2.SelectedObject = libraryVisionBase;
                     libraryVisionBase.Run(HWindID);
-                  this.panel1.Controls.Add(   libraryVisionBase.GetControl());
+                    this.panel1.Controls.Add(libraryVisionBase.GetControl());
                 }
                 HWindID.ShowObj();
-
             }
             catch (Exception)
             {
             }
         }
-
-   
 
         private void 导入图像ToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -204,27 +207,29 @@ namespace Vision2.vision.HalconRunFile.PCBFile
                 {
                     HOperatorSet.ReadImage(out HObject hObject, path);
                     HWindID.SetImaage(hObject);
-                    HOperatorSet.GetImageSize(hObject, out  width, out  height);
+                    HOperatorSet.GetImageSize(hObject, out width, out height);
                     HWindID.ShowImage();
                 }
             }
             catch (Exception)
             { }
         }
-        HTuple Home2D;
-        HTuple width;
-        HTuple height;
+
+        private HTuple Home2D;
+        private HTuple width;
+        private HTuple height;
+
         private void toolStripButton1_Click(object sender, EventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
-            //openFileDialog.InitialDirectory = Vision2.ErosProjcetDLL.Project.ProjectINI.In.ProjectPathRun ;
+            //openFileDialog.InitialDirectory = ProjectINI.ProjectPathRun ;
             try
             {//"文本文件|*txt.*|C#文件|*.cs|所有文件|*.*";
                 openFileDialog.Filter = "Excel文件|*.xls;*.xlsx;*.txt;";
                 DialogResult dialog = openFileDialog.ShowDialog();
                 if (dialog == DialogResult.OK)
                 {
-                    if (System.IO.Path.GetExtension(openFileDialog.FileName)== ".txt")
+                    if (System.IO.Path.GetExtension(openFileDialog.FileName) == ".txt")
                     {
                         Npoi.ReadText(openFileDialog.FileName, out List<string> text);
                         dataGridView1.Rows.Clear();
@@ -232,7 +237,7 @@ namespace Vision2.vision.HalconRunFile.PCBFile
                         {
                             string[] ItemArray = System.Text.RegularExpressions.Regex.Split(item, @"\s+");
                             int det = dataGridView1.Rows.Add();
-                            if (ItemArray.Length>=3)
+                            if (ItemArray.Length >= 3)
                             {
                                 dataGridView1.Rows[det].Cells[0].Value = ItemArray[PCBAEX.GetPThis().DXFInFoc.NameIndex];
                                 dataGridView1.Rows[det].Cells[1].Value = ItemArray[PCBAEX.GetPThis().DXFInFoc.RowIndex];
@@ -240,11 +245,11 @@ namespace Vision2.vision.HalconRunFile.PCBFile
                                 dataGridView1.Rows[det].Cells[3].Value = ItemArray[PCBAEX.GetPThis().DXFInFoc.ApiIndex];
                                 dataGridView1.Rows[det].Cells[4].Value = ItemArray[PCBAEX.GetPThis().DXFInFoc.TurnUpsideDownIndex];
                             }
-                            if (ItemArray.Length>=4)
-                                {
-                                    dataGridView1.Rows[det].Cells[5].Value = ItemArray[5];
-                                    dataGridView1.Rows[det].Cells[6].Value = ItemArray[6];
-                                }
+                            if (ItemArray.Length >= 4)
+                            {
+                                dataGridView1.Rows[det].Cells[5].Value = ItemArray[5];
+                                dataGridView1.Rows[det].Cells[6].Value = ItemArray[6];
+                            }
                         }
                     }
                     else
@@ -260,7 +265,6 @@ namespace Vision2.vision.HalconRunFile.PCBFile
                             //dataGridView1.Columns.Clear();
                             foreach (var item in dataTable2.Columns)
                             {
-
                             }
                             foreach (DataRow item1 in dataTable2.Rows)
                             {
@@ -286,7 +290,6 @@ namespace Vision2.vision.HalconRunFile.PCBFile
                             MessageBox.Show("导入成功");
                         }
                     }
-                
                 }
             }
             catch (Exception ex)
@@ -299,8 +302,8 @@ namespace Vision2.vision.HalconRunFile.PCBFile
         {
             try
             {
-                HTuple sets = width.D/ height.D;
-                hWindowControl1.Height = (int) ((double)hWindowControl1.Width/ sets.D);
+                HTuple sets = width.D / height.D;
+                hWindowControl1.Height = (int)((double)hWindowControl1.Width / sets.D);
             }
             catch (Exception ex)
             {
@@ -334,7 +337,7 @@ namespace Vision2.vision.HalconRunFile.PCBFile
         {
             try
             {
-             RunProgramFile.RunProgram.DrawPoint(HWindID, out HTuple row,out HTuple col);
+                RunProgramFile.RunProgram.DrawPoint(HWindID, out HTuple row, out HTuple col);
                 PCBAEX.GetPThis().DXFInFoc.Row = row;
                 PCBAEX.GetPThis().DXFInFoc.Col = col;
                 UPdata();
@@ -380,7 +383,6 @@ namespace Vision2.vision.HalconRunFile.PCBFile
         {
             try
             {
-
                 for (int i = 0; i < dataGridView1.Rows.Count; i++)
                 {
                     Library.LibraryVisionBase libraryVisionBase;
@@ -411,8 +413,8 @@ namespace Vision2.vision.HalconRunFile.PCBFile
             {
                 SaveFileDialog openFileDialog = new SaveFileDialog();
                 openFileDialog.Filter = "Exlce文件|*.xls;*.xlsx";
-            
-                openFileDialog.FileName = Project.formula.Product.ProductionName+ ".xls";
+
+                openFileDialog.FileName = Project.formula.Product.ProductionName + ".xls";
                 DialogResult dialogResult = openFileDialog.ShowDialog();
                 if (dialogResult == DialogResult.OK)
                 {

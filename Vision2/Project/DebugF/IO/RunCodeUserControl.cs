@@ -15,9 +15,10 @@ namespace Vision2.Project.DebugF.IO
             InitializeComponent();
         }
 
-        RunCodeStr codeStr;
-        List<string> TimeStr;
-        bool botrr;
+        private RunCodeStr codeStr;
+        private List<string> TimeStr;
+        private bool botrr;
+
         public void SetData(RunCodeStr code)
         {
             codeStr = code;
@@ -45,7 +46,7 @@ namespace Vision2.Project.DebugF.IO
                 TimeStr.AddRange(new string[codeStr.CodeStr.Count]);
                 codeStr.RunCode += RunCodeOne;
                 codeStr.RunDone += CodeStr_RunDone; ;
-                showLineNo(codeStr.StepInt);
+                showLineNo(codeStr.StepInt, "");
             }
             catch (Exception ex)
             {
@@ -82,25 +83,25 @@ namespace Vision2.Project.DebugF.IO
                     richTextBox2.SelectionColor = Color.Black;
                 }
 
-                richTextBox2.AppendText("行:" + (runErr.RowIndx + 1) + "状态:" + runErr.RunState +"时间:"+ (runErr.StepRunTime / 1000.0).ToString("0.000S") +"错误:"+runErr.ErrStr + Environment.NewLine);
+                richTextBox2.AppendText("行:" + (runErr.RowIndx + 1) + "状态:" + runErr.RunState + "时间:" + (runErr.StepRunTime / 1000.0).ToString("0.000S") + "错误:" + runErr.ErrStr + Environment.NewLine);
                 ////toolStripStatusLabel1.Text = "行:" + runErr.RowIndx;
                 toolStripStatusLabel2.Text = (runErr.StepRunTime / 1000.0).ToString("0.000S");
-                toolStripStatusLabel4.Text = "总CT:"+codeStr.RunTime.ToString();
+                toolStripStatusLabel4.Text = "总CT:" + codeStr.RunTime.ToString();
                 TimeStr[runErr.RowIndx] = runErr.StepRunTime + "ms";
                 //toolStripStatusLabel3.Text = "Time:" + runErr.StepRunTime + "ms";
-                showLineNoTime(runErr.RowIndx, panel3, runErr.StepRunTime + "ms");
-                showLineNo(codeStr.StepInt);
+                //showLineNoTime(runErr.RowIndx, panel3, runErr.StepRunTime + "ms");
+                showLineNo(codeStr.StepInt, runErr.StepRunTime + "ms");
                 richTextBox2.SelectionStart = richTextBox2.Text.Length;
                 richTextBox2.ScrollToCaret();
             }
             catch (Exception)
             {
-
             }
         }
 
-        int lineSpace;
-        private void showLineNo(int COT)
+        private int lineSpace;
+
+        private void showLineNo(int COT, string text)
         {
             if (codeStr.Runing)
             {
@@ -142,12 +143,10 @@ namespace Vision2.Project.DebugF.IO
             brusht.Color = Color.GreenYellow;
 
             g.FillRectangle(brush, 0, 0, this.panel1.ClientRectangle.Width, this.panel1.ClientRectangle.Height);
-            g.FillRectangle(brusht, 20, 0, 1, this.panel1.ClientRectangle.Height);
+            g.FillRectangle(brusht, 60, 0, 1, this.panel1.ClientRectangle.Height);
             brush.Color = Color.Blue;//重置画笔颜色
 
             //绘制行号
-
-
 
             if (crntFirstLine != crntLastLine)
             {
@@ -156,13 +155,11 @@ namespace Vision2.Project.DebugF.IO
             else
             {
                 //lineSpace = Convert.ToInt32(this.richTextBox1.Font.Size);
-
             }
 
             int brushX = this.panel1.ClientRectangle.Width - Convert.ToInt32(font.Size * 2);
 
             int brushY = crntLastPos.Y + Convert.ToInt32(font.Size * 0.21f);//惊人的算法啊！！
-
 
             System.Drawing.Drawing2D.AdjustableArrowCap lineCap =
                 new System.Drawing.Drawing2D.AdjustableArrowCap(4, 6, true);
@@ -171,20 +168,23 @@ namespace Vision2.Project.DebugF.IO
 
             Graphics gfx = this.panel1.CreateGraphics();
 
-
-
-
             for (int i = crntLastLine; i > -1; i--)
             {
                 if (i == COT)
                 {
                     gfx.DrawLine(redArrowPen, brushX - 40, brushY + 5, brushX, brushY + 5);
                     brush.Color = Color.Red;//重置画笔颜色
+                    g.DrawString(text, font, brush, 0, brushY);
                 }
                 else
                 {
                     brush.Color = Color.Blue;//重置画笔颜色
+                    if (TimeStr[i] != null)
+                    {
+                        g.DrawString(TimeStr[i], font, brush, 0, brushY);
+                    }
                 }
+
                 g.DrawString((i + 1).ToString(), font, brush, brushX, brushY);
                 brushY -= lineSpace;
             }
@@ -200,8 +200,6 @@ namespace Vision2.Project.DebugF.IO
         {
             try
             {
-
-
                 //获得当前坐标信息
                 Point p = this.richTextBox1.Location;
                 int crntFirstIndex = this.richTextBox1.GetCharIndexFromPosition(p);
@@ -239,7 +237,6 @@ namespace Vision2.Project.DebugF.IO
 
                 //绘制行号
 
-
                 if (crntFirstLine != crntLastLine)
                 {
                     lineSpace = (crntLastPos.Y - crntFirstPos.Y) / (crntLastLine - crntFirstLine);
@@ -253,7 +250,6 @@ namespace Vision2.Project.DebugF.IO
 
                 int brushY = crntLastPos.Y + Convert.ToInt32(font.Size * 0.21f);//惊人的算法啊！！
 
-
                 System.Drawing.Drawing2D.AdjustableArrowCap lineCap =
                     new System.Drawing.Drawing2D.AdjustableArrowCap(4, 6, true);
                 Pen redArrowPen = new Pen(Color.Red, 4);
@@ -263,17 +259,14 @@ namespace Vision2.Project.DebugF.IO
 
                 for (int i = crntLastLine; i > -1; i--)
                 {
-
                     if (i == COT)
                     {
                         //gfx.DrawLine(redArrowPen, brushX - 40, brushY + 5, brushX, brushY + 5);
                         brush.Color = Color.Red;//重置画笔颜色
                         g.DrawString(text, font, brush, brushX, brushY);
-
                     }
                     else if (TimeStr[i] != null)
                     {
-
                         brush.Color = Color.Blue;//重置画笔颜色
                         g.DrawString(TimeStr[i], font, brush, brushX, brushY);
                     }
@@ -288,16 +281,23 @@ namespace Vision2.Project.DebugF.IO
             }
             catch (Exception)
             {
-
             }
         }
+
         private void richTextBox1_TextChanged(object sender, EventArgs e)
         {
-            if (!botrr)
+            try
             {
-                showLineNo(codeStr.StepInt);
+                if (!botrr)
+                {
+                    showLineNo(codeStr.StepInt, "");
+                }
             }
+            catch (Exception)
+            {
 
+            }
+       
         }
 
         private void tsButton1_Click(object sender, EventArgs e)
@@ -318,19 +318,14 @@ namespace Vision2.Project.DebugF.IO
 
         private void tsButton3_Click(object sender, EventArgs e)
         {
-
             Thread thread = new Thread(() =>
             {
-
                 codeStr.Run();
             });
             thread.IsBackground = true;
 
             thread.Start();
-
-
         }
-
 
         private void RunCodeUserControl_Load(object sender, EventArgs e)
         {
@@ -343,7 +338,6 @@ namespace Vision2.Project.DebugF.IO
             }
             catch (Exception)
             {
-
             }
         }
 
@@ -365,21 +359,21 @@ namespace Vision2.Project.DebugF.IO
                 tsButton4.BackColor = Color.Green;
             }
             //tsButton4.Checked = false;
-
         }
 
         private void richTextBox1_VScroll(object sender, EventArgs e)
         {
-            showLineNo(codeStr.StepInt);
-            showLineNoTime(codeStr.IfRowInt, panel3, "");
+            showLineNo(codeStr.StepInt, "");
+            //showLineNoTime(codeStr.IfRowInt, panel3, "");
         }
-        Local_variable_scale_Form local_Variable_Scale_Form;
+
+        private Local_variable_scale_Form local_Variable_Scale_Form;
 
         private void tsButton5_Click(object sender, EventArgs e)
         {
             if (local_Variable_Scale_Form == null || local_Variable_Scale_Form.IsDisposed)
             {
-                local_Variable_Scale_Form = new Local_variable_scale_Form(DebugCompiler.GetThis().DDAxis.KeyVales);
+                local_Variable_Scale_Form = new Local_variable_scale_Form(DebugCompiler.Instance.DDAxis.KeyVales);
             }
             Vision2.ErosProjcetDLL.UI.UICon.WindosFormerShow(ref local_Variable_Scale_Form);
         }
@@ -404,7 +398,7 @@ namespace Vision2.Project.DebugF.IO
             {
                 if (codeStr != null)
                 {
-                    showLineNo(codeStr.StepInt);
+                    showLineNo(codeStr.StepInt, "");
                 }
             }
             catch (Exception)
@@ -424,7 +418,6 @@ namespace Vision2.Project.DebugF.IO
             catch (Exception)
             {
             }
-
         }
     }
 }

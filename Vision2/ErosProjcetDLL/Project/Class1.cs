@@ -9,7 +9,6 @@ using System.Xml.Linq;
 
 namespace Vision2.ErosProjcetDLL.Project
 {
-
     public enum enumLanguage
     {
         Chinese,
@@ -20,8 +19,10 @@ namespace Vision2.ErosProjcetDLL.Project
     {
         //当前默认语言
         public static string DefaultLanguage = "ChineseSimplified";
+
         private static List<string> ListMenu = new List<string>();
         private static Dictionary<string, ToolStripMenuItem> DicMenu = new Dictionary<string, ToolStripMenuItem>();
+
         /// <summary>
         /// 读取当前默认语言
         /// </summary>
@@ -44,7 +45,6 @@ namespace Vision2.ErosProjcetDLL.Project
             XElement root1 = document.Root;
             defaultLanguage = root1.FirstAttribute.Value;
 
-
             return defaultLanguage;
         }
 
@@ -65,9 +65,7 @@ namespace Vision2.ErosProjcetDLL.Project
             }
             catch (Exception)
             {
-
             }
-
         }
 
         private static void EnumerateMenu(ToolStripMenuItem item)
@@ -94,7 +92,7 @@ namespace Vision2.ErosProjcetDLL.Project
             {
                 return false;
             }
-            //根据用户选择的语言获得表的显示文字 
+            //根据用户选择的语言获得表的显示文字
             Hashtable hashText = ReadXMLText(form.Name, language);
             Hashtable hashHeaderText = ReadXMLHeaderText(form.Name, language);
             if (hashText == null)
@@ -133,14 +131,12 @@ namespace Vision2.ErosProjcetDLL.Project
                     controls = form.Controls.Find(item.ToString(), true);
                     if (controls.Length > 0)
                     {
-
                     }
                 }
                 controls = form.Controls.Find("lanquageToolStripMenultem", true);
 
                 if (controls.Length > 0)
                 {
-
                 }
                 //遍历所有控件
                 foreach (Control control in sonControls)
@@ -178,7 +174,6 @@ namespace Vision2.ErosProjcetDLL.Project
                         GetSetSubControls(control.Controls, hashText, hashHeaderText);
                     }
                     GetContNameText(control, hashText);
-
                 }
                 ////如果找到了控件，就将对应的名字赋值过去
                 if (hashText.Contains(form.Text))
@@ -193,7 +188,8 @@ namespace Vision2.ErosProjcetDLL.Project
             }
             return true;
         }
-        static void GetContNameText(Control control, Hashtable hashText)
+
+        private static void GetContNameText(Control control, Hashtable hashText)
         {
             try
             {
@@ -208,15 +204,11 @@ namespace Vision2.ErosProjcetDLL.Project
                     {
                         GetContNameText(control.Controls[i], hashText);
                     }
-
                 }
             }
             catch (Exception)
             {
-
             }
-
-
         }
 
         /// <summary>
@@ -260,7 +252,6 @@ namespace Vision2.ErosProjcetDLL.Project
                     }
                     else
                     {
-
                     }
 
                     if (hashText.Contains(control.Text))
@@ -314,11 +305,7 @@ namespace Vision2.ErosProjcetDLL.Project
                     {
                         hashResult.Add(name, text);
                     }
-
-
-
                 }
-
 
                 reader.Close();
                 // reader.Dispose();
@@ -369,8 +356,6 @@ namespace Vision2.ErosProjcetDLL.Project
                     {
                         hashResult.Add(name, text);
                     }
-
-
                 }
                 reader.Close();
                 //reader.Dispose();
@@ -399,4 +384,3 @@ namespace Vision2.ErosProjcetDLL.Project
         }
     }
 }
-

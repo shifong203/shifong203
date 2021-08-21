@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+
 namespace Vision2.ErosProjcetDLL.UI
 {
     public class UICon
@@ -15,7 +16,6 @@ namespace Vision2.ErosProjcetDLL.UI
         /// <returns></returns>
         [System.Runtime.InteropServices.DllImport("user32.dll", CharSet = CharSet.Auto)]
         public static extern bool SwitchToThisWindow(IntPtr hWnd, bool fAltTab);
-
 
         /// <summary>
         /// 将窗口显示在前端
@@ -32,7 +32,6 @@ namespace Vision2.ErosProjcetDLL.UI
                 }
                 if (form.IsDisposed)
                 {
-
                     Assembly assembly = Assembly.GetAssembly(form.GetType()); // 获取当前程序集
                     dynamic obj = assembly.CreateInstance(form.GetType().ToString()); // 创建类的实例
                     form = (T)obj;
@@ -51,8 +50,8 @@ namespace Vision2.ErosProjcetDLL.UI
             return false;
         }
 
-
         #region 截取屏幕图像
+
         /// <summary>
         /// 截取屏幕图像
         /// </summary>
@@ -66,7 +65,8 @@ namespace Vision2.ErosProjcetDLL.UI
             gp.DrawImage(tSrcBmp, 0, 0, tScreenRect, GraphicsUnit.Pixel);
             return tSrcBmp;
         }
-        #endregion
+
+        #endregion 截取屏幕图像
 
         [DllImport("user32.dll")]
         public static extern bool GetCursorPos(out POINT lpPoint);
@@ -76,6 +76,7 @@ namespace Vision2.ErosProjcetDLL.UI
         {
             public int X;
             public int Y;
+
             public POINT(int x, int y)
             {
                 this.X = x;
@@ -97,12 +98,15 @@ namespace Vision2.ErosProjcetDLL.UI
 
             public delegate int HookProc(int nCode, Int32 wParam, IntPtr lParam);
 
-            static int hKeyboardHook = 0; //声明键盘钩子处理的初始值
-                                          //值在Microsoft SDK的Winuser.h里查询
-                                          // http://www.bianceng.cn/Programming/csharp/201410/45484.htm
+            private static int hKeyboardHook = 0; //声明键盘钩子处理的初始值
+
+            //值在Microsoft SDK的Winuser.h里查询
+            // http://www.bianceng.cn/Programming/csharp/201410/45484.htm
             public const int WH_KEYBOARD_LL = 13;   //线程键盘钩子监听鼠标消息设为2，全局键盘监听鼠标消息设为13
-            HookProc KeyboardHookProcedure; //声明KeyboardHookProcedure作为HookProc类型
-                                            //键盘结构
+
+            private HookProc KeyboardHookProcedure; //声明KeyboardHookProcedure作为HookProc类型
+
+            //键盘结构
             [StructLayout(LayoutKind.Sequential)]
             public class KeyboardHookStruct
             {
@@ -112,15 +116,14 @@ namespace Vision2.ErosProjcetDLL.UI
                 public int time; // 指定的时间戳记的这个讯息
                 public int dwExtraInfo; // 指定额外信息相关的信息
             }
+
             //使用此功能，安装了一个钩子
             [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
             public static extern int SetWindowsHookEx(int idHook, HookProc lpfn, IntPtr hInstance, int threadId);
 
-
             //调用此函数卸载钩子
             [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
             public static extern bool UnhookWindowsHookEx(int idHook);
-
 
             //使用此功能，通过信息钩子继续下一个钩子
             [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
@@ -128,7 +131,7 @@ namespace Vision2.ErosProjcetDLL.UI
 
             // 取得当前线程编号（线程钩子需要用到）
             [DllImport("kernel32.dll")]
-            static extern int GetCurrentThreadId();
+            private static extern int GetCurrentThreadId();
 
             //使用WINDOWS API函数代替获取当前实例的函数,防止钩子失效
             [DllImport("kernel32.dll")]
@@ -164,10 +167,10 @@ namespace Vision2.ErosProjcetDLL.UI
                     }
                 }
             }
+
             public void Stop()
             {
                 bool retKeyboard = true;
-
 
                 if (hKeyboardHook != 0)
                 {
@@ -177,6 +180,7 @@ namespace Vision2.ErosProjcetDLL.UI
 
                 if (!(retKeyboard)) throw new Exception("卸载钩子失败！");
             }
+
             //ToAscii职能的转换指定的虚拟键码和键盘状态的相应字符或字符
             [DllImport("user32")]
             public static extern int ToAscii(int uVirtKey, //[in] 指定虚拟关键代码进行翻译。
@@ -188,7 +192,6 @@ namespace Vision2.ErosProjcetDLL.UI
             //获取按键的状态
             [DllImport("user32")]
             public static extern int GetKeyboardState(byte[] pbKeyState);
-
 
             [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
             private static extern short GetKeyState(int vKey);
@@ -233,17 +236,16 @@ namespace Vision2.ErosProjcetDLL.UI
                         KeyEventArgs e = new KeyEventArgs(keyData);
                         KeyUpEvent(this, e);
                     }
-
                 }
                 //如果返回1，则结束消息，这个消息到此为止，不再传递。
                 //如果返回0或调用CallNextHookEx函数则消息出了这个钩子继续往下传递，也就是传给消息真正的接受者
                 return CallNextHookEx(hKeyboardHook, nCode, wParam, lParam);
             }
+
             ~KeyboardHook()
             {
                 Stop();
             }
         }
-
     }
 }

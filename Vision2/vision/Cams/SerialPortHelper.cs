@@ -1,21 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO.Ports;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Vision2.vision.Cams
 {
     public delegate void dosome();
-    public class SerialPortHelper :SerialPort
-    {
 
-        string comReceive;
+    public class SerialPortHelper : SerialPort
+    {
+        private string comReceive;
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public dosome DOrecevie;
+
         /// <summary>
         /// 接受到的字符
         /// </summary>
@@ -34,6 +33,7 @@ namespace Vision2.vision.Cams
                 comReceive = "";
             }
         }
+
         public SerialPortHelper(int i, int baudRate, out string ErrInfo)
         {
             try
@@ -49,10 +49,10 @@ namespace Vision2.vision.Cams
             }
             catch (Exception EX)
             {
-
                 ErrInfo = EX.Message;
             }
         }
+
         /// <summary>
         /// 数据接收事件
         /// </summary>
@@ -73,6 +73,7 @@ namespace Vision2.vision.Cams
                 ComReceive = str;
             }
         }
+
         /// <summary>
         /// 发送数据,
         /// </summary>
@@ -82,8 +83,8 @@ namespace Vision2.vision.Cams
             try
             {
                 byte[] sendData = Encoding.ASCII.GetBytes(sendbuff);
-                this.Write(sendData, 0, sendData.Length);//发送数据  
-                                                       //s.WriteLine(sendbuff);
+                this.Write(sendData, 0, sendData.Length);//发送数据
+                                                         //s.WriteLine(sendbuff);
             }
             catch (Exception)
             {

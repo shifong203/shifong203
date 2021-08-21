@@ -69,7 +69,6 @@ namespace Vision2.ErosProjcetDLL.Excel
                             //读取该行的第j列数据
                             if (j == 19)
                             {
-
                             }
                             dataRow[i] = row.GetCell(j);
                         }
@@ -83,6 +82,7 @@ namespace Vision2.ErosProjcetDLL.Excel
             }
             return data;
         }
+
         /// <summary>
         /// 读取Excel表格指定的表单文件,64位软件读取时第一行数据作为列名；
         /// </summary>
@@ -94,6 +94,7 @@ namespace Vision2.ErosProjcetDLL.Excel
             DataTable dt = new DataTable();
             return ImportExcel(filePath, sheetName);
         }     /// <summary>
+
               /// 读取Excel表格指定的表单文件,64位软件读取时第一行数据作为列名；
               /// </summary>
               /// <param name="filePath">文件地址</param>
@@ -148,7 +149,9 @@ namespace Vision2.ErosProjcetDLL.Excel
                 if (sheet == null)
                     return null;
                 IEnumerator rows = sheet.GetRowEnumerator();
+
                 #region 获取表头
+
                 IRow headerRow = sheet.GetRow(0);
                 int cellCount = headerRow.LastCellNum;
                 for (int j = 0; j < cellCount; j++)
@@ -163,8 +166,11 @@ namespace Vision2.ErosProjcetDLL.Excel
                         dt.Columns.Add("");
                     }
                 }
-                #endregion
+
+                #endregion 获取表头
+
                 #region 获取内容
+
                 for (int i = (sheet.FirstRowNum + 1); i <= sheet.LastRowNum; i++)
                 {
                     IRow row = sheet.GetRow(i);
@@ -184,7 +190,6 @@ namespace Vision2.ErosProjcetDLL.Excel
                                 else
                                 {
                                     dataRow[j] = row.GetCell(j).ToString();
-
                                 }
                             }
                             else
@@ -195,8 +200,8 @@ namespace Vision2.ErosProjcetDLL.Excel
                     }
                     dt.Rows.Add(dataRow);
                 }
-                #endregion
 
+                #endregion 获取内容
             }
             catch (Exception ex)
             {
@@ -249,11 +254,13 @@ namespace Vision2.ErosProjcetDLL.Excel
                 stream.Dispose();
                 ISheet sheet = null;
                 //获取工作表 默认取第一张
-                 sheet = workbook.GetSheetAt(sheetSele);
+                sheet = workbook.GetSheetAt(sheetSele);
                 if (sheet == null)
                     return null;
                 IEnumerator rows = sheet.GetRowEnumerator();
+
                 #region 获取表头
+
                 IRow headerRow = sheet.GetRow(0);
                 int cellCount = headerRow.LastCellNum;
                 for (int j = 0; j < cellCount; j++)
@@ -268,8 +275,11 @@ namespace Vision2.ErosProjcetDLL.Excel
                         dt.Columns.Add("");
                     }
                 }
-                #endregion
+
+                #endregion 获取表头
+
                 #region 获取内容
+
                 for (int i = (sheet.FirstRowNum + 1); i <= sheet.LastRowNum; i++)
                 {
                     IRow row = sheet.GetRow(i);
@@ -289,7 +299,6 @@ namespace Vision2.ErosProjcetDLL.Excel
                                 else
                                 {
                                     dataRow[j] = row.GetCell(j).ToString();
-
                                 }
                             }
                             else
@@ -300,8 +309,8 @@ namespace Vision2.ErosProjcetDLL.Excel
                     }
                     dt.Rows.Add(dataRow);
                 }
-                #endregion
 
+                #endregion 获取内容
             }
             catch (Exception ex)
             {
@@ -317,6 +326,7 @@ namespace Vision2.ErosProjcetDLL.Excel
             }
             return dt;
         }
+
         /// <summary>
         /// 读取文本文件
         /// </summary>
@@ -339,6 +349,7 @@ namespace Vision2.ErosProjcetDLL.Excel
             }
             return false;
         }
+
         /// <summary>
         /// 读取文本文件
         /// </summary>
@@ -363,31 +374,19 @@ namespace Vision2.ErosProjcetDLL.Excel
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="path"></param>
         /// <param name="text"></param>
         public static void AddWriteCSV(string path, params string[] text)
         {//保存参数记录
-
-            if (!path.Contains("."))
-            {
-                path = path + ".CSV";
-            }
-            System.IO.Directory.CreateDirectory(Path.GetDirectoryName(path));
             try
             {
-                //创建文件流写入对象,绑定文件流对象
-                //创建数据对象
-                StringBuilder sb = new StringBuilder();
-                string[] ste = new string[] { };
-                if (System.IO.File.Exists(path))//文件不存在时,创建新文件,并写入文件标题
+                if (!path.Contains("."))
                 {
-                    ste = File.ReadAllLines(path);
+                    path = path + ".CSV";
                 }
-                FileStream fs = new FileStream(path, FileMode.OpenOrCreate, FileAccess.ReadWrite);
-                StreamWriter sw = new StreamWriter(fs, Encoding.UTF8);
-                //创建文件流对象
+                System.IO.Directory.CreateDirectory(Path.GetDirectoryName(path));
                 string tet = "";
                 for (int i = 0; i < text.Length; i++)
                 {
@@ -397,6 +396,23 @@ namespace Vision2.ErosProjcetDLL.Excel
                     }
                     tet += text[i] + ',';
                 }
+
+                File.AppendAllText(path, tet+ Environment.NewLine);
+                return;
+                //创建文件流写入对象,绑定文件流对象
+                //创建数据对象
+                StringBuilder sb = new StringBuilder();
+                string[] ste = new string[] { };
+                if (System.IO.File.Exists(path))//文件不存在时,创建新文件,并写入文件标题
+                {
+                    ste = File.ReadAllLines(path);
+                }
+                FileStream fs = new FileStream(path, FileMode.OpenOrCreate, FileAccess.ReadWrite);
+
+          
+                StreamWriter sw = new StreamWriter(fs, Encoding.UTF8);
+                //创建文件流对象
+         
                 for (int i = 0; i < ste.Length; i++)
                 {
                     sb.AppendLine(ste[i]);
@@ -415,7 +431,11 @@ namespace Vision2.ErosProjcetDLL.Excel
             {
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="text"></param>
         public static void AddText(String path, params string[] text)
         {
             System.IO.Directory.CreateDirectory(Path.GetDirectoryName(path));
@@ -434,7 +454,6 @@ namespace Vision2.ErosProjcetDLL.Excel
                     {
                         fs.Write(text[i]);
                     }
-
                 }
 
                 //StringBuilder sb = new StringBuilder();
@@ -444,7 +463,7 @@ namespace Vision2.ErosProjcetDLL.Excel
                 //    ste = File.ReadAllLines(path);
                 //}
                 //FileStream fs = new FileStream(path, FileMode.OpenOrCreate, FileAccess.ReadWrite);
-                //StreamWriter sw = new StreamWriter(fs, Encoding.UTF8); 
+                //StreamWriter sw = new StreamWriter(fs, Encoding.UTF8);
 
                 //for (int i = 0; i < ste.Length; i++)
                 //{
@@ -453,7 +472,6 @@ namespace Vision2.ErosProjcetDLL.Excel
                 ////创建文件流对象
                 //string tet = "";
                 ////sb.Append("RunTime").Append(",").Append("BarCode").Append(",").Append("OverStation");
-
 
                 ////把标题内容写入到文件流中
                 //sw.Write(sb);
@@ -465,6 +483,12 @@ namespace Vision2.ErosProjcetDLL.Excel
             {
             }
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="text"></param>
+
         public static void AddTextLine(String path, params string[] text)
         {
             Directory.CreateDirectory(Path.GetDirectoryName(path));
@@ -486,26 +510,27 @@ namespace Vision2.ErosProjcetDLL.Excel
             {
             }
         }
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="path"></param>
         /// <param name="text"></param>
         /// <param name="Extension"></param>
         public static void WriteF(string path, List<string> text, string Extension = ".CSV")
         {
-            if (!path.EndsWith(Extension))
-            {
-                path = path + Extension;
-            }
-
-            if (System.IO.File.Exists(path))
-            {
-                System.IO.File.Delete(path);
-            }
-            System.IO.Directory.CreateDirectory(Path.GetDirectoryName(path));
             try
             {
+                if (!path.EndsWith(Extension))
+                {
+                    path = path + Extension;
+                }
+
+                if (File.Exists(path))
+                {
+                    File.Delete(path);
+                }
+                Directory.CreateDirectory(Path.GetDirectoryName(path));
                 //创建文件流写入对象,绑定文件流对象
                 //创建数据对象
                 StringBuilder sb = new StringBuilder();
@@ -513,7 +538,7 @@ namespace Vision2.ErosProjcetDLL.Excel
                 FileStream fs = new FileStream(path, FileMode.OpenOrCreate, FileAccess.ReadWrite);
                 StreamWriter sw = new StreamWriter(fs, Encoding.UTF8);
                 //创建文件流对象
-                string tet = "";
+
                 for (int i = 0; i < ste.Length; i++)
                 {
                     sb.AppendLine(ste[i]);
@@ -532,6 +557,7 @@ namespace Vision2.ErosProjcetDLL.Excel
             {
             }
         }
+
         /// <summary>
         /// 读取Excel表格
         /// </summary>
@@ -606,7 +632,6 @@ namespace Vision2.ErosProjcetDLL.Excel
                             }
                             dt.Rows.RemoveAt(0);
                         }
-
                     }
                 }
             }
@@ -622,10 +647,8 @@ namespace Vision2.ErosProjcetDLL.Excel
             int result = 0;
             DataTable schemaTable = conn.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, new object[] { null, null, null, "TABLE" });
 
-
             if (schemaTable != null)
             {
-
                 for (Int32 row = 0; row < schemaTable.Rows.Count; row++)
                 {
                     string col_name = schemaTable.Rows[row]["TABLE_NAME"].ToString();
@@ -690,20 +713,18 @@ namespace Vision2.ErosProjcetDLL.Excel
 
             return value;
         }
+
         //根据数据类型设置不同类型的cell
         public static void SetCellValue(ICell cell, object obj)
         {
-
-
             if (obj == null)
             {
                 cell.SetCellValue(string.Empty);
                 return;
             }
-
-            if (double.TryParse(obj.ToString(), out double ds))
+            if (obj.GetType() == typeof(double))
             {
-                cell.SetCellValue(ds);
+                cell.SetCellValue((double)obj);
             }
             else if (obj.GetType() == typeof(int))
             {
@@ -736,7 +757,7 @@ namespace Vision2.ErosProjcetDLL.Excel
         }
 
         /// <summary>
-        /// 写行到Excle，不存在则创建
+        /// 写行到Excle，不存在则创建,数据Obj
         /// </summary>
         /// <param name="filePath">地址</param>
         /// <param name="sheetName">表名</param>
@@ -883,9 +904,7 @@ namespace Vision2.ErosProjcetDLL.Excel
                                 //如果要根据内容自动调整列宽，需要先setCellValue再调用
                                 sheet.AutoSizeColumn(j);
                             }
-
                         }
-
                     }
                 }
                 else
@@ -918,12 +937,11 @@ namespace Vision2.ErosProjcetDLL.Excel
             catch (Exception ex)
             {
                 throw (new Exception("写数据错误" + ex.Message));
-
             }
-
         }
+
         /// <summary>
-        /// 
+        /// 写行到Excle，不存在则创建，数据Double
         /// </summary>
         /// <param name="filePath"></param>
         /// <param name="sheetName"></param>
@@ -1012,6 +1030,13 @@ namespace Vision2.ErosProjcetDLL.Excel
                 throw (new Exception("写数据错误" + ex.Message));
             }
         }
+
+        /// <summary>
+        /// 写行到Excle，不存在则创建，数据List<Dobule>
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <param name="sheetName"></param>
+        /// <param name="Values"></param>
         public static void AddRosSWriteToExcel(string filePath, string sheetName, List<double[]> Values)
         {
             //创建工作薄
@@ -1099,8 +1124,8 @@ namespace Vision2.ErosProjcetDLL.Excel
             {
                 throw (new Exception("写数据错误" + ex.Message));
             }
-
         }
+
         /// <summary>
         /// 写行到Excle，不存在则创建
         /// </summary>
@@ -1190,8 +1215,6 @@ namespace Vision2.ErosProjcetDLL.Excel
                 ICell cell;
                 for (int i = 0; i < Values.Count; i++)
                 {
-
-
                     row = sheet.CreateRow(sheet.LastRowNum + 1);//创建第i行
 
                     if (Values[i].Length == 1)
@@ -1265,8 +1288,8 @@ namespace Vision2.ErosProjcetDLL.Excel
             {
                 throw (new Exception("写数据错误" + ex.Message));
             }
-
         }
+
         /// <summary>
         /// 更改列名不存在则创建
         /// </summary>
@@ -1622,7 +1645,6 @@ namespace Vision2.ErosProjcetDLL.Excel
                         {
                             listObj.Add(dataGridView.Rows[i].Cells[i2].Value.ToString());
                         }
-
                     }
                     AddRosWriteToExcel(filePath, sheetName, listObj.ToArray());
                 }
@@ -1633,7 +1655,6 @@ namespace Vision2.ErosProjcetDLL.Excel
             }
         }
 
-
         /// <summary>
         /// 读取Excel生成类，标题为字段标签
         /// </summary>
@@ -1641,7 +1662,6 @@ namespace Vision2.ErosProjcetDLL.Excel
         /// <returns>返回的类</returns>
         public static T GetPahtLoad<T>(string path)
         {
-
             return default(T);
         }
 
@@ -1659,7 +1679,6 @@ namespace Vision2.ErosProjcetDLL.Excel
             AddWriteColumnToExcel(path, sheetName, dispNames);
             AddRosWriteToExcel(path, sheetName, values);
         }
-
 
         #region ini 文件读写函数
 
@@ -1718,6 +1737,5 @@ namespace Vision2.ErosProjcetDLL.Excel
         public static extern bool WritePrivateProfileString(string lpAppName, string lpKeyName, string lpString, string lpFileName);
 
         #endregion ini 文件读写函数
-
     }
 }

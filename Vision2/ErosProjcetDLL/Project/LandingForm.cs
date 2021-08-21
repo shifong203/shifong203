@@ -20,11 +20,13 @@ namespace Vision2.ErosProjcetDLL.Project
                 comboBox1.SelectedIndex = 1;
             }
         }
-        public LandingForm(bool isLoinClrsi):this()
+
+        public LandingForm(bool isLoinClrsi) : this()
         {
             isloinColsi = isLoinClrsi;
         }
-        bool isloinColsi;
+
+        private bool isloinColsi;
 
         private UresForm uresForm;
 
@@ -65,22 +67,17 @@ namespace Vision2.ErosProjcetDLL.Project
                     label3.Text = "登录失败";
                     button5.Visible = false;
                 }
-
             }
             catch (Exception)
             {
             }
-
         }
-
-
 
         private void textBox2_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
             {
                 button1.PerformClick();
-           
             }
         }
 
@@ -96,8 +93,6 @@ namespace Vision2.ErosProjcetDLL.Project
             }
         }
 
-        
-
         private void button5_Click(object sender, EventArgs e)
         {
             User.Del();
@@ -109,20 +104,20 @@ namespace Vision2.ErosProjcetDLL.Project
         {
             try
             {
-               string[] paths=      System.IO.Directory.GetFiles(ProjectINI.In.ProjectPathRun);
+                string[] paths = System.IO.Directory.GetFiles(ErosProjcetDLL.Project.ProjectINI.ProjectPathRun);
                 for (int i = 0; i < paths.Length; i++)
                 {
-                   string fileName=  System.IO.Path.GetFileNameWithoutExtension(paths[i]);
+                    string fileName = System.IO.Path.GetFileNameWithoutExtension(paths[i]);
                     if (fileName.ToLower() == "logo")
                     {
                         pictureBox1.Image = Image.FromFile(paths[i]);
-                      
+
                         break;
                     }
                 }
             }
             catch (Exception)
-            {}
+            { }
         }
     }
 }

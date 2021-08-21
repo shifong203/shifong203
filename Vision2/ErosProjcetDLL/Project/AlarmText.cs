@@ -19,8 +19,7 @@ namespace Vision2.ErosProjcetDLL.Project
             richTextBox1.Text = "";
         }
 
-        static AlarmText Program;
-
+        private static AlarmText Program;
 
         public static AlarmText ThisF
         {
@@ -38,7 +37,9 @@ namespace Vision2.ErosProjcetDLL.Project
                 Program = value;
             }
         }
-        static object locktime = new object();
+
+        private static object locktime = new object();
+
         //[PropertyTabAttribute(typeof(TypeCategoryTab), PropertyTabScope.Component)]
         /// <summary>
         /// 报警类
@@ -64,6 +65,7 @@ namespace Vision2.ErosProjcetDLL.Project
                 {
                     return true;
                 }
+
                 public override StandardValuesCollection GetStandardValues(ITypeDescriptorContext context)
                 {
                     return new StandardValuesCollection(new string[] { ">", ">=", "<", "<=", "=", "!=" });
@@ -91,9 +93,11 @@ namespace Vision2.ErosProjcetDLL.Project
 
             [Description("触发报警显示的类型，基本类型或自定义类型"), Category("显示"), DisplayName("报警类别"), TypeConverter(typeof(AlarmTypeConverter)),]
             public string AlarmType { get; set; } = "";
-            double valuet;
-            bool alarm = false;
-            bool isar = false;
+
+            private double valuet;
+            private bool alarm = false;
+            private bool isar = false;
+
             /// <summary>
             /// 检测报警触发器
             /// </summary>
@@ -104,8 +108,6 @@ namespace Vision2.ErosProjcetDLL.Project
             {
                 if (this.Enabled)
                 {
-
-
                     if (value != valuet)
                     {
                         alarm = false;
@@ -134,7 +136,6 @@ namespace Vision2.ErosProjcetDLL.Project
                                                 SetAlarm(name, text);
                                             }
                                         }
-
                                     }
                                     break;
 
@@ -153,7 +154,6 @@ namespace Vision2.ErosProjcetDLL.Project
                                                 SetAlarm(name, text);
                                             }
                                         }
-
                                     }
                                     break;
 
@@ -245,7 +245,6 @@ namespace Vision2.ErosProjcetDLL.Project
                                 {
                                     SetAlarm(name, "未定义枚举");
                                 }
-
                             }
                         }
                     }
@@ -253,9 +252,6 @@ namespace Vision2.ErosProjcetDLL.Project
                     {
                         //alarm = true;
                     }
-
-
-
                 }
             }
 
@@ -317,13 +313,15 @@ namespace Vision2.ErosProjcetDLL.Project
         /// </summary>
         public static Dictionary<string, alarmStruct> DicAlarm { get; private set; } = new Dictionary<string, alarmStruct>();
 
-        static List<TextColor> lisetText = new List<TextColor>();
+        private static List<TextColor> lisetText = new List<TextColor>();
+
         public class TextColor
         {
             public string Text { get; set; }
 
             public Color Color { get; set; }
         }
+
         public class alarmStruct
         {
             public alarmStruct()
@@ -333,22 +331,27 @@ namespace Vision2.ErosProjcetDLL.Project
                 Name = "";
                 AlaType = "一般报警";
             }
+
             /// <summary>
             /// 触发时间
             /// </summary>
             public string Time;
+
             /// <summary>
             /// 报警信息
             /// </summary>
             public string Text;
+
             /// <summary>
             /// 名称
             /// </summary>
             public string Name;
+
             /// <summary>
             /// 类型
             /// </summary>
             public string AlaType;
+
             public override string ToString()
             {
                 return this.Name + ":" + this.AlaType + ":" + this.Text + ":" + this.Time;
@@ -403,7 +406,6 @@ namespace Vision2.ErosProjcetDLL.Project
                 }
                 else
                 {
-
                     string timeStr = DateTime.Now.ToString("MM/dd HH:mm:ss");
                     string timedey = DateTime.Now.ToString("yy年MM月dd日");
                     //Excel.Npoi.AddText(ProjectINI.TempPath + "\\报警记录\\ " + timedey, timeStr+name+type+text);
@@ -461,12 +463,10 @@ namespace Vision2.ErosProjcetDLL.Project
                     else if (type.Contains(AlarmType.致命报警.ToString()))
                     {
                         AddTextNewLine(timeStr + "." + type + "." + name + "{" + text, Color.Red);
-
                     }
                     else if (type.Contains(AlarmType.提示信息.ToString()))
                     {
                         AddTextNewLine(timeStr + "." + type + "." + name + "{" + text, Color.GreenYellow);
-
                     }
                     else if (type.Contains(AlarmType.指示信息.ToString()))
                     {
@@ -492,20 +492,21 @@ namespace Vision2.ErosProjcetDLL.Project
 
         public static void AddText(string text, Color color)
         {
+            Excel.Npoi.AddTextLine(ProjectINI.TempPath + "\\文本记录\\" + DateTime.Now.ToLongDateString() + ".CSV", new string[] { DateTime.Now.ToString(), text });
 
-            Excel.Npoi.AddTextLine(Vision2.ErosProjcetDLL.Project.ProjectINI.TempPath + "\\文本记录\\" + DateTime.Now.ToLongDateString() + ".CSV", new string[] { DateTime.Now.ToString(), text });
             if (ThisF.richTextBox1.InvokeRequired)
             {
                 ThisF.richTextBox1.Invoke(new Action<string, Color>(AddText), text, color);
             }
             else
             {
+                text = DateTime.Now.ToString("T") + ":" + text;
                 lisetText.Add(new TextColor() { Text = text, Color = color });
                 try
                 {
                     Color col = ThisF.richTextBox1.SelectionColor;
                     ThisF.richTextBox1.AppendText(text);
-                    //Excel.Npoi.AddRosWriteToExcel(Vision2.ErosProjcetDLL.Project.ProjectINI.In.ProjectPathRun + "\\报警记录\\ " + timedey + ".xls", timedey, new string[] { timeStr, text });
+                    //Excel.Npoi.AddRosWriteToExcel(ProjectINI.ProjectPathRun + "\\报警记录\\ " + timedey + ".xls", timedey, new string[] { timeStr, text });
                     int strati = ThisF.richTextBox1.Text.Length - text.Length;
                     if (strati < 0)
                     {
@@ -519,7 +520,6 @@ namespace Vision2.ErosProjcetDLL.Project
                 catch (Exception)
                 {
                 }
-
             }
         }
 
@@ -532,7 +532,8 @@ namespace Vision2.ErosProjcetDLL.Project
         {
             AddText(text + Environment.NewLine);
         }
-        static int errNumber;
+
+        private static int errNumber;
 
         public static void LogErr(string text, string name)
         {
@@ -542,7 +543,9 @@ namespace Vision2.ErosProjcetDLL.Project
             AddTextNewLine(name + ":" + text, Color.Red);
             errNumber++;
         }
-        static int warningNumber;
+
+        private static int warningNumber;
+
         public static void LogWarning(string name, string text)
         {
             AddTextNewLine(name + ":" + text, Color.Yellow);
@@ -689,7 +692,6 @@ namespace Vision2.ErosProjcetDLL.Project
             }
             ThisF.richTextBox1.SelectionStart = ThisF.richTextBox1.Text.Length;
             richTextBox1.ScrollToCaret();
-
         }
 
         /// <summary>
@@ -809,7 +811,6 @@ namespace Vision2.ErosProjcetDLL.Project
                     //}
                     //Vision2.Project.MainForm1.MainFormF.tsButton1.Text = "报警:" + DicAlarm.Count();
                 }));
-
             }
             catch (Exception)
             {
@@ -863,10 +864,7 @@ namespace Vision2.ErosProjcetDLL.Project
         {
             LogMessageForm logMessageForm = new LogMessageForm(Application.StartupPath + @"\Log\LogIncident.txt");
             logMessageForm.Show();
-
         }
-
-
 
         private void toolStripDropDownButton1_MouseMove(object sender, MouseEventArgs e)
         {
@@ -886,7 +884,6 @@ namespace Vision2.ErosProjcetDLL.Project
             //弹出报警列表ToolStripMenuItem.Checked = ProjectINI.In.IsShowAlarmText;
         }
 
-
         private void toolStripButton3_Click(object sender, EventArgs e)
         {
             try
@@ -894,16 +891,15 @@ namespace Vision2.ErosProjcetDLL.Project
                 MainForm1.MainFormF.splitContainer3.Panel2Collapsed = true;
                 if (MainForm1.MainFormF.Controls.Contains(AlarmForm.AlarmFormThis))
                 {
-                       UserFormulaContrsl.This.tabControl1.TabPages.Add(UserFormulaContrsl.This.tabPage4);
-                       UserFormulaContrsl.This.tabPage4.Controls.Add(AlarmForm.AlarmFormThis);
-                        AlarmForm.AlarmFormThis.TopLevel = false;
-                        AlarmForm.AlarmFormThis.FormBorderStyle = FormBorderStyle.None;
-                        AlarmForm.AlarmFormThis.Dock = DockStyle.Fill;
-                        AlarmForm.AlarmFormThis.Show();
+                    UserFormulaContrsl.This.tabControl1.TabPages.Add(UserFormulaContrsl.This.tabPage4);
+                    UserFormulaContrsl.This.tabPage4.Controls.Add(AlarmForm.AlarmFormThis);
+                    AlarmForm.AlarmFormThis.TopLevel = false;
+                    AlarmForm.AlarmFormThis.FormBorderStyle = FormBorderStyle.None;
+                    AlarmForm.AlarmFormThis.Dock = DockStyle.Fill;
+                    AlarmForm.AlarmFormThis.Show();
                 }
                 else
                 {
-                   
                     UserFormulaContrsl.This.tabControl1.TabPages.Remove(UserFormulaContrsl.This.tabPage4);
                     MainForm1.MainFormF.Controls.Add(AlarmForm.AlarmFormThis);
                     AlarmForm.AlarmFormThis.BringToFront();
@@ -915,7 +911,6 @@ namespace Vision2.ErosProjcetDLL.Project
             }
             catch (Exception ex)
             { }
-
         }
 
         private void AlarmText_Load(object sender, EventArgs e)
@@ -927,7 +922,7 @@ namespace Vision2.ErosProjcetDLL.Project
                 for (int i = 0; i < lisetText.Count; i++)
                 {
                     richTextBox1.AppendText(lisetText[i].Text);
-                    //Excel.Npoi.AddRosWriteToExcel(Vision2.ErosProjcetDLL.Project.ProjectINI.In.ProjectPathRun + "\\报警记录\\ " + timedey + ".xls", timedey, new string[] { timeStr, text });
+                    //Excel.Npoi.AddRosWriteToExcel(ProjectINI.ProjectPathRun + "\\报警记录\\ " + timedey + ".xls", timedey, new string[] { timeStr, text });
                     int strati = ThisF.richTextBox1.Text.Length - lisetText[i].Text.Length;
                     if (strati < 0)
                     {
@@ -938,22 +933,19 @@ namespace Vision2.ErosProjcetDLL.Project
                     ThisF.richTextBox1.SelectionStart = ThisF.richTextBox1.Text.Length;
                     ThisF.richTextBox1.SelectionColor = col;
                 }
-
             }
             catch (Exception)
             {
             }
-
         }
 
         private void toolStripButton2_Click(object sender, EventArgs e)
         {
             try
             {
-
                 UserFormulaContrsl.This.tabControl1.TabPages.Remove(UserFormulaContrsl.This.tabPage4);
-                MainForm1.MainFormF. splitContainer3.Panel2Collapsed = false;
-                MainForm1.MainFormF.splitContainer3.Panel2. Controls.Add(AlarmForm.AlarmFormThis);
+                MainForm1.MainFormF.splitContainer3.Panel2Collapsed = false;
+                MainForm1.MainFormF.splitContainer3.Panel2.Controls.Add(AlarmForm.AlarmFormThis);
                 AlarmForm.AlarmFormThis.BringToFront();
                 AlarmForm.AlarmFormThis.Dock = DockStyle.Fill;
                 AlarmForm.AlarmFormThis.FormBorderStyle = FormBorderStyle.None;
@@ -963,22 +955,17 @@ namespace Vision2.ErosProjcetDLL.Project
             catch (Exception)
             {
             }
-       
         }
 
         private void toolStripComboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             try
             {
-
-                AlarmForm.UpDa(toolStripComboBox1.SelectedItem.ToString() );
-       
+                AlarmForm.UpDa(toolStripComboBox1.SelectedItem.ToString());
             }
             catch (Exception)
             {
             }
         }
     }
-
-
 }

@@ -29,8 +29,7 @@ namespace Vision2.ErosProjcetDLL.Project
             set { alarmForm = value; }
         }
 
-
-        static AlarmForm alarmForm;
+        private static AlarmForm alarmForm;
 
         private void AlarmForm_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -44,14 +43,13 @@ namespace Vision2.ErosProjcetDLL.Project
                 AlarmForm.AlarmFormThis.Show();
             }
             catch (System.Exception)
-            {  }
+            { }
             e.Cancel = true;//拦截，不响应操作
             return;
         }
 
         private void AlarmForm_Load(object sender, System.EventArgs e)
         {
-
         }
 
         public static void UpDa(string showText)
@@ -69,7 +67,6 @@ namespace Vision2.ErosProjcetDLL.Project
                     AlarmForm.AlarmFormThis.FormBorderStyle = FormBorderStyle.Fixed3D;
                     AlarmForm.AlarmFormThis.TopMost = true;
                     AlarmForm.AlarmFormThis.Show();
-
                 }
                 else if (showText == "控制栏左")
                 {
@@ -83,7 +80,7 @@ namespace Vision2.ErosProjcetDLL.Project
                 }
                 else
                 {
-                    AlarmForm.AlarmFormThis. TopLevel = false;
+                    AlarmForm.AlarmFormThis.TopLevel = false;
                     UserFormulaContrsl.This.tabControl1.TabPages.Remove(UserFormulaContrsl.This.tabPage4);
                     MainForm1.MainFormF.splitContainer3.Panel2Collapsed = false;
                     MainForm1.MainFormF.splitContainer3.Panel2.Controls.Add(AlarmForm.AlarmFormThis);
@@ -93,17 +90,14 @@ namespace Vision2.ErosProjcetDLL.Project
                     AlarmForm.AlarmFormThis.TopMost = false;
                     AlarmForm.AlarmFormThis.Show();
                 }
-
             }
             catch (Exception ex)
-            { 
+            {
             }
-      
         }
 
         private void alarmText1_Load(object sender, System.EventArgs e)
         {
-
         }
     }
 }

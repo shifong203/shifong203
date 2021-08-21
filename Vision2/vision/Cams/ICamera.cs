@@ -7,60 +7,73 @@ namespace Vision2.vision.Cams
 {
     public interface ICamera
     {
-
         void OnCameraStatusChanged(string key);
+
         void OnEnverIamge(string key, int runid, OneResultOBj iamge);
+
         void OpenCam();
+
         void CloseCam();
+
         HObject GetImage();
+
         bool GetImage(out IGrabbedRawData image);
+
         HObject IGrabbedRawDataTOImage(IGrabbedRawData data);
- 
+
         object GetIDevice();
 
         void SetExposureTime(double VALUE);
 
-
         void Straing(HalconRun halconRun);
+
         event Action<string, OneResultOBj, int, bool> Swtr;
 
         event Action<bool> LinkEnvet;
+
         //delegate void Sw(string key, HObject image, int runID, bool isSave = true);
 
         void Stop();
+
         double CPrecision { get; set; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         double Precision { get; set; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         string FOV { get; set; }
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
         double Focal { get; set; }
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
         double Kappa { get; set; }
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
         double Cy { get; set; }
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
         double Cx { get; set; }
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
         double Sy { get; set; }
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
         double Sx { get; set; }
 
@@ -73,7 +86,6 @@ namespace Vision2.vision.Cams
 
         bool ISMap { get; set; }
         int Width { get; set; }
-
 
         int Height { get; set; }
 
@@ -90,7 +102,6 @@ namespace Vision2.vision.Cams
         int RunID { get; set; }
         string Name { get; set; }
 
-
         string IntIP { get; set; }
 
         string IP { get; set; }
@@ -98,12 +109,11 @@ namespace Vision2.vision.Cams
         bool Grabbing { get; }
 
         string FlashLampName { get; set; }
+
         string GetFramegrabberParam(string pName);
 
         bool SetProgramValue(string pName, string value);
 
         bool SetProgramValue(string pName, double value);
-
     }
-
 }

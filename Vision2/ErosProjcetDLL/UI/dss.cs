@@ -1,5 +1,6 @@
 ﻿using System.Threading;
 using System.Windows.Forms;
+
 namespace Vision2.ErosProjcetDLL.UI
 {
     /// <summary>
@@ -16,7 +17,8 @@ namespace Vision2.ErosProjcetDLL.UI
             Thread thread = new Thread(UpCyc);
             thread.Start();
         }
-        void UpCyc()
+
+        private void UpCyc()
         {
             while (!this.Disposing && this.Visible)
             {

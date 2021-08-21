@@ -1,5 +1,4 @@
-﻿
-using ErosSocket.ErosConLink;
+﻿using ErosSocket.ErosConLink;
 using System;
 using System.ComponentModel;
 using System.Drawing;
@@ -10,7 +9,9 @@ namespace Vision2.Project.DebugF.PLC
     {
         [DescriptionAttribute("。"), Category("PLC地址"), DisplayName("读写名称")]
         public string LinkNameStr { get; set; } = "";
-        bool ISCT;
+
+        private bool ISCT;
+
         private dynamic TextPlc_ValueCyEvent(UClass.ErosValues.ErosValueD key)
         {
             this.Invoke(new Action(() =>
@@ -29,7 +30,6 @@ namespace Vision2.Project.DebugF.PLC
             return key.Value;
         }
 
-
         protected override void CreateHandle()
         {
             base.CreateHandle();
@@ -47,7 +47,6 @@ namespace Vision2.Project.DebugF.PLC
             {
                 StaticCon.SetLingkValue(LinkNameStr, false, out string err);
             }
-
         }
 
         protected override void Dispose(bool disposing)
@@ -60,7 +59,6 @@ namespace Vision2.Project.DebugF.PLC
                  && StaticCon.GetSocketClint(TAS[0]).KeysValues.DictionaryValueD[TAS[1]]._Type == UClass.Boolean)
                 {
                     StaticCon.GetSocketClint(TAS[0]).KeysValues.DictionaryValueD[TAS[1]].ValueCyEvent -= TextPlc_ValueCyEvent;
-
                 }
             }
             catch (Exception)
@@ -68,7 +66,7 @@ namespace Vision2.Project.DebugF.PLC
             }
         }
 
-        void Create()
+        private void Create()
         {
             if (this.InvokeRequired)
             {

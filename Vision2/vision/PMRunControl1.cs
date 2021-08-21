@@ -13,8 +13,8 @@ namespace Vision2.vision
             InitializeComponent();
             UpProject();
             //Vision.Instance.UpProjectNode(tVProject.Nodes.Add("图像处理"));
-
         }
+
         /// <summary>
         /// 更新程序
         /// </summary>
@@ -97,7 +97,7 @@ namespace Vision2.vision
                 MessageBox.Show(ex.Message);
             }
         }
-  
+
         /// <summary>
         /// 单击按键
         /// </summary>
@@ -125,12 +125,9 @@ namespace Vision2.vision
                             {
                                 PropertyForm.UPProperty(CurrentNode.Tag);
                             }
-
                         }
                     }));
-
                 });
-
             }
             catch (Exception)
             {
@@ -139,7 +136,6 @@ namespace Vision2.vision
 
         private void tVProject_Click(object sender, EventArgs e)
         {
-
         }
 
         private void tsButton1_Click(object sender, EventArgs e)
@@ -148,16 +144,12 @@ namespace Vision2.vision
             {
                 UpProject();
 
-
                 //tVProject.Nodes.Clear();
                 //Vision.Instance.UpProjectNode(tVProject.Nodes.Add("图像处理"));
             }
             catch (Exception)
             {
-
-
             }
-
         }
     }
 }

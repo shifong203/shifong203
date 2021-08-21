@@ -17,13 +17,17 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             InitializeComponent();
         }
-        PCBA PCBAT;
+
+        private PCBA PCBAT;
+
         public PCBAControl(PCBA pCBA) : this()
         {
             PCBAT = pCBA;
             halcon = pCBA.GetPThis();
         }
-        HalconRun halcon;
+
+        private HalconRun halcon;
+
         private void 添加电阻ToolStripMenuItem_Click(object sender, System.EventArgs e)
         {
             try
@@ -33,10 +37,10 @@ namespace Vision2.vision.HalconRunFile.Controls
                 RunProgram bPCBoJB = null;
                 if (PCBAT.GetDicPCBA().ContainsKey(dsts))
                 {
-                     int ds = ProjectINI.GetStrReturnInt(name, out dsts);
-                     stret:
-                     if (PCBAT.GetDicPCBA().ContainsKey(dsts + (++ds)))
-                        {  goto stret; }
+                    int ds = ProjectINI.GetStrReturnInt(name, out dsts);
+                stret:
+                    if (PCBAT.GetDicPCBA().ContainsKey(dsts + (++ds)))
+                    { goto stret; }
                     dsts = dsts + (ds);
                     DialogResult dr = MessageBox.Show(name + ":已存在!是否新建《" + dsts + "》？", "新建程序", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
                     if (dr == DialogResult.OK)
@@ -45,12 +49,12 @@ namespace Vision2.vision.HalconRunFile.Controls
                         object DA = JsonConvert.DeserializeObject(jsonStr, PCBAT.GetDicPCBA()[name].GetType());
                         bPCBoJB = DA as RunProgram;
                     }
-                    else   return;    
+                    else return;
                 }
                 else bPCBoJB = new Capacitance();
-                 PCBAT.GetDicPCBA().Add(dsts, bPCBoJB);
-                 TreeNode treeNode = treeView1.Nodes.Add(dsts);
-                 treeNode.Tag = bPCBoJB;
+                PCBAT.GetDicPCBA().Add(dsts, bPCBoJB);
+                TreeNode treeNode = treeView1.Nodes.Add(dsts);
+                treeNode.Tag = bPCBoJB;
             }
             catch (Exception ex)
             {
@@ -63,7 +67,7 @@ namespace Vision2.vision.HalconRunFile.Controls
             try
             {
                 TreeNode treeNode = treeView1.SelectedNode;
-                if (treeNode!=null)
+                if (treeNode != null)
                 {
                     if (PCBAT.GetDicPCBA().ContainsKey(treeNode.Text))
                     {
@@ -88,7 +92,7 @@ namespace Vision2.vision.HalconRunFile.Controls
             {
                 foreach (var item in PCBAT.GetDicPCBA())
                 {
-                    if (item.Key!="")
+                    if (item.Key != "")
                     {
                         TreeNode treeNode = treeView1.Nodes.Add(item.Key);
                         treeNode.Text = item.Key;
@@ -112,7 +116,9 @@ namespace Vision2.vision.HalconRunFile.Controls
                 MessageBox.Show(ex.Message);
             }
         }
-        TreeNode CurrentNode;
+
+        private TreeNode CurrentNode;
+
         private void treeView1_MouseClick(object sender, MouseEventArgs e)
         {
             try
@@ -128,14 +134,14 @@ namespace Vision2.vision.HalconRunFile.Controls
                         {
                             tabPage1.Text = CurrentNode.Text;
                             InterfacePCBA Capacit = CurrentNode.Tag as InterfacePCBA;
-                            if (Capacit!=null)
+                            if (Capacit != null)
                             {
                                 tabPage1.Controls.Clear();
                                 Control control = Capacit.GetControl(PCBAT.GetPThis());
                                 tabPage1.Controls.Add(control);
                                 control.Dock = DockStyle.Fill;
                                 halcon.HobjClear();
-                                RunProgram bPCBoJB =     CurrentNode.Tag as RunProgram;
+                                RunProgram bPCBoJB = CurrentNode.Tag as RunProgram;
                                 propertyGrid1.SelectedObject = bPCBoJB;
                                 bPCBoJB.GetRunProgram(PCBAT);
                                 bPCBoJB.RunHProgram(halcon.GetOneImageR(), out List<OneRObj> oneRObj, new AoiObj()); ;
@@ -196,21 +202,21 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             try
             {
-                if (CurrentNode==null) return;
+                if (CurrentNode == null) return;
                 string dsts = "重命名";
-                stret:
+            stret:
                 string name = Interaction.InputBox("请输入新名称", dsts, CurrentNode.Text, 100, 100);
-                if (name=="")   return;
+                if (name == "") return;
                 RunProgram bPCBoJB = CurrentNode.Tag as RunProgram;
                 if (PCBAT.GetDicPCBA().ContainsKey(name))
                 {
                     DialogResult dr = MessageBox.Show(name + ":已存在!请重新输入", "请重新输入", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
                     if (dr == DialogResult.OK) goto stret;
-                    else  return;  
+                    else return;
                 }
                 bPCBoJB.Name = name;
                 PCBAT.GetDicPCBA().Add(name, bPCBoJB);
-                treeView1.Nodes.Add(name).Tag= bPCBoJB;
+                treeView1.Nodes.Add(name).Tag = bPCBoJB;
                 PCBAT.GetDicPCBA().Remove(CurrentNode.Text);
                 treeView1.Nodes.Remove(CurrentNode);
             }
@@ -231,7 +237,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 if (PCBAT.GetDicPCBA().ContainsKey(dsts))
                 {
                     int ds = ProjectINI.GetStrReturnInt(name, out dsts);
-                   stret:
+                stret:
                     if (PCBAT.GetDicPCBA().ContainsKey(dsts + (++ds)))
                     {
                         goto stret;
@@ -259,33 +265,28 @@ namespace Vision2.vision.HalconRunFile.Controls
             {
                 MessageBox.Show(ex.Message);
             }
-
         }
 
         private void toolStripButton1_Click(object sender, EventArgs e)
         {
-
         }
 
         private void 同步到库ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
-              {
+            {
                 //ToolStrip toolStrip  =toolStripItemw.GetCurrentParent();
-              
-                        if (CurrentNode!=null)
-                        {
-                            PCBAT.GetDicPCBA()[CurrentNode.Text].SaveThis(Library.LibraryBasics.PathStr);
-                            Vision.Instance.AddLibrary(PCBAT.GetDicPCBA()[CurrentNode.Text]);
-                        }
 
-                    }
-                    catch (Exception)
-                    {
-                    }
-                    //弹出带输入
-                
-         
+                if (CurrentNode != null)
+                {
+                    PCBAT.GetDicPCBA()[CurrentNode.Text].SaveThis(Library.LibraryBasics.PathStr);
+                    Vision.Instance.AddLibrary(PCBAT.GetDicPCBA()[CurrentNode.Text]);
+                }
+            }
+            catch (Exception)
+            {
+            }
+            //弹出带输入
         }
     }
 }

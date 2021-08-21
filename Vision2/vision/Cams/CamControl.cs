@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 using Vision2.vision.HalconRunFile.RunProgramFile;
+
 namespace Vision2.vision.Cams
 {
     public partial class CamControl : UserControl
@@ -9,8 +10,8 @@ namespace Vision2.vision.Cams
         public CamControl(ICamera cam, HalconRun halconRun = null) : this()
         {
             UpDataRe(cam, halconRun);
-
         }
+
         public CamControl()
         {
             InitializeComponent();
@@ -33,8 +34,6 @@ namespace Vision2.vision.Cams
                         Lebm_bCamIsOK.ForeColor = Color.Red;
                     }
                 }));
-
-
             }
             else
             {
@@ -47,9 +46,10 @@ namespace Vision2.vision.Cams
 
         private void CamControl_Load(object sender, EventArgs e)
         {
-
         }
-        bool isChetr;
+
+        private bool isChetr;
+
         public void UpDataRe(ICamera cam, HalconRun halconRun = null)
         {
             try
@@ -84,7 +84,7 @@ namespace Vision2.vision.Cams
                     ThridLibray.IGigeInterfaceInfo device2 = ThridLibray.Enumerator.GigeInterfaceInfo(Cam.Index);
                     Cam.IntIP = device2.IPAddress;
                     TBGain.Text = hSBGain.Value.ToString();
-       
+
                     if (Cam.IsCamConnected)
                     {
                         toCamLink.Text = "断开";
@@ -102,7 +102,6 @@ namespace Vision2.vision.Cams
                 {
                     Halcon = Vision.GetFocusRunHalcon();
                 }
-
             }
             catch (Exception ex)
             {
@@ -144,7 +143,6 @@ namespace Vision2.vision.Cams
         {
             try
             {
-
                 Vision.GetFocusRunHalcon();
                 //Cam.CoordinateMeassage = Coordinate.Coordinate_Type.XYZU3D;
 
@@ -217,7 +215,6 @@ namespace Vision2.vision.Cams
         {
             try
             {
-
                 if (double.TryParse(txExposure.Text, out double intExp))
                 {
                     if (intExp != 0)
@@ -254,7 +251,6 @@ namespace Vision2.vision.Cams
             }
         }
 
-
         private void CamIntPut1_SelectedIndexChanged(object sender, EventArgs e)
         {
             //Cam.TriggerMode = CamIntPut1.SelectedItem.ToString();
@@ -278,18 +274,14 @@ namespace Vision2.vision.Cams
             {
                 Cam.SetProgramValue("BalanceWhiteAuto", (uint)CamIntPut1.SelectedIndex);
             }
-
-
         }
 
         private void TxCamIp_address_TextChanged(object sender, EventArgs e)
         {
-
         }
 
         private void label5_Click(object sender, EventArgs e)
         {
-
         }
 
         private void numericUpDown1_ValueChanged(object sender, EventArgs e)
@@ -306,11 +298,7 @@ namespace Vision2.vision.Cams
             }
             catch (Exception ex)
             {
-
-
             }
-
-
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -322,7 +310,6 @@ namespace Vision2.vision.Cams
 
         private void panel1_Paint(object sender, PaintEventArgs e)
         {
-
         }
     }
 }

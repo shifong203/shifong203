@@ -2,15 +2,11 @@
 using System;
 using System.Windows.Forms;
 using Vision2.vision.HalconRunFile.RunProgramFile;
+
 namespace Vision2.vision.HalconRunFile.Controls
 {
     public class VisionUserControl : HWindowControl
     {
-
-
-
-
-
         ////public List<string> ListImagePath = new List<string>();
 
         public HTuple m_ImageRow1, m_ImageCol1;
@@ -22,9 +18,8 @@ namespace Vision2.vision.HalconRunFile.Controls
         private HTuple m_ImageRow0, m_ImageCol0;
         private HTuple hv_Button;
         public bool meuseBool;
-        HalconRun halcon;
+        private HalconRun halcon;
         private HTuple Row0_1, Col0_1, Row1_1, Col1_1;
-
 
         private void VisionUserControl_HMouseDown(object sender, HMouseEventArgs e)
         {
@@ -41,7 +36,6 @@ namespace Vision2.vision.HalconRunFile.Controls
 
                 if (e.Button == MouseButtons.Left)
                 {
-
                     halcon.hWindowHalcon(this.HalconWindow);
                     this.OnClick(e);
                 }
@@ -56,9 +50,7 @@ namespace Vision2.vision.HalconRunFile.Controls
             }
             catch (Exception)
             {
-
             }
-
         }
 
         private void VisionUserControl_Load(object sender, EventArgs e)
@@ -87,7 +79,6 @@ namespace Vision2.vision.HalconRunFile.Controls
             }
             catch (Exception)
             {
-
             }
             halcon.GetOneImageR().IsMoveBool = false;
             meuseBool = false;
@@ -97,9 +88,9 @@ namespace Vision2.vision.HalconRunFile.Controls
         private void InitializeComponent()
         {
             this.SuspendLayout();
-            // 
+            //
             // VisionUserControl
-            // 
+            //
             this.Name = "VisionUserControl";
             this.Size = new System.Drawing.Size(439, 360);
             this.WindowSize = new System.Drawing.Size(439, 360);
@@ -109,13 +100,11 @@ namespace Vision2.vision.HalconRunFile.Controls
             this.HMouseWheel += new HalconDotNet.HMouseEventHandler(this.hWindowControl1_HMouseWheel);
             this.Load += new System.EventHandler(this.VisionUserControl_Load);
             this.ResumeLayout(false);
-
         }
 
         public VisionUserControl()
         {
             InitializeComponent();
-
         }
 
         public void UpHalcon(HalconRun halconRun)
@@ -138,7 +127,6 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             try
             {
-
                 if (halcon == null)
                 {
                     return;
@@ -171,12 +159,12 @@ namespace Vision2.vision.HalconRunFile.Controls
                     }
                     halcon.ShowObj();
                 }
-
             }
             catch
             {
             }
         }
+
         /// <summary>
         /// 图像缩放
         /// </summary>
@@ -254,9 +242,7 @@ namespace Vision2.vision.HalconRunFile.Controls
             }
             catch (Exception es)
             {
-
             }
-
         }
     }
 }

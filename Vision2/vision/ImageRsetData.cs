@@ -8,6 +8,5 @@ namespace Vision2.vision
         {
             InitializeComponent();
         }
-
     }
 }

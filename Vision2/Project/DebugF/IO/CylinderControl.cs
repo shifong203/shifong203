@@ -12,13 +12,16 @@ namespace Vision2.Project.DebugF.IO
         {
             InitializeComponent();
         }
+
         public CylinderControl(ICylinder cylind) : this()
         {
             Up(cylind);
         }
-        ICylinder cylinder;
+
+        private ICylinder cylinder;
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public void UpC()
         {
@@ -41,7 +44,6 @@ namespace Vision2.Project.DebugF.IO
                             SQlabel.BackColor = Color.Red;
                         }
                     }
-
                 }
                 if (int.TryParse(cylinder.ProtrudeI, out redt))
                 {
@@ -61,7 +63,6 @@ namespace Vision2.Project.DebugF.IO
                 {
                     if (cylinder.CylinderAlram.Length != 0)
                     {
-
                         label1.BackColor = Color.Red;
                         label1.Text = cylinder.Name + "故障";
                     }
@@ -114,18 +115,16 @@ namespace Vision2.Project.DebugF.IO
         {
             cylinder = cylind;
             label1.Text = cylinder.Name;
-
         }
 
         [DescriptionAttribute("边框颜色。"), Category("外观"), DisplayName("边框颜色")]
         public Color BorderColor { get; set; } = Color.Orange;
 
-
         private void UserControl1_Load(object sender, EventArgs e)
         {
             try
             {
-                DebugCompiler.GetThis().DDAxis.UpCycle += DDAxis_UpCycle;
+                DebugCompiler.Instance.DDAxis.UpCycle += DDAxis_UpCycle;
             }
             catch (Exception)
             {
@@ -136,7 +135,6 @@ namespace Vision2.Project.DebugF.IO
         {
             try
             {
-
                 if (this.InvokeRequired)
                 {
                     //Invoke(new Action<string, MonitoredItem, MonitoredItemNotificationEventArgs>(SubCallback), key, monitoredItem, args);
@@ -145,7 +143,7 @@ namespace Vision2.Project.DebugF.IO
                 }
                 if (this.IsDisposed)
                 {
-                    DebugCompiler.GetThis().DDAxis.UpCycle -= DDAxis_UpCycle;
+                    DebugCompiler.Instance.DDAxis.UpCycle -= DDAxis_UpCycle;
                     return;
                 }
                 UpC();
@@ -181,7 +179,6 @@ namespace Vision2.Project.DebugF.IO
             }
             catch (Exception)
             {
-
             }
         }
 
@@ -193,11 +190,7 @@ namespace Vision2.Project.DebugF.IO
             }
             catch (Exception)
             {
-
             }
-
         }
     }
-
-
 }

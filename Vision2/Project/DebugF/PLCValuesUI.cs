@@ -13,7 +13,6 @@ namespace Vision2.Project.DebugF
     {
         public PLCValuesUI()
         {
-
             InitializeComponent();
             //checkBox1.Checked = RecipeCompiler.Instance.Data.IsChe;
         }
@@ -48,16 +47,16 @@ namespace Vision2.Project.DebugF
                                         {
                                             if (ProcessControl.ProcessUser.QRCode == "")
                                             {
-                                                StaticCon.GetSocketClint(RecipeCompiler.Instance.DataLinkName).SetIDValue("D1210", "Int16", "21", out  err);
+                                                StaticCon.GetSocketClint(RecipeCompiler.Instance.DataLinkName).SetIDValue("D1210", "Int16", "21", out err);
                                             }
                                             else
                                             {
-                                                StaticCon.GetSocketClint(RecipeCompiler.Instance.DataLinkName).SetIDValue("D1210", "Int16","20", out  err);
+                                                StaticCon.GetSocketClint(RecipeCompiler.Instance.DataLinkName).SetIDValue("D1210", "Int16", "20", out err);
                                             }
                                         }
-                                        label5.Text = "请求状态:"+ valueD +err;
+                                        label5.Text = "请求状态:" + valueD + err;
                                     }
-       
+
                                     label1.Text = "位移值:" + StaticCon.GetSocketClint(RecipeCompiler.Instance.DataLinkName).GetKeyValue("位移传感器值");
                                     if (StaticCon.GetSocketClint(RecipeCompiler.Instance.DataLinkName).GetKeyValue("完成") == 1)
                                     {
@@ -116,8 +115,6 @@ namespace Vision2.Project.DebugF
                                         }
                                         Updet(valuse, xs, ys, dwe);
                                     }
-
-                                 
                                 }
                             }
                             catch (Exception ex)
@@ -129,12 +126,9 @@ namespace Vision2.Project.DebugF
                     );
                 thread.IsBackground = true;
                 thread.Start();
-
-
             }
             catch (Exception)
             {
-
             }
             ErosProjcetDLL.Project.ProjectINI.In.User.EventLog += User_EventLog;
         }
@@ -189,7 +183,6 @@ namespace Vision2.Project.DebugF
                 {
                     //Membership.GeneratePassword(20, 1)
 
-
                     valuse.Add(rd.Next(-1, 10));
                     //if (RecipeCompiler.Instance.Data.PointXID[i] == "")
                     //{
@@ -236,20 +229,16 @@ namespace Vision2.Project.DebugF
                     //        ys.Add(resFloat);
                     //    }
                     //}
-
-
-
                 }
 
                 Updet(valuse, xs, ys, valuse.Count);
             }
             catch (Exception)
             {
-
             }
         }
 
-        void Updet(List<float> valuse, List<float> x, List<float> y, int dwe)
+        private void Updet(List<float> valuse, List<float> x, List<float> y, int dwe)
         {
             try
             {
@@ -360,7 +349,6 @@ namespace Vision2.Project.DebugF
                                         break;
                                     }
                                     dataGridView1.Rows[i2].Cells[1].Style.BackColor = Color.Green;
-
                                 }
                             }
                             ValueStr.Add(RecipeCompiler.Instance.Data.CheCalssT[i].Value.ToString());
@@ -368,11 +356,11 @@ namespace Vision2.Project.DebugF
                     }
                 }));
                 string dataTime = DateTime.Now.ToLongDateString();
-                if (!System.IO.File.Exists(ProcessControl.ProcessUser.GetThis().ExcelPath + "//" + dataTime + ".xls"))
+                if (!System.IO.File.Exists(ProcessControl.ProcessUser.Instancen.ExcelPath + "//" + dataTime + ".xls"))
                 {
-                    ErosProjcetDLL.Excel.Npoi.AddWriteColumnToExcel(ProcessControl.ProcessUser.GetThis().ExcelPath + "//" + dataTime, "数据", ContNAMES.ToArray());
+                    ErosProjcetDLL.Excel.Npoi.AddWriteColumnToExcel(ProcessControl.ProcessUser.Instancen.ExcelPath + "//" + dataTime, "数据", ContNAMES.ToArray());
                 }
-                ErosProjcetDLL.Excel.Npoi.AddRosWriteToExcel(ProcessControl.ProcessUser.GetThis().ExcelPath + "//" + dataTime, "数据", ValueStr.ToArray());
+                ErosProjcetDLL.Excel.Npoi.AddRosWriteToExcel(ProcessControl.ProcessUser.Instancen.ExcelPath + "//" + dataTime, "数据", ValueStr.ToArray());
                 UserFormulaContrsl.This.textBox1.Text = "";
 
                 if (RecipeCompiler.Instance.GetMes() != null)
@@ -383,7 +371,6 @@ namespace Vision2.Project.DebugF
                 {
                     ErosProjcetDLL.Project.AlarmText.AddTextNewLine("未定义Mes", Color.Red);
                 }
-
             }
             catch (Exception ex)
             {
@@ -399,9 +386,7 @@ namespace Vision2.Project.DebugF
             }
             catch (Exception)
             {
-
             }
-
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
@@ -412,7 +397,6 @@ namespace Vision2.Project.DebugF
             }
             catch (Exception)
             {
-
             }
         }
     }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using Vision2.ErosProjcetDLL.Project;
 
 namespace Vision2.Project.ProcessControl
 {
@@ -37,13 +38,13 @@ namespace Vision2.Project.ProcessControl
             dataGridView2.Rows[14].Cells[0].Value = "历史码6";
             dataGridView2.Rows[15].Cells[0].Value = "历史码7";
             dataGridView2.Rows[16].Cells[0].Value = "历史码8";
-
         }
 
         public static ProcessControl StaticProcessThis;
-        int it = 0;
-        List<string> ts;
-        string code = "";
+        private int it = 0;
+        private List<string> ts;
+        private string code = "";
+
         /// <summary>
         /// 初始化
         /// </summary>
@@ -105,7 +106,6 @@ namespace Vision2.Project.ProcessControl
                                     }
                                     else
                                     {
-
                                         DataGridViewTextBoxColumn dataGridViewColumn = new DataGridViewTextBoxColumn();
                                         dataGridViewColumn.Name = dataGridViewColumn.HeaderText = item2.Key;
                                         dataGridView1.Columns.Add(dataGridViewColumn);
@@ -153,13 +153,13 @@ namespace Vision2.Project.ProcessControl
                             {
                                 if (dataGridView3.Rows[i].Cells[0].Value != null)
                                 {
-                                    if (!ProcessUser.GetThis().GetTrayID().ContainsKey(dataGridView3.Rows[i].Cells[0].Value.ToString()))
+                                    if (!ProcessUser.Instancen.GetTrayID().ContainsKey(dataGridView3.Rows[i].Cells[0].Value.ToString()))
                                     {
                                         dataGridView3.Rows.RemoveAt(i);
                                     }
                                 }
                             }
-                            foreach (var item in ProcessUser.GetThis().GetTrayID())
+                            foreach (var item in ProcessUser.Instancen.GetTrayID())
                             {
                                 for (int i = 0; i < dataGridView3.Rows.Count; i++)
                                 {
@@ -190,21 +190,19 @@ namespace Vision2.Project.ProcessControl
                                     }
                                 }
                             }
-
                         }
                         catch (Exception ex)
                         {
                             //MessageBox.Show(ex.Message);
                         }
-
                     }));
-
                 }
             }
             catch (Exception)
             {
             }
         }
+
         /// <summary>
         /// 刷新
         /// </summary>
@@ -258,15 +256,13 @@ namespace Vision2.Project.ProcessControl
             try
             {
                 string item = dataGridView1.Rows[this.dataGridView1.SelectedCells[0].RowIndex].Cells[0].Value.ToString();
-                if (ProcessUser.GetThis().ProductMessage.ContainsKey(item))
+                if (ProcessUser.Instancen.ProductMessage.ContainsKey(item))
                 {
-                    ProcessUser.GetThis().ProductMessage.Remove(item);
+                    ProcessUser.Instancen.ProductMessage.Remove(item);
                 }
-
             }
             catch (Exception ex)
             {
-
             }
         }
 
@@ -274,8 +270,6 @@ namespace Vision2.Project.ProcessControl
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-
-
         }
 
         private void toolStripButton1_Click(object sender, EventArgs e)
@@ -289,9 +283,7 @@ namespace Vision2.Project.ProcessControl
             {
                 if (MessageBox.Show("是否删除？", "删除全部过程数据", MessageBoxButtons.OKCancel, MessageBoxIcon.Asterisk) == DialogResult.OK)
                 {
-
                     ProcessUser.ClearAll();
-
 
                     Up();
                 }
@@ -299,12 +291,10 @@ namespace Vision2.Project.ProcessControl
             catch (Exception)
             {
             }
-
         }
 
         private void tabPage3_Click(object sender, EventArgs e)
         {
-
         }
 
         private void tabControl1_Selected(object sender, TabControlEventArgs e)
@@ -352,7 +342,7 @@ namespace Vision2.Project.ProcessControl
                     //{
                     //    button2.BackColor = Color.Red;
                     //}
-                    if (ProcessUser.GetThis().LinkFEap)
+                    if (ProcessUser.Instancen.LinkFEap)
                     {
                         button12.BackColor = Color.Green;
                     }
@@ -360,12 +350,11 @@ namespace Vision2.Project.ProcessControl
                     {
                         button12.BackColor = Color.Red;
                     }
-                    textBox4.Text = ErosSocket.ErosConLink.StaticCon.GetLingkNameValueString(ProcessUser.GetThis().EapGetQRCodeName);
+                    textBox4.Text = ErosSocket.ErosConLink.StaticCon.GetLingkNameValueString(ProcessUser.Instancen.EapGetQRCodeName);
                     //ErosSocket.ErosConLink.StaticCon.GetLingkIDValueS("打码清洗.DB17.4", "String", 100, out dynamic ert);
                     //textBox5.Text = ert;
                     ErosSocket.ErosConLink.StaticCon.GetLingkIDValueS("打码清洗.DB17.106", "String", 100, out dynamic ert);
                     textBox6.Text = ert;
-
                 }
             }
             catch (Exception)
@@ -377,18 +366,15 @@ namespace Vision2.Project.ProcessControl
         {
             try
             {
-
                 ProcessUser.SetCodeProValue(textBox9.Text,
                     new string[] { "载具码", "位置", "OK", "位移检测" }
                 , new string[] {textBox8.Text,comboBox3.SelectedItem.ToString(),
                     comboBox1.SelectedItem.ToString(),
                     comboBox2.SelectedItem.ToString() });
-
             }
             catch (Exception)
             {
             }
-
         }
 
         //private void button2_Click(object sender, EventArgs e)
@@ -408,9 +394,8 @@ namespace Vision2.Project.ProcessControl
         //    }
         //    catch (Exception)
         //    {
-        //    } 
+        //    }
         //}
-
 
         private void button3_Click(object sender, EventArgs e)
         {
@@ -420,7 +405,6 @@ namespace Vision2.Project.ProcessControl
         {
             try
             {
-
                 //ErosSocket.ErosConLink.StaticCon.SetLinkAddressValue("打码清洗.DB17.4",ErosSocket.ErosConLink.UClass.String,textBox5.Text);
                 ErosSocket.ErosConLink.StaticCon.SetLinkAddressValue("打码清洗.DB17.106", ErosSocket.ErosConLink.UClass.String, textBox6.Text);
                 //ErosSocket.ErosConLink.StaticCon.GetLingkIDValueS("打码清洗.DB17.4", "String", 100, out dynamic ert);
@@ -437,7 +421,7 @@ namespace Vision2.Project.ProcessControl
         {
             try
             {
-                System.Diagnostics.Process.Start(Vision2.ErosProjcetDLL.Project.ProjectINI.In.ProjectPathRun + "\\过程记录\\");
+                System.Diagnostics.Process.Start(ProjectINI.ProjectPathRun + "\\过程记录\\");
             }
             catch (Exception)
             {
@@ -460,7 +444,8 @@ namespace Vision2.Project.ProcessControl
             }
             botf = false;
         }
-        bool botf = false;
+
+        private bool botf = false;
 
         private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -488,7 +473,6 @@ namespace Vision2.Project.ProcessControl
 
         private void button6_Click(object sender, EventArgs e)
         {
-
         }
 
         private void button1_Click_1(object sender, EventArgs e)
@@ -499,8 +483,6 @@ namespace Vision2.Project.ProcessControl
             }
             catch (Exception)
             {
-
-
             }
         }
 
@@ -513,7 +495,7 @@ namespace Vision2.Project.ProcessControl
 
         private void button8_Click(object sender, EventArgs e)
         {
-            //Dictionary<string,string>dt=  
+            //Dictionary<string,string>dt=
             //       Stub.StubManager.getDevice().GetRecipe("", textBox2.Text);
         }
 
@@ -538,7 +520,7 @@ namespace Vision2.Project.ProcessControl
         {
             try
             {
-                ProcessUser.GetThis().SendTyID(textBox5.Text);
+                ProcessUser.Instancen.SendTyID(textBox5.Text);
             }
             catch (Exception ex)
             {
@@ -547,31 +529,28 @@ namespace Vision2.Project.ProcessControl
 
         private void button12_Click(object sender, EventArgs e)
         {
-            if (ProcessUser.GetThis().LinkFEap)
+            if (ProcessUser.Instancen.LinkFEap)
             {
-                ProcessUser.GetThis().LinkFEap = false;
+                ProcessUser.Instancen.LinkFEap = false;
                 button12.BackColor = Color.Red;
             }
             else
             {
-                ProcessUser.GetThis().LinkFEap = true;
+                ProcessUser.Instancen.LinkFEap = true;
                 button12.BackColor = Color.Green;
             }
         }
 
         private void textBox4_TextChanged(object sender, EventArgs e)
         {
-
         }
 
         private void plcButton1_Click(object sender, EventArgs e)
         {
-
         }
 
         private void plcBtn1_Click(object sender, EventArgs e)
         {
-
         }
     }
 }

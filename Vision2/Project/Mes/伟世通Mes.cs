@@ -40,12 +40,12 @@ namespace Vision2.Project.Mes
             }
         }
 
-        public override bool ReadMes(string SerialNumber, out string resetMesString)
+        public override bool ReadMes(out string resetMesString, TrayData trayData)
         {
             throw new NotImplementedException();
         }
 
-        public override bool ReadMes(out string resetMesString)
+        public override bool ReadMes(string sn, out string resetMesString)
         {
             throw new NotImplementedException();
         }
@@ -61,10 +61,9 @@ namespace Vision2.Project.Mes
             {
                 WrietMes(data.GetDataVales()[i], Product_Name);
             }
-  
         }
 
-        public override void WrietMes( OneDataVale trayData, string Product_Name)
+        public override void WrietMes(OneDataVale trayData, string Product_Name)
         {
             try
             {
@@ -91,8 +90,8 @@ namespace Vision2.Project.Mes
                 ListText.Add("No.   Test Item   Low Limit   Criterion High Limit Unit    P / F      Value");
                 ListText.Add("1	   焊点检查	   1	  GELE	  1	  BOOL	  " + reset + "   1");
                 ListText.Add("EndTime=" + timeStr);
-                伟世通Mes.WeirtFlg(ProcessControl.ProcessUser.GetThis().ExcelPath, trayData.PanelID, trayData.OK);
-                伟世通Mes.WeirtDATA(ProcessControl.ProcessUser.GetThis().ExcelPath, trayData.PanelID, ListText);
+                伟世通Mes.WeirtFlg(ProcessControl.ProcessUser.Instancen.ExcelPath, trayData.PanelID, trayData.OK);
+                伟世通Mes.WeirtDATA(ProcessControl.ProcessUser.Instancen.ExcelPath, trayData.PanelID, ListText);
                 string st1 = DateTime.Now.ToString("HH:mm");
                 string st2 = "6:30";
                 string st3 = "18:30";
@@ -107,7 +106,7 @@ namespace Vision2.Project.Mes
                 {
                     //DiName = DateTime.Now.Subtract(). ToString("yyyyMMdd");
                 }
-                string path = ProcessControl.ProcessUser.GetThis().ExcelPath + "//" + DiName + "//"
+                string path = ProcessControl.ProcessUser.Instancen.ExcelPath + "//" + DiName + "//"
                + trayData.PanelID + "_" + DateTime.Now.ToString("yyyyMMddHHmmss") + reset;
                 ErosProjcetDLL.Excel.Npoi.WriteF(path, ListText, ".dat");
             }

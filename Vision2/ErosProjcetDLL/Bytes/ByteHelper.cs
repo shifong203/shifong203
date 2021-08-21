@@ -10,12 +10,11 @@ namespace Vision2.ErosProjcetDLL.Bytes
     /// </summary>
     public class ByteHelper
     {
-
-        /// <summary> 
-        /// 将一个object对象序列化，返回一个byte[]         
-        /// </summary> 
-        /// <param name="obj">能序列化的对象</param>         
-        /// <returns></returns> 
+        /// <summary>
+        /// 将一个object对象序列化，返回一个byte[]
+        /// </summary>
+        /// <param name="obj">能序列化的对象</param>
+        /// <returns></returns>
         public static byte[] ObjectToBytes(object obj)
         {
             using (MemoryStream ms = new MemoryStream())
@@ -25,11 +24,11 @@ namespace Vision2.ErosProjcetDLL.Bytes
             }
         }
 
-        /// <summary> 
-        /// 将一个序列化后的byte[]数组还原         
+        /// <summary>
+        /// 将一个序列化后的byte[]数组还原
         /// </summary>
-        /// <param name="Bytes"></param>         
-        /// <returns></returns> 
+        /// <param name="Bytes"></param>
+        /// <returns></returns>
         public static object BytesToObject(byte[] Bytes)
         {
             using (MemoryStream ms = new MemoryStream(Bytes))
@@ -38,6 +37,7 @@ namespace Vision2.ErosProjcetDLL.Bytes
                 return formatter.Deserialize(ms);
             }
         }
+
         /// <summary>
         /// 读文件到byte[]
         /// </summary>
@@ -66,6 +66,7 @@ namespace Vision2.ErosProjcetDLL.Bytes
                     pFileStream.Close();
             }
         }
+
         /// <summary>
         /// 写byte[]到fileName
         /// </summary>
@@ -101,7 +102,6 @@ namespace Vision2.ErosProjcetDLL.Bytes
             return true;
         }
 
-
         /// <summary>
         /// 字符串转指定CodeHex进制字节数组
         /// </summary>
@@ -118,6 +118,7 @@ namespace Vision2.ErosProjcetDLL.Bytes
                 returnBytes[i] = Convert.ToByte(hexString.Substring(i * 2, 2), codeHex);
             return returnBytes;
         }
+
         // 16进制字符串转字节数组   格式为 string sendMessage = "00 01 00 00 00 06 FF 05 00 64 00 00";
         private static byte[] HexStrTobyte(string hexString)
         {
@@ -129,6 +130,7 @@ namespace Vision2.ErosProjcetDLL.Bytes
                 returnBytes[i] = Convert.ToByte(hexString.Substring(i * 2, 2).Trim(), 16);
             return returnBytes;
         }
+
         // 字节数组转16进制字符串
         public static string ByteToHexStr(byte[] bytes, string ch = " ")
         {
@@ -210,7 +212,5 @@ namespace Vision2.ErosProjcetDLL.Bytes
             }
             return true;
         }
-
     }
-
 }

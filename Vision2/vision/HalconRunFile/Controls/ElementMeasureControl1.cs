@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using Vision2.vision.HalconRunFile.RunProgramFile;
+
 namespace Vision2.vision.HalconRunFile.Controls
 {
     public partial class ElementMeasureControl1 : UserControl
@@ -11,8 +12,9 @@ namespace Vision2.vision.HalconRunFile.Controls
             wa = waves;
             halcon = run;
         }
-        Waves wa;
-        HalconRun halcon;
+
+        private Waves wa;
+        private HalconRun halcon;
 
         public void Up()
         {
@@ -22,6 +24,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 listBox1.Items.Add(item.Value.Name);
             }
         }
+
         private void button1_Click(object sender, EventArgs e)
         {
             wa.ShowMesager(halcon);
@@ -44,10 +47,7 @@ namespace Vision2.vision.HalconRunFile.Controls
             }
             catch (Exception)
             {
-
-
             }
-
         }
     }
 }

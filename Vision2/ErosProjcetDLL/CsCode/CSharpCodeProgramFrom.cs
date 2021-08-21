@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 
-
 namespace Vision2.ErosProjcetDLL.CsCode
 {
     public partial class CSharpCodeProgramFrom : Form
@@ -11,21 +10,19 @@ namespace Vision2.ErosProjcetDLL.CsCode
         {
             InitializeComponent();
         }
-        CSharpCode cSharpCode;
+
+        private CSharpCode cSharpCode;
+
         private void toolStripDropDownButton2_Click(object sender, EventArgs e)
         {
-
-
         }
 
         private void toolStripButton1_Click(object sender, EventArgs e)
         {
-
         }
 
         private void 插入测试代码ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
         }
 
         private void toolStripButton2_Click(object sender, EventArgs e)
@@ -42,13 +39,11 @@ namespace Vision2.ErosProjcetDLL.CsCode
                 richTextBox2.AppendText(sd.ToString() + Environment.NewLine);
                 //cSharpCode.DebugCode(richTextBox3.Text, richTextBox3.Text, out string errs);
                 richTextBox2.AppendText(errs + Environment.NewLine);
-
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
-
         }
 
         private void toolStripSplitButton1_ButtonClick(object sender, EventArgs e)
@@ -88,7 +83,6 @@ namespace Vision2.ErosProjcetDLL.CsCode
                         //richTextBox2.AppendText(cSharpCode.GetAssembly().GetModules()[i].Name + Environment.NewLine);
                         //richTextBox2.AppendText(cSharpCode.GetAssembly().GetModules()[i].ScopeName + Environment.NewLine);
                     }
-
                 }
                 else
                 {
@@ -100,20 +94,15 @@ namespace Vision2.ErosProjcetDLL.CsCode
                     treeView1.Nodes.Add(item);
                 }
                 richTextBox2.AppendText(errstring + Environment.NewLine);
-
-
-
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
-
             }
         }
 
         private void 插入实例ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
             try
             {
                 richTextBox1.AppendText(CSharpCode.GenerateCode());
@@ -121,10 +110,7 @@ namespace Vision2.ErosProjcetDLL.CsCode
             }
             catch (Exception)
             {
-
-
             }
-
         }
 
         private void toolStripButton1_Click_1(object sender, EventArgs e)
@@ -160,18 +146,16 @@ namespace Vision2.ErosProjcetDLL.CsCode
             }
             catch (Exception)
             {
-
-
             }
-
         }
-        string errs;
-        List<object> listObj = new List<object>();
+
+        private string errs;
+        private List<object> listObj = new List<object>();
+
         private void button1_Click(object sender, EventArgs e)
         {
             try
             {
-
                 //dynamic sd = cSharpCode.DebugCode("DynamicCodeGenerate.HelloWorld", "OutPut", out string errs);
                 dynamic sd;
                 listObj.Clear();
@@ -192,14 +176,14 @@ namespace Vision2.ErosProjcetDLL.CsCode
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
-
             }
-
         }
-        void AddTextNewLine(string data)
+
+        private void AddTextNewLine(string data)
         {
             richTextBox2.AppendText(data + Environment.NewLine);
         }
+
         private void toolStripButton3_Click(object sender, EventArgs e)
         {
             richTextBox2.Text = "";
@@ -226,9 +210,7 @@ namespace Vision2.ErosProjcetDLL.CsCode
             }
             catch (Exception)
             {
-
             }
-
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -249,9 +231,7 @@ namespace Vision2.ErosProjcetDLL.CsCode
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
-
             }
-
         }
 
         private void button5_Click(object sender, EventArgs e)
@@ -259,9 +239,7 @@ namespace Vision2.ErosProjcetDLL.CsCode
             try
             {
                 cSharpCode.DebugCode(richTextBox3.Text, "New", out errs);
-
             }
-
             catch (Exception)
             {
             }
@@ -279,7 +257,6 @@ namespace Vision2.ErosProjcetDLL.CsCode
 
         private void toolStripSplitButton2_ButtonClick(object sender, EventArgs e)
         {
-
         }
     }
 }

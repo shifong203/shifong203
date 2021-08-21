@@ -51,7 +51,6 @@ namespace Vision2.ErosProjcetDLL.UI.DataGridViewF
                         dataGrid.CurrentCell.Value = combo.Text;
                     }
                 }
-
             }
             void DataGridViewEx_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
             {
@@ -59,10 +58,8 @@ namespace Vision2.ErosProjcetDLL.UI.DataGridViewF
                 Brush bru = Brushes.Black;
                 e.Graphics.DrawString(title, dataGrid.DefaultCellStyle.Font,
                     bru, e.RowBounds.Location.X + dataGrid.RowHeadersWidth / 2 - 4, e.RowBounds.Location.Y + 4);
-
             }
         }
-
 
         /// <summary>
         /// 双缓冲，解决闪烁问题
@@ -75,6 +72,5 @@ namespace Vision2.ErosProjcetDLL.UI.DataGridViewF
             PropertyInfo pi = dgvType.GetProperty("DoubleBuffered", BindingFlags.Instance | BindingFlags.NonPublic);
             pi.SetValue(dgv, flag, null);
         }
-
     }
 }

@@ -22,7 +22,9 @@ namespace Vision2.ErosProjcetDLL.UI.PropertyGrid
                 MessageBox.Show(ex.Message);
             }
         }
-        List<string> listString;
+
+        private List<string> listString;
+
         private void ListStringEditorControl_Load(object sender, EventArgs e)
         {
             foreach (var item in listString)
@@ -34,7 +36,6 @@ namespace Vision2.ErosProjcetDLL.UI.PropertyGrid
 
         private void button2_Click(object sender, EventArgs e)
         {
-
         }
 
         private void ListStringEditorControl_Leave(object sender, EventArgs e)
@@ -48,23 +49,23 @@ namespace Vision2.ErosProjcetDLL.UI.PropertyGrid
                     {
                         list.Add(dataGridView1.Rows[i].Cells[0].Value.ToString());
                     }
-
                 }
                 this.Tag = list;
             }
-
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
         }
     }
+
     public class ListStringEditor : UITypeEditor
     {
         public override UITypeEditorEditStyle GetEditStyle(ITypeDescriptorContext context)
         {
             return UITypeEditorEditStyle.DropDown;
         }
+
         public override object EditValue(ITypeDescriptorContext context, IServiceProvider provider, object value)
         {
             IWindowsFormsEditorService service = provider.GetService(typeof(IWindowsFormsEditorService)) as IWindowsFormsEditorService;

@@ -1,12 +1,8 @@
 ﻿using HalconDotNet;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Vision2.vision.HalconRunFile.RunProgramFile;
-using static Vision2.vision.Vision;
 
 namespace Vision2.vision.HalconRunFile.PCBFile
 {
@@ -35,6 +31,7 @@ namespace Vision2.vision.HalconRunFile.PCBFile
         {
             HalconRun.ClassToJsonSavePath(this, path);
         }
+
         public double Periphery_Circle { get; set; } = 100;
         public double Inside_Circle { get; set; } = 40;
 
@@ -48,9 +45,7 @@ namespace Vision2.vision.HalconRunFile.PCBFile
 
         public double AngleMin { get; set; } = 0;
 
-
         public double AngleMax { get; set; } = 100;
-
 
         public double Angle;
 
@@ -61,12 +56,12 @@ namespace Vision2.vision.HalconRunFile.PCBFile
         public ImageTypeObj ImageTypeObj { get; set; }
         public Select_shape_Min_Max Select_Shape_Min_Max { get; set; } = new Select_shape_Min_Max();
 
-        public override Control GetControl(HalconRun run)
+        public override Control GetControl(IDrawHalcon run)
         {
             return new Cap(this, run);
         }
 
-        public override bool RunHProgram(  OneResultOBj oneResultOBj, out List<OneRObj> oneRObjs,AoiObj aoiObj)
+        public override bool RunHProgram(OneResultOBj oneResultOBj, out List<OneRObj> oneRObjs, AoiObj aoiObj)
         {
             oneRObjs = new List<OneRObj>();
             HObject ErrRoi = new HObject();
@@ -81,10 +76,10 @@ namespace Vision2.vision.HalconRunFile.PCBFile
                 HOperatorSet.AreaCenter(Thresholdt, out HTuple area, out HTuple row, out HTuple column);
                 if (row.Length == 1)
                 {
-                    HOperatorSet.GenCircle(out  ErrRoi, row, column, this.Inside_Circle);
+                    HOperatorSet.GenCircle(out ErrRoi, row, column, this.Inside_Circle);
                     HOperatorSet.ReduceDomain(hObject, ErrRoi, out HObject hObjectt);
                     HOperatorSet.Threshold(hObjectt, out HObject Thresholdt2, Inside_Thread_Min, Inside_Thread_Max);
-                    if (Erosion_Circle!=0)
+                    if (Erosion_Circle != 0)
                     {
                         HOperatorSet.OpeningCircle(Thresholdt2, out Thresholdt2, Erosion_Circle);
                     }
@@ -93,30 +88,30 @@ namespace Vision2.vision.HalconRunFile.PCBFile
                     oneResultOBj.AddObj(hObject2, ColorResult.yellow);
                     HOperatorSet.Union1(hObject2, out hObject2);
                     HOperatorSet.AreaCenter(hObject2, out HTuple area2, out HTuple row2, out HTuple colu2);
-                    if (row2.Length==0) oneResultOBj.AddObj(this.AOIObj, ColorResult.red);
+                    if (row2.Length == 0) oneResultOBj.AddObj(this.AOIObj, ColorResult.red);
                     else
                     {
-                            HOperatorSet.AngleLx(row, column, row2, colu2, out HTuple angle);
-                            Angle = angle.TupleDeg();
-                            if (Angle < 0)
-                            {
-                                Angle = 360 + Angle;
-                            }
-                            Vision.Gen_arrow_contour_xld(out HObject hoarrow, row, column, row2, colu2);
-                            if (Angle<AngleMin || Angle>AngleMax)
-                            {
+                        HOperatorSet.AngleLx(row, column, row2, colu2, out HTuple angle);
+                        Angle = angle.TupleDeg();
+                        if (Angle < 0)
+                        {
+                            Angle = 360 + Angle;
+                        }
+                        Vision.Gen_arrow_contour_xld(out HObject hoarrow, row, column, row2, colu2);
+                        if (Angle < AngleMin || Angle > AngleMax)
+                        {
                             oneResultOBj.AddObj(this.AOIObj, ColorResult.red); NGNumber++;
-                            }
-                            else
-                            {
-                                if (IsRoi) oneResultOBj.AddObj(this.AOIObj, ColorResult.blue);
-                            }
-                              oneResultOBj.AddObj(hoarrow, ColorResult.blue);
-                            if (IsText) oneResultOBj.AddImageMassage(row, column, Angle);
+                        }
+                        else
+                        {
+                            if (IsRoi) oneResultOBj.AddObj(this.AOIObj, ColorResult.blue);
+                        }
+                        oneResultOBj.AddObj(hoarrow, ColorResult.blue);
+                        if (IsText) oneResultOBj.AddImageMassage(row, column, Angle);
                     }
                 }
                 else oneResultOBj.AddObj(this.AOIObj, ColorResult.red); NGNumber++;
-                if (NGNumber!=0)
+                if (NGNumber != 0)
                 {
                     RsetBool = false;
                 }
@@ -129,11 +124,6 @@ namespace Vision2.vision.HalconRunFile.PCBFile
             {
             }
             return RsetBool;
-
         }
-
-    
-
- 
     }
 }

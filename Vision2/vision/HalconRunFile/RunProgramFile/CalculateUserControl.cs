@@ -10,6 +10,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         {
             InitializeComponent();
         }
+
         public CalculateUserControl(Calculate calculate) : this()
         {
             Calculate = calculate;
@@ -20,44 +21,38 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
 
         private void DataBindings_CollectionChanging(object sender, CollectionChangeEventArgs e)
         {
-
         }
 
         private void DataBindings_CollectionChanged(object sender, CollectionChangeEventArgs e)
         {
-
         }
 
+        private bool isChanged = true;
+        private HalconRun Halcon;
+        private Calculate Calculate;
 
-
-        bool isChanged = true;
-        HalconRun Halcon;
-        Calculate Calculate;
-        void SetPragram(int runid)
+        private void SetPragram(int runid)
         {
             if (isChanged)
             {
                 return;
             }
             Halcon.HobjClear();
-            Calculate.Run( Halcon.GetOneImageR(), new AoiObj() { DebugID=runid});
+            Calculate.Run(Halcon.GetOneImageR(), new AoiObj() { DebugID = runid });
             //Halcon.ShowImage();
             Halcon.ShowObj();
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-
         }
 
         private void numericUpDown3_ValueChanged(object sender, EventArgs e)
         {
-
         }
 
         private void CalculateUserControl_Load(object sender, EventArgs e)
@@ -72,7 +67,6 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
 
         private void numericUpDown3_Validated(object sender, EventArgs e)
         {
-
         }
     }
 }

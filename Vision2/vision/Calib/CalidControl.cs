@@ -12,11 +12,11 @@ namespace Vision2.vision.Calib
         private Coordinate _Coordinate;
 
         private int d;
+
         public CalidControl()
         {
             InitializeComponent();
             ThisForm = this;
-
 
             //foreach (var item in Vision.Instance.DicCoordinate)
             //{
@@ -56,7 +56,6 @@ namespace Vision2.vision.Calib
             }
         }
 
-
         public static CalidControl ThisForm = new CalidControl();
 
         /// <summary>
@@ -85,7 +84,6 @@ namespace Vision2.vision.Calib
             this.Invoke(methodInvoker);
             void ThreadFilesVison()
             {
-
                 if (int.TryParse(rowName, out d))
                 {
                     if (dataGridView1.Rows.Count <= d)
@@ -107,7 +105,6 @@ namespace Vision2.vision.Calib
                     dataGridView1.Rows[d].Cells[3].Value = value3;
                     dataGridView1.Rows[d].Cells[4].Value = value4;
                 }
-
             }
         }
 
@@ -140,8 +137,6 @@ namespace Vision2.vision.Calib
 
             _Coordinate.Mat2dPar();
         }
-
-
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -202,13 +197,11 @@ namespace Vision2.vision.Calib
             catch (Exception ex)
             {
                 MessageBox.Show("计算失败：" + ex.Message);
-
             }
         }
 
         private void CalidControl_Load(object sender, EventArgs e)
         {
-
             dataGridView1.Rows.Add(9);
 
             foreach (var item in Vision.Instance.DicCoordinate)
@@ -219,7 +212,6 @@ namespace Vision2.vision.Calib
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
-
         }
 
         private void splitContainer1_Panel1_Click(object sender, EventArgs e)
@@ -231,12 +223,10 @@ namespace Vision2.vision.Calib
             catch (Exception)
             {
             }
-
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
-
         }
     }
 }

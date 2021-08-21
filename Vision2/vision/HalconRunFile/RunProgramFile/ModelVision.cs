@@ -12,51 +12,22 @@ using Vision2.ErosProjcetDLL.Project;
 using Vision2.ErosProjcetDLL.UI.PropertyGrid;
 using Vision2.vision.HalconRunFile.Controls;
 using static Vision2.vision.HalconRunFile.RunProgramFile.Color_Detection;
-using static Vision2.vision.Vision;
 
 namespace Vision2.vision.HalconRunFile.RunProgramFile
 {
     [Serializable]
     public class ModelVision : RunProgram
     {
-        ///// <summary>
-        /////
-        ///// </summary>
-        ///// <param name="tabControl"></param>
-        ///// <param name="data"></param>
-        //public new void UpProperty(PropertyForm control, object data)
-        //{
-        //    base.UpProperty(control, data);
-        //    HalconRun halconRun = data as HalconRun;
-        //    TreeNode Current = data as TreeNode;
-        //    if (Current != null)
-        //    {
-        //        TreeNode CurrentNodeP = Current.Parent;
-        //        if (CurrentNodeP != null)
-        //        {
-        //        stru:
-        //            if (CurrentNodeP != null)
-        //            {
-        //                halconRun = CurrentNodeP.Tag as HalconRun;
-        //                if (halconRun == null)
-        //                {
-        //                    CurrentNodeP = CurrentNodeP.Parent;
-        //                    goto stru;
-        //                }
-        //            }
-        //        }
-        //    }
-        //    //TabPage tab = control.Controls.Find("tabPage1", true)[0] as TabPage;
-        //}
-
         public override string ShowHelpText()
         {
             return "2.2_创建视觉模板";
         }
-        public override Control GetControl(HalconRun halcon )
+
+        public override Control GetControl(IDrawHalcon halcon)
         {
-            return new ModelControl(this) { Dock = DockStyle.Fill };
+            return new ModelControl(this, halcon) { Dock = DockStyle.Fill };
         }
+
         public enum CModeRowCol
         {
             Dis = 0,
@@ -91,6 +62,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             /// 跟随模板
             /// </summary>
             private HObject ModeXld = new HObject();
+
             public HObject GetModeXld(HObject hObject = null)
             {
                 if (hObject != null)
@@ -113,11 +85,11 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             /// 角度
             /// </summary>
             public HTuple Angle = new HTuple();
+
             /// <summary>
             /// 角度
             /// </summary>
             public HTuple Phi = new HTuple();
-
 
             /// <summary>
             /// 分数
@@ -133,6 +105,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             /// 仿射变换
             /// </summary>
             public List<HTuple> HomMat;
+
             ///// <summary>
             ///// 仿射变换
             ///// </summary>
@@ -183,6 +156,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             /// 转换坐标
             /// </summary>
             public HTuple X = new HTuple();
+
             public HTuple Y = new HTuple();
             public HTuple U = new HTuple();
             public HTuple Z = new HTuple();
@@ -214,14 +188,13 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             }
             catch (Exception)
             {
-
             }
-
         }
+
         public HObject Create_ModelRegr { get; set; }
+
         public override void Dispose()
         {
-
             OrignXLD.Dispose();
             ROIModeXLD.Dispose();
             try
@@ -230,23 +203,23 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             }
             catch (Exception)
             {
-
             }
             base.Dispose();
-
         }
+
         private ModelVision modelVision;
 
         [Description("3D坐标彷射参数"), Category("坐标系统"), DisplayName("标定模式")]
         public Calib.AutoCalibPoint.CalibMode calibMode { get; set; }
 
-
         [Description("3D坐标彷射参数"), Category("坐标系统"), DisplayName("坐标系统"),
        TypeConverter(typeof(ErosConverter)), ErosConverter.ThisDropDownAttribute("ListCoordinate3DName")]
         public string Coordinate3DName { get; set; } = "";
+
         [DescriptionAttribute("机器人名称。"), Category("触发器"), DisplayName("机器人名称")]
         [Editor(typeof(LinkNameAddreControl.Editor), typeof(UITypeEditor))]
         public string ReadRunIDName { get; set; } = string.Empty;
+
         /// <summary>
         /// 坐标集合名称
         /// </summary>
@@ -257,6 +230,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 return Vision.Instance.DicCalib3D.Keys.ToList();
             }
         }
+
         [DescriptionAttribute("模板彷射模式。"), Category("结果显示"), DisplayName("模板偏移方式")]
         public CModeRowCol CMode
         {
@@ -341,6 +315,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
 
                     case CModeRowCol.RowColAngle:
                         break;
+
                     case CModeRowCol.Cilcre:
 
                         foreach (var item in this.Dic_Measure.Keys_Measure)
@@ -368,10 +343,9 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         [DescriptionAttribute("模板彷射模式。图片仿射模式、模板区域仿射模式，和绘制仿射模式"), Category("结果显示"), DisplayName("原点Col")]
         [TypeConverter(typeof(ErosConverter)), ErosConverter.ThisDropDownAttribute("", true, "图片", "模板区域", "绘制区域")]
         public string Mode { get; set; } = "";
+
         [DescriptionAttribute("是否显示模板绘制中心点。"), Category("结果显示"), DisplayName("显示模板绘制中心点")]
         public bool ISPoint { get; set; } = true;
-
-
 
         [DescriptionAttribute("显示模板分数。"), Category("结果显示"), DisplayName("显示模板分数")]
         public bool IsSeae { get; set; } = true;
@@ -384,8 +358,10 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
 
         [DescriptionAttribute("中心大小。"), Category("结果显示"), DisplayName("中心大小")]
         public int PointSize { get; set; } = 60;
+
         public bool IsDip { get; set; }
         public List<DIP> DIPs { get; set; } = new List<DIP>();
+
         public class DIP
         {
             public string Name { get; set; } = "";
@@ -394,14 +370,13 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             public double Angle { get; set; }
             public double DistanceMax { get; set; } = 100;
             public double AngleMax { get; set; } = 50;
-            
         }
+
         public Text_Model.Text_Mo HTextMod = new Text_Model.Text_Mo();
 
         public Variation_Model Variation_Model = new Variation_Model();
 
         public Dictionary<string, Color_classify> ColorDic { get; set; } = new Dictionary<string, Color_classify>();
-
 
         [DescriptionAttribute("同步模板中心Col。"), Category("原点处理"), DisplayName("原点Col")]
         public double SetOriginCol { get; set; }
@@ -426,7 +401,8 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
 
         [DescriptionAttribute("模板中心偏移U。"), Category("原点处理"), DisplayName("原点叠加偏移U")]
         public double OriginUAdd { get; set; }
-        HTuple ID = new HTuple();
+
+        private HTuple ID = new HTuple();
 
         [DescriptionAttribute("最小得分。"), Category("定位参数"), DisplayName("最小匹配分数")]
         public double ScoreD { get; set; } = 0.6;
@@ -483,19 +459,22 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
 
         [DescriptionAttribute(""), Category("2D"), DisplayName("参考点Y")]
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public double Ys { get; set; }
+
         [DescriptionAttribute(""), Category("2D"), DisplayName("参考点X")]
         /// <summary>
         /// 参考点X
         /// </summary>
         public double Xs { get; set; }
+
         [DescriptionAttribute(""), Category("2D"), DisplayName("使用参考点")]
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public bool IsCot { get; set; }
+
         [DescriptionAttribute("越大越快，定位效果也相对低。最大1"), Category("定位参数"), DisplayName("查找速度")]
         /// <summary>
         /// 贪婪速度，越大越慢效果越好,小块效果降低
@@ -508,13 +487,12 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         /// </summary>
         public double MaxOverlapD { get; set; } = 0.5;
 
-  
-
         [DescriptionAttribute("最小1"), Category("定位参数"), DisplayName("查找数量上限")]
         /// <summary>
         /// 数量上线
         /// </summary>
         public int NumberI { get; set; } = 1;
+
         /// <summary>
         /// 目标数量
         /// </summary>
@@ -522,12 +500,14 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
 
         [DescriptionAttribute("模板加入偏移的中心X位置"), Category("结果参数"), DisplayName("中心点X")]
         public HTuple X { get; set; }
+
         [DescriptionAttribute("模板加入偏移的中心Y位置"), Category("结果参数"), DisplayName("中心点Y")]
         public HTuple Y { get; set; }
 
         [DescriptionAttribute("将X偏移写入的变量名称"), Category("触发器"), DisplayName("结果X偏移位置名称")]
         [Editor(typeof(ErosSocket.ErosConLink.LinkNameAddreControl.Editor), typeof(UITypeEditor))]
         public string MXName { get; set; } = string.Empty;
+
         [DescriptionAttribute("将Y偏移写入的变量名称。"), Category("触发器"), DisplayName("结果Y偏移位置名称")]
         [Editor(typeof(ErosSocket.ErosConLink.LinkNameAddreControl.Editor), typeof(UITypeEditor))]
         public string MYName { get; set; } = string.Empty;
@@ -535,6 +515,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         [DescriptionAttribute("将U偏移写入的变量名称。"), Category("触发器"), DisplayName("结果U偏移位置名称")]
         [Editor(typeof(ErosSocket.ErosConLink.LinkNameAddreControl.Editor), typeof(UITypeEditor))]
         public string MUName { get; set; } = string.Empty;
+
         [DescriptionAttribute("将Z偏移写入的变量名称。"), Category("触发器"), DisplayName("结果Z偏移位置名称")]
         [Editor(typeof(ErosSocket.ErosConLink.LinkNameAddreControl.Editor), typeof(UITypeEditor))]
         public string MZName { get; set; } = string.Empty;
@@ -559,7 +540,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
 
         public HTuple ArrowRow1 = new HTuple();
 
-        public HTuple ArrowCol1= new HTuple();
+        public HTuple ArrowCol1 = new HTuple();
         public HTuple ArrowRow2 = new HTuple();
 
         public HTuple ArrowCol2 = new HTuple();
@@ -570,7 +551,9 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         /// 亚像素精度
         /// </summary>
         public HTuple SubPixel = "least_squares_high";// "least_squares_high";ignore_color_polarity
+
         public RModelHomMat MRModelHomMat;
+
         /// <summary>
         /// 读取模板
         /// </summary>
@@ -582,8 +565,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             Directory.CreateDirectory(Path.GetDirectoryName(path));
             try
             {
-
-                if (File.Exists(path  + this.SuffixName))
+                if (File.Exists(path + this.SuffixName))
                 {
                     modelVision = JsonConvert.DeserializeObject<ModelVision>(File.ReadAllText(path + this.SuffixName));  //以字符串形式读取文件
                 }
@@ -645,7 +627,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         public override RunProgram UpSatrt<T>(string path)
         {
             modelVision = RradModel(path);
-            modelVision. Variation_Model.ReadModel(path  );
+            modelVision.Variation_Model.ReadModel(path);
             return modelVision;
         }
 
@@ -653,8 +635,9 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         {
             base.SaveThis(path);
             SaveModel(path);
-            Variation_Model.Write_Variation_Model(path+ "\\" + this.Name+ "\\" + this.Name);
+            Variation_Model.Write_Variation_Model(path + "\\" + this.Name + "\\" + this.Name);
         }
+
         public void DrawROI(HalconRun halcon)
         {
             try
@@ -725,7 +708,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 {
                     HOperatorSet.ClearShapeModel(this.ID);
                 }
-                catch  {    }
+                catch { }
                 //SubPixel = "ignore_color_polarity";
                 HOperatorSet.CreateScaledShapeModel(ImageReduced, "auto", AngleStart.TupleRad(), AngleExtent.TupleRad(), AngleStep,
                     this.MinScaelD, this.MaxScaelD, "auto", "auto",
@@ -770,16 +753,16 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 HOperatorSet.Union1(hObject1, out hObject1);
 
                 HOperatorSet.SmallestRectangle2(DrawObj, out HTuple row1, out HTuple colu1, out HTuple phi1, out HTuple length1, out HTuple length2);
-                HOperatorSet.SmallestRectangle2(hObject1, out row1, out  colu1, out  arrowPhi, out  length1, out  length2);
-   
+                HOperatorSet.SmallestRectangle2(hObject1, out row1, out colu1, out arrowPhi, out length1, out length2);
+
                 HOperatorSet.VectorAngleToRigid(0, 0, 0, this.OriginY, this.OriginX, this.OriginU, out HomMat2D_T);
                 HOperatorSet.VectorAngleToRigid(0, 0, 0, this.OriginY, this.OriginX, arrowPhi, out HTuple homat);
-                HOperatorSet.AffineTransPoint2d(homat, 0, -length1, out  ArrowRow1, out  ArrowCol1);
+                HOperatorSet.AffineTransPoint2d(homat, 0, -length1, out ArrowRow1, out ArrowCol1);
                 HOperatorSet.AffineTransPoint2d(homat, 0, length1, out ArrowRow2, out ArrowCol2);
                 HOperatorSet.GenRegionLine(out HObject hObject, ArrowRow1, ArrowCol1, ArrowRow2, ArrowCol2);
-                halcon.AddObj(hObject,ColorResult.blue);
+                halcon.AddObj(hObject, ColorResult.blue);
                 //Vision.Gen_arrow_contour_xld(out arrow, 0, -length1, 0, length1);
-     
+
                 HOperatorSet.AffineTransContourXld(this.OrignXLD, out objDisp, HomMat2D_T);
                 this.XLD = objDisp.ConcatObj(Cross);
                 this.ROIModeXLD = this.XLD.Clone();
@@ -877,7 +860,6 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 else
                 {
                     MessageBox.Show("创建成功，单未搜索到模板");
-
                 }
                 //获得中心点并显示
                 //halcon.POnShowObj(halcon, this.Name);
@@ -889,6 +871,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 //Vision.Disp_message(halcon.hWindowHalcon(), "创建模板过程失败!",  20, 20, true);
             }
         }
+
         public static Double ToAngle(double value)
         {
             if (value < 0)
@@ -901,6 +884,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             }
             return value;
         }
+
         public void SetDip(HTuple AoiRow, HTuple AoiCol, HTuple angle, out HObject xld, out HTuple row, out HTuple col, out HTuple phi, out HTuple idT)
         {
             xld = new HObject();
@@ -920,10 +904,10 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 HTuple hTuple3cs = new HTuple();
                 for (int i = 0; i < AoiRow.Length; i++)
                 {
-                    HOperatorSet.VectorAngleToRigid(OriginY, OriginX, 0, AoiRow[i], AoiCol[i],  angle.TupleRad()[i], out HTuple hTuple);
+                    HOperatorSet.VectorAngleToRigid(OriginY, OriginX, 0, AoiRow[i], AoiCol[i], angle.TupleRad()[i], out HTuple hTuple);
                     HOperatorSet.AffineTransPixel(hTuple, ArrowRow1, ArrowCol1, out HTuple hTuple2R, out HTuple hTuple2c);
                     HOperatorSet.AffineTransPixel(hTuple, ArrowRow2, ArrowCol2, out HTuple hTuple3R, out HTuple hTuple3c);
-        
+
                     hTuple2Rs.Append(hTuple2R);
                     hTuple2cs.Append(hTuple2c);
                     hTuple3Rs.Append(hTuple3R);
@@ -952,17 +936,17 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                             HOperatorSet.GetRegionIndex(hObject, AoiRow.TupleSelect(id).TupleInt(), AoiCol.TupleSelect(id).TupleInt(), out indet);
                             if (indet.Length != 0)
                             {
-                                HOperatorSet.VectorAngleToRigid(OriginY, OriginX, 0, DIPs[i].Row, DIPs[i].Col,new HTuple( DIPs[i].Angle).TupleRad(), out HTuple hTuple);
+                                HOperatorSet.VectorAngleToRigid(OriginY, OriginX, 0, DIPs[i].Row, DIPs[i].Col, new HTuple(DIPs[i].Angle).TupleRad(), out HTuple hTuple);
                                 HOperatorSet.AffineTransPixel(hTuple, ArrowRow1, ArrowCol1, out HTuple hTuple2R, out HTuple hTuple2c);
                                 HOperatorSet.AffineTransPixel(hTuple, ArrowRow2, ArrowCol2, out HTuple hTuple3R, out HTuple hTuple3c);
                                 HOperatorSet.AngleLl(hTuple2Rs[id], hTuple2cs[id], hTuple3Rs[id], hTuple3cs[id], hTuple2R, hTuple2c, hTuple3R, hTuple3c, out HTuple angleT);
                                 angleT = angleT.TupleDeg();
                                 Vision.Gen_arrow_contour_xld(out HObject HOARROW, hTuple2R, hTuple2c, hTuple3R, hTuple3c);
-    
-                                if (angleT.TupleAbs()> DIPs[i].AngleMax)
+
+                                if (angleT.TupleAbs() > DIPs[i].AngleMax)
                                 {
                                     phiMdt = angleT;
-                                    this.GetPThis().AddObj(HOARROW,ColorResult.red);
+                                    this.GetPThis().AddObj(HOARROW, ColorResult.red);
                                     Rste = false;
                                 }
                                 else
@@ -976,7 +960,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                                 AoiRow = AoiRow.TupleRemove(id);
                                 AoiCol = AoiCol.TupleRemove(id);
                                 angle = angle.TupleRemove(id);
-                            
+
                                 break;
                             }
                         }
@@ -1008,12 +992,13 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             {
             }
         }
+
         /// <summary>
         /// 执行模板查找，并将图片放射变换
         /// </summary>
         /// <param name="halcon"></param>
         /// <returns></returns>
-        public bool FindShapeModel(OneResultOBj halcon, string mode,AoiObj aoiObj)
+        public bool FindShapeModel(OneResultOBj halcon, string mode, AoiObj aoiObj)
         {
             MRModelHomMat = new RModelHomMat();
             HTuple message = new HTuple();
@@ -1050,7 +1035,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 }
                 if (MRModelHomMat.Row.Length == 0)
                 {
-                    if (!halcon.GetHalcon() .GDicModelR().ContainsKey(this.Name))
+                    if (!halcon.GetHalcon().GDicModelR().ContainsKey(this.Name))
                     {
                         halcon.GetHalcon().GDicModelR().Add(this.Name, MRModelHomMat);
                     }
@@ -1090,13 +1075,12 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         //AddGreen(hObject);
                         hObject.Dispose();
                     }
-    
                 }
                 else if (mode == "图片")
                 {
                     HOperatorSet.VectorAngleToRigid(MRModelHomMat.Row, MRModelHomMat.Col, MRModelHomMat.Angle, this.OriginY, this.OriginX, 0, out this.m_HomMat2D);
                     HOperatorSet.AffineTransImage(halcon.Image, out HObject images, this.m_HomMat2D, "bicubic", "false");
-                    halcon.Image=images;
+                    halcon.Image = images;
                     halcon.GetHalcon().ImageHdt(images);
                     AddGreen(ROIModeXLD.Clone());
                 }//图片彷设
@@ -1150,7 +1134,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 }
                 else if (CoordinateMeassage == Coordinate.Coordinate_Type.PixelRC)
                 {
-                    halcon.AddImageMassage(MRModelHomMat.Row, MRModelHomMat.Col, MRModelHomMat.Scale + "row:"+MRModelHomMat.Row + "col:" + MRModelHomMat.Col);
+                    halcon.AddImageMassage(MRModelHomMat.Row, MRModelHomMat.Col, MRModelHomMat.Scale + "row:" + MRModelHomMat.Row + "col:" + MRModelHomMat.Col);
                 }
                 else if (CoordinateMeassage == Coordinate.Coordinate_Type.XYU2D)
                 {
@@ -1169,7 +1153,6 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 {
                     if (Vision.Instance.DicCalib3D.ContainsKey(this.Coordinate3DName))
                     {
-                       
                         HTuple pose = halcon.GetHalcon().GetRobotBaesPose();
                         if (pose == null)
                         {
@@ -1224,9 +1207,9 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 }
                 if (IsAngle)
                 {
-                    halcon.AddImageMassage(MRModelHomMat.Row+40, MRModelHomMat.Col, MRModelHomMat.Phi);
+                    halcon.AddImageMassage(MRModelHomMat.Row + 40, MRModelHomMat.Col, MRModelHomMat.Phi);
                 }
-                if (data.Length!=0)
+                if (data.Length != 0)
                 {
                     halcon.AddMeassge(this.Name + data);
                 }
@@ -1244,7 +1227,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         /// </summary>
         /// <param name="halcon">处理集合</param>
         /// <returns></returns>
-        public override bool RunHProgram( OneResultOBj oneResultOBj, out List<OneRObj> oneRObjs, AoiObj aoiObj)
+        public override bool RunHProgram(OneResultOBj oneResultOBj, out List<OneRObj> oneRObjs, AoiObj aoiObj)
         {
             oneRObjs = new List<OneRObj>();
             base.ClerItem();
@@ -1262,7 +1245,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             Watch.Stop();
             if (IsDip)
             {
-                SetDip(MRModelHomMat.Row, MRModelHomMat.Col, MRModelHomMat.Phi, out HObject xldt,out HTuple row,out HTuple col,out HTuple phi,out HTuple idt);
+                SetDip(MRModelHomMat.Row, MRModelHomMat.Col, MRModelHomMat.Phi, out HObject xldt, out HTuple row, out HTuple col, out HTuple phi, out HTuple idt);
                 if (xldt.CountObj() > 0)
                 {
                     NGNumber++;
@@ -1272,12 +1255,12 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         HTuple.TupleGenConst(row.Length, Vision.Instance.DilationRectangle1),
                         HTuple.TupleGenConst(row.Length, Vision.Instance.DilationRectangle1));
 
-                    oneResultOBj.AddImageMassage(row, col, phi.TupleString("0.02f") +":" + DIPs[idt].Name,ColorResult.red);
-                    oneResultOBj. AddNGOBJ( this.Name, "偏移", hObject1, nGRoi);
+                    oneResultOBj.AddImageMassage(row, col, phi.TupleString("0.02f") + ":" + DIPs[idt].Name, ColorResult.red);
+                    oneResultOBj.AddNGOBJ(this.Name, "偏移", hObject1, nGRoi);
                     dst = false;
                 }
             }
-            else if(!dst)
+            else if (!dst)
             {
                 if (nGRoi.IsInitialized())
                 {
@@ -1287,11 +1270,11 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         NGNumber++;
                         HOperatorSet.GenRectangle2(out HObject hObject1, row, column, HTuple.TupleGenConst(row.Length, 0),
                         HTuple.TupleGenConst(row.Length, Vision.Instance.DilationRectangle1), HTuple.TupleGenConst(row.Length, Vision.Instance.DilationRectangle1));
-                        oneResultOBj .AddNGOBJ(this.Name, "偏移", hObject1, nGRoi);
+                        oneResultOBj.AddNGOBJ(this.Name, "偏移", hObject1, nGRoi);
                     }
                 }
             }
-            if (!Variation_Model.RunPa( oneResultOBj, this, MRModelHomMat.HomMat))
+            if (!Variation_Model.RunPa(oneResultOBj, this, MRModelHomMat.HomMat))
             {
                 NGNumber++;
             }
@@ -1311,9 +1294,9 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                             {
                                 for (int i = 0; i < MRModelHomMat.NumberT; i++)
                                 {
-                                   HOperatorSet.AffineTransRegion(item.Value.DrawObj, out HObject hObjectROI, MRModelHomMat.HomMat[i], "nearest_neighbor");
+                                    HOperatorSet.AffineTransRegion(item.Value.DrawObj, out HObject hObjectROI, MRModelHomMat.HomMat[i], "nearest_neighbor");
                                     aoiObj.SelseAoi = hObjectROI;
-                                    if (!item.Value.Classify( oneResultOBj, aoiObj, this, out HObject hObject))
+                                    if (!item.Value.Classify(oneResultOBj, aoiObj, this, out HObject hObject))
                                     {
                                         //oneResultOBj.ADDRed(this.Name, item.Value.Name, hObjectROI, hObject);
                                         NGNumber++;
@@ -1329,10 +1312,10 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     else
                     {
                         aoiObj.SelseAoi = item.Value.DrawObj;
-                        if (!item.Value.Classify( oneResultOBj, aoiObj, this, out HObject hObject))
+                        if (!item.Value.Classify(oneResultOBj, aoiObj, this, out HObject hObject))
                         {
-                        //    oneResultOBj.ADDRed(this.Name, item.Value.Name, item.Value.DrawObj.Clone(), hObject);
-                           NGNumber++;
+                            //    oneResultOBj.ADDRed(this.Name, item.Value.Name, item.Value.DrawObj.Clone(), hObject);
+                            NGNumber++;
                         }
                         if (this.IsDisObj)
                         {
@@ -1344,7 +1327,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 {
                 }
             }
-            if (oneResultOBj.GetHalcon()!=null)
+            if (oneResultOBj.GetHalcon() != null)
             {
                 oneResultOBj.GetHalcon().MRModelHomMat = MRModelHomMat;
                 if (!oneResultOBj.GetHalcon().GDicModelR().ContainsKey(this.Name))
@@ -1410,8 +1393,6 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 }
                 oneResultOBj.GetHalcon().SendMesage(data.TrimEnd(','));
             }
-    
-         
             if (dst)
             {
                 StaticCon.SetLinkAddressValue(this.MXName, "Single", MRModelHomMat.X.TupleString("0.3f"));
@@ -1422,18 +1403,17 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             {
                 NGNumber++;
             }
-            if (NGNumber!=0)
+            if (NGNumber != 0)
             {
-         
                 //oneResultOBj.ADDRed(this.Name, AOIObj, AOIObj);
                 return false;
             }
+            oneResultOBj.AddOKOBj(new OneCompOBJs.OneComponent() { ComponentID = this.Name });
             return true;
         }
 
         public void GetPoint(double row, double col, ModelVision.RModelHomMat rModelHomMat, out double rowt, out double colT)
         {
-
             rowt = 0;
             colT = 0;
             if (Mode == "绘制区域")
@@ -1445,7 +1425,6 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             {
                 HOperatorSet.VectorAngleToRigid(rModelHomMat.Row[0], rModelHomMat.Col[0], rModelHomMat.Angle[0],
                0, 0, 0, out this.m_HomMat2D);
-
             }
             HOperatorSet.HomMat2dScale(m_HomMat2D, rModelHomMat.Scale[0],
            rModelHomMat.Scale[0], rModelHomMat.Row[0], rModelHomMat.Col[0], out this.m_HomMat2D);
@@ -1453,15 +1432,16 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             rowt = hTupleRow.D;
             colT = hTupleCol.D;
         }
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="hamHam2d"></param>
         /// <param name="halcon"></param>
         /// <param name="OutCentreRow"></param>
         /// <param name="OutCentreCol"></param>
         /// <returns></returns>
-        bool Angle(HTuple hamHam2d, HalconRun halcon, out HTuple OutCentreRow, out HTuple OutCentreCol, out HTuple phi)
+        private bool Angle(HTuple hamHam2d, HalconRun halcon, out HTuple OutCentreRow, out HTuple OutCentreCol, out HTuple phi)
         {
             phi = OutCentreCol = OutCentreRow = new HTuple();
             if (this.Dic_Measure.Keys_Measure.ContainsKey("angle1") && this.Dic_Measure.Keys_Measure.ContainsKey("angle2"))
@@ -1479,30 +1459,26 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                        this.Dic_Measure["angle2"].OutCentreRow, this.Dic_Measure["angle2"].OutCentreCol,
                        out HTuple rowcenter, out HTuple colcenter, out HTuple Length, out phi);
 
-
                     phi = phi.TupleDeg();
                     return true;
                 }
             }
             else if (this.Dic_Measure.Keys_Measure.ContainsKey("angle"))
             {
-
                 nGRoi = nGRoi.ConcatObj(this.Dic_Measure["angle"].MeasureObj(halcon, hamHam2d, halcon.GetOneImageR())._HObject);
 
                 if (this.Dic_Measure["angle"].IsExist("平行线夹角"))
                 {
-
                     if (this.Dic_Measure["angle"].OutPhi != 0)
                     {
-
                         phi = this.Dic_Measure["angle"]["平行线夹角"];
                         return true;
                     }
                 }
-
             }
             return false;
         }
+
         /// <summary>
         /// 测量圆形纠正
         /// </summary>
@@ -1511,7 +1487,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         /// <param name="row"></param>
         /// <param name="col"></param>
         /// <returns></returns>
-        bool CilcreM(HalconRun halcon, HTuple homMat, out HTuple row, out HTuple col)
+        private bool CilcreM(HalconRun halcon, HTuple homMat, out HTuple row, out HTuple col)
         {
             row = new HTuple();
             col = new HTuple();
@@ -1523,7 +1499,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             foreach (var item in detee)
             {
                 ds++;
-                halcon.AddObj(item.Value.MeasureObj(halcon, homMat,halcon.GetOneImageR())._HObject);
+                halcon.AddObj(item.Value.MeasureObj(halcon, homMat, halcon.GetOneImageR())._HObject);
                 if (item.Value.OutCentreRow != 0 && item.Value.OutCentreCol != 0)
                 {
                     row.Append(item.Value.OutCentreRow);

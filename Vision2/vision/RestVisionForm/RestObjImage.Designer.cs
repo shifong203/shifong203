@@ -489,6 +489,7 @@
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.RestObjImage_FormClosing);
             this.Load += new System.EventHandler(this.RestObjImage_Load);
+            this.VisibleChanged += new System.EventHandler(this.RestObjImage_VisibleChanged);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.RestObjImage_KeyDown);
             this.Resize += new System.EventHandler(this.RestObjImage_Resize);
             this.groupBox1.ResumeLayout(false);

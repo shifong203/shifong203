@@ -7,7 +7,6 @@ namespace Vision2.ErosProjcetDLL.Project
     {
         public NewPragram()
         {
-
             InitializeComponent();
             this.listBox2.Items.Clear();
             dss = ProjectINI.In.GetListRun();
@@ -21,18 +20,16 @@ namespace Vision2.ErosProjcetDLL.Project
             {
                 this.listBox2.SelectedIndex = 0;
             }
-
         }
-        Dictionary<string, ProjectObj> dss;
+
+        private Dictionary<string, ProjectObj> dss;
         public string NewName = "";
 
         private void button1_Click(object sender, System.EventArgs e)
         {
-
             NewName = textBox1.Text;
 
             this.Close();
-
         }
 
         private void listBox2_SelectedIndexChanged(object sender, System.EventArgs e)
@@ -63,8 +60,6 @@ namespace Vision2.ErosProjcetDLL.Project
                     {
                         //this.richTextBox1.Text = project.ProjectClass[listBox1.SelectedItem.ToString()].;
                     }
-
-
                 }
             }
         }

@@ -1,35 +1,32 @@
-﻿using HalconDotNet;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Vision2.vision.RestVisionForm
 {
     [Serializable]
     public class PrestImageData
     {
-
         public NummberSPC nummber { get; set; } = new NummberSPC();
+
         /// <summary>
         /// NG区域
         /// </summary>
         public Dictionary<string, XldOjb> Key1Xld { get; set; } = new Dictionary<string, XldOjb>();
+
         /// <summary>
         /// 线体名称
         /// </summary>
         public string LinkName { get; set; }
 
-
         /// <summary>
         ///产品名称
         /// </summary>
         public string PName { get; set; }
+
         /// <summary>
         /// 产品SN
         /// </summary>
@@ -41,18 +38,20 @@ namespace Vision2.vision.RestVisionForm
         public int TrayID { get; set; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public int TrayX { get; set; }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public int TrayY { get; set; }
+
         /// <summary>
         /// 结果
         /// </summary>
         public bool OK { get; set; }
+
         /// <summary>
         /// 完成
         /// </summary>
@@ -68,7 +67,6 @@ namespace Vision2.vision.RestVisionForm
         ///// 产品图
         ///// </summary>
         //public HObject Image { get; set; }
-
     }
 
     [Serializable]
@@ -77,14 +75,17 @@ namespace Vision2.vision.RestVisionForm
      /// 总数
      /// </summary>
         public int Total = 0;
+
         /// <summary>
         /// NG
         /// </summary>
         public int NG_num = 0;
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public int Rest_num = 0;
+
         public string GetSPC()
         {
             try
@@ -148,7 +149,6 @@ namespace Vision2.vision.RestVisionForm
             catch (Exception ex)
             {
                 System.Windows.Forms.MessageBox.Show("读取文件:" + path + " 失败;" + ex.Message);
-
             }
             return false;
         }
@@ -179,11 +179,11 @@ namespace Vision2.vision.RestVisionForm
             return JsonConvert.SerializeObject(data);
         }
 
-        /// <summary> 
-        /// 将一个object对象序列化，返回一个byte[]         
-        /// </summary> 
-        /// <param name="obj">能序列化的对象</param>         
-        /// <returns></returns> 
+        /// <summary>
+        /// 将一个object对象序列化，返回一个byte[]
+        /// </summary>
+        /// <param name="obj">能序列化的对象</param>
+        /// <returns></returns>
         public static byte[] ObjectToBytes(object obj)
         {
             using (MemoryStream ms = new MemoryStream())
@@ -192,11 +192,11 @@ namespace Vision2.vision.RestVisionForm
             }
         }
 
-        /// <summary> 
-        /// 将一个序列化后的byte[]数组还原         
+        /// <summary>
+        /// 将一个序列化后的byte[]数组还原
         /// </summary>
-        /// <param name="Bytes"></param>         
-        /// <returns></returns> 
+        /// <param name="Bytes"></param>
+        /// <returns></returns>
         public static object BytesToObject(byte[] Bytes)
         {
             using (MemoryStream ms = new MemoryStream(Bytes))

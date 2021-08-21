@@ -12,6 +12,7 @@ namespace Vision2.ErosProjcetDLL.Code
         {
             InitializeComponent();
         }
+
         public UserCode(string path) : this()
         {
             try
@@ -23,27 +24,23 @@ namespace Vision2.ErosProjcetDLL.Code
                     {
                         richTextBox1.Text += Ecode.Lines[i];
                     }
-
                 }
                 Ecode.Name = Path.GetFileNameWithoutExtension(path);
-
-
-
             }
             catch (Exception)
             {
-
-
             }
         }
+
         private void panel1_MouseClick(object sender, MouseEventArgs e)
         {
-
         }
+
         public Code Ecode = new Code();
 
-        ContextMenuStrip contextMenuStrip;
-        int ds;
+        private ContextMenuStrip contextMenuStrip;
+        private int ds;
+
         private void richTextBox1_TextChanged(object sender, EventArgs e)
         {
             try
@@ -87,7 +84,6 @@ namespace Vision2.ErosProjcetDLL.Code
             }
             catch (Exception)
             {
-
             }
         }
 
@@ -96,12 +92,9 @@ namespace Vision2.ErosProjcetDLL.Code
             try
             {
                 contextMenuStrip.Dispose();
-
             }
             catch (Exception)
             {
-
-
             }
         }
 
@@ -114,12 +107,9 @@ namespace Vision2.ErosProjcetDLL.Code
 
                 richTextBox1.SelectionStart = ds + 1;
                 richTextBox1.Focus();
-
             }
             catch (Exception)
             {
-
-
             }
         }
     }

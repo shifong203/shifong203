@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 
-
 namespace Vision2.ErosProjcetDLL.UI.PropertyGrid
 {
     public class MyPropertyGrid : System.Windows.Forms.PropertyGrid

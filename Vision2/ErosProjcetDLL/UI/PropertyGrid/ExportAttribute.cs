@@ -1,17 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System;
-using System.Collections;
 using System.ComponentModel;
 
 namespace Vision2.ErosProjcetDLL.UI.PropertyGrid
 {
-
     public class PropertyOrderPair : IComparable
     {
         private int _order;
         private string _name;
+
         public string Name
         {
             get
@@ -21,6 +17,7 @@ namespace Vision2.ErosProjcetDLL.UI.PropertyGrid
         }
 
         private PropertyDescriptor _property;
+
         public PropertyDescriptor Property
         {
             get
@@ -59,8 +56,6 @@ namespace Vision2.ErosProjcetDLL.UI.PropertyGrid
         }
     }
 
-
-
     /// <summary>
     /// 属性信息的顺序分类等信息
     /// 字段或者属性等 可序列化的信息上
@@ -71,6 +66,7 @@ namespace Vision2.ErosProjcetDLL.UI.PropertyGrid
     public class PropertyIndexAttribute : Attribute
     {
         private string indexCode;
+
         /// <summary>
         /// 标识
         /// </summary>
@@ -85,8 +81,9 @@ namespace Vision2.ErosProjcetDLL.UI.PropertyGrid
                 indexCode = value;
             }
         }
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="indexCode"></param>
         public PropertyIndexAttribute(string indexCode)

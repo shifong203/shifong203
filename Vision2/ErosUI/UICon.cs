@@ -10,14 +10,14 @@ namespace Vision2.ErosUI
 {
     public class UICon
     {
-
         public static void DragDropConrot(Control control)
         {
             control.AllowDrop = true;
             control.DragDrop += new System.Windows.Forms.DragEventHandler(ToolForm.UIForm.Control_DragDrop);
             control.DragOver += new System.Windows.Forms.DragEventHandler(ToolForm.UIForm.Control_DragOver);
         }
-        Control ThisControl;
+
+        private Control ThisControl;
 
         /// <summary>
         /// 引用并添加事件
@@ -60,6 +60,7 @@ namespace Vision2.ErosUI
             {
             }
         }
+
         private void Control_Click(object sender, EventArgs e)
         {
             try
@@ -100,6 +101,7 @@ namespace Vision2.ErosUI
         private Point upPos = new Point(100, 100);
 
         private bool isShift;
+
         /// <summary>
         /// 大小事件
         /// </summary>

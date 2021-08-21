@@ -1,14 +1,13 @@
-﻿using HalconDotNet;
+﻿using ErosSocket.DebugPLC.Robot;
+using HalconDotNet;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 using System.Windows.Forms;
 using Vision2.Project.formula;
 using Vision2.Project.Mes;
-using Vision2.vision.HalconRunFile.RunProgramFile;
-using  ErosSocket.DebugPLC.Robot;
 using Vision2.vision;
+using Vision2.vision.HalconRunFile.RunProgramFile;
 using static Vision2.vision.HalconRunFile.RunProgramFile.OneCompOBJs;
 
 namespace Vision2.Project.DebugF.IO
@@ -21,9 +20,9 @@ namespace Vision2.Project.DebugF.IO
             //ErosProjcetDLL.UI.DataGridViewF.StCon.AddCon(dataGridView1);
             ErosProjcetDLL.UI.DataGridViewF.StCon.AddCon(dataGridView2);
         }
-         HWindID HWi ;
 
-      
+        private HWindID HWi;
+
         public void SetTray(TrayData trayRobot)
         {
             if (trayData != trayRobot)
@@ -43,113 +42,51 @@ namespace Vision2.Project.DebugF.IO
                 Initialize();
             }
         }
+
         public void SetTray(int trayRobot)
         {
             try
             {
-                trayData = DebugCompiler.GetThis().DDAxis.ListTray[trayRobot].GetTrayData();
+                trayData = DebugCompiler.Instance.DDAxis.ListTray[trayRobot].GetTrayData();
                 trayData.SetITrayRobot(this);
                 this.Invoke(new Action(() =>
                 {
-                        Initialize();
+                    Initialize();
                 }));
             }
             catch (Exception)
             {
             }
         }
+
         public void SetMinMax(double min, double max)
         {
             MinV = min;
             MaxV = max;
         }
+
         public TrayRobot GetTrayEx(int number = -1)
         {
             if (number < 0)
             {
-                return DebugCompiler.GetThis().DDAxis.ListTray[0];
+                return DebugCompiler.Instance.DDAxis.ListTray[0];
             }
-            return DebugCompiler.GetThis().DDAxis.ListTray[number];
+            return DebugCompiler.Instance.DDAxis.ListTray[number];
         }
-        static double MinV = 00;
-        static double MaxV = 2;
 
-        TrayData trayData;
+        private static double MinV = 00;
+        private static double MaxV = 2;
+
+        private TrayData trayData;
+
         public static TrayRobot GetTray(int ids = -1)
         {
             if (ids >= 0)
             {
-                return DebugCompiler.GetThis().DDAxis.GetTrayInxt(ids);
+                return DebugCompiler.Instance.DDAxis.GetTrayInxt(ids);
             }
             return null;
         }
-        //public static void SetStaticTray(TrayRobot trayRobot)
-        //{
-        //    tray = trayRobot;
-        //    try
-        //    {
-        //        MainForm1.MainFormF.Invoke(new Action(() =>
-        //        {
-        //            for (int i = 0; i < tray.Count; i++)
-        //            {
-        //                if (DebugCompiler.GetTrayDataUserControl().Controls.Find((i + 1).ToString(), false).Length != 0)
-        //                {
-        //                    TrayControl label1 = DebugCompiler.GetTrayDataUserControl().Controls.Find((i + 1).ToString(), false)[0] as TrayControl;
-
-        //                    if (label1 != null)
-        //                    {
-        //                        label1.label1.Text = (i + 1).ToString();
-
-        //                        if (tray.GetTrayData().GetDataVales()[i] == null)
-        //                        {
-        //                            tray.GetTrayData().GetDataVales()[i] = new OneDataVale();
-        //                        }
-        //                        label1.label1.Text += "SN:" + tray.GetTrayData().GetDataVales()[i].PanelID;
-        //                        if (tray.GetTrayData().GetDataVales()[i].OK)
-        //                        {
-        //                            RecipeCompiler.AddOKNumber(i, true);
-        //                            if (RecipeCompiler.Instance.PalenID)
-        //                            {
-        //                                if (tray.GetTrayData().GetDataVales()[tray.Number - 1].PanelID == null || tray.GetTrayData().GetDataVales()[tray.Number - 1].PanelID == "")
-        //                                {
-        //                                    tray.GetTrayData().GetDataVales()[tray.Number - 1].AddNG("SN未识别");
-        //                                    tray.GetTrayData().GetDataVales()[tray.Number - 1].OK = false;
-        //                                    label1.label1.BackColor = Color.Red;
-        //                                }
-        //                                else
-        //                                {
-        //                                    tray.GetTrayData().GetDataVales()[tray.Number - 1].OK = true;
-        //                                    label1.label1.BackColor = Color.Green;
-        //                                }
-        //                            }
-        //                            else
-        //                            {
-        //                                tray.GetTrayData().GetDataVales()[tray.Number - 1].OK = true;
-        //                                label1.label1.BackColor = Color.Green;
-        //                            }
-        //                        }
-        //                        else
-        //                        {
-        //                            RecipeCompiler.AddOKNumber(i, false);
-        //                            label1.label1.BackColor = Color.Red;
-        //                        }
-        //                        if (tray.GetTrayData().GetDataVales()[tray.Number - 1] == null)
-        //                        {
-        //                            tray.GetTrayData().GetDataVales()[tray.Number - 1] = new OneDataVale();
-        //                        }
-        //                        label1.Tag = tray.GetTrayData().GetDataVales()[tray.Number - 1];
-        //                    }
-        //                }
-
-
-        //            }
-
-        //        }));
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //    }
-        //}
 
         public void SetValue(int number, bool value, double? valueDouble = null)
         {
@@ -162,7 +99,6 @@ namespace Vision2.Project.DebugF.IO
                         TrayControl label1 = this.Controls.Find(number.ToString(), false)[0] as TrayControl;
                         if (label1 != null)
                         {
-
                             if (value)
                             {
                                 label1.label1.BackColor = Color.Green;
@@ -176,7 +112,7 @@ namespace Vision2.Project.DebugF.IO
                                 label1.label1.BackColor = Color.Red;
                             }
                             label1.label1.Text = number.ToString();
-                            if (trayData.GetDataVales()[number - 1]!=null)
+                            if (trayData.GetDataVales()[number - 1] != null)
                             {
                                 label1.label1.Text += "SN:" + trayData.GetDataVales()[number - 1].PanelID;
                             }
@@ -186,20 +122,19 @@ namespace Vision2.Project.DebugF.IO
                             }
                         }
                     }
-
                 }));
             }
             catch (Exception ex)
             {
             }
         }
+
         public void SetValue(int number, double valueDouble)
         {
             try
             {
                 MainForm1.MainFormF.Invoke(new Action(() =>
                 {
-
                     TrayControl label1 = this.Controls.Find(number.ToString(), false)[0] as TrayControl;
                     if (trayData.GetDataVales()[number - 1] == null)
                     {
@@ -212,7 +147,6 @@ namespace Vision2.Project.DebugF.IO
                     }
                     if (label1 != null)
                     {
-
                         if (valueDouble < MinV || valueDouble > MaxV)
                         {
                             label1.label1.BackColor = Color.Red;
@@ -231,7 +165,6 @@ namespace Vision2.Project.DebugF.IO
                             {
                                 label1.label1.BackColor = Color.Red;
                             }
-
                         }
                         label1.label1.Text += "/" + valueDouble;
                     }
@@ -241,13 +174,13 @@ namespace Vision2.Project.DebugF.IO
             {
             }
         }
+
         public void SetValue(int number, bool value)
         {
             try
             {
                 MainForm1.MainFormF.Invoke(new Action(() =>
                 {
-
                     TrayControl label1 = this.Controls.Find(number.ToString(), false)[0] as TrayControl;
                     if (label1 != null)
                     {
@@ -257,7 +190,6 @@ namespace Vision2.Project.DebugF.IO
                         }
                         else
                         {
-
                             label1.label1.BackColor = Color.Red;
                         }
                     }
@@ -267,18 +199,17 @@ namespace Vision2.Project.DebugF.IO
             {
             }
         }
-        public void SetValue(int number,string sn)
+
+        public void SetValue(int number, string sn)
         {
             try
             {
                 MainForm1.MainFormF.Invoke(new Action(() =>
                 {
-
                     TrayControl label1 = this.Controls.Find(number.ToString(), false)[0] as TrayControl;
                     if (label1 != null)
                     {
-                        label1.label1.Text = number+"SN:" +sn;
-
+                        label1.label1.Text = number + "SN:" + sn;
                     }
                 }));
             }
@@ -286,10 +217,12 @@ namespace Vision2.Project.DebugF.IO
             {
             }
         }
+
         public void SetValue(double valueDouble)
         {
             SetValue(trayData.Number, valueDouble);
         }
+
         public void SetValue(List<double> values)
         {
             try
@@ -306,7 +239,7 @@ namespace Vision2.Project.DebugF.IO
                         }
                         if (label1 != null)
                         {
-                            label1.label1.Text = trayData.Number.ToString() + "SN:" + trayData.GetDataVales()[trayData.Number - 1].PanelID +Environment.NewLine;
+                            label1.label1.Text = trayData.Number.ToString() + "SN:" + trayData.GetDataVales()[trayData.Number - 1].PanelID + Environment.NewLine;
                             trayData.GetDataVales()[trayData.Number - 1].Data = values;
                             label1.Tag = trayData.GetDataVales()[trayData.Number - 1];
                         }
@@ -317,6 +250,7 @@ namespace Vision2.Project.DebugF.IO
             {
             }
         }
+
         public void SetValue(List<string> values)
         {
             try
@@ -342,38 +276,6 @@ namespace Vision2.Project.DebugF.IO
                                 //});
                             }
                             bool OKt = true;
-                            //if (tray.GetDataVales()[tray.Number - 1].Data1.Count >= RecipeCompiler.Instance.Data.ListDatV.Count)
-                            //{
-                            //    for (int i = 0; i < tray.GetDataVales()[tray.Number - 1].Data1.Count; i++)
-                            //    {
-                            //        if (i >= RecipeCompiler.Instance.Data.ListDatV.Count)
-                            //        {
-                            //            break;
-                            //        }
-                            //        tray.GetDataVales()[tray.Number - 1].Data1[i] = RecipeCompiler.Instance.Data.GetMaxMinValue(i);
-                            //        if (!RecipeCompiler.Instance.Data.GetChet(i))
-                            //        {
-                            //            OKt = false;
-                            //        }
-                            //    }
-                            //    if (OKt)
-                            //    {
-                            //        label1.label1.Text += "数据:OK";
-                            //    }
-                            //    else
-                            //    {
-                            //        label1.label1.Text += "数据:NG";
-                            //    }
-                            //    if (tray.GetDataVales()[tray.Number - 1].OK)
-                            //    {
-                            //        label1.label1.BackColor = Color.Green;
-                            //    }
-                            //    else
-                            //    {
-                            //        label1.label1.BackColor = Color.Red;
-                            //    }
-                            //}
-                            //tray.GetDataVales()[tray.Number - 1].Data = values;
                             label1.Tag = trayData.GetDataVales()[trayData.Number - 1];
                         }
                     }
@@ -384,9 +286,9 @@ namespace Vision2.Project.DebugF.IO
             }
         }
 
-        public void SetComponentData(int index,List<string> datStrs)
+        public void SetComponentData(int index, List<string> datStrs)
         {
-            RecipeCompiler.Instance.Data.AddData(index,datStrs);
+            RecipeCompiler.Instance.Data.AddData(index, datStrs);
         }
 
         public void SetID(List<string> values)
@@ -406,7 +308,6 @@ namespace Vision2.Project.DebugF.IO
                         {
                             //tray.GetDataVales()[tray.Number - 1].Data1.Add(new MaxMinValue()
                             //{
-
                             //});
                             label1.label1.Text = trayData.Number.ToString() + "SN:" + trayData.GetDataVales()[trayData.Number - 1].PanelID;
                             label1.Tag = trayData.GetDataVales()[trayData.Number - 1];
@@ -474,7 +375,6 @@ namespace Vision2.Project.DebugF.IO
                                     trayData.GetDataVales()[idS[i] - 1].OK = false;
                                 }
                                 label1.Tag = trayData.GetDataVales()[idS[i] - 1];
-
                             }
                         }
                     }
@@ -484,6 +384,7 @@ namespace Vision2.Project.DebugF.IO
             {
             }
         }
+
         public void SetPanleSN(List<string> listSN, List<int> tryaid)
         {
             try
@@ -551,16 +452,14 @@ namespace Vision2.Project.DebugF.IO
                                         trayData.GetDataVales()[tryaid[i] - 1].OK = false;
                                     }
                                     label1.Tag = trayData.GetDataVales()[tryaid[i] - 1];
-
                                 }
                             }
-                            if (tryaid[i]==0)
+                            if (tryaid[i] == 0)
                             {
                                 trayData.TrayIDQR = listSN[i];
                                 GetTexup();
                             }
                         }
-
                     }
                     catch (Exception ex)
                     {
@@ -587,40 +486,39 @@ namespace Vision2.Project.DebugF.IO
                             {
                                 data.OK = values[i];
                                 Control[] controls = this.Controls.Find(data.TrayLocation.ToString(), false);
-                                    if (controls.Length != 0)
+                                if (controls.Length != 0)
+                                {
+                                    Label label1 = controls[0] as Label;
+                                    if (label1 != null)
                                     {
-                                        Label label1 = controls[0] as Label;
-                                        if (label1 != null)
+                                        if (data.NotNull)
                                         {
-                                            if (data.NotNull)
+                                            if (data.OK)
                                             {
-                                                if (data.OK)
-                                                {
-                                                    label1.BackColor = Color.Green;
-                                                }
-                                                else
-                                                {
-                                                    label1.BackColor = Color.Red;
-                                                }
+                                                label1.BackColor = Color.Green;
                                             }
-                                            string datStr = (i + 1).ToString();
-                                            if (data.PanelID != null && data.PanelID.Length != 0)
+                                            else
                                             {
-                                                if (data.PanelID.Length >= 6)
-                                                {
-                                                    datStr += "SN:" + data.PanelID.Substring(data.PanelID.Length - 6);
-                                                }
-                                                else
-                                                {
-                                                    datStr += "SN:" + data.PanelID;
-                                                }
+                                                label1.BackColor = Color.Red;
                                             }
-                                            label1.Text = datStr;
-                                            label1.Tag = data;
                                         }
+                                        string datStr = (i + 1).ToString();
+                                        if (data.PanelID != null && data.PanelID.Length != 0)
+                                        {
+                                            if (data.PanelID.Length >= 6)
+                                            {
+                                                datStr += "SN:" + data.PanelID.Substring(data.PanelID.Length - 6);
+                                            }
+                                            else
+                                            {
+                                                datStr += "SN:" + data.PanelID;
+                                            }
+                                        }
+                                        label1.Text = datStr;
+                                        label1.Tag = data;
                                     }
-
                                 }
+                            }
                         }
                         catch (Exception)
                         { }
@@ -631,13 +529,14 @@ namespace Vision2.Project.DebugF.IO
             {
             }
         }
+
         public void SetNumber(int number)
         {
             trayData.Number = number;
         }
+
         public void RestValue(TrayData trayDa)
         {
-
             if (trayData != null)
             {
                 trayData = trayDa;
@@ -649,13 +548,14 @@ namespace Vision2.Project.DebugF.IO
                         control.checkBox1.Checked = false;
                         //control.BackColor = Color.White;
                         control.label1.Text = control.label1.Name;
-                        control.label1.BackColor= Color.White;
+                        control.label1.BackColor = Color.White;
                         control.Tag = null;
                     }
                 }
                 GetTexup();
             }
         }
+
         public void GetTexup()
         {
             try
@@ -666,22 +566,23 @@ namespace Vision2.Project.DebugF.IO
             {
             }
         }
+
         /// <summary>
         /// 初始化矩阵
         /// </summary>
-        public void Initialize(TrayData trayDa=null)
+        public void Initialize(TrayData trayDa = null)
         {
             try
             {
-                if (trayDa!=null)
+                if (trayDa != null)
                 {
-                    trayData= trayDa;
+                    trayData = trayDa;
                 }
                 int rows = trayData.YNumber;
                 int columnCount = trayData.XNumber;
                 // 动态添加一行
                 this.AutoScroll = true;
-                    if (rows == 0)
+                if (rows == 0)
                 {
                     return;
                 }
@@ -721,13 +622,16 @@ namespace Vision2.Project.DebugF.IO
                             case TrayRobot.TrayDirectionEnum.左上:
                                 trayControl.Name = trayControl.label1.Name = trayControl.label1.Text = (dt * columnCount + sd + 1).ToString();
                                 break;
+
                             case TrayRobot.TrayDirectionEnum.右上:
                                 //trayControl.Name = trayControl.label1.Name = trayControl.label1.Text = ((rows * (sd + 1)) - dt).ToString();
                                 trayControl.Name = trayControl.label1.Name = trayControl.label1.Text = (rows * columnCount - (columnCount * (dt + 1)) + sd + 1).ToString();
                                 break;
+
                             case TrayRobot.TrayDirectionEnum.左下:
                                 trayControl.Name = trayControl.label1.Name = trayControl.label1.Text = ((dt + 1) * columnCount - sd).ToString();
                                 break;
+
                             case TrayRobot.TrayDirectionEnum.右下:
                                 trayControl.Name = trayControl.label1.Name = trayControl.label1.Text = (rows * columnCount - (dt) * columnCount - sd).ToString();
                                 break;
@@ -742,19 +646,22 @@ namespace Vision2.Project.DebugF.IO
                             case TrayRobot.TrayDirectionEnum.左上:
                                 trayControl.Name = trayControl.label1.Name = trayControl.label1.Text = (i + 1).ToString();
                                 break;
+
                             case TrayRobot.TrayDirectionEnum.右上:
                                 trayControl.Name = trayControl.label1.Name = trayControl.label1.Text = ((columnCount * (sd + 1)) - dt).ToString();
                                 break;
+
                             case TrayRobot.TrayDirectionEnum.左下:
 
                                 trayControl.Name = trayControl.label1.Name = trayControl.label1.Text = (rows * columnCount - (columnCount * (sd + 1)) + dt + 1).ToString();
                                 break;
+
                             case TrayRobot.TrayDirectionEnum.右下:
                                 trayControl.Name = trayControl.label1.Name = trayControl.label1.Text = (rows * columnCount - i).ToString();
                                 break;
                         }
                     }
-              
+
                     trayControl.Height = heit;
                     trayControl.Width = Wita;
                     trayControl.Location = new Point(new Size(trayControl.Width * dt, trayControl.Height * sd + label1.Height));
@@ -767,7 +674,8 @@ namespace Vision2.Project.DebugF.IO
             {
                 MessageBox.Show(ex.Message.PadRight(30, ' '), "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-        } 
+        }
+
         private void Label1_MouseMove(object sender, MouseEventArgs e)
         {
             try
@@ -775,7 +683,6 @@ namespace Vision2.Project.DebugF.IO
             }
             catch (Exception)
             {
-
             }
         }
 
@@ -783,11 +690,11 @@ namespace Vision2.Project.DebugF.IO
         {
             try
             {
-                if (e.Button==MouseButtons.Right)
+                if (e.Button == MouseButtons.Right)
                 {
                     return;
                 }
-                if (DebugCompiler.GetThis().IsImage)
+                if (DebugCompiler.Instance.IsImage)
                 {
                     tabControl1.SelectedIndex = 0;
                 }
@@ -795,7 +702,7 @@ namespace Vision2.Project.DebugF.IO
                 {
                     tabControl1.SelectedIndex = 1;
                 }
-          
+
                 Control control = sender as Label;
                 if (control == null)
                 {
@@ -810,19 +717,19 @@ namespace Vision2.Project.DebugF.IO
                         panel1.Location = new Point(100, 100);
                     }
                     panel1.Visible = true;
-                 
+
                     if (!this.Controls.Contains(panel1))
                     {
                         this.Controls.Add(panel1);
                         panel1.BringToFront();
                     }
                     toolStripLabel1.Text = "N:" + control.Name + ";SN:";
-                    toolStripTextBox1.Text= dataObj.PanelID;
-                    if (dataObj!=null)
+                    toolStripTextBox1.Text = dataObj.PanelID;
+                    if (dataObj != null)
                     {
                         //dataGridView1.Rows.Clear();
                         treeView1.Nodes.Clear();
-                        if (dataObj.ListCamsData.Count==0)
+                        if (dataObj.ListCamsData.Count == 0)
                         {
                             tabControl1.TabPages.Remove(tabPage2);
                         }
@@ -830,28 +737,35 @@ namespace Vision2.Project.DebugF.IO
                         {
                             tabControl1.TabPages.Add(tabPage2);
                         }
-                        if (!dataObj.GetNGImage().IsInitialized())
+                        if (dataObj.GetNGImage() != null)
                         {
-                            tabControl1.TabPages.Remove(tabPage1);
+                            if (!dataObj.GetNGImage().IsInitialized())
+                            {
+                                tabControl1.TabPages.Remove(tabPage1);
+                            }
+                            else
+                            {
+                                tabControl1.TabPages.Add(tabPage1);
+                            }
                         }
                         else
                         {
-                            tabControl1.TabPages.Add(tabPage1);
+                            tabControl1.TabPages.Remove(tabPage1);
                         }
-                        if (tabControl1.TabPages.Count==0)
-                        {
 
+                        if (tabControl1.TabPages.Count == 0)
+                        {
+                            this.panel1.Height = 100;
                         }
 
                         foreach (var item in dataObj.ListCamsData)
                         {
-                           TreeNode treeNode=  treeView1.Nodes.Add(item.Key);
+                            TreeNode treeNode = treeView1.Nodes.Add(item.Key);
                             treeNode.Tag = item.Value;
                             treeNode.ImageIndex = 0;
                             foreach (var itemd in item.Value.NGObj.DicOnes)
                             {
-
-                                TreeNode treeNode1= treeNode.Nodes.Add(itemd.Key);
+                                TreeNode treeNode1 = treeNode.Nodes.Add(itemd.Key);
                                 if (itemd.Value.OK)
                                 {
                                     treeNode1.ImageIndex = 6;
@@ -860,24 +774,24 @@ namespace Vision2.Project.DebugF.IO
                                 {
                                     treeNode1.ImageIndex = 7;
                                 }
-                          
+
                                 treeNode1.Tag = itemd.Value;
                             }
                             treeNode.Expand();
-                         }
-                           foreach (var item in dataObj.ListCamsData)
-                           {
-                                HWi.SetImaage(item.Value.ImagePlus);
-                                break;
-                            }
-                            if (dataObj.OK)
-                            {
-                                control.BackColor = Color.Green;
-                            }
-                            else
-                            {
-                                control.BackColor = Color.Red;
-                            }
+                        }
+                        foreach (var item in dataObj.ListCamsData)
+                        {
+                            HWi.SetImaage(item.Value.ImagePlus);
+                            break;
+                        }
+                        //if (dataObj.OK)
+                        //{
+                        //    control.BackColor = Color.Green;
+                        //}
+                        //else
+                        //{
+                        //    control.BackColor = Color.Red;
+                        //}
                     }
                 }
                 if (DebugCompiler.EquipmentStatus == ErosSocket.ErosConLink.EnumEquipmentStatus.运行中)
@@ -914,9 +828,8 @@ namespace Vision2.Project.DebugF.IO
 
         private void dataGridView1_Click(object sender, EventArgs e)
         {
-
         }
-       
+
         private void dataGridView1_MouseDown(object sender, MouseEventArgs e)
         {
             try
@@ -930,9 +843,10 @@ namespace Vision2.Project.DebugF.IO
             }
         }
 
-        int xPos;
-        int yPos;
-        bool MoveFlag;
+        private int xPos;
+        private int yPos;
+        private bool MoveFlag;
+
         private void dataGridView1_MouseUp(object sender, MouseEventArgs e)
         {
             MoveFlag = false;
@@ -969,55 +883,55 @@ namespace Vision2.Project.DebugF.IO
                 //tray.Number = number+1;
                 MainForm1.MainFormF.Invoke(new Action(() =>
                 {
-                     string datStr = "";
-                        if (this.Controls.Find(number.ToString(), false).Length != 0)
+                    string datStr = "";
+                    if (this.Controls.Find(number.ToString(), false).Length != 0)
+                    {
+                        TrayControl label1 = this.Controls.Find(number.ToString(), false)[0] as TrayControl;
+                        if (label1 != null)
                         {
-                            TrayControl label1 = this.Controls.Find(number.ToString(), false)[0] as TrayControl;
-                            if (label1 != null)
+                            if (dataVale.OK)
                             {
-                                if (dataVale .OK)
-                                {
-                                    label1.label1.BackColor = Color.Green;
-                                }
-                                else
-                                {
-                                    label1.label1.BackColor = Color.Red;
-                                }
-                                if (trayData.GetDataVales()[number-1] == null)
-                                {
-                                    trayData.GetDataVales()[number - 1] = new OneDataVale();
-                                }
-                                trayData.GetDataVales()[number - 1].PanelID = dataVale.PanelID;
-                                trayData.GetDataVales()[number - 1] =dataVale;
-                                if (trayData.GetDataVales()[number - 1] != null)
-                                {
-                                    if (trayData.GetDataVales()[number - 1].PanelID != null)
-                                    {
-                                       datStr += trayData.GetDataVales()[number - 1].TrayLocation+  "SN:" + trayData.GetDataVales()[number - 1].PanelID + Environment.NewLine;
-                                    }
-                                      bool ok = true;
-                                    //foreach (var item in dataVale.DataMin_Max)
-                                    //{
-                                    //    if (!item.Value.GetRsetOK())
-                                    //    {
-                                    //        datStr += item.Key+";";
-                                    //       ok = false;
-                                    //    }
-                                    //}
-                                        //if (ok)
-                                        //{
-                                        //  datStr += "数据ok;";
-                                        //}
-                                 
-                                    label1.label1.Text = datStr;
-                                }
-                                else
-                                {
-                                    trayData.GetDataVales()[number - 1].OK = false;
-                                }
-                                label1.Tag = trayData.GetDataVales()[number - 1];
+                                label1.label1.BackColor = Color.Green;
                             }
+                            else
+                            {
+                                label1.label1.BackColor = Color.Red;
+                            }
+                            if (trayData.GetDataVales()[number - 1] == null)
+                            {
+                                trayData.GetDataVales()[number - 1] = new OneDataVale();
+                            }
+                            trayData.GetDataVales()[number - 1].PanelID = dataVale.PanelID;
+                            trayData.GetDataVales()[number - 1] = dataVale;
+                            if (trayData.GetDataVales()[number - 1] != null)
+                            {
+                                if (trayData.GetDataVales()[number - 1].PanelID != null)
+                                {
+                                    datStr += trayData.GetDataVales()[number - 1].TrayLocation + "SN:" + trayData.GetDataVales()[number - 1].PanelID + Environment.NewLine;
+                                }
+                                bool ok = true;
+                                //foreach (var item in dataVale.DataMin_Max)
+                                //{
+                                //    if (!item.Value.GetRsetOK())
+                                //    {
+                                //        datStr += item.Key+";";
+                                //       ok = false;
+                                //    }
+                                //}
+                                //if (ok)
+                                //{
+                                //  datStr += "数据ok;";
+                                //}
+
+                                label1.label1.Text = datStr;
+                            }
+                            else
+                            {
+                                trayData.GetDataVales()[number - 1].OK = false;
+                            }
+                            label1.Tag = trayData.GetDataVales()[number - 1];
                         }
+                    }
                 }));
             }
             catch (Exception ex)
@@ -1035,7 +949,6 @@ namespace Vision2.Project.DebugF.IO
             }
             catch (Exception)
             {
-
             }
         }
 
@@ -1043,13 +956,14 @@ namespace Vision2.Project.DebugF.IO
         {
             try
             {
-
             }
             catch (Exception)
             {
             }
         }
-        bool fILE;
+
+        private bool fILE;
+
         private void tsButton1_Click(object sender, EventArgs e)
         {
             if (fILE)
@@ -1064,32 +978,28 @@ namespace Vision2.Project.DebugF.IO
             else
             {
                 fILE = true;
-                panel1.Width =800;
+                panel1.Width = 800;
                 panel1.Height = 500;
             }
-
         }
 
         public void SetValue(int number, TrayData dataVale)
         {
             try
             {
-        
                 MainForm1.MainFormF.Invoke(new Action(() =>
                 {
-         
-
                     for (int i = 0; i < dataVale.GetDataVales().Count; i++)
                     {
                         string datStr = "";
                         OneDataVale data = dataVale.GetDataVales()[i];
                         if (data != null)
                         {
-                            if (data.TrayLocation==0)
+                            if (data.TrayLocation == 0)
                             {
                                 continue;
                             }
-                            if (this.Controls.Find(data.TrayLocation.ToString(), false).Length==1)
+                            if (this.Controls.Find(data.TrayLocation.ToString(), false).Length == 1)
                             {
                                 TrayControl label1 = this.Controls.Find(data.TrayLocation.ToString(), false)[0] as TrayControl;
                                 if (label1 != null)
@@ -1105,7 +1015,6 @@ namespace Vision2.Project.DebugF.IO
                                             label1.label1.BackColor = Color.Red;
                                         }
                                     }
-                            
 
                                     if (data.PanelID != null)
                                     {
@@ -1115,9 +1024,7 @@ namespace Vision2.Project.DebugF.IO
 
                                     label1.Tag = data;
                                 }
-
                             }
-
                         }
                     }
                 }));
@@ -1168,7 +1075,7 @@ namespace Vision2.Project.DebugF.IO
         //        catch (Exception)
         //        {
         //        }
-       
+
         //}
 
         private void dataGridView1_CellMouseMove(object sender, DataGridViewCellMouseEventArgs e)
@@ -1176,6 +1083,7 @@ namespace Vision2.Project.DebugF.IO
             //dataGridView2.Visible = false;
             //timer1.Stop();
         }
+
         private void timer1_Tick(object sender, EventArgs e)
         {
             try
@@ -1198,7 +1106,6 @@ namespace Vision2.Project.DebugF.IO
                 //TreeNode CurrentNode = treeView1.GetNodeAt(ClickPoint);
                 //if (CurrentNode != null)
                 //{
-                 
                 //    if (CurrentNode.Tag is OneCamData)
                 //    {
                 //        OneCamData oneCamData = CurrentNode.Tag as OneCamData;
@@ -1240,9 +1147,8 @@ namespace Vision2.Project.DebugF.IO
                 //        dataGridView2.Show();
 
                 //    }
-                 
+
                 //}
-                
             }
             catch (Exception)
             {
@@ -1252,11 +1158,10 @@ namespace Vision2.Project.DebugF.IO
         private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
         {
             try
-            {              
-                TreeNode CurrentNode =  e.Node;
+            {
+                TreeNode CurrentNode = e.Node;
                 if (CurrentNode != null)
                 {
-
                     if (CurrentNode.Tag is OneCamData)
                     {
                         OneCamData oneCamData = CurrentNode.Tag as OneCamData;
@@ -1296,11 +1201,8 @@ namespace Vision2.Project.DebugF.IO
                         }
                         dataGridView2.BringToFront();
                         dataGridView2.Show();
-
                     }
-
                 }
-
             }
             catch (Exception)
             {
@@ -1327,7 +1229,61 @@ namespace Vision2.Project.DebugF.IO
                 {
                     SetValue(i + 1, 0);
                 }
+            }
+        }
 
+        public void SetValue(bool listValue)
+        {
+            try
+            {
+                MainForm1.MainFormF.Invoke(new Action(() =>
+                {
+                    for (int i = 0; i < trayData.Count; i++)
+                    {
+                        try
+                        {
+                            OneDataVale data = trayData.GetDataVales()[i];
+                            if (data != null)
+                            {
+                                Control[] controls = this.Controls.Find(data.TrayLocation.ToString(), false);
+                                if (controls.Length != 0)
+                                {
+                                    TrayControl label1 = controls[0] as TrayControl;
+                                    if (label1 != null)
+                                    {
+                                        if (data.NotNull)
+                                        {
+                                            if (data.OK)
+                                            {
+                                                label1.label1.BackColor = Color.Green;
+                                            }
+                                            else
+                                            {
+                                                label1.label1.BackColor = Color.Red;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            label1.label1.BackColor = Color.Red;
+                                        }
+                                        string datStr = (i + 1).ToString();
+                                        if (data.PanelID != null && data.PanelID.Length != 0)
+                                        {
+                                            datStr += "SN:" + data.PanelID;
+                                        }
+                                        label1.label1.Text = datStr;
+                                        label1.Tag = data;
+                                    }
+                                }
+                            }
+                        }
+                        catch (Exception)
+                        { }
+                    }
+                }));
+            }
+            catch (Exception ex)
+            {
             }
         }
     }

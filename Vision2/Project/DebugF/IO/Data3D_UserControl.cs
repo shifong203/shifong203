@@ -7,7 +7,6 @@ namespace Vision2.Project.DebugF.IO
         public Data3D_UserControl()
         {
             InitializeComponent();
-
         }
     }
 }

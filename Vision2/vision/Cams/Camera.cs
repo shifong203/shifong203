@@ -10,7 +10,7 @@ using Vision2.vision.HalconRunFile.RunProgramFile;
 namespace Vision2.vision.Cams
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <param name="CameraIndex"></param>
     public delegate void CameraStatusChangedHandle(int CameraIndex);
@@ -26,10 +26,7 @@ namespace Vision2.vision.Cams
     /// </summary>
     public class Camera : ICamera
     {
-
         protected string name = "";
-
- 
 
         protected string serialnum = "";
 
@@ -56,22 +53,24 @@ namespace Vision2.vision.Cams
         /// </summary>
         public string Name { get { return name; } set { name = value; } }
 
-
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public string SerialNum { get { return serialnum; } set { serialnum = value; } }
+
         [Description("是否连接成功"), Category("Net"), DisplayName("连接状态")]
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public virtual bool IsCamConnected { get { return iscamconnected; } set { iscamconnected = value; } }
+
         [Description("曝光时间微秒"), Category("采图属性"), DisplayName("曝光时间")]
         /// <summary>
         /// 曝光时间
         /// </summary>
         public virtual double ExposureTime { get { return expoursetime; } set { expoursetime = value; } }
+
         protected double expoursetime = 1000;
 
         [Description("相机类型"), Category("硬件属性"), DisplayName("相机类型")]
@@ -93,13 +92,16 @@ namespace Vision2.vision.Cams
                 }
             }
         }
+
         [Description("增益"), Category("采图属性"), DisplayName("增益")]
         public virtual double Gain
         { get { return gain; } set { gain = value; } }
+
         protected double gain = 1;
 
         [DescriptionAttribute("是否纠正图像"), Category("采图属性"), DisplayName("纠正图像")]
         public virtual double Gamma { get; set; }
+
         protected double gamma = 0.4;
 
         [Description("图像类型黑白或彩色"), Category("采图属性"), DisplayName("图像类型")]
@@ -108,26 +110,32 @@ namespace Vision2.vision.Cams
         public string CameraImageFormat { get; set; } = "BayerRG8";
 
         public string Key { get; set; }
+
         [Description("相机与PC接口IP"), Category("Net"), DisplayName("本地IP")]
         public virtual string IntIP { get; set; }
+
         [Description("相机IP"), Category("Net"), DisplayName("相机IP")]
         public virtual string IP { get; set; }
 
         public bool Grabbing { get; private set; }
+
         [Description("相机连接ID"), Category("硬件属性"), DisplayName("相机连接ID")]
         public string ID { get; set; }
+
         public int RunID { get; set; }
 
         public long RunTime { get; set; }
+
         [Description("像素与MM转换比例"), Category("像素转换"), DisplayName("像素转换比例")]
         public double CaliConst { get; set; } = 1;
 
         public int MaxNumbe { get; set; }
+
         [Description(""), Category("采图属性"), DisplayName("宽度")]
         public int Width { get; set; }
+
         [Description(""), Category("采图属性"), DisplayName("高度")]
         public int Height { get; set; }
-
 
         [DescriptionAttribute("灯光输出。"), Category("触发器"), DisplayName("灯光输出名称")]
         [Editor(typeof(LinkNameAddreControl.Editor), typeof(UITypeEditor))]
@@ -142,7 +150,6 @@ namespace Vision2.vision.Cams
         Vision2.ErosProjcetDLL.UI.PropertyGrid.ErosConverter.ThisDropDown("", true, "row", "diagonal", "column", "None")]
         public string RotateTypeStr { get; set; } = "None";
 
-
         [DescriptionAttribute("实测精度。"), Category("镜头"), DisplayName("实际精度")]
         /// <summary>
         /// 理论精度
@@ -154,7 +161,6 @@ namespace Vision2.vision.Cams
         /// 理论精度
         /// </summary>
         public double Precision { get; set; }
-
 
         [DescriptionAttribute("镜头FOV视场大小。"), Category("镜头"), DisplayName("FOV视场")]
         /// <summary>
@@ -170,41 +176,43 @@ namespace Vision2.vision.Cams
 
         [DescriptionAttribute("畸变。"), Category("内参"), DisplayName("畸变")]
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public double Kappa { get; set; }
+
         [DescriptionAttribute("畸变。"), Category("内参"), DisplayName("中心CY")]
         public double Cy { get; set; }
+
         [DescriptionAttribute("畸变。"), Category("内参"), DisplayName("中心CX")]
         public double Cx { get; set; }
 
         [DescriptionAttribute("像元Sy。"), Category("内参"), DisplayName("像元Sy")]
         public double Sy { get; set; }
+
         [DescriptionAttribute("像元Sx。"), Category("内参"), DisplayName("像元Sx")]
         public double Sx { get; set; }
 
         public HObject Map { get; set; }
+
         [DescriptionAttribute("是否纠正图像"), Category("标定"), DisplayName("纠正图像")]
         public bool ISMap { get; set; }
 
-
         public virtual void OpenCam()
         {
-
         }
 
         public void OnLinkEnvet(bool isc)
         {
             LinkEnvet?.Invoke(isc);
         }
+
         public virtual void CloseCam()
         {
         }
 
-
         /// <summary>
         /// 采集图片
-        /// </summary>        
+        /// </summary>
         /// <returns></returns>
         public virtual HObject GetImage()
         {
@@ -212,19 +220,16 @@ namespace Vision2.vision.Cams
             return ho_iamge;
         }
 
-
-
-
         public virtual string GetFramegrabberParam(string pName)
         {
-
-
             return "";
         }
+
         public virtual bool SetProgramValue(string pName, string value)
         {
             return false;
         }
+
         public virtual bool SetProgramValue(string pName, double value)
         {
             return false;
@@ -250,7 +255,6 @@ namespace Vision2.vision.Cams
             Vision.TriggerSetup(this.FlashLampName, false.ToString());
         }
 
-
         public virtual object GetIDevice()
         {
             return null;
@@ -263,10 +267,9 @@ namespace Vision2.vision.Cams
 
         public virtual void SetExposureTime(double VALUE)
         {
-
         }
 
-        public  virtual   bool GetImage(out IGrabbedRawData image)
+        public virtual bool GetImage(out IGrabbedRawData image)
         {
             image = null;
             return false;
@@ -301,28 +304,32 @@ namespace Vision2.vision.Cams
         }
     }
 
-
     public class CamData
     {
         [Description("增益"), Category("采图属性"), DisplayName("增益")]
         public virtual double Gain
         { get { return gain; } set { gain = value; } }
+
         protected double gain = 1;
 
         [Description("曝光时间微秒"), Category("采图属性"), DisplayName("曝光时间")]
         /// <summary>
         /// 曝光时间
         /// </summary>
-        public virtual double ExposureTime { get { return expoursetime; }
-            set { expoursetime = value; } }
+        public virtual double ExposureTime
+        {
+            get { return expoursetime; }
+            set { expoursetime = value; }
+        }
+
         protected double expoursetime = 1000;
 
         [DescriptionAttribute("伽马"), Category("采图属性"), DisplayName("伽马")]
         public double Gamma { get { return gamma; } set { gamma = value; } }
+
         protected double gamma = 1;
 
         [DescriptionAttribute("光源配置"), Category("采图属性"), DisplayName("光源配置")]
-        public string Light_Source { get; set; } ="";
-
+        public string Light_Source { get; set; } = "";
     }
 }

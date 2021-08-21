@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using Vision2.ErosProjcetDLL.Excel;
+using Vision2.ErosProjcetDLL.Project;
 using static Vision2.Project.formula.Product;
 
 namespace Vision2.Project.formula
@@ -22,9 +23,9 @@ namespace Vision2.Project.formula
             Column3.Items.AddRange("array[]");
         }
 
+        private int y;
+        private int x;
 
-        int y;
-        int x;
         /// <summary>
         /// 更改中发生
         /// </summary>
@@ -66,7 +67,6 @@ namespace Vision2.Project.formula
                                         int itd = Y + 1;
                                         for (int i = 0; i < ids; i++)
                                         {
-
                                             if (itd + 1 >= dataGridView1.Rows.Count)
                                             {
                                                 itd = dataGridView1.Rows.Add();
@@ -79,7 +79,6 @@ namespace Vision2.Project.formula
                                             {
                                                 Type type = ErosSocket.ErosConLink.UClass.GetTypeByString(dataGridView1.Rows[Y].Cells[1].Value.ToString());
                                                 dataGridView1.Rows[itd].Cells[1].Value = Activator.CreateInstance(type).ToString();
-
                                             }
                                             else
                                             {
@@ -99,7 +98,6 @@ namespace Vision2.Project.formula
                                         int itd = Y + 1;
                                         for (int i = 0; i < ids; i++)
                                         {
-
                                             if (itd + 1 >= dataGridView1.Rows.Count)
                                             {
                                                 itd = dataGridView1.Rows.Add();
@@ -112,7 +110,6 @@ namespace Vision2.Project.formula
                                             {
                                                 Type type = ErosSocket.ErosConLink.UClass.GetTypeByString(dataGridView1.Rows[Y].Cells[1].Value.ToString());
                                                 dataGridView1.Rows[itd].Cells[1].Value = Activator.CreateInstance(type).ToString();
-
                                             }
                                             else
                                             {
@@ -122,9 +119,6 @@ namespace Vision2.Project.formula
                                         }
                                     }
                                 }
-
-
-
                             }
                             //contextMenuStrip.Show(pOINT.X, pOINT.Y);
                         }
@@ -161,10 +155,8 @@ namespace Vision2.Project.formula
                                     y = e.RowIndex;
                                     Rectangle rectangle2 = dataGridView1.RectangleToScreen(rectangle);
                                     contextMenuStrip.Show(rectangle2.X, rectangle2.Y + this.dataGridView1.Rows[e.RowIndex].Height);
-
                                 }
                             }
-
                         }
                     }
                     catch (Exception es)
@@ -195,15 +187,12 @@ namespace Vision2.Project.formula
                         }
                     }
                 }
-
             }
             catch (Exception)
             {
-
-
             }
-
         }
+
         /// <summary>
         /// 点击下拉写入
         /// </summary>
@@ -263,8 +252,9 @@ namespace Vision2.Project.formula
                 MessageBox.Show(ex.Message);
             }
         }
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -282,7 +272,6 @@ namespace Vision2.Project.formula
             }
             catch (Exception)
             {
-
             }
         }
 
@@ -301,7 +290,6 @@ namespace Vision2.Project.formula
             {
                 MessageBox.Show(ex.Message);
             }
-
         }
 
         private void FormulaPrForm_Load(object sender, EventArgs e)
@@ -322,24 +310,21 @@ namespace Vision2.Project.formula
                     }
                     this.AddDataGridConmlus(Product.GetListLinkNames.ToArray());
                     this.Updatas(listBox1.SelectedItem.ToString());
-
                 }
                 catch (Exception ex)
                 {
                     MessageBox.Show(ex.Message);
                 }
-
             }
             catch (Exception)
             {
-
             }
         }
 
         private void toolStripButton2_Click(object sender, EventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.InitialDirectory = Vision2.ErosProjcetDLL.Project.ProjectINI.In.ProjectPathRun + "\\产品配方\\";
+            openFileDialog.InitialDirectory = ProjectINI.ProjectPathRun + "\\产品配方\\";
             openFileDialog.Filter = "Excel文件|*.xls";
             DialogResult dialog = openFileDialog.ShowDialog();
             try
@@ -375,7 +360,6 @@ namespace Vision2.Project.formula
                                     product.ParameterMap[item1.Table.Columns[i].ColumnName].Add(item1[0].ToString(), item1[i].ToString());
                                 }
                             }
-
                         }
                         //this.Parameters = product;
                         Product.GetProduct().Parameter_Dic.GetParameters().Clear();
@@ -392,9 +376,7 @@ namespace Vision2.Project.formula
 
                         Updatas();
                         MessageBox.Show("导入成功");
-
                     }
-
                 }
             }
             catch (Exception ex)
@@ -402,16 +384,16 @@ namespace Vision2.Project.formula
                 MessageBox.Show("导入失败:" + ex.Message);
             }
         }
+
         public void Updatas()
         {
             Updatas(groupBox1.Text);
         }
+
         public void Updatas(string name)
         {
             try
             {
-
-
                 if (name != null)
                 {
                     groupBox1.Text = name;
@@ -442,8 +424,6 @@ namespace Vision2.Project.formula
                         }
                     }
                 }
-
-
             }
             catch (Exception ex)
             {
@@ -478,7 +458,6 @@ namespace Vision2.Project.formula
                         {
                             try
                             {
-
                                 if (StaticCon.SocketClint.ContainsKey(item))
                                 {
                                     ErosSocket.ErosConLink.IErosLinkNet erosLinkNet = StaticCon.SocketClint[item];
@@ -534,13 +513,13 @@ namespace Vision2.Project.formula
                                 MessageBox.Show(ex.Message);
                             }
                         }));
-
                     });
                     thread.IsBackground = true;
                     thread.Start();
                 }
             }
         }
+
         private void toolStripButton1_Click(object sender, EventArgs e)
         {
             try
@@ -572,7 +551,6 @@ namespace Vision2.Project.formula
                                 item.Add(dataGridView1.Rows[i].Cells[0].Value.ToString(), new StructTypeValue()
                                 {
                                     ValueStr = dataGridView1.Rows[i].Cells[1].Value.ToString(),
-
                                 });
                                 if (dataGridView1.Rows[i].Cells[2].Value != null)
                                 {
@@ -643,7 +621,6 @@ namespace Vision2.Project.formula
                                 }
                             }
                         }
-
                     }
                     catch (Exception ex)
                     {
@@ -656,12 +633,10 @@ namespace Vision2.Project.formula
                 {
                     Product.GetParameters().Add(item2.Key, item2.Value);
                 }
-
             }
             catch (Exception EX)
             {
                 MessageBox.Show(EX.Message);
-
             }
         }
 
@@ -672,18 +647,14 @@ namespace Vision2.Project.formula
 
         private void toolStripButton3_Click(object sender, EventArgs e)
         {
-
             try
             {
-
-                Product.SaveDicPrExcel(Vision2.ErosProjcetDLL.Project.ProjectINI.In.ProjectPathRun + "\\产品配方\\产品配方管理\\产品文件.xls");
+                Product.SaveDicPrExcel(ProjectINI.ProjectPathRun + "\\产品配方\\产品配方管理\\产品文件.xls");
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
-
-
         }
 
         private void 删除ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -710,15 +681,11 @@ namespace Vision2.Project.formula
             }
             catch (Exception)
             {
-
-
             }
-
         }
 
         private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
         {
-
         }
     }
 }

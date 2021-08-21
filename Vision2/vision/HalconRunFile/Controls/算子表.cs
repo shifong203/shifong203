@@ -10,6 +10,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
 using HWND = System.IntPtr;
+
 namespace Vision2.vision.HalconRunFile.Controls
 {
     public partial class 算子表 : Form

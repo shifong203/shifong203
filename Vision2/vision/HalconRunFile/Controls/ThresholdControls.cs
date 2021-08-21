@@ -9,23 +9,27 @@ namespace Vision2.vision.HalconRunFile.Controls
         public delegate void EventValue(Threshold_Min_Max threshold_Min_);
 
         public event EventValue evValue;
+
         public ThresholdControls()
         {
             InitializeComponent();
             comboBox1.Items.AddRange(Enum.GetNames(typeof(ImageTypeObj)));
         }
+
         public ThresholdControls(Threshold_Min_Max threshold_Min_) : this()
         {
             threshold_Min_1 = threshold_Min_;
-
         }
+
         public void SetData(Threshold_Min_Max threshold_Min_)
         {
             threshold_Min_1 = threshold_Min_;
 
             GetPret();
         }
-        bool isCave;
+
+        private bool isCave;
+
         public void GetPret()
         {
             isCave = true;
@@ -41,7 +45,7 @@ namespace Vision2.vision.HalconRunFile.Controls
             }
             isCave = false;
         }
-        
+
         public void SetPret()
         {
             if (isCave)
@@ -51,7 +55,7 @@ namespace Vision2.vision.HalconRunFile.Controls
             try
             {
                 threshold_Min_1.ImageTypeObj = (ImageTypeObj)Enum.Parse(typeof(ImageTypeObj), comboBox1.SelectedItem.ToString());
-                threshold_Min_1.Max =(byte) numericUpDownThrMax.Value;
+                threshold_Min_1.Max = (byte)numericUpDownThrMax.Value;
                 threshold_Min_1.Min = (byte)numericUpDownThrMin.Value;
                 evValue?.Invoke(threshold_Min_1);
             }
@@ -65,7 +69,8 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             comboBox1.Items.AddRange(Enum.GetNames(typeof(ImageTypeObj)));
         }
-        Threshold_Min_Max threshold_Min_1;
+
+        private Threshold_Min_Max threshold_Min_1;
 
         private void numericUpDownThrMax_ValueChanged(object sender, EventArgs e)
         {

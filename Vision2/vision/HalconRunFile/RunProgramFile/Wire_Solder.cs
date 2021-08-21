@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using Vision2.vision.HalconRunFile.Controls;
-using static Vision2.vision.Vision;
 
 namespace Vision2.vision.HalconRunFile.RunProgramFile
 {
@@ -19,11 +18,13 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             thresholdV_2.Max = 255;
             thresholdV_2.Min = 200;
         }
+
         public override string ShowHelpText()
         {
             return "2.5焊线检测";
         }
-        public override Control GetControl( HalconRun halconRun)
+
+        public override Control GetControl(IDrawHalcon halconRun)
         {
             return new Wire_Solder_Control(this);
         }
@@ -33,14 +34,13 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             return base.ReadThis<Wire_Solder>(PATH);
         }
 
-        public override bool RunHProgram( OneResultOBj oneResultOBj,out List<OneRObj> oneRObjs, AoiObj aoiObj)
+        public override bool RunHProgram(OneResultOBj oneResultOBj, out List<OneRObj> oneRObjs, AoiObj aoiObj)
         {
             oneRObjs = new List<OneRObj>();
             return RunP(oneResultOBj, aoiObj);
         }
 
         public Threshold_Min_Max thresholdV_2 { get; set; } = new Threshold_Min_Max();
-
 
         public bool RunP(OneResultOBj halcon, AoiObj aoiObj, HTuple visionUserControlH = null, HTuple visionUserControlS = null,
             HTuple visionUserControlV = null, HTuple hwindRgb = null)
@@ -82,7 +82,6 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 HOperatorSet.Threshold(image3, out HObject hObjectV, V_threshold_min, V_threshold_max);
 
                 HObject hObjectV2 = thresholdV_2.Threshold(image3);
-
 
                 HOperatorSet.Union2(hObjectV, hObjectV2, out hObjectV);
 
@@ -172,7 +171,6 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     HOperatorSet.GenRectangle2(out hObject51, row1_s, column1_s, phi1_s, length1_s, length2_s);
                     //halcon.AddObj(hObject51, ColorResult.Red);
 
-
                     HOperatorSet.Intersection(hObject52, hObject1, out hObject52);
                     HOperatorSet.Connection(hObject52, out hObject52);
                     HOperatorSet.AreaCenter(hObject52, out area, out row35, out hTuple2);
@@ -192,7 +190,6 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     HOperatorSet.SmallestRectangle2(hObject53, out row1_s, out column1_s, out phi1_s, out length1_s, out length2_s);
                     if (aoiObj.DebugID > 2)
                     {
-
                         halcon.AddImageMassage(row1_s, column1_s, "3宽:" + (length2_s * 2).TupleString("0.1f"));
                     }
                     HOperatorSet.GenRectangle2(out hObject51, row1_s, column1_s, phi1_s, length1_s, length2_s);
@@ -290,7 +287,6 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         //halcon.AddMessage("空错误");
                     }
                 }
-
             }
             catch (Exception ex)
             {
@@ -303,9 +299,9 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             }
             return ResltBool;
         }
+
         public double ClosingCircle { get; set; } = 7;
         public double ErosionCircle { get; set; } = 1;
-
 
         public double MaxLength2 { get; set; }
         public double MinLength2 { get; set; }
@@ -313,8 +309,6 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         public double MinLength1 { get; set; }
 
         public double MaxDeg { get; set; }
-
-
 
         public byte H_threshold_min { get; set; }
 
@@ -327,7 +321,6 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         public byte S_threshold_min { get; set; }
         public byte S_threshold_max { get; set; }
 
-
         public byte S_threshold_min2 { get; set; }
         public byte S_threshold_max2 { get; set; }
 
@@ -339,16 +332,14 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
 
         public class Wire_S
         {
-
             public HObject HObject { get; set; } = new HObject();
 
             public List<int> List3DName { get; set; } = new List<int>();
 
-
             public string Color { get; set; }
 
             /// <summary>
-            /// 
+            ///
             /// </summary>
             /// <param name="halcon"></param>
             /// <param name="wire"></param>
@@ -362,7 +353,6 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             {
                 try
                 {
-
                     HOperatorSet.AreaCenter(this.HObject, out HTuple area, out HTuple rows1, out HTuple columns1);
                     HOperatorSet.GetRegionIndex(hObject2, rows1.TupleInt(), columns1.TupleInt(), out HTuple index);
                     if (index.Length == 0)
@@ -385,7 +375,6 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     halcon.AddImageMassage(row1_s, column1_s, "1宽:" + (length2_s * 2).TupleString("0.1f"));
                     HOperatorSet.GenRectangle2(out hObject51, row1_s, column1_s, phi1_s, length1_s, length2_s);
                     //halcon.AddObj(hObject51, ColorResult.Red);
-
 
                     HOperatorSet.Intersection(hObject52, hObject1, out hObject52);
                     HOperatorSet.Connection(hObject52, out hObject52);
@@ -411,7 +400,6 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     HOperatorSet.SmallestRectangle2(hObject54, out row1_s, out column1_s, out phi1_s, out length1_s, out length2_s);
                     halcon.AddImageMassage(row1_s, column1_s, "4宽:" + (length2_s * 2).TupleString("0.1f"));
                     HOperatorSet.GenRectangle2(out hObject51, row1_s, column1_s, phi1_s, length1_s, length2_s);
-
                 }
                 catch (Exception)
                 {
@@ -420,6 +408,5 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 return false;
             }
         }
-
     }
 }

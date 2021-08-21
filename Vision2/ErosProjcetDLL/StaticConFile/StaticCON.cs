@@ -35,6 +35,5 @@ namespace Vision2.ErosProjcetDLL.StaticConFile
             }
             return dic;
         }
-
     }
 }
