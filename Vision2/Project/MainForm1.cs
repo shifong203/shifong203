@@ -84,10 +84,16 @@ namespace Vision2.Project
                 }
                 if (ProjectINI.Enbt)
                 {
+                    userFormulaContrsl1.lightSourceControl1.Enabled = true;
+                    userFormulaContrsl1.dataGridView2.Enabled = true;
+                    userFormulaContrsl1.panel4.Enabled = true;
                     SaveAll.Visible = true;
                 }
                 else
                 {
+                    //userFormulaContrsl1.panel4.Enabled = false;
+                    userFormulaContrsl1.dataGridView2.Enabled = true;
+                    userFormulaContrsl1.lightSourceControl1.Enabled = false;
                     SaveAll.Visible = false;
                 }
                 toolStripLabel9.Text = DebugCompiler.Instance.DeviceNameText;
@@ -242,18 +248,18 @@ namespace Vision2.Project
                                                                 DebugF.DebugCompiler.Stop();
                                                                 ErosProjcetDLL.Project.AlarmListBoxt.AddAlarmText("运行中急停按钮开启停止");
                                                             }
-                                                            if (DebugF.DebugCompiler.EquipmentStatus == ErosSocket.ErosConLink.EnumEquipmentStatus.初始化中)
+                                                            if (DebugCompiler.EquipmentStatus == ErosSocket.ErosConLink.EnumEquipmentStatus.初始化中)
                                                             {
-                                                                if (DebugF.DebugCompiler.Instance.IsRunStrat)
+                                                                if (DebugCompiler.Instance.IsRunStrat)
                                                                 {
-                                                                    DebugF.DebugCompiler.ISHome = false;
+                                                                    DebugCompiler.ISHome = false;
                                                                 }
-                                                                DebugF.DebugCompiler.RunStop = true;
-                                                                DebugF.DebugCompiler.Stop();
-                                                                ErosProjcetDLL.Project.AlarmListBoxt.AddAlarmText("初始化中急停按钮开启停止");
+                                                                DebugCompiler.RunStop = true;
+                                                                DebugCompiler.Stop();
+                                                                AlarmListBoxt.AddAlarmText("初始化中急停按钮开启停止");
                                                             }
                                                         }
-                                                        ErosProjcetDLL.Project.AlarmListBoxt.AddAlarmText("急停按钮开启");
+                                                        AlarmListBoxt.AddAlarmText("急停按钮开启");
                                                         toolStripLabel6.BackColor = Color.Red;
                                                     }
                                                 }
@@ -550,28 +556,12 @@ namespace Vision2.Project
             }
         }
 
-        private void 平铺ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                this.LayoutMdi(MdiLayout.TileVertical);
-            }
-            catch (Exception)
-            {
-            }
-        }
-
         private void toolStripLeft_MouseLeave(object sender, EventArgs e)
         {
             if (隐藏工具ToolStripMenuItem.Checked)
             {
                 toolStripLeft.Visible = false;
             }
-        }
-
-        private void 打开ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            System.Diagnostics.Process.Start(Application.StartupPath);
         }
 
         private void 打开历史数据ToolStripMenuItem_Click(object sender, EventArgs e)

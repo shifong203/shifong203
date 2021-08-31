@@ -53,7 +53,17 @@ namespace Vision2.vision.HalconRunFile.PCBFile
         {
             try
             {
+                HOperatorSet.AreaCenter(Run.AOIObj, out HTuple area, out HTuple row, out HTuple column);
+
                 Run.AOIObj = RunProgram.DragMoveOBJ(halcon, Run.AOIObj);
+
+                HOperatorSet.AreaCenter(Run.AOIObj, out HTuple area2, out HTuple row2, out HTuple column2);
+
+                HOperatorSet.VectorAngleToRigid(row, column, 0, row2, column2, 0, out HTuple hTuple);
+                HOperatorSet.AffineTransRegion(Run.Point1, out HObject hObject, hTuple, "nearest_neighbor");
+                HOperatorSet.AffineTransRegion(Run.Point2, out HObject hObject2, hTuple, "nearest_neighbor");
+                Run.Point1 = hObject;
+                Run.Point2 = hObject2;
             }
             catch (Exception ex)
             {

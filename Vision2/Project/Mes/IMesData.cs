@@ -2,8 +2,11 @@
 using HalconDotNet;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Drawing.Design;
 using System.Windows.Forms;
 using Vision2.ErosProjcetDLL.Project;
+using Vision2.ErosProjcetDLL.UI.PropertyGrid;
 using Vision2.Project.formula;
 using Vision2.vision;
 using Vision2.vision.HalconRunFile.RunProgramFile;
@@ -39,7 +42,34 @@ namespace Vision2.Project.Mes
         public abstract Form GetForm();
 
         public abstract event IMesData.ResTMesd ResDoneEvent;
+        /// <summary>
+        ///历史记录地址
+        /// </summary>
+        [Editor(typeof(PageTypeEditor_FolderBrowserDialog), typeof(UITypeEditor))]
+        [Description(""), Category("历史记录"), DisplayName("历史记录地址")]
+     
+        public string DataPaht { get; set; } = "E:\\历史记录";
 
+
+        [Description("线号"), Category("Mes信息"), DisplayName("线号")]
+        public virtual string Line_Name { get; set; } = "Bay32";
+
+        [DescriptionAttribute("线体标示。"), Category("设备标识"), DisplayName("站号")]
+        public virtual string Fixture_ID { get; set; } = "EQDIW00011-01";
+
+        [Description("站号选择"), Category("Mes信息"), DisplayName("站号选择")]
+        public List<string> FixtureList { get; set; } = new List<string>();
+
+        [Description("线号选择"), Category("Mes信息"), DisplayName("线号选择")]
+        public List<string> ListStr { get; set; } = new List<string>();
+
+
+
+        [Description(""), Category("Mes查询"), DisplayName("异步查询")]
+        /// <summary>
+        ///模拟FVTPass
+        /// </summary>
+        public bool MesArye { get; set; }
         /// <summary>
         /// 保存到项目地址,必须调用父类
         /// </summary>
@@ -156,7 +186,7 @@ namespace Vision2.Project.Mes
             //set { product_Name = value; } 
         
         }
-        string product_Name;
+      
         /// <summary>
         /// 托盘位号
         /// </summary>
@@ -211,7 +241,7 @@ namespace Vision2.Project.Mes
                 }
                 foreach (var item in ListCamsData)
                 {
-                    if (!item.Value.OK) 
+                    if (!item.Value.aOK) 
                         return false;
                 }
                 foreach (var item in NGName)
@@ -223,7 +253,7 @@ namespace Vision2.Project.Mes
                 {
                     return false;
                 }
-                return true;
+                 return true;
             }
             set
             {
@@ -235,7 +265,7 @@ namespace Vision2.Project.Mes
                 NGName = keyValuePairs;
                 foreach (var item in ListCamsData)
                 {
-                    item.Value.OK = value;
+                    item.Value.aOK = value;
                 }
                 ok = value;
             }
@@ -295,9 +325,9 @@ namespace Vision2.Project.Mes
                     OneCompO.Add(itemdet.Value);
                 }
             }
-
             return OneCompO;
         }
+
         public HObject GetNGImage()
         {
             foreach (var item in ListCamsData)
@@ -313,6 +343,34 @@ namespace Vision2.Project.Mes
             }
             return null;
         }
+
+        public HObject[] GetImages(string camName)
+        {
+            List<HObject> hObjects = new List<HObject>();
+            List<int> runIDs = new List<int>();
+            try
+            {
+                if (ListCamsData.ContainsKey(camName))
+                {
+                    for (int i = 0; i < ListCamsData[camName].ResuOBj.Count; i++)
+                    {
+                   
+                        if (!runIDs.Contains(ListCamsData[camName].ResuOBj[i].LiyID))
+                        {
+                            runIDs.Add(ListCamsData[camName].ResuOBj[i].LiyID);
+                            hObjects.Add(ListCamsData[camName].ResuOBj[i].Image);
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+            return hObjects.ToArray();
+
+        }
+
         public string GetNGCamName()
         {
             foreach (var item in ListCamsData)
@@ -335,6 +393,11 @@ namespace Vision2.Project.Mes
                 ListCamsData[runName] = oneCam;
             }
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="runName"></param>
+        /// <param name="imagePalus"></param>
         public void AddCamsData(string runName, HObject imagePalus)
         {
             if (!ListCamsData.ContainsKey(runName))
@@ -351,7 +414,7 @@ namespace Vision2.Project.Mes
         {
             if (ListCamsData.ContainsKey(camName))
             {
-                if (oneRObj.OK)
+                if (oneRObj.aOK)
                 {
                     ListCamsData[camName].AllCompObjs.AddCont(oneRObj);
                 }
@@ -374,14 +437,14 @@ namespace Vision2.Project.Mes
         /// <summary>
         /// 单面集合是否OK
         /// </summary>
-        public bool OK
+        public bool aOK
         {
             get
             {
 
                 foreach (var item in DicNGObj.DicOnes)
                 {
-                    if (!item.Value.OK)
+                    if (!item.Value.aOK)
                     {
                         return false;
                     }
@@ -394,7 +457,7 @@ namespace Vision2.Project.Mes
 
                 foreach (var item in DicNGObj.DicOnes)
                 {
-                    item.Value.OK = value;
+                    item.Value.aOK = value;
                 }
             }
         }

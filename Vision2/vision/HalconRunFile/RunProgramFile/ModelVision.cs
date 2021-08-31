@@ -1239,7 +1239,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             Watch.Restart();
             if (!this.FindShapeModel(oneResultOBj, this.Mode, aoiObj))
             {
-                oneResultOBj.AddNGOBJ(this.Name, "偏移", aoiObj.SelseAoi, nGRoi);
+                oneResultOBj.AddNGOBJ(aoiObj.CiName, "Skewing", aoiObj.SelseAoi, nGRoi, this.GetBackNames());
                 NGNumber++;
             }
             Watch.Stop();
@@ -1256,7 +1256,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         HTuple.TupleGenConst(row.Length, Vision.Instance.DilationRectangle1));
 
                     oneResultOBj.AddImageMassage(row, col, phi.TupleString("0.02f") + ":" + DIPs[idt].Name, ColorResult.red);
-                    oneResultOBj.AddNGOBJ(this.Name, "偏移", hObject1, nGRoi);
+                    oneResultOBj.AddNGOBJ(aoiObj.CiName, "Skewing", hObject1, nGRoi, this.GetBackNames());
                     dst = false;
                 }
             }
@@ -1270,7 +1270,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         NGNumber++;
                         HOperatorSet.GenRectangle2(out HObject hObject1, row, column, HTuple.TupleGenConst(row.Length, 0),
                         HTuple.TupleGenConst(row.Length, Vision.Instance.DilationRectangle1), HTuple.TupleGenConst(row.Length, Vision.Instance.DilationRectangle1));
-                        oneResultOBj.AddNGOBJ(this.Name, "偏移", hObject1, nGRoi);
+                        oneResultOBj.AddNGOBJ(aoiObj.CiName, "Skewing", hObject1, nGRoi, this.GetBackNames());
                     }
                 }
             }

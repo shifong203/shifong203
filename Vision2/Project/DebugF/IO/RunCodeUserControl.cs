@@ -295,9 +295,7 @@ namespace Vision2.Project.DebugF.IO
             }
             catch (Exception)
             {
-
             }
-       
         }
 
         private void tsButton1_Click(object sender, EventArgs e)

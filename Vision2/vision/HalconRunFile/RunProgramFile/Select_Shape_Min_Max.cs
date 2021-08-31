@@ -130,6 +130,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             {
                 Max = Max.TupleRemove(Max.Length - 1);
             }
+            //HOperatorSet.Connection(hObject, out hObject);
             if (runid >= 0)
             {
                 HOperatorSet.SelectShape(hObject, out hObject1, Select_Type[runid], Operation, Min[runid], Max[runid]);

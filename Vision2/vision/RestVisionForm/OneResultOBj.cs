@@ -28,6 +28,11 @@ namespace Vision2.vision
             Colrrs.GenEmptyObj();
         }
 
+        /// <summary>
+        /// 是否保存图像
+        /// </summary>
+        public bool IsSave = true;
+
         public Coordinate CoordinatePXY = new Coordinate();
 
         /// <summary>
@@ -72,7 +77,7 @@ namespace Vision2.vision
             {
                 foreach (var item in oneContOBJs.DicOnes)
                 {
-                    if (!item.Value.OK)
+                    if (!item.Value.aOK)
                     {
                         return false;
                     }
@@ -87,7 +92,7 @@ namespace Vision2.vision
             {
                 foreach (var item in oneContOBJs.DicOnes)
                 {
-                    if (!item.Value.OK)
+                    if (!item.Value.aOK)
                     {
                         return false;
                     }
@@ -100,7 +105,7 @@ namespace Vision2.vision
                 {
                     foreach (var item in oneContOBJs.DicOnes)
                     {
-                        item.Value.OK = true;
+                        item.Value.aOK = true;
                     }
                 }
                 autoOk = value;
@@ -130,8 +135,14 @@ namespace Vision2.vision
 
         public void ReadImage(string path)
         {
-            HOperatorSet.ReadImage(out HObject hObject, path);
-            Image = hObject;
+            try
+            {
+                HOperatorSet.ReadImage(out HObject hObject, path);
+                Image = hObject;
+            }
+            catch (Exception)
+            {
+            }
         }
 
         public void AddOKOBj(OneCompOBJs.OneComponent oneComponent)
@@ -152,6 +163,9 @@ namespace Vision2.vision
             oneContOBJs.AddCont(rObj);
         }
 
+        /// <summary>
+        ///
+        /// </summary>
         private List<HObject> imageS = new List<HObject>();
 
         /// <summary>
@@ -164,16 +178,23 @@ namespace Vision2.vision
         /// <param name="ngText">NG信息集合</param>
         /// <param name="runPa">库名称</param>
         public void AddNGOBJ(string component, string nGText, HObject roi, HObject err,
-            HTuple ngText = null, string runPa = "")
+            HTuple ngText, string runPa = "")
         {
+            HOperatorSet.AreaCenter(roi, out HTuple area, out HTuple row, out HTuple colu);
             OneRObj rObj = new OneRObj()
             {
                 NGText = nGText,
                 ComponentID = component,
                 ROI = roi,
                 NGROI = err,
-                RunName = runPa
+                RunName = runPa,
             };
+            if (row.Length >= 0)
+            {
+                rObj.Row = row.TupleInt();
+                rObj.Col = colu.TupleInt();
+            }
+
             if (ngText != null)
             {
                 for (int i = 0; i < ngText.Length; i++)
@@ -629,17 +650,20 @@ namespace Vision2.vision
                 {
                     foreach (var itemtd in item.Value.oneRObjs)
                     {
-                        if (itemtd.ROI != null)
+                        if (!item.Value.aOK)
                         {
-                            HOperatorSet.AreaCenter(itemtd.ROI, out HTuple area, out HTuple row, out HTuple column);
-                            if (row.Length == 1)
+                            if (itemtd.ROI != null)
                             {
-                                Vision.Disp_message(hWindowHalconID, itemtd.NGText, row, column, true, "red");
+                                HOperatorSet.AreaCenter(itemtd.ROI, out HTuple area, out HTuple row, out HTuple column);
+                                if (row.Length == 1)
+                                {
+                                    Vision.Disp_message(hWindowHalconID, itemtd.NGText, row, column, true, "red");
+                                }
+                                HOperatorSet.SetColor(hWindowHalconID, "red");
+                                HOperatorSet.DispObj(itemtd.NGROI, hWindowHalconID);
+                                HOperatorSet.SetColor(hWindowHalconID, Vision.Instance.ROIColr.ToString());
+                                HOperatorSet.DispObj(itemtd.ROI, hWindowHalconID);
                             }
-                            HOperatorSet.SetColor(hWindowHalconID, "red");
-                            HOperatorSet.DispObj(itemtd.NGROI, hWindowHalconID);
-                            HOperatorSet.SetColor(hWindowHalconID, Vision.Instance.ROIColr.ToString());
-                            HOperatorSet.DispObj(itemtd.ROI, hWindowHalconID);
                         }
                     }
                 }
@@ -771,6 +795,10 @@ namespace Vision2.vision
 
         public int Width;
 
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="hObject"></param>
         public void AddImage(HObject hObject)
         {
             imageS.Add(hObject);
@@ -844,6 +872,14 @@ namespace Vision2.vision
         }
 
         private Dictionary<string, Hobjt_Colro> Dick = new Dictionary<string, Hobjt_Colro>();
+        public List<Hobjt_Colro> GetHobjt_s(List<Hobjt_Colro> hobjt_Colros=null)
+        {
+            if (hobjt_Colros!=null)
+            {
+                ListHobj = hobjt_Colros;
+            }
+            return ListHobj;
+        }
         private List<Hobjt_Colro> ListHobj = new List<Hobjt_Colro>();
 
         ~OneResultOBj()

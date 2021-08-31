@@ -145,7 +145,6 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                             select objDic;
                 int i = 0;
                 int cont = detee.Count();
-
                 if (detee.Count() == dataGridView1.Rows.Count)
                 {
                     for (i = 0; i < dataGridView1.Rows.Count; i++)
@@ -633,8 +632,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         {
             Information = "视觉程序容器类,装载视觉执行程序";
             RunTimeI = 0;
-            HOperatorSet.GenEmptyObj(out HObjectImage);
-
+            //HOperatorSet.GenEmptyObj(out HObjectImage);
             //CamNameStr = "default";
             Height = -1;
             Width = -1;
@@ -878,27 +876,130 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         public string ImagePaths { get; set; } = "";
 
         /// <summary>
-        /// 图片
+        /// 整盘集合
         /// </summary>
-        //HObject imag
-        //{
-        //    get
-        //    {
-        //        lock (lokt)
-        //        {
-        //            return HObjectImage;
-        //        }
-        //    }
-        //    set
-        //    {
-        //        lock (lokt)
-        //        {
-        //            HObjectImage = value;
-        //        }
-        //    }
-        //}
+        private Queue<ImagesOneRun> ImageTs = new Queue<ImagesOneRun>();
 
-        private HObject HObjectImage = new HObject();
+        public Queue<ImagesOneRun> GetRuns()
+        {
+            return ImageTs;
+        }
+
+        public List<OneResultOBj> GetRunsOne()
+        {
+            List<OneResultOBj> oneResults = new List<OneResultOBj>();
+            for (int i = 0; i < ImageTs.Count; i++)
+            {
+                oneResults.Add(ImageTs.ToArray()[i].ImageTs);
+            }
+            return oneResults;
+        }
+
+        public bool AysBing { get; private set; }
+
+        public bool AysEndble { get; set; }
+
+        public void AysnetRun()
+        {
+            Task task = new Task(() =>
+            {
+                if (AysBing)
+                {
+                    return;
+                }
+                AysBing = true;
+                AysEndble = true;
+                while (AysEndble)
+                {
+                    try
+                    {
+                        if (!AysBing) AysBing = true;
+                        if (ImageTs.Count != 0)
+                        {
+                            ImagesOneRun resultOBj = ImageTs.Dequeue();
+                            resultOBj.GetImage(this.GetCam());
+                            CamImageEvent(resultOBj.ImageTs);
+                        }
+                    }
+                    catch (Exception ex)
+                    { }
+                }
+                AysBing = false;
+            });
+
+            task.Start();
+        }
+
+        public void AysnetCam(int liyID, int runID, HObject imaged = null)
+        {
+            try
+            {
+                ImagesOneRun imagesOneRun = null;
+                if (imaged == null)
+                {
+                    if (this.GetCam().GetImage(out IGrabbedRawData image))
+                    {
+                        imagesOneRun = new ImagesOneRun(image, liyID, runID);
+                        Task task = new Task(() =>
+                        {
+                            imagesOneRun.GetImage(this.GetCam());
+                            ImageTs.Enqueue(imagesOneRun);
+                        });
+                        task.Start();
+                    }
+                    else
+                    {
+                        throw (new Exception("采图失败;"));
+                    }
+                }
+                else
+                {
+                    imagesOneRun = new ImagesOneRun(imaged, liyID, runID);
+                    ImageTs.Enqueue(imagesOneRun);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw (ex);
+            }
+        }
+
+        public class ImagesOneRun
+        {
+            public ImagesOneRun(IGrabbedRawData grabbedRawData, int liyID, int runID)
+            {
+                images = grabbedRawData;
+                ImageTs.LiyID = liyID;
+                ImageTs.RunID = runID;
+            }
+
+            public ImagesOneRun(HObject grabbedRawData, int liyID, int runID)
+            {
+                ImageTs.Image = grabbedRawData;
+                ImageTs.LiyID = liyID;
+                ImageTs.RunID = runID;
+            }
+
+            public OneResultOBj ImageTs = new OneResultOBj();
+
+            private IGrabbedRawData images;
+
+            public HObject GetImage(Cams.ICamera camera)
+            {
+                try
+                {
+                    if (images != null)
+                    {
+                        ImageTs.Image = camera.IGrabbedRawDataTOImage(images);
+                    }
+                    return ImageTs.Image;
+                }
+                catch (Exception)
+                {
+                }
+                return ImageTs.Image;
+            }
+        }
 
         private static object lokt = new object();
 
@@ -1129,6 +1230,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
 
                 this.ReadImage(files.ToArray()[0].ToString());
             }
+            AysnetRun();
             SetCamPraegrm();
             //SetExposureTime();
             ObjName = "结果区域";
@@ -2047,6 +2149,16 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         Vision.TriggerSetup(Vision.GetSaveImageInfo(this.Name).ReadCamOKName, "true");
                         this.GetCam().OnEnverIamge(liyID.ToString(), runid, oneResultOBj);
                     }
+                    else if (oneResultOBj != null)
+                    {
+                        oneResultOBj.RunID = runid;
+                        oneResultOBj.LiyID = liyID;
+                        aysDone = false;
+                        asyncRestImage.Invoke(oneResultOBj);
+                        Vision.TriggerSetup(Vision.GetSaveImageInfo(this.Name).ReadCamOKName, "true");
+                        this.CamImageEvent(oneResultOBj);
+                        //this.GetCam().OnEnverIamge(liyID.ToString(), runid, oneResultOBj);
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -2203,9 +2315,9 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         //{
         //    return TrayResetData;
         //}
-        public void CamImageEvent(OneResultOBj oneResultOBj, bool isSave = true)
+        public void CamImageEvent(OneResultOBj oneResultOBj)
         {
-            CamImageEvent(oneResultOBj.LiyID.ToString(), oneResultOBj, oneResultOBj.RunID, isSave);
+            CamImageEvent(oneResultOBj.LiyID.ToString(), oneResultOBj, oneResultOBj.RunID);
         }
 
         /// <summary>
@@ -2215,7 +2327,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         /// <param name="OneImageData">单次拍照集合</param>
         /// <param name="runID"> 程序ID </param>
         /// <param name="isSave">保存图片</param>
-        public void CamImageEvent(string liyID, OneResultOBj OneImageData, int runID, bool isSave = true)
+        public void CamImageEvent(string liyID, OneResultOBj OneImageData, int runID)
         {
             try
             {
@@ -2264,11 +2376,6 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     if (trayRobotData != null)
                     {
                         OnePatrData = trayRobotData.GetOneDataVale(TrayLocation - 1);
-                        if (OnePatrData != null)
-                        {
-                            OnePatrData.TrayLocation = TrayLocation;
-                            OnePatrData.NotNull = true;
-                        }
                     }
                 }
                 else
@@ -2279,7 +2386,18 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         this.ResultOBjs = new OneResultOBj[MaxRunID].ToList();
                         TrayRestData = new DataReseltBase();
                     }
+                    if (OneImageData.LiyID == 1 || OneImageData.RunID == 1)
+                    {
+                        OnePatrData = new OneDataVale();
+                    }
                 }
+
+                if (this.GetSaveImageInfo().PiNumber <= 1)
+                {
+                    OnePatrData.TrayLocation = TrayLocation;
+                    OnePatrData.NotNull = true;
+                }
+
                 //OneCamData.RunVisionName = this.Name;
                 if (keyValuePairs1 == null)
                 {
@@ -2360,7 +2478,20 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     OneCamData = new OneCamData();
                 }
                 OneCamData.ResuOBj.Add(OneImageData);
-                UPDa(OneImageData, isSave, hObject);
+                if (OnePatrData != null)
+                {
+                    //if (OnePatrData.PanelID == "")
+                    //{
+                    //    OnePatrData.PanelID = Project.ProcessControl.ProcessUser.QRCode;
+                    //}
+                    OnePatrData.PanelID = Project.ProcessControl.ProcessUser.QRCode;
+                    if (this.GetSaveImageInfo().PiNumber <= 1)
+                    {
+                        OnePatrData.AddCamsData(this.Name, OneImageData.RunID, OneCamData);
+                    }
+                }
+
+                UPDa(OneImageData, OneImageData.IsSave, hObject, OnePatrData);
 
                 if (PaleMode && OneImageData.LiyID % this.PaleID == 0)
                 {
@@ -2368,7 +2499,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     {
                         AlarmText.AddTextNewLine("已完成:" + runID + ":" + LiyID);
                     }
-                    UPDOneData(OneImageData, isSave);
+                    UPDOneData(OneImageData, OnePatrData, trayRobotData, OneImageData.IsSave);
                 }
             }
             catch (Exception ex)
@@ -2383,7 +2514,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         /// <param name="oneResultOBj"></param>
         /// <param name="isSave"></param>
         /// <param name="hObject"></param>
-        public void UPDa(OneResultOBj oneResultOBj, bool isSave, HObject hObject)
+        public void UPDa(OneResultOBj oneResultOBj, bool isSave, HObject hObject, OneDataVale oneDataVale)
         {
             Thread thread = new Thread(() =>
             {
@@ -2401,7 +2532,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
 
                             if (Vision.Instance.DicSaveType[this.Name].IsQRText)
                             {
-                                hTuple.Append(Project.ProcessControl.ProcessUser.QRCode);
+                                hTuple.Append(oneDataVale.PanelID);
                             }
                             if (!File.Exists(Vision.Instance.DicSaveType[this.Name].SaveDataPath + "\\CPK\\" + DateTimeImage.ToLongDateString() + ".xls"))
                             {
@@ -2431,11 +2562,15 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     {
                         if (rebool)
                         {
-                            Vision.SaveWindow(Vision.Instance.DicSaveType[this.Name].SavePath + "\\" + DateTimeImage.ToLongDateString() + "\\截屏OK\\" + DateTimeImage.ToString("HH时mm分ss秒"), this.hWindowHalcon(), Vision.Instance.DicSaveType[this.Name].SaveWindowImageType);
+                            Vision.SaveWindow(Vision.Instance.DicSaveType[this.Name].SavePath + "\\" +
+                                DateTimeImage.ToLongDateString() + "\\截屏OK\\" + DateTimeImage.ToString("HH时mm分ss秒"),
+                                this.hWindowHalcon(), Vision.Instance.DicSaveType[this.Name].SaveWindowImageType);
                         }
                         else
                         {
-                            Vision.SaveWindow(Vision.Instance.DicSaveType[this.Name].SavePath + "\\" + DateTimeImage.ToLongDateString() + "\\截屏NG\\" + DateTimeImage.ToString("HH时mm分ss秒"), this.hWindowHalcon(), Vision.Instance.DicSaveType[this.Name].SaveWindowImageType);
+                            Vision.SaveWindow(Vision.Instance.DicSaveType[this.Name].SavePath +
+                                "\\" + DateTimeImage.ToLongDateString() + "\\截屏NG\\" + DateTimeImage.ToString("HH时mm分ss秒"),
+                                this.hWindowHalcon(), Vision.Instance.DicSaveType[this.Name].SaveWindowImageType);
                         }
                     }
                     try
@@ -2443,7 +2578,8 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         HTuple datas = new HTuple();
                         if (Vision.Instance.DicSaveType[this.Name].IsData)
                         {
-                            SaveDataExcel("历史数据", this.WriteDataCName.Keys.ToArray(), DateTimeImage.ToString("HH时mm分ss秒"), this.WriteDataCName.Values.ToArray());
+                            SaveDataExcel("历史数据", this.WriteDataCName.Keys.ToArray(),
+                                DateTimeImage.ToString("HH时mm分ss秒"), this.WriteDataCName.Values.ToArray());
                         }
                         if (Vision.Instance.DicSaveType[this.Name].ISSaveModeR)
                         {
@@ -2490,17 +2626,18 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                             imageName = this.RunName[oneResultOBj.RunID - 1];
                         }
                         imageName += oneResultOBj.LiyID;
-                        Vision.Instance.DicSaveType[this.Name].SaveImage(hObject, oneResultOBj.RunID, imageName, this.Name, DateTimeImage);
                         if (Vision.Instance.DicSaveType[this.Name].ISSaveNGImage)
                         {
                             if (!rebool)
                             {
-                                Vision.Instance.DicSaveType[this.Name].SaveImage(hObject, Vision.Instance.DicSaveType[this.Name].SavePath + "\\NG\\" + DateTimeImage.ToLongDateString() + "\\" + Product.ProductionName + "\\" +
-                                    Project.ProcessControl.ProcessUser.QRCode + "\\" + DateTimeImage.ToString("HH时mm分ss秒") + oneResultOBj.RunID);
-                                Vision.SaveWindow(Vision.Instance.DicSaveType[this.Name].SavePath + "\\NG\\" + DateTimeImage.ToLongDateString() + "\\" + Product.ProductionName + "\\" +
-                                    Project.ProcessControl.ProcessUser.QRCode + "\\" + DateTimeImage.ToString("HH时mm分ss秒") + oneResultOBj.RunID + "截屏", Vision.GetRunNameVision(Name).hWindowHalcon());
+                                string path = Vision.Instance.DicSaveType[this.Name].SavePath + "\\NG\\" + DateTimeImage.ToLongDateString() + "\\" + Product.ProductionName + "\\" +
+                                    oneDataVale.PanelID + "\\" + this.Name + DateTimeImage.ToString("HH时mm分ss秒") + oneResultOBj.RunID + "-" + oneResultOBj.LiyID;
+
+                                Vision.Instance.DicSaveType[this.Name].SaveImage(hObject, path);
+                                Vision.SaveWindow(path + "截屏", Vision.GetRunNameVision(Name).hWindowHalcon());
                             }
                         }
+                        Vision.Instance.DicSaveType[this.Name].SaveImage(hObject, oneResultOBj.RunID, imageName, this.Name, oneDataVale.PanelID, DateTimeImage);
                     }
                     hObject.Dispose();
                 }
@@ -2519,105 +2656,208 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         /// </summary>
         /// <param name="dataP"></param>
         /// <param name="isSave"></param>
-        public void UPDOneData(OneResultOBj dataP, bool isSave)
+        public void UPDOneData(OneResultOBj dataP, OneDataVale onePatrData, TrayData trayD, bool isSave)
         {
             Thread thread = new Thread(() =>
             {
                 try
                 {
-                    //dataP.Done = false;
-                    HOperatorSet.HomMat2dIdentity(out HTuple HomMat2D);
-                    OneCompOBJs oneRObjs = new OneCompOBJs();
-                    for (int i = 0; i < OneCamData.ResuOBj.Count; i++)
+                    if (this.PaleID > 1)
                     {
-                        HTuple rowsT = 0;
-                        HTuple colsT = 0;
-                        try
+                        HOperatorSet.HomMat2dIdentity(out HTuple HomMat2D);
+                        OneCompOBJs oneRObjs = new OneCompOBJs();
+                        OneCamData oneCamD = onePatrData.ListCamsData[this.Name];
+                        for (int i = 0; i < oneCamD.ResuOBj.Count; i++)
                         {
-                            rowsT = this.TiffeOffsetImageEX.Rows[i] - this.TiffeOffsetImageEX.Rows1[i];
-                            colsT = this.TiffeOffsetImageEX.Cols[i] - this.TiffeOffsetImageEX.Cols1[i];
-                        }
-                        catch (Exception ex)
-                        {
-                        }
-                        if (OneCamData.ResuOBj[i].GetNgOBJS().DicOnes.Count > 0)
-                        {
-                            HOperatorSet.HomMat2dTranslate(HomMat2D, rowsT, colsT, out HTuple hTuple);
-                            foreach (var item in OneCamData.ResuOBj[i].GetNgOBJS().DicOnes)
+                            HTuple rowsT = 0;
+                            HTuple colsT = 0;
+                            try
                             {
-                                if (item.Value.oneRObjs.Count == 0)
+                                rowsT = this.TiffeOffsetImageEX.Rows[i] - this.TiffeOffsetImageEX.Rows1[i];
+                                colsT = this.TiffeOffsetImageEX.Cols[i] - this.TiffeOffsetImageEX.Cols1[i];
+                            }
+                            catch (Exception ex)
+                            {
+                            }
+                            if (oneCamD.ResuOBj[i].GetNgOBJS().DicOnes.Count > 0)
+                            {
+                                HOperatorSet.HomMat2dTranslate(HomMat2D, rowsT, colsT, out HTuple hTuple);
+                                foreach (var item in oneCamD.ResuOBj[i].GetNgOBJS().DicOnes)
                                 {
-                                    oneRObjs.Add(item.Value);
-                                }
-
-                                foreach (var itemd in item.Value.oneRObjs)
-                                {
-                                    try
+                                    if (item.Value.oneRObjs.Count == 0)
                                     {
-                                        OneRObj oneRObj = new OneRObj(itemd);
-                                        HOperatorSet.AffineTransRegion(itemd.NGROI,
-                                              out oneRObj.NGROI, hTuple, "nearest_neighbor");
-                                        HOperatorSet.AffineTransRegion(itemd.ROI,
-                                      out oneRObj.ROI, hTuple, "nearest_neighbor");
-                                        oneRObjs.AddCont(oneRObj);
+                                        oneRObjs.Add(item.Value);
                                     }
-                                    catch (Exception ex)
-                                    { }
+
+                                    foreach (var itemd in item.Value.oneRObjs)
+                                    {
+                                        try
+                                        {
+                                            OneRObj oneRObj = new OneRObj(itemd);
+                                            HOperatorSet.AffineTransRegion(itemd.NGROI,
+                                                  out oneRObj.NGROI, hTuple, "nearest_neighbor");
+                                            HOperatorSet.AffineTransRegion(itemd.ROI,
+                                          out oneRObj.ROI, hTuple, "nearest_neighbor");
+                                            oneRObjs.AddCont(oneRObj);
+                                        }
+                                        catch (Exception ex)
+                                        { }
+                                    }
                                 }
                             }
+                            oneCamD.SetOneContOBJ(oneRObjs);
                         }
-                        OneCamData.SetOneContOBJ(oneRObjs);
                     }
                     HObject hObject = dataP.Image;
-                    if (this.PaleID != 1)
+                    if (onePatrData != null)
                     {
-                        hObject = Vision.GetRunNameVision(this.Name).TiffeOffsetImageEX.TiffeOffsetImage(this.Name);
+                        if (this.PaleID != 1)
+                        {
+                            hObject = Vision.GetRunNameVision(this.Name).TiffeOffsetImageEX.TiffeOffsetImage(onePatrData.GetImages(this.Name));
+                            //hObject = Vision.GetRunNameVision(this.Name).TiffeOffsetImageEX.TiffeOffsetImage(this.Name);
+                        }
+                        onePatrData.AddCamsData(this.Name, hObject);
                     }
-                    if (OnePatrData != null)
+                    else
                     {
-                        OnePatrData.PanelID = Project.ProcessControl.ProcessUser.QRCode;
-                        OnePatrData.AddCamsData(this.Name, dataP.RunID, OneCamData);
-                        OnePatrData.AddCamsData(this.Name, hObject);
+                        if (this.PaleID != 1)
+                        {
+                            hObject = Vision.GetRunNameVision(this.Name).TiffeOffsetImageEX.TiffeOffsetImage(this.Name);
+                        }
                     }
-                    UserFormulaContrsl.This.HWind.SetImaage(hObject);
+                    if (DebugCompiler.Instance.IsSet)
+                    {
+                        UserFormulaContrsl.This.HWind.SetImaage(hObject);
+                    }
                     if (isSave)
                     {
                         if (this.PaleID != 1)
                         {
-                            Vision.GetSaveImageInfo(this.Name).SaveImage(hObject, 0, "拼图", this.Name, DateTime.Now);
+                            Vision.GetSaveImageInfo(this.Name).SaveImage(hObject, 0, "拼图", this.Name, onePatrData.PanelID, DateTime.Now);
                         }
                     }
-                    if (trayRobotData != null)
+                    if (trayD != null)
                     {
-                        if (trayRobotData.GetITrayRobot() != null)
+                        if (trayD.GetITrayRobot() != null)
                         {
-                            if (OnePatrData != null)
+                            if (onePatrData != null)
                             {
                                 if (RecipeCompiler.Instance.PalenID)
                                 {
-                                    if (OnePatrData.PanelID == null || OnePatrData.PanelID == "")
+                                    if (onePatrData.PanelID == null || onePatrData.PanelID == "")
                                     {
-                                        OneCamData.NGObj.AddCont(new OneRObj() { ComponentID = "SN", NGText = "SN未识别" });
-                                        OnePatrData.OK = false;
+                                        onePatrData.AddNG("SN未识别", false);
+                                        onePatrData.OK = false;
                                     }
                                 }
-                                OnePatrData.AutoOK = OnePatrData.OK;
-                                OnePatrData.EndTime = DateTime.Now;
+                                onePatrData.AutoOK = onePatrData.OK;
+                                onePatrData.EndTime = DateTime.Now;
                             }
-                            trayRobotData.SetNumberValue(TrayLocation, trayRobotData);
+                            if (this.GetSaveImageInfo().PiNumber > 1)
+                            {
+                                int detg = trayD.XNumber / this.GetSaveImageInfo().PiNumber + trayD.XNumber % this.GetSaveImageInfo().PiNumber;
+                                int det = dataP.RunID / (trayD.XNumber / this.GetSaveImageInfo().PiNumber + trayD.XNumber % this.GetSaveImageInfo().PiNumber);
+                                //det = det - 1;
+                                if (dataP.RunID == 16)
+                                { }
+                                detg = dataP.RunID / (trayD.XNumber / this.GetSaveImageInfo().PiNumber + trayD.XNumber % this.GetSaveImageInfo().PiNumber);
+                                if (dataP.RunID / (trayD.XNumber / this.GetSaveImageInfo().PiNumber) > 0 &&
+                                dataP.RunID % (trayD.XNumber / this.GetSaveImageInfo().PiNumber) == dataP.RunID / (trayD.XNumber / this.GetSaveImageInfo().PiNumber))
+                                { det = 1; }
+                                else
+                                { det = 0; }
+                                for (int i = 0; i < this.GetSaveImageInfo().PiNumber - det; i++)
+                                {
+                                    OneDataVale oneData = trayD.GetOneDataVale((dataP.RunID - 1) * this.GetSaveImageInfo().PiNumber + i - detg + det);
+
+                                    OneCamData oneCamData = new OneCamData();
+                                    OneResultOBj oneResultOBj = new OneResultOBj();
+                                    foreach (var item in dataP.GetNgOBJS().DicOnes)
+                                    {
+                                        HOperatorSet.GetRegionIndex(this.GetSaveImageInfo().PObj[i], item.Value.Row, item.Value.Col, out HTuple intdes);
+                                        if (intdes.Length >= 1)
+                                        {
+                                            oneData.NotNull = true;
+                                            if (intdes != -1)
+                                            {
+                                                if (item.Key == "颜色检测")
+                                                { }
+                                                oneResultOBj.AddOKOBj(item.Value);
+                                                oneCamData.NGObj.Add(item.Value);
+                                            }
+                                        }
+                                    }
+                                    //oneResultOBj.GetHobjt_s(dataP.GetHobjt_s());
+                                    oneResultOBj.HObjectYellow = dataP.HObjectYellow;
+                                    oneResultOBj.HObjectGreen = dataP.HObjectGreen;
+                                    oneResultOBj.HObjectRed = dataP.HObjectRed;
+                                    oneResultOBj.HObjectBlue = dataP.HObjectBlue;
+                                    oneResultOBj.MaGreen = dataP.MaGreen;
+                                    oneResultOBj.Image = dataP.Image;
+                                    oneResultOBj.AddObj(this.GetSaveImageInfo().PObj[i]);
+                                    oneResultOBj.RunID = dataP.RunID;
+
+                                    oneCamData.ResuOBj.Add(oneResultOBj);
+                                    oneData.AddCamsData(this.Name, dataP.RunID, oneCamData);
+
+                                    oneData.AddCamsData(this.Name, dataP.Image);
+                                    if (!oneData.NotNull)
+                                    {
+                                        trayD.SetNumberValue(oneData.TrayLocation, 0);
+                                    }
+                                    else
+                                    {
+                                        if (oneData.OK)
+                                        {
+                                            trayD.SetNumberValue(oneData.TrayLocation, 1);
+                                        }
+                                        else
+                                        {
+                                            trayD.SetNumberValue(oneData.TrayLocation, 2);
+                                            foreach (var item in oneCamData.NGObj.DicOnes)
+                                            {
+                                                if (item.Value.RestStrings.Contains("气泡"))
+                                                {
+                                                    if (!item.Value.aOK)
+                                                    {
+                                                        trayD.SetNumberValue(oneData.TrayLocation, 3);
+                                                        break;
+                                                    }
+                                                }
+                                            }
+
+                                        }
+                                    }
+                        
+                                    //if (!oneCamData.aOK)
+                                    //{
+                                 
+                                     
+                                    //}
+                                    //else
+                                    //{
+                                    //    trayD.SetNumberValue(oneData.TrayLocation, 1);
+                                    //}
+                                }
+                            }
+                            else
+                            {
+                                trayD.SetNumberValue(onePatrData.TrayLocation, trayD);
+                            }
+
                             if (Vision.GetSaveImageInfo(this.Name).ISCount)
                             {
                                 if (RecipeCompiler.Instance.TrayQRType == RecipeCompiler.TrayEnumType.一个流程一个产品)
                                 {
-                                    RecipeCompiler.AddOKNumber(OnePatrData.OK);
-                                    if (OnePatrData.AutoOK)
+                                    RecipeCompiler.AddOKNumber(onePatrData.OK);
+                                    if (onePatrData.AutoOK)
                                     {
                                         if (RecipeCompiler.Instance.GetMes() != null)
                                         {
-                                            RecipeCompiler.Instance.GetMes().WrietMes(OnePatrData, Product.ProductionName);
+                                            RecipeCompiler.Instance.GetMes().WrietMes(onePatrData, Product.ProductionName);
                                         }
                                     }
-                                    UserFormulaContrsl.GetDataVale(OnePatrData);
+                                    UserFormulaContrsl.GetDataVale(onePatrData);
                                 }
                             }
                         }
@@ -4648,6 +4888,11 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         [DescriptionAttribute("是否保存测试数据。"), Category("CPK"), DisplayName("启动数据保存")]
         public bool ISSaveData { get; set; }
 
+        [DescriptionAttribute("分割产品数量。"), Category("产品"), DisplayName("分割产品数量")]
+        public int PiNumber { get; set; }
+
+        public List<HObject> PObj = new List<HObject>();
+
         [DescriptionAttribute("选择轴组合。"), Category("轴"), DisplayName("轴组")]
         [TypeConverter(typeof(ErosConverter)), ErosConverter.ThisDropDownAttribute("AxisGrotList", false, true)]
         public string AxisGrot { get; set; } = "";
@@ -4751,12 +4996,10 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         /// <param name="Name">相机名称</param>
         /// <param name="Result">结果</param>
         /// <param name="timeLog">时间</param>
-        public void SaveImage(HObject image, int runID, string imageName, string Name, DateTime timeLog)
+        public void SaveImage(HObject image, int runID, string imageName, string Name, string sn, DateTime timeLog)
         {
             string path = "";
-
             path = SavePath + "\\" + timeLog.ToLongDateString();
-
             if (ImageNameType == "All")
             {
                 path += "\\" + Name;
@@ -4771,7 +5014,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             }
             else if (ImageNameType == "QR")
             {
-                path += "\\" + Product.ProductionName + "\\" + Project.ProcessControl.ProcessUser.QRCode + "\\" + Name;
+                path += "\\" + Product.ProductionName + "\\" + sn + "\\" + Name;
             }
             else
             {

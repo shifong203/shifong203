@@ -27,7 +27,7 @@ namespace Vision2.vision.Cams
 
         void Straing(HalconRun halconRun);
 
-        event Action<string, OneResultOBj, int, bool> Swtr;
+        event Action<string, OneResultOBj, int> Swtr;
 
         event Action<bool> LinkEnvet;
 

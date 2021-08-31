@@ -691,7 +691,7 @@ namespace Vision2.ErosProjcetDLL.Project
             obje = default(T);
             try
             {
-                if (!path.Contains("."))
+                if (!Path.GetFileName(path).Contains("."))
                 {
                     path = path + ".txt";
                 }
@@ -718,7 +718,7 @@ namespace Vision2.ErosProjcetDLL.Project
         {
             try
             {
-                if (!path.Contains("."))
+                if (!Path.GetFileName(path).Contains('.'))
                 {
                     path = path + ".txt";
                 }
@@ -746,6 +746,44 @@ namespace Vision2.ErosProjcetDLL.Project
             {
             }
             return jsonStr;
+        }
+
+        public static void Weait(object calss)
+        {
+            try
+            {
+                SaveFileDialog fbd = new SaveFileDialog();
+                fbd.Title = "选择文件";
+                fbd.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop); //初始路径
+                fbd.Filter = "txt|*.txt;*.dt|所有文件|*.*";
+                fbd.ShowDialog();
+                if (fbd.FileNames.Length != 0)
+                {
+                    ProjectINI.ClassToJsonSavePath(calss, fbd.FileName);
+                }
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        public static void ReadWeait<T>(out T calss)
+        {
+            calss = default(T);
+            try
+            {
+                OpenFileDialog fbd = new OpenFileDialog();
+                fbd.Title = "选择文件";
+                fbd.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop); //初始路径
+                fbd.Filter = "txt|*.txt;*.dt|所有文件|*.*";
+                fbd.ShowDialog();
+                if (fbd.FileNames.Length != 0)
+                {
+                    ProjectINI.ReadPathJsonToCalss(fbd.FileName, out calss);
+                }
+            }
+            catch (Exception ex)
+            { }
         }
 
         // <summary>

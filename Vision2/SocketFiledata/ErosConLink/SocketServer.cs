@@ -337,22 +337,24 @@ namespace ErosSocket.ErosConLink
         {
             try
             {
-                watch.Restart();
-                RecivesDone = false;
-                int dd = 0;
-                while (true)
-                {
-                    dd++;
-                    Thread.Sleep(1);
-                    if (RecivesDone)
-                    {
-                        return ReciveStr[ReciveStr.Count - 1];
-                    }
-                    if (watch.ElapsedMilliseconds > de)
-                    {
-                        break;
-                    }
-                }
+                return base.AlwaysReceive(de);
+
+                //watch.Restart();
+                ////RecivesDone = false;
+                //int dd = 0;
+                //while (true)
+                //{
+                //    dd++;
+                //    Thread.Sleep(1);
+                //    if (RecivesDone)
+                //    {
+                //        return ReciveStr[ReciveStr.Count - 1];
+                //    }
+                //    if (watch.ElapsedMilliseconds > de)
+                //    {
+                //        break;
+                //    }
+                //}
             }
             catch (Exception re)
             {
@@ -411,7 +413,10 @@ namespace ErosSocket.ErosConLink
                     catch (Exception)
                     {
                         //socket.Blocking = false;
-                        this.DictiPoint.Remove(socket.RemoteEndPoint.ToString());
+                        if (this.DictiPoint.Count != 0)
+                        {
+                            this.DictiPoint.Remove(socket.RemoteEndPoint.ToString());
+                        }
                     }
 
                     OnNewLink(socket.RemoteEndPoint.ToString() + "断开链接!");

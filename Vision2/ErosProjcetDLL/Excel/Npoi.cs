@@ -363,7 +363,7 @@ namespace Vision2.ErosProjcetDLL.Excel
             {
                 if (File.Exists(filePath))
                 {
-                    text.AddRange(File.ReadAllLines(filePath));
+                    text.AddRange(File.ReadAllLines(filePath, Encoding.UTF8));
                     return true;
                 }
             }
@@ -397,7 +397,7 @@ namespace Vision2.ErosProjcetDLL.Excel
                     tet += text[i] + ',';
                 }
 
-                File.AppendAllText(path, tet+ Environment.NewLine);
+                File.AppendAllText(path, tet + Environment.NewLine);
                 return;
                 //创建文件流写入对象,绑定文件流对象
                 //创建数据对象
@@ -409,10 +409,9 @@ namespace Vision2.ErosProjcetDLL.Excel
                 }
                 FileStream fs = new FileStream(path, FileMode.OpenOrCreate, FileAccess.ReadWrite);
 
-          
                 StreamWriter sw = new StreamWriter(fs, Encoding.UTF8);
                 //创建文件流对象
-         
+
                 for (int i = 0; i < ste.Length; i++)
                 {
                     sb.AppendLine(ste[i]);
@@ -420,7 +419,6 @@ namespace Vision2.ErosProjcetDLL.Excel
 
                 //sb.Append("RunTime").Append(",").Append("BarCode").Append(",").Append("OverStation");
                 sb.AppendLine(tet);
-
                 //把标题内容写入到文件流中
                 sw.Write(sb);
                 sw.Flush();
@@ -431,14 +429,15 @@ namespace Vision2.ErosProjcetDLL.Excel
             {
             }
         }
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="path"></param>
         /// <param name="text"></param>
         public static void AddText(String path, params string[] text)
         {
-            System.IO.Directory.CreateDirectory(Path.GetDirectoryName(path));
+            Directory.CreateDirectory(Path.GetDirectoryName(path));
             try
             {
                 if (!path.Contains("."))
@@ -447,7 +446,6 @@ namespace Vision2.ErosProjcetDLL.Excel
                 }
                 //创建文件流写入对象,绑定文件流对象
                 //创建数据对象
-
                 using (StreamWriter fs = new StreamWriter(path, true))
                 {
                     for (int i = 0; i < text.Length; i++)
@@ -455,36 +453,14 @@ namespace Vision2.ErosProjcetDLL.Excel
                         fs.Write(text[i]);
                     }
                 }
-
-                //StringBuilder sb = new StringBuilder();
-                //string[] ste = new string[] { };
-                //if (System.IO.File.Exists(path))//文件不存在时,创建新文件,并写入文件标题
-                //{
-                //    ste = File.ReadAllLines(path);
-                //}
-                //FileStream fs = new FileStream(path, FileMode.OpenOrCreate, FileAccess.ReadWrite);
-                //StreamWriter sw = new StreamWriter(fs, Encoding.UTF8);
-
-                //for (int i = 0; i < ste.Length; i++)
-                //{
-                //    sb.AppendLine(ste[i]);
-                //}
-                ////创建文件流对象
-                //string tet = "";
-                ////sb.Append("RunTime").Append(",").Append("BarCode").Append(",").Append("OverStation");
-
-                ////把标题内容写入到文件流中
-                //sw.Write(sb);
-                //sw.Flush();
-                //sw.Close();
-                //fs.Close();
             }
             catch (Exception ex)
             {
             }
         }
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="path"></param>
         /// <param name="text"></param>
@@ -536,7 +512,7 @@ namespace Vision2.ErosProjcetDLL.Excel
                 StringBuilder sb = new StringBuilder();
                 string[] ste = new string[] { };
                 FileStream fs = new FileStream(path, FileMode.OpenOrCreate, FileAccess.ReadWrite);
-                StreamWriter sw = new StreamWriter(fs, Encoding.UTF8);
+                StreamWriter sw = new StreamWriter(fs);
                 //创建文件流对象
 
                 for (int i = 0; i < ste.Length; i++)

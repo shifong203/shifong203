@@ -42,7 +42,6 @@ namespace ErosSocket.DebugPLC.PLC
                     {
                         System.Threading.Thread.Sleep(1000);
                         isMove = false;
-
                         while (!this.IsDisposed)
                         {
                             try

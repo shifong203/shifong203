@@ -9,6 +9,7 @@ using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 using Vision2.Project.formula;
+using Vision2.vision;
 using Vision2.vision.HalconRunFile.RunProgramFile;
 
 namespace Vision2.Project.DebugF.IO
@@ -302,6 +303,237 @@ namespace Vision2.Project.DebugF.IO
                         {
                             if (points[i].Name == date)
                             {
+                                return points[i];
+                            }
+                        }
+                    }
+                }
+                //托盘产品数量
+                else if (pragrm.ToLower().StartsWith("tray"))
+                {
+                    string date = pragrm.Remove(0, 4);
+                    int det = (int)ToDoubleP(date);
+                    return DebugCompiler.Instance.DDAxis.GetTrayInxt(det).Count;
+                }
+                //特殊参数
+                else if (pragrm.ToLower().StartsWith("pt["))
+                {
+                    string date = pragrm.Substring(3, pragrm.IndexOf(']') - pragrm.IndexOf('[') - 1).ToLower();
+                    string[] dataStrs = date.Split('.');
+                    int idnex = 0;
+                    if (date == "qr")
+                    {
+                        return ProcessControl.ProcessUser.QRCode;
+                    }
+                    else if (dataStrs[0] == "trayid")
+                    {
+                        if (dataStrs.Length >= 2)
+                        {
+                            idnex = ToDoubleP(dataStrs[1]);
+                        }
+                        return DebugCompiler.Instance.DDAxis.GetTrayInxt(idnex).GetTrayData().TrayIDQR;
+                    }
+                    else if (dataStrs[0] == "trayqr")
+                    {
+                        int idnexD = 0;
+                        if (dataStrs.Length >= 2)
+                        {
+                            idnex = ToDoubleP(dataStrs[1]);
+                        }
+                        if (dataStrs.Length >= 3)
+                        {
+                            idnexD = ToDoubleP(dataStrs[2]);
+                        }
+                        if (idnexD != 0)
+                        {
+                            return DebugCompiler.Instance.DDAxis.GetTrayInxt(idnex).GetTrayData().GetDataVales()[idnexD - 1].PanelID;
+                        }
+                        else
+                        {
+                            string datas = "";
+                            for (int i = 0; i < DebugCompiler.Instance.DDAxis.GetTrayInxt(idnex).Count; i++)
+                            {
+                                if (DebugCompiler.Instance.DDAxis.GetTrayInxt(idnex).GetTrayData().GetDataVales()[i] != null)
+                                {
+                                    datas += DebugCompiler.Instance.DDAxis.GetTrayInxt(idnex).GetTrayData().GetDataVales()[i].PanelID + ",";
+                                }
+                                else
+                                {
+                                    datas += ",";
+                                }
+                            }
+                            return datas;
+                        }
+                    }
+                }
+                //变量参数
+                else
+                {
+                    if (DebugCompiler.Instance.DDAxis.KeyVales.ContainsKey(pragrm))
+                    {
+                        return DebugCompiler.Instance.DDAxis.KeyVales[pragrm];
+                    }
+                    else
+                    {
+                        return pragrm;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+            return null;
+        }
+
+        public static dynamic ToDoubleP(string pragrm, ErosSocket.DebugPLC.EnumAxisType axType)
+        {
+            try
+            {
+                pragrm = pragrm.Trim(' ');
+                double vat = 0;
+                if (int.TryParse(pragrm, out int resInt))
+                {
+                    return resInt;
+                }
+                if (double.TryParse(pragrm, out vat))
+                {
+                    return vat;
+                }  //配方参数
+                else if (pragrm.ToLower().StartsWith("p["))
+                {
+                    pragrm = pragrm.Substring(2, pragrm.Length - 3);
+                    pragrm = Product.GetProd()[pragrm];
+                    if (int.TryParse(pragrm, out resInt))
+                    {
+                        return resInt;
+                    }
+                    if (double.TryParse(pragrm, out vat))
+                    {
+                        return vat;
+                    }
+                    else
+                    {
+                        return pragrm;
+                    }
+                }//全局点位
+                else if (pragrm.ToLower().StartsWith("pi["))
+                {
+                    string date = pragrm.Substring(3, pragrm.IndexOf(']') - pragrm.IndexOf('[') - 1);
+                    if (date.Contains('.'))
+                    {
+                        string dateTC = pragrm.Split('.')[1];
+                        for (int i = 0; i < DebugCompiler.Instance.DDAxis.XyzPoints.Count; i++)
+                        {
+                            if (DebugCompiler.Instance.DDAxis.XyzPoints[i].Name == date)
+                            {
+                                if (dateTC == "X" && axType == EnumAxisType.X)
+                                {
+                                    return DebugCompiler.Instance.DDAxis.XyzPoints[i].X;
+                                }
+                                else if (dateTC == "Y" && axType == EnumAxisType.Y)
+                                {
+                                    return DebugCompiler.Instance.DDAxis.XyzPoints[i].Y;
+                                }
+                                else if (dateTC == "Z" && axType == EnumAxisType.Z)
+                                {
+                                    return DebugCompiler.Instance.DDAxis.XyzPoints[i].Z;
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        for (int i = 0; i < DebugCompiler.Instance.DDAxis.XyzPoints.Count; i++)
+                        {
+                            if (DebugCompiler.Instance.DDAxis.XyzPoints[i].Name == date)
+                            {
+                                if (axType == EnumAxisType.Z)
+                                {
+                                    return DebugCompiler.Instance.DDAxis.XyzPoints[i].Z;
+                                }
+                                else if (axType == EnumAxisType.X)
+                                {
+                                    return DebugCompiler.Instance.DDAxis.XyzPoints[i].X;
+                                }
+                                else if (axType == EnumAxisType.Y)
+                                {
+                                    return DebugCompiler.Instance.DDAxis.XyzPoints[i].Y;
+                                }
+                                else if (axType == EnumAxisType.U)
+                                {
+                                    return DebugCompiler.Instance.DDAxis.XyzPoints[i].U;
+                                }
+                                return DebugCompiler.Instance.DDAxis.XyzPoints[i];
+                            }
+                        }
+                    }
+                }
+                //产品点位
+                else if (pragrm.ToLower().StartsWith("pf["))
+                {
+                    string date = pragrm.Substring(3, pragrm.IndexOf(']') - pragrm.IndexOf('[') - 1);
+                    List<XYZPoint> points = RecipeCompiler.GetProductEX().DPoint;
+                    string dateTC = pragrm;
+                    if (pragrm.Contains('.'))
+                    {
+                        dateTC = pragrm.Split('.')[1];
+                        for (int i = 0; i < points.Count; i++)
+                        {
+                            if (points[i].Name == date)
+                            {
+                                if (dateTC == "X")
+                                {
+                                    return points[i].X;
+                                }
+                                else if (dateTC == "Y")
+                                {
+                                    return points[i].Y;
+                                }
+                                else if (dateTC == "Z")
+                                {
+                                    return points[i].Z;
+                                }
+                                if (axType == EnumAxisType.Z)
+                                {
+                                    return points[i].Z;
+                                }
+                                else if (axType == EnumAxisType.X)
+                                {
+                                    return points[i].X;
+                                }
+                                else if (axType == EnumAxisType.Y)
+                                {
+                                    return points[i].Y;
+                                }
+                                else if (axType == EnumAxisType.U)
+                                {
+                                    return points[i].U;
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        for (int i = 0; i < points.Count; i++)
+                        {
+                            if (points[i].Name == date)
+                            {
+                                if (axType == EnumAxisType.Z)
+                                {
+                                    return points[i].Z;
+                                }
+                                else if (axType == EnumAxisType.X)
+                                {
+                                    return points[i].X;
+                                }
+                                else if (axType == EnumAxisType.Y)
+                                {
+                                    return points[i].Y;
+                                }
+                                else if (axType == EnumAxisType.U)
+                                {
+                                    return points[i].U;
+                                }
                                 return points[i];
                             }
                         }
@@ -973,10 +1205,10 @@ namespace Vision2.Project.DebugF.IO
                         RunCode?.Invoke(runErr);
                         if (points[0].AxisGrabName == axisGroupName)
                         {
-                            Axis AxisX = DebugCompiler.Instance.DDAxis.GetAxisGrotNameEx(axisGroupName, ErosSocket.DebugPLC.EnumAxisType.X);
-                            Axis AxisY = DebugCompiler.Instance.DDAxis.GetAxisGrotNameEx(axisGroupName, ErosSocket.DebugPLC.EnumAxisType.Y);
-                            Axis AxisZ = DebugCompiler.Instance.DDAxis.GetAxisGrotNameEx(axisGroupName, ErosSocket.DebugPLC.EnumAxisType.Z);
-                            Axis AxisU = DebugCompiler.Instance.DDAxis.GetAxisGrotNameEx(axisGroupName, ErosSocket.DebugPLC.EnumAxisType.U);
+                            Axis AxisX = DebugCompiler.Instance.DDAxis.GetAxisGrotNameEx(axisGroupName, EnumAxisType.X);
+                            Axis AxisY = DebugCompiler.Instance.DDAxis.GetAxisGrotNameEx(axisGroupName, EnumAxisType.Y);
+                            Axis AxisZ = DebugCompiler.Instance.DDAxis.GetAxisGrotNameEx(axisGroupName, EnumAxisType.Z);
+                            Axis AxisU = DebugCompiler.Instance.DDAxis.GetAxisGrotNameEx(axisGroupName, EnumAxisType.U);
                             double ValeZ = points[0].Z;
                             if (AxisZ != null)
                             {
@@ -1000,7 +1232,14 @@ namespace Vision2.Project.DebugF.IO
                                         runID = ((dt - 1) * halconRun.PaleID + LiyID);
                                     }
                                 }
-                                halconRun.AsysReadCamImage(LiyID, runID, asyncRestImage => { });
+                                if (true)
+                                {
+                                    halconRun.AysnetCam(LiyID, runID);
+                                }
+                                else
+                                {
+                                    //halconRun.AsysReadCamImage(LiyID, runID, asyncRestImage => { });
+                                }
                                 Thread.Sleep(DebugCompiler.Instance.CamWait);
                             }
                             else
@@ -1052,9 +1291,9 @@ namespace Vision2.Project.DebugF.IO
                 List<XYZPoint> points = RecipeCompiler.GetProductEX().Relativel.DicRelativelyPoint[threadData.Code];
                 string names = threadData.ParName;
                 HalconRun halconRun = null;
-                foreach (var item in vision.Vision.GetHimageList())
+                foreach (var item in Vision.GetHimageList())
                 {
-                    if (vision.Vision.GetSaveImageInfo(item.Value.Name).AxisGrot == names)
+                    if (Vision.GetSaveImageInfo(item.Value.Name).AxisGrot == names)
                     {
                         halconRun = item.Value;
                         break;
@@ -1081,14 +1320,11 @@ namespace Vision2.Project.DebugF.IO
                             continue;
                         }
                     }
-                    if (Abort)
-                    {
-                        break;
-                    }
-                    Axis AxisX = DebugCompiler.Instance.DDAxis.GetAxisGrotNameEx(axisGroupName, ErosSocket.DebugPLC.EnumAxisType.X);
-                    Axis AxisY = DebugCompiler.Instance.DDAxis.GetAxisGrotNameEx(axisGroupName, ErosSocket.DebugPLC.EnumAxisType.Y);
-                    Axis AxisZ = DebugCompiler.Instance.DDAxis.GetAxisGrotNameEx(axisGroupName, ErosSocket.DebugPLC.EnumAxisType.Z);
-                    Axis AxisU = DebugCompiler.Instance.DDAxis.GetAxisGrotNameEx(axisGroupName, ErosSocket.DebugPLC.EnumAxisType.U);
+                    if (Abort) break;
+                    Axis AxisX = DebugCompiler.Instance.DDAxis.GetAxisGrotNameEx(axisGroupName, EnumAxisType.X);
+                    Axis AxisY = DebugCompiler.Instance.DDAxis.GetAxisGrotNameEx(axisGroupName, EnumAxisType.Y);
+                    Axis AxisZ = DebugCompiler.Instance.DDAxis.GetAxisGrotNameEx(axisGroupName, EnumAxisType.Z);
+                    Axis AxisU = DebugCompiler.Instance.DDAxis.GetAxisGrotNameEx(axisGroupName, EnumAxisType.U);
                     double ValeZ = item.Z;
                     if (AxisZ != null)
                     {
@@ -1102,7 +1338,40 @@ namespace Vision2.Project.DebugF.IO
                     i++;
                     threadData.RunState = "点位:" + i + "轨迹:" + halconRun.Name + ";" + item.GetPointStr();
                     RunCode?.Invoke(threadData);
-                    if (DebugCompiler.Instance.DDAxis.SetXYZ1Points(axisGroupName, 10, item.X + AxisX.Point, item.Y + AxisY.Point, ValeZ, ValeU, item.isMove))
+                    if (!IsSimulate)
+                    {
+                        if (DebugCompiler.Instance.DDAxis.SetXYZ1Points(axisGroupName, 10, item.X + AxisX.Point, item.Y + AxisY.Point, ValeZ, ValeU, item.isMove))
+                        {
+                            if (item.ID != -1)
+                            {
+                                LiyID = i;
+                                runID = i;
+                                Thread.Sleep(DebugCompiler.Instance.MarkWait);
+                                if (halconRun.PaleMode)
+                                {
+                                    if (halconRun.TrayID >= 0)
+                                    {
+                                        int dt = DebugCompiler.Instance.DDAxis.GetTrayInxt(halconRun.TrayID).Number;
+                                        runID = ((dt - 1) * halconRun.PaleID + LiyID);
+                                        if (ErosProjcetDLL.Project.ProjectINI.AdminEnbt)
+                                        {
+                                            ErosProjcetDLL.Project.AlarmText.AddTextNewLine("托盘数:" + dt + ":" + runID + ":" + LiyID);
+                                        }
+                                    }
+                                }
+                                halconRun.AysnetCam(LiyID, runID);
+                                Thread.Sleep(DebugCompiler.Instance.CamWait);
+                            }
+                        }
+                        else
+                        {
+                            if (DebugCompiler.EquipmentStatus != ErosSocket.ErosConLink.EnumEquipmentStatus.已停止)
+                            {
+                                ErosProjcetDLL.Project.AlarmListBoxt.AddAlarmText(item.Name + ":移动失败!");
+                            }
+                        }
+                    }
+                    else
                     {
                         if (item.ID != -1)
                         {
@@ -1115,25 +1384,21 @@ namespace Vision2.Project.DebugF.IO
                                 {
                                     int dt = DebugCompiler.Instance.DDAxis.GetTrayInxt(halconRun.TrayID).Number;
                                     runID = ((dt - 1) * halconRun.PaleID + LiyID);
-                                    //if (halconRun.PaleID == LiyID)
-                                    //{
-                                    //    DebugCompiler.GetThis().DDAxis.GetTrayInxt(halconRun.TrayID).Number++;
-                                    //}
                                     if (ErosProjcetDLL.Project.ProjectINI.AdminEnbt)
                                     {
                                         ErosProjcetDLL.Project.AlarmText.AddTextNewLine("托盘数:" + dt + ":" + runID + ":" + LiyID);
                                     }
                                 }
                             }
-                            halconRun.AsysReadCamImage(LiyID, runID, asyncRestImage => { });
+                            OneResultOBj oneResultOBj = halconRun.GetOneImageR();
+                            string path = Vision.VisionPath + "Image\\" + halconRun.Name + LiyID + ".bmp";
+                            if (System.IO.File.Exists(path))
+                            {
+                                oneResultOBj.ReadImage(path);
+                            }
+                            halconRun.AysnetCam(LiyID, runID, oneResultOBj.Image);
+                            //halconRun.AsysReadCamImage(LiyID, runID, asyncRestImage => { }, halconRun.GetOneImageR());
                             Thread.Sleep(DebugCompiler.Instance.CamWait);
-                        }
-                    }
-                    else
-                    {
-                        if (DebugCompiler.EquipmentStatus != ErosSocket.ErosConLink.EnumEquipmentStatus.已停止)
-                        {
-                            ErosProjcetDLL.Project.AlarmListBoxt.AddAlarmText(item.Name + ":移动失败!");
                         }
                     }
                 }
@@ -1145,14 +1410,16 @@ namespace Vision2.Project.DebugF.IO
             threadData.Done = true;
         }
 
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="errStr"></param>
         public void TrayToCamRelativeLocus(RunErr errStr)
         {
             try
             {
                 ThreadData threadDatas = new ThreadData("TrayToCamRelativeLocus", 500000000);
                 string[] errStrdt = errStr.Code.Remove(0, 23).Trim(';').Split(';');
-
-                //runErr.Code = errStrdt[0];
                 for (int j = 1; j < errStrdt.Length; j++)
                 {
                     threadDatas.Add(errStrdt[j]);
@@ -1191,21 +1458,28 @@ namespace Vision2.Project.DebugF.IO
                 for (int i = 0; i < trayRobot.Count; i++)
                 {
                     PointFile poinFile = trayRobot.GetPoint(i + 1);
+                    trayRobot.Number = i + 1;
                     threadData.RunState = "开始移动托盘ID" + trayid + ";位置" + (i + 1) + ";";
                     RunCode?.Invoke(threadData);
-
-                    if (!DebugCompiler.Instance.DDAxis.SetXYZ1Points(axisName, GoOutTime,
-                        poinFile.X, poinFile.Y, poinFile.Z, poinFile.U, EnumXYZUMoveType.直接移动))
+                    if (IsSimulate)
                     {
-                        if (DebugCompiler.EquipmentStatus != ErosSocket.ErosConLink.EnumEquipmentStatus.已停止)
-                        {
-                            threadData.ErrStr += axisName + "移动失败;";
-                            break;
-                        }
+                        RelativeLocusTs(new RunErr() { Code = threadData.ParName, ParName = axisName });
                     }
                     else
                     {
-                        RelativeLocusTs(new RunErr() { Code = threadData.ParName, ParName = axisName });
+                        if (!DebugCompiler.Instance.DDAxis.SetXYZ1Points(axisName, GoOutTime,
+                                 poinFile.X, poinFile.Y, poinFile.Z, poinFile.U, EnumXYZUMoveType.直接移动))
+                        {
+                            if (DebugCompiler.EquipmentStatus != ErosSocket.ErosConLink.EnumEquipmentStatus.已停止)
+                            {
+                                threadData.ErrStr += axisName + "移动失败;";
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            RelativeLocusTs(new RunErr() { Code = threadData.ParName, ParName = axisName });
+                        }
                     }
                 }
             }
@@ -1250,10 +1524,7 @@ namespace Vision2.Project.DebugF.IO
                             Thread.Sleep(10);
                         }
                     }
-                    if (this.Stoping)
-                    {
-                        return true;
-                    }
+                    if (this.Stoping) return true;
                 }
                 catch (Exception ex)
                 {
@@ -1382,9 +1653,9 @@ namespace Vision2.Project.DebugF.IO
 
                     HalconRun halconRun = vision.Vision.GetRunNameVision(tdat[0]);
 
-                    halconRun.GetCam().Key = RunID.ToString();
                     if (!IsSimulate)
                     {
+                        halconRun.GetCam().Key = RunID.ToString();
                         halconRun.ReadCamImage(LiayID.ToString(), RunID);
                     }
                     else
@@ -1405,6 +1676,46 @@ namespace Vision2.Project.DebugF.IO
                 threadData.ErrStr = ex.Message;
             }
             threadData.Done = true;
+        }
+
+        public void AyaCall(RunErr code)
+        {
+            try
+            {
+                string[] tdat = code.Code.Remove(0, 8).Trim(';').Split(',');
+                int LiayID = ToDoubleP(tdat[1]);
+                int RunID = LiayID;
+                if (tdat.Length >= 3)
+                {
+                    RunID = ToDoubleP(tdat[2]);
+                }
+                HalconRun halconRun = vision.Vision.GetRunNameVision(tdat[0]);
+                if (!IsSimulate)
+                {
+                    if (halconRun.GetCam() != null)
+                    {
+                        halconRun.GetCam().Key = RunID.ToString();
+                        halconRun.AysnetCam(LiayID, RunID);
+                    }
+                    else
+                    {
+                        code.ErrStr += "相机未实例";
+                    }
+                }
+                else
+                {
+                    string path = vision.Vision.VisionPath + "Image\\" + halconRun.Name + LiayID + ".bmp";
+                    if (System.IO.File.Exists(path))
+                    {
+                        HOperatorSet.ReadImage(out HObject hObject, path);
+                        halconRun.AysnetCam(LiayID, RunID, hObject);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                code.ErrStr = ex.Message;
+            }
         }
 
         public void SetLight(string lightName)
@@ -1438,6 +1749,7 @@ namespace Vision2.Project.DebugF.IO
                 runErr.RowIndx = rowindex;
                 runErr.Code = text;
                 runErr.runCoStr = RunCoStr.执行中;
+                text = text.Trim();
                 if (text == "")
                 {
                     goto End;
@@ -1629,11 +1941,11 @@ namespace Vision2.Project.DebugF.IO
                         {
                             Await = true;
                         }
-                        simulateQRForm.ShowMesabe(text.Remove(0, imtey[0].Length), Await);
+                        SimulateQRForm.ShowMesabe(text.Remove(0, imtey[0].Length), Await);
                     }
                     else
                     {
-                        simulateQRForm.ShowMesabe(text.Remove(0, imtey[0].Length), Await);
+                        SimulateQRForm.ShowMesabe(text.Remove(0, imtey[0].Length), Await);
                     }
                 }
                 else if (imtey[0] == "resetshowmesaage")
@@ -1645,11 +1957,11 @@ namespace Vision2.Project.DebugF.IO
                         {
                             Await = true;
                         }
-                        simulateQRForm.ShowMesabe(text.Remove(0, text.ToLower().IndexOf("{") + 1), Await);
+                        SimulateQRForm.ShowMesabe(text.Remove(0, text.ToLower().IndexOf("{") + 1), Await);
                     }
                     else
                     {
-                        simulateQRForm.ShowMesabe(text.Remove(0, text.ToLower().IndexOf("resetshowmesaage") + imtey[0].Length), Await);
+                        SimulateQRForm.ShowMesabe(text.Remove(0, text.ToLower().IndexOf("resetshowmesaage") + imtey[0].Length), Await);
                     }
                 }
                 else if (imtey[0] == "resetmes")
@@ -1708,7 +2020,7 @@ namespace Vision2.Project.DebugF.IO
                     }
                     if (!rsetOk)
                     {
-                        simulateQRForm.ShowMesabe(restMest);
+                        SimulateQRForm.ShowMesabe(restMest);
                         if (StopIS == 1)
                         {
                             DebugCompiler.Stop(true);
@@ -1778,7 +2090,7 @@ namespace Vision2.Project.DebugF.IO
                     string name = "";
                     if (ProcessControl.ProcessUser.QRCode == "")
                     {
-                        if (simulateQRForm.ShowMesabe("请手动输入托盘ID", out name))
+                        if (SimulateQRForm.ShowMesabe("请手动输入托盘ID", out name))
                         {
                             if (name.Contains("\r\n"))
                             {
@@ -1875,11 +2187,11 @@ namespace Vision2.Project.DebugF.IO
                     {
                         if (tdat.Length == 1)
                         {
-                            DebugCompiler.Instance.DDAxis.AxisGo(imtey[1], yutData[1]);
+                            DebugCompiler.Instance.DDAxis.AxisSycnGo(imtey[1], (double)ToDoubleP(yutData[1], DebugCompiler.Instance.DDAxis.GetAxisName(imtey[1]).AxisType));
                         }
                         else if (tdat.Length == 2)
                         {
-                            DebugCompiler.Instance.DDAxis.AxisGo(imtey[1], yutData[1], tdat[1]);
+                            DebugCompiler.Instance.DDAxis.AxisSycnGo(imtey[1], (double)ToDoubleP(yutData[1], DebugCompiler.Instance.DDAxis.GetAxisName(imtey[1]).AxisType), (double)ToDoubleP(tdat[1]));
                         }
                     }
                 }
@@ -2060,6 +2372,10 @@ namespace Vision2.Project.DebugF.IO
                 {
                     Calls(runErr);
                 }
+                else if (imtey[0] == "ayscall")
+                {
+                    AyaCall(runErr);
+                }
                 else if (imtey[0] == "simulationcall")
                 {
                     bool IsSave = false;
@@ -2071,7 +2387,8 @@ namespace Vision2.Project.DebugF.IO
                         int.TryParse(tdat[4], out int rdet);
                         IsSave = Convert.ToBoolean(rdet);
                     }
-                    vision.Vision.GetRunNameVision(tdat[1]).CamImageEvent(runid.ToString(), null, lirdID, IsSave);
+                    vision.Vision.GetRunNameVision(tdat[1]).GetOneImageR().IsSave = IsSave;
+                    vision.Vision.GetRunNameVision(tdat[1]).CamImageEvent(runid.ToString(), null, lirdID);
                 }
                 else if (imtey[0] == "ng")
                 {
@@ -2137,7 +2454,7 @@ namespace Vision2.Project.DebugF.IO
                         runErr.ErrStr = "通信名不存在" + imtey[1];
                     }
                 }
-                else if (imtey[0] == "weirtfiletray")
+                else if (imtey[0] == "writefiletray")
                 {
                     int det = 0;
                     det = ToDoubleP(imtey[1]);
@@ -2238,7 +2555,7 @@ namespace Vision2.Project.DebugF.IO
                                             if (err != "")
                                             {
                                                 UserFormulaContrsl.SetOK(2);
-                                                simulateQRForm.ShowMesabe(err);
+                                                SimulateQRForm.ShowMesabe(err);
                                             }
                                             else
                                             {
@@ -2317,8 +2634,7 @@ namespace Vision2.Project.DebugF.IO
                                 AwaitOut = true;
                                 break;
                             }
-                            System.Threading.Thread.Sleep(100);
-
+                            Thread.Sleep(10);
                             if (Stoping)
                             {
                                 break;
@@ -2345,7 +2661,7 @@ namespace Vision2.Project.DebugF.IO
                                     AwaitOut = true;
                                     break;
                                 }
-                                System.Threading.Thread.Sleep(10);
+                                Thread.Sleep(10);
                                 if (DebugCompiler.EquipmentStatus == ErosSocket.ErosConLink.EnumEquipmentStatus.已停止)
                                 {
                                     break;
@@ -2375,6 +2691,22 @@ namespace Vision2.Project.DebugF.IO
                             }
                         }
                     }
+                    else if (vision.Vision.GetHimageList().ContainsKey(imtey[1]))
+                    {
+                        while (vision.Vision.GetRunNameVision(imtey[1]).GetRuns().Count != 0)
+                        {
+                            if (outTime != 0 && outTime <= Watch.ElapsedMilliseconds / 1000)
+                            {
+                                AwaitOut = true;
+                                break;
+                            }
+                            Thread.Sleep(10);
+                            if (Stoping)
+                            {
+                                break;
+                            }
+                        }
+                    }
                 }
                 //等待信号保持
                 else if (imtey[0] == "always")
@@ -2389,7 +2721,6 @@ namespace Vision2.Project.DebugF.IO
                         if (imtey.Length == 3)
                         {
                         }
-
                         if (int.TryParse(imtey[2], out dindex))
                         {
                             if (yutData.Length == 2)
@@ -2423,7 +2754,7 @@ namespace Vision2.Project.DebugF.IO
                                 {
                                     break;
                                 }
-                                System.Threading.Thread.Sleep(10);
+                                Thread.Sleep(10);
                                 if (Stoping)
                                 {
                                     break;
@@ -2571,7 +2902,7 @@ namespace Vision2.Project.DebugF.IO
                                 else if (tdat[1] == "id")
                                 {
                                     bool isDone = true;
-                                    ErosSocket.DebugPLC.Robot.TrayRobot trayRobot = DebugCompiler.Instance.DDAxis.GetTrayInxt(idet);
+                                    TrayRobot trayRobot = DebugCompiler.Instance.DDAxis.GetTrayInxt(idet);
                                     for (int i = 0; i < trayRobot.Count; i++)
                                     {
                                         isDone = false;
@@ -2819,7 +3150,7 @@ namespace Vision2.Project.DebugF.IO
                         DebugCompiler.Instance.DDAxis.GetTrayInxt((int)ToDoubleP(tdat[1])).GetTrayData().RestValue();
                     }
                 }
-                else if (imtey[0] == "wrietmes")
+                else if (imtey[0] == "writemes")
                 {
                     if (RecipeCompiler.Instance.GetMes() != null)
                     {
@@ -2853,7 +3184,7 @@ namespace Vision2.Project.DebugF.IO
                 }
                 else if (imtey[0] == "submitresults")
                 {
-                    UserFormulaContrsl.WeirtMes();
+                    UserFormulaContrsl.WriteMes();
                 }
                 else if (imtey[0] == "cleardata")
                 {
@@ -2867,7 +3198,7 @@ namespace Vision2.Project.DebugF.IO
                 {
                     HObject hObject = vision.Vision.GetRunNameVision(tdat[1]).TiffeOffsetImageEX.TiffeOffsetImage();
                     //vision.Vision.OneProductVale.ImagePlus = hObject;
-                    vision.Vision.GetSaveImageInfo(tdat[1]).SaveImage(hObject, 0, "拼图", tdat[1], DateTime.Now);
+                    vision.Vision.GetSaveImageInfo(tdat[1]).SaveImage(hObject, 0, "拼图", tdat[1], Project.ProcessControl.ProcessUser.QRCode, DateTime.Now);
                     vision.Vision.GetRunNameVision(tdat[1]).Image(hObject);
                     vision.Vision.GetRunNameVision(tdat[1]).ShowImage();
                 }
@@ -2987,6 +3318,7 @@ namespace Vision2.Project.DebugF.IO
             {
                 runErr.ErrStr += ex.Message;
             }
+
             if (DebugCompiler.RunStop)
             {
                 runErr.runCoStr = RunCoStr.执行错误;
@@ -3118,7 +3450,11 @@ namespace Vision2.Project.DebugF.IO
             /// </summary>
             public string Code = "";
 
+            /// <summary>
+            ///
+            /// </summary>
             public string ParName = "";
+
             public bool Err;
             public bool Done;
             public int RowIndx;

@@ -139,13 +139,13 @@ namespace Vision2.vision.HalconRunFile.PCBFile
                     else HOperatorSet.SortRegion(hObject3, out hObject3, "first_point", "true", "column");
                     HOperatorSet.AreaCenter(hObject3, out area, out row3, out column3);
                     HOperatorSet.SmallestRectangle2(hObject3, out HTuple row4, out HTuple column4, out HTuple phi4, out HTuple length11, out HTuple length22);
-
+                    //No pin found 未找到针点
                     if (length11.Length == 0)
                     {
-                        if (!NGText.Contains("未找到针点"))
+                        if (!NGText.Contains("No pin found"))
                         {
                             ErrNumber++;
-                            NGText += "未找到针点:";
+                            NGText += "No pin found:";
                         }
                     }
                     else
@@ -165,13 +165,13 @@ namespace Vision2.vision.HalconRunFile.PCBFile
                         HOperatorSet.AreaCenter(hObject, out HTuple areah1, out HTuple rowh1, out HTuple coluh1);
 
                         for (int i = 0; i < areah1.Length; i++)
-                        {
+                        {  //Leg broken 焊脚破损
                             if (areah1[i] < HP_Foreign_Matter_Area)
                             {
-                                if (!NGText.Contains("焊脚破损"))
+                                if (!NGText.Contains("Leg broken"))
                                 {
                                     ErrNumber++;
-                                    NGText += "焊脚破损:";
+                                    NGText += "Leg broken:";
                                 }
                                 ErrDobj = ErrDobj.ConcatObj(hObject6.SelectObj(i + 1));
                                 oneResultOBj.AddObj(hObject6.SelectObj(i + 1), ColorResult.red);
@@ -194,16 +194,17 @@ namespace Vision2.vision.HalconRunFile.PCBFile
                         HOperatorSet.Threshold(HJImage, out HObject hObject8, Pint_Foreign_MatterMin, Pint_Foreign_MatterMax);
                         HOperatorSet.Connection(hObject8, out hObject8);
                         HOperatorSet.SelectShape(hObject8, out hObject8, "area", "and", Pint_Foreign_Matter_Area, 999999999);
+                        //Foreign body in welding foot 焊脚内异物
                         if (hObject8.CountObj() != 0)
                         {
                             HOperatorSet.DilationCircle(hObject8, out HObject errObj, 5);
                             oneResultOBj.AddObj(errObj, ColorResult.red);
 
                             ErrDobj = ErrDobj.ConcatObj(errObj);
-                            if (!NGText.Contains("焊脚内异物"))
+                            if (!NGText.Contains("Foreign body in welding foot "))
                             {
                                 ErrNumber++;
-                                NGText += "焊脚内异物:";
+                                NGText += "Foreign body in welding foot :";
                             }
                         }
                     }
@@ -232,33 +233,36 @@ namespace Vision2.vision.HalconRunFile.PCBFile
                                 {
                                     ErrNumber++;
                                     HOperatorSet.GenRegionLine(out HObject hObject5, row4[i2], column4[i2], row4[i2 + 1], column4[i2 + 1]);
-                                    oneResultOBj.AddNGOBJ(iCPint.Name, "针脚间距", HjAOI, hObject5);
-                                    if (!NGText.Contains("针脚间距"))
+                                    //Stitch spacing针脚间距
+                                    oneResultOBj.AddNGOBJ(iCPint.Name, "Stitch Spacing", HjAOI, hObject5, iCPint.GetBackNames());
+                                    if (!NGText.Contains("Stitch Spacing"))
                                     {
-                                        NGText += "针脚间距:";
+                                        NGText += "Stitch Spacing:";
                                     }
                                     ErrDobj = ErrDobj.ConcatObj(hObject5);
                                 }
                             }
+                            //长度length
                             if (PintLength.SetValeu(length11[i2]) != 0)
                             {
                                 ErrNumber++;
-                                if (!NGText.Contains("长度"))
+                                if (!NGText.Contains("Length"))
                                 {
-                                    NGText += "长度:";
+                                    NGText += "Length:";
                                 }
-                                oneResultOBj.AddNGOBJ(iCPint.Name, "长度", ROI, hObject3.SelectObj(i2 + 1));
+                                oneResultOBj.AddNGOBJ(iCPint.Name, "Length", ROI, hObject3.SelectObj(i2 + 1), iCPint.GetBackNames());
                                 ErrBool = true;
                                 ErrDobj = ErrDobj.ConcatObj(hObject3.SelectObj(i2 + 1));
                             }
+                            //width宽度
                             if (PintWatih.SetValeu(length22[i2]) != 0)
                             {
                                 ErrNumber++;
-                                if (!NGText.Contains("宽度"))
+                                if (!NGText.Contains("Width"))
                                 {
-                                    NGText += "宽度:";
+                                    NGText += "Width:";
                                 }
-                                oneResultOBj.AddNGOBJ(iCPint.Name, "宽度", ROI, hObject3.SelectObj(i2 + 1));
+                                oneResultOBj.AddNGOBJ(iCPint.Name, "Width", ROI, hObject3.SelectObj(i2 + 1), iCPint.GetBackNames());
                                 ErrBool = true;
                                 if (!ErrBool)
                                 {
@@ -266,20 +270,20 @@ namespace Vision2.vision.HalconRunFile.PCBFile
                                 }
                             }
                         }
+                        //Pin number引脚数量
                         if (Number != row4.Length)
                         {
-                            if (!NGText.Contains("引脚数量"))
+                            if (!NGText.Contains("Pin number"))
                             {
-                                NGText += "引脚数量:";
+                                NGText += "Pin number:";
                             }
-                            oneResultOBj.AddNGOBJ(iCPint.Name, "引脚数量", ROI, hObject3);
+                            oneResultOBj.AddNGOBJ(iCPint.Name, "Pin number", ROI, hObject3, iCPint.GetBackNames());
                             ErrDobj = ErrDobj.ConcatObj(hObject3);
                             ErrNumber++;
                         }
                         if (debug == 2)
                         {
                             oneResultOBj.AddObj(HJROI, ColorResult.blue);
-
                             oneResultOBj.AddObj(hObject3, ColorResult.yellow);
                             oneResultOBj.AddMeassge("数量" + length11.Length + "长度" + length11.TupleMean() + "宽度" + length22.TupleMean() + "距离" + DistanceS.TupleMean());
                             DistanceS.Append(0);
@@ -495,7 +499,7 @@ namespace Vision2.vision.HalconRunFile.PCBFile
                 if (!ziPoints[i].PintRun(V, homMat2D, this, oneResultOBj, out HObject errObj, out HObject roi))
                 {
                     //oneResultOBj.AddObj(errObj);
-                    oneResultOBj.AddNGOBJ(this.Name, (i + 1) + "针脚缺陷", roi, errObj);
+                    oneResultOBj.AddNGOBJ(this.Name, (i + 1) + "针脚缺陷", roi, errObj, this.GetBackNames());
                     //ErrDobj = ErrDobj.ConcatObj(errObj);
                     NGNumber++;
                 }

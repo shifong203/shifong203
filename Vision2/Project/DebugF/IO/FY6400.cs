@@ -143,6 +143,11 @@ namespace Vision2.Project.DebugF.IO
             {
                 return false;
             }
+            if (DODIAxis.Debug)
+            {
+                DebugCompiler.Instance.DDAxis.Out[intex] = value;
+                return true;
+            }
             if (!this.IsInitialBool)
             {
                 ErosProjcetDLL.Project.AlarmText.AddTextNewLine("未初始化成功,写入输出" + intex + "失败");

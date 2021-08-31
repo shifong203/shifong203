@@ -32,5 +32,28 @@ namespace Vision2.捷普
             {
             }
         }
+
+        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+        }
+
+        private void listBox1_DoubleClick(object sender, EventArgs e)
+        {
+            try
+            {
+                if (listBox1.SelectedIndex == 1)
+                {
+                    ErosProjcetDLL.Project.ProjectINI.DebugMode = true;
+                }
+                else
+                {
+                    ErosProjcetDLL.Project.ProjectINI.DebugMode = false;
+                }
+                this.Close();
+            }
+            catch (Exception)
+            {
+            }
+        }
     }
 }

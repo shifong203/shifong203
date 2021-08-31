@@ -17,10 +17,13 @@ namespace Vision2.ErosProjcetDLL.Project
         {
         }
 
+        private bool IsCharve;
+
         public void up()
         {
             try
             {
+                IsCharve = true;
                 comboBox1.Items.Clear();
                 dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
                 jurisdiction.Items.Clear();
@@ -84,6 +87,7 @@ namespace Vision2.ErosProjcetDLL.Project
             {
                 MessageBox.Show(ex.Message);
             }
+            IsCharve = false;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -207,6 +211,31 @@ namespace Vision2.ErosProjcetDLL.Project
 
         private void toolStripButton2_Click(object sender, EventArgs e)
         {
+        }
+
+        private void dataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            try
+            {
+                if (IsCharve)
+                {
+                    return;
+                }
+                if (ProjectINI.In.UserRight.Contains("工程师"))
+                {
+                    if (e.ColumnIndex == 2)
+                    {
+                        if (ProjectINI.In.User.UserPassWords.ContainsKey(dataGridView1.Rows[e.RowIndex].Cells[0].Value.ToString()))
+                        {
+                            ProjectINI.In.User.UserPassWords[dataGridView1.Rows[e.RowIndex].Cells[0].Value.ToString()].UserID =
+                                dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString();
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+            }
         }
     }
 }

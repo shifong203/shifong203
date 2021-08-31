@@ -22,6 +22,8 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         {
             oneRObjs = new List<OneRObj>();
             OneRObj oneRObj = new OneRObj();
+            oneRObj.ComponentID = this.Name;
+
             HObject hObjectRoi = new HObject();
             hObjectRoi.GenEmptyObj();
             bool OK = false; HObject image;
@@ -71,6 +73,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 string[] name2 = MeasureName2.Split('.');
                 Measure measure1 = null;
                 Measure measure2 = null;
+
                 if (Dic_Measure.Keys_Measure.ContainsKey(name1[0]))
                 {
                     measure1 = Dic_Measure.Keys_Measure[name1[0]];
@@ -79,10 +82,19 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 {
                     measure2 = Dic_Measure.Keys_Measure[name2[0]];
                 }
+                HTuple rows = new HTuple(measure2.OutRows, measure1.OutRows);
+                HTuple cols = new HTuple(measure2.OutCols, measure1.OutCols);
+                HOperatorSet.GenRegionPolygonFilled(out hObjectRoi, rows, cols);
+                HOperatorSet.SmallestRectangle1(hObjectRoi, out HTuple row1, out HTuple col1, out HTuple row2, out HTuple col2);
+
+                HOperatorSet.GenRectangle1(out hObjectRoi, row1, col1, row2, col2);
+
+                //HOperatorSet.GenRegionPoints(out hObjectRoi, rows, cols);
+                //HOperatorSet.Union1(hObjectRoi, out hObjectRoi);
                 switch (MeasureMode)
                 {
                     case MeasureModeEnum.点与线垂足:
-                        HTuple lengtMM = new HTuple();
+                        HTuple lengtMM = new HTuple(-99999);
                         HTuple outrow = new HTuple();
                         HTuple outcol = new HTuple();
                         HObject Roi = new HObject();
@@ -126,7 +138,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         this["垂足mm"] = lengtMM;
                         if (!rest)
                             OK = false;
-
+                        oneRObj.dataMinMax.AddData("垂足", lengtMM, DistanceMin, DistanceMax);
                         if (DistanceMax < lengtMM.D || DistanceMin > lengtMM.D)
                         {
                             oneResultOBj.AddObj(Roi, ColorResult.red);
@@ -137,6 +149,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                             oneResultOBj.AddObj(Roi, this.color);
                             OK = true;
                         }
+
                         break;
 
                     case MeasureModeEnum.同心圆:
@@ -159,14 +172,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
 
                     case MeasureModeEnum.线平行:
 
-                        HOperatorSet.LinePosition(measure1.DrawRows[0], measure1.DrawCols[0], measure1.DrawRows[1], measure1.DrawCols[1],
-                     out HTuple rocen, out HTuple colcen, out HTuple length, out HTuple phi);
-                        HOperatorSet.LinePosition(measure2.DrawRows[0], measure2.DrawCols[0], measure2.DrawRows[1], measure2.DrawCols[1],
-                        out HTuple rocen2, out HTuple colcen2, out HTuple length2, out HTuple phi2);
-                        HOperatorSet.LinePosition(rocen, colcen, rocen2, colcen2, out rocen2, out colcen2, out length2, out phi2);
-                        HOperatorSet.GenRectangle2(out hObjectRoi, rocen2, colcen2, phi2, length2 / 2 + 100, 100);
-
-                        if (measure2.ResltBool || measure1.ResltBool)
+                        if (measure2.ResltBool && measure1.ResltBool)
                         {
                             OK = true;
                             double dinRow1, dinCol1, dinRow2, dinCol2 = 0;
@@ -179,6 +185,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                             dinCol21 = measure1.OutCols[0];
                             dinRow22 = measure1.OutRows[1];
                             dinCol22 = measure1.OutCols[1];
+
                             double dinRow3 = measure2.OutCentreRow.Value;
                             double dinCol3 = measure2.OutCentreCol.Value;
                             HOperatorSet.AngleLl(dinRow1, dinCol1, dinRow2, dinCol2, dinRow21, dinCol21, dinRow22, dinCol22, out HTuple angle);
@@ -196,7 +203,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                             Vision.Gen_arrow_contour_xld(out HObject contour4, dinRow3, dinCol3, projectRow3, projectCol03);
                             HObject corss = new HObject();
                             corss.GenEmptyObj();
-                            oneRObj.ComponentID = this.Name;
+
                             HTuple angleD = angle.TupleDeg();
                             this["夹角"] = angleD;
                             this["第1点P"] = dist;
@@ -263,7 +270,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                                 }
                                 HOperatorSet.GenCrossContourXld(out HObject corss2, new HTuple(projectRow3.D, dinRow3), new HTuple(projectCol03.D, dinCol3), 20, 0);
                                 corss = corss.ConcatObj(corss2);
-                                if (angleD > AngleMax || angleD < AngleMin || DistM3 < DistanceMin || DistM3 > DistanceMax)
+                                if (angleD > AngleMax || angleD < AngleMin || DistM2 < DistanceMin || DistM2 > DistanceMax)
                                 {
                                     oneResultOBj.AddImageMassage(projectRow3, projectCol03, massage, ColorResult.red);
                                     OK = false;
@@ -287,7 +294,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                                 }
                                 if (oneResultOBj.GetHalcon().keyValuePairs1.ContainsKey(this.Name + ".第3点"))
                                 {
-                                    oneResultOBj.GetHalcon().keyValuePairs1[this.Name + ".第3点"] = DistM2;
+                                    oneResultOBj.GetHalcon().keyValuePairs1[this.Name + ".第3点"] = DistM3;
                                 }
                                 else
                                 {
@@ -307,7 +314,6 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                             }
                             oneResultOBj.AddObj(corss, ColorResult.blue);
                         }
-
                         break;
 
                     case MeasureModeEnum.圆中心:
@@ -345,12 +351,17 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         return true;
                 }
             }
-            if (!OK)
+            HOperatorSet.AreaCenter(hObjectRoi, out HTuple area, out HTuple row, out HTuple colue);
+            HOperatorSet.DilationCircle(hObjectRoi, out HObject hObjectRoi2, 10);
+            if (row.Length >= 1)
             {
-                oneRObj.NGROI = hObjectRoi;
-                oneRObj.ROI = hObjectRoi;
-                oneRObj.NGText = this.Name;
+                oneRObj.Row = row.TupleInt();
+                oneRObj.Col = colue.TupleInt();
             }
+            oneRObj.NGROI = hObjectRoi;
+            oneRObj.ROI = hObjectRoi2;
+            oneRObj.NGText = this.Name;
+            oneRObj.aOK = OK;
             oneResultOBj.AddNGOBJ(oneRObj);
             return OK;
         }

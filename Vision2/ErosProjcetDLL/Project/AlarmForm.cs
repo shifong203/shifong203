@@ -71,9 +71,13 @@ namespace Vision2.ErosProjcetDLL.Project
                 else if (showText == "控制栏左")
                 {
                     MainForm1.MainFormF.splitContainer3.Panel2Collapsed = true;
-                    UserFormulaContrsl.This.tabControl1.TabPages.Add(UserFormulaContrsl.This.tabPage4);
-                    UserFormulaContrsl.This.tabPage4.Controls.Add(AlarmForm.AlarmFormThis);
+                    if (!UserFormulaContrsl.This.tabControl1.TabPages.Contains(UserFormulaContrsl.This.tabPage4))
+                    {
+                        UserFormulaContrsl.This.tabControl1.TabPages.Add(UserFormulaContrsl.This.tabPage4);
+                    }
                     AlarmForm.AlarmFormThis.TopLevel = false;
+                    UserFormulaContrsl.This.tabPage4.Controls.Add(AlarmForm.AlarmFormThis);
+
                     AlarmForm.AlarmFormThis.FormBorderStyle = FormBorderStyle.None;
                     AlarmForm.AlarmFormThis.Dock = DockStyle.Fill;
                     AlarmForm.AlarmFormThis.Show();

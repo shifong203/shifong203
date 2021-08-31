@@ -4,6 +4,8 @@ using System.Drawing;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Vision2.Project.DebugF;
+using Vision2.Project.DebugF.IO;
 
 namespace ErosSocket.DebugPLC.DIDO
 {
@@ -96,6 +98,20 @@ namespace ErosSocket.DebugPLC.DIDO
                     else
                     {
                         dID.WritDO(e.RowIndex, false);
+                    }
+                }
+                else if (e.ColumnIndex == 3)
+                {
+                    if (DODIAxis.Debug)
+                    {
+                        if (DebugCompiler.Instance.DDAxis.Int[e.RowIndex])
+                        {
+                            DebugCompiler.Instance.DDAxis.Int[e.RowIndex] = false;
+                        }
+                        else
+                        {
+                            DebugCompiler.Instance.DDAxis.Int[e.RowIndex] = true;
+                        }
                     }
                 }
             }

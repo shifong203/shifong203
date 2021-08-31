@@ -46,7 +46,7 @@
             this.richTextBox1.Name = "richTextBox1";
             this.richTextBox1.ReadOnly = true;
             this.richTextBox1.Size = new System.Drawing.Size(711, 618);
-            this.richTextBox1.TabIndex = 7;
+            this.richTextBox1.TabIndex = 0;
             this.richTextBox1.Text = "";
             // 
             // panel1
@@ -79,7 +79,7 @@
             this.button1.Location = new System.Drawing.Point(458, 0);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(104, 37);
-            this.button1.TabIndex = 6;
+            this.button1.TabIndex = 10;
             this.button1.Text = "F10确认";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
@@ -113,6 +113,7 @@
             this.Text = "报警窗口";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.AlramListForm1_FormClosing);
             this.Load += new System.EventHandler(this.AlramListForm1_Load);
+            this.VisibleChanged += new System.EventHandler(this.AlarmListBoxt_VisibleChanged);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.AlarmListBoxt_KeyDown);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();

@@ -111,14 +111,19 @@ namespace Vision2.Project.DebugF.IO
                             {
                                 label1.label1.BackColor = Color.Red;
                             }
+                            trayData.GetDataVales()[number - 1].OK = value;
                             label1.label1.Text = number.ToString();
-                            if (trayData.GetDataVales()[number - 1] != null)
+                            if (trayData.GetDataVales()[number - 1].PanelID != "")
                             {
-                                label1.label1.Text += "SN:" + trayData.GetDataVales()[number - 1].PanelID;
+                                label1.label1.Text += "SN:" + trayData.GetDataVales()[number - 1].PanelID + ";";
                             }
                             if (valueDouble != null)
                             {
                                 label1.label1.Text += "/" + valueDouble;
+                            }
+                            if (trayData.GetDataVales()[number - 1].MesStr != "")
+                            {
+                                label1.label1.Text += "Mes:" + trayData.GetDataVales()[number - 1].MesStr;
                             }
                         }
                     }
@@ -488,7 +493,7 @@ namespace Vision2.Project.DebugF.IO
                                 Control[] controls = this.Controls.Find(data.TrayLocation.ToString(), false);
                                 if (controls.Length != 0)
                                 {
-                                    Label label1 = controls[0] as Label;
+                                    TrayControl label1 = controls[0] as TrayControl;
                                     if (label1 != null)
                                     {
                                         if (data.NotNull)
@@ -598,15 +603,15 @@ namespace Vision2.Project.DebugF.IO
                 }
                 GetTexup();
                 int heit, Wita;
-                heit = this.Height / (rows);
+                heit = (this.Height - 20) / (rows);
                 Wita = (this.Width - 20) / (columnCount);
                 if (heit < 20)
                 {
                     heit = 20;
                 }
-                if (Wita < 50)
+                if (Wita < 30)
                 {
-                    Wita = 50;
+                    Wita = 30;
                 }
                 for (int i = 0; i < rows * columnCount; i++)
                 {
@@ -694,14 +699,6 @@ namespace Vision2.Project.DebugF.IO
                 {
                     return;
                 }
-                if (DebugCompiler.Instance.IsImage)
-                {
-                    tabControl1.SelectedIndex = 0;
-                }
-                else
-                {
-                    tabControl1.SelectedIndex = 1;
-                }
 
                 Control control = sender as Label;
                 if (control == null)
@@ -735,7 +732,10 @@ namespace Vision2.Project.DebugF.IO
                         }
                         else
                         {
-                            tabControl1.TabPages.Add(tabPage2);
+                            if (!tabControl1.TabPages.Contains(tabPage2))
+                            {
+                                tabControl1.TabPages.Add(tabPage2);
+                            }
                         }
                         if (dataObj.GetNGImage() != null)
                         {
@@ -745,7 +745,10 @@ namespace Vision2.Project.DebugF.IO
                             }
                             else
                             {
-                                tabControl1.TabPages.Add(tabPage1);
+                                if (!tabControl1.TabPages.Contains(tabPage1))
+                                {
+                                    tabControl1.TabPages.Add(tabPage1);
+                                }
                             }
                         }
                         else
@@ -757,41 +760,101 @@ namespace Vision2.Project.DebugF.IO
                         {
                             this.panel1.Height = 100;
                         }
+                        else
+                        {
+                            this.panel1.Height = 600;
+                        }
 
                         foreach (var item in dataObj.ListCamsData)
                         {
                             TreeNode treeNode = treeView1.Nodes.Add(item.Key);
                             treeNode.Tag = item.Value;
                             treeNode.ImageIndex = 0;
+                            dataGridView2.Rows.Clear();
+                            int index = 0;
+                            foreach (var itemd in item.Value.NGObj.DicOnes)
+                            {
+                                DataMinMax da = itemd.Value.oneRObjs[0].dataMinMax;
+                                if (da != null)
+                                {
+                                    if (da.Reference_Name.Count == 0)
+                                    {
+                                        continue;
+                                    }
+                                    dataGridView2.Rows.Add(da.Reference_Name.Count);
+                                    for (int i = 0; i < da.Reference_Name.Count; i++)
+                                    {
+                                        dataGridView2.Rows[index].Cells[0].Value = itemd.Key + "." + da.Reference_Name[i];
+                                        if (da.ValueStrs.Count > i)
+                                        {
+                                            dataGridView2.Rows[index].Cells[1].Value = da.ValueStrs[i];
+                                        }
+                                        dataGridView2.Rows[index].Cells[2].Value = da.Reference_ValueMin[i];
+                                        dataGridView2.Rows[index].Cells[3].Value = da.Reference_ValueMax[i];
+                                        index++;
+                                    }
+                                    if (da.ValueStrs.Count > dataGridView2.Rows.Count)
+                                    {
+                                        dataGridView2.Rows.Add(da.ValueStrs.Count - da.Reference_Name.Count);
+                                        for (int i = da.Reference_Name.Count; i < da.ValueStrs.Count; i++)
+                                        {
+                                            dataGridView2.Rows[index].Cells[1].Value = da.ValueStrs[i];
+                                            index++;
+                                        }
+                                    }
+                                }
+                            }
+
+                            dataGridView2.Dock = DockStyle.Fill;
+                            dataGridView2.Visible = true;
+                            dataGridView2.BringToFront();
+                            dataGridView2.Show();
                             foreach (var itemd in item.Value.NGObj.DicOnes)
                             {
                                 TreeNode treeNode1 = treeNode.Nodes.Add(itemd.Key);
-                                if (itemd.Value.OK)
+                                if (itemd.Value.aOK)
                                 {
-                                    treeNode1.ImageIndex = 6;
+                                    treeNode1.ImageIndex = 7;
                                 }
                                 else
                                 {
+                                    treeNode1.ImageIndex = 2;
+                                }
+                                treeNode1.Tag = itemd.Value;
+                            }
+
+                            foreach (var itemd in item.Value.GetAllCompOBJs().DicOnes)
+                            {
+                                TreeNode treeNode1 = treeNode.Nodes.Add(itemd.Key);
+                                if (itemd.Value.aOK)
+                                {
                                     treeNode1.ImageIndex = 7;
+                                }
+                                else
+                                {
+                                    treeNode1.ImageIndex = 2;
                                 }
 
                                 treeNode1.Tag = itemd.Value;
                             }
+
                             treeNode.Expand();
                         }
                         foreach (var item in dataObj.ListCamsData)
                         {
-                            HWi.SetImaage(item.Value.ImagePlus);
+                            HWi.SetImaage(item.Value.ResuOBj[0].Image);
+                            HWi.OneResIamge = item.Value.ResuOBj[0];
+                            HWi.ShowImage();
                             break;
                         }
-                        //if (dataObj.OK)
-                        //{
-                        //    control.BackColor = Color.Green;
-                        //}
-                        //else
-                        //{
-                        //    control.BackColor = Color.Red;
-                        //}
+                        if (DebugCompiler.Instance.IsImage)
+                        {
+                            tabControl1.SelectedTab = tabPage1;
+                        }
+                        else
+                        {
+                            tabControl1.SelectedTab = tabPage2;
+                        }
                     }
                 }
                 if (DebugCompiler.EquipmentStatus == ErosSocket.ErosConLink.EnumEquipmentStatus.运行中)
@@ -801,10 +864,10 @@ namespace Vision2.Project.DebugF.IO
                 HalconRun halcon = Vision.GetRunNameVision();
                 if (halcon != null)
                 {
-                    halcon.HobjClear();
                     HWindowControl controlH = halcon.GetHWindow().GetNmaeWindowControl("Image." + control.Text);
                     if (controlH != null)
                     {
+                        halcon.HobjClear();
                         OneResultOBj halconResult = controlH.Tag as OneResultOBj;
                         halcon.ShowImage(halconResult.Image);
                         halcon.SetResultOBj(halconResult);
@@ -952,16 +1015,6 @@ namespace Vision2.Project.DebugF.IO
             }
         }
 
-        private void toolStripButton2_Click(object sender, EventArgs e)
-        {
-            try
-            {
-            }
-            catch (Exception)
-            {
-            }
-        }
-
         private bool fILE;
 
         private void tsButton1_Click(object sender, EventArgs e)
@@ -1015,11 +1068,12 @@ namespace Vision2.Project.DebugF.IO
                                             label1.label1.BackColor = Color.Red;
                                         }
                                     }
-
-                                    if (data.PanelID != null)
+                                    datStr = data.TrayLocation.ToString();
+                                    if (data.PanelID != "")
                                     {
-                                        datStr += data.TrayLocation + "SN:" + data.PanelID + Environment.NewLine;
+                                        datStr += "SN:" + data.PanelID + Environment.NewLine;
                                     }
+
                                     label1.label1.Text = datStr;
 
                                     label1.Tag = data;
@@ -1162,16 +1216,53 @@ namespace Vision2.Project.DebugF.IO
                 TreeNode CurrentNode = e.Node;
                 if (CurrentNode != null)
                 {
+                    dataGridView2.Dock = DockStyle.Fill;
                     if (CurrentNode.Tag is OneCamData)
                     {
+                        dataGridView2.Rows.Clear();
                         OneCamData oneCamData = CurrentNode.Tag as OneCamData;
+                        int index = 0;
+                        foreach (var itemd in oneCamData.NGObj.DicOnes)
+                        {
+                            DataMinMax da = itemd.Value.oneRObjs[0].dataMinMax;
+                            if (da != null)
+                            {
+                                if (da.Reference_Name.Count == 0)
+                                {
+                                    continue;
+                                }
+                                dataGridView2.Rows.Add(da.Reference_Name.Count);
+                                for (int i = 0; i < da.Reference_Name.Count; i++)
+                                {
+                                    dataGridView2.Rows[index].Cells[0].Value = itemd.Key + "." + da.Reference_Name[i];
+                                    if (da.ValueStrs.Count > i)
+                                    {
+                                        dataGridView2.Rows[index].Cells[1].Value = da.ValueStrs[i];
+                                    }
+                                    dataGridView2.Rows[index].Cells[2].Value = da.Reference_ValueMin[i];
+                                    dataGridView2.Rows[index].Cells[3].Value = da.Reference_ValueMax[i];
+                                    index++;
+                                }
+                                if (da.ValueStrs.Count > dataGridView2.Rows.Count)
+                                {
+                                    dataGridView2.Rows.Add(da.ValueStrs.Count - da.Reference_Name.Count);
+                                    for (int i = da.Reference_Name.Count; i < da.ValueStrs.Count; i++)
+                                    {
+                                        dataGridView2.Rows[index].Cells[1].Value = da.ValueStrs[i];
+                                        index++;
+                                    }
+                                }
+                            }
+                            dataGridView2.BringToFront();
+                            dataGridView2.Show();
+                        }
                     }
                     else if (CurrentNode.Tag is OneComponent)
                     {
                         OneComponent oneCamData = CurrentNode.Tag as OneComponent;
                         dataGridView2.Visible = true;
                         dataGridView2.Location = new Point(150, 100);
-                        dataGridView2.Rows.Clear();
+                        dataGridView2.Dock = DockStyle.Fill;
                         DataMinMax da = oneCamData.oneRObjs[0].dataMinMax;
                         if (da != null)
                         {
@@ -1271,7 +1362,7 @@ namespace Vision2.Project.DebugF.IO
                                         {
                                             datStr += "SN:" + data.PanelID;
                                         }
-                                        label1.label1.Text = datStr;
+                                        label1.label1.Text = datStr+data.MesStr;
                                         label1.Tag = data;
                                     }
                                 }
@@ -1284,6 +1375,69 @@ namespace Vision2.Project.DebugF.IO
             }
             catch (Exception ex)
             {
+            }
+        }
+
+        public void SetValue(int number, int errNuber)
+        {
+            try
+            {
+                MainForm1.MainFormF.Invoke(new Action(() =>
+                {
+                    Control[] controls = Controls.Find(number.ToString(), false);
+                    OneDataVale data = trayData.GetDataVales()[number - 1];
+                    if (controls.Length != 0)
+                    {
+                        TrayControl label1 = controls[0] as TrayControl;
+                        if (label1 != null)
+                        {
+                            label1.Tag = data;
+                            switch (errNuber)
+                            {
+                                case -1:
+                                    label1.label1.BackColor = Color.Black;
+                                    break;
+
+                                case 0:
+                                    data.NotNull = false;
+                                    label1.label1.BackColor = Color.Orange;
+                                    break;
+
+                                case 1:
+                                    data.OK = true;
+                                    label1.label1.BackColor = Color.Green;
+                                    break;
+
+                                case 2:
+                                    //data.OK = false;
+                                    label1.label1.BackColor = Color.Red;
+                                    break;
+
+                                case 3:
+                                    //data.OK = false;
+                                    label1.label1.BackColor = Color.Yellow;
+                                    break;
+
+                                case 4:
+                                    //data.OK = false;
+                                    label1.label1.BackColor = Color.Blue;
+                                    break;
+
+                                case 5:
+                                    data.OK = false;
+                                    label1.label1.BackColor = Color.Pink;
+                                    break;
+
+                                default:
+                                    break;
+                            }
+                        }
+                    }
+                }));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
     }

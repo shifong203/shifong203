@@ -52,6 +52,9 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
 
         public HObject NGROI = new HObject();
 
+        public int Row;
+        public int Col;
+
         public OneRObj()
         {
             NGROI.GenEmptyObj();
@@ -61,8 +64,10 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         {
             this.ComponentID = oneRObj.ComponentID;
             this.RestText = oneRObj.RestText;
-            this.NGText = oneRObj.NGText;
-
+            if (!oneRObj.aOK)
+            {
+                this.NGText = oneRObj.NGText;
+            }
             this.dataMinMax = oneRObj.dataMinMax;
             this.Done = oneRObj.Done;
             this.NGROI = oneRObj.NGROI;
@@ -78,7 +83,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         /// </summary>
         public DataMinMax dataMinMax = new DataMinMax();
 
-        public bool OK;
+        public bool aOK;
 
         public bool Done;
 
@@ -131,7 +136,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             }
             RestText = "OK";
 
-            OK = true;
+            aOK = true;
             Done = true;
         }
 
@@ -147,7 +152,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             }
             RestText = restText;
             Done = true;
-            OK = false;
+            aOK = false;
         }
     }
 
@@ -158,11 +163,19 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
     {
         public void AddCont(OneRObj oneRObj)
         {
-            if (!DicOnes.ContainsKey(oneRObj.ComponentID))
+            try
             {
-                DicOnes.Add(oneRObj.ComponentID, new OneComponent() { ComponentID = oneRObj.ComponentID });
+                if (!DicOnes.ContainsKey(oneRObj.ComponentID))
+                {
+                    DicOnes.Add(oneRObj.ComponentID, new OneComponent() { ComponentID = oneRObj.ComponentID });
+                }
+                DicOnes[oneRObj.ComponentID].Row = oneRObj.Row;
+                DicOnes[oneRObj.ComponentID].Col = oneRObj.Col;
+                DicOnes[oneRObj.ComponentID].oneRObjs.Add(oneRObj);
             }
-            DicOnes[oneRObj.ComponentID].oneRObjs.Add(oneRObj);
+            catch (System.Exception)
+            {
+            }
         }
 
         public void Add(OneComponent oneRObj)
@@ -188,20 +201,23 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         {
             public List<OneRObj> oneRObjs = new List<OneRObj>();
 
+            public int Row;
+            public int Col;
+
             public void AddNgObj(string ngText, string conam, HTuple restString, HObject roi, HObject NGerr, DataMinMax dataMinMax)
             {
-                OneRObj oneRObj = new OneRObj() { NGText = NGText, ComponentID = conam, ROI = roi, NGROI = NGerr, dataMinMax = dataMinMax };
+                OneRObj oneRObj = new OneRObj() { NGText = ngText, ComponentID = conam, ROI = roi, NGROI = NGerr, dataMinMax = dataMinMax };
                 oneRObj.RestStrings.AddRange(restString.ToSArr());
                 oneRObjs.Add(oneRObj);
             }
 
-            public bool OK
+            public bool aOK
             {
                 get
                 {
                     for (int i = 0; i < oneRObjs.Count; i++)
                     {
-                        if (!oneRObjs[i].OK) return false;
+                        if (!oneRObjs[i].aOK) return false;
                     }
                     return true;
                 }
@@ -209,7 +225,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 {
                     for (int i = 0; i < oneRObjs.Count; i++)
                     {
-                        oneRObjs[i].OK = value;
+                        oneRObjs[i].aOK = value;
                     }
                 }
             }
@@ -250,7 +266,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         }
                         data += item.NGText + ";";
                     }
-                    return data;
+                    return data.Trim(';');
                 }
             }
 
@@ -267,7 +283,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         }
                         data += item.CNGText + ";";
                     }
-                    return data;
+                    return data.Trim(';');
                 }
             }
 
@@ -307,7 +323,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 get
                 {
                     string data = "";
-                    if (OK)
+                    if (aOK)
                     {
                         data = "OK;";
                     }
@@ -319,7 +335,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         }
                         data += item.RestText + ";";
                     }
-                    return data;
+                    return data.Trim(';');
                 }
             }
 

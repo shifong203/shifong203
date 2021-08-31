@@ -216,5 +216,15 @@ namespace Vision2.vision.HalconRunFile.PCBFile
             {
             }
         }
+
+        private void toolStripButton3_Click(object sender, EventArgs e)
+        {
+            try
+            {
+            }
+            catch (Exception)
+            {
+            }
+        }
     }
 }

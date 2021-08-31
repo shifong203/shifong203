@@ -272,7 +272,6 @@ namespace Vision2.Project
                                 }
                                 LinKbtn.Text = item.Key + ":" + item.Value.LinkState;
                             }));
-
                             return "";
                         }
                     }
@@ -315,7 +314,6 @@ namespace Vision2.Project
                 }));
                 //UserFormulaContrsl.This.tabControl1.TabPages.Remove(UserFormulaContrsl.This.tabPage4);
                 //MainForm1.MainFormF.splitContainer3.Panel2Collapsed = false;
-                AlarmForm.UpDa(Vision2.Project.DebugF.DebugCompiler.Instance.ErrTextS);
 
                 System.GC.Collect();
                 //form.LoadEnd();

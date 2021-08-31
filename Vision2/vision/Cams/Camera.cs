@@ -36,7 +36,7 @@ namespace Vision2.vision.Cams
 
         public CameraStatusChangedHandle CameraStatusChanged;
 
-        public event Action<string, OneResultOBj, int, bool> Swtr;
+        public event Action<string, OneResultOBj, int> Swtr;
 
         public event Action<bool> LinkEnvet;
 
@@ -262,7 +262,7 @@ namespace Vision2.vision.Cams
 
         public void OnEnverIamge(string key, int runid, OneResultOBj iamge)
         {
-            this.Swtr.Invoke(key, iamge, runid, true);
+            this.Swtr.Invoke(key, iamge, runid);
         }
 
         public virtual void SetExposureTime(double VALUE)
@@ -278,6 +278,7 @@ namespace Vision2.vision.Cams
         public virtual HObject IGrabbedRawDataTOImage(IGrabbedRawData frame)
         {
             HObject ho_image2 = new HObject();
+            //frame.PixelFmt
             if (CameraImageFormat == "Mono8")
             {
                 int nRGB = RGBFactory.EncodeLen(frame.Width, frame.Height, false);

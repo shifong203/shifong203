@@ -28,11 +28,15 @@ namespace Vision2.vision.HalconRunFile.Controls
                 }
                 if (text_Mode.ListhObjects.Count == 0)
                 {
-                    text_Mode.ListhObjects.Add(text_Mode.DrawHomObj(halcon));
+                    text_Mode.ListhObjects.Add(text_Mode.DrawRectangle2(halcon));
+                    //    text_Mode.ListhObjects.Add(RunProgramFile.RunProgram.DrawModOBJ(halcon,RunProgramFile.HalconRun.EnumDrawType.Rectangle1,new HObject()));
                 }
                 else
                 {
-                    text_Mode.ListhObjects[listBox1.SelectedIndex] = text_Mode.DrawHomObj(halcon, listBox1.SelectedIndex);
+                    text_Mode.ListhObjects[listBox1.SelectedIndex] = text_Mode.DrawRectangle2(halcon);
+
+                    //text_Mode.ListhObjects[listBox1.SelectedIndex] = RunProgramFile. RunProgram.DrawModOBJ(halcon,
+                    //RunProgramFile.HalconRun.EnumDrawType.Rectangle2, text_Mode.ListhObjects[listBox1.SelectedIndex]);
                 }
             }
             catch (Exception)
@@ -45,6 +49,15 @@ namespace Vision2.vision.HalconRunFile.Controls
             try
             {
                 text_Mode.GetHomObj(halcon);
+
+                HOperatorSet.ReduceDomain(halcon.Image(), text_Mode.ListhObjects[listBox1.SelectedIndex], out HObject hObject);
+                HOperatorSet.CropDomain(hObject, out hObject);
+                HOperatorSet.RotateImage(hObject, out HObject hObject3, 90, "constant");
+                HWindID.Image(hObject3);
+                //HWindID.SetImaage(hObject3);
+                //HOperatorSet.GetImageSize(hObject3, out HTuple widt, out HTuple hiet);
+                //HWindID.SetPerpetualPart(0, 0, widt, hiet);
+                HWindID.ShowImage();
             }
             catch (Exception ex)
             {
@@ -62,7 +75,7 @@ namespace Vision2.vision.HalconRunFile.Controls
             halcon = halcon_;
             checkBox1.Checked = text_Mode.QRMode;
             HWindID.Initialize(hWindowControl1);
-            pretreatmentUserControl1.SetData(text_, HWindID);
+            pretreatmentUserControl1.SetData(text_);
             textBox1.Text = text_Mode.ModeText;
             listBox1.Items.Clear();
             for (int i = 0; i < text_Mode.ListhObjects.Count; i++)
@@ -111,7 +124,17 @@ namespace Vision2.vision.HalconRunFile.Controls
                         HOperatorSet.AffineTransRegion(text_Mode.ListhObjects[listBox1.SelectedIndex], out HObject hObject2, listh[i], "nearest_neighbor");
                         HTuple home2d = listh[i];
                         halcon.AddObj(hObject2);
-                        HOperatorSet.HomMat2dRotate(home2d, text_Mode.Phi[listBox1.SelectedIndex], text_Mode.Row[listBox1.SelectedIndex], text_Mode.Column[listBox1.SelectedIndex], out home2d);
+                        //HOperatorSet.HomMat2dRotate(home2d, this.Phi[i2], this.Row[i2], this.Column[i2], out home2d);
+
+                        //HOperatorSet.ReduceDomain(halcon.Image(), text_Mode.ListhObjects[listBox1.SelectedIndex], out HObject hObject);
+                        //HOperatorSet.CropDomain(hObject, out hObject);
+                        //HOperatorSet.AreaCenter(hObject, out HTuple areas, out HTuple rows, out HTuple colues);
+                        //HOperatorSet.SmallestRectangle1(hObject,  out HTuple rows1, out HTuple colues1, out HTuple rows2, out HTuple colues2);
+                        //HOperatorSet.GenRectangle1(out HObject hObjecttsd, rows1, colues1, rows2, colues2);
+                        //HWindID.OneResIamge.AddObj(hObjecttsd);
+
+                        HOperatorSet.HomMat2dRotate(home2d, text_Mode.Phi[listBox1.SelectedIndex],
+                          text_Mode.Row[listBox1.SelectedIndex], text_Mode.Column[listBox1.SelectedIndex], out home2d);
                         HOperatorSet.AffineTransImage(image, out HObject hObject3, home2d, "constant", "false");
                         HOperatorSet.AffineTransRegion(hObject2, out HObject hObject1, home2d, "nearest_neighbor");
                         HOperatorSet.ReduceDomain(hObject3, hObject1, out HObject hObject);
@@ -119,7 +142,10 @@ namespace Vision2.vision.HalconRunFile.Controls
                         HOperatorSet.HomMat2dInvert(home2d, out home2d);
                         if (hObject2 != null)
                         {
-                            HWindID.SetImaage(hObject);
+                            HOperatorSet.SmallestRectangle1(hObject1, out HTuple row1, out HTuple colu1, out HTuple row2, out HTuple colu2);
+
+                            HWindID.SetImaage(hObject3);
+                            HWindID.SetPerpetualPart(row1 - 100, colu1 - 100, row2 + 100, colu2 + 100);
                             HWindID.OneResIamge.AddObj(hObject1);
                             HWindID.OneResIamge.AddObj(hObject4);
                             HOperatorSet.AreaCenter(hObject4, out HTuple area, out HTuple row, out HTuple column);
@@ -131,7 +157,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                             }
                         }
                     }
-
+                    HWindID.ShowImage();
                     halcon.ShowObj();
                 }
                 catch (Exception EX)
@@ -181,6 +207,10 @@ namespace Vision2.vision.HalconRunFile.Controls
                 return;
             }
             text_Mode.QRMode = checkBox1.Checked;
+        }
+
+        private void pretreatmentUserControl1_Load(object sender, EventArgs e)
+        {
         }
     }
 }

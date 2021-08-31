@@ -124,21 +124,21 @@ namespace Vision2.捷普
                                         item.Value.Run(halconRun.GetOneImageR(), new AoiObj());
                                         MeasureMlet measureMlet = item.Value as MeasureMlet;
                                         double vaet = p1DiffIn.TupleMean() / p1Diff.TupleMean();
-                                        measureMlet.Scale = vaet; label5.Text = "比例:" + vaet;
+                                        measureMlet.Scale = vaet; label5.Text = "比例:" + vaet.ToString("0.00000000");
                                     }
                                     else if (item.Key == "P2_dist")
                                     {
                                         item.Value.Run(halconRun.GetOneImageR(), new AoiObj());
                                         MeasureMlet measureMlet = item.Value as MeasureMlet;
                                         double vaet = p2DiffIn.TupleMean() / p2Diff.TupleMean();
-                                        measureMlet.Scale = vaet; label6.Text = "比例:" + vaet;
+                                        measureMlet.Scale = vaet; label6.Text = "比例:" + vaet.ToString("0.00000000");
                                     }
                                     else if (item.Key == "P3_dist")
                                     {
                                         item.Value.Run(halconRun.GetOneImageR(), new AoiObj());
                                         MeasureMlet measureMlet = item.Value as MeasureMlet;
                                         double vaet = p3DiffIn.TupleMean() / p3Diff.TupleMean();
-                                        measureMlet.Scale = vaet; label7.Text = "比例:" + vaet;
+                                        measureMlet.Scale = vaet; label7.Text = "比例:" + vaet.ToString("0.00000000");
                                     }
                                     else if (item.Key == "P4_dist")
                                     {
@@ -146,7 +146,7 @@ namespace Vision2.捷普
                                         MeasureMlet measureMlet = item.Value as MeasureMlet;
                                         double vaet = p4DiffIn.TupleMean() / p4Diff.TupleMean();
                                         measureMlet.Scale = vaet;
-                                        label8.Text = "比例:" + vaet;
+                                        label8.Text = "比例:" + vaet.ToString("0.00000000");
                                     }
                                 }
                                 break;
@@ -179,7 +179,7 @@ namespace Vision2.捷普
                         item.Value.Run(halconRun.GetOneImageR(), new AoiObj());
                         MeasureMlet measureMlet = item.Value as MeasureMlet;
                         double vaet = (double)numericUpDown1.Value / measureMlet.ValuePP;
-                        label5.Text = "比例:" + vaet; /*+ "=" + numericUpDown1.Value + "/" + measureMlet.ValuePP;*/
+                        label5.Text = "比例:" + vaet.ToString("0.00000000"); /*+ "=" + numericUpDown1.Value + "/" + measureMlet.ValuePP;*/
                         measureMlet.Scale = vaet;
                         measureMlet.ResValue = (double)numericUpDown1.Value;
                     }
@@ -188,7 +188,7 @@ namespace Vision2.捷普
                         item.Value.Run(halconRun.GetOneImageR(), new AoiObj());
                         MeasureMlet measureMlet = item.Value as MeasureMlet;
                         double vaet = (double)numericUpDown2.Value / measureMlet.ValuePP;
-                        label6.Text = "比例:" + vaet; /*+ "=" + numericUpDown2.Value + "/" + measureMlet.ValuePP;*/
+                        label6.Text = "比例:" + vaet.ToString("0.00000000"); /*+ "=" + numericUpDown2.Value + "/" + measureMlet.ValuePP;*/
                         measureMlet.Scale = vaet;
                         measureMlet.ResValue = (double)numericUpDown2.Value;
                     }
@@ -197,7 +197,7 @@ namespace Vision2.捷普
                         item.Value.Run(halconRun.GetOneImageR(), new AoiObj());
                         MeasureMlet measureMlet = item.Value as MeasureMlet;
                         double vaet = (double)numericUpDown3.Value / measureMlet.ValuePP;
-                        label7.Text = "比例:" + vaet; /*+ "=" + numericUpDown3.Value + "/" + measureMlet.ValuePP;*/
+                        label7.Text = "比例:" + vaet.ToString("0.00000000"); /*+ "=" + numericUpDown3.Value + "/" + measureMlet.ValuePP;*/
                         measureMlet.Scale = vaet;
                         measureMlet.ResValue = (double)numericUpDown3.Value;
                     }
@@ -206,7 +206,7 @@ namespace Vision2.捷普
                         item.Value.Run(halconRun.GetOneImageR(), new AoiObj());
                         MeasureMlet measureMlet = item.Value as MeasureMlet;
                         double vaet = (double)numericUpDown4.Value / measureMlet.ValuePP;
-                        label8.Text = "比例:" + vaet; /*+ "=" + numericUpDown4.Value + "/" + measureMlet.ValuePP;*/
+                        label8.Text = "比例:" + vaet.ToString("0.00000000"); /*+ "=" + numericUpDown4.Value + "/" + measureMlet.ValuePP;*/
                         measureMlet.Scale = vaet;
                         measureMlet.ResValue = (double)numericUpDown4.Value;
                     }
@@ -233,22 +233,26 @@ namespace Vision2.捷普
                     }
                     if (item.Key == "P1_dist")
                     {
-                        ProjectINI.WritePrivateProfileString("cal_data_mm", "P1_dist_pixels", measureMlet.Scale.ToString(), Application.StartupPath + @"\setting.ini");
+                        measureMlet.ResValue = (double)numericUpDown1.Value;
+                        ProjectINI.WritePrivateProfileString("cal_data_mm", "P1_dist_pixels", measureMlet.Scale.ToString("0.00000000"), Application.StartupPath + @"\setting.ini");
                         ProjectINI.WritePrivateProfileString("dist_mm", "P1_dist", measureMlet.ResValue.ToString(), Application.StartupPath + @"\setting.ini");
                     }
                     else if (item.Key == "P2_dist")
                     {
-                        ProjectINI.WritePrivateProfileString("cal_data_mm", "P2_dist_pixels", measureMlet.Scale.ToString(), Application.StartupPath + @"\setting.ini");
+                        measureMlet.ResValue = (double)numericUpDown2.Value;
+                        ProjectINI.WritePrivateProfileString("cal_data_mm", "P2_dist_pixels", measureMlet.Scale.ToString("0.00000000"), Application.StartupPath + @"\setting.ini");
                         ProjectINI.WritePrivateProfileString("dist_mm", "P2_dist", measureMlet.ResValue.ToString(), Application.StartupPath + @"\setting.ini");
                     }
                     else if (item.Key == "P3_dist")
                     {
-                        ProjectINI.WritePrivateProfileString("cal_data_mm", "P3_dist_pixels", measureMlet.Scale.ToString(), Application.StartupPath + @"\setting.ini");
+                        measureMlet.ResValue = (double)numericUpDown3.Value;
+                        ProjectINI.WritePrivateProfileString("cal_data_mm", "P3_dist_pixels", measureMlet.Scale.ToString("0.00000000"), Application.StartupPath + @"\setting.ini");
                         ProjectINI.WritePrivateProfileString("dist_mm", "P3_dist", measureMlet.ResValue.ToString(), Application.StartupPath + @"\setting.ini");
                     }
                     else if (item.Key == "P4_dist")
                     {
-                        ProjectINI.WritePrivateProfileString("cal_data_mm", "P4_dist_pixels", measureMlet.Scale.ToString(), Application.StartupPath + @"\setting.ini");
+                        measureMlet.ResValue = (double)numericUpDown4.Value;
+                        ProjectINI.WritePrivateProfileString("cal_data_mm", "P4_dist_pixels", measureMlet.Scale.ToString("0.00000000"), Application.StartupPath + @"\setting.ini");
                         ProjectINI.WritePrivateProfileString("dist_mm", "P4_dist", measureMlet.ResValue.ToString(), Application.StartupPath + @"\setting.ini");
                     }
                 }
@@ -273,6 +277,32 @@ namespace Vision2.捷普
         {
             try
             {
+                HalconRun halconRun = Vision.GetRunNameVision();
+
+                foreach (var item in halconRun.GetRunProgram())
+                {
+                    MeasureMlet measureMlet = item.Value as MeasureMlet;
+                    if (measureMlet == null)
+                    {
+                        continue;
+                    }
+                    if (item.Key == "P1_dist")
+                    {
+                        numericUpDown1.Value = (decimal)measureMlet.ResValue;
+                    }
+                    else if (item.Key == "P2_dist")
+                    {
+                        numericUpDown2.Value = (decimal)measureMlet.ResValue;
+                    }
+                    else if (item.Key == "P3_dist")
+                    {
+                        numericUpDown3.Value = (decimal)measureMlet.ResValue;
+                    }
+                    else if (item.Key == "P4_dist")
+                    {
+                        numericUpDown4.Value = (decimal)measureMlet.ResValue;
+                    }
+                }
             }
             catch (Exception)
             {

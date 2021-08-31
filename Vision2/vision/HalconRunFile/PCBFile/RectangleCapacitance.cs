@@ -41,6 +41,9 @@ namespace Vision2.vision.HalconRunFile.PCBFile
         public HObject Point1 { get; set; }
         public HObject Point2 { get; set; }
 
+        [Category("焊脚搜索"), DisplayName("焊脚开运算闭运算"), Description("")]
+        public double open { get; set; } = 2;
+
         public Threshold_Min_Max Threshold_Min_M { get; set; } = new Threshold_Min_Max();
         public Threshold_Min_Max Threshold_Min_DP { get; set; } = new Threshold_Min_Max();
 
@@ -59,7 +62,6 @@ namespace Vision2.vision.HalconRunFile.PCBFile
         public bool RunDebug(OneResultOBj oneResultOBj, AoiObj aoiObj)
         {
             NGNumber = 0;
-
             NGTextS = new HTuple();
             nGRoi = new HObject();
             nGRoi.GenEmptyObj();
@@ -67,6 +69,7 @@ namespace Vision2.vision.HalconRunFile.PCBFile
             hObject2.GenEmptyObj();
             bool RsetBool = false;
             HTuple area = new HTuple();
+            AOIObj.GenEmptyObj();
             try
             {
                 HOperatorSet.DistanceRrMinDil(Point1, Point2, out HTuple MIND);
@@ -78,12 +81,24 @@ namespace Vision2.vision.HalconRunFile.PCBFile
                 HOperatorSet.Union2(Point1, Point2, out AOIObj);
                 HOperatorSet.ClosingRectangle1(AOIObj, out AOIObj, MIND * 2, MIND * 2);
                 aoiObj.GetAOI(AOIObj);
+                aoiObj.CiName = this.Name;
+                //aoiObj.GetAOI(aoiObj.SelseAoi);
                 if (aoiObj.DebugID != 0)
                 {
                     oneResultOBj.ClearAllObj();
+                    oneResultOBj.AddObj(aoiObj.SelseAoi);
                 }
+
                 HOperatorSet.ReduceDomain(oneResultOBj.GetHalcon().GetImageOBJ(Threshold_Min_M.ImageTypeObj), aoiObj.SelseAoi, out HObject imaget);
+
                 HObject hObject = Threshold_Min_M.Threshold(imaget);
+
+                hObject = RunProgram.OpneOrCosingCircle(hObject, open);
+
+                if (aoiObj.DebugID != 0)
+                {
+                    oneResultOBj.AddObj(hObject, ColorResult.yellow);
+                }
 
                 HOperatorSet.AreaCenter(hObject, out area, out HTuple row, out HTuple column);
                 HOperatorSet.Intersection(Point1, hObject, out HObject hObject1);
@@ -110,9 +125,10 @@ namespace Vision2.vision.HalconRunFile.PCBFile
                     OutCol = column;
                     HOperatorSet.DistancePp(OutRow, OutCol, ModeRow, ModeCol, out HTuple distfMM);
                     distfMM = oneResultOBj.GetCaliConstMM(distfMM);
+                    //偏移
                     if (this.IntCapcitanceMinx.SkewingSetValeu(distfMM) != 0)
                     {
-                        NGTextS.Append("偏移" + distfMM);
+                        NGTextS.Append("skewing" + distfMM);
                         NGNumber++;
                     }
                     oneResultOBj.AddObj(corss, ColorResult.yellow);
@@ -133,26 +149,25 @@ namespace Vision2.vision.HalconRunFile.PCBFile
                     HOperatorSet.AreaCenter(hObject3, out HTuple areaDt, out HTuple row2, out HTuple column2);
                     //HOperatorSet.ErosionCircle(hObject3, out hObject3, 1);
                     HOperatorSet.OpeningCircle(hObject3, out hObject3, 5);
-
                     oneResultOBj.AddObj(hObject3, ColorResult.yellow);
                     if (this.IntCapcitanceMinx.RaSetValeu(length12) != 0)
-                    {
-                        NGTextS.Append("长度" + length12);
+                    {//长度length
+                        NGTextS.Append("length" + length12);
                         NGNumber++;
                     }
                     if (this.IntCapcitanceMinx.RbSetValeu(length22) != 0)
-                    {
-                        NGTextS.Append("宽度" + length22);
+                    {//width 宽度
+                        NGTextS.Append("width" + length22);
                         NGNumber++;
                     }
                     if (this.IntCapcitanceMinx.AngleSetValeu(phi) != 0)
-                    {
-                        NGTextS.Append("角度" + phi);
+                    {// angle 角度
+                        NGTextS.Append("angle" + phi);
                         NGNumber++;
                     }
                     if (this.IntCapcitanceMinx.AreaSetValeu(areaDt) != 0)
-                    {
-                        NGTextS.Append("颜色面积" + areaDt);
+                    {//Different color area颜色面积
+                        NGTextS.Append("Different color area" + areaDt);
                         NGNumber++;
                     }
                     if (aoiObj.DebugID != 0)
@@ -166,8 +181,8 @@ namespace Vision2.vision.HalconRunFile.PCBFile
                     }
                 }
                 else
-                {
-                    NGTextS.Append("焊盘数量错误" + rows.Length);
+                {///焊盘数量错误
+                    NGTextS.Append("Wrong number of pads" + rows.Length);
                     NGNumber++;
                     oneResultOBj.AddObj(aoiObj.SelseAoi, ColorResult.blue);
                     oneResultOBj.AddObj(hObject, ColorResult.red);
@@ -180,35 +195,39 @@ namespace Vision2.vision.HalconRunFile.PCBFile
                 }
             }
             catch (Exception ex)
-            {
-                NGTextS.Append("执行错误;");
+            {//execution error 执行错误
+                NGTextS.Append("execution error;");
                 NGNumber++;
             }
-            if (NGNumber == 0)
+            try
             {
-                oneResultOBj.AddObj(hObject2);
-                RsetBool = true;
-            }
-            else
-            {
-                oneResultOBj.AddImageMassage(aoiObj.AoiRow + 90, aoiObj.AoiCol, NGTextS, ColorResult.red);
-                ; nGRoi = nGRoi.ConcatObj(hObject2);
-                string ngt = "";
-                for (int i = 0; i < NGTextS.Length; i++)
+                if (NGNumber == 0)
                 {
-                    ngt += NGTextS[i] + ";";
-                }
-                if (Vision.Instance.DicDrawbackNameS.ContainsKey(BackName))
-                {
-                    Vision.DrawBackSt drawBackSt = Vision.Instance.DicDrawbackNameS[BackName];
-                    oneResultOBj.AddNGOBJ(aoiObj.CiName, ngt, aoiObj.SelseAoi, nGRoi,
-                        drawBackSt.GetBackName(), this.Name);
+                    oneResultOBj.AddObj(hObject2);
+                    RsetBool = true;
                 }
                 else
                 {
-                    oneResultOBj.AddNGOBJ(aoiObj.CiName, ngt, aoiObj.SelseAoi, nGRoi,
-                         null, this.Name);
+                    oneResultOBj.AddImageMassage(aoiObj.AoiRow + 90, aoiObj.AoiCol, NGTextS, ColorResult.red);
+                    ; nGRoi = nGRoi.ConcatObj(hObject2);
+                    string ngt = "";
+                    for (int i = 0; i < NGTextS.Length; i++)
+                    {
+                        ngt += NGTextS[i] + ";";
+                    }
+                    if (Vision.Instance.DicDrawbackNameS.ContainsKey(BackName))
+                    {
+                        Vision.DrawBackSt drawBackSt = Vision.Instance.DicDrawbackNameS[BackName];
+                        oneResultOBj.AddNGOBJ(aoiObj.CiName, ngt, aoiObj.SelseAoi, nGRoi,drawBackSt.GetBackName(), this.Name);
+                    }
+                    else
+                    {
+                        oneResultOBj.AddNGOBJ(aoiObj.CiName, ngt, aoiObj.SelseAoi, nGRoi,  null, this.Name);
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
             }
             return RsetBool;
         }

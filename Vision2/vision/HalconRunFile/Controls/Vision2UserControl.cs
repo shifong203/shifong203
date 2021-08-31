@@ -460,6 +460,7 @@ namespace Vision2.vision.HalconRunFile.Controls
             {
                 try
                 {
+                    toolStripLabel2.Text = "Cont:" + this.halcon.GetRuns().Count;
                     if (hRun.GetCam() != null && hRun.GetCam().Grabbing)
                     {
                         toolStripButton6.Text = "停止";

@@ -9,7 +9,10 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
+using System.Windows.Forms.DataVisualization.Charting;
+using Vision2.ConClass;
 using Vision2.ErosProjcetDLL.Project;
+using Vision2.ErosProjcetDLL.UI;
 using Vision2.ErosProjcetDLL.UI.PropertyGrid;
 using Vision2.Project.DebugF;
 using Vision2.Project.Mes;
@@ -85,8 +88,47 @@ namespace Vision2.Project.formula
                 HWind.Initialize(hWindowControl1);
                 hWindowControl1.MouseClick += HWindowControl1_MouseClick;
                 MainForm1.MainFormF.CycleEven += ThreadUP;
+                chartType.Series.Clear();
+                chartType.ChartAreas.Clear();
+                Series Series1 = new Series();
+                chartType.Series.Add(Series1);
+                chartType.Series["Series1"].ChartType = SeriesChartType.Column;
+                chartType.Legends[0].Enabled = false;
+                chartType.Series["Series1"].LegendText = "";
+                chartType.Series["Series1"].Label = "#VALY";
+                chartType.Series["Series1"].ToolTip = "#VALX";
+                chartType.Series["Series1"]["PointWidth"] = "0.5";
+                ChartArea ChartArea1 = new ChartArea();
+                chartType.ChartAreas.Add(ChartArea1);
+                //开启三维模式的原因是为了避免标签重叠
+                chartType.ChartAreas["ChartArea1"].AxisY.Interval = 50;
+                chartType.ChartAreas["ChartArea1"].Area3DStyle.Enable3D = true;//开启三维模式;PointDepth:厚度BorderWidth:边框宽
+                chartType.ChartAreas["ChartArea1"].Area3DStyle.Rotation = 20;//起始角度
+                chartType.ChartAreas["ChartArea1"].Area3DStyle.Inclination = 15;//倾斜度(0～90)
+                chartType.ChartAreas["ChartArea1"].Area3DStyle.LightStyle = LightStyle.Realistic;//表面光泽度
+                chartType.ChartAreas["ChartArea1"].AxisX.Interval = 1; //决定x轴显示文本的间隔，1为强制每个柱状体都显示，3则间隔3个显示
+                chartType.ChartAreas["ChartArea1"].AxisX.LabelStyle.Font = new Font("宋体", 9, FontStyle.Regular);
+                chartType.ChartAreas["ChartArea1"].AxisX.MajorGrid.Enabled = false;
+                chartType.Series[0].XValueMember = "name";
+                chartType.Series[0].YValueMembers = "sumcount";
+                //ChartArea1.AxisX.w
+                ChartArea1.AxisX.Minimum = 0;
+                ChartArea1.AxisX.Maximum = 24;
+                ChartArea1.AxisY.Minimum = 0d;
+                //     int x = 0;
+                //RecipeCompiler.OKNumberClass[] oKNumberClass = RecipeCompiler.Instance.GetOKNumberList();
+                //List<int> vs = new List<int>();
+                //for (int i = 0; i < oKNumberClass.Length; i++)
+                //{
+                //    vs.Add(oKNumberClass[i].Number);
+                //}
+                //foreach (int v in vs)
+                //{
+                //    chartType.Series["Series1"].Points.AddXY(x, v);
+                //    x++;
+                //}
             }
-            catch (Exception)
+            catch (Exception ex)
             {
             }
         }
@@ -241,6 +283,7 @@ namespace Vision2.Project.formula
                 catch (Exception)
                 {
                 }
+                AlarmForm.UpDa(DebugCompiler.Instance.ErrTextS);
                 if (DebugCompiler.Instance.LinkSeelpTyoe < 3)
                 {
                     toolStripComboBox1.SelectedIndex = DebugCompiler.Instance.LinkSeelpTyoe;
@@ -416,6 +459,8 @@ namespace Vision2.Project.formula
                 }
                 groupBox4.Visible = DebugCompiler.Instance.UserIDText;
                 groupBox5.Visible = DebugCompiler.Instance.Work_Order;
+
+                toolStripLabel1.Visible = button1.Visible = comboBox1.Visible = DebugCompiler.Instance.IsPoName;
                 if (DebugCompiler.Instance.PuPragrm != "")
                 {
                     groupBox6.Visible = true;
@@ -446,14 +491,20 @@ namespace Vision2.Project.formula
                     panel2.Visible = false;
                 }
                 groupBox2.Visible = RecipeCompiler.Instance.PalenIDVsible;
+
                 if (Vision.Instance.OffCont == 0)
                 {
                     lightSourceControl1.Visible = false;
                 }
-                else
+                else if (DebugCompiler.Instance.isVisibleLightS)
                 {
                     lightSourceControl1.Visible = true;
                 }
+                else
+                {
+                    lightSourceControl1.Visible = false;
+                }
+
                 bool visible = false;
                 foreach (Control item in groupBox3.Controls)
                 {
@@ -465,12 +516,42 @@ namespace Vision2.Project.formula
                 }
                 groupBox3.Visible = visible;
 
-                isUP = false;
+                if (RecipeCompiler.Instance.GetMes() != null)
+                {
+                    panel4.Visible = true;
+                    comboBox2.Items.Clear();
+                    comboBox3.Items.Clear();
+
+                    if (!RecipeCompiler.Instance.GetMes().FixtureList.Contains(RecipeCompiler.Instance.GetMes().Fixture_ID))
+                    {
+                        RecipeCompiler.Instance.GetMes().FixtureList.Add(RecipeCompiler.Instance.GetMes().Fixture_ID);
+                    }
+                    if (RecipeCompiler.Instance.GetMes().FixtureList.Count != 0)
+                    {
+                        comboBox3.Items.AddRange(RecipeCompiler.Instance.GetMes().FixtureList.ToArray());
+                    }
+                    if (!RecipeCompiler.Instance.GetMes().ListStr.Contains(RecipeCompiler.Instance.GetMes().Line_Name))
+                    {
+                        RecipeCompiler.Instance.GetMes().ListStr.Add(RecipeCompiler.Instance.GetMes().Line_Name);
+                    }
+                    if (RecipeCompiler.Instance.GetMes().ListStr.Count != 0)
+                    {
+                        comboBox2.Items.AddRange(RecipeCompiler.Instance.GetMes().ListStr.ToArray());
+                    }
+                    comboBox2.SelectedItem = RecipeCompiler.Instance.GetMes().Line_Name;
+                    comboBox3.SelectedItem = RecipeCompiler.Instance.GetMes().Fixture_ID;
+                }
+                else
+                {
+                    panel4.Visible = false;
+                }
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.StackTrace + ex.Message);
             }
+
+            isUP = false;
         }
 
         private void dataGridView2_CellValueChanged(object sender, DataGridViewCellEventArgs e)
@@ -527,7 +608,6 @@ namespace Vision2.Project.formula
 
         private void comboBox1_Click(object sender, EventArgs e)
         {
-            Up();
         }
 
         private SynchronizationForm synchronizationForm;
@@ -598,32 +678,11 @@ namespace Vision2.Project.formula
 
         private void toolStripDropDownButton1_Click(object sender, EventArgs e)
         {
-            try
-            {
-                System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
-                fbd.Description = "请选择文件夹";
-                if (ProcessControl.ProcessUser.Instancen.ExcelPath == null)
-                {
-                    ProcessControl.ProcessUser.Instancen.ExcelPath = Application.StartupPath;
-                }
-                if (System.IO.Directory.Exists(ProcessControl.ProcessUser.Instancen.ExcelPath.ToString()))
-                {
-                    fbd.SelectedPath = ProcessControl.ProcessUser.Instancen.ExcelPath.ToString();
-                }
-                System.Windows.Forms.DialogResult dialog = FolderBrowserLauncher.ShowFolderBrowser(fbd);
-                if (dialog == System.Windows.Forms.DialogResult.OK)
-                {
-                    ProcessControl.ProcessUser.Instancen.ExcelPath = fbd.SelectedPath;
-                    ProcessControl.ProcessUser.Instancen.SaveThis();
-                }
-            }
-            catch (Exception ex)
-            {
-            }
         }
 
         private void comboBox1_SelectionChangeCommitted(object sender, EventArgs e)
         {
+            Up();
         }
 
         public static bool NG { get { return data.OK; } }
@@ -717,7 +776,7 @@ namespace Vision2.Project.formula
             }
         }
 
-        public static void WeirtMes(bool OKWe = true)
+        public static void WriteMes(bool OKWe = true)
         {
             try
             {
@@ -776,7 +835,7 @@ namespace Vision2.Project.formula
             }
             catch (Exception ex)
             {
-                AlarmText.LogErr(ex.Message, "写入数据");
+                AlarmText.LogErr(ex.Message, "Mes写入数据");
             }
         }
 
@@ -788,7 +847,7 @@ namespace Vision2.Project.formula
         /// <param name="oKNumber"></param>
         public void AddData(RecipeCompiler.OKNumberClass oKNumber)
         {
-            label3.Text = RecipeCompiler.Instance.GetSPC();
+            RecipeCompiler.GetSPC();
             ISOk = oKNumber.IsOK;
             if (oKNumber.IsOK)
             {
@@ -800,10 +859,10 @@ namespace Vision2.Project.formula
                 label2.BackColor = Color.Red;
                 label2.Text = "NG";
             }
-            string data = RecipeCompiler.Instance.OKNumber.OKNumber.ToString() + "," + RecipeCompiler.Instance.OKNumber.NGNumber.ToString() +
-                "," + RecipeCompiler.Instance.OKNumber.IsOK + "," + RecipeCompiler.Instance.OKNumber.Number + "," + RecipeCompiler.Instance.OKNumber.OKNG
-                + "," + RecipeCompiler.Instance.OKNumber.AutoNGNumber;
-            File.WriteAllText(ProjectINI.TempPath + "NG概率.txt", data);
+            //string data = RecipeCompiler.Instance.OKNumber.OKNumber.ToString() + "," + RecipeCompiler.Instance.OKNumber.NGNumber.ToString() +
+            //    "," + RecipeCompiler.Instance.OKNumber.IsOK + "," + RecipeCompiler.Instance.OKNumber.Number + "," + RecipeCompiler.Instance.OKNumber.OKNG
+            //    + "," + RecipeCompiler.Instance.OKNumber.AutoNGNumber;
+            //File.WriteAllText(ProjectINI.TempPath + "NG概率.txt", data);
         }
 
         public bool ISOk;
@@ -1525,10 +1584,6 @@ namespace Vision2.Project.formula
 
         private static List<OneDataVale> dataVales = new List<OneDataVale>();
 
-        private void comboBox2_SelectionChangeCommitted(object sender, EventArgs e)
-        {
-        }
-
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
         }
@@ -1539,26 +1594,26 @@ namespace Vision2.Project.formula
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
-            try
-            {
-                timer1.Interval = 500;
-                if (!timer1.Enabled)
-                {
-                    timer1.Start();
-                }
-            }
-            catch (Exception ex)
-            {
-            }
+            //try
+            //{
+            //    timer1.Interval = 500;
+            //    if (!timer1.Enabled)
+            //    {
+            //        timer1.Start();
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //}
         }
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            if (textBox1.Text.Length >= numericUpDown1.Value)
-            {
-                StaticAddQRCode(textBox1.Text);
-                textBox1.Text = "";
-            }
+            //if (textBox1.Text.Length >= numericUpDown1.Value)
+            //{
+            //    StaticAddQRCode(textBox1.Text);
+            //    textBox1.Text = "";
+            //}
         }
 
         private void 附加测试ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1571,15 +1626,18 @@ namespace Vision2.Project.formula
             ErosProjcetDLL.UI.UICon.WindosFormerShow(ref linkDataForm1);
         }
 
+        private Form form;
+
         private void mES设置ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
             {
-                Form form = RecipeCompiler.Instance.GetMes().GetForm();
-                if (form != null)
+                if (form == null || form.IsDisposed)
                 {
-                    form.Show();
+                    form = RecipeCompiler.Instance.GetMes().GetForm();
                 }
+                UICon.SwitchToThisWindow(form.Handle, true);
+                form.Show();
             }
             catch (Exception ex)
             {
@@ -1665,6 +1723,313 @@ namespace Vision2.Project.formula
         private void textBox3_TextChanged(object sender, EventArgs e)
         {
             Product.Work_Order = textBox3.Text;
+        }
+
+        private void 打开历史ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (System.IO.Directory.Exists(RecipeCompiler.Instance.GetMes().DataPaht))
+                {
+                    System.Diagnostics.Process.Start(RecipeCompiler.Instance.GetMes().DataPaht);
+                }
+                else
+                {
+                    System.Diagnostics.Process.Start(RecipeCompiler.Instance.GetMes().DataPaht);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void 选择Mes地址ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
+                fbd.Description = "请选择文件夹";
+                if (ProcessControl.ProcessUser.Instancen.ExcelPath == null)
+                {
+                    ProcessControl.ProcessUser.Instancen.ExcelPath = Application.StartupPath;
+                }
+                if (System.IO.Directory.Exists(ProcessControl.ProcessUser.Instancen.ExcelPath.ToString()))
+                {
+                    fbd.SelectedPath = ProcessControl.ProcessUser.Instancen.ExcelPath.ToString();
+                }
+                System.Windows.Forms.DialogResult dialog = FolderBrowserLauncher.ShowFolderBrowser(fbd);
+                if (dialog == System.Windows.Forms.DialogResult.OK)
+                {
+                    ProcessControl.ProcessUser.Instancen.ExcelPath = fbd.SelectedPath;
+                    ProcessControl.ProcessUser.Instancen.SaveThis();
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+        }
+
+        private void 选择历史数据地址ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                FolderBrowserDialog fbd = new FolderBrowserDialog();
+                fbd.Description = "请选择文件夹";
+
+                Directory.CreateDirectory(RecipeCompiler.Instance.GetMes().DataPaht);
+                if (Directory.Exists(RecipeCompiler.Instance.GetMes().DataPaht))
+                {
+                    fbd.SelectedPath = RecipeCompiler.Instance.GetMes().DataPaht;
+                }
+                DialogResult dialog = FolderBrowserLauncher.ShowFolderBrowser(fbd);
+                if (dialog == DialogResult.OK)
+                {
+                    RecipeCompiler.Instance.GetMes().DataPaht = fbd.SelectedPath;
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+        }
+
+        private void toolStripButton1_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                //chartType.Series.Clear();
+                //           chartType.ChartAreas.Clear();
+
+                //Series Series1 = new Series();
+                //chartType.Series.Add(Series1);
+                chartType.Series["Series1"].ChartType = SeriesChartType.Pie;
+                chartType.Legends[0].Enabled = true;
+                chartType.Series["Series1"].LegendText = "#INDEX:#VALX";//开启图例
+                chartType.Series["Series1"].Label = "#INDEX:#PERCENT";
+                chartType.Series["Series1"].IsXValueIndexed = false;
+                chartType.Series["Series1"].IsValueShownAsLabel = false;
+                chartType.Series["Series1"]["PieLineColor"] = "Black";//连线颜色
+                chartType.Series["Series1"]["PieLabelStyle"] = "Outside";//标签位置
+                chartType.Series["Series1"].ToolTip = "#VALX";//显示提示用语
+                                                              //ChartArea ChartArea1 = new ChartArea();
+                                                              //chartType.ChartAreas.Add(ChartArea1);
+                                                              //开启三维模式的原因是为了避免标签重叠
+                chartType.ChartAreas["ChartArea1"].Area3DStyle.Enable3D = true;//开启三维模式;PointDepth:厚度BorderWidth:边框宽
+                chartType.ChartAreas["ChartArea1"].Area3DStyle.Rotation = 15;//起始角度
+                chartType.ChartAreas["ChartArea1"].Area3DStyle.Inclination = 45;//倾斜度(0～90)
+                chartType.ChartAreas["ChartArea1"].Area3DStyle.LightStyle = LightStyle.Realistic;//表面光泽度
+                chartType.Series[0].XValueMember = "name";
+                chartType.Series[0].YValueMembers = "sumcount";
+                //int x = 0;
+                //float[] values = { 905, 100, 20, 23, 60, 87, 42, 77, 92, 51, 29 };
+                //foreach (float v in values)
+
+                //{
+                //    chartType.Series["Series1"].Points.AddXY(x, v);
+                //    x++;
+
+                //}
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        private void toolStripButton2_Click_1(object sender, EventArgs e)
+        {
+            try
+            {
+                chartType.Series.Clear();
+                chartType.ChartAreas.Clear();
+                Series Series1 = new Series();
+                chartType.Series.Add(Series1);
+                chartType.Series["Series1"].ChartType = SeriesChartType.Column;
+                chartType.Legends[0].Enabled = false;
+                chartType.Series["Series1"].LegendText = "";
+                chartType.Series["Series1"].Label = "#VALY";
+                chartType.Series["Series1"].ToolTip = "#VALX";
+                chartType.Series["Series1"]["PointWidth"] = "0.5";
+                ChartArea ChartArea1 = new ChartArea();
+                chartType.ChartAreas.Add(ChartArea1);
+                //开启三维模式的原因是为了避免标签重叠
+                chartType.ChartAreas["ChartArea1"].AxisY.Interval = 50;
+                chartType.ChartAreas["ChartArea1"].Area3DStyle.Enable3D = true;//开启三维模式;PointDepth:厚度BorderWidth:边框宽
+                chartType.ChartAreas["ChartArea1"].Area3DStyle.Rotation = 20;//起始角度
+                chartType.ChartAreas["ChartArea1"].Area3DStyle.Inclination = 15;//倾斜度(0～90)
+                chartType.ChartAreas["ChartArea1"].Area3DStyle.LightStyle = LightStyle.Realistic;//表面光泽度
+                chartType.ChartAreas["ChartArea1"].AxisX.Interval = 1; //决定x轴显示文本的间隔，1为强制每个柱状体都显示，3则间隔3个显示
+                chartType.ChartAreas["ChartArea1"].AxisX.LabelStyle.Font = new Font("宋体", 9, FontStyle.Regular);
+                chartType.ChartAreas["ChartArea1"].AxisX.MajorGrid.Enabled = false;
+                chartType.Series[0].XValueMember = "name";
+                chartType.Series[0].YValueMembers = "sumcount";
+                //ChartArea1.AxisX.w
+                ChartArea1.AxisX.Minimum = 0;
+
+                ChartArea1.AxisX.Maximum = 24;
+
+                ChartArea1.AxisY.Minimum = 0d;
+                int x = 0;
+
+                RecipeCompiler.OKNumberClass[] oKNumberClass = RecipeCompiler.Instance.GetOKNumberList();
+                List<int> vs = new List<int>();
+
+                for (int i = 0; i < oKNumberClass.Length; i++)
+                {
+                    vs.Add(oKNumberClass[i].Number);
+                }
+
+                foreach (int v in vs)
+                {
+                    chartType.Series["Series1"].Points.AddXY(x, v);
+                    x++;
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+        }
+
+        private void toolStripButton3_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                chartType.Series["Series1"].Points.Clear();
+                // 在chart中显示数据
+                chartType.ChartAreas["ChartArea1"].AxisX.Interval = 1;
+                chartType.ChartAreas["ChartArea1"].AxisY.Interval = 50;
+                int x = 0;
+                float[] values = { 105, 100, 20, 23, 60, 87, 42, 77, 92, 51, 29 };
+                foreach (float v in values)
+
+                {
+                    chartType.Series["Series1"].Points.AddXY(x, v);
+                    x++;
+                }
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        private void toolStripButton4_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            //openFileDialog.InitialDirectory = ProjectINI.ProjectPathRun + "\\产品配方\\";
+            openFileDialog.Filter = "csv文件|*.Csv";
+            DialogResult dialog = openFileDialog.ShowDialog();
+            try
+            {
+                if (dialog == DialogResult.OK)
+                {
+                    Npoi.ReadText(openFileDialog.FileName, out List<string> str);
+
+                    if (str == null)
+                    {
+                        MessageBox.Show("参数信息不存在;" + Environment.NewLine);
+                    }
+                    else
+                    {
+                        string dsat = Path.GetDirectoryName(openFileDialog.FileName) + "\\";
+                        dsat += Path.GetFileNameWithoutExtension(openFileDialog.FileName) + "CRD";
+                        for (int i = 0; i < str.Count; i++)
+                        {
+                            if (str[i].Contains("导航图1"))
+                            {
+                                str[i] = str[i].Remove(str[i].IndexOf("导航图1."));
+                            }
+                        }
+                        //string daa=       str[4000];
+                        Npoi.WriteF(dsat, str);
+                        MessageBox.Show("处理完成");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("导入失败:" + ex.Message);
+            }
+        }
+
+        private void textBox1_KeyDown(object sender, KeyEventArgs e)
+        {
+            try
+            {
+                //if (textBox1.Text.Length >= numericUpDown1.Value)
+                //{
+                StaticAddQRCode(textBox1.Text);
+                textBox1.Text = "";
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        private void tabPage3_Click(object sender, EventArgs e)
+        {
+        }
+
+        private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                RecipeCompiler.Instance.GetMes().Line_Name = comboBox2.SelectedItem.ToString();
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        private void comboBox2_DropDown(object sender, EventArgs e)
+        {
+            try
+            {
+                foreach (var item in RecipeCompiler.Instance.GetMes().ListStr)
+                {
+                    if (!comboBox2.Items.Contains(item))
+                    {
+                        comboBox2.Items.Add(item);
+                    }
+                }
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        private void comboBox3_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                RecipeCompiler.Instance.GetMes().Fixture_ID = comboBox3.SelectedItem.ToString();
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        private void comboBox3_DropDown(object sender, EventArgs e)
+        {
+            try
+            {
+                foreach (var item in RecipeCompiler.Instance.GetMes().FixtureList)
+                {
+                    if (!comboBox3.Items.Contains(item))
+                    {
+                        comboBox3.Items.Add(item);
+                    }
+                }
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        private void toolStripButton3_Click_1(object sender, EventArgs e)
+        {
+        }
+
+        private void toolStripButton5_Click(object sender, EventArgs e)
+        {
         }
     }
 }

@@ -272,6 +272,59 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             return hObject;
         }
 
+        public HObject TiffeOffsetImage(HObject[] hObjects)
+        {
+            HObject hObjectImage = new HObject();
+            hObjectImage.GenEmptyObj();
+            if (hObjects.Length == 1)
+            {
+                return hObjects[0];
+            }
+            try
+            {
+                if (Rows1.Length != hObjects.Length)
+                {
+                    Rows1 = HTuple.TupleGenConst(hObjects.Length, -1);
+                    Cols1 = HTuple.TupleGenConst(hObjects.Length, -1);
+                    Rows2 = HTuple.TupleGenConst(hObjects.Length, -1);
+                    Cols2 = HTuple.TupleGenConst(hObjects.Length, -1);
+                }
+                for (int i = 0; i < hObjects.Length; i++)
+                {
+                    if (hObjects[i] == null)
+                    {
+                        hObjects[i] = hObjectT;
+                    }
+                    else
+                    {
+                        HOperatorSet.ZoomImageSize(hObjects[i], out HObject hObject1, ImageWidthI / ZoomImageSize, ImageHeightI / ZoomImageSize, "constant");
+                        hObjectImage = hObjectImage.ConcatObj(hObject1);
+                    }
+                }
+                int d = hObjectImage.CountObj();
+                if (IsFill == 0)
+                {
+                    if (Vertical)
+                    {
+                        HOperatorSet.TileImages(hObjectImage, out hObjectImage, ImageNumberCol, "vertical");
+                    }
+                    else
+                    {
+                        HOperatorSet.TileImages(hObjectImage, out hObjectImage, ImageNumberCol, "horizontal");
+                    }
+                }
+                else if (IsFill == 1)
+                {
+                    HOperatorSet.TileImagesOffset(hObjectImage, out hObjectImage, Rows, Cols, Rows1, Cols1, Rows2, Cols2, WidthI, HeightI);
+                }
+            }
+            catch (Exception ex)
+            {
+                ErosProjcetDLL.Project.AlarmText.AddTextNewLine("拼图失败，行:" + ex.StackTrace.Remove(0, ex.StackTrace.Length - 5) + ":" + ex.Message);
+            }
+            return hObjectImage;
+        }
+
         /// <summary>
         ///
         /// </summary>

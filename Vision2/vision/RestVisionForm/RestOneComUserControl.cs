@@ -13,6 +13,17 @@ namespace Vision2.vision.RestVisionForm
             InitializeComponent();
         }
 
+        /// <summary>
+        /// 显示集合委托
+        /// </summary>
+        /// <param name="hObject"></param>
+        public delegate void UPShowObj(int objName);
+
+        /// <summary>
+        /// 显示事件
+        /// </summary>
+        public event UPShowObj EventShowObj;
+
         private OneComponent oneContOBJs;
 
         /// <summary>
@@ -66,9 +77,20 @@ namespace Vision2.vision.RestVisionForm
                     //listBox1.SelectedIndex = 0;
                     for (int i = 0; i < OneRObjT.RestStrings.Count; i++)
                     {
-                        if (!listBox1.Items.Contains(i + OneRObjT.RestStrings[i]))
+                        if (Vision.Instance.DefectTypeDicEx.ContainsKey(OneRObjT.RestStrings[i]))
                         {
-                            listBox1.Items.Add(i + OneRObjT.RestStrings[i]);
+                            string dname = Vision.Instance.DefectTypeDicEx[OneRObjT.RestStrings[i]].DrawbackEnglish;
+                            if (!listBox1.Items.Contains(i + dname))
+                            {
+                                listBox1.Items.Add(i + dname);
+                            }
+                        }
+                        else
+                        {
+                            if (!listBox1.Items.Contains(i + OneRObjT.RestStrings[i]))
+                            {
+                                listBox1.Items.Add(i + OneRObjT.RestStrings[i]);
+                            }
                         }
                     }
                     listBox1.SelectedIndex = 0;
@@ -76,7 +98,7 @@ namespace Vision2.vision.RestVisionForm
                 }
                 else
                 {
-                    if (item.OK)
+                    if (item.aOK)
                     {
                         dataGridView1.Rows[intd].DefaultCellStyle.BackColor = Color.Green;
                     }
@@ -103,7 +125,7 @@ namespace Vision2.vision.RestVisionForm
                 }
                 else
                 {
-                    oneContOBJs.RAddNG(listBox1.SelectedItem.ToString().Remove(0, 1));
+                    oneContOBJs.RAddNG(OneRObjT.RestStrings[listBox1.SelectedIndex]);
                 }
             }
             else
@@ -120,6 +142,13 @@ namespace Vision2.vision.RestVisionForm
         private void listBox1_DoubleClick(object sender, EventArgs e)
         {
             SetRest(listBox1.SelectedIndex);
+            try
+            {
+                EventShowObj.Invoke(listBox1.SelectedIndex);
+            }
+            catch (Exception)
+            {
+            }
         }
     }
 }

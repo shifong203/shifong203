@@ -41,9 +41,9 @@ namespace Vision2
                 HOperatorSet.SetSystem("clip_region", "false");
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
-                string curPath = System.Environment.CurrentDirectory;
-                string basePath = Path.GetDirectoryName(System.AppDomain.CurrentDomain.BaseDirectory);
-                if (!System.IO.Directory.Exists(ProjectINI.ProjietPath))
+                string curPath = Environment.CurrentDirectory;
+                string basePath = Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory);
+                if (!Directory.Exists(ProjectINI.ProjietPath))
                 {
                     ProjectINI.ProjietPath = "D:\\Vision2\\";
                     if (!System.IO.Directory.Exists(ProjectINI.ProjietPath))

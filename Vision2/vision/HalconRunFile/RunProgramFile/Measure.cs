@@ -2873,10 +2873,11 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         {
                             HOperatorSet.GenCrossContourXld(out HObject cross, rowt, colt, 60, 0);
                             HOperatorSet.GenRectangle2(out HObject hObject1, OutCentreRow, outCentreCol, phi, distance / 2, Vision.Instance.DilationRectangle1);
-                            oneResultOBj.AddNGOBJ(this.Name, "超差" + MLineM, hObject1, hObject1);
+                            //偏移
+                            oneResultOBj.AddNGOBJ(this.Name, "Skewing" + MLineM, hObject1, hObject1, this.GetBackNames());
                             if (IsDisObj)
                             {
-                                halcon.AddImageMassage(OutCentreRow, outCentreCol, this.Name + ".超差" + distMM.TupleMax());
+                                halcon.AddImageMassage(OutCentreRow, outCentreCol, this.Name + ".Skewing" + distMM.TupleMax());
                                 halcon.AddObj(cross, ColorResult.red);
                             }
                         }

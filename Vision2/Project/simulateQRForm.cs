@@ -5,9 +5,9 @@ using System.Windows.Forms;
 
 namespace Vision2.Project
 {
-    public partial class simulateQRForm : Form
+    public partial class SimulateQRForm : Form
     {
-        public simulateQRForm()
+        public SimulateQRForm()
         {
             InitializeComponent();
         }
@@ -44,7 +44,11 @@ namespace Vision2.Project
             {
             }
         }
-
+        /// <summary>
+        /// 显示文本显示，
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="await"></param>
         public static void ShowMesabe(string text, bool await = false)
         {
             try
@@ -55,13 +59,13 @@ namespace Vision2.Project
                     {
                         MainForm1.MainFormF.Invoke(new Action(() =>
                         {
-                            simulateQRForm simulateQRForm = new simulateQRForm();
+                            SimulateQRForm simulateQRForm = new SimulateQRForm();
                             simulateQRForm.label2.Text = "提示信息:" + text;
                             simulateQRForm.richTextBox1.Text = text;
-                            simulateQRForm.label1.Visible = false;
+                            simulateQRForm.groupBox1.Visible = false;
                             simulateQRForm.textBox1.Visible = false;
                             simulateQRForm.button2.Visible = false;
-                            Vision2.ErosProjcetDLL.UI.UICon.SwitchToThisWindow(simulateQRForm.Handle, true);
+                            ErosProjcetDLL.UI.UICon.SwitchToThisWindow(simulateQRForm.Handle, true);
                             simulateQRForm.ShowDialog();
                         }));
                     });
@@ -72,13 +76,13 @@ namespace Vision2.Project
                 {
                     MainForm1.MainFormF.Invoke(new Action(() =>
                     {
-                        simulateQRForm simulateQRForm = new simulateQRForm();
+                        SimulateQRForm simulateQRForm = new SimulateQRForm();
                         simulateQRForm.label2.Text = "提示信息:" + text;
                         simulateQRForm.richTextBox1.Text = text;
-                        simulateQRForm.label1.Visible = false;
+                        simulateQRForm.groupBox1.Visible = false;
                         simulateQRForm.textBox1.Visible = false;
                         simulateQRForm.button2.Visible = false;
-                        Vision2.ErosProjcetDLL.UI.UICon.SwitchToThisWindow(simulateQRForm.Handle, true);
+                        ErosProjcetDLL.UI.UICon.SwitchToThisWindow(simulateQRForm.Handle, true);
                         simulateQRForm.ShowDialog();
                     }));
                 }
@@ -93,10 +97,10 @@ namespace Vision2.Project
             restText = "";
             try
             {
-                simulateQRForm simulateQRForm = new simulateQRForm();
+                SimulateQRForm simulateQRForm = new SimulateQRForm();
                 simulateQRForm.label2.Text = "提示信息:" + text;
                 simulateQRForm.richTextBox1.Text = text;
-                Vision2.ErosProjcetDLL.UI.UICon.SwitchToThisWindow(simulateQRForm.Handle, true);
+                ErosProjcetDLL.UI.UICon.SwitchToThisWindow(simulateQRForm.Handle, true);
                 if (simulateQRForm.ShowDialog() == DialogResult.Yes)
                 {
                     restText = simulateQRForm.textBox1.Text;
@@ -167,6 +171,11 @@ namespace Vision2.Project
         private void simulateQRForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             DebugF.DebugCompiler.Buzzer = false;
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

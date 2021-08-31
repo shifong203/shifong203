@@ -56,7 +56,7 @@ namespace Vision2.vision
                             RecipeCompiler.AddOKNumber(false);
                             trayDataVales.Enqueue(dat);
                         }
-                        label3.Text = RecipeCompiler.Instance.GetSPC();
+                        //label3.Text = RecipeCompiler.Instance.GetSPC();
                         this.Text = "复判窗口剩余:" + trayDataVales.Count;
                         ErosProjcetDLL.UI.UICon.SwitchToThisWindow(RestObjImage.RestObjImageFrom.Handle, true);
                         RestObjImage.RestObjImageFrom.Show();
@@ -72,7 +72,7 @@ namespace Vision2.vision
                         }
                     }
                 }
-                label3.Text = RecipeCompiler.Instance.GetSPC();
+                //label3.Text = RecipeCompiler.Instance.GetSPC();
                 Vision.OneProductVale = new OneDataVale();
                 //Vision.Instance.OneProductValeClert();
                 HWindIDt.ShowImage();
@@ -160,7 +160,7 @@ namespace Vision2.vision
                                             dataGridView1.Rows.Clear();
                                             foreach (var item in data.GetNGCompData().DicOnes)
                                             {
-                                                if (!item.Value.OK)
+                                                if (!item.Value.aOK)
                                                 {
                                                     int dt = dataGridView1.Rows.Add();
                                                     //dataGridView1.Rows[dt].Cells[0].Value = item.Value + ":" + item.RunID;

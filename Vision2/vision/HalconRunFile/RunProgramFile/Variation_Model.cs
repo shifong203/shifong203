@@ -291,7 +291,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 }
                 if (NGNumber > 0)
                 {
-                    oneResultOBj.AddNGOBJ(run.Name, Name, hObject, hObjectRed);
+                    oneResultOBj.AddNGOBJ(run.Name, Name, hObject, hObjectRed, run.GetBackNames());
                     //oneResultOBj.AddNGOBJ(new OneRObj() { NGText = run.Name + ":" + Name, ROI = hObject, NGROI = hObjectRed });
                     return false;
                 }

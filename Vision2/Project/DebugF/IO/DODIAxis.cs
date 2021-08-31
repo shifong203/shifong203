@@ -15,6 +15,9 @@ using Vision2.Project.formula;
 
 namespace Vision2.Project.DebugF.IO
 {
+    /// <summary>
+    ///
+    /// </summary>
     public class DODIAxis : Run_project, IDIDO
     {
         public DODIAxis()
@@ -39,6 +42,8 @@ namespace Vision2.Project.DebugF.IO
         ///
         /// </summary>
         public List<C154Cylinder> Cylinders { get; set; } = new List<C154Cylinder>();
+
+        public static bool Debug;
 
         public ErosSocket.ErosConLink.UClass.ErosValues KeyVales
         {
@@ -476,20 +481,23 @@ namespace Vision2.Project.DebugF.IO
                                 //Thread.Sleep(50);
                                 runID = 6;
                                 Cyp(DebugCompiler.Instance.RCylinder, false);
-                                double d = this.GetAxisName(DebugCompiler.Instance.AxisNameS).Point + DebugCompiler.Instance.WaitPoint;
-                                SetMoveAxistP(DebugCompiler.Instance.WaitPoint, DebugCompiler.Instance.WaitSleep);
-                                int der = 0;
-                                while (this.GetAxisName(DebugCompiler.Instance.AxisNameS).Point < d)
+                                if (DebugCompiler.Instance.WaitPoint != 0)
                                 {
-                                    der++;
-                                    if (der >= 1000)
+                                    double d = this.GetAxisName(DebugCompiler.Instance.AxisNameS).Point + DebugCompiler.Instance.WaitPoint;
+                                    SetMoveAxistP(DebugCompiler.Instance.WaitPoint, DebugCompiler.Instance.WaitSleep);
+                                    int der = 0;
+                                    while (this.GetAxisName(DebugCompiler.Instance.AxisNameS).Point < d)
                                     {
-                                        break;
+                                        der++;
+                                        if (der >= 1000)
+                                        {
+                                            break;
+                                        }
+                                        Thread.Sleep(10);
                                     }
-                                    Thread.Sleep(10);
+                                    this.GetAxisName(DebugCompiler.Instance.AxisNameS).AddSeelp();
                                 }
                                 MoveAxisStop();
-                                this.GetAxisName(DebugCompiler.Instance.AxisNameS).AddSeelp();
                             }
                         }
                         bool Runt = true;
@@ -508,6 +516,10 @@ namespace Vision2.Project.DebugF.IO
                         {
                             runID = 7;
                             StartTime = DateTime.Now;
+                            //if (!vision.RestObjImage.RestObjImageFrom.Visible)
+                            //{
+                            //    DebugCompiler.GetDoDi().WritDO(DebugCompiler.Instance.OutDischarging, false);
+                            //}
                             Cyp(DebugCompiler.Instance.RCylinder, false);
                             DebugCompiler.GetDoDi().WritDO(DebugCompiler.Instance.To_Board_DO, false);
                             MoveAxisStop();
@@ -519,18 +531,18 @@ namespace Vision2.Project.DebugF.IO
                             runID = 8;
                             this.GetAxisName(DebugCompiler.Instance.AxisNameS).AddSeelp();
                             WatchT.Stop();
-                            while (DebugCompiler.EquipmentStatus == ErosSocket.ErosConLink.EnumEquipmentStatus.暂停中)
+                            while (DebugCompiler.EquipmentStatus == EnumEquipmentStatus.暂停中)
                             {
                                 Thread.Sleep(10);
                             }
-                            if (DebugCompiler.EquipmentStatus == ErosSocket.ErosConLink.EnumEquipmentStatus.已停止)
+                            if (DebugCompiler.EquipmentStatus == EnumEquipmentStatus.已停止)
                             {
                                 RunCodeT.Runing = false;
                                 return false;
                             }
                             if (RunCodeT.StopIng)
                             {
-                                DebugCompiler.EquipmentStatus = ErosSocket.ErosConLink.EnumEquipmentStatus.已停止;
+                                DebugCompiler.EquipmentStatus = EnumEquipmentStatus.已停止;
                                 RunCodeT.Runing = false;
                                 return false;
                             }
@@ -1361,7 +1373,6 @@ namespace Vision2.Project.DebugF.IO
                 {
                     axisU = GetAxisGrotNameEx(groupName, EnumAxisType.Udd);
                 }
-
                 if ((axisU != null && !axisU.IsHome) && (axisZ != null && !axisZ.IsHome) && !axisX.IsHome && !axisY.IsHome)
                 {
                     ErosProjcetDLL.Project.AlarmListBoxt.AddAlarmText(new ErosProjcetDLL.Project.AlarmText.alarmStruct() { Name = groupName, Text = "未初始化" });
@@ -1898,6 +1909,9 @@ namespace Vision2.Project.DebugF.IO
         先移动再旋转 = 3,
     }
 
+    /// <summary>
+    /// 位置轨迹类
+    /// </summary>
     public class XYZPoint
     {
         public string Name { get; set; } = "";
@@ -1906,6 +1920,17 @@ namespace Vision2.Project.DebugF.IO
         public double Z { get; set; }
         public double U { get; set; }
         public int ID { get; set; }
+
+
+
+        /// <summary>
+        /// 方法名称
+        /// </summary>
+        public string MethodName { get; set; } = "";
+
+        /// <summary>
+        /// 移动方式
+        /// </summary>
         public EnumXYZUMoveType isMove { get; set; }
 
         [Description("2D坐标彷射参数"), Category("坐标系统"), DisplayName("坐标系统"),
@@ -2050,7 +2075,7 @@ namespace Vision2.Project.DebugF.IO
         public short AxisNoEx { get; set; } = -1;
 
         [DescriptionAttribute("。"), Category("状态"), DisplayName("是否运动中")]
-        public bool IsMove { get; private set; }
+        public bool IsMove { get; set; }
 
         [DescriptionAttribute("1=mAcm_AxGetCmdPosition。2=mAcm_AxGetMachPosition,其他=mAcm_AxGetActualPosition"),
             Category("状态"), DisplayName("读取当前位置方法")]
@@ -2190,7 +2215,6 @@ namespace Vision2.Project.DebugF.IO
             if (IsError)
             {
             }
-
             if (!IsEnabled)
             {
                 UResult = Motion.mAcm_AxSetSvOn(m_Axishand, 1);
@@ -2242,6 +2266,8 @@ namespace Vision2.Project.DebugF.IO
                     try
                     {
                         uint IOStatus = 0;
+                        //Motion.mAcm_AxGetMotionStatus(m_Axishand, ref IOStatus);
+
                         uint Result = Motion.mAcm_AxGetMotionIO(m_Axishand, ref IOStatus);
                         IOBools = StaticCon.ConvertIntToBoolArray((int)IOStatus, 32);
                         if (AxisNoEx >= 0)
@@ -2546,21 +2572,20 @@ namespace Vision2.Project.DebugF.IO
                     if (IOBools[1] || StaratNn == 3)
                     {
                         UResult = Motion.mAcm_AxResetError(m_Axishand);
-                        if (AxisNoEx > 0)
-                        {
-                            uint IOStatus = 0;
-                            ushort IOStatust = 0;
-                            uint Result = Motion.mAcm_AxGetMotionIO(m_AxishandEx, ref IOStatus);
-                            bool[] vs = StaticCon.ConvertIntToBoolArray((int)IOStatus, 32);
-                            Result = Motion.mAcm_AxGetState(m_AxishandEx, ref IOStatust);
-                            if (vs[0] || IOStatust == 3)
-                            {
-                                UResult = Motion.mAcm_AxResetError(m_AxishandEx);
-                            }
-                        }
                         Thread.Sleep(50);
                     }
-
+                    if (AxisNoEx > 0)
+                    {
+                        uint IOStatus = 0;
+                        ushort IOStatust = 0;
+                        uint Result = Motion.mAcm_AxGetMotionIO(m_AxishandEx, ref IOStatus);
+                        bool[] vs = StaticCon.ConvertIntToBoolArray((int)IOStatus, 32);
+                        Result = Motion.mAcm_AxGetState(m_AxishandEx, ref IOStatust);
+                        if (vs[1] || IOStatust == 3)
+                        {
+                            UResult = Motion.mAcm_AxResetError(m_AxishandEx);
+                        }
+                    }
                     Enabled();
                     if (IOBools[1] || StaratNn == 3)
                     {
@@ -2872,11 +2897,13 @@ namespace Vision2.Project.DebugF.IO
             {
                 if (this.PlusLimit < p)
                 {
-                    throw (new Exception("超出最大限位"));
+                    ErosProjcetDLL.Project.AlarmListBoxt.AddAlarmText(this.Name, "超出最大限位" + p);
+                    throw (new Exception("超出最大限位"+p));
                 }
                 if (this.MinusLimit > p)
                 {
-                    throw (new Exception("超出最小限位"));
+                    ErosProjcetDLL.Project.AlarmListBoxt.AddAlarmText(this.Name, "超出最小限位" + p);
+                    throw (new Exception("超出最小限位"+p));
                 }
             }
             if (AxisType == EnumAxisType.S)
@@ -2980,6 +3007,10 @@ namespace Vision2.Project.DebugF.IO
             return true;
         }
 
+        /// <summary>
+        /// 速度移动
+        /// </summary>
+        /// <param name="Addt"></param>
         public void SetMoveTe(bool Addt)
         {
             short d = 0;

@@ -22,12 +22,24 @@ namespace Vision2.vision.HalconRunFile.Controls
                 {
                     listBox1.Items.Add(i + 1);
                 }
-                comboBox1.Items.Clear();
-                comboBox1.Items.AddRange(Enum.GetNames(typeof(ImageTypeObj)));
-                comboBox1.SelectedItem = overgild.ImageTypeOb.ToString();
-                numericUpDown1.Value = (decimal)overgild.ErosinCircle;
-                numericUpDown4.Value = (decimal)overgild.ThresSelectMin;
-                numericUpDown5.Value = (decimal)overgild.ThresSelectMax;
+                thresholdControls1.SetData(overgild.threshold_Min_Max);
+                select_obj_type1.SetData(overgild.Select_Shape_Min_Max);
+                select_obj_type2.SetData(overgild.Select_Shape_Min_Outobj);
+
+                //comboBox1.Items.Clear();
+
+                //comboBox1.Items.AddRange(Enum.GetNames(typeof(ImageTypeObj)));
+                //comboBox1.SelectedItem = overgild.ImageTypeOb.ToString();
+                textBox1.Text = overgild.Defect_Type;
+                numericUpDown1.Value = (decimal)overgild.DilationCircle;
+                numericUpDown2.Value = (decimal)overgild.ErosinCircle;
+                numericUpDown3.Value = (decimal)overgild.DnyValue;
+                numericUpDown4.Value = (decimal)overgild.MeanHeith;
+                numericUpDown5.Value = (decimal)overgild.MeanWidth;
+                domainUpDown1.Text = overgild.DnyTypeValue;
+                checkBox2.Checked = overgild.IsDisObj;
+                //numericUpDown4.Value = (decimal)overgild.ThresSelectMin;
+                //numericUpDown5.Value = (decimal)overgild.ThresSelectMax;
             }
             catch (Exception ex)
             {
@@ -110,13 +122,22 @@ namespace Vision2.vision.HalconRunFile.Controls
                 {
                     return;
                 }
-                overgild.ImageTypeOb = (ImageTypeObj)Enum.Parse(typeof(ImageTypeObj),
-                comboBox1.SelectedItem.ToString());
-                overgild.ThresSelectMin = (byte)numericUpDown4.Value;
-                overgild.ErosinCircle = (double)numericUpDown1.Value;
-                overgild.ThresSelectMax = (byte)numericUpDown5.Value;
+                //overgild.ImageTypeOb = (ImageTypeObj)Enum.Parse(typeof(ImageTypeObj),
+                //comboBox1.SelectedItem.ToString());
+                //overgild.ThresSelectMin = (byte)numericUpDown4.Value;
+                overgild.IsDisObj = checkBox2.Checked;
+                overgild.Defect_Type = textBox1.Text;
+                overgild.ErosinCircle = (double)numericUpDown2.Value;
+                overgild.DilationCircle = (double)numericUpDown1.Value;
+                overgild.ISAoiMode = checkBox1.Checked;
+                overgild.DnyValue = (double)numericUpDown3.Value;
+                overgild.MeanHeith = (double)numericUpDown4.Value;
+                overgild.MeanWidth = (double)numericUpDown5.Value;
+
+                overgild.DnyTypeValue = domainUpDown1.Text;
+                //overgild.ThresSelectMax = (byte)numericUpDown5.Value;
                 halcon.HobjClear();
-                overgild.RunSeleRoi(halcon.GetOneImageR(), 1, out HalconDotNet.HObject err);
+                overgild.RunSeleRoi(halcon.GetOneImageR(), id, out HalconDotNet.HObject err);
                 halcon.AddObj(err);
                 overgild.GetPThis().ShowObj();
                 halcon.ShowObj();
@@ -127,19 +148,9 @@ namespace Vision2.vision.HalconRunFile.Controls
             }
         }
 
-        private void comboBox1_SelectedIndexChanged(object sender, System.EventArgs e)
+        private void select1(object sender, System.EventArgs e)
         {
-            SetDatd();
-        }
-
-        private void button3_Click(object sender, EventArgs e)
-        {
-            try
-            {
-            }
-            catch (Exception)
-            {
-            }
+            SetDatd(2);
         }
 
         private void groupBox1_Enter(object sender, EventArgs e)
@@ -165,7 +176,7 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             try
             {
-                overgild.SelecRoi = RunProgram.DrawHObj(halcon, overgild.SelecRoi);
+                overgild.AOIObj = RunProgram.DrawHObj(halcon, overgild.AOIObj);
             }
             catch (Exception)
             {
@@ -176,7 +187,48 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             try
             {
-                overgild.SelecRoi = RunProgram.DrawRmoveObj(halcon, overgild.SelecRoi);
+                overgild.AOIObj = RunProgram.DrawRmoveObj(halcon, overgild.AOIObj);
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            SetDatd(1);
+        }
+
+        private void Sele3(object sender, EventArgs e)
+        {
+            SetDatd(3);
+        }
+
+        private void domainUpDown1_SelectedItemChanged(object sender, EventArgs e)
+        {
+            SetDatd(2);
+        }
+
+        private void listBox2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                SetDatd(listBox2.SelectedIndex + 1);
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        private void thresholdControls1_Load(object sender, EventArgs e)
+        {
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                SetDatd(1);
             }
             catch (Exception)
             {

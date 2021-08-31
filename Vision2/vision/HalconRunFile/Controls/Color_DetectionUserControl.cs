@@ -28,6 +28,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 aoiObj.SelseAoi = _Classify.DrawObj;
 
                 aoiObj.CiName = _Classify.Name;
+
                 _Classify.Classify(halcon.GetOneImageR(), aoiObj,
                     Color_detection, out HObject hObject,
                     hObjects);
@@ -161,6 +162,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 _Classify.ISFillUp = checkBox1.Checked;
                 _Classify.ClosingCircleValue = (double)numericUpDown3.Value;
                 AoiObj aoiObj = new AoiObj();
+
                 aoiObj.SelseAoi = _Classify.DrawObj;
 
                 aoiObj.CiName = _Classify.Name;
@@ -216,13 +218,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 }
 
                 Get_Pragram(Color_detection.keyColor[listBox1.SelectedItem.ToString()]);
-                if (!_Classify.EnbleSelect)
-                {
-                    if (_Classify.DrawObj != null && _Classify.DrawObj.IsInitialized())
-                    {
-                        halcon.AddObj(_Classify.DrawObj, ColorResult.coral);
-                    }
-                }
+          
                 listBox2.Items.Clear();
                 listBox2.Items.Add("并集");
                 for (int i = 0; i < _Classify.threshold_Min_Maxes.Count; i++)
@@ -231,7 +227,21 @@ namespace Vision2.vision.HalconRunFile.Controls
                 }
                 AoiObj aoiObj = new AoiObj();
                 aoiObj.SelseAoi = _Classify.DrawObj;
+
                 aoiObj.CiName = _Classify.Name;
+             List<HTuple> homitd=      Color_detection.GetHomMatList(halcon.GetOneImageR());
+                //if (homitd.Count >= 1)
+                //{
+                //    HOperatorSet.AffineTransRegion(aoiObj.SelseAoi, out aoiObj.SelseAoi, homitd[0], "nearest_neighbor");
+                //}
+                //if (!_Classify.EnbleSelect)
+                //{
+                //    if (aoiObj.SelseAoi != null && aoiObj.SelseAoi.IsInitialized())
+                //    {
+                //        halcon.AddObj(aoiObj.SelseAoi, ColorResult.coral);
+                //    }
+                //}
+                aoiObj.DebugID = 1;
                 _Classify.Classify(halcon.GetOneImageR(), aoiObj, Color_detection, out HObject hObject,
                 this.hObjects);
                 listBox2.SelectedIndex = 0;

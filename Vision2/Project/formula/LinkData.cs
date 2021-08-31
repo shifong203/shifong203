@@ -693,8 +693,48 @@ namespace Vision2.Project.formula
             vs.Add(ComponentName + ":" + RunNameOBJ + ":" + Reference_Name.Count + ";");
             for (int i2 = 0; i2 < Reference_Name.Count; i2++)
             {
-                vs.Add((i2 + 1) + ":" + Reference_Name[i2] + ":" + Reference_ValueMin[i2] + ">" + ValueStrs + "<" + Reference_ValueMax[i2]);
+                vs.Add((i2 + 1) + ":" + Reference_Name[i2] + ":" + Reference_ValueMin[i2] + ">" + doubleV[i2].Value.ToString("0.000") + "<" + Reference_ValueMax[i2]);
             }
+            return vs;
+        }
+
+        public List<string> GetStrNG()
+        {
+            List<string> vs = new List<string>();
+            try
+            {
+                for (int i = 0; i < Reference_ValueMin.Count; i++)
+                {
+                    if (GetRsetNumber(i) != 0)
+                    {
+                        vs.Add(Reference_Name[i] + ":" + Reference_ValueMin[i] + "<" + doubleV[i].Value.ToString("0.000") + ">" + Reference_ValueMax[i]);
+                    }
+                }
+            }
+            catch (Exception)
+            {
+            }
+
+            return vs;
+        }
+
+        public List<string> GetStrTextNG()
+        {
+            List<string> vs = new List<string>();
+            try
+            {
+                for (int i = 0; i < Reference_ValueMin.Count; i++)
+                {
+                    if (GetRsetNumber(i) != 0)
+                    {
+                        vs.Add(GetRsetstr(i));
+                    }
+                }
+            }
+            catch (Exception)
+            {
+            }
+
             return vs;
         }
 
@@ -702,7 +742,6 @@ namespace Vision2.Project.formula
         {
             OneRObj oneRObj = new OneRObj()
             {
-                NGText = RunNameOBJ,
                 ComponentID = ComponentName,
                 RestText = "OK",
                 RestStrings = Reference_Name,
@@ -714,9 +753,14 @@ namespace Vision2.Project.formula
                 {
                     oneRObj.NGROI = RecipeCompiler.GetProductEX().Key_Navigation_Picture[vs[0]].KeyRoi[vs[1]].Clone();
                     oneRObj.ROI = RecipeCompiler.GetProductEX().Key_Navigation_Picture[vs[0]].KeyRoi[vs[1]].Clone();
+                    //oneRObj.NGText = vs[1];
                 }
             }
-            oneRObj.OK = GetRsetOK();
+            oneRObj.aOK = GetRsetOK();
+            if (!oneRObj.aOK)
+            {
+                oneRObj.NGText = RunNameOBJ;
+            }
             oneRObj.dataMinMax = this;
             return oneRObj;
         }
@@ -775,14 +819,14 @@ namespace Vision2.Project.formula
 
         public bool GetRsetOK()
         {
-            if (Done)
-            {
-                return OK;
-            }
             for (int i = 0; i < Reference_ValueMin.Count; i++)
             {
                 if (GetRsetNumber(i) != 0)
                 {
+                    if (Done)
+                    {
+                        return OK;
+                    }
                     return false;
                 }
             }
@@ -803,7 +847,7 @@ namespace Vision2.Project.formula
 
         public bool OK { get; set; }
 
-        public bool Done { get; set; }
+        public bool Done { get; set; } = true;
 
         public int GetRset()
         {
@@ -845,6 +889,32 @@ namespace Vision2.Project.formula
                 return -3;
             }
             return 0;
+        }
+
+        /// <summary>
+        /// 获取标准值
+        /// </summary>
+        /// <param name="indxe"></param>
+        /// <returns>返回0=OK，-1=空值,返回-2小于下限，返回-3大于上限</returns>
+        public string GetRsetstr(int indxe)
+        {
+            if (indxe >= doubleV.Count)
+            {
+                return this.ComponentName + ":数据不足";
+            }
+            if (doubleV[indxe] == null)
+            {
+                return this.ComponentName + ":数据空";
+            }
+            if (Reference_ValueMin[indxe] > doubleV[indxe])
+            {
+                return this.ComponentName + ":超下限";
+            }
+            else if (Reference_ValueMax[indxe] < doubleV[indxe])
+            {
+                return this.ComponentName + ":超上限";
+            }
+            return "";
         }
 
         public void AddData(string name, double value, double datamin, double datamxa)

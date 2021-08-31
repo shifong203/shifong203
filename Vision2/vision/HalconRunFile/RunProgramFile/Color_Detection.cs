@@ -166,6 +166,15 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 }
             }
 
+            /// <summary>
+            ///
+            /// </summary>
+            /// <param name="oneResultOBj"></param>
+            /// <param name="drawObj"></param>
+            /// <param name="RunPa"></param>
+            /// <param name="Color_region"></param>
+            /// <param name="Listobjs"></param>
+            /// <returns></returns>
             public bool Classify(OneResultOBj oneResultOBj, AoiObj drawObj, RunProgram RunPa, out HObject Color_region,
                  List<HObject> Listobjs = null)
             {
@@ -185,6 +194,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 HObject H = new HObject();
                 HObject S = new HObject();
                 HObject V = new HObject();
+                ///检测区
                 HObject hObjectROI = oneResultOBj.GetHalcon().GetModelHaoMatRegion(RunPa.HomName, drawObj.SelseAoi);
                 HObject hObject = oneResultOBj.GetHalcon().GetModelHaoMatRegion(RunPa.HomName, drawObj.SelseAoi);
                 if (EnbleSelect)
@@ -202,6 +212,10 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         HOperatorSet.GenRectangle1(out hObject, 0, 0, oneResultOBj.GetHalcon().Height, oneResultOBj.GetHalcon().Width);
                         hObjectROI = hObject;
                     }
+                }
+                if (drawObj.DebugID!=0)
+                {
+                    oneResultOBj.AddObj(hObjectROI, ColorResult.coral);
                 }
                 hObject = hObjectROI;
                 HOperatorSet.SmallestRectangle1(hObjectROI, out row1, out col1, out height, out width);
@@ -315,8 +329,10 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 HOperatorSet.AreaCenter(Color_region, out HTuple areaTd, out HTuple rowTd, out HTuple coluTd);
                 OBJRow = rowTd;
                 OBJCol = coluTd;
+                drawObj.SelseAoi = hObjectROI;
                 if (NGNumber != 0)
                 {
+                    HOperatorSet.Union1(Color_region, out Color_region);
                     HOperatorSet.DilationRectangle1(Color_region, out HObject hObject1, Vision.Instance.DilationRectangle1, Vision.Instance.DilationRectangle1);
                     HOperatorSet.Connection(hObject1, out hObject1);
                     //oneResultOBj.AddNGOBJ(RunPa.Name, Name, hObject1, hObjectROI);
@@ -332,7 +348,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         Colorid = HTuple.TupleGenConst(area.Length, Color_ID);
                         oneResultOBj.AddImageMassage(row, column, drawObj.CiName + "." + Colorid + Name, ColorResult.yellow);
                     }
-                    oneResultOBj.AddNGOBJ(drawObj.CiName, RunPa.Name + "." + Name, hObject1, Color_region);
+                    oneResultOBj.AddNGOBJ(drawObj.CiName, RunPa.Name + "." + Name, hObject1, Color_region, RunPa.GetBackNames());
                     return false;
                 }
                 return true;
@@ -345,6 +361,8 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         public override bool RunHProgram(OneResultOBj oneResultOBj, out List<OneRObj> oneRObjs, AoiObj aoiObj)
         {
             oneRObjs = new List<OneRObj>();
+
+            this.AOIObj.GenEmptyObj();
             //HOperatorSet.AreaCenter(aoiObj.Aoi, out HTuple area, out HTuple row, out HTuple col);
             foreach (var item in keyColor)
             {
@@ -364,9 +382,19 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     }
                     else
                     {
-                        aoiObj.CiName = Name;
+                        if (CRDName == "")
+                        {
+                            aoiObj.CiName = Name;
+                        }
+                        else
+                        {
+                            aoiObj.CiName = CRDName;
+                        }
                     }
-
+                    //if (homitd.Count >= 1)
+                    //{
+                    //    HOperatorSet.AffineTransRegion(aoiObj.SelseAoi, out aoiObj.SelseAoi, homitd[0], "nearest_neighbor");
+                    //}
                     //HOperatorSet.AffineTransRegion(aoiObj.Drow, out aoiObj.Drow, hom2dt, "nearest_neighbor");
                     if (!item.Value.Classify(oneResultOBj, aoiObj, this, out HObject hObject))
                     {
@@ -374,11 +402,15 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         HTuple Colorid = new HTuple();
                         ResltBool = false;
                     }
+                    this.AOIObj = this.AOIObj.ConcatObj(aoiObj.SelseAoi);
                 }
                 catch (Exception ex)
                 {
                 }
             }
+            HOperatorSet.Union1(AOIObj, out AOIObj);
+            HOperatorSet.AreaCenter(AOIObj, out HTuple area2, out HTuple rows, out HTuple colu);
+
             return ResltBool;
         }
     }

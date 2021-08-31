@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
@@ -45,7 +47,9 @@ namespace Vision2.vision.HalconRunFile.Controls
                     return;
                 }
                 this.Text = TraversalExecutionPath;
-
+                this.button1.Enabled = false;
+                this.button2.Enabled = true;
+                this.button3.Enabled = true;
                 Thread thread = new Thread(() =>
                 {
                     Cambueys = true;
@@ -55,7 +59,10 @@ namespace Vision2.vision.HalconRunFile.Controls
                     {
                         if (dataGridView1.Rows.Count == 0)
                         {
+                            this.button1.Enabled = true;
                             Cambueys = false;
+                            this.button3.Enabled = this.button2.Enabled = false;
+
                             MessageBox.Show("本地Image未找到图片");
                             return;
                         }
@@ -70,8 +77,10 @@ namespace Vision2.vision.HalconRunFile.Controls
                             {
                                 if (!Cambueys)
                                 {
+                                    this.button1.Enabled = true;
                                     label2.Text = "停止";
                                     Cambueys = false;
+                                    this.button3.Enabled = this.button2.Enabled = false;
                                     return;
                                 }
                                 while (ist)
@@ -86,7 +95,11 @@ namespace Vision2.vision.HalconRunFile.Controls
                                     continue;
                                 }
                                 if (halcon.ReadImage(dataGridView1.Rows[i].Cells[0].Value.ToString()))
-                                    halcon.CamImageEvent(numericUpDown1.Value.ToString(), halcon.GetOneImageR(), (int)numericUpDown1.Value, false);
+                                {
+                                    halcon.GetOneImageR().IsSave = false;
+                                    halcon.CamImageEvent(numericUpDown1.Value.ToString(), halcon.GetOneImageR(), (int)numericUpDown1.Value);
+                                }
+
                                 this.Invoke(new Action(() =>
                                 {
                                     progressBar1.Value = i;
@@ -96,10 +109,17 @@ namespace Vision2.vision.HalconRunFile.Controls
                                     dataGridView1.Rows[i].Cells[1].Value = halcon.Result;
                                     if (halcon.Result == "OK")
                                     {
+                                        dataGridView1.Rows[i].Cells[1].Style.BackColor = Color.Green;
                                         ok++;
                                     }
                                     else
                                     {
+                                        if (checkBox3.Checked)
+                                        {
+                                            this.button4.Text = "继续";
+                                            ist = true;
+                                        }
+                                        dataGridView1.Rows[i].Cells[1].Style.BackColor = Color.Red;
                                         ng++;
                                     }
                                     string dtaT = "";
@@ -130,6 +150,8 @@ namespace Vision2.vision.HalconRunFile.Controls
                     catch (Exception)
                     {
                     }
+                    this.button1.Enabled = true;
+                    this.button3.Enabled = this.button2.Enabled = false;
                     Cambueys = false;
                 });
 
@@ -146,7 +168,7 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             try
             {
-                System.Windows.Forms.FolderBrowserDialog dialog = new System.Windows.Forms.FolderBrowserDialog();
+                FolderBrowserDialog dialog = new FolderBrowserDialog();
                 if (TraversalExecutionPath == "")
                 {
                     TraversalExecutionPath = Vision.Instance.DicSaveType[halcon.Name].SavePath;
@@ -160,42 +182,45 @@ namespace Vision2.vision.HalconRunFile.Controls
                 if (dialoge != System.Windows.Forms.DialogResult.OK) return;
                 TraversalExecutionPath = dialog.SelectedPath;
                 this.Text = TraversalExecutionPath;
-                var det = Vision2.ErosProjcetDLL.FileCon.FileConStatic.GetFilesDicListPath(TraversalExecutionPath, ".bmp,.jpg,.hobj");
-                if (det.Count == 0)
+                //var det = Vision2.ErosProjcetDLL.FileCon.FileConStatic.GetFilesDicListPath(TraversalExecutionPath, ".bmp,.jpg,.hobj");
+                List<string> images = Vision2.ErosProjcetDLL.FileCon.FileConStatic.GetFilesListPath(TraversalExecutionPath, ".bmp,.jpg,.hobj");
+
+                if (images.Count == 0)
                 {
                     Cambueys = false;
                     MessageBox.Show("本地Image未找到图片");
                     return;
                 }
                 int numbers = 0;
+                dataGridView1.DataSource = null;
                 dataGridView1.Rows.Clear();
+                dataGridView1.Columns.Clear();
 
-                if (det.Count == 0)
+                if (images.Count == 0)
                 {
                     Cambueys = false;
                     MessageBox.Show("本地Image未找到图片");
                     return;
                 }
-
-                foreach (var item in det)
+                List<string> listImages = new List<string>();
+                for (int i = 0; i < images.Count; i++)
                 {
-                    for (int i = 0; i < item.Value.Count; i++)
+                    if (!checkBox2.Checked || images[i].Contains(halcon.Name))
                     {
-                        if (!checkBox2.Checked || item.Value[i].Contains(halcon.Name))
+                        if (checkBox1.Checked && !System.IO.Path.GetFileNameWithoutExtension(images[i]).EndsWith(numericUpDown1.Value.ToString()))
                         {
-                            if (checkBox1.Checked && !System.IO.Path.GetFileNameWithoutExtension(item.Value[i]).EndsWith(numericUpDown1.Value.ToString()))
-                            {
-                                continue;
-                            }
-                            numbers++;
-                            int ds = dataGridView1.Rows.Add();
-                            dataGridView1.Rows[ds].Cells[0].Value = item.Value[i];
+                            continue;
                         }
+                        listImages.Add(images[i]);
                     }
                 }
+                this.dataGridView1.DataSource = (from paths in listImages select new { paths }).ToList();
+                //dataGridView1.Columns.Add(Column1);
+                dataGridView1.Columns.Add(Column2);
+                dataGridView1.Columns.Add(Column3);
                 progressBar1.Maximum = numbers;
                 label4.Text = numbers + "/0";
-                label2.Text = "总数:" + numbers + ";" + "文件夹数量：" + det.Count + "";
+                label2.Text = "总数:" + numbers + ";" + "文件数量：" + listImages.Count + "";
             }
             catch (Exception ex)
             {
@@ -207,7 +232,7 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             this.Invoke(new Action(() =>
             {
-                label5.Text = "OK:" + ok + " NG:" + ng + ";" + ((double)(100.0 / (ok + ng) * (double)ok)).ToString("00.0") + "%";
+                label5.Text = "OK:" + ok + " NG:" + ng + " ==> " + ((double)(100.0 / (ok + ng) * (double)ok)).ToString("00.0") + "%";
             }));
         }
 
@@ -226,11 +251,12 @@ namespace Vision2.vision.HalconRunFile.Controls
                 {
                     return;
                 }
-                if (e.ColumnIndex == 0)
 
+                if (e.ColumnIndex == 0)
                 {
                     halcon.ReadImage(dataGridView1.Rows[e.RowIndex].Cells[0].Value.ToString());
-                    halcon.CamImageEvent(halcon.RunIDStr[(int)numericUpDown1.Value - 1], halcon.GetOneImageR(), (int)numericUpDown1.Value, false);
+                    halcon.GetOneImageR().IsSave = false;
+                    halcon.CamImageEvent(halcon.RunIDStr[(int)numericUpDown1.Value - 1], halcon.GetOneImageR(), (int)numericUpDown1.Value);
                     if (ok > 0 && ng > 0)
                     {
                         if (dataGridView1.Rows[e.RowIndex].Cells[1].Value.ToString() != halcon.Result)
@@ -247,7 +273,14 @@ namespace Vision2.vision.HalconRunFile.Controls
                             }
                         }
                     }
-
+                    if (halcon.Result == "OK")
+                    {
+                        dataGridView1.Rows[e.RowIndex].Cells[1].Style.BackColor = Color.Yellow;
+                    }
+                    else
+                    {
+                        dataGridView1.Rows[e.RowIndex].Cells[1].Style.BackColor = Color.Red;
+                    }
                     upText();
                     dataGridView1.Rows[e.RowIndex].Cells[1].Value = halcon.Result;
                 }

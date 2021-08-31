@@ -25,54 +25,90 @@ namespace Vision2.Project.DebugF.IO
                         try
                         {
                             number++;
-                            Thread.Sleep(2);
-                            label3.Text = DebugCompiler.Instance.DDAxis.runID.ToString();
-                            label1.Text = "CT:" + DebugCompiler.Instance.DDAxis.WatchT.Elapsed.TotalSeconds;
-                            if (DebugCompiler.Instance.DDAxis.AlwaysIODot.Value)
-                            {
-                                pictureBox2.BackColor = Color.GreenYellow;
-                            }
-                            else
-                            {
-                                pictureBox2.BackColor = Color.Gray;
-                            }
-                            if (DebugCompiler.Instance.DDAxis.AlwaysIOInt.Value)
-                            {
-                                label2.BackColor = Color.GreenYellow;
-                            }
-                            else
-                            {
-                                label2.BackColor = Color.Gray;
-                            }
-                            if (DebugCompiler.Instance.DDAxis.AlwaysIOOut.Value)
-                            {
-                                if (!DebugCompiler.Instance.DDAxis.Int[DebugCompiler.Instance.To_Board_DI])
-                                {
-                                    if (DebugCompiler.EquipmentStatus == ErosSocket.ErosConLink.EnumEquipmentStatus.运行中)
-                                    {
-                                        //if (DebugCompiler.GetThis().DDAxis.runID>6&& DebugCompiler.GetThis().DDAxis.runID>=1)
-                                        //{
-                                        DebugCompiler.Instance.DDAxis.MoveAxisStop();
-                                    }
-                                }
-                                label4.BackColor = Color.GreenYellow;
-                            }
-                            else
-                            {
-                                label4.BackColor = Color.Gray;
-                            }
+                            Thread.Sleep(1);
+                            labelIDCode.Text = DebugCompiler.Instance.DDAxis.runID.ToString();
+                            label1.Text = "CT:" + DebugCompiler.Instance.DDAxis.WatchT.Elapsed.TotalSeconds.ToString("0.00");
+
                             this.Invoke(new Action(() =>
                             {
-                                if (DODIAxis.RresWait)
+                                if (DebugCompiler.Instance.DDAxis.AlwaysIODot.Value)
                                 {
-                                    label5.Visible = true;
-                                    label5.BackColor = Color.Green;
+                                    this.pictureBoxINPace.Visible = true;
+                                    pictureBoxINPace.BackColor = Color.GreenYellow;
                                 }
                                 else
                                 {
-                                    label5.Visible = false;
+                                    this.pictureBoxINPace.Visible = false;
+                                    pictureBoxINPace.BackColor = Color.Gray;
                                 }
-                                label4.Text = "出" + DebugCompiler.Instance.DDAxis.AlwaysIOOut.RunTime.ToString("00.0");
+                                if (DebugCompiler.Instance.DDAxis.AlwaysIOInt.Value)
+                                {
+                                    this.pictureBoxIntoPlate.Visible = true;
+                                    label2.BackColor = Color.GreenYellow;
+                                }
+                                else
+                                {
+                                    this.pictureBoxIntoPlate.Visible = false;
+                                    label2.BackColor = Color.Gray;
+                                }
+                                if (DebugCompiler.Instance.DDAxis.AlwaysIOOut.Value)
+                                {
+                                    if (!this.pictureBoxOutPlate.Visible)
+                                    {
+                                        this.pictureBoxOutPlate.Visible = true;
+                                    }
+                                    if (!DebugCompiler.Instance.DDAxis.Int[DebugCompiler.Instance.To_Board_DI])
+                                    {
+                                        if (DebugCompiler.EquipmentStatus == ErosSocket.ErosConLink.EnumEquipmentStatus.运行中)
+                                        {
+                                            //if (DebugCompiler.GetThis().DDAxis.runID>6&& DebugCompiler.GetThis().DDAxis.runID>=1)
+                                            //{
+                                            DebugCompiler.Instance.DDAxis.MoveAxisStop();
+                                        }
+                                    }
+                                    label4OutSen.BackColor = Color.GreenYellow;
+                                }
+                                else
+                                {
+                                    this.pictureBoxOutPlate.Visible = false;
+                                    label4OutSen.BackColor = Color.Gray;
+                                }
+                                if (DODIAxis.RresWait)
+                                {
+                                    label5Await.Visible = true;
+                                    label5Await.BackColor = Color.Green;
+                                }
+                                else
+                                {
+                                    label5Await.Visible = false;
+                                }
+
+                                if (DebugCompiler.Instance.DDAxis.Out[DebugCompiler.Instance.OutDischarging])
+                                {
+                                    label6PT.BackColor = Color.Green;
+                                }
+                                else
+                                {
+                                    label6PT.BackColor = Color.Transparent;
+                                }
+                                if (DebugCompiler.Instance.DDAxis.GetCylinderName(DebugCompiler.Instance.RCylinder) != null)
+                                {
+                                    if (DebugCompiler.Instance.DDAxis.GetCylinderName(DebugCompiler.Instance.RCylinder).AnValue)
+                                    {
+                                        pictureBox4.BackColor = Color.GreenYellow;
+
+                                        pictureBox4.Location = new Point(pictureBox4.Location.X, 80);
+                                    }
+                                    else
+                                    {
+                                        pictureBox4.Location = new Point(pictureBox4.Location.X, 80);
+                                    }
+                                }
+                                else
+                                {
+                                    pictureBox4.Visible = false;
+                                }
+                                label4OutSen.Text = "出" + DebugCompiler.Instance.DDAxis.AlwaysIOOut.RunTime.ToString("00.0");
                                 //label3.Text = "" + DebugCompiler.GetThis().DDAxis.AlwaysIODot.RunTime.ToString("00.0");
                                 label2.Text = "进" + DebugCompiler.Instance.DDAxis.AlwaysIOInt.RunTime.ToString("00.0");
                             }));
@@ -92,21 +128,44 @@ namespace Vision2.Project.DebugF.IO
                             {
                                 pictureBox8.BackColor = Color.Gray;
                             }
+                            if (DebugCompiler.Instance.DDAxis.Out[DebugCompiler.Instance.RunButton.yellow])
+                            {
+                                pictureYel.BackColor = Color.Yellow;
+                            }
+                            else
+                            {
+                                pictureYel.BackColor = Color.Olive;
+                            }
+                            if (DebugCompiler.Instance.DDAxis.Out[DebugCompiler.Instance.RunButton.green])
+                            {
+                                pictureBoxGreen.BackColor = Color.Lime;
+                            }
+                            else
+                            {
+                                pictureBoxGreen.BackColor = Color.DarkGreen;
+                            }
+
+                            if (DebugCompiler.Instance.DDAxis.Out[DebugCompiler.Instance.RunButton.red])
+                            {
+                                pictureBoxRed.BackColor = Color.Red;
+                            }
+                            else
+                            {
+                                pictureBoxRed.BackColor = Color.Maroon;
+                            }
                             if (DebugCompiler.EquipmentStatus == ErosSocket.ErosConLink.EnumEquipmentStatus.运行中)
                             {
                                 if (!DebugCompiler.Instance.DDAxis.RunCodeT.Runing)
                                 {
                                     ndtr++;
-                                    if (ndtr >= 600)
+                                    if (ndtr >= 3000)
                                     {
                                         if (number / 10 % 2 > 0)
                                         {
-                                            pictureYel.BackColor = Color.Yellow;
                                             DebugCompiler.GetDoDi().WritDO(DebugCompiler.Instance.RunButton.yellow, true);
                                         }
                                         else
                                         {
-                                            pictureYel.BackColor = Color.Olive;
                                             DebugCompiler.GetDoDi().WritDO(DebugCompiler.Instance.RunButton.yellow, false);
                                         }
                                     }
@@ -117,23 +176,7 @@ namespace Vision2.Project.DebugF.IO
                                     ndtr = 0;
                                 }
                             }
-                            if (DebugCompiler.Instance.DDAxis.GetCylinderName(DebugCompiler.Instance.RCylinder) != null)
-                            {
-                                if (DebugCompiler.Instance.DDAxis.GetCylinderName(DebugCompiler.Instance.RCylinder).AnValue)
-                                {
-                                    pictureBox4.BackColor = Color.GreenYellow;
 
-                                    pictureBox4.Location = new Point(pictureBox4.Location.X, 80);
-                                }
-                                else
-                                {
-                                    pictureBox4.Location = new Point(pictureBox4.Location.X, 80);
-                                }
-                            }
-                            else
-                            {
-                                pictureBox4.Visible = false;
-                            }
                             if (DebugCompiler.Instance.DDAxis.GetCylinderName(DebugCompiler.Instance.LoctionCylinder) != null)
                             {
                                 if (DebugCompiler.Instance.DDAxis.GetCylinderName(DebugCompiler.Instance.LoctionCylinder).AnValue)
@@ -149,10 +192,10 @@ namespace Vision2.Project.DebugF.IO
                                 }
                             }
                         }
-                        catch (Exception)
+                        catch (Exception ex)
                         {
                         }
-                        Thread.Sleep(50);
+                        Thread.Sleep(10);
                     }
                 });
                 thread.IsBackground = true;

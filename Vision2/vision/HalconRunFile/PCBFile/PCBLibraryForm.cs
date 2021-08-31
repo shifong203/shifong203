@@ -33,6 +33,7 @@ namespace Vision2.vision.HalconRunFile.PCBFile
                 //HWindID.WhidowAdd = true;
                 propertyGrid1.SelectedObject = PCBAEX.GetPThis().DXFInFoc;
                 HWindID.HobjClear();
+                dataGridView1.Rows.Clear();
                 treeView1.Nodes.Clear();
                 foreach (var item in PCBAEX.DictRoi)
                 {
@@ -43,10 +44,18 @@ namespace Vision2.vision.HalconRunFile.PCBFile
                     HOperatorSet.GenRectangle2(out HObject hObject, item.Value.Row, item.Value.Col,
                        new HTuple(item.Value.Angle).TupleRad(), item.Value.Length1, item.Value.Length2);
                     HWindID.OneResIamge.AddNameOBJ(item.Key, hObject);
+                    int det = dataGridView1.Rows.Add();
+                    dataGridView1.Rows[det].Cells[0].Value = item.Value.Name;
+                    dataGridView1.Rows[det].Cells[1].Value = item.Value.Row;
+                    dataGridView1.Rows[det].Cells[2].Value = item.Value.Col;
+                    dataGridView1.Rows[det].Cells[3].Value = item.Value.Angle;
+                    dataGridView1.Rows[det].Cells[4].Value = item.Value.ToolDone;
+                    dataGridView1.Rows[det].Cells[5].Value = item.Value.LibraryName;
                 }
             }
             catch (Exception ex)
             {
+                MessageBox.Show(ex.Message);
             }
         }
 

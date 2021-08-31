@@ -11,10 +11,10 @@ namespace Vision2.vision.HalconRunFile.Controls
             InitializeComponent();
         }
 
-        public void SetData(RunProgramFile.RunProgram run, HWindID userC)
+        public void SetData(RunProgramFile.RunProgram run)
         {
             RunProgram = run;
-            visionUserC1 = userC;
+
             isCheave = true;
             checkBox4.Checked = RunProgram.IsImage_range;
             checkBox3.Checked = RunProgram.IsEmphasize;
@@ -33,8 +33,6 @@ namespace Vision2.vision.HalconRunFile.Controls
 
         private RunProgramFile.RunProgram RunProgram;
         private bool isCheave;
-
-        private HWindID visionUserC1;
 
         private void trackBar1_Scroll(object sender, EventArgs e)
         {
@@ -57,8 +55,8 @@ namespace Vision2.vision.HalconRunFile.Controls
                 RunProgram.EmphasizeH = (byte)numericUpDown2.Value;
                 RunProgram.EmphasizeW = (byte)numericUpDown3.Value;
                 HObject image = RunProgram.GetEmset(RunProgram.GetPThis().Image());
-                visionUserC1.SetImaage(image);
-                visionUserC1.ShowImage();
+                hWindID.SetImaage(image);
+                hWindID.ShowImage();
             }
             catch (Exception ex)
             {
@@ -66,13 +64,28 @@ namespace Vision2.vision.HalconRunFile.Controls
             }
         }
 
+        public HWindID hWindID;
+
         private void button9_Click(object sender, EventArgs e)
         {
             try
             {
-                HObject image = RunProgram.GetEmset(RunProgram.GetPThis().Image());
-                visionUserC1.SetImaage(image);
-                visionUserC1.ShowImage();
+                try
+                {
+                    RunProgram.Watch.Restart();
+                    HObject image = RunProgram.GetEmset(RunProgram.GetPThis().Image());
+                    RunProgram.Watch.Stop();
+                    hWindID.SetImaage(image);
+                    hWindID.OneResIamge.AddMeassge("运行时间" + RunProgram.Watch.ElapsedMilliseconds);
+                    hWindID.ShowImage();
+                }
+                catch (Exception)
+                {
+                }
+
+                //HObject image = RunProgram.GetEmset(RunProgram.GetPThis().Image());
+                //visionUserC1.SetImaage(image);
+                //visionUserC1.ShowImage();
             }
             catch (Exception)
             {
@@ -85,6 +98,18 @@ namespace Vision2.vision.HalconRunFile.Controls
 
         private void label11_Click(object sender, EventArgs e)
         {
+        }
+
+        private void PretreatmentUserControl_Load(object sender, EventArgs e)
+        {
+            try
+            {
+                hWindID = new HWindID();
+                hWindID.Initialize(hWindowControl1);
+            }
+            catch (Exception)
+            {
+            }
         }
     }
 }

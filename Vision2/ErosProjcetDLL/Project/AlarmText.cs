@@ -354,7 +354,8 @@ namespace Vision2.ErosProjcetDLL.Project
 
             public override string ToString()
             {
-                return this.Name + ":" + this.AlaType + ":" + this.Text + ":" + this.Time;
+                //return this.Name + ":" + this.AlaType + ":" + this.Text + ":" + this.Time;
+                return this.Time + "{" + this.AlaType + "{" + this.Name + "{" + this.Text;
             }
         }
 
@@ -492,7 +493,8 @@ namespace Vision2.ErosProjcetDLL.Project
 
         public static void AddText(string text, Color color)
         {
-            Excel.Npoi.AddTextLine(ProjectINI.TempPath + "\\文本记录\\" + DateTime.Now.ToLongDateString() + ".CSV", new string[] { DateTime.Now.ToString(), text });
+            Excel.Npoi.AddText(ProjectINI.TempPath + "\\文本记录\\" +
+                DateTime.Now.ToLongDateString() + ".CSV", text);
 
             if (ThisF.richTextBox1.InvokeRequired)
             {

@@ -3,12 +3,12 @@ using ErosSocket.ErosConLink;
 using System;
 using System.ComponentModel;
 using System.Drawing;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Vision2.ConClass;
 using Vision2.ErosProjcetDLL.Project;
 using Vision2.ErosProjcetDLL.UI.PropertyGrid;
 using Vision2.Project.formula;
-using Vision2.Project.ProcessControl;
 
 namespace Vision2.Project.Mes.环旭SISF
 {
@@ -22,12 +22,24 @@ namespace Vision2.Project.Mes.环旭SISF
             SocketClint = StaticCon.GetSocketClint(LinkName);
             if (SocketClint != null)
             {
-                SocketClint.PassiveEvent += SocketClint_PassiveEvent;
+                SocketClint.PassiveStringBuilderEvent += SocketClint_PassiveStringBuilderEvent;
             }
         }
 
-        public class SisfData
+        private string sisfStr = "";
+
+        private string SocketClint_PassiveStringBuilderEvent(System.Text.StringBuilder key, SocketClint socket, System.Net.Sockets.Socket socketR)
         {
+            try
+            {
+                sisfStr = key.ToString();
+                RestWait = true;
+                //SocketClint. RecivesDone = true;
+            }
+            catch (Exception)
+            {
+            }
+            return "";
         }
 
         public string Send(params string[] TEXT)
@@ -47,27 +59,28 @@ namespace Vision2.Project.Mes.环旭SISF
             {
                 AlarmText.AddTextNewLine("SISF写入错误:" + ex.Message, Color.Red);
             }
-        
+
             AddTextSisf("S:" + dataStr);
             return dataStr;
         }
 
         public void AddTextSisf(string text)
         {
-            text= DateTime.Now  +" :"+ text;
-            ErosProjcetDLL.Excel.Npoi.AddTextLine(ProcessControl.ProcessUser.Instancen.ExcelPath + "\\" +
-                      DateTime.Now.ToString("yyyy-MM-dd") + "\\SFIS记录", text);
+            AlarmText.AddTextNewLine("SISF:" + text);
+            text = DateTime.Now + " " + text;
+            ErosProjcetDLL.Excel.Npoi.AddTextLine(this.DataPaht + "\\SFIS记录" + "\\" +
+                      DateTime.Now.ToString("yyyy-MM-dd") + ".txt", text);
         }
 
         [DescriptionAttribute("CODE_NAME,"), Category("SISF"), DisplayName("SISF版本")]
         [TypeConverter(typeof(ErosConverter)), ErosConverter.ThisDropDownAttribute("", "芯片扫码改造V1", "Presasm1_SPEC")]
         public string SISFVersions { get; set; } = "";
 
-        [DescriptionAttribute("线体标示。"), Category("设备标识"), DisplayName("Fixture_ID线体名")]
-        public string Fixture_ID { get; set; } = "EQDIW00011-01";
+        [DescriptionAttribute("设备名称。"), Category("设备标识"), DisplayName("Fixture_ID设备名")]
+        public override string Fixture_ID { get; set; } = "EQDIW00011-01";
 
         [DescriptionAttribute("位置标示。"), Category("设备标识"), DisplayName("Line位置标示")]
-        public string Line_Name { get; set; } = "JORDAN";
+        public override string Line_Name { get; set; } = "JORDAN";
 
         [DescriptionAttribute("状态。"), Category("设备标识"), DisplayName("Status状态")]
         public string Status { get; set; } = "OK";
@@ -79,12 +92,9 @@ namespace Vision2.Project.Mes.环旭SISF
         public int OutTime { get; set; } = 10000;
 
         [DescriptionAttribute("判断SN长度,"), Category("功能"), DisplayName("码长度判断")]
-        public bool QRLength { get; set; } 
+        public bool QRLength { get; set; }
 
-        private string SocketClint_PassiveEvent(byte[] key, SocketClint socket, System.Net.Sockets.Socket socketR)
-        {
-            return "";
-        }
+        public bool RestWait;
 
         public SocketClint GetSocketClint()
         {
@@ -113,30 +123,34 @@ namespace Vision2.Project.Mes.环旭SISF
         {
             try
             {
-    
+                UserFormulaContrsl.SetOK(0);
+                RestWait = false;
                 if (!this.GetSocketClint().IsConn)
                 {
-                    this.GetSocketClint().AsynLink();
+                    this.GetSocketClint().AsynLink(false);
                 }
 
                 if (!this.GetSocketClint().IsConn)
                 {
                     AlarmListBoxt.AddAlarmText("SISF", "错误:SISF连接断开");
-                    trayData.SetNumberValue(false);
+                    //trayData.SetNumberValue(false);
                 }
                 else
                 {
                     if (SISFVersions == "芯片扫码改造V1")
                     {
                         Sisf1(trayData);
-                   
                     }
                     else if (SISFVersions == "Presasm1_SPEC")
                     {
-                       Sisf2(trayData);
+                        Sisf2(trayData);
                     }
                 }
-                WrietDATA(trayData);
+                Task task = new Task(new Action(() =>
+                {
+                    WrietDATA(trayData);
+                }));
+                task.Start();
             }
             catch (Exception)
             {
@@ -147,18 +161,17 @@ namespace Vision2.Project.Mes.环旭SISF
         {
             try
             {
-                string FileName = DateTime.Now.ToString("yyyyMMdd") + ".CSV";
-                if (!System.IO.File.Exists(ProcessUser.Instancen.ExcelPath + "\\" + FileName))
+                string FileName = this.DataPaht + "\\" + DateTime.Now.ToString("yyyyMMdd") + ".xls";
+                if (!System.IO.File.Exists(FileName))
                 {
-                    Npoi.AddWriteColumnToExcel(ProcessUser.Instancen.ExcelPath + "\\" + FileName, "数据", "位号", "SN", "状态","SISF信息");
+                    Npoi.AddWriteColumnToExcel(FileName, "数据", "位号", "SN", "状态", "SISF信息");
                 }
-                Npoi.AddRosWriteToExcel(ProcessUser.Instancen.ExcelPath + "\\" + FileName,"数据", DateTime.Now.ToString(),
+                Npoi.AddRosWriteToExcel(FileName, "数据", DateTime.Now.ToString(),
                     tray.GetDataVales().Count.ToString(), tray.OK.ToString(), tray.MesRestStr);
 
                 for (int i = 0; i < tray.GetDataVales().Count; i++)
                 {
-                    
-                    Npoi.AddRosWriteToExcel(ProcessUser.Instancen.ExcelPath + "\\" + FileName, "数据", tray.GetDataVales()[i].TrayLocation.ToString(),
+                    Npoi.AddRosWriteToExcel(FileName, "数据", tray.GetDataVales()[i].TrayLocation.ToString(),
                            tray.GetDataVales()[i].PanelID, tray.GetDataVales()[i].OK.ToString(), tray.GetDataVales()[i].MesStr);
                 }
             }
@@ -178,15 +191,15 @@ namespace Vision2.Project.Mes.环旭SISF
             try
             {
                 this.SendStep7(trayData.TrayIDQR);
-                string datas = this.GetSocketClint().AlwaysRece(OutTime);
+                string datas = this.GetSocketClint().AlwaysReceive(OutTime);
                 AddTextSisf("R:" + datas);
                 trayData.MesRestStr += datas;
                 if (datas.StartsWith("OK"))
                 {
                     AlarmText.AddTextNewLine("SISF1OK");
-                    this.SendStep2(trayData.TrayIDQR, trayData.GetTraySN()[0], trayData.GetTraySN()[trayData.Count-1]);
-                    datas = this.GetSocketClint().AlwaysRece(OutTime);
-               
+                    this.SendStep2(trayData.TrayIDQR, trayData.GetTraySN()[0], trayData.GetTraySN()[trayData.Count - 1]);
+
+                    datas = this.GetSocketClint().AlwaysReceive(OutTime);
                     AddTextSisf(" R:" + datas);
                     trayData.MesRestStr += datas;
                     if (datas.StartsWith("OK"))
@@ -276,32 +289,120 @@ namespace Vision2.Project.Mes.环旭SISF
             if (QRLength)
             {
                 AddTextSisf("err:码长度错误:" + number + "!=" + Product.GetProd()["码长度"]);
-                AlarmText.AddTextNewLine("err:码长度错误:" + number +"!="+ Product.GetProd()["码长度"]);
             }
-            datSSD = Send(Fixture_ID, "SN1", "2", ProjectINI.In.UserID, Line_Name, "", Status,
+            datSSD = Send(Fixture_ID, trayData.GetOneDataVale(0).PanelID, "2", ProjectINI.In.UserID, Line_Name, "", Status,
                 "", "", "", "", Product.Work_Order, datSSD);
-            string datas = this.GetSocketClint().AlwaysRece(OutTime);
+
+            string datas = this.GetSocketClint().AlwaysReceive(OutTime);
             trayData.MesRestStr = datas;
             if (datas == "")
             {
-                AddTextSisf( " R:等待超时ms" + OutTime);
+                AddTextSisf(" R:等待超时ms" + OutTime);
                 UserFormulaContrsl.SetString("超时", Color.Red);
+                trayData.SetNumberValue(false);
             }
-            else if (datas.StartsWith("OK"))
+            else if (datas.ToLower().StartsWith("ok"))
             {
+            
                 AlarmText.AddTextNewLine("SISF:" + datas);
                 AddTextSisf(" R:" + datas);
-                trayData.SetNumberValue(true);
                 UserFormulaContrsl.SetOK(3);
-             
+                if (datas.Contains(","))
+                {
+                    try
+                    {
+                        string[] dtaStr = datas.Split(',');
+                        if (datas.Contains(";"))
+                        {
+                            string[] datsdd = dtaStr[1].Split(';');
+                            for (int i = 0; i < datsdd.Length; i++)
+                            {
+                                string[] datsItmes = datsdd[i].Split('=');
+                                if (datsItmes[0].StartsWith("SN"))
+                                {
+                                    string[] dataTrs = datsItmes[01].Split(' ');
+                                    int dint = ProjectINI.GetStrReturnInt(datsItmes[0]);
+                                    if (trayData.GetOneDataVale(dint - 1).PanelID == dataTrs[0])
+                                    {
+                                        trayData.GetOneDataVale(dint - 1).MesStr = datsdd[i];
+                                    }
+                                    else
+                                    {
+                                        trayData.GetOneDataVale(dint - 1).MesStr = datsdd[i];
+                                    }
+                                }
+                            }
+                            ListSNForm.ShowMesabe(datas, datsdd);
+                        }
+                   
+                    }
+                    catch (Exception)
+                    {
+                    }
+              
+                }
+                trayData.SetNumberValue(true);
             }
-            else if (datas.Contains("FAIL"))
+            else if (datas.ToLower().Contains("fail"))
             {
-                AlarmText.AddTextNewLine("SISF:" + datas, Color.Red);
+                trayData.SetNumberValue(true);
+                RestData(datas, trayData);
                 AddTextSisf(" R:" + datas);
                 UserFormulaContrsl.SetOK(2);
             }
+            else
+            {
+                AddTextSisf(" R:" + datas);
+                RestData(datas, trayData);
+                UserFormulaContrsl.SetOK(2);
+            }
+
+            RecipeCompiler.AddOKNumber(trayData.OKNumber);
+            RecipeCompiler.GetSPC();
+            this.GetSocketClint().Close();
             return datas;
+        }
+
+        public void RestData(string datastr, TrayData trayData)
+        {
+            try
+            {
+                //FAIL2,SN1=FYJ1167300MUEC053D1Y00303K   MO not Match
+                //FAIL2,SN1=FYJ1167300MUEC053D1Y00303K ROUTE NG;SN3=FYJ1167300MUEC053D1Y00303K ROUTE NG
+                //FAIL2, NO EMP 2200，Underfil01 no set
+                string[] datas = datastr.Split(',');
+                string[] dats = datas[1].Split(';');
+                if (datastr.Contains("="))
+                {
+                    for (int i = 0; i < dats.Length; i++)
+                    {
+                        string[] datsItmes = dats[i].Split('=');
+                        if (datsItmes[0].StartsWith("SN"))
+                        {
+                            string[] dataTrs = datsItmes[01].Split(' ');
+                            int dint = ProjectINI.GetStrReturnInt(datsItmes[0]);
+                            if (trayData.GetOneDataVale(dint - 1).PanelID == dataTrs[0])
+                            {
+                                trayData.GetOneDataVale(dint - 1).MesStr = dats[i];
+                            }
+                            else
+                            {
+                                trayData.GetOneDataVale(dint - 1).MesStr = dats[i];
+                            }
+                            RecipeCompiler.AddNGNumber(1);
+                            trayData.SetNumberValue(dint, false);
+                        }
+                    }
+                    trayData.GetITrayRobot().UpData();
+                }
+                else
+                {
+                    trayData.SetNumberValue(false);
+                }
+            }
+            catch (Exception ex)
+            {
+            }
         }
 
         #endregion 扫码Presasm1_SPEC

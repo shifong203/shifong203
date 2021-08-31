@@ -18,6 +18,17 @@ namespace Vision2.ErosProjcetDLL.Project
 
         private static AlarmListBoxt alarmList = new AlarmListBoxt();
 
+        /// <summary>
+        /// 报价数量
+        /// </summary>
+        public static int AlarmCont
+        {
+            get
+            {
+                return AlarmText.DicAlarm.Count;
+            }
+        }
+
         public static AlarmListBoxt AlarmFormThis
         {
             get
@@ -74,16 +85,15 @@ namespace Vision2.ErosProjcetDLL.Project
                 {
                     AlarmListBoxt.AlarmFormThis.Show();
                 }
-                //AlarmListBoxt.AlarmFormThis.Show();
                 if (AlarmText.DicAlarm.ContainsKey(text.Name))
                 {
                     return;
                 }
-
                 if (!AlarmText.DicAlarm.ContainsKey(text.Name))
                 {
                     AlarmText.DicAlarm.Add(text.Name, text);
-                    Excel.Npoi.AddText(Vision2.ErosProjcetDLL.Project.ProjectINI.TempPath + "\\报警记录\\" + DateTime.Now.ToLongDateString() + ".CSV", new string[] { DateTime.Now.ToString(), text.ToString() });
+                    Excel.Npoi.AddText(ProjectINI.TempPath + "\\报警记录\\" + DateTime.Now.ToLongDateString() + ".CSV",
+                        text.ToString() + Environment.NewLine);
                 }
                 if (ite == 0)
                 {
@@ -100,13 +110,15 @@ namespace Vision2.ErosProjcetDLL.Project
                     {
                         dt = true;
                         ste += alarmList.richTextBox1.Lines[i].Length;
-                        date = alarmList.richTextBox1.Lines[i] = "【" + ite + "】" + text.Time + "{" + text.AlaType + "{" + text.Name + "{" + text.Text + Environment.NewLine;
+                        date = alarmList.richTextBox1.Lines[i] = "【" + ite + "】" + text.ToString() + Environment.NewLine;
+                        //     date = alarmList.richTextBox1.Lines[i] = "【" + ite + "】" + text.Time + "{" + text.AlaType + "{" + text.Name + "{" + text.Text + Environment.NewLine;
                         break;
                     }
                 }
                 if (!dt)
                 {
-                    date = "【" + ite + "】" + text.Time + "{" + text.AlaType + "{" + text.Name + "{" + text.Text + Environment.NewLine;
+                    date = "【" + ite + "】" + text.ToString();
+                    //    date = "【" + ite + "】" + text.Time + "{" + text.AlaType + "{" + text.Name + "{" + text.Text + Environment.NewLine;
                     alarmList.richTextBox1.AppendText(date);
                 }
                 alarmList.richTextBox1.Select(ste, date.Length);
@@ -309,6 +321,17 @@ namespace Vision2.ErosProjcetDLL.Project
                 catch (Exception)
                 {
                 }
+            }
+        }
+
+        private void AlarmListBoxt_VisibleChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                richTextBox1.Focus();
+            }
+            catch (Exception)
+            {
             }
         }
     }

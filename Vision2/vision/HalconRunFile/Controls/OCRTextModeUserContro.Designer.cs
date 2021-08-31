@@ -35,27 +35,27 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.tabControl2 = new System.Windows.Forms.TabControl();
             this.tabPage5 = new System.Windows.Forms.TabPage();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.hWindowControl1 = new HalconDotNet.HWindowControl();
+            this.panel2 = new System.Windows.Forms.Panel();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.添加区域ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.删除区域ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.pretreatmentUserControl1 = new Vision2.vision.HalconRunFile.Controls.PretreatmentUserControl();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.hWindowControl1 = new HalconDotNet.HWindowControl();
-            this.panel2 = new System.Windows.Forms.Panel();
             this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
             this.panel1.SuspendLayout();
             this.tabControl2.SuspendLayout();
             this.tabPage5.SuspendLayout();
+            this.panel2.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.tabPage2.SuspendLayout();
-            this.panel2.SuspendLayout();
             this.SuspendLayout();
             // 
             // button1
@@ -122,6 +122,67 @@
             this.tabPage5.Text = "识别区域";
             this.tabPage5.UseVisualStyleBackColor = true;
             // 
+            // hWindowControl1
+            // 
+            this.hWindowControl1.BackColor = System.Drawing.Color.Black;
+            this.hWindowControl1.BorderColor = System.Drawing.Color.Black;
+            this.hWindowControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.hWindowControl1.ImagePart = new System.Drawing.Rectangle(0, 0, 640, 480);
+            this.hWindowControl1.Location = new System.Drawing.Point(3, 168);
+            this.hWindowControl1.Name = "hWindowControl1";
+            this.hWindowControl1.Size = new System.Drawing.Size(601, 420);
+            this.hWindowControl1.TabIndex = 10;
+            this.hWindowControl1.WindowSize = new System.Drawing.Size(601, 420);
+            // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this.listBox1);
+            this.panel2.Controls.Add(this.button4);
+            this.panel2.Controls.Add(this.checkBox1);
+            this.panel2.Controls.Add(this.button1);
+            this.panel2.Controls.Add(this.label1);
+            this.panel2.Controls.Add(this.button2);
+            this.panel2.Controls.Add(this.textBox1);
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel2.Location = new System.Drawing.Point(3, 3);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(601, 165);
+            this.panel2.TabIndex = 11;
+            // 
+            // listBox1
+            // 
+            this.listBox1.ContextMenuStrip = this.contextMenuStrip1;
+            this.listBox1.Dock = System.Windows.Forms.DockStyle.Left;
+            this.listBox1.FormattingEnabled = true;
+            this.listBox1.ItemHeight = 12;
+            this.listBox1.Location = new System.Drawing.Point(0, 0);
+            this.listBox1.Name = "listBox1";
+            this.listBox1.Size = new System.Drawing.Size(80, 165);
+            this.listBox1.TabIndex = 6;
+            this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
+            // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.添加区域ToolStripMenuItem,
+            this.删除区域ToolStripMenuItem});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(125, 48);
+            // 
+            // 添加区域ToolStripMenuItem
+            // 
+            this.添加区域ToolStripMenuItem.Name = "添加区域ToolStripMenuItem";
+            this.添加区域ToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.添加区域ToolStripMenuItem.Text = "添加区域";
+            this.添加区域ToolStripMenuItem.Click += new System.EventHandler(this.添加区域ToolStripMenuItem_Click);
+            // 
+            // 删除区域ToolStripMenuItem
+            // 
+            this.删除区域ToolStripMenuItem.Name = "删除区域ToolStripMenuItem";
+            this.删除区域ToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.删除区域ToolStripMenuItem.Text = "删除区域";
+            this.删除区域ToolStripMenuItem.Click += new System.EventHandler(this.删除区域ToolStripMenuItem_Click);
+            // 
             // checkBox1
             // 
             this.checkBox1.AutoSize = true;
@@ -150,40 +211,6 @@
             this.textBox1.TabIndex = 7;
             this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
-            // listBox1
-            // 
-            this.listBox1.ContextMenuStrip = this.contextMenuStrip1;
-            this.listBox1.Dock = System.Windows.Forms.DockStyle.Left;
-            this.listBox1.FormattingEnabled = true;
-            this.listBox1.ItemHeight = 12;
-            this.listBox1.Location = new System.Drawing.Point(0, 0);
-            this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(80, 180);
-            this.listBox1.TabIndex = 6;
-            this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
-            // 
-            // contextMenuStrip1
-            // 
-            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.添加区域ToolStripMenuItem,
-            this.删除区域ToolStripMenuItem});
-            this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(125, 48);
-            // 
-            // 添加区域ToolStripMenuItem
-            // 
-            this.添加区域ToolStripMenuItem.Name = "添加区域ToolStripMenuItem";
-            this.添加区域ToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
-            this.添加区域ToolStripMenuItem.Text = "添加区域";
-            this.添加区域ToolStripMenuItem.Click += new System.EventHandler(this.添加区域ToolStripMenuItem_Click);
-            // 
-            // 删除区域ToolStripMenuItem
-            // 
-            this.删除区域ToolStripMenuItem.Name = "删除区域ToolStripMenuItem";
-            this.删除区域ToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
-            this.删除区域ToolStripMenuItem.Text = "删除区域";
-            this.删除区域ToolStripMenuItem.Click += new System.EventHandler(this.删除区域ToolStripMenuItem_Click);
-            // 
             // tabPage3
             // 
             this.tabPage3.Controls.Add(this.pretreatmentUserControl1);
@@ -202,6 +229,7 @@
             this.pretreatmentUserControl1.Name = "pretreatmentUserControl1";
             this.pretreatmentUserControl1.Size = new System.Drawing.Size(601, 585);
             this.pretreatmentUserControl1.TabIndex = 0;
+            this.pretreatmentUserControl1.Load += new System.EventHandler(this.pretreatmentUserControl1_Load);
             // 
             // tabPage4
             // 
@@ -224,33 +252,6 @@
             this.tabPage2.Text = "属性";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
-            // hWindowControl1
-            // 
-            this.hWindowControl1.BackColor = System.Drawing.Color.Black;
-            this.hWindowControl1.BorderColor = System.Drawing.Color.Black;
-            this.hWindowControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.hWindowControl1.ImagePart = new System.Drawing.Rectangle(0, 0, 640, 480);
-            this.hWindowControl1.Location = new System.Drawing.Point(3, 183);
-            this.hWindowControl1.Name = "hWindowControl1";
-            this.hWindowControl1.Size = new System.Drawing.Size(601, 405);
-            this.hWindowControl1.TabIndex = 10;
-            this.hWindowControl1.WindowSize = new System.Drawing.Size(601, 405);
-            // 
-            // panel2
-            // 
-            this.panel2.Controls.Add(this.listBox1);
-            this.panel2.Controls.Add(this.button4);
-            this.panel2.Controls.Add(this.checkBox1);
-            this.panel2.Controls.Add(this.button1);
-            this.panel2.Controls.Add(this.label1);
-            this.panel2.Controls.Add(this.button2);
-            this.panel2.Controls.Add(this.textBox1);
-            this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel2.Location = new System.Drawing.Point(3, 3);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(601, 180);
-            this.panel2.TabIndex = 11;
-            // 
             // propertyGrid1
             // 
             this.propertyGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -269,11 +270,11 @@
             this.panel1.ResumeLayout(false);
             this.tabControl2.ResumeLayout(false);
             this.tabPage5.ResumeLayout(false);
+            this.panel2.ResumeLayout(false);
+            this.panel2.PerformLayout();
             this.contextMenuStrip1.ResumeLayout(false);
             this.tabPage3.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
-            this.panel2.ResumeLayout(false);
-            this.panel2.PerformLayout();
             this.ResumeLayout(false);
 
         }

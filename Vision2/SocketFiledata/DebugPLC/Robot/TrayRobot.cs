@@ -21,6 +21,13 @@ namespace ErosSocket.DebugPLC.Robot
     {
         void SetValue(int number, bool value, double? valueDouble = null);
 
+        /// <summary>
+        /// 更新指定位置状态
+        /// </summary>
+        /// <param name="number">编号</param>
+        /// <param name="errNuber">错误状态，-1错误,0 清空，1OK，2NG红色，3NG黄色，4NG蓝色，5NG粉色 </param>
+        void SetValue(int number, int errNuber);
+
         void SetValue(int number, OneDataVale dataVale);
 
         void SetValue(int number, TrayData dataVale);
@@ -118,6 +125,12 @@ namespace ErosSocket.DebugPLC.Robot
                 TrayDataS.Number = value;
             }
         }
+
+        [DescriptionAttribute("判断穴位SN是否空 。"), Category("判断"), DisplayName("判断穴位SN")]
+        public bool IsSN { get; set; }
+
+        [DescriptionAttribute("判断托盘SN是否空。"), Category("判断"), DisplayName("判断托盘SN")]
+        public bool IsTraySN { get; set; }
 
         private ITrayRobot trayRobots;
 
@@ -531,6 +544,10 @@ namespace ErosSocket.DebugPLC.Robot
 
     public class TrayData
     {
+        public bool IsSn { get { return tray1.IsSN; } }
+
+        public bool IsTryaSN { get { return tray1.IsTraySN; } }
+
         public TrayData(TrayRobot trayRobot)
         {
             tray1 = trayRobot;
@@ -593,13 +610,14 @@ namespace ErosSocket.DebugPLC.Robot
             {
                 try
                 {
-                    if (RecipeCompiler.Instance.TrayID)
+                    if (tray1.IsTraySN)
                     {
                         if (TrayIDQR == null || TrayIDQR == "")
                         {
                             return false;
                         }
                     }
+
                     if (GetDataVales() != null)
                     {
                         for (int i = 0; i < GetDataVales().Count; i++)
@@ -621,6 +639,7 @@ namespace ErosSocket.DebugPLC.Robot
                 return false;
             }
         }
+
         public string MesRestStr = "";
 
         public bool Done
@@ -657,6 +676,22 @@ namespace ErosSocket.DebugPLC.Robot
                 for (int i = 0; i < dataVales1.Count; i++)
                 {
                     if (!dataVales1[i].OK)
+                    {
+                        numbert++;
+                    }
+                }
+                return numbert;
+            }
+        }
+
+        public int OKNumber
+        {
+            get
+            {
+                int numbert = 0;
+                for (int i = 0; i < dataVales1.Count; i++)
+                {
+                    if (dataVales1[i].OK)
                     {
                         numbert++;
                     }
@@ -772,6 +807,11 @@ namespace ErosSocket.DebugPLC.Robot
             trayRobots.SetValue(number, TrayResetD);
         }
 
+        public void SetNumberValue(int number, int errCode)
+        {
+            trayRobots.SetValue(number, errCode);
+        }
+
         public void SetNumberValue(int number, bool Vaules)
         {
             trayRobots.SetValue(number, Vaules);
@@ -786,7 +826,18 @@ namespace ErosSocket.DebugPLC.Robot
         {
             for (int i = 0; i < dataVales1.Count; i++)
             {
-                dataVales1[i].OK = Vaules;
+                if (Vaules)
+                {
+                    if (dataVales1[i].PanelID != "")
+                    {
+                        dataVales1[i].OK = Vaules;
+                    }
+                }
+                else
+                {
+                    dataVales1[i].OK = Vaules;
+                }
+
                 if (Vaules)
                 {
                     dataVales1[i].NotNull = Vaules;
@@ -929,7 +980,7 @@ namespace ErosSocket.DebugPLC.Robot
                                 if (err != "")
                                 {
                                     UserFormulaContrsl.SetOK(2);
-                                    simulateQRForm.ShowMesabe(err);
+                                    SimulateQRForm.ShowMesabe(err);
                                 }
                                 else
                                 {
@@ -1209,7 +1260,7 @@ namespace ErosSocket.DebugPLC.Robot
                     if (Err)
                     {
                         UserFormulaContrsl.SetOK(2);
-                        simulateQRForm.ShowMesabe("托盘码重复:" + ErrString);
+                        SimulateQRForm.ShowMesabe("托盘码重复:" + ErrString);
                     }
                     else
                     {

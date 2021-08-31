@@ -97,6 +97,7 @@ namespace Vision2.vision
                 }
                 else
                 {
+                    CiName = "";
                 }
             }
             catch (Exception)
@@ -304,12 +305,17 @@ namespace Vision2.vision
         {
             try
             {
-                if (name == "off")
+                if (name.ToLower() == "off")
                 {
                     OffLight();
                     return;
                 }
-                if (Vision.Instance.DicLightSource.ContainsKey(name))
+                else if (name.ToLower() == "on")
+                {
+                    OnLight();
+                    return;
+                }
+                else if (Vision.Instance.DicLightSource.ContainsKey(name))
                 {
                     Vision.Instance.GetLightSources()[0].SetLightSource(Vision.Instance.DicLightSource[name]);
                 }
@@ -324,6 +330,17 @@ namespace Vision2.vision
             try
             {
                 Vision.Instance.GetLightSources()[0].SetOFF();
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        public static void OnLight()
+        {
+            try
+            {
+                Vision.Instance.GetLightSources()[0].SetOn();
             }
             catch (Exception)
             {
@@ -1731,15 +1748,42 @@ namespace Vision2.vision
             public HTuple GetBackName()
             {
                 HTuple hTuple = new HTuple();
-                for (int i = 0; i < DicDrawbackName.Count; i++)
+                for (int i = 0; i < BrawBacks.Count; i++)
                 {
-                    hTuple.Append(DicDrawbackName[i]);
+                    hTuple.Append(BrawBacks[i].DrawbackName);
                 }
                 return hTuple;
             }
 
-            public List<string> DicDrawbackName = new List<string>();
-            public List<int> DicDrawbackIndex = new List<int>();
+            public void AddDrawVBack(string name, int index, string english)
+            {
+                BrawBacks.Add(new DrawBack() { DrawbackName = name, DrawbackIndex = index, DrawbackEnglish = english });
+                //DicDrawbackName.Add(name);
+                //DicDrawbackEnglish.Add(english);
+                //DicDrawbackIndex.Add(index);
+            }
+
+            public DrawBack GetDrawBack(int index)
+            {
+                if (BrawBacks.Count > index)
+                {
+                    return BrawBacks[index];
+                }
+                return null;
+            }
+
+            public List<DrawBack> BrawBacks { get; set; } = new List<DrawBack>();
+
+            //public List<string> DicDrawbackEnglish = new List<string>();
+            //public List<string> DicDrawbackName = new List<string>();
+            //public List<int>  DicDrawbackIndex = new List<int>();
+        }
+
+        public class DrawBack
+        {
+            public string DrawbackEnglish = "";
+            public string DrawbackName = "";
+            public int DrawbackIndex = 0;
         }
 
         [Category("运行参数"), DisplayName("执行程序名称"),
@@ -1850,6 +1894,12 @@ namespace Vision2.vision
         public Dictionary<string, Calib.AutoCalibPoint> DicCalib3D { get; set; } = new Dictionary<string, Calib.AutoCalibPoint>();
 
         [Browsable(false)]
+        public List<string> CRDNameList { get; set; } = new List<string>();
+
+        [Browsable(false)]
+        public Dictionary<string, DrawBack> DefectTypeDicEx { get; set; } = new Dictionary<string, DrawBack>();
+
+        [Browsable(false)]
         public List<string> ListHalconName { get; set; } = new List<string>();
 
         [Browsable(false)]
@@ -1930,6 +1980,8 @@ namespace Vision2.vision
             }
             catch (Exception ex)
             {
+                ErosProjcetDLL.Project.AlarmListBoxt.AddAlarmText(new ErosProjcetDLL.Project.AlarmText.alarmStruct()
+                { Name = "NGShow故障", Text = ex.Message });
             }
         }
 
@@ -4330,13 +4382,15 @@ namespace Vision2.vision
         {
             HObject hObject = new HObject();
             hObject.GenEmptyObj();
+            int ds = Region.CountObj();
+            HTuple classTd = Region.GetObjClass();
             try
             {
-                if (Region.GetObjClass() == "region")
+                if (classTd == "region")
                 {
                     return Region;
                 }
-                int ds = Region.CountObj();
+
                 for (int i = 0; i < ds; i++)
                 {
                     HOperatorSet.SelectObj(Region, out HObject hObject1, i + 1);

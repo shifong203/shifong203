@@ -39,11 +39,7 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.dataGridView2 = new System.Windows.Forms.DataGridView();
-            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column3 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.插入ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.删除ToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
@@ -101,7 +97,6 @@
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.Column5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.contextMenuStrip3 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.button2 = new System.Windows.Forms.Button();
             this.checkBox5 = new System.Windows.Forms.CheckBox();
@@ -140,9 +135,15 @@
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
+            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewComboBoxColumn1 = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.contextMenuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -300,40 +301,11 @@
             this.dataGridView2.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView2_CellValueChanged);
             this.dataGridView2.CurrentCellChanged += new System.EventHandler(this.dataGridView2_CurrentCellChanged);
             // 
-            // dataGridViewTextBoxColumn1
-            // 
-            this.dataGridViewTextBoxColumn1.FillWeight = 253.8071F;
-            this.dataGridViewTextBoxColumn1.HeaderText = "码";
-            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
-            this.dataGridViewTextBoxColumn1.ReadOnly = true;
-            this.dataGridViewTextBoxColumn1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            // 
-            // Column2
-            // 
-            this.Column2.FillWeight = 39.61736F;
-            this.Column2.HeaderText = "托盘编号";
-            this.Column2.Name = "Column2";
-            this.Column2.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            // 
             // Column3
             // 
             this.Column3.FillWeight = 34.18956F;
             this.Column3.HeaderText = "启用";
             this.Column3.Name = "Column3";
-            // 
-            // Column1
-            // 
-            this.Column1.FillWeight = 84.73257F;
-            this.Column1.HeaderText = "Row";
-            this.Column1.Name = "Column1";
-            this.Column1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            // 
-            // Column4
-            // 
-            this.Column4.FillWeight = 87.65341F;
-            this.Column4.HeaderText = "Column";
-            this.Column4.Name = "Column4";
-            this.Column4.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
             // contextMenuStrip2
             // 
@@ -343,33 +315,33 @@
             this.托盘编号叠加ToolStripMenuItem,
             this.托盘编号递减ToolStripMenuItem});
             this.contextMenuStrip2.Name = "contextMenuStrip2";
-            this.contextMenuStrip2.Size = new System.Drawing.Size(181, 114);
+            this.contextMenuStrip2.Size = new System.Drawing.Size(149, 92);
             // 
             // 插入ToolStripMenuItem
             // 
             this.插入ToolStripMenuItem.Name = "插入ToolStripMenuItem";
-            this.插入ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.插入ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
             this.插入ToolStripMenuItem.Text = "插入";
             this.插入ToolStripMenuItem.Click += new System.EventHandler(this.插入ToolStripMenuItem_Click);
             // 
             // 删除ToolStripMenuItem1
             // 
             this.删除ToolStripMenuItem1.Name = "删除ToolStripMenuItem1";
-            this.删除ToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            this.删除ToolStripMenuItem1.Size = new System.Drawing.Size(148, 22);
             this.删除ToolStripMenuItem1.Text = "删除";
             this.删除ToolStripMenuItem1.Click += new System.EventHandler(this.删除ToolStripMenuItem1_Click);
             // 
             // 托盘编号叠加ToolStripMenuItem
             // 
             this.托盘编号叠加ToolStripMenuItem.Name = "托盘编号叠加ToolStripMenuItem";
-            this.托盘编号叠加ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.托盘编号叠加ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
             this.托盘编号叠加ToolStripMenuItem.Text = "托盘编号递增";
             this.托盘编号叠加ToolStripMenuItem.Click += new System.EventHandler(this.托盘编号叠加ToolStripMenuItem_Click);
             // 
             // 托盘编号递减ToolStripMenuItem
             // 
             this.托盘编号递减ToolStripMenuItem.Name = "托盘编号递减ToolStripMenuItem";
-            this.托盘编号递减ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.托盘编号递减ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
             this.托盘编号递减ToolStripMenuItem.Text = "托盘编号递减";
             this.托盘编号递减ToolStripMenuItem.Click += new System.EventHandler(this.托盘编号递减ToolStripMenuItem_Click);
             // 
@@ -670,11 +642,11 @@
             this.hWindowControl1.BorderColor = System.Drawing.Color.Black;
             this.hWindowControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.hWindowControl1.ImagePart = new System.Drawing.Rectangle(0, 0, 640, 480);
-            this.hWindowControl1.Location = new System.Drawing.Point(3, 226);
+            this.hWindowControl1.Location = new System.Drawing.Point(3, 173);
             this.hWindowControl1.Name = "hWindowControl1";
-            this.hWindowControl1.Size = new System.Drawing.Size(629, 315);
+            this.hWindowControl1.Size = new System.Drawing.Size(629, 368);
             this.hWindowControl1.TabIndex = 25;
-            this.hWindowControl1.WindowSize = new System.Drawing.Size(629, 315);
+            this.hWindowControl1.WindowSize = new System.Drawing.Size(629, 368);
             // 
             // groupBox1
             // 
@@ -707,7 +679,7 @@
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupBox1.Location = new System.Drawing.Point(3, 3);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(629, 223);
+            this.groupBox1.Size = new System.Drawing.Size(629, 170);
             this.groupBox1.TabIndex = 24;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "预处理";
@@ -716,7 +688,7 @@
             // label22
             // 
             this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(13, 195);
+            this.label22.Location = new System.Drawing.Point(82, 145);
             this.label22.Name = "label22";
             this.label22.Size = new System.Drawing.Size(56, 14);
             this.label22.TabIndex = 43;
@@ -725,7 +697,7 @@
             // numericUpDown21
             // 
             this.numericUpDown21.DecimalPlaces = 1;
-            this.numericUpDown21.Location = new System.Drawing.Point(82, 191);
+            this.numericUpDown21.Location = new System.Drawing.Point(141, 141);
             this.numericUpDown21.Maximum = new decimal(new int[] {
             255,
             0,
@@ -749,7 +721,7 @@
             // label21
             // 
             this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(17, 168);
+            this.label21.Location = new System.Drawing.Point(83, 121);
             this.label21.Name = "label21";
             this.label21.Size = new System.Drawing.Size(56, 14);
             this.label21.TabIndex = 41;
@@ -758,7 +730,7 @@
             // numericUpDown20
             // 
             this.numericUpDown20.DecimalPlaces = 2;
-            this.numericUpDown20.Location = new System.Drawing.Point(82, 164);
+            this.numericUpDown20.Location = new System.Drawing.Point(141, 117);
             this.numericUpDown20.Maximum = new decimal(new int[] {
             10,
             0,
@@ -777,7 +749,7 @@
             // checkBox7
             // 
             this.checkBox7.AutoSize = true;
-            this.checkBox7.Location = new System.Drawing.Point(4, 146);
+            this.checkBox7.Location = new System.Drawing.Point(4, 119);
             this.checkBox7.Name = "checkBox7";
             this.checkBox7.Size = new System.Drawing.Size(82, 18);
             this.checkBox7.TabIndex = 39;
@@ -788,7 +760,7 @@
             // label20
             // 
             this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(17, 122);
+            this.label20.Location = new System.Drawing.Point(99, 91);
             this.label20.Name = "label20";
             this.label20.Size = new System.Drawing.Size(63, 14);
             this.label20.TabIndex = 38;
@@ -797,7 +769,7 @@
             // numericUpDown19
             // 
             this.numericUpDown19.DecimalPlaces = 2;
-            this.numericUpDown19.Location = new System.Drawing.Point(82, 118);
+            this.numericUpDown19.Location = new System.Drawing.Point(162, 87);
             this.numericUpDown19.Maximum = new decimal(new int[] {
             20,
             0,
@@ -816,7 +788,7 @@
             // checkBox1
             // 
             this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(4, 100);
+            this.checkBox1.Location = new System.Drawing.Point(4, 90);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(96, 18);
             this.checkBox1.TabIndex = 36;
@@ -827,7 +799,7 @@
             // checkBox4
             // 
             this.checkBox4.AutoSize = true;
-            this.checkBox4.Location = new System.Drawing.Point(3, 22);
+            this.checkBox4.Location = new System.Drawing.Point(4, 16);
             this.checkBox4.Name = "checkBox4";
             this.checkBox4.Size = new System.Drawing.Size(82, 18);
             this.checkBox4.TabIndex = 35;
@@ -838,31 +810,31 @@
             // trackBar4
             // 
             this.trackBar4.AutoSize = false;
-            this.trackBar4.Location = new System.Drawing.Point(112, 59);
+            this.trackBar4.Location = new System.Drawing.Point(107, 61);
             this.trackBar4.Maximum = 255;
             this.trackBar4.Name = "trackBar4";
-            this.trackBar4.Size = new System.Drawing.Size(141, 33);
+            this.trackBar4.Size = new System.Drawing.Size(141, 20);
             this.trackBar4.TabIndex = 34;
             this.trackBar4.TickFrequency = 0;
-            this.trackBar4.TickStyle = System.Windows.Forms.TickStyle.Both;
+            this.trackBar4.TickStyle = System.Windows.Forms.TickStyle.None;
             this.trackBar4.Scroll += new System.EventHandler(this.trackBar1_Scroll);
             // 
             // trackBar5
             // 
             this.trackBar5.AutoSize = false;
-            this.trackBar5.Location = new System.Drawing.Point(112, 26);
+            this.trackBar5.Location = new System.Drawing.Point(107, 37);
             this.trackBar5.Maximum = 255;
             this.trackBar5.Name = "trackBar5";
-            this.trackBar5.Size = new System.Drawing.Size(141, 33);
+            this.trackBar5.Size = new System.Drawing.Size(141, 22);
             this.trackBar5.TabIndex = 33;
             this.trackBar5.TickFrequency = 0;
-            this.trackBar5.TickStyle = System.Windows.Forms.TickStyle.Both;
+            this.trackBar5.TickStyle = System.Windows.Forms.TickStyle.None;
             this.trackBar5.Scroll += new System.EventHandler(this.trackBar1_Scroll);
             // 
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(-2, 71);
+            this.label10.Location = new System.Drawing.Point(-2, 64);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(63, 14);
             this.label10.TabIndex = 31;
@@ -871,7 +843,7 @@
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(-2, 45);
+            this.label11.Location = new System.Drawing.Point(-2, 41);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(63, 14);
             this.label11.TabIndex = 30;
@@ -879,7 +851,7 @@
             // 
             // numericUpDown11
             // 
-            this.numericUpDown11.Location = new System.Drawing.Point(67, 41);
+            this.numericUpDown11.Location = new System.Drawing.Point(62, 37);
             this.numericUpDown11.Maximum = new decimal(new int[] {
             255,
             0,
@@ -892,7 +864,7 @@
             // 
             // numericUpDown12
             // 
-            this.numericUpDown12.Location = new System.Drawing.Point(67, 67);
+            this.numericUpDown12.Location = new System.Drawing.Point(62, 60);
             this.numericUpDown12.Maximum = new decimal(new int[] {
             255,
             0,
@@ -906,7 +878,7 @@
             // checkBox3
             // 
             this.checkBox3.AutoSize = true;
-            this.checkBox3.Location = new System.Drawing.Point(254, 14);
+            this.checkBox3.Location = new System.Drawing.Point(254, 12);
             this.checkBox3.Name = "checkBox3";
             this.checkBox3.Size = new System.Drawing.Size(96, 18);
             this.checkBox3.TabIndex = 25;
@@ -917,34 +889,34 @@
             // trackBar3
             // 
             this.trackBar3.AutoSize = false;
-            this.trackBar3.Location = new System.Drawing.Point(359, 93);
+            this.trackBar3.Location = new System.Drawing.Point(457, 58);
             this.trackBar3.Maximum = 205;
             this.trackBar3.Name = "trackBar3";
-            this.trackBar3.Size = new System.Drawing.Size(141, 33);
+            this.trackBar3.Size = new System.Drawing.Size(141, 23);
             this.trackBar3.TabIndex = 24;
             this.trackBar3.TickFrequency = 0;
-            this.trackBar3.TickStyle = System.Windows.Forms.TickStyle.Both;
+            this.trackBar3.TickStyle = System.Windows.Forms.TickStyle.None;
             this.trackBar3.Scroll += new System.EventHandler(this.trackBar1_Scroll);
             this.trackBar3.ValueChanged += new System.EventHandler(this.trackBar1_Scroll);
             // 
             // trackBar2
             // 
             this.trackBar2.AutoSize = false;
-            this.trackBar2.Location = new System.Drawing.Point(359, 60);
+            this.trackBar2.Location = new System.Drawing.Point(457, 35);
             this.trackBar2.Maximum = 205;
             this.trackBar2.Name = "trackBar2";
-            this.trackBar2.Size = new System.Drawing.Size(141, 33);
+            this.trackBar2.Size = new System.Drawing.Size(141, 23);
             this.trackBar2.TabIndex = 23;
             this.trackBar2.TickFrequency = 0;
-            this.trackBar2.TickStyle = System.Windows.Forms.TickStyle.Both;
+            this.trackBar2.TickStyle = System.Windows.Forms.TickStyle.None;
             this.trackBar2.Scroll += new System.EventHandler(this.trackBar1_Scroll);
             this.trackBar2.ValueChanged += new System.EventHandler(this.trackBar1_Scroll);
             // 
             // button9
             // 
-            this.button9.Location = new System.Drawing.Point(173, 114);
+            this.button9.Location = new System.Drawing.Point(254, 91);
             this.button9.Name = "button9";
-            this.button9.Size = new System.Drawing.Size(71, 50);
+            this.button9.Size = new System.Drawing.Size(115, 27);
             this.button9.TabIndex = 12;
             this.button9.Text = "显示预处理图片";
             this.button9.UseVisualStyleBackColor = true;
@@ -953,7 +925,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(271, 105);
+            this.label3.Location = new System.Drawing.Point(370, 62);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(35, 14);
             this.label3.TabIndex = 21;
@@ -962,20 +934,20 @@
             // trackBar1
             // 
             this.trackBar1.AutoSize = false;
-            this.trackBar1.Location = new System.Drawing.Point(359, 27);
+            this.trackBar1.Location = new System.Drawing.Point(457, 12);
             this.trackBar1.Maximum = 20;
             this.trackBar1.Name = "trackBar1";
-            this.trackBar1.Size = new System.Drawing.Size(141, 33);
+            this.trackBar1.Size = new System.Drawing.Size(141, 23);
             this.trackBar1.TabIndex = 22;
             this.trackBar1.TickFrequency = 0;
-            this.trackBar1.TickStyle = System.Windows.Forms.TickStyle.Both;
+            this.trackBar1.TickStyle = System.Windows.Forms.TickStyle.None;
             this.trackBar1.Scroll += new System.EventHandler(this.trackBar1_Scroll);
             this.trackBar1.ValueChanged += new System.EventHandler(this.trackBar1_Scroll);
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(273, 69);
+            this.label2.Location = new System.Drawing.Point(371, 39);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(35, 14);
             this.label2.TabIndex = 20;
@@ -983,7 +955,7 @@
             // 
             // numericUpDown1
             // 
-            this.numericUpDown1.Location = new System.Drawing.Point(314, 32);
+            this.numericUpDown1.Location = new System.Drawing.Point(412, 12);
             this.numericUpDown1.Maximum = new decimal(new int[] {
             20,
             0,
@@ -996,7 +968,7 @@
             // 
             // numericUpDown2
             // 
-            this.numericUpDown2.Location = new System.Drawing.Point(315, 66);
+            this.numericUpDown2.Location = new System.Drawing.Point(412, 35);
             this.numericUpDown2.Maximum = new decimal(new int[] {
             201,
             0,
@@ -1009,7 +981,7 @@
             // 
             // numericUpDown3
             // 
-            this.numericUpDown3.Location = new System.Drawing.Point(314, 100);
+            this.numericUpDown3.Location = new System.Drawing.Point(412, 58);
             this.numericUpDown3.Maximum = new decimal(new int[] {
             201,
             0,
@@ -1023,7 +995,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(250, 36);
+            this.label1.Location = new System.Drawing.Point(348, 16);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(63, 14);
             this.label1.TabIndex = 19;
@@ -1081,12 +1053,6 @@
             this.dataGridView1.RowTemplate.Height = 23;
             this.dataGridView1.Size = new System.Drawing.Size(322, 366);
             this.dataGridView1.TabIndex = 2;
-            // 
-            // Column5
-            // 
-            this.Column5.HeaderText = "Mack点";
-            this.Column5.Name = "Column5";
-            this.Column5.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             // 
             // contextMenuStrip3
             // 
@@ -1549,6 +1515,14 @@
             this.toolStripButton3.ToolTipText = "将当前区域作为矩阵识别区";
             this.toolStripButton3.Click += new System.EventHandler(this.toolStripButton3_Click);
             // 
+            // dataGridViewTextBoxColumn1
+            // 
+            this.dataGridViewTextBoxColumn1.FillWeight = 253.8071F;
+            this.dataGridViewTextBoxColumn1.HeaderText = "码";
+            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
+            this.dataGridViewTextBoxColumn1.ReadOnly = true;
+            this.dataGridViewTextBoxColumn1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
             // dataGridViewTextBoxColumn2
             // 
             this.dataGridViewTextBoxColumn2.FillWeight = 39.61736F;
@@ -1572,6 +1546,40 @@
             this.dataGridViewTextBoxColumn4.Name = "dataGridViewTextBoxColumn4";
             this.dataGridViewTextBoxColumn4.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.dataGridViewTextBoxColumn4.Width = 113;
+            // 
+            // dataGridViewTextBoxColumn5
+            // 
+            this.dataGridViewTextBoxColumn5.HeaderText = "Mack点";
+            this.dataGridViewTextBoxColumn5.Name = "dataGridViewTextBoxColumn5";
+            this.dataGridViewTextBoxColumn5.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridViewTextBoxColumn5.Width = 279;
+            // 
+            // Column2
+            // 
+            this.Column2.FillWeight = 39.61736F;
+            this.Column2.HeaderText = "托盘编号";
+            this.Column2.Name = "Column2";
+            this.Column2.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // Column1
+            // 
+            this.Column1.FillWeight = 84.73257F;
+            this.Column1.HeaderText = "Row";
+            this.Column1.Name = "Column1";
+            this.Column1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // Column4
+            // 
+            this.Column4.FillWeight = 87.65341F;
+            this.Column4.HeaderText = "Column";
+            this.Column4.Name = "Column4";
+            this.Column4.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // Column5
+            // 
+            this.Column5.HeaderText = "Mack点";
+            this.Column5.Name = "Column5";
+            this.Column5.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             // 
             // dataGridViewComboBoxColumn1
             // 
@@ -1763,5 +1771,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Column5;
         private System.Windows.Forms.DataGridViewComboBoxColumn dataGridViewComboBoxColumn1;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip3;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn5;
     }
 }

@@ -318,6 +318,11 @@ namespace ErosSocket.ErosConLink
         private ManualResetEvent timeOutObject;
 
         /// <summary>
+        /// 超时
+        /// </summary>
+        private ManualResetEvent timeOutRest;
+
+        /// <summary>
         /// 链接委托
         /// </summary>
         /// <param name="key"></param>
@@ -441,7 +446,11 @@ namespace ErosSocket.ErosConLink
         public string LinkState { get; set; } = "";
 
         [DescriptionAttribute("链接状态成功为true"), Category("连接状态"), ReadOnlyAttribute(true), DisplayName("链接成功标志")]
-        public bool IsConn { get; set; }
+        public bool IsConn
+        {
+            get;
+            set;
+        }
 
         [DescriptionAttribute("指定的动态变量表"), Category("执行机制"), DisplayName("变量表")]
         /// <summary>
@@ -774,6 +783,9 @@ namespace ErosSocket.ErosConLink
         /// </summary>
         public bool ErrBool { get; set; }
 
+        [DescriptionAttribute("长连接/True短连接"), CategoryAttribute("连接类型"), DisplayName("长连接/True短连接")]
+        public bool IsContData { get; set; }
+
         public const string constName = "nameID";
         public const string constOutIP = "outIP";
         public const string constOutProt = "outPort";
@@ -841,7 +853,7 @@ namespace ErosSocket.ErosConLink
 
         private TextBoxBase EpsenV01_PassiveTextBoxEvent(Encoding key, byte[] buffrs)
         {
-            return Vision2.ErosProjcetDLL.Project.AlarmText.ThisF.richTextBox1;
+            return AlarmText.ThisF.richTextBox1;
         }
 
         private static void AddType(Type type)
@@ -984,79 +996,73 @@ namespace ErosSocket.ErosConLink
             threadReceive.Start();
         }
 
-        public System.Diagnostics.Stopwatch watcht = new System.Diagnostics.Stopwatch();
+        public Stopwatch watcht = new Stopwatch();
 
         /// <summary>
         /// 等待通信反馈
         /// </summary>
         /// <param name="de">等待毫秒</param>
         /// <returns></returns>
-        public virtual string AlwaysReceive(int de)
+        public virtual string AlwaysReceive(int outTime = 5000)
         {
-            RecivesDone = false;
             try
             {
-                Stopwatch watcht = new System.Diagnostics.Stopwatch();
-                watcht.Restart();
-                int dd = 0;
-                while (true)
-                {
-                    dd++;
-                    Thread.Sleep(10);
-                    if (RecivesDone)
-                    {
-                        return dataStr.ToString();
-                    }
-                    if (watcht.ElapsedMilliseconds > de)
-                    {
-                        return "";
-                    }
-                }
-            }
-            catch (Exception re) { }
-            return "";
-        }
+                timeOutRest = new ManualResetEvent(false);
 
-        public string gettrst(object sde)
-        {
-            Stopwatch watcht = new Stopwatch();
-            watcht.Restart();
-            int dd = 0;
-            while (true)
-            {
-                dd++;
-                Thread.Sleep(10);
-                if (RecivesDone)
+                if (timeOutRest.WaitOne(outTime, false))
                 {
                     return dataStr.ToString();
                 }
-                if (watcht.ElapsedMilliseconds > (int)sde)
-                {
-                    break;
-                }
-            }
-            return "";
-        }
-
-        /// <summary>
-        /// 等待返回信息
-        /// </summary>
-        /// <returns></returns>
-        public string AlwaysRece(int outTime = 5000)
-        {
-            RecivesDone = false;
-            string dataStr = "";
-            try
-            {
-                var task = Task<string>.Factory.StartNew(new Func<object, string>(gettrst), outTime);
-                task.Wait();
-                return task.Result;
             }
             catch (Exception re)
             {
             }
-            return dataStr;
+            return "";
+
+            //RecivesDone = false;
+            //try
+            //{
+            //    Stopwatch watcht = new System.Diagnostics.Stopwatch();
+            //    watcht.Restart();
+            //    int dd = 0;
+            //    while (true)
+            //    {
+            //        dd++;
+            //        Thread.Sleep(10);
+            //        if (RecivesDone)
+            //        {
+            //            return dataStr.ToString();
+            //        }
+            //        if (watcht.ElapsedMilliseconds > de)
+            //        {
+            //            return "";
+            //        }
+            //    }
+            //}
+            //catch (Exception re) { }
+            //return "";
         }
+
+        ///// <summary>
+        ///// 等待返回信息
+        ///// </summary>
+        ///// <returns></returns>
+        //public string AlwaysRece(int outTime = 5000)
+        //{
+        //    try
+        //    {
+        //        timeOutRest = new ManualResetEvent(false);
+        //        timeOutRest.WaitOne(outTime,false);
+
+        //        //var task = Task<string>.Factory.StartNew(new Func<object, string>(gettrst), outTime);
+        //        //task.Wait();
+        //        return dataStr.ToString();
+        //    }
+        //    catch (Exception re)
+        //    {
+        //    }
+        //    return dataStr.ToString();
+        //}
 
         /// <summary>
         ///触发首次连接事件
@@ -1090,7 +1096,7 @@ namespace ErosSocket.ErosConLink
                 if (key.Length < 50000)
                 {
                     dataStr = new StringBuilder(GetEncoding().GetString(key));
-                    RecivesDone = true;
+                    timeOutRest.Set();
                     PassiveStringBuilderEvent?.Invoke(dataStr, this, socketR);
                     if (IsAlramText)
                     {
@@ -1124,9 +1130,9 @@ namespace ErosSocket.ErosConLink
             {
                 Linking = false;
                 this.LinkState = "关闭";
-                this.Recivebuffer = null;
+
                 this.IsConn = false;
-                this.ReciveStr = null;
+
                 LinkO?.Invoke(IsConn);
                 TextBoxBase tex = PassiveTextBoxEvent?.Invoke(GetEncoding(), new byte[] { });
                 if (tex != null)
@@ -1144,7 +1150,8 @@ namespace ErosSocket.ErosConLink
         public override void Dispose()
         {
             PassiveTextBoxEvent -= EpsenV01_PassiveTextBoxEvent;
-
+            this.Recivebuffer = null;
+            this.ReciveStr = null;
             Close();
             if (thread != null && thread.IsAlive)
             {
@@ -1184,6 +1191,7 @@ namespace ErosSocket.ErosConLink
                         else
                         {
                             Thread.Sleep(200);
+
                             IsConn = this.AsynLink(false);
                             LinkO?.Invoke(IsConn);
                         }
@@ -1249,6 +1257,7 @@ namespace ErosSocket.ErosConLink
         {
             try
             {
+                //RecivesDone = false;
                 watchSen.Restart();
                 if (this.Insocket == null)
                 {
@@ -1266,7 +1275,7 @@ namespace ErosSocket.ErosConLink
                     {
                         if (IsAlramText)
                         {
-                            AddTextBox("(S):" + GetEncoding().GetString(buffr).Remove(GetEncoding().GetString(buffr).Length - FTU.Length / 2), System.Drawing.Color.GreenYellow);
+                            AddTextBox("(S):" + GetEncoding().GetString(buffr), System.Drawing.Color.GreenYellow);
                         }
                     }
                     return true;
@@ -1275,7 +1284,7 @@ namespace ErosSocket.ErosConLink
                 {
                     if (IsAlramText)
                     {
-                        AddTextBox("(S)发送失败(" + this.LinkState + "):" + GetEncoding().GetString(buffr).Remove(GetEncoding().GetString(buffr).Length - FTU.Length / 2), System.Drawing.Color.Red);
+                        AddTextBox("(S)发送失败(" + this.LinkState + "):" + GetEncoding().GetString(buffr), System.Drawing.Color.Red);
                     }
                 }
             }
@@ -1452,8 +1461,15 @@ namespace ErosSocket.ErosConLink
         /// <param name="isCycle">链接不成功是否重复链接</param>
         public virtual bool AsynLink(bool isCycle = true)
         {
+            CloseBool = false;
             this.AsynConnect(isCycle);
-            return false;
+            return IsConn;
+        }
+
+        public bool Link()
+        {
+            CloseBool = false;
+            return Link(this.IP, this.Port);
         }
 
         /// <summary>
@@ -1471,6 +1487,7 @@ namespace ErosSocket.ErosConLink
             {
                 Insocket.Connect(outPoint);
                 this.LinkState = "连接成功";
+                IsConn = true;
                 LinkO?.Invoke(true);
                 return true;
             }
@@ -1519,7 +1536,7 @@ namespace ErosSocket.ErosConLink
 
                     if (isCycle)
                     {
-                        AsynConnect(true);
+                        AsynConnect(isCycle);
                     }
                     this.Linking = false;
                 }
@@ -1537,7 +1554,9 @@ namespace ErosSocket.ErosConLink
                     {
                         Insocket.EndConnect(asyncResult);
                         AsynRecive(Insocket);
+                        timeOutObject.Set();
                         this.Linking = false;
+                        string dats = this.Name;
                         IsConn = true;
                         this.LinkState = "连接成功";
                         LinkO?.Invoke(IsConn);
@@ -1551,7 +1570,6 @@ namespace ErosSocket.ErosConLink
                         this.Linking = false;
                         IsConn = false;
                         this.LinkState = "连接失败";
-
                         LinkO?.Invoke(IsConn);
                     }
                 }

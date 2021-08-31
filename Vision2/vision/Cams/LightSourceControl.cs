@@ -203,7 +203,7 @@ namespace Vision2.vision.Cams
         private string CheckChData()
         {
             string data = "S";
-            if (H1Off)
+            if (H1 > 0)
             {
                 data += H1.ToString("000") + "T";
             }
@@ -211,7 +211,7 @@ namespace Vision2.vision.Cams
             {
                 data += H1.ToString("000") + "F";
             }
-            if (H2Off)
+            if (H2 > 0)
             {
                 data += H2.ToString("000") + "T";
             }
@@ -220,7 +220,7 @@ namespace Vision2.vision.Cams
                 data += H2.ToString("000") + "F";
             }
 
-            if (H3Off)
+            if (H3 > 0)
             {
                 data += H3.ToString("000") + "T";
             }
@@ -228,7 +228,7 @@ namespace Vision2.vision.Cams
             {
                 data += H3.ToString("000") + "F";
             }
-            if (H4Off)
+            if (H4 > 0)
             {
                 data += H4.ToString("000") + "T";
             }
@@ -348,6 +348,7 @@ namespace Vision2.vision.Cams
         public void SetOFF()
         {
             Opne();
+            H2 = H3 = H4 = H1 = 0;
             if (Vision.Instance.OffName == "浮根")
             {
                 serialPort.Write(CheckChData() + "C#");
@@ -358,6 +359,28 @@ namespace Vision2.vision.Cams
                 SetTimeValue('2', '2', "000");
                 SetTimeValue('2', '3', "000");
                 SetTimeValue('2', '4', "000");
+            }
+            else
+            {
+                CheckChKWData();
+            }
+        }
+
+        public void SetOn()
+        {
+            Opne();
+            H2 = H3 = H4 = H1 = 255;
+
+            if (Vision.Instance.OffName == "浮根")
+            {
+                serialPort.Write(CheckChData() + "C#");
+            }
+            else if (Vision.Instance.OffName == "嘉历")
+            {
+                SetTimeValue('2', '1', "255");
+                SetTimeValue('2', '2', "255");
+                SetTimeValue('2', '3', "255");
+                SetTimeValue('2', '4', "255");
             }
             else
             {

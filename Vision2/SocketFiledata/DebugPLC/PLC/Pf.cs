@@ -191,13 +191,19 @@ namespace ErosSocket.DebugPLC.PLC
 
         private void button8_Click(object sender, EventArgs e)
         {
-            if (!AxisT.IsEnabled)
+            try
             {
-                AxisT.Enabled();
+                if (!AxisT.IsEnabled)
+                {
+                    AxisT.Enabled();
+                }
+                else
+                {
+                    AxisT.Diset();
+                }
             }
-            else
+            catch (Exception)
             {
-                AxisT.Diset();
             }
         }
 

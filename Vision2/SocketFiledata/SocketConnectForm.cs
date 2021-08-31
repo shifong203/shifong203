@@ -137,7 +137,7 @@ namespace ErosSocket
             {
                 DataTable dataTable = new DataTable();
                 dataTable.Columns.Add("nameID", Type.GetType("System.String"));
-                DataColumn dataColumn = dataTable.Columns.Add("ValueName", Type.GetType("System.String"));
+                dataTable.Columns.Add("ValueName", Type.GetType("System.String"));
                 dataTable.Columns.Add("outIP", Type.GetType("System.String"));
                 dataTable.Columns.Add("outPort", Type.GetType("System.String"));
                 dataTable.Columns.Add("Event", Type.GetType("System.String"));
@@ -148,62 +148,18 @@ namespace ErosSocket
                     DataRow newRow = dataTable.NewRow();
                     TabPage newtabPage = new TabPage();
                     newRow["nameID"] = newtabPage.Text = item.Value.Name;
-                    if (true)
-                    {
-                    }
                     newRow["ValueName"] = item.Value.ValusName;
                     newRow["outIP"] = item.Value.IP;
                     newRow["outPort"] = item.Value.Port;
                     newRow["Event"] = item.Value.Event;
                     newRow["NetType"] = item.Value.NetType;
-
                     newRow["Default"] = item.Value.FacillttState;
 
                     //tpgListReadW.TabPages.Add(newtabPage);
                     dataTable.Rows.Add(newRow);
                 }
                 dataGridView1.DataSource = dataTable;
-                //读取XML文档
-                //XmlDocument doc = new XmlDocument();
-                //if (File.Exists(ProjectINI.ProjectPathRun + "\\" + DicSocket.Instance.FileName + "\\XMLSocket.xml"))
-                //{
-                //    doc.Load(ProjectINI.ProjectPathRun + "\\" + DicSocket.Instance.FileName + "\\XMLSocket.xml");
-                //    //获得根节点
-                //    XmlElement users = doc.DocumentElement;
-                //    //获得根节点下子节点
-                //    XmlNodeList xnl = users.ChildNodes;
-                //    DataTable dataTable = new DataTable();
-                //    dataTable.Columns.Add("nameID", Type.GetType("System.String"));
-                //    DataColumn dataColumn = dataTable.Columns.Add("ValueName", Type.GetType("System.String"));
-                //    dataTable.Columns.Add("outIP", Type.GetType("System.String"));
-                //    dataTable.Columns.Add("outPort", Type.GetType("System.String"));
-                //    dataTable.Columns.Add("Event", Type.GetType("System.String"));
-                //    dataTable.Columns.Add("NetType", Type.GetType("System.String"));
-                //    dataTable.Columns.Add("Default", Type.GetType("System.String"));
-                //    //tpgListReadW.TabPages.Clear();
-                //    foreach (XmlNode item in xnl)
-                //    {   //读取集合属性
-                //        DataRow newRow = dataTable.NewRow();
-                //        TabPage newtabPage = new TabPage();
-                //        newRow["nameID"] = newtabPage.Text = item.Attributes["nameID"].Value.ToString();
-                //        newRow["ValueName"] = item.Attributes["ValueName"].Value.ToString();
-                //        newRow["outIP"] = item.Attributes["outIP"].Value.ToString();
-                //        newRow["outPort"] = item.Attributes["outPort"].Value.ToString();
-                //        newRow["Event"] = item.Attributes["Event"].Value.ToString();
-                //        newRow["NetType"] = item.Attributes["NetType"].Value.ToString();
-                //        if (item.Attributes["Default"] != null)
-                //        {
-                //            newRow["Default"] = item.Attributes["Default"].Value.ToString();
-                //        }
-                //        else
-                //        {
-                //            newRow["Default"] = "";
-                //        }
-                //        //tpgListReadW.TabPages.Add(newtabPage);
-                //        dataTable.Rows.Add(newRow);
-                //    }
-                //    dataGridView1.DataSource = dataTable;
-                //}
+
                 Directory.CreateDirectory(Application.StartupPath + "\\ValueS");
                 var path = Directory.GetFiles(Application.StartupPath + "\\ValueS")/*/*.Where(t=>t.EndsWith(".xml"))*/;//获取文件下的全部路径，附加多选筛选Where
                 string[] names = new string[path.Length];

@@ -9,7 +9,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
     {
         public override Control GetControl(IDrawHalcon halcon)
         {
-            return new HalconRunFile.Controls.PinUserControl1(this);
+            return new Controls.PinUserControl1(this);
         }
 
         public override RunProgram UpSatrt<T>(string Path)
@@ -251,7 +251,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                                         oneResultOBj.AddImageMassage(rowCent, columnCent, new HTuple(lengt).TupleString(".3") + "C", ColorResult.red);
                                         err++;
                                         //oneCompo.AddNgObj("", Name,r)
-                                        oneResultOBj.AddNGOBJ(Name, "偏移", ho_PinSort, ho_PinSort);
+                                        oneResultOBj.AddNGOBJ(aoiObj.CiName, "偏移", ho_PinSort, ho_PinSort, this.GetBackNames());
                                     }
                                     else
                                     {
@@ -270,7 +270,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                                         ColMt.Append(lengt);
                                         if (lengt > ColumnMM + ToleranceMM || lengt < ColumnMM - ToleranceMM)
                                         {
-                                            oneResultOBj.AddNGOBJ(Name, "偏移", ho_PinSort, ho_PinSort);
+                                            oneResultOBj.AddNGOBJ(aoiObj.CiName, "偏移", ho_PinSort, ho_PinSort, this.GetBackNames());
                                             oneResultOBj.AddImageMassage(rowCent, columnCent, new HTuple(lengt).TupleString(".3") + "R", ColorResult.red);
                                             err++;
                                         }
@@ -600,7 +600,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 if (hObject.CountObj() != 0)
                 {
                     HOperatorSet.GenCircle(out HObject circle, row, column, radius * 2);
-                    oneResultOBj.AddNGOBJ(this.Name, "异物", circle, hObject);
+                    oneResultOBj.AddNGOBJ(this.CRDName, "异物", circle, hObject, this.GetBackNames());
                     //ADDRed(hObject);
                     return false;
                 }

@@ -30,8 +30,8 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RunUControl));
             this.label2 = new System.Windows.Forms.Label();
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.label4 = new System.Windows.Forms.Label();
+            this.pictureBoxINPace = new System.Windows.Forms.PictureBox();
+            this.label4OutSen = new System.Windows.Forms.Label();
             this.pictureBox4 = new System.Windows.Forms.PictureBox();
             this.pictureBox6 = new System.Windows.Forms.PictureBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
@@ -45,12 +45,15 @@
             this.pictureBox11 = new System.Windows.Forms.PictureBox();
             this.pictureBox12 = new System.Windows.Forms.PictureBox();
             this.pictureBox13 = new System.Windows.Forms.PictureBox();
-            this.pictureBox14 = new System.Windows.Forms.PictureBox();
-            this.pictureBox15 = new System.Windows.Forms.PictureBox();
+            this.pictureBoxRed = new System.Windows.Forms.PictureBox();
+            this.pictureBoxGreen = new System.Windows.Forms.PictureBox();
             this.pictureYel = new System.Windows.Forms.PictureBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
+            this.labelIDCode = new System.Windows.Forms.Label();
+            this.label5Await = new System.Windows.Forms.Label();
+            this.label6PT = new System.Windows.Forms.Label();
+            this.pictureBoxIntoPlate = new System.Windows.Forms.PictureBox();
+            this.pictureBoxOutPlate = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxINPace)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -63,9 +66,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox11)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox12)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox13)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox14)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox15)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxRed)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxGreen)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureYel)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxIntoPlate)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxOutPlate)).BeginInit();
             this.SuspendLayout();
             // 
             // label2
@@ -78,31 +83,31 @@
             this.label2.TabIndex = 2;
             this.label2.Text = "进";
             // 
-            // pictureBox2
+            // pictureBoxINPace
             // 
-            this.pictureBox2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
-            this.pictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox2.Image")));
-            this.pictureBox2.Location = new System.Drawing.Point(74, 28);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(111, 73);
-            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox2.TabIndex = 4;
-            this.pictureBox2.TabStop = false;
+            this.pictureBoxINPace.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
+            this.pictureBoxINPace.Image = ((System.Drawing.Image)(resources.GetObject("pictureBoxINPace.Image")));
+            this.pictureBoxINPace.Location = new System.Drawing.Point(141, 93);
+            this.pictureBoxINPace.Name = "pictureBoxINPace";
+            this.pictureBoxINPace.Size = new System.Drawing.Size(50, 41);
+            this.pictureBoxINPace.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBoxINPace.TabIndex = 4;
+            this.pictureBoxINPace.TabStop = false;
             // 
-            // label4
+            // label4OutSen
             // 
-            this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("宋体", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label4.Location = new System.Drawing.Point(227, 24);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(29, 20);
-            this.label4.TabIndex = 9;
-            this.label4.Text = "出";
+            this.label4OutSen.AutoSize = true;
+            this.label4OutSen.Font = new System.Drawing.Font("宋体", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label4OutSen.Location = new System.Drawing.Point(227, 24);
+            this.label4OutSen.Name = "label4OutSen";
+            this.label4OutSen.Size = new System.Drawing.Size(29, 20);
+            this.label4OutSen.TabIndex = 9;
+            this.label4OutSen.Text = "出";
             // 
             // pictureBox4
             // 
             this.pictureBox4.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox4.Image")));
-            this.pictureBox4.Location = new System.Drawing.Point(3, 82);
+            this.pictureBox4.Location = new System.Drawing.Point(50, 104);
             this.pictureBox4.Name = "pictureBox4";
             this.pictureBox4.Size = new System.Drawing.Size(33, 30);
             this.pictureBox4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -112,7 +117,7 @@
             // pictureBox6
             // 
             this.pictureBox6.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox6.Image")));
-            this.pictureBox6.Location = new System.Drawing.Point(188, 81);
+            this.pictureBox6.Location = new System.Drawing.Point(192, 103);
             this.pictureBox6.Name = "pictureBox6";
             this.pictureBox6.Size = new System.Drawing.Size(33, 30);
             this.pictureBox6.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -129,6 +134,7 @@
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 14;
             this.pictureBox1.TabStop = false;
+            this.pictureBox1.Visible = false;
             // 
             // pictureBox3
             // 
@@ -165,7 +171,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("宋体", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label1.Location = new System.Drawing.Point(226, 90);
+            this.label1.Location = new System.Drawing.Point(137, 70);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(29, 20);
             this.label1.TabIndex = 21;
@@ -181,6 +187,7 @@
             this.pictureBox7.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox7.TabIndex = 23;
             this.pictureBox7.TabStop = false;
+            this.pictureBox7.Visible = false;
             // 
             // pictureBox9
             // 
@@ -203,6 +210,7 @@
             this.pictureBox10.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox10.TabIndex = 25;
             this.pictureBox10.TabStop = false;
+            this.pictureBox10.Visible = false;
             // 
             // pictureBox11
             // 
@@ -225,6 +233,7 @@
             this.pictureBox12.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox12.TabIndex = 27;
             this.pictureBox12.TabStop = false;
+            this.pictureBox12.Visible = false;
             // 
             // pictureBox13
             // 
@@ -237,61 +246,100 @@
             this.pictureBox13.TabIndex = 26;
             this.pictureBox13.TabStop = false;
             // 
-            // pictureBox14
+            // pictureBoxRed
             // 
-            this.pictureBox14.BackColor = System.Drawing.Color.Brown;
-            this.pictureBox14.Location = new System.Drawing.Point(301, 0);
-            this.pictureBox14.Name = "pictureBox14";
-            this.pictureBox14.Size = new System.Drawing.Size(29, 32);
-            this.pictureBox14.TabIndex = 30;
-            this.pictureBox14.TabStop = false;
+            this.pictureBoxRed.BackColor = System.Drawing.Color.Maroon;
+            this.pictureBoxRed.Location = new System.Drawing.Point(301, 0);
+            this.pictureBoxRed.Name = "pictureBoxRed";
+            this.pictureBoxRed.Size = new System.Drawing.Size(29, 32);
+            this.pictureBoxRed.TabIndex = 30;
+            this.pictureBoxRed.TabStop = false;
             // 
-            // pictureBox15
+            // pictureBoxGreen
             // 
-            this.pictureBox15.BackColor = System.Drawing.Color.Green;
-            this.pictureBox15.Location = new System.Drawing.Point(301, 58);
-            this.pictureBox15.Name = "pictureBox15";
-            this.pictureBox15.Size = new System.Drawing.Size(29, 32);
-            this.pictureBox15.TabIndex = 29;
-            this.pictureBox15.TabStop = false;
+            this.pictureBoxGreen.BackColor = System.Drawing.Color.DarkGreen;
+            this.pictureBoxGreen.Location = new System.Drawing.Point(301, 61);
+            this.pictureBoxGreen.Name = "pictureBoxGreen";
+            this.pictureBoxGreen.Size = new System.Drawing.Size(29, 32);
+            this.pictureBoxGreen.TabIndex = 29;
+            this.pictureBoxGreen.TabStop = false;
             // 
             // pictureYel
             // 
             this.pictureYel.BackColor = System.Drawing.Color.Olive;
-            this.pictureYel.Location = new System.Drawing.Point(301, 30);
+            this.pictureYel.Location = new System.Drawing.Point(301, 31);
             this.pictureYel.Name = "pictureYel";
             this.pictureYel.Size = new System.Drawing.Size(29, 32);
             this.pictureYel.TabIndex = 28;
             this.pictureYel.TabStop = false;
             // 
-            // label3
+            // labelIDCode
             // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("宋体", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label3.Location = new System.Drawing.Point(333, 24);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(29, 20);
-            this.label3.TabIndex = 31;
-            this.label3.Text = "id";
+            this.labelIDCode.AutoSize = true;
+            this.labelIDCode.Font = new System.Drawing.Font("宋体", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.labelIDCode.Location = new System.Drawing.Point(333, 24);
+            this.labelIDCode.Name = "labelIDCode";
+            this.labelIDCode.Size = new System.Drawing.Size(29, 20);
+            this.labelIDCode.TabIndex = 31;
+            this.labelIDCode.Text = "id";
             // 
-            // label5
+            // label5Await
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(59, 72);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(11, 12);
-            this.label5.TabIndex = 32;
-            this.label5.Text = "W";
+            this.label5Await.AutoSize = true;
+            this.label5Await.Location = new System.Drawing.Point(335, 77);
+            this.label5Await.Name = "label5Await";
+            this.label5Await.Size = new System.Drawing.Size(11, 12);
+            this.label5Await.TabIndex = 32;
+            this.label5Await.Text = "W";
+            // 
+            // label6PT
+            // 
+            this.label6PT.AutoSize = true;
+            this.label6PT.Location = new System.Drawing.Point(335, 57);
+            this.label6PT.Name = "label6PT";
+            this.label6PT.Size = new System.Drawing.Size(11, 12);
+            this.label6PT.TabIndex = 33;
+            this.label6PT.Text = "D";
+            // 
+            // pictureBoxIntoPlate
+            // 
+            this.pictureBoxIntoPlate.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
+            this.pictureBoxIntoPlate.Image = ((System.Drawing.Image)(resources.GetObject("pictureBoxIntoPlate.Image")));
+            this.pictureBoxIntoPlate.Location = new System.Drawing.Point(0, 93);
+            this.pictureBoxIntoPlate.Name = "pictureBoxIntoPlate";
+            this.pictureBoxIntoPlate.Size = new System.Drawing.Size(50, 41);
+            this.pictureBoxIntoPlate.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBoxIntoPlate.TabIndex = 34;
+            this.pictureBoxIntoPlate.TabStop = false;
+            this.pictureBoxIntoPlate.Visible = false;
+            // 
+            // pictureBoxOutPlate
+            // 
+            this.pictureBoxOutPlate.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
+            this.pictureBoxOutPlate.Image = ((System.Drawing.Image)(resources.GetObject("pictureBoxOutPlate.Image")));
+            this.pictureBoxOutPlate.Location = new System.Drawing.Point(280, 93);
+            this.pictureBoxOutPlate.Name = "pictureBoxOutPlate";
+            this.pictureBoxOutPlate.Size = new System.Drawing.Size(50, 41);
+            this.pictureBoxOutPlate.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBoxOutPlate.TabIndex = 35;
+            this.pictureBoxOutPlate.TabStop = false;
+            this.pictureBoxOutPlate.Visible = false;
             // 
             // RunUControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.Controls.Add(this.label5);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.pictureBox14);
-            this.Controls.Add(this.pictureBox15);
+            this.Controls.Add(this.pictureBoxOutPlate);
+            this.Controls.Add(this.pictureBox4);
+            this.Controls.Add(this.pictureBox6);
+            this.Controls.Add(this.pictureBoxIntoPlate);
+            this.Controls.Add(this.pictureBoxINPace);
+            this.Controls.Add(this.label6PT);
+            this.Controls.Add(this.label5Await);
+            this.Controls.Add(this.labelIDCode);
+            this.Controls.Add(this.pictureBoxRed);
+            this.Controls.Add(this.pictureBoxGreen);
             this.Controls.Add(this.pictureYel);
             this.Controls.Add(this.pictureBox12);
             this.Controls.Add(this.pictureBox13);
@@ -304,15 +352,12 @@
             this.Controls.Add(this.pictureBox5);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.pictureBox3);
-            this.Controls.Add(this.pictureBox6);
-            this.Controls.Add(this.pictureBox4);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this.pictureBox2);
+            this.Controls.Add(this.label4OutSen);
             this.Controls.Add(this.label2);
             this.Name = "RunUControl";
             this.Size = new System.Drawing.Size(433, 134);
             this.Load += new System.EventHandler(this.RunUserControl_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxINPace)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
@@ -325,9 +370,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox11)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox12)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox13)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox14)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox15)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxRed)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxGreen)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureYel)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxIntoPlate)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxOutPlate)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -335,8 +382,8 @@
 
         #endregion
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.PictureBox pictureBox2;
-        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.PictureBox pictureBoxINPace;
+        private System.Windows.Forms.Label label4OutSen;
         private System.Windows.Forms.PictureBox pictureBox4;
         private System.Windows.Forms.PictureBox pictureBox6;
         private System.Windows.Forms.PictureBox pictureBox1;
@@ -350,10 +397,13 @@
         private System.Windows.Forms.PictureBox pictureBox11;
         private System.Windows.Forms.PictureBox pictureBox12;
         private System.Windows.Forms.PictureBox pictureBox13;
-        private System.Windows.Forms.PictureBox pictureBox14;
-        private System.Windows.Forms.PictureBox pictureBox15;
+        private System.Windows.Forms.PictureBox pictureBoxRed;
+        private System.Windows.Forms.PictureBox pictureBoxGreen;
         private System.Windows.Forms.PictureBox pictureYel;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label labelIDCode;
+        private System.Windows.Forms.Label label5Await;
+        private System.Windows.Forms.Label label6PT;
+        private System.Windows.Forms.PictureBox pictureBoxIntoPlate;
+        private System.Windows.Forms.PictureBox pictureBoxOutPlate;
     }
 }

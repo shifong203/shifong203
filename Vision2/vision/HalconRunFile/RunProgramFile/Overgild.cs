@@ -12,6 +12,11 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
     /// </summary>
     public class Overgild : RunProgram
     {
+        public Overgild()
+        {
+            Select_Shape_Min_Outobj.AddSelectType(Select_shape_Min_Max.Enum_Select_Type.ra, 20, 99999);
+        }
+
         public override Control GetControl(IDrawHalcon halcon)
         {
             return new Controls.OvergildControl1(this);
@@ -22,20 +27,24 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             return base.ReadThis<Overgild>(Path);
         }
 
-        [Description(""), Category("搜索区域"), DisplayName("区域灰度值Min"),]
-        public byte ThresSelectMin { get; set; } = 100;
+        /// <summary>
+        /// 检测区域灰度
+        /// </summary>
+        public Threshold_Min_Max threshold_Min_Max = new Threshold_Min_Max();
 
-        [Description(""), Category("搜索区域"), DisplayName("区域灰度值Max"),]
-        public byte ThresSelectMax { get; set; } = 255;
+        /// <summary>
+        /// 检测区域筛选
+        /// </summary>
 
-        [Description(""), Category("搜索区域"), DisplayName("区域筛选Min"),]
-        public double SelectMin { get; set; } = 1500;
+        public Select_shape_Min_Max Select_Shape_Min_Max = new Select_shape_Min_Max();
 
-        [Description(""), Category("搜索区域"), DisplayName("区域筛选Max"),]
-        public double SelectMax { get; set; } = 99999999;
+        public Select_shape_Min_Max Select_Shape_Min_Outobj = new Select_shape_Min_Max();
 
-        [Description("区域膨胀或缩小，正值放大，负值缩小"), Category("搜索区域"), DisplayName("区域膨胀或缩小"),]
-        public double ErosinCircle { get; set; } = 5;
+        [Description(""), Category("局部分割"), DisplayName("均值高度"),]
+        public double MeanHeith { get; set; } = 7;
+
+        [Description(""), Category("局部分割"), DisplayName("均值宽度"),]
+        public double MeanWidth { get; set; } = 7;
 
         [Description("1.0, 3.0, 5.0, 7.0, 10.0, 20.0, 30.0，-255.0 ≤ Offset ≤ 255.0 (lin) "), Category("局部分割"), DisplayName("分割阈值"),]
         public double DnyValue { get; set; } = 5;
@@ -43,6 +52,12 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         [Description("暗=dark、相等=equal、亮=light、不相等=not_equal"), Category("局部分割"), DisplayName("分割区域"),]
         [TypeConverter(typeof(ErosConverter)), ErosConverter.ThisDropDownAttribute("", true, "dark", "equal", "light", "not_equal")]
         public string DnyTypeValue { get; set; } = "not_equal";
+
+        [Description("区域膨胀或缩小，正值放大，负值缩小"), Category("搜索区域"), DisplayName("区域圆滑处理"),]
+        public double DilationCircle { get; set; } = 10;
+
+        [Description("区域膨胀或缩小，正值放大，负值缩小"), Category("搜索区域"), DisplayName("区域膨胀或缩小"),]
+        public double ErosinCircle { get; set; } = -5;
 
         [Description(""), Category("划痕处理"), DisplayName("划痕第一次赛选最小长度"),]
         public double SocekSeleMin1 { get; set; } = 5;
@@ -68,6 +83,9 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         [Description(""), Category("搜索区域"), DisplayName("倒角尺寸"),]
         public double ChamferPhi { get; set; } = 5;
 
+        [Description(""), Category("结果输出"), DisplayName("裂痕显示"),]
+        public bool SockeObj { get; set; }
+
         /// <summary>
         /// 模板区域
         /// </summary>
@@ -77,11 +95,6 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         /// 搜索区域
         /// </summary>
         public HObject SelecRoi;
-
-        /// <summary>
-        ///
-        /// </summary>
-        public HObject Mhimage;
 
         public List<OvergilEX> RunListOvergil { get; set; } = new List<OvergilEX>();
 
@@ -95,72 +108,101 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         {
             errRoi = new HObject();
             errRoi.GenEmptyObj();
+            HObject hobj1 = new HObject();
+            hobj1.GenEmptyObj();
+            HObject hImage = new HObject();
+            hImage.GenEmptyObj();
             try
             {
-                //ImageHdt(halcon.Image);
-                HOperatorSet.Threshold(this.GetEmset(halcon.GetHalcon().GetImageOBJ(ImageTypeOb)), out HObject hobj1, ThresSelectMin, ThresSelectMax);
-                HOperatorSet.Connection(hobj1, out hobj1);
-                HOperatorSet.SelectShape(hobj1, out HObject hObject, "area", "and", SelectMin, SelectMax);
-                //HOperatorSet.FillUp(hObject, out hObject);
+                if (ISAoiMode)
+                {
+                    hImage = halcon.GetHalcon().GetImageOBJ(ImageTypeOb);
+                }
+                else
+                {
+                    hobj1 = AOIObj;
+                    HOperatorSet.ReduceDomain(GetEmset(halcon.GetHalcon().GetImageOBJ(ImageTypeOb)), hobj1, out hImage);
+                }
+
                 if (id != 0)
                 {
-                    halcon.AddObj(hObject);
+                    halcon.AddObj(hobj1);
                 }
-                //HOperatorSet.ClosingCircle(hObject, out hObject,800);
-                //HOperatorSet.SmallestRectangle2(hObject, out HTuple rowR, out HTuple colR, out HTuple phiR, out HTuple length1R, out HTuple length2R);
-                //HOperatorSet.HomMat2dIdentity(out HTuple homMat);
-                //HObject image = halcon.Image;
-                //HOperatorSet.GenRectangle2(out HObject rectangle2, rowR, colR, phiR, length1R - ChamferPhi, length2R);
-                //HOperatorSet.GenRectangle2(out HObject rectangle3, rowR, colR, phiR, length1R, length2R - ChamferPhi);
-                //HOperatorSet.Union1(rectangle3.ConcatObj(rectangle2), out rectangle3);
-                HOperatorSet.ErosionCircle(hObject, out hObject, ErosinCircle);
-                //HOperatorSet.Union1(rectangle3.ConcatObj(hObject), out rectangle3);
+                hobj1 = threshold_Min_Max.Threshold(hImage);
+                //HOperatorSet.Threshold(, out hobj1, ThresSelectMin, ThresSelectMax);
+                HOperatorSet.Connection(hobj1, out hobj1);
+                hobj1 = Select_Shape_Min_Max.select_shape(hobj1);
+                //ImageHdt(halcon.Image);
 
+                if (id == 1)
+                {
+                    halcon.AddObj(hobj1);
+                }
+                //HOperatorSet.FillUp(hObject, out hObject);
+
+                hobj1 = DilationOrErosingCircle(hobj1, DilationCircle);
+                if (id == 2)
+                {
+                    halcon.AddObj(hobj1);
+                }
+                HObject hObject = DilationOrErosingCircle(hobj1, ErosinCircle);
                 HOperatorSet.Union1(hObject, out HObject rectangle3);
-                HOperatorSet.ReduceDomain(halcon.GetHalcon().GetImageOBJ(ImageTypeOb), rectangle3, out HObject hImage);
-                if (id != 0)
+                if (IsDisObj)
                 {
                     halcon.AddObj(rectangle3, ColorResult.yellow);
                 }
+                HOperatorSet.ReduceDomain(halcon.GetHalcon().GetImageOBJ(ImageTypeOb), rectangle3, out hImage);
+                if (id >= 2)
+                {
+                    halcon.AddObj(rectangle3, ColorResult.yellow);
+                }
+                if (false)
+                {
+                    HOperatorSet.AreaCenter(ModeOBj, out HTuple areat, out HTuple rowt, out HTuple columnt);
+                    HOperatorSet.SmallestRectangle2(ModeOBj, out HTuple rowtd, out HTuple columntd, out HTuple phi, out HTuple leng1, out HTuple leng2);
+                    HOperatorSet.AreaCenter(rectangle3, out HTuple areas, out HTuple rowdt, out HTuple columnttd);
+                    HOperatorSet.SmallestRectangle2(rectangle3, out HTuple rowtdd, out HTuple columntdd, out HTuple phdi, out HTuple lengd1, out HTuple lengd2);
+                    HOperatorSet.VectorAngleToRigid(rowtd, columntd, phi, rowtdd,
+                        columntdd, phdi, out HTuple hTuple);
+                    HOperatorSet.AffineTransRegion(ModeOBj, out HObject modeObjT, hTuple, "nearest_neighbor");
+                    HOperatorSet.Difference(modeObjT, rectangle3, out HObject ertd);
+                    if (id >= 3)
+                    {
+                        halcon.AddObj(ertd, ColorResult.red);
+                    }
+                    HOperatorSet.OpeningCircle(ertd, out ertd, 5);
+                }
+
+                //if (IsDisObj)
+                //{
+                //    halcon.AddObj(modeObjT, ColorResult.blue);
+                //}
 
                 HObject errt = new HObject();
                 errt.GenEmptyObj();
-                //HOperatorSet.Threshold(hImage, out HObject errt, 0, 160);
-                //HOperatorSet.ClosingCircle(errt, out errt, 5);
-                //HOperatorSet.OpeningCircle(errt, out errt, 2);
-                //HOperatorSet.Connection(errt, out errt);
-                //HOperatorSet.SelectShape(errt, out errt, "area", "and", 100, 999999);
-                //HOperatorSet.DilationCircle(errt, out errt, 10);
-                //if (id!=0)
-                //{
-                //    halcon.AddObj(rectangle3, ColorResult.yellow);
-                //    HOperatorSet.AreaCenter(errt, out HTuple ate, out rowR, out colR );
-                //    if (rowR.Length!=0)
-                //    {
-                //        halcon.AddImageMassage(rowR, colR, ate);
-                //    }
-                //}
-                //halcon.AddObj(errt, ColorResult.red);
-                HOperatorSet.ErosionCircle(rectangle3, out hObject, ErosinCircle);
                 SelecRoi = hObject;
-                //HOperatorSet.ReduceDomain(image, hObject, out  hImage);
-                Mhimage = hImage;
-                HOperatorSet.MeanImage(Mhimage, out HObject hObject1, EmphasizeH, EmphasizeW);
+                HOperatorSet.MeanImage(hImage, out HObject hObject1, MeanWidth, MeanHeith);
                 HOperatorSet.DynThreshold(hImage, hObject1, out HObject hObject2, DnyValue, DnyTypeValue);
                 HOperatorSet.Connection(hObject2, out hObject2);
                 HOperatorSet.SelectShape(hObject2, out hObject2, "ra", "and", SocekSeleMin1, 9999999999);
                 HOperatorSet.Union1(hObject2, out hObject2);
                 HOperatorSet.ClosingCircle(hObject2, out hObject2, ColsingSocek);
                 HOperatorSet.Connection(hObject2, out hObject2);
-                HOperatorSet.SelectShape(hObject2, out hObject2, "ra", "and", SocekSeleMin2, 9999999999);
-                //HOperatorSet.SelectShape(hObject2, out errt, "inner_radius", "and", 0, SocekSeleMax);
+                hObject2 = Select_Shape_Min_Outobj.select_shape(hObject2);
                 HOperatorSet.Union1(hObject2, out hObject2);
 
-                HOperatorSet.DilationCircle(hObject2, out hObject1, 3.5);
-                HOperatorSet.Skeleton(hObject2, out errt);
+                HOperatorSet.DilationCircle(hObject2, out errt, 3.5);
                 if (errt.CountObj() != 0)
                 {
-                    halcon.AddObj(hObject1, ColorResult.blue);
+                    halcon.AddObj(errt, ColorResult.blue);
+                }
+                if (SockeObj)
+                {
+                    HOperatorSet.Skeleton(errt, out errt);
+                }
+
+                if (errt.CountObj() != 0)
+                {
                     errRoi = errt;
                 }
                 return;
@@ -232,7 +274,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 RunListOvergil[id].RunPa(oneResultOBj, this, out HObject hObject1);
                 if (hObject1.CountObj() != 0)
                 {
-                    oneResultOBj.AddNGOBJ(this.Name, RunListOvergil[id].ErrText, hObject1, hObject1);
+                    oneResultOBj.AddNGOBJ(this.Name, RunListOvergil[id].ErrText, hObject1, hObject1, this.GetBackNames());
                 }
             }
             catch (Exception ex)
@@ -245,12 +287,17 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             oneRObjs = new List<OneRObj>();
             try
             {
-                RunSeleRoi(oneResultOBj, aoiObj.DebugID, out HObject errRoi);
+                HObject errRoi = new HObject();
+                errRoi.GenEmptyObj();
+
+                RunSeleRoi(oneResultOBj, aoiObj.DebugID, out errRoi);
+
                 //halcon.AddObj(SelecRoi);
                 if (errRoi.CountObj() != 0)
                 {
+                    oneResultOBj.AddNGOBJ(aoiObj.CiName, Defect_Type, aoiObj.SelseAoi, errRoi, this.GetBackNames());
                     this.NGNumber++;
-                    oneResultOBj.AddObj(errRoi, ColorResult.red);
+                    //oneResultOBj.AddObj(errRoi, ColorResult.red);
                 }
                 if (isRoiComparison)
                 {
@@ -284,7 +331,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         HOperatorSet.DilationCircle(hObject1, out HObject hObject, 50);
                         //halcon.AddObj(hObject, ColorResult.firebrick);
                         this.NGNumber++;
-                        oneResultOBj.AddNGOBJ(this.Name, RunListOvergil[i].ErrText, hObject.Clone(), hObject1);
+                        oneResultOBj.AddNGOBJ(aoiObj.CiName, RunListOvergil[i].ErrText, hObject.Clone(), hObject1, this.GetBackNames());
                     }
                 }
                 if (this.NGNumber == 0)

@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Windows.Forms;
 using Vision2.ErosProjcetDLL.Project;
 using Vision2.ErosProjcetDLL.UI.PropertyGrid;
+using Vision2.Project.DebugF;
 using Vision2.Project.DebugF.IO;
 using Vision2.Project.Mes;
 using static Vision2.Project.Mes.安费诺Mes;
@@ -101,17 +102,41 @@ namespace Vision2.Project.formula
             托盘扫码计数 = 2,
         }
 
-        public string GetSPC()
+        public static string GetSPC()
         {
             try
             {
                 string data = Instance.OKNumber.OKNumber.ToString() + "," + Instance.OKNumber.NGNumber.ToString() + "," + Instance.OKNumber.IsOK + "," + Instance.OKNumber.Number + "," + Instance.OKNumber.OKNG + "," + Instance.OKNumber.AutoNGNumber;
                 File.WriteAllText(ProjectINI.TempPath + "计数.txt", data);
+                ProjectINI.ClassToJsonSavePath(Instance.OKNumber, ProjectINI.TempPath + "计数Json.txt");
+                Directory.CreateDirectory(ProjectINI.TempPath + "计数\\");
+                ProjectINI.ClassToJsonSavePath(Instance.oKNumberClasses, ProjectINI.TempPath + "计数\\" + DateTime.Now.ToString("yy年MM月dd日") + "计数.txt");
             }
             catch (Exception)
             {
             }
-            return "计数:" + OKNumber.Number + "  良率%:" + OKNumber.OKNG.ToString("0.00") + "\n\rOK:" + OKNumber.OKNumber + "  NG:" + OKNumber.NGNumber + "  NOK:" + OKNumber.AutoNGNumber;
+            try
+            {
+                userVisionManagement.label3.Text = Instance.OKNumber.GetSPC();
+                RecipeCompiler.OKNumberClass[] oKNumberClass = RecipeCompiler.Instance.GetOKNumberList();
+                List<int> vs = new List<int>();
+                userVisionManagement.chartType.Series["Series1"].Points.Clear();
+                for (int i = 0; i < oKNumberClass.Length; i++)
+                {
+                    vs.Add(oKNumberClass[i].Number);
+                }
+                int x = 0;
+                for (int i = 0; i < vs.Count; i++)
+                {
+                    userVisionManagement.chartType.Series["Series1"].Points.AddXY(i, vs[i]);
+                }
+            }
+            catch (Exception)
+            {
+            }
+            return userVisionManagement.label3.Text;
+
+            //    return "计数:" + OKNumber.Number + "  良率%:" + OKNumber.OKNG.ToString("0.00") + "\n\rOK:" + OKNumber.OKNumber + "  NG:" + OKNumber.NGNumber + "  NOK:" + OKNumber.AutoNGNumber;
         }
 
         public enum EnumUpDataType
@@ -168,11 +193,11 @@ namespace Vision2.Project.formula
         [DescriptionAttribute("。"), Category("显示数据"), DisplayName("是否使用托盘")]
         public sbyte TrayCont { get; set; } = -1;
 
-        [Description("是否显示二维码"), Category("显示数据"), DisplayName("显示托盘码")]
+        [Description("是否显示二维码"), Category("显示数据"), DisplayName("显示产品码")]
         public bool IsQRCdoe { get; set; } = true;
 
-        [DescriptionAttribute("。"), Category("显示数据"), DisplayName("托盘ID判断")]
-        public bool TrayID { get; set; }
+        //[DescriptionAttribute("。"), Category("显示数据"), DisplayName("托盘ID判断")]
+        //public bool TrayID { get; set; }
 
         [DescriptionAttribute("。"), Category("显示数据"), DisplayName("穴位ID判断")]
         public bool PalenID { get; set; }
@@ -180,16 +205,16 @@ namespace Vision2.Project.formula
         [DescriptionAttribute("。"), Category("显示数据"), DisplayName("显示手动输入ID")]
         public bool PalenIDVsible { get; set; }
 
-        [Description("是否复盘"), Category("复判"), DisplayName("是否复盘")]
-        public bool IsRestOk { get; set; }
+        //[Description("是否复盘"), Category("复判"), DisplayName("是否复盘")]
+        //public bool IsRestOk { get; set; }
 
         [Description("文件后缀"), Category("Mes数据"), DisplayName("文件后缀")]
         [TypeConverter(typeof(ErosConverter)), ErosConverter.ThisDropDownAttribute("", false, ".txt", ".Csv", "")]
         public string Filet { get; set; } = ".txt";
 
-        [Description("文件命名规则"), Category("Mes数据"), DisplayName("写文件命名规则")]
-        [TypeConverter(typeof(ErosConverter)), ErosConverter.ThisDropDownAttribute("", "QR", "Time", "")]
-        public string WritDataFileName { get; set; } = "QR";
+        //[Description("文件命名规则"), Category("Mes数据"), DisplayName("写文件命名规则")]
+        //[TypeConverter(typeof(ErosConverter)), ErosConverter.ThisDropDownAttribute("", "QR", "Time", "")]
+        //public string WritDataFileName { get; set; } = "QR";
 
         [Description("Mes厂家规则,"), Category("Mes数据"), DisplayName("写Mes厂家规则")]
         [TypeConverter(typeof(ErosConverter)), ErosConverter.ThisDropDownAttribute("", "", "伟世通", "丸旭", "捷普", "安费诺", "SISF")]
@@ -290,19 +315,26 @@ namespace Vision2.Project.formula
                     }
                 }
 
-                Assembly assembly = Assembly.GetExecutingAssembly(); // 获取当前程序集
-                MesTypeName = mesData.GetType().FullName;
-                dynamic obj = assembly.CreateInstance(MesTypeName);
-                if (obj != null)
+                if (mesData != null)
                 {
-                    data1 = obj.ReadThis(ErosProjcetDLL.Project.ProjectINI.ProjectPathRun + "\\产品配方", obj);
+                    Assembly assembly = Assembly.GetExecutingAssembly(); // 获取当前程序集
+                    MesTypeName = mesData.GetType().FullName;
+                    dynamic obj = assembly.CreateInstance(MesTypeName);
+                    if (obj != null)
+                    {
+                        data1 = obj.ReadThis(ErosProjcetDLL.Project.ProjectINI.ProjectPathRun + "\\产品配方", obj);
+                    }
                 }
             }
             catch (Exception ex)
             {
                 AlarmText.AddTextNewLine("读取Mes失败:" + ex.Message);
             }
-            Product.ReadExcelDic(ErosProjcetDLL.Project.ProjectINI.ProjectPathRun + "\\产品配方\\产品文件", out string err);
+      
+            if (!Product.ReadExcelDic(ProjectINI.ProjectPathRun + "\\产品配方\\产品文件", out string err))
+            {
+                AlarmText.LogWarning(Product.ProductionName, err);
+            }
             if (RecipeCompiler.Instance.DPoint.Count != 0)
             {
                 foreach (var item in Product.GetThisP())
@@ -368,7 +400,7 @@ namespace Vision2.Project.formula
                 ErosSocket.ErosConLink.StaticCon.GetSocketClint(RecipeCompiler.Instance.GetQRLinkNmae).PassiveEvent += RecipeCompiler_PassiveEvent;
             }
             userVisionManagement = MainForm1.MainFormF.userFormulaContrsl1;
-            AlarmText.LogWarning(Product.ProductionName, err);
+     
             Data.Set();
             ErosSocket.ErosConLink.SocketClint socketClint = ErosSocket.ErosConLink.StaticCon.GetSocketClint(DataLinkName);
             if (socketClint != null)
@@ -378,6 +410,27 @@ namespace Vision2.Project.formula
             Product.SetUserFormulaContrsl(userVisionManagement);
             try
             {
+                Directory.CreateDirectory(ProjectINI.TempPath + "计数\\");
+                if (File.Exists(ProjectINI.TempPath + "计数\\" + DateTime.Now.ToString("yy年MM月dd日") + "计数.txt"))
+                {
+                    if (!ProjectINI.ReadPathJsonToCalss(ProjectINI.TempPath + "计数\\" + DateTime.Now.ToString("yy年MM月dd日") + "计数.txt", out oKNumberClasses))
+                    {
+                        oKNumberClasses = new OKNumberClass[24];
+                        for (int i = 0; i < oKNumberClasses.Length; i++)
+                        {
+                            oKNumberClasses[i] = new OKNumberClass();
+                        }
+                    }
+                }
+                else
+                {
+                    oKNumberClasses = new OKNumberClass[24];
+                    for (int i = 0; i < oKNumberClasses.Length; i++)
+                    {
+                        oKNumberClasses[i] = new OKNumberClass();
+                    }
+                }
+
                 if (File.Exists(ProjectINI.TempPath + "计数.txt"))
                 {
                     string data = File.ReadAllText(ProjectINI.TempPath + "计数.txt");
@@ -388,6 +441,8 @@ namespace Vision2.Project.formula
                     Instance.OKNumber.Number = int.Parse(datas[3]);
                     Instance.OKNumber.OKNG = Single.Parse(datas[4]);
                     Instance.OKNumber.AutoNGNumber = int.Parse(datas[5]);
+                    Instance.OKNumber.autoPointNGNumber = int.Parse(datas[6]);
+                    Instance.OKNumber.PointNGNumber = int.Parse(datas[7]);
                 }
                 else
                 {
@@ -396,6 +451,9 @@ namespace Vision2.Project.formula
                     Instance.OKNumber.IsOK = false;
                     Instance.OKNumber.Number = 0;
                     Instance.OKNumber.OKNG = 0;
+                }
+                if (!ProjectINI.ReadPathJsonToCalss(ProjectINI.TempPath + "计数Json.txt", out Instance.OKNumber))
+                {
                 }
             }
             catch (Exception)
@@ -442,25 +500,22 @@ namespace Vision2.Project.formula
                     GetUserFormulaContrsl().ListOkNumber = new List<bool>();
                 }
                 GetUserFormulaContrsl().ListOkNumber.Add(IsOk);
+                int det = DateTime.Now.Hour;
                 if (IsOk)
                 {
+                    Instance.oKNumberClasses[det].OKNumber++;
                     Instance.OKNumber.OKNumber++;
                 }
                 else
                 {
+                    Instance.oKNumberClasses[det].NGNumber++;
                     Instance.OKNumber.NGNumber++;
                 }
                 Instance.OKNumber.IsOK = IsOk;
                 Instance.OKNumber.Number++;
+                Instance.oKNumberClasses[det].Number++;
                 Instance.OKNumber.OKNG = (Single)((double)Instance.OKNumber.OKNumber / (double)Instance.OKNumber.Number) * 100.0F;
-                //try
-                //{
-                //    string data = Instance.OKNumber.OKNumber.ToString() + "," + Instance.OKNumber.NGNumber.ToString() + "," + Instance.OKNumber.IsOK + "," + Instance.OKNumber.Number + "," + Instance.OKNumber.OKNG;
-                //    File.WriteAllText(ProjectINI.TempPath + "NG概率.txt", data);
-                //}
-                //catch (Exception)
-                //{
-                //}
+
                 UserFormulaContrsl.StaticAddData(Instance.OKNumber);
             }
             catch (Exception)
@@ -470,7 +525,47 @@ namespace Vision2.Project.formula
 
         public static void AddRlsNumber()
         {
-            Instance.OKNumber.AutoNGNumber++;
+            try
+            {
+                Instance.OKNumber.AutoNGNumber++;
+                int det = DateTime.Now.Hour;
+                Instance.oKNumberClasses[det].Number++;
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        public static void AddNGNumber(int number = 1)
+        {
+            try
+            {
+                int det = DateTime.Now.Hour;
+                Instance.OKNumber.NGNumber += number;
+                Instance.oKNumberClasses[det].NGNumber += number;
+                Instance.OKNumber.Number += number;
+                Instance.oKNumberClasses[det].Number += number;
+                Instance.OKNumber.OKNG = (Single)((double)Instance.OKNumber.OKNumber / (double)Instance.OKNumber.Number) * 100.0F;
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        public static void AddOKNumber(int number = 1)
+        {
+            try
+            {
+                int det = DateTime.Now.Hour;
+                Instance.OKNumber.OKNumber += number;
+                Instance.oKNumberClasses[det].OKNumber += number;
+                Instance.OKNumber.Number += number;
+                Instance.oKNumberClasses[det].Number += number;
+                Instance.OKNumber.OKNG = (Single)((double)Instance.OKNumber.OKNumber / (double)Instance.OKNumber.Number) * 100.0F;
+            }
+            catch (Exception)
+            {
+            }
         }
 
         public static void AddOKNumber(int id, bool IsOk)
@@ -486,25 +581,21 @@ namespace Vision2.Project.formula
                     GetUserFormulaContrsl().ListOkNumber = new List<bool>(new bool[GetUserFormulaContrsl().MAXt]);
                 }
                 GetUserFormulaContrsl().ListOkNumber[id] = IsOk;
+                int det = DateTime.Now.Hour;
                 if (IsOk)
                 {
                     Instance.OKNumber.OKNumber++;
+                    Instance.oKNumberClasses[det].OKNumber++;
                 }
                 else
                 {
                     Instance.OKNumber.NGNumber++;
+                    Instance.oKNumberClasses[det].NGNumber++;
                 }
                 Instance.OKNumber.IsOK = IsOk;
                 Instance.OKNumber.Number++;
+                Instance.oKNumberClasses[det].Number++;
                 Instance.OKNumber.OKNG = (Single)((double)Instance.OKNumber.OKNumber / (double)Instance.OKNumber.Number) * 100.0F;
-                //try
-                //{
-                //    string data = Instance.OKNumber.OKNumber.ToString() + "," + Instance.OKNumber.NGNumber.ToString() + "," + Instance.OKNumber.IsOK + "," + Instance.OKNumber.Number + "," + Instance.OKNumber.OKNG;
-                //    File.WriteAllText(ProjectINI.TempPath + "NG概率.txt", data);
-                //}
-                //catch (Exception)
-                //{
-                //}
                 UserFormulaContrsl.StaticAddData(Instance.OKNumber);
             }
             catch (Exception)
@@ -531,7 +622,8 @@ namespace Vision2.Project.formula
                     {
                         Instance.OKNumber.NGNumber--;
                         Instance.OKNumber.OKNumber++;
-                        Instance.OKNumber.AutoNGNumber++;
+                        //Instance.OKNumber.AutoNGNumber++;
+                        AddRlsNumber();
                     }
                     else
                     {
@@ -541,13 +633,14 @@ namespace Vision2.Project.formula
                     Instance.OKNumber.IsOK = isOK;
                 }
             }
-            else if (Project.formula.RecipeCompiler.GetUserFormulaContrsl().ListOkNumber[id] != isOK)
+            else if (RecipeCompiler.GetUserFormulaContrsl().ListOkNumber[id] != isOK)
             {
                 if (isOK)
                 {
                     Instance.OKNumber.NGNumber--;
                     Instance.OKNumber.OKNumber++;
-                    Instance.OKNumber.AutoNGNumber++;
+                    //Instance.OKNumber.AutoNGNumber++;
+                    AddRlsNumber();
                 }
                 else
                 {
@@ -567,8 +660,20 @@ namespace Vision2.Project.formula
 
         public OKNumberClass OKNumber = new OKNumberClass();
 
+        private OKNumberClass[] oKNumberClasses;
+
+        public OKNumberClass[] GetOKNumberList()
+        {
+            return oKNumberClasses;
+        }
+
         public class OKNumberClass
         {
+            public string GetSPC()
+            {
+                return "计数:" + Number + "  良率%:" + OKNG.ToString("0.00") + "\n\rOK:" + OKNumber + "  NG:" + NGNumber + "  NOK:" + AutoNGNumber;
+            }
+
             /// <summary>
             /// 是否OK
             /// </summary>
@@ -598,6 +703,16 @@ namespace Vision2.Project.formula
             /// 机器误判数量
             /// </summary>
             public int AutoNGNumber { get; set; }
+
+            /// <summary>
+            /// NG点数量
+            /// </summary>
+            public int PointNGNumber { get; set; }
+
+            /// <summary>
+            /// NG误判点数量
+            /// </summary>
+            public int autoPointNGNumber { get; set; }
         }
 
         public override void SaveThis(string path)

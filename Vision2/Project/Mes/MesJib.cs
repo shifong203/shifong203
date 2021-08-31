@@ -83,11 +83,8 @@ namespace Vision2.Project.Mes
             resetMesString = "";
             try
             {
-                resetMesString = webservice.OKToTest(MesData.Customer,
-                    MesData.DiviSion,
-                sn, Product.ProductionName,
-                MesData.Testre_Name,
-                MesData.Test_Process);
+                resetMesString = webservice.OKToTest(MesData.Customer, MesData.DiviSion, sn,
+               Product.ProductionName, MesData.Testre_Name, MesData.Test_Process);
                 if (!resetMesString.ToLower().Contains("pass"))
                 {
                     ErosProjcetDLL.Project.AlarmText.AddTextNewLine(sn + ":" + resetMesString, Color.Red);
@@ -110,7 +107,6 @@ namespace Vision2.Project.Mes
             {
             }
             return OK;
-
             //return ReadMes(out resetMesString, DebugCompiler.Instance.DDAxis.GetTrayInxt(0).GetTrayData().GetDataVales()[0].PanelID);
         }
 
@@ -131,7 +127,7 @@ namespace Vision2.Project.Mes
 
             string sn = "";
             string strTimed = DateTime.Now.ToString("yyyy-MM-dd");
-            string pathEx = MesData.DataPaht + "//" + strTimed + ".xls";
+            string pathEx = this.DataPaht + "//" + strTimed + ".xls";
             if (!File.Exists(pathEx))
             {
                 List<string> columnText = new List<string>() { "进站时间", "结束时间", "状态", "SN" };
@@ -245,7 +241,7 @@ namespace Vision2.Project.Mes
             ListText.Add("]" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
 
             string strTimed = data.EndTime.ToString(MesData.FileTimeName);
-            string pathEx = MesData.DataPaht + "//" + data.EndTime.ToString("yyyyMMdd") + ".csv";
+            string pathEx = this.DataPaht + "//" + data.EndTime.ToString("yyyyMMdd") + ".csv";
             if (!File.Exists(pathEx))
             {
                 List<string> columnText = new List<string>() { "进站时间", "结束时间", "状态", "SN", "托盘位" };
@@ -290,8 +286,13 @@ namespace Vision2.Project.Mes
             {
                 paht = "DEBUG-" + paht;
             }
-            ErosProjcetDLL.Excel.Npoi.WriteF(MesData.DataPaht + "\\" + DateTime.Now.ToString("yyyyMMdd") + "//" + paht, ListText, RecipeCompiler.Instance.Filet);
-            ErosProjcetDLL.Excel.Npoi.WriteF(ProcessControl.ProcessUser.Instancen.ExcelPath + "//" + paht, ListText, RecipeCompiler.Instance.Filet);
+            else
+            {
+                ErosProjcetDLL.Excel.Npoi.WriteF(ProcessControl.ProcessUser.Instancen.ExcelPath + "//" + paht,
+                    ListText, RecipeCompiler.Instance.Filet);
+            }
+            ErosProjcetDLL.Excel.Npoi.WriteF(this.DataPaht + "\\" + DateTime.Now.ToString("yyyyMMdd") + "//" + paht,
+                ListText, RecipeCompiler.Instance.Filet);
         }
 
         public override void WrietMes(TrayData tray, string Product_Name)
@@ -313,8 +314,8 @@ namespace Vision2.Project.Mes
                 MesDatas.Add("O" + ErosProjcetDLL.Project.ProjectINI.In.UserName);
                 MesDatas.Add("[" + DebugCompiler.Instance.DDAxis.StartTime.ToString("yyyy-MM-dd HH:mm:ss"));
                 MesDatas.Add("]" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
-                string strTimed = DateTime.Now.ToString("yyyy-MM-dd");
-                string pathEx = MesData.DataPaht + "\\" + strTimed + ".csv";
+                string strTimed = DateTime.Now.ToString("D");
+                string pathEx = this.DataPaht + "\\" + strTimed + ".csv";
                 if (!File.Exists(pathEx))
                 {
                     List<string> columnText = new List<string>() { "StratTime", "EndTime", "status", "SN", "机检", "Mes", "FVt" };
@@ -330,12 +331,55 @@ namespace Vision2.Project.Mes
                 {
                     dat.Add("NG");
                 }
-
                 ErosProjcetDLL.Excel.Npoi.AddWriteCSV(pathEx, dat.ToArray());
                 List<string> listSn = new List<string>();
                 int ErrBool = 0;
                 string err = "";
                 string mesErr = "";
+                string[] FVTSTR = new string[] { "", "", "", "", "" };
+
+                for (int i = 0; i < tray.Count; i++)
+                {
+                    if (tray.GetDataVales()[i].NotNull)
+                    {
+                        sn = tray.GetDataVales()[i].PanelID;
+                        if (sn == null || sn == "")
+                        {
+                            ErosProjcetDLL.Project.AlarmListBoxt.AddAlarmText(
+                                new ErosProjcetDLL.Project.AlarmText.alarmStruct() { Name = "SN为空", Text = "ID未读取到" });
+                        }
+                        else
+                        {
+                            trayID.Add(tray.GetDataVales()[i].TrayLocation);
+                            if (listSn.Contains(sn))
+                            {
+                                ErosProjcetDLL.Project.AlarmListBoxt.AddAlarmText(new ErosProjcetDLL.Project.AlarmText.alarmStruct()
+                                { Name = "SN重复", Text = "SN重复请确认" + sn });
+                            }
+                            listSn.Add(sn);
+                            if (tray.GetDataVales()[i].OK)
+                            {
+                                listResult.Add("Pass");
+                            }
+                            else
+                            {
+                                listResult.Add("Fail");
+                            }
+                        }
+                    }
+                }
+
+                if (MesData.FvtReadData)
+                {
+                    if (!ReadFvt(trayID.ToArray(), listSn.ToArray(), listResult.ToArray(), out FVTSTR))
+                    {
+                        if (MesData.FvtForm)
+                        {
+                            FvtForm1 fvtForm1 = new FvtForm1(trayID.ToArray(), listSn.ToArray(), listResult.ToArray());
+                            fvtForm1.ShowDialog();
+                        }
+                    }
+                }
                 for (int i = 0; i < tray.Count; i++)
                 {
                     if (tray.GetDataVales().Count <= i)
@@ -358,7 +402,7 @@ namespace Vision2.Project.Mes
                                 else
                                 {
                                     string errMesString = "null";
-                                    bool resMesOK = true;
+                                    bool resMesOK = false;
                                     if (MesData.IsRardMes)
                                     {
                                         if (!ReadMes(sn, out errMesString))
@@ -373,8 +417,6 @@ namespace Vision2.Project.Mes
                                         }
                                         tray.GetDataVales()[i].MesStr = errMesString;
                                     }
-                                    trayID.Add(tray.GetDataVales()[i].TrayLocation);
-                                    listSn.Add(sn);
                                     MesDatas[0] = "S" + sn;
                                     dat = new List<string>();
                                     dat.Add("");
@@ -395,9 +437,25 @@ namespace Vision2.Project.Mes
                                         MesDataList.AddRange(MesDatas);
                                         foreach (var item in tray.GetDataVales()[i].GetAllCompOBJs().DicOnes)
                                         {
-                                            if (!item.Value.OK)
+                                            if (!item.Value.aOK)
                                             {
-                                                string dd = "F" + tray.GetDataVales()[i].TrayLocation + item.Value.ComponentID;
+                                                string dd = "F";
+                                                if (vision.Vision.Instance.CRDNameList.Contains(item.Value.ComponentID))
+                                                {
+                                                    dd += item.Value.ComponentID + "-";/*+ item.Value.NGText;*/
+                                                }
+                                                else
+                                                {
+                                                    dd += "PCB - ";
+                                                }
+                                                if (vision.Vision.Instance.DefectTypeDicEx.ContainsKey(item.Value.RestText))
+                                                {
+                                                    dd += item.Value.RestText;
+                                                }
+                                                else
+                                                {
+                                                    dd += MesData.DefaultFlaw;
+                                                }
                                                 if (!MesDataList.Contains(dd))
                                                 {
                                                     MesDataList.Add(dd);
@@ -406,35 +464,67 @@ namespace Vision2.Project.Mes
                                         }
                                         foreach (var item in tray.GetDataVales()[i].GetNGCompData().DicOnes)
                                         {
-                                            if (!item.Value.OK)
+                                            if (!item.Value.aOK)
                                             {
-                                                string dd = "F" + tray.GetDataVales()[i].TrayLocation + item.Value.ComponentID;
+                                                string dd = "F";
+                                                if (vision.Vision.Instance.CRDNameList.Contains(item.Value.ComponentID))
+                                                {
+                                                    dd += item.Value.ComponentID + "-";/*+ item.Value.NGText;*/
+                                                }
+                                                else
+                                                {
+                                                    dd += "PCB - ";
+                                                }
+                                                if (vision.Vision.Instance.DefectTypeDicEx.ContainsKey(item.Value.RestText))
+                                                {
+                                                    dd += item.Value.RestText;
+                                                }
+                                                else
+                                                {
+                                                    dd += MesData.DefaultFlaw;
+                                                }
                                                 if (!MesDataList.Contains(dd))
                                                 {
                                                     MesDataList.Add(dd);
                                                 }
                                             }
                                         }
+                                        bool isd = false;
+                                        for (int j = 0; j < MesDataList.Count; j++)
+                                        {
+                                            if (MesDataList[j].StartsWith("F"))
+                                            {
+                                                isd = true;
+                                            }
+                                        }
+                                        if (isd == false)
+                                        {
+                                            MesDataList.Add("FPCB - " + MesData.DefaultFlaw);
+                                        }
                                     }
                                     dat.Add(sn);
                                     dat.Add(tray.GetDataVales()[i].AutoOK.ToString());
                                     dat.Add(errMesString);
-                                    dat.Add("null");
-                                    //dat.Add(errMesString);
-                                    //dat.Add("FVT:"+);
+                                    for (int T = 0; T < listSn.Count; T++)
+                                    {
+                                        if (listSn[T] == sn)
+                                        {
+                                            dat.Add(FVTSTR[T]);
+                                            if (FVTSTR[T].TrimEnd(';').ToLower().EndsWith("pass"))
+                                            {
+                                                resMesOK = true;
+                                            }
+                                            break;
+                                        }
+                                    }
                                     RecipeCompiler.AddOKNumber(tray.GetDataVales()[i].OK);
                                     string paht = "//" + sn + DateTime.Now.ToString(" yyyy-MM-dd-HH-mm-ss");
                                     if (resMesOK)
                                     {
                                         ErosProjcetDLL.Excel.Npoi.WriteF(ProcessControl.ProcessUser.Instancen.ExcelPath + paht, MesDataList, RecipeCompiler.Instance.Filet);
-                                        ErosProjcetDLL.Excel.Npoi.WriteF(MesData.DataPaht + "\\Mes记录\\" + DateTime.Now.ToString("yyyyMMdd") + paht, MesDataList, RecipeCompiler.Instance.Filet);
+                                        ErosProjcetDLL.Excel.Npoi.WriteF(this.DataPaht + "\\Mes记录\\" + DateTime.Now.ToString("D") + paht, MesDataList, RecipeCompiler.Instance.Filet);
                                     }
                                     ErosProjcetDLL.Excel.Npoi.AddWriteCSV(pathEx, dat.ToArray());
-                                    //OneDataVale oneDataVale = tray.GetDataVales()[i];
-                                    //Task task = new Task(new Action(() => {
-                                    //    WrietDATA(oneDataVale);
-                                    //}));
-                                    //task.Start();
                                 }
                             }
                         }
@@ -446,7 +536,6 @@ namespace Vision2.Project.Mes
                         ErosProjcetDLL.Project.AlarmText.AddTextNewLine("mesTray" + i + ":" + ex.StackTrace.Substring(ex.StackTrace.Length / 2 - 1, ex.StackTrace.Length / 2));
                     }
                 }
-
                 Task task = new Task(new Action(() =>
                 {
                     for (int i = 0; i < tray.Count; i++)
@@ -464,10 +553,6 @@ namespace Vision2.Project.Mes
                 }));
                 task.Start();
 
-                if (MesData.FvtReadData)
-                {
-                    ReadFvt(trayID.ToArray(), listSn.ToArray(), listResult.ToArray());
-                }
                 if (mesErr != "")
                 {
                     ErosProjcetDLL.Project.AlarmListBoxt.AddAlarmText(new ErosProjcetDLL.Project.AlarmText.alarmStruct()
@@ -496,7 +581,7 @@ namespace Vision2.Project.Mes
         {
             try
             {
-                string path = MesData.DataPaht + "\\CRD数据\\" + DateTime.Now.ToString("yyyyMMdd") + ".CSV";
+                string path = this.DataPaht + "\\CRD数据\\" + DateTime.Now.ToString("yyyyMMdd") + ".CSV";
                 if (!File.Exists(path))
                 {
                     List<string> columnText = new List<string>() { "NO","Line", "Customer","Mode","	Defect Type","Location" ,"Serial Number","Result"   ,"Date" ,
@@ -511,12 +596,11 @@ namespace Vision2.Project.Mes
                     data.Add(no.ToString());
                     data.Add(MesData.Line);
                     data.Add(MesData.Customer);
-
                     data.Add(oneDataVale.Product_Name);
                     data.Add(item.Value.RestText);
                     data.Add(item.Value.ComponentID);
                     data.Add(oneDataVale.PanelID);
-                    if (item.Value.OK)
+                    if (item.Value.aOK)
                     {
                         data.Add("Pass");
                     }
@@ -566,41 +650,59 @@ namespace Vision2.Project.Mes
             return new JabilForm(this);
         }
 
-        public string ReadFvt(int[] trayID, string[] sn, string[] resetStr)
-        {
-            List<string> TextWeit = new List<string>();
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="trayID"></param>
+        /// <param name="sn"></param>
+        /// <param name="resetStr"></param>
+        /// <param name="fVTsTR"></param>
+        /// <returns></returns>
 
+        public bool ReadFvt(int[] trayID, string[] sn, string[] resetStr, out string[] fVTsTR)
+        {
+            fVTsTR = new string[trayID.Length];
+            string[] REST = new string[trayID.Length];
+            for (int i = 0; i < trayID.Length; i++)
+            {
+                REST[i] = "Empty";
+                fVTsTR[i] = "";
+            }
+            List<string> TextWeit = new List<string>();
+            for (int i = 0; i < trayID.Length; i++)
+            {
+                TextWeit.Add("No:" + trayID[i] + ";SN:" + sn[i] + ";AMVI result:");
+            }
             try
             {
+                if (sn.Length == 0)
+                {
+                    ErosProjcetDLL.Project.AlarmText.AddTextNewLine("FVT:码数量为0");
+                    return false;
+                }
                 string fileName = sn[0];
                 string PathFvt = MesData.FVTDataPath + "\\" + fileName + ".txt";
-                Directory.CreateDirectory(MesData.FVTDataPath);
-                Directory.CreateDirectory(MesData.DataPaht + "\\FVT\\" + DateTime.Now.ToString("D"));
+                //Directory.CreateDirectory(MesData.FVTDataPath);
+                Directory.CreateDirectory(this.DataPaht + "\\FVT\\" + DateTime.Now.ToString("D"));
                 if (MesData.FvtSimulateDATA)
                 {
                     for (int i = 0; i < sn.Length; i++)
                     {
-                        TextWeit.Add("No:" + trayID[i] + ";SN:" + sn[i] + ";AMVI result:" + resetStr[i]);
+                        TextWeit[i] += resetStr[i] + ";";
                     }
                     File.WriteAllLines(PathFvt, TextWeit);
-                    string paths = MesData.DataPaht + "\\FVT\\" + DateTime.Now.ToString("D") + "\\" + Path.GetFileName(fileName) + ".txt";
-                    File.WriteAllLines(paths, TextWeit);
-                    //if (MesData.FVTSaveDataPath != "")
-                    //{
-                    //    File.WriteAllLines(MesData.FVTSaveDataPath + "\\" + fileName + ".txt", TextWeit);
-                    //}
-
+                    string Path = this.DataPaht + "\\FVT\\" + DateTime.Now.ToString("D") + "\\" + fileName + ".txt";
+                    File.WriteAllLines(Path, TextWeit);
                     ErosProjcetDLL.Project.AlarmText.AddTextNewLine("FVT写入完成:" + PathFvt);
-                    return "";
+                    return true;
                 }
                 List<bool> RsetOk = new List<bool>();
                 for (int i = 0; i < trayID.Length; i++)
                 {
                     RsetOk.Add(false);
                 }
-                bool isDa = false;
-                string[] fileS = Directory.GetFiles(MesData.FVTPath);
-
+                string[] fileS = Directory.GetFiles(MesData.FVTPath, "*.txt");
+                List<string> snTem = new List<string>();
                 for (int i = 0; i < fileS.Length; i++)
                 {
                     string snt = Path.GetFileNameWithoutExtension(fileS[i]);
@@ -616,83 +718,125 @@ namespace Vision2.Project.Mes
                                 if (sn[j] == datas[1])
                                 {
                                     string textStr = "";
-                                    isDa = true;
-                                    if (strDatas[id].Contains("Empty"))
+                                    RsetOk[j] = true;
+                                    fVTsTR[j] = strDatas[id];
+                                    if (strDatas[id].ToLower().Contains("empty"))
                                     {
                                         resetStr[j] = "Empty";
                                     }
-                                    if (strDatas[id].Contains("Fail"))
+                                    if (strDatas[id].ToLower().Contains("fail"))
                                     {
                                         resetStr[j] = "Fail";
                                     }
-                                    if (strDatas[id].Contains("Other"))
+                                    if (strDatas[id].ToLower().Contains("other"))
                                     {
                                         resetStr[j] = "Other";
                                     }
-                                    if (strDatas[id].Contains("AMVI"))
-                                    {
-                                        strDatas[id] = "";
-                                        for (int k = 0; k < dat.Length; k++)
-                                        {
-                                            if (dat[k].StartsWith("AMVI"))
-                                            {
-                                                dat[k] = "AMVI result:" + resetStr[j];
-                                            }
-                                            if (dat[k].Length > 1)
-                                            {
-                                                strDatas[id] += dat[k] + ";";
-                                            }
-                                        }
-                                    }
-                                    else
-                                    {
-                                        strDatas[id] += "AMVI result:" + resetStr[j] + ";";
-                                    }
+                                    strDatas[id] += "AMVI result:" + resetStr[j] + ";";
                                     for (int k = 0; k < 2; k++)
                                     {
                                         textStr += dat[k] + ";";
                                     }
                                     //textStr = strDatas[id];
-                                    TextWeit.Add(textStr += "AMVI result:" + resetStr[j] + ";");
+                                    //TextWeit.Add(textStr += "AMVI result:" + resetStr[j] + ";");
+                                    REST[j] = resetStr[j];
                                     break;
                                 }
                             }
                         }
                     }
-                    if (isDa)
+                    if (RsetOk.Contains(true))
                     {
-                        Directory.CreateDirectory(MesData.FVTDataPath + "\\");
+                        for (int J = 0; J < TextWeit.Count; J++)
+                        {
+                            TextWeit[J] += REST[J] + ";";
+                            snTem.Add(sn[J] + "=" + REST[J]);
+                        }
+                        //Directory.CreateDirectory(MesData.FVTDataPath + "\\");
                         File.WriteAllLines(PathFvt, TextWeit);
-                        Directory.CreateDirectory(MesData.DataPaht + "\\FVT\\" + DateTime.Now.ToString("D"));
-                        string paths = MesData.DataPaht + "\\FVT\\" + DateTime.Now.ToString("D") + "\\" + Path.GetFileName(fileS[i]);
-                        if (MesData.FVTSaveDataPath != "")
+                        string path = this.DataPaht + "\\FVT\\" + DateTime.Now.ToString("D") + "\\" + fileName + ".txt";
+                        File.WriteAllLines(path, TextWeit);
+                        if (MesData.IsDelete)
                         {
-                            File.WriteAllLines(MesData.FVTSaveDataPath + "\\" + fileName + ".txt", strDatas);
+                            if (File.Exists(fileS[i]))
+                            {
+                                string Pathd = this.DataPaht + "\\FVT历史\\" + DateTime.Now.ToString("D") + "\\" + Path.GetFileName(fileS[i]);
+                                if (File.Exists(Pathd))
+                                {
+                                    File.Delete(Pathd);
+                                }
+                                File.Move(fileS[i], Pathd);
+                            }
                         }
-                        if (File.Exists(paths))
+                        string mest = "F:";
+                        for (int j = 0; j < snTem.Count; j++)
                         {
-                            File.Delete(paths);
+                            mest += snTem[j] + ";";
                         }
-                        //File.Move(fileS[i], paths);
-                        File.WriteAllLines(paths, strDatas);
-                        if (File.Exists(fileS[i]))
+                        ErosProjcetDLL.Project.AlarmText.AddTextNewLine(mest);
+
+                        if (File.Exists(PathFvt))
                         {
-                            File.Delete(fileS[i]);
+                            ErosProjcetDLL.Project.AlarmText.AddTextNewLine(PathFvt);
                         }
-                        ErosProjcetDLL.Project.AlarmText.AddTextNewLine("FVT写入完成:" + PathFvt);
-                        return "";
+                        else
+                        {
+                            ErosProjcetDLL.Project.AlarmText.AddTextNewLine("写入失败：" + PathFvt);
+                            return false;
+                        }
+                        return true;
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                ErosProjcetDLL.Project.AlarmText.AddTextNewLine("FVT错误信息:" + ex.Message);
+                ErosProjcetDLL.Project.AlarmText.AddTextNewLine("FVT错误:" + ex.StackTrace);
+            }
+            ErosProjcetDLL.Project.AlarmListBoxt.AddAlarmText(new ErosProjcetDLL.Project.AlarmText.alarmStruct()
+            { Name = "FVT", Text = "FVT读取失败" });
+            return false;
+        }
+
+        /// <summary>
+        /// 模拟FVTPass
+        /// </summary>
+        /// <param name="trayID"></param>
+        /// <param name="sn"></param>
+        /// <param name="resetStr"></param>
+        /// <returns></returns>
+        public bool WriteFatData(int[] trayID, string[] sn, string[] resetStr)
+        {
+            List<string> TextWeit = new List<string>();
+            try
+            {
+                string fileName = sn[0];
+                string PathFvt = MesData.FVTDataPath + "\\" + fileName + ".txt";
+                Directory.CreateDirectory(MesData.FVTDataPath);
+                Directory.CreateDirectory(this.DataPaht + "\\FVT\\" + DateTime.Now.ToString("D"));
+                List<string> snTem = new List<string>();
+                for (int i = 0; i < sn.Length; i++)
+                {
+                    TextWeit.Add("No:" + trayID[i] + ";SN:" + sn[i] + ";AMVI result:" + resetStr[i]);
+                    snTem.Add(sn[i] + "=" + resetStr[i]);
+                }
+                File.WriteAllLines(PathFvt, TextWeit);
+                string paths = this.DataPaht + "\\FVT\\" + DateTime.Now.ToString("D") + "\\" + Path.GetFileName(fileName) + ".txt";
+                File.WriteAllLines(paths, TextWeit);
+                string mest = "F强制写入:";
+                for (int j = 0; j < snTem.Count; j++)
+                {
+                    mest += snTem[j] + ";";
+                }
+                ErosProjcetDLL.Project.AlarmText.AddTextNewLine(mest);
+                return true;
             }
             catch (Exception ex)
             {
                 ErosProjcetDLL.Project.AlarmText.AddTextNewLine("FVT错误:" + ex.Message);
                 ErosProjcetDLL.Project.AlarmText.AddTextNewLine("FVT错误:" + ex.StackTrace);
             }
-            ErosProjcetDLL.Project.AlarmText.AddTextNewLine("FVT错误:FVT读取失败");
-            ErosProjcetDLL.Project.AlarmListBoxt.AddAlarmText(new ErosProjcetDLL.Project.AlarmText.alarmStruct()
-            { Name = "FVT", Text = "FVT读取失败" });
-            return "";
+            return false;
         }
     }
 
@@ -703,14 +847,19 @@ namespace Vision2.Project.Mes
             Testre_Name = Dns.GetHostName();
         }
 
+        public int MesIntd { get; set; } = 1;
+
         [Description("文件名明名时间规则"), Category("文件名称"), DisplayName("文件名时间规则")]
-        public string FileTimeName { get; set; } = "yyyy-MM-dd";
+        public string FileTimeName { get; set; } = "yyyy-MM-dd";//(MM-dd-yyyy HH-mm-ss)
 
         /// <summary>
         /// 客户名
         /// </summary>
         [Description("客户名Customer"), Category("Mes信息"), DisplayName("C-客户名")]
         public string Customer { get; set; } = "Customer";
+
+        [Description("默认写入缺陷"), Category("缺陷管理"), DisplayName("默认缺陷")]
+        public string DefaultFlaw { get; set; } = "MISSING";
 
         [Description("板样式"), Category("Mes信息"), DisplayName("B-Board_Style")]
         public string Board_Style { get; set; } = "Stack";
@@ -805,6 +954,19 @@ namespace Vision2.Project.Mes
         public string FVTPath { get; set; } = "";
 
         [Editor(typeof(PageTypeEditor_FolderBrowserDialog), typeof(UITypeEditor))]
+        [Description(""), Category("FVT信息"), DisplayName("FVT2读取数据地址")]
+        /// <summary>
+        ///FVT读取数据地址
+        /// </summary>
+        public string FVTPath2 { get; set; } = "";
+
+        [Description(""), Category("FVT信息"), DisplayName("FVT弹出对话框")]
+        public bool FvtForm { get; set; }
+
+        [Description(""), Category("FVT信息"), DisplayName("是否删除读取记录")]
+        public bool IsDelete { get; set; }
+
+        [Editor(typeof(PageTypeEditor_FolderBrowserDialog), typeof(UITypeEditor))]
         [Description(""), Category("FVT信息"), DisplayName("FVT写入数据地址")]
         /// <summary>
         ///FVT写入数据地址
@@ -823,12 +985,5 @@ namespace Vision2.Project.Mes
         /// 是否读取
         /// </summary>
         public bool IsRardMes { get; set; }
-
-        [Editor(typeof(PageTypeEditor_FolderBrowserDialog), typeof(UITypeEditor))]
-        [Description(""), Category("历史记录"), DisplayName("历史记录地址")]
-        /// <summary>
-        ///历史记录地址
-        /// </summary>
-        public string DataPaht { get; set; } = "D:\\历史记录";
     }
 }

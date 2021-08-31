@@ -14,6 +14,7 @@ using Vision2.ErosProjcetDLL.Project;
 using Vision2.Project.DebugF.IO;
 using Vision2.Project.formula;
 using Vision2.vision;
+using static Vision2.vision.Vision;
 
 namespace Vision2.Project.DebugF
 {
@@ -72,6 +73,16 @@ namespace Vision2.Project.DebugF
             {
                 //ErrText = ErrText[-1].ToString();
                 isCot = true;
+                ErosProjcetDLL.UI.DataGridViewF.StCon.AddCon(dataGridView7);
+                foreach (var item in Vision.Instance.DefectTypeDicEx)
+                {
+                    int det = dataGridView7.Rows.Add();
+                    dataGridView7.Rows[det].Cells[0].Tag = item.Value;
+                    dataGridView7.Rows[det].Cells[0].Value = item.Value.DrawbackIndex;
+                    dataGridView7.Rows[det].Cells[1].Value = item.Value.DrawbackName;
+                    dataGridView7.Rows[det].Cells[2].Value = item.Value.DrawbackEnglish;
+                }
+
                 HWindNt.Initialize(hWindowControl2);
                 Column8.Items.AddRange(Enum.GetNames(typeof(EnumXYZUMoveType)));
                 Column11.Items.AddRange(Enum.GetNames(typeof(ProductEX.Relatively.EnumPointType)));
@@ -383,6 +394,7 @@ namespace Vision2.Project.DebugF
             try
             {
                 listBox1.Items.Clear();
+
                 listBox1.Items.AddRange(Product.GetThisP().Keys.ToArray());
                 if (xYZPoints1 == null)
                 {
@@ -572,31 +584,35 @@ namespace Vision2.Project.DebugF
                 if (dialog == DialogResult.OK)
                 {
                     string names = Path.GetFileNameWithoutExtension(fbd.SelectedPath);
-
+                    ProductEX xYZPoints = new ProductEX();
                     if (!RecipeCompiler.Instance.ProductEX.ContainsKey(names))
                     {
-                        ProductEX xYZPoints = new ProductEX();
-                        if (ProjectINI.ReadPathJsonToCalss(fbd.SelectedPath + "//产品参数", out xYZPoints))
-                        {
-                            RecipeCompiler.Instance.ProductEX.Add(names, xYZPoints);
-                        }
-                        string path = ErosProjcetDLL.Project.ProjectINI.ProjectPathRun + "\\" + Vision.Instance.FileName + "\\";
-                        CopyFolder1(fbd.SelectedPath, path + names);
-
-                        Dictionary<string, string> keyValuePairs = new Dictionary<string, string>();
-                        if (ProjectINI.ReadPathJsonToCalss(fbd.SelectedPath + "//配方参数", out keyValuePairs))
-                        {
-                            if (RecipeCompiler.Instance.Produc.ContainsKey(names))
-                            {
-                                RecipeCompiler.Instance.Produc[names] = keyValuePairs;
-                            }
-                            else
-                            {
-                                RecipeCompiler.Instance.Produc.Add(names, keyValuePairs);
-                            }
-                        }
+                        RecipeCompiler.Instance.ProductEX.Add(names, xYZPoints);
                     }
 
+                    if (ProjectINI.ReadPathJsonToCalss(fbd.SelectedPath + "//产品参数", out xYZPoints))
+                    {
+                        RecipeCompiler.Instance.ProductEX[names] = xYZPoints;
+                    }
+                    string path = ProjectINI.ProjectPathRun + "\\" + Vision.Instance.FileName + "\\";
+                    CopyFolder1(fbd.SelectedPath, path + names);
+                    Dictionary<string, string> keyValuePairs = new Dictionary<string, string>();
+                    if (ProjectINI.ReadPathJsonToCalss(fbd.SelectedPath + "//配方参数", out keyValuePairs))
+                    {
+                        if (RecipeCompiler.Instance.Produc.ContainsKey(names))
+                        {
+                            RecipeCompiler.Instance.Produc[names] = keyValuePairs;
+                        }
+                        else
+                        {
+                            RecipeCompiler.Instance.Produc.Add(names, keyValuePairs);
+                        }
+                        if (Product.GetThisP().ContainsKey(Name))
+                        {
+                            Product.GetThisP().Add(names, keyValuePairs);
+                        }
+                        Product.GetThisP()[names] = keyValuePairs;
+                    }
                     UpData();
                 }
             }
@@ -1899,8 +1915,22 @@ namespace Vision2.Project.DebugF
                 }
                 productEX.Key_Navigation_Picture.Add(sd, productEX.Key_Navigation_Picture[names]);
                 listBox3.Items.Add(sd);
+                listBox3.SelectedItem = sd;
+
                 productEX.Key_Navigation_Picture.Remove(names);
                 listBox3.Items.Remove(names);
+
+                foreach (var item in productEX.ListDicData)
+                {
+                    if (item.RunNameOBJ.Contains('.'))
+                    {
+                        string[] datSd = item.RunNameOBJ.Split('.');
+                        if (datSd[0] == names)
+                        {
+                            item.RunNameOBJ = sd + "." + datSd[1];
+                        }
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -2393,19 +2423,18 @@ namespace Vision2.Project.DebugF
                         {
                             foreach (DataRow item1 in dataTable2.Rows)
                             {
-                                     HOperatorSet.GenRectangle1(out HObject hObject, double.Parse(item1.ItemArray[1].ToString()) - 50, double.Parse(item1.ItemArray[2].ToString()) - 50,
-                                    double.Parse(item1.ItemArray[1].ToString()) + 50, double.Parse(item1.ItemArray[2].ToString()) + 50);
-                                    if (!productEX.Key_Navigation_Picture[listBox3.SelectedItem.ToString()].KeyRoi.ContainsKey(item1.ItemArray[0].ToString()))
-                                    {
-                                        productEX.Key_Navigation_Picture[listBox3.SelectedItem.ToString()].KeyRoi.Add(item1.ItemArray[0].ToString(), hObject);
-                                        listBox2.Items.Add(item1.ItemArray[0]);
-                                     }
-                                    else
-                                    {
-                                        productEX.Key_Navigation_Picture[listBox3.SelectedItem.ToString()].KeyRoi[item1.ItemArray[0].ToString()]= hObject;
-                                    }
+                                HOperatorSet.GenRectangle1(out HObject hObject, double.Parse(item1.ItemArray[1].ToString()) - 50, double.Parse(item1.ItemArray[2].ToString()) - 50,
+                               double.Parse(item1.ItemArray[1].ToString()) + 50, double.Parse(item1.ItemArray[2].ToString()) + 50);
+                                if (!productEX.Key_Navigation_Picture[listBox3.SelectedItem.ToString()].KeyRoi.ContainsKey(item1.ItemArray[0].ToString()))
+                                {
+                                    productEX.Key_Navigation_Picture[listBox3.SelectedItem.ToString()].KeyRoi.Add(item1.ItemArray[0].ToString(), hObject);
+                                    listBox2.Items.Add(item1.ItemArray[0]);
+                                }
+                                else
+                                {
+                                    productEX.Key_Navigation_Picture[listBox3.SelectedItem.ToString()].KeyRoi[item1.ItemArray[0].ToString()] = hObject;
+                                }
                             }
-
                             MessageBox.Show("导入成功");
                         }
                     }
@@ -2419,6 +2448,291 @@ namespace Vision2.Project.DebugF
 
         private void toolStripDropDownButton3_Click(object sender, EventArgs e)
         {
+        }
+
+        private DrawBackSt drawBackSt;
+
+        private void listBox5_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (listBox1.SelectedItem == null)
+                {
+                    return;
+                }
+                isCot = true;
+                drawBackSt = Vision.Instance.DicDrawbackNameS[listBox1.SelectedItem.ToString()];
+                dataGridView6.Rows.Clear();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            isCot = false;
+        }
+
+        private void dataGridView6_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            try
+            {
+                if (isCot)
+                {
+                    return;
+                }
+                if (drawBackSt != null)
+                {
+                    //for (int i = 0; i < dataGridView6.Rows.Count; i++)
+                    //{
+                    //    if (dataGridView6.Rows[i].Cells[0].Value != null)
+                    //    {
+                    //        if (drawBackSt.DicDrawbackIndex.Count <= i)
+                    //        {
+                    //            drawBackSt.DicDrawbackIndex.Add(int.Parse(dataGridView6.Rows[i].Cells[0].Value.ToString()));
+                    //        }
+                    //        else
+                    //        {
+                    //            drawBackSt.DicDrawbackIndex[i] = int.Parse(dataGridView6.Rows[i].Cells[0].Value.ToString());
+                    //        }
+                    //    }
+                    //    if (dataGridView6.Rows[i].Cells[1].Value != null)
+                    //    {
+                    //        if (drawBackSt.DicDrawbackName.Count <= i)
+                    //        {
+                    //            drawBackSt.DicDrawbackName.Add(dataGridView6.Rows[i].Cells[1].Value.ToString());
+                    //        }
+                    //        else
+                    //        {
+                    //            drawBackSt.DicDrawbackName[i] = dataGridView6.Rows[i].Cells[1].Value.ToString();
+                    //        }
+                    //    }
+                    //}
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void 添加ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string name = Interaction.InputBox("请输入新名称", "缺陷类型", "缺陷1", 100, 100);
+                if (name != "")
+                {
+                    if (!Vision.Instance.DicDrawbackNameS.ContainsKey(name))
+                    {
+                        Vision.Instance.DicDrawbackNameS.Add(name, new DrawBackSt());
+                        listBox5.Items.Add(name);
+                    }
+                    else
+                    {
+                        MessageBox.Show("已存在" + name);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void toolStripMenuItem7_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (Vision.Instance.DicDrawbackNameS.ContainsKey(listBox5.SelectedItem.ToString()))
+                {
+                    Vision.Instance.DicDrawbackNameS.Remove(listBox5.SelectedItem.ToString());
+                    listBox5.Items.RemoveAt(listBox5.SelectedIndex);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void 导出缺陷类型ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                ErosProjcetDLL.Project.ProjectINI.Weait(Vision.Instance.DicDrawbackNameS);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void 导入缺陷类型ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Dictionary<string, DrawBackSt> keyValuePairs = new Dictionary<string, DrawBackSt>();
+
+                ErosProjcetDLL.Project.ProjectINI.ReadWeait(out keyValuePairs);
+                if (keyValuePairs != null)
+                {
+                    foreach (var item in keyValuePairs)
+                    {
+                        if (!Vision.Instance.DicDrawbackNameS.ContainsKey(item.Key))
+                        {
+                            Vision.Instance.DicDrawbackNameS.Add(item.Key, item.Value);
+                        }
+                        else
+                        {
+                            Vision.Instance.DicDrawbackNameS[item.Key] = item.Value;
+                        }
+                    }
+                    listBox5.Items.Clear();
+                    foreach (var item in Vision.Instance.DicDrawbackNameS)
+                    {
+                        listBox5.Items.Add(item.Key);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void dataGridView7_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            try
+            {
+                if (isCot)
+                {
+                    return;
+                }
+                if (dataGridView7.Rows[e.RowIndex].Cells[1].Value == null)
+                {
+                    return;
+                }
+                DrawBack drawBack = dataGridView7.Rows[e.RowIndex].Cells[0].Tag as DrawBack;
+
+                int dw = 0;
+                string key = dataGridView7.Rows[e.RowIndex].Cells[1].Value.ToString();
+                if (drawBack != null)
+                {
+                    if (drawBack.DrawbackName != key)
+                    {
+                        Vision.Instance.DefectTypeDicEx.Remove(drawBack.DrawbackName);
+                    }
+                }
+                string values = "";
+                if (dataGridView7.Rows[e.RowIndex].Cells[1].Value != null)
+                {
+                    values = dataGridView7.Rows[e.RowIndex].Cells[2].Value.ToString();
+                }
+                if (dataGridView7.Rows[e.RowIndex].Cells[0].Value != null)
+                {
+                    int.TryParse(dataGridView7.Rows[e.RowIndex].Cells[0].Value.ToString(), out dw);
+                }
+                if (Vision.Instance.DefectTypeDicEx.ContainsKey(key))
+                {
+                    Vision.Instance.DefectTypeDicEx[key].DrawbackEnglish = values;
+                    Vision.Instance.DefectTypeDicEx[key].DrawbackIndex = dw;
+                    Vision.Instance.DefectTypeDicEx[key].DrawbackName = key;
+                }
+                else
+                {
+                    Vision.Instance.DefectTypeDicEx.Add(key, new DrawBack()
+                    {
+                        DrawbackEnglish = values,
+                        DrawbackName = key,
+                        DrawbackIndex = dw
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+        }
+
+        private void 导入ToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            //openFileDialog.InitialDirectory = ProjectINI.ProjectPathRun ;
+            try
+            {//"文本文件|*txt.*|C#文件|*.cs|所有文件|*.*";
+                openFileDialog.Filter = "Excel文件|*.xls;*.xlsx;*.txt;";
+                DialogResult dialog = openFileDialog.ShowDialog();
+                if (dialog == DialogResult.OK)
+                {
+                    if (System.IO.Path.GetExtension(openFileDialog.FileName) == ".txt")
+                    {
+                        Npoi.ReadText(openFileDialog.FileName, out List<string> text);
+                        //dataGridView1.Rows.Clear();
+
+                        foreach (var item in text)
+                        {
+                            string[] ItemArray = System.Text.RegularExpressions.Regex.Split(item, @"\s+");
+                        }
+                    }
+                    else
+                    {
+                        DataTable dataTable2 = Npoi.ReadExcelFile(openFileDialog.FileName, 0);
+                        if (dataTable2 == null)
+                        {
+                            MessageBox.Show("参数信息不存在;" + Environment.NewLine);
+                        }
+                        else
+                        {
+                            dataGridView7.Rows.Clear();
+                            Vision.Instance.DefectTypeDicEx.Clear();
+                            foreach (DataRow item1 in dataTable2.Rows)
+                            {
+                                if (!Vision.Instance.DefectTypeDicEx.ContainsKey(item1.ItemArray[1].ToString()))
+                                {
+                                    Vision.Instance.DefectTypeDicEx.Add(item1.ItemArray[1].ToString(),
+                                        new DrawBack()
+                                        {
+                                            DrawbackName = item1.ItemArray[1].ToString(),
+                                            DrawbackEnglish = item1.ItemArray[2].ToString(),
+                                        });
+
+                                    int det = dataGridView7.Rows.Add();
+                                    int.TryParse(item1.ItemArray[0].ToString(),
+                                        out Vision.Instance.DefectTypeDicEx[item1.ItemArray[1].ToString()].
+                                    DrawbackIndex);
+                                    dataGridView7.Rows[det].Cells[0].Value = item1.ItemArray[0];
+                                    dataGridView7.Rows[det].Cells[1].Value = item1.ItemArray[1];
+                                    dataGridView7.Rows[det].Cells[2].Value = item1.ItemArray[2];
+                                }
+                                else
+                                {
+                                    //Vision.Instance.CRDName.Add(item1.ItemArray[0].ToString(), item1.ItemArray[0].ToString());
+                                }
+                            }
+                            MessageBox.Show("导入成功");
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("导入失败:" + ex.Message);
+            }
+        }
+
+        private void 导出ToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+        }
+
+        private void 删除ToolStripMenuItem3_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Vision.Instance.DefectTypeDicEx.Remove(dataGridView7.Rows[dataGridView7.SelectedCells[0].RowIndex].Cells[1].Value.ToString());
+                dataGridView7.Rows.RemoveAt(dataGridView7.SelectedCells[0].RowIndex);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
     }
 }

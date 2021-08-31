@@ -30,18 +30,6 @@ namespace Vision2.Project.DebugF
             StaticThis = this;
         }
 
-        /// <summary>
-        /// 返回实例
-        /// </summary>
-        /// <returns></returns>
-        //public static DebugCompiler Instance()
-        //{
-        //    if (StaticThis == null)
-        //    {
-        //        StaticThis = new DebugCompiler();
-        //   }
-        //    return StaticThis;
-        //}
         public static DebugCompiler Instance
         {
             get
@@ -146,11 +134,6 @@ namespace Vision2.Project.DebugF
         {
             try
             {
-                //textProgram.Btn_Start.Enabled = IsConnect;
-                //textProgram.Btn_Stop.Enabled = IsConnect;
-                //textProgram.Btn_Initialize.Enabled = IsConnect;
-                //textProgram.Btn_Pause.Enabled = IsConnect;
-                //textProgram.Btn_Reset.Enabled = IsConnect;
                 PointFile.ReadPoint();
                 StartWhil0eRun();
                 thread = new Thread(ThreadRun);
@@ -180,17 +163,23 @@ namespace Vision2.Project.DebugF
         /// </summary>
         public FeedingModeEnum feedingModeEnum { get; set; }
 
+        [DescriptionAttribute("。"), Category("选项功能"), DisplayName("显示产品选项")]
+        public bool IsPoName { get; set; } = true;
+
         [DescriptionAttribute("。"), Category("选项功能"), DisplayName("显示产品参数")]
         public string PuPragrm { get; set; } = "";
 
-        [DescriptionAttribute("。"), Category("选项功能"), DisplayName("使用设备控制")]
-        public bool IsConnect { get; set; } = true;
+        //[DescriptionAttribute("。"), Category("选项功能"), DisplayName("使用设备控制")]
+        //public bool IsConnect { get; set; } = true;
 
         [DescriptionAttribute("。"), Category("选项功能"), DisplayName("使用导航图")]
         public bool IsSet { get; set; } = false;
 
         [DescriptionAttribute("。"), Category("选项功能"), DisplayName("显示状态")]
         public bool Display_Status { get; set; } = false;
+
+        [DescriptionAttribute("。"), Category("选项功能"), DisplayName("显示灯光控制器")]
+        public bool isVisibleLightS { get; set; } = false;
 
         [DescriptionAttribute("。"), Category("选项功能"), DisplayName("显示用户ID输入框")]
         public bool UserIDText { get; set; } = false;
@@ -298,12 +287,6 @@ namespace Vision2.Project.DebugF
             {
             }
         }
-
-        private double MavValue { get; set; } = 500;
-        private double StrValue { get; set; } = 80;
-        private double AceValue { get; set; } = 400;
-
-        private double DceValue { get; set; } = 400;
 
         /// <summary>
         /// 运行中停止
@@ -685,6 +668,12 @@ namespace Vision2.Project.DebugF
         /// </summary>
         [DescriptionAttribute("板卡IO输入。"), Category("线体"), DisplayName("进站检测")]
         public sbyte IntCDI { get; set; } = -1;
+
+        /// <summary>
+        /// 后站放行
+        /// </summary>
+        [DescriptionAttribute("后站放行输出。"), Category("线体"), DisplayName("后站放行")]
+        public sbyte OutDischarging { get; set; } = -1;
 
         [DescriptionAttribute("板卡IO输出。"), Category("线体"), DisplayName("进站风枪")]
         public sbyte OutFDEX { get; set; } = -1;
@@ -1350,8 +1339,8 @@ namespace Vision2.Project.DebugF
                                 if (EquipmentStatus == EnumEquipmentStatus.初始化完成)
                                 {
                                     MainForm1.MainFormF.Btn_Debug.Enabled =
-                              MainForm1.MainFormF.Btn_Initialize.Enabled =
-                               MainForm1.MainFormF.Btn_Start.Enabled = true;
+                                    MainForm1.MainFormF.Btn_Initialize.Enabled =
+                                    MainForm1.MainFormF.Btn_Start.Enabled = true;
                                     MainForm1.MainFormF.Btn_Start.Text = "启动";
                                     Product.IsSwitchover = true;
                                     RecipeCompiler.GetUserFormulaContrsl().EnabledLog(true);
@@ -1417,24 +1406,13 @@ namespace Vision2.Project.DebugF
                         dsa = StaticCon.GetLingkNameValueString(StaticThis.LinkAlarmName);
                         if (dsa == true.ToString())
                         {
-                            //textProgram.labelAram.Text = "故障";
                             IsAlarm = true;
-                            //textProgram.labelAram.BackColor = System.Drawing.Color.Red;
                         }
                         else
                         {
                             IsAlarm = false;
-                            //textProgram.labelAram.Text = "正常";
-                            //textProgram.labelAram.BackColor = System.Drawing.Color.Green;
                         }
-                        //if (this.LinkPause == "")
-                        //{
-                        //    MainForm1.MainFormF.Btn_Pause.Enabled = false;
-                        //}
-                        //else
-                        //{
-                        //    MainForm1.MainFormF.Btn_Pause.Enabled = true;
-                        //}
+
                         if (EquipmentStatus == EnumEquipmentStatus.暂停中)
                         {
                             run_Project.Pause();
@@ -1453,7 +1431,7 @@ namespace Vision2.Project.DebugF
                                 if (run_Project.HomeDone)
                                 {
                                     DebugCompiler.ISHome = true;
-                                    Vision2.ErosProjcetDLL.Project.AlarmText.AddTextNewLine("初始化完成");
+                                    AlarmText.AddTextNewLine("初始化完成");
                                     EquipmentStatus = EnumEquipmentStatus.初始化完成;
                                 }
                             }

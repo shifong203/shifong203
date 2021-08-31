@@ -11,12 +11,18 @@ namespace Vision2.vision.HalconRunFile.Controls
         }
 
         public HalconRunFile.RunProgramFile.HalconRun HalconRun;
+        private bool isThrad;
 
         private void button1_Click(object sender, EventArgs e)
         {
             try
             {
                 button4.Enabled = false;
+                if (isThrad)
+                {
+                    return;
+                }
+                isThrad = true;
                 if (checkBox1.Checked)
                 {
                     for (int j = 0; j < dataGridView2.Rows.Count; j++)
@@ -31,7 +37,8 @@ namespace Vision2.vision.HalconRunFile.Controls
                         HalconRun.ReadImage(dataGridView2.Rows[(int)numericUpDown2.Value].Cells[0].Value.ToString());
                         HalconRun.GetOneImageR().LiyID = (int)numericUpDown1.Value;
                         HalconRun.GetOneImageR().RunID = (int)numericUpDown1.Value;
-                        HalconRun.CamImageEvent(HalconRun.GetOneImageR(), false);
+                        HalconRun.GetOneImageR().IsSave = false;
+                        HalconRun.CamImageEvent(HalconRun.GetOneImageR());
                         if (numericUpDown2.Value == 0)
                         {
                             dataGridView1.Columns.Clear();
@@ -164,7 +171,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                     }
                     numericUpDown2.Value++;
                 }
-
+                isThrad = false;
                 //HalconRun.CamImageEvent(numericUpDown1.Value.ToString(), null, (int)numericUpDown1.Value);
             }
             catch (Exception ex)
@@ -337,7 +344,8 @@ namespace Vision2.vision.HalconRunFile.Controls
                 HalconRun.ReadImage(dataGridView2.Rows[(int)e.RowIndex].Cells[0].Value.ToString());
                 HalconRun.GetOneImageR().LiyID = (int)numericUpDown1.Value;
                 HalconRun.GetOneImageR().RunID = (int)numericUpDown1.Value;
-                HalconRun.CamImageEvent(HalconRun.GetOneImageR(), false);
+                HalconRun.GetOneImageR().IsSave = false;
+                HalconRun.CamImageEvent(HalconRun.GetOneImageR());
                 if (numericUpDown2.Value == 0)
                 {
                     dataGridView1.Columns.Clear();

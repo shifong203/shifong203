@@ -31,6 +31,9 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(UserFormulaContrsl));
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
@@ -43,6 +46,9 @@
             this.附加测试ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mES设置ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.打开数据ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.选择Mes地址ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.打开历史ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.选择历史数据地址ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
             this.panel1 = new System.Windows.Forms.Panel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -56,11 +62,15 @@
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.清除数据ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.panel4 = new System.Windows.Forms.Panel();
+            this.groupBox7 = new System.Windows.Forms.GroupBox();
+            this.comboBox2 = new System.Windows.Forms.ComboBox();
+            this.groupBox8 = new System.Windows.Forms.GroupBox();
+            this.comboBox3 = new System.Windows.Forms.ComboBox();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
             this.dataGridView2 = new System.Windows.Forms.DataGridView();
             this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.lightSourceControl1 = new Vision2.vision.Cams.LightSourceControl();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.button5 = new System.Windows.Forms.Button();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
@@ -73,9 +83,15 @@
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
-            this.label7 = new System.Windows.Forms.Label();
-            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
+            this.lightSourceControl1 = new Vision2.vision.Cams.LightSourceControl();
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.chartType = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.toolStrip2 = new System.Windows.Forms.ToolStrip();
+            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButton5 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
             this.panel3 = new System.Windows.Forms.Panel();
             this.label4 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
@@ -88,6 +104,7 @@
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.toolStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -98,6 +115,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             this.tabPage3.SuspendLayout();
+            this.panel4.SuspendLayout();
+            this.groupBox7.SuspendLayout();
+            this.groupBox8.SuspendLayout();
             this.groupBox6.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             this.groupBox3.SuspendLayout();
@@ -105,7 +125,9 @@
             this.groupBox5.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.groupBox2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
+            this.tabPage5.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.chartType)).BeginInit();
+            this.toolStrip2.SuspendLayout();
             this.panel3.SuspendLayout();
             this.contextMenuStrip2.SuspendLayout();
             this.SuspendLayout();
@@ -119,9 +141,7 @@
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(329, 29);
             this.comboBox1.TabIndex = 0;
-            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             this.comboBox1.SelectionChangeCommitted += new System.EventHandler(this.comboBox1_SelectionChangeCommitted);
-            this.comboBox1.Click += new System.EventHandler(this.comboBox1_Click);
             // 
             // button1
             // 
@@ -166,7 +186,8 @@
             this.toolStripDropDownButton1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.附加测试ToolStripMenuItem,
             this.mES设置ToolStripMenuItem,
-            this.打开数据ToolStripMenuItem});
+            this.打开数据ToolStripMenuItem,
+            this.打开历史ToolStripMenuItem});
             this.toolStripDropDownButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripDropDownButton1.Image")));
             this.toolStripDropDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripDropDownButton1.Name = "toolStripDropDownButton1";
@@ -179,7 +200,7 @@
             // 
             this.附加测试ToolStripMenuItem.Image = global::Vision2.Properties.Resources.library_bookmarked;
             this.附加测试ToolStripMenuItem.Name = "附加测试ToolStripMenuItem";
-            this.附加测试ToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+            this.附加测试ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
             this.附加测试ToolStripMenuItem.Text = "附加测试";
             this.附加测试ToolStripMenuItem.Click += new System.EventHandler(this.附加测试ToolStripMenuItem_Click);
             // 
@@ -187,17 +208,42 @@
             // 
             this.mES设置ToolStripMenuItem.Image = global::Vision2.Properties.Resources.globe_vector;
             this.mES设置ToolStripMenuItem.Name = "mES设置ToolStripMenuItem";
-            this.mES设置ToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+            this.mES设置ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
             this.mES设置ToolStripMenuItem.Text = "MES设置";
             this.mES设置ToolStripMenuItem.Click += new System.EventHandler(this.mES设置ToolStripMenuItem_Click);
             // 
             // 打开数据ToolStripMenuItem
             // 
+            this.打开数据ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.选择Mes地址ToolStripMenuItem});
             this.打开数据ToolStripMenuItem.Image = global::Vision2.Properties.Resources.folder;
             this.打开数据ToolStripMenuItem.Name = "打开数据ToolStripMenuItem";
-            this.打开数据ToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
-            this.打开数据ToolStripMenuItem.Text = "打开数据文件夹";
+            this.打开数据ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.打开数据ToolStripMenuItem.Text = "打开数据文件";
             this.打开数据ToolStripMenuItem.Click += new System.EventHandler(this.打开数据ToolStripMenuItem_Click);
+            // 
+            // 选择Mes地址ToolStripMenuItem
+            // 
+            this.选择Mes地址ToolStripMenuItem.Name = "选择Mes地址ToolStripMenuItem";
+            this.选择Mes地址ToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
+            this.选择Mes地址ToolStripMenuItem.Text = "选择Mes地址";
+            this.选择Mes地址ToolStripMenuItem.Click += new System.EventHandler(this.选择Mes地址ToolStripMenuItem_Click);
+            // 
+            // 打开历史ToolStripMenuItem
+            // 
+            this.打开历史ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.选择历史数据地址ToolStripMenuItem});
+            this.打开历史ToolStripMenuItem.Name = "打开历史ToolStripMenuItem";
+            this.打开历史ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.打开历史ToolStripMenuItem.Text = "打开历史文件";
+            this.打开历史ToolStripMenuItem.Click += new System.EventHandler(this.打开历史ToolStripMenuItem_Click);
+            // 
+            // 选择历史数据地址ToolStripMenuItem
+            // 
+            this.选择历史数据地址ToolStripMenuItem.Name = "选择历史数据地址ToolStripMenuItem";
+            this.选择历史数据地址ToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            this.选择历史数据地址ToolStripMenuItem.Text = "选择历史数据地址";
+            this.选择历史数据地址ToolStripMenuItem.Click += new System.EventHandler(this.选择历史数据地址ToolStripMenuItem_Click);
             // 
             // toolStripLabel1
             // 
@@ -238,11 +284,12 @@
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Controls.Add(this.tabPage4);
+            this.tabControl1.Controls.Add(this.tabPage5);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(3, 135);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(402, 489);
+            this.tabControl1.Size = new System.Drawing.Size(402, 490);
             this.tabControl1.TabIndex = 4;
             // 
             // tabPage2
@@ -251,7 +298,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 26);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(394, 459);
+            this.tabPage2.Size = new System.Drawing.Size(394, 460);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "导航图";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -264,9 +311,9 @@
             this.hWindowControl1.ImagePart = new System.Drawing.Rectangle(0, 0, 640, 480);
             this.hWindowControl1.Location = new System.Drawing.Point(3, 3);
             this.hWindowControl1.Name = "hWindowControl1";
-            this.hWindowControl1.Size = new System.Drawing.Size(388, 453);
+            this.hWindowControl1.Size = new System.Drawing.Size(388, 454);
             this.hWindowControl1.TabIndex = 0;
-            this.hWindowControl1.WindowSize = new System.Drawing.Size(388, 453);
+            this.hWindowControl1.WindowSize = new System.Drawing.Size(388, 454);
             this.hWindowControl1.HMouseMove += new HalconDotNet.HMouseEventHandler(this.hWindowControl1_HMouseMove);
             this.hWindowControl1.HMouseDown += new HalconDotNet.HMouseEventHandler(this.HWindowControl1_HMouseDown);
             // 
@@ -276,7 +323,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 26);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(394, 459);
+            this.tabPage1.Size = new System.Drawing.Size(394, 460);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "数据";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -298,7 +345,7 @@
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowHeadersVisible = false;
             this.dataGridView1.RowTemplate.Height = 30;
-            this.dataGridView1.Size = new System.Drawing.Size(388, 453);
+            this.dataGridView1.Size = new System.Drawing.Size(388, 454);
             this.dataGridView1.TabIndex = 3;
             this.dataGridView1.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellClick);
             this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
@@ -339,24 +386,82 @@
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.panel4);
             this.tabPage3.Controls.Add(this.groupBox6);
-            this.tabPage3.Controls.Add(this.lightSourceControl1);
             this.tabPage3.Controls.Add(this.groupBox3);
             this.tabPage3.Controls.Add(this.panel2);
             this.tabPage3.Controls.Add(this.groupBox2);
+            this.tabPage3.Controls.Add(this.lightSourceControl1);
             this.tabPage3.Location = new System.Drawing.Point(4, 26);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(394, 459);
+            this.tabPage3.Size = new System.Drawing.Size(394, 460);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "状态";
             this.tabPage3.UseVisualStyleBackColor = true;
+            this.tabPage3.Click += new System.EventHandler(this.tabPage3_Click);
+            // 
+            // panel4
+            // 
+            this.panel4.Controls.Add(this.groupBox7);
+            this.panel4.Controls.Add(this.groupBox8);
+            this.panel4.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel4.Location = new System.Drawing.Point(3, 421);
+            this.panel4.Name = "panel4";
+            this.panel4.Size = new System.Drawing.Size(388, 55);
+            this.panel4.TabIndex = 22;
+            // 
+            // groupBox7
+            // 
+            this.groupBox7.Controls.Add(this.comboBox2);
+            this.groupBox7.Dock = System.Windows.Forms.DockStyle.Left;
+            this.groupBox7.Location = new System.Drawing.Point(193, 0);
+            this.groupBox7.Name = "groupBox7";
+            this.groupBox7.Size = new System.Drawing.Size(199, 55);
+            this.groupBox7.TabIndex = 20;
+            this.groupBox7.TabStop = false;
+            this.groupBox7.Text = "线号:";
+            // 
+            // comboBox2
+            // 
+            this.comboBox2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.comboBox2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox2.FormattingEnabled = true;
+            this.comboBox2.Location = new System.Drawing.Point(3, 22);
+            this.comboBox2.Name = "comboBox2";
+            this.comboBox2.Size = new System.Drawing.Size(193, 24);
+            this.comboBox2.TabIndex = 0;
+            this.comboBox2.DropDown += new System.EventHandler(this.comboBox2_DropDown);
+            this.comboBox2.SelectedIndexChanged += new System.EventHandler(this.comboBox2_SelectedIndexChanged);
+            // 
+            // groupBox8
+            // 
+            this.groupBox8.Controls.Add(this.comboBox3);
+            this.groupBox8.Dock = System.Windows.Forms.DockStyle.Left;
+            this.groupBox8.Location = new System.Drawing.Point(0, 0);
+            this.groupBox8.Name = "groupBox8";
+            this.groupBox8.Size = new System.Drawing.Size(193, 55);
+            this.groupBox8.TabIndex = 21;
+            this.groupBox8.TabStop = false;
+            this.groupBox8.Text = "站号:";
+            // 
+            // comboBox3
+            // 
+            this.comboBox3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.comboBox3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox3.FormattingEnabled = true;
+            this.comboBox3.Location = new System.Drawing.Point(3, 22);
+            this.comboBox3.Name = "comboBox3";
+            this.comboBox3.Size = new System.Drawing.Size(187, 24);
+            this.comboBox3.TabIndex = 0;
+            this.comboBox3.DropDown += new System.EventHandler(this.comboBox3_DropDown);
+            this.comboBox3.SelectedIndexChanged += new System.EventHandler(this.comboBox3_SelectedIndexChanged);
             // 
             // groupBox6
             // 
             this.groupBox6.Controls.Add(this.dataGridView2);
             this.groupBox6.Dock = System.Windows.Forms.DockStyle.Top;
-            this.groupBox6.Location = new System.Drawing.Point(3, 365);
+            this.groupBox6.Location = new System.Drawing.Point(3, 334);
             this.groupBox6.Name = "groupBox6";
             this.groupBox6.Size = new System.Drawing.Size(388, 87);
             this.groupBox6.TabIndex = 21;
@@ -395,14 +500,6 @@
             this.Column2.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             this.Column2.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
-            // lightSourceControl1
-            // 
-            this.lightSourceControl1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lightSourceControl1.Location = new System.Drawing.Point(3, 187);
-            this.lightSourceControl1.Name = "lightSourceControl1";
-            this.lightSourceControl1.Size = new System.Drawing.Size(388, 178);
-            this.lightSourceControl1.TabIndex = 14;
-            // 
             // groupBox3
             // 
             this.groupBox3.Controls.Add(this.button5);
@@ -410,7 +507,7 @@
             this.groupBox3.Controls.Add(this.label5);
             this.groupBox3.Controls.Add(this.button3);
             this.groupBox3.Dock = System.Windows.Forms.DockStyle.Top;
-            this.groupBox3.Location = new System.Drawing.Point(3, 138);
+            this.groupBox3.Location = new System.Drawing.Point(3, 285);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(388, 49);
             this.groupBox3.TabIndex = 16;
@@ -463,7 +560,7 @@
             this.panel2.Controls.Add(this.groupBox5);
             this.panel2.Controls.Add(this.groupBox4);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel2.Location = new System.Drawing.Point(3, 85);
+            this.panel2.Location = new System.Drawing.Point(3, 232);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(388, 53);
             this.panel2.TabIndex = 20;
@@ -511,12 +608,10 @@
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.textBox1);
-            this.groupBox2.Controls.Add(this.label7);
-            this.groupBox2.Controls.Add(this.numericUpDown1);
             this.groupBox2.Dock = System.Windows.Forms.DockStyle.Top;
-            this.groupBox2.Location = new System.Drawing.Point(3, 3);
+            this.groupBox2.Location = new System.Drawing.Point(3, 177);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(388, 82);
+            this.groupBox2.Size = new System.Drawing.Size(388, 55);
             this.groupBox2.TabIndex = 15;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "产品ID";
@@ -530,42 +625,105 @@
             this.textBox1.Size = new System.Drawing.Size(382, 31);
             this.textBox1.TabIndex = 9;
             this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+            this.textBox1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox1_KeyDown);
             // 
-            // label7
+            // lightSourceControl1
             // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(3, 56);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(56, 16);
-            this.label7.TabIndex = 13;
-            this.label7.Text = "码长度";
-            // 
-            // numericUpDown1
-            // 
-            this.numericUpDown1.Location = new System.Drawing.Point(60, 53);
-            this.numericUpDown1.Minimum = new decimal(new int[] {
-            5,
-            0,
-            0,
-            0});
-            this.numericUpDown1.Name = "numericUpDown1";
-            this.numericUpDown1.Size = new System.Drawing.Size(81, 26);
-            this.numericUpDown1.TabIndex = 12;
-            this.numericUpDown1.Value = new decimal(new int[] {
-            5,
-            0,
-            0,
-            0});
+            this.lightSourceControl1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.lightSourceControl1.Location = new System.Drawing.Point(3, 3);
+            this.lightSourceControl1.Name = "lightSourceControl1";
+            this.lightSourceControl1.Size = new System.Drawing.Size(388, 174);
+            this.lightSourceControl1.TabIndex = 14;
             // 
             // tabPage4
             // 
             this.tabPage4.Location = new System.Drawing.Point(4, 26);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(394, 459);
+            this.tabPage4.Size = new System.Drawing.Size(394, 460);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "信息记录";
             this.tabPage4.UseVisualStyleBackColor = true;
+            // 
+            // tabPage5
+            // 
+            this.tabPage5.Controls.Add(this.chartType);
+            this.tabPage5.Controls.Add(this.toolStrip2);
+            this.tabPage5.Location = new System.Drawing.Point(4, 26);
+            this.tabPage5.Name = "tabPage5";
+            this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage5.Size = new System.Drawing.Size(394, 460);
+            this.tabPage5.TabIndex = 4;
+            this.tabPage5.Text = "统计";
+            this.tabPage5.UseVisualStyleBackColor = true;
+            // 
+            // chartType
+            // 
+            chartArea1.Name = "ChartArea1";
+            this.chartType.ChartAreas.Add(chartArea1);
+            this.chartType.Dock = System.Windows.Forms.DockStyle.Fill;
+            legend1.Name = "Legend1";
+            this.chartType.Legends.Add(legend1);
+            this.chartType.Location = new System.Drawing.Point(3, 28);
+            this.chartType.Name = "chartType";
+            series1.ChartArea = "ChartArea1";
+            series1.Legend = "Legend1";
+            series1.Name = "Series1";
+            this.chartType.Series.Add(series1);
+            this.chartType.Size = new System.Drawing.Size(388, 429);
+            this.chartType.TabIndex = 0;
+            this.chartType.Text = "chart1";
+            // 
+            // toolStrip2
+            // 
+            this.toolStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripButton1,
+            this.toolStripButton2,
+            this.toolStripButton5,
+            this.toolStripButton3});
+            this.toolStrip2.Location = new System.Drawing.Point(3, 3);
+            this.toolStrip2.Name = "toolStrip2";
+            this.toolStrip2.Size = new System.Drawing.Size(388, 25);
+            this.toolStrip2.TabIndex = 1;
+            this.toolStrip2.Text = "toolStrip2";
+            // 
+            // toolStripButton1
+            // 
+            this.toolStripButton1.Image = global::Vision2.Properties.Resources.idea_vector;
+            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton1.Name = "toolStripButton1";
+            this.toolStripButton1.Size = new System.Drawing.Size(52, 22);
+            this.toolStripButton1.Text = "饼图";
+            this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
+            // 
+            // toolStripButton2
+            // 
+            this.toolStripButton2.Image = global::Vision2.Properties.Resources.chart;
+            this.toolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton2.Name = "toolStripButton2";
+            this.toolStripButton2.Size = new System.Drawing.Size(52, 22);
+            this.toolStripButton2.Text = "柱图";
+            this.toolStripButton2.Click += new System.EventHandler(this.toolStripButton2_Click_1);
+            // 
+            // toolStripButton5
+            // 
+            this.toolStripButton5.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.toolStripButton5.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton5.Image")));
+            this.toolStripButton5.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton5.Name = "toolStripButton5";
+            this.toolStripButton5.Size = new System.Drawing.Size(48, 22);
+            this.toolStripButton5.Text = "日记录";
+            this.toolStripButton5.Click += new System.EventHandler(this.toolStripButton5_Click);
+            // 
+            // toolStripButton3
+            // 
+            this.toolStripButton3.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.toolStripButton3.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton3.Image")));
+            this.toolStripButton3.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton3.Name = "toolStripButton3";
+            this.toolStripButton3.Size = new System.Drawing.Size(48, 22);
+            this.toolStripButton3.Text = "月记录";
+            this.toolStripButton3.Click += new System.EventHandler(this.toolStripButton3_Click_1);
             // 
             // panel3
             // 
@@ -637,9 +795,9 @@
             // 
             this.runUControl1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.runUControl1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.runUControl1.Location = new System.Drawing.Point(3, 624);
+            this.runUControl1.Location = new System.Drawing.Point(3, 625);
             this.runUControl1.Name = "runUControl1";
-            this.runUControl1.Size = new System.Drawing.Size(402, 134);
+            this.runUControl1.Size = new System.Drawing.Size(402, 133);
             this.runUControl1.TabIndex = 5;
             // 
             // dataGridViewImageColumn1
@@ -685,6 +843,14 @@
             this.dataGridViewTextBoxColumn2.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.dataGridViewTextBoxColumn2.Width = 47;
             // 
+            // dataGridViewTextBoxColumn3
+            // 
+            this.dataGridViewTextBoxColumn3.HeaderText = "值";
+            this.dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
+            this.dataGridViewTextBoxColumn3.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridViewTextBoxColumn3.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.dataGridViewTextBoxColumn3.Width = 189;
+            // 
             // dataGridViewTextBoxColumn5
             // 
             dataGridViewCellStyle5.Font = new System.Drawing.Font("宋体", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
@@ -716,6 +882,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.contextMenuStrip1.ResumeLayout(false);
             this.tabPage3.ResumeLayout(false);
+            this.panel4.ResumeLayout(false);
+            this.groupBox7.ResumeLayout(false);
+            this.groupBox8.ResumeLayout(false);
             this.groupBox6.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
             this.groupBox3.ResumeLayout(false);
@@ -727,7 +896,11 @@
             this.groupBox4.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
+            this.tabPage5.ResumeLayout(false);
+            this.tabPage5.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.chartType)).EndInit();
+            this.toolStrip2.ResumeLayout(false);
+            this.toolStrip2.PerformLayout();
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
             this.contextMenuStrip2.ResumeLayout(false);
@@ -747,7 +920,6 @@
         public System.Windows.Forms.ToolStripLabel toolStripLabel1;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.DataGridViewImageColumn dataGridViewImageColumn1;
@@ -767,8 +939,6 @@
         private HalconDotNet.HWindowControl hWindowControl1;
         private DebugF.IO.RunUControl runUControl1;
         public System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.NumericUpDown numericUpDown1;
         private System.Windows.Forms.Timer timer1;
         public System.Windows.Forms.TabPage tabPage4;
         public System.Windows.Forms.TabControl tabControl1;
@@ -778,7 +948,6 @@
         private System.Windows.Forms.ToolStripMenuItem 打开数据ToolStripMenuItem;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip2;
         private System.Windows.Forms.ToolStripMenuItem 清除统计数据ToolStripMenuItem;
-        private vision.Cams.LightSourceControl lightSourceControl1;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Button button3;
@@ -788,8 +957,26 @@
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.GroupBox groupBox5;
         private System.Windows.Forms.GroupBox groupBox6;
-        private System.Windows.Forms.DataGridView dataGridView2;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
+        private System.Windows.Forms.ToolStripMenuItem 打开历史ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 选择Mes地址ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 选择历史数据地址ToolStripMenuItem;
+        private System.Windows.Forms.TabPage tabPage5;
+        private System.Windows.Forms.ToolStrip toolStrip2;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
+        private System.Windows.Forms.ToolStripButton toolStripButton1;
+        private System.Windows.Forms.ToolStripButton toolStripButton2;
+        public System.Windows.Forms.Label label3;
+        public System.Windows.Forms.DataVisualization.Charting.Chart chartType;
+        private System.Windows.Forms.ComboBox comboBox2;
+        public vision.Cams.LightSourceControl lightSourceControl1;
+        public System.Windows.Forms.GroupBox groupBox8;
+        private System.Windows.Forms.ComboBox comboBox3;
+        public System.Windows.Forms.GroupBox groupBox7;
+        public System.Windows.Forms.DataGridView dataGridView2;
+        public System.Windows.Forms.Panel panel4;
+        private System.Windows.Forms.ToolStripButton toolStripButton3;
+        private System.Windows.Forms.ToolStripButton toolStripButton5;
     }
 }

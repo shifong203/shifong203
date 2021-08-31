@@ -75,11 +75,10 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             control.Width = 900;
             //
             tabPage = new TabPage();
-            //TabControl tabContr = control.tabControl1;
-            //tabPage.Text = "区域属性";
-            //tabContr.TabPages.Add(tabPage);
-            //tabPage.Controls.Add(new ObjDataGr() { Dock = DockStyle.Fill, Tag = this.KeyHObject });
         }
+
+        [Category("CRD"), DisplayName("CRD名称"), Description("CRD名称，为''时使用程序名")]
+        public string CRDName { get; set; } = "";
 
         public Control GetThisControl()
         {
@@ -336,6 +335,9 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         /// </summary>
         public HObject AOIObj = new HObject();
 
+        [DescriptionAttribute("使用固定区域。"), Category("检测区域"), DisplayName("使用AOI区域")]
+        public bool ISAoiMode { get; set; }
+
         //[DescriptionAttribute("是否在复判栏显示。"), Category("结果显示"), DisplayName("是否显示复判项")]
         //public bool ISCompound { get; set; } = true;
 
@@ -356,6 +358,26 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 return listS;
             }
         }
+
+        public HTuple GetBackNames()
+        {
+            HTuple hTuple = new HTuple();
+            try
+            {
+                if (BackName == "")
+                {
+                    return hTuple;
+                }
+                hTuple = new HTuple(Vision.Instance.DicDrawbackNameS[BackName].GetBackName());
+            }
+            catch (Exception)
+            {
+            }
+            return hTuple;
+        }
+
+        [DescriptionAttribute("NG后缺陷类型。"), Category("结果输出"), DisplayName("缺陷名称")]
+        public string Defect_Type { get; set; } = "NG";
 
         public OneComponent GetOneComponent()
         {
@@ -379,10 +401,12 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 AoiRow = row;
                 AoiCol = col;
             }
+
             aoiObj.AoiRow = this.AoiRow;
             aoiObj.AoiCol = this.AoiCol;
             aoiObj.Drow = DrawObj;
             aoiObj.CiName = this.Name;
+            aoiObj.RPName = this.Name;
             return aoiObj;
         }
 
@@ -425,6 +449,15 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 Watch.Restart();
                 oneCompo = new OneComponent();
                 NGTextS = new HTuple();
+                if (CRDName == "")
+                {
+                    aoiObj.CiName = this.Name;
+                }
+                else
+                {
+                    aoiObj.CiName = this.CRDName;
+                }
+
                 ResltBool = RunHProgram(oneResultOBj, out List<OneRObj> oneRObj, aoiObj);
                 Watch.Stop();
                 Dictionary<string, HTuple> sdd = this.SetData();
@@ -468,6 +501,46 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 ResltBool = false;
             }
             return ResltBool;
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="hObject"></param>
+        /// <param name="dvalue"></param>
+        /// <returns></returns>
+        public static HObject OpneOrCosingCircle(HObject hObject, double dvalue)
+        {
+            if (dvalue == 0)
+            {
+                return hObject;
+            }
+            else if (dvalue > 0)
+            {
+                HOperatorSet.ClosingCircle(hObject, out hObject, dvalue);
+            }
+            else
+            {
+                HOperatorSet.OpeningCircle(hObject, out hObject, Math.Abs(dvalue));
+            }
+            return hObject;
+        }
+
+        public static HObject DilationOrErosingCircle(HObject hObject, double dvalue)
+        {
+            if (dvalue == 0)
+            {
+                return hObject;
+            }
+            else if (dvalue > 0)
+            {
+                HOperatorSet.DilationCircle(hObject, out hObject, dvalue);
+            }
+            else
+            {
+                HOperatorSet.ErosionCircle(hObject, out hObject, Math.Abs(dvalue));
+            }
+            return hObject;
         }
 
         public virtual bool RunHom2D(OneResultOBj oneResultOBj, AoiObj aoiobl)
@@ -664,6 +737,9 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             }
         }
 
+        /// <summary>
+        /// 显示执行区
+        /// </summary>
         //[DescriptionAttribute("错误信息。"), Category("结果显示"), DisplayName("错误信息")]
         //public string ErrText { get; set; }
         [DescriptionAttribute("显示区域。"), Category("结果显示"), DisplayName("是否显示区域")]
@@ -933,7 +1009,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         /// <param name="drawObj"></param>
         /// <param name="enumDrawType"></param>
         /// <returns></returns>
-        public static HObject DrawHobj(IDrawHalcon halcon, HObject drawObj, HalconRun.EnumDrawType enumDrawType)
+        public static HObject DrawHObj(IDrawHalcon halcon, HObject drawObj, HalconRun.EnumDrawType enumDrawType)
         {
             try
             {
@@ -968,7 +1044,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
 
                         HOperatorSet.GetMposition(halcon.hWindowHalcon(), out hv_Row, out hv_Column, out hv_Button);
                         HObject hObject = new HObject();
-
+                        hObject.GenEmptyObj();
                         HOperatorSet.DispObj(halcon.Image(), halcon.hWindowHalcon());
                         HOperatorSet.SetSystem("flush_graphic", "true");
                         //HOperatorSet.SetSystem("flush_graphic", "true");
@@ -1013,17 +1089,23 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                                     Vision.Disp_message(halcon.hWindowHalcon(), "未选择绘制类型，已取消绘制！");
                                     return drawObj;
                             }
+                            HOperatorSet.SetDraw(halcon.hWindowHalcon(), "margin");
                             HOperatorSet.SetColor(halcon.hWindowHalcon(), "red");
                             HOperatorSet.DispObj(hObject, halcon.hWindowHalcon());
                             HOperatorSet.SetColor(halcon.hWindowHalcon(), "#b2222270");
                             drawObj = hObject;
                             HOperatorSet.DispObj(drawObj, halcon.hWindowHalcon());
+                            halcon.Drawing = false;
+
+                            halcon.DrawErasure = false;
+                            return drawObj;
                         }
                         else
                         {
-                            HOperatorSet.GenCircle(out hObject, hv_Row, hv_Column, Circl_Rire);
-                            HOperatorSet.SetColor(halcon.hWindowHalcon(), "#b2222270");
+                            //HOperatorSet.GenCircle(out hObject, hv_Row, hv_Column, Circl_Rire);
                             HOperatorSet.DispObj(drawObj, halcon.hWindowHalcon());
+                            HOperatorSet.SetColor(halcon.hWindowHalcon(), "#b2222270");
+
                             HOperatorSet.SetColor(halcon.hWindowHalcon(), "red");
                             HOperatorSet.DispObj(hObject, halcon.hWindowHalcon());
                         }

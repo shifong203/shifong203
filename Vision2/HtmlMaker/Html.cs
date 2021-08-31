@@ -114,7 +114,7 @@ namespace Vision2.HtmlMaker
                         DoWrite("<TD>Dimension Analysis</TD>");
                         DoWrite("<TD>" + itemd.Key + "</TD>");
                         runo++;
-                        if (itemd.Value.OK)
+                        if (itemd.Value.aOK)
                         {
                             DoWrite("<TD bgColor=#00ff00><B>PASS</B></TD>");
                         }

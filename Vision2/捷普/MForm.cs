@@ -45,6 +45,11 @@ namespace Vision2.捷普
                     UserFormulaContrsl.StaticAddQRCode(textBox1.Text);
                     DebugCompiler.Start();
                 }
+                if (ProjectINI.DebugMode)
+                {
+                    label6.Text = "Pass";
+                    label6.BackColor = Color.Yellow;
+                }
                 tabControl1.SelectedIndex = 1;
                 Project.MainForm1.MainFormF.WindowState = FormWindowState.Minimized;
             }
@@ -232,14 +237,15 @@ namespace Vision2.捷普
                     {
                         dataGridView1.Rows[i].Cells[8].Value = key.RunTime;
                     }
-                    string Name = textBox1.Text +
+                    string name = textBox1.Text +
                     UserFormulaContrsl.GetDataVale().EndTime.ToString(
                         mesJib.MesData.FileTimeName);
                     if (ProjectINI.DebugMode)
                     {
-                        Name = "DEBUG-" + Name;
+                        name = "DEBUG-" + name;
                     }
-                    string path = mesJib.MesData.TEPath + "\\" + Name;
+
+                    string path = mesJib.MesData.TEPath + "\\" + name;
                     if (UserFormulaContrsl.GetDataVale().OK)
                     {
                         label7.BackColor = Color.Green;
@@ -251,12 +257,17 @@ namespace Vision2.捷普
                         label7.BackColor = Color.Red;
                         label7.Text = "Fail";
                     }
+                    textBox1.Text = "";
                     string textd = "00:00:";
                     label9.Text = textd + key.RunTime.ToString("00");
-                    HtmlMaker.Html.GenerateCode(path, key.RunTime, UserFormulaContrsl.timeStrStrat, DateTime.Now, UserFormulaContrsl.GetDataVale());
+                    if (!name.Contains("DEBUG"))
+                    {
+                        HtmlMaker.Html.GenerateCode(path, key.RunTime, UserFormulaContrsl.timeStrStrat,
+                         DateTime.Now, UserFormulaContrsl.GetDataVale());
+                    }
+                    HtmlMaker.Html.GenerateCode(mesJib.DataPaht + "\\" + DateTime.Now.ToString("yyyyMMdd") + "\\" + name
+                               , key.RunTime, UserFormulaContrsl.timeStrStrat, DateTime.Now, UserFormulaContrsl.GetDataVale());
                 }));
-                HtmlMaker.Html.GenerateCode(mesJib.MesData.DataPaht + "\\" + DateTime.Now.ToString("yyyyMMdd") + "\\" + Name
-                    , key.RunTime, UserFormulaContrsl.timeStrStrat, DateTime.Now, UserFormulaContrsl.GetDataVale());
             }
             catch (Exception ex)
             {
@@ -367,6 +378,7 @@ namespace Vision2.捷普
                             }
                             if (!Err)
                             {
+                                richTextBox1.AppendText(DateTime.Now.ToString() + "用户ID无权限" + Environment.NewLine);
                                 MessageBox.Show("用户ID无权限!");
                             }
                             else
@@ -376,6 +388,7 @@ namespace Vision2.捷普
                         }
                         else
                         {
+                            richTextBox1.AppendText(DateTime.Now.ToString() + strErr + Environment.NewLine);
                             label6.BackColor = Color.Red;
                         }
                         textBox3.Text = ProjectINI.In.UserID;
@@ -458,8 +471,15 @@ namespace Vision2.捷普
         {
             try
             {
-                CRRForm cRRFor = new CRRForm();
-                cRRFor.ShowDialog();
+                if (ProjectINI.DebugMode)
+                {
+                    CRRForm cRRFor = new CRRForm();
+                    cRRFor.ShowDialog();
+                }
+                else
+                {
+                    MessageBox.Show("请切换到Debug模式");
+                }
             }
             catch (Exception)
             {

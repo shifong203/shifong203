@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.IO;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 using Vision2.ErosProjcetDLL.Project;
 
@@ -43,7 +44,7 @@ namespace Vision2.Project.Mes.环旭SISF
             {
                 richTextBox2.AppendText(mesInfon1.SendStep7(textBox1.Text) + Environment.NewLine);
 
-                string ds = mesInfon1.GetSocketClint().AlwaysRece(10000);
+                string ds = mesInfon1.GetSocketClint().AlwaysReceive(10000);
                 richTextBox1.AppendText(ds + Environment.NewLine);
             }
             catch (Exception ex)
@@ -83,7 +84,7 @@ namespace Vision2.Project.Mes.环旭SISF
             try
             {
                 richTextBox2.AppendText(mesInfon1.SendStep2(textBox1.Text, textBox2.Text, textBox3.Text) + Environment.NewLine);
-                string ds = mesInfon1.GetSocketClint().AlwaysRece(10000);
+                string ds = mesInfon1.GetSocketClint().AlwaysReceive(10000);
                 richTextBox1.AppendText(ds + Environment.NewLine);
             }
             catch (Exception ex)
@@ -92,10 +93,25 @@ namespace Vision2.Project.Mes.环旭SISF
             }
         }
 
+        private bool isCahtrv = false;
+
         private void SisfForm1_Load(object sender, EventArgs e)
         {
             try
             {
+                isCahtrv = true;
+                ErosProjcetDLL.UI.DataGridViewF.StCon.AddCon(dataGridView1);
+                ErosProjcetDLL.UI.DataGridViewF.StCon.AddCon(dataGridView2);
+                for (int i = 0; i < mesInfon1.ListStr.Count; i++)
+                {
+                    int dset = dataGridView1.Rows.Add();
+                    dataGridView1.Rows[dset].Cells[0].Value = mesInfon1.ListStr[i];
+                }
+                for (int i = 0; i < mesInfon1.FixtureList.Count; i++)
+                {
+                    int dset = dataGridView2.Rows.Add();
+                    dataGridView2.Rows[dset].Cells[0].Value = mesInfon1.FixtureList[i];
+                }
                 mesInfon1.GetSocketClint().PassiveStringBuilderEvent += SisfForm1_PassiveStringBuilderEvent;
                 for (int i = 0; i < listBox1.Items.Count; i++)
                 {
@@ -103,10 +119,19 @@ namespace Vision2.Project.Mes.环旭SISF
                     listBox1.SelectedItem = listBox1.Items[i];
                     break;
                 }
+                if (mesInfon1.SISFVersions == "Presasm1_SPEC")
+                {
+                    button1.Enabled = false;
+                    button2.Enabled = false;
+                }
+                else
+                {
+                }
             }
             catch (Exception)
             {
             }
+            isCahtrv = false;
         }
 
         private string SisfForm1_PassiveStringBuilderEvent(StringBuilder key, ErosSocket.ErosConLink.SocketClint socket, System.Net.Sockets.Socket socketR)
@@ -129,18 +154,6 @@ namespace Vision2.Project.Mes.环旭SISF
             }
             catch (Exception)
             {
-            }
-        }
-
-        private void button4_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                mesInfon1.WrietMes(DebugF.DebugCompiler.GetTray(0).GetTrayData());
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
             }
         }
 
@@ -171,7 +184,14 @@ namespace Vision2.Project.Mes.环旭SISF
         {
             try
             {
-                mesInfon1.WrietMes(DebugF.DebugCompiler.GetTray(0).GetTrayData());
+                Thread thread = new Thread(() =>
+                {
+                    mesInfon1.WrietMes(DebugF.DebugCompiler.GetTray(0).GetTrayData());
+                });
+
+                thread.IsBackground = true;
+                thread.Start();
+
                 //richTextBox2.AppendText(mesInfon1.Sisf2(DebugF.DebugCompiler.GetTray(0).GetTrayData()) + Environment.NewLine);
                 //string ds = mesInfon1.GetSocketClint().AlwaysRece(10000);
                 //richTextBox1.AppendText(ds + Environment.NewLine);
@@ -179,6 +199,65 @@ namespace Vision2.Project.Mes.环旭SISF
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+        }
+
+        private void dataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            try
+            {
+                if (isCahtrv)
+                {
+                    return;
+                }
+                mesInfon1.ListStr.Clear();
+                for (int i = 0; i < dataGridView1.Rows.Count; i++)
+                {
+                    if (dataGridView1.Rows[i].Cells[0].Value != null)
+                    {
+                        mesInfon1.ListStr.Add(dataGridView1.Rows[i].Cells[0].Value.ToString());
+                    }
+                }
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        private void dataGridView2_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            try
+            {
+                if (isCahtrv)
+                {
+                    return;
+                }
+                mesInfon1.FixtureList.Clear();
+                for (int i = 0; i < dataGridView2.Rows.Count; i++)
+                {
+                    if (dataGridView2.Rows[i].Cells[0].Value != null)
+                    {
+                        mesInfon1.FixtureList.Add(dataGridView2.Rows[i].Cells[0].Value.ToString());
+                    }
+                }
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                mesInfon1.RestData(textBox8.Text, DebugF.DebugCompiler.GetTray(0).GetTrayData());
+            }
+            catch (Exception)
+            {
             }
         }
     }

@@ -13,12 +13,13 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
     {
         private Text_Model Instance;
 
+        private HTuple ID { get; set; }
 
-        HTuple ID { get; set; }
         [DescriptionAttribute("创建模式"),
         Category("识别参数"), DisplayName("创建模式"), TypeConverter(typeof(ErosConverter)),
         ErosConverter.ThisDropDown("", "auto", "manual")]
         public string CreateMode { get; set; } = "auto";
+
         [DescriptionAttribute("OCR类型选择。默认：Universal_Rej.occ'。可选'Document_Rej.omc'," +
             " 'Document_0-9_Rej.omc', 'Document_0-9A-Z_Rej.omc', 'Document_A-Z+_Rej.omc', 'DotPrint_Rej.omc'," +
             " 'DotPrint_0-9_Rej.omc', 'DotPrint_0-9+_Rej.omc', 'DotPrint_0-9A-Z_Rej.omc', 'DotPrint_A-Z+_Rej.omc', " +
@@ -32,8 +33,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         ErosConverter.ThisDropDown("", false, "", "Universal_0-9_NoRej", "Universal_Rej.occ", "Universal_0-9A-Z+_Rej.occ", "Universal_A-Z+_Rej.occ")]
         public string FontName { get; set; } = "Universal_0-9A-Z+_Rej.occ";
 
-
-        HTuple ResultIDText = new HTuple();
+        private HTuple ResultIDText = new HTuple();
 
         [Description("返回区域的特征根据创建模式aoto/manual，all_lines：返回所有分段文本行的所有字符。" +
            "['line', LineIndex]:返回LineIndex指定的文本行中的所有字符。例如，['line'， 0] 返回第一行。" +
@@ -44,6 +44,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
          ErosConverter.ThisDropDown("", "all_lines", "element", "line", "manual_all_lines",
              "manual_compensated_image", "manual_line")]
         public string ResultObjName { get; set; } = "all_lines";
+
         [Description(" 返回的结果的名称。 'class'OCR信息, 'class_element', 'class_line', 'confidence', 'confidence_element'" +
             "'confidence_line', 'manual_num_lines', 'manual_thresholds', 'num_classes', 'num_lines'" +
             "'polarity', 'polarity_element', 'polarity_line'"),
@@ -53,35 +54,24 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             "num_lines", "polarity", "polarity_element", "polarity_line")]
         public string ResultTextName { get; set; } = "class";
 
-
-
-
-        [Description("最小字符笔画宽度,auto或数字"), Category("识别参数"), DisplayName("笔画宽度")
-            , TypeConverter(typeof(ErosConverter)),
-       ErosConverter.ThisDropDown("", false, "auto")]
-        public string Min_stroke_width { get; set; } = "";
-        [Description("字符最小间隔，auto或数字"), Category("识别参数"), DisplayName("字符最小间隔"), TypeConverter(typeof(ErosConverter)),
-       ErosConverter.ThisDropDown("", false, "auto")]
-        public string Dot_print_min_char_gap { get; set; } = "";
-        [Description("笔画最大间隔，auto或数字"), Category("识别参数"), DisplayName("笔画最大间隔"), TypeConverter(typeof(ErosConverter)),
-       ErosConverter.ThisDropDown("", false, "auto")]
-        public string Dot_print_max_dot_gap { get; set; } = "";
         [Description("识别到的字符"), Category("结果"), DisplayName("识别的OCR")]
         /// <summary>
         /// 识别的字符
         /// </summary>
         public HTuple ResultText { get; set; } = new HTuple();
 
-
-
         [Description("完全匹配的字符"), Category("结果"), DisplayName("目标字符")]
         public string ModeText { get; set; } = "";
+
         [Description("匹配QR"), Category("结果"), DisplayName("比较QR")]
         public bool QRMode { get; set; }
 
-
         [Description("使用训练库识别字符"), Category("识别"), DisplayName("使用训练库")]
-        public bool OCRMLP { get; set; } 
+        public bool OCRMLP { get; set; }
+
+        [Description("使用训练库识别字符"), Category("识别"), DisplayName("分割")]
+        public double OCRMLPCosing { get; set; } = 0;
+
         public HTuple Row { get; set; } = new HTuple();
 
         public HTuple Column { get; set; } = new HTuple();
@@ -90,10 +80,10 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
 
         public HTuple Length2 { get; set; } = new HTuple();
 
-
         public List<HObject> ListhObjects { get; set; } = new List<HObject>();
 
-        int Intdex;
+        private int Intdex;
+
         /// <summary>
         /// 初始化读取实例
         /// </summary>
@@ -129,7 +119,9 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
 
             return Instance;
         }
-        HTuple ocrMLPID;
+
+        private HTuple ocrMLPID;
+
         /// <summary>
         /// 创建识别区
         /// </summary>
@@ -178,7 +170,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
 
                 HOperatorSet.CreateTextModelReader(CreateMode, FontName, out HTuple deepOcrID);
                 ID = deepOcrID;
-                HOperatorSet.ReadOcrClassMlp("Industrial_0-9A-Z_NoRej.omc", out  OcrHandle);
+                HOperatorSet.ReadOcrClassMlp("Industrial_0-9A-Z_NoRej.omc", out OcrHandle);
             }
             catch (Exception EX)
             {
@@ -187,9 +179,45 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
 
             SetParam();
         }
-        HTuple OcrHandle;
+
+        private HTuple OcrHandle;
+
+        private bool isSet;
+
+        [Description("最小字符笔画宽度,auto或数字"), Category("字符参数"), DisplayName("笔画宽度")
+            , TypeConverter(typeof(ErosConverter)),
+       ErosConverter.ThisDropDown("", false, "auto")]
+        public string Min_stroke_width { get; set; } = "";
+
+        [Description("最小字符笔画宽度,auto或数字"), Category("字符参数"), DisplayName("字符对比度")]
+        public double Min_contrast { get; set; } = 15;
+
+        [Description("最小字符笔画宽度,auto或数字"), Category("字符参数"), DisplayName("字符最大高度")
+         , TypeConverter(typeof(ErosConverter)), ErosConverter.ThisDropDown("", false, "auto")]
+        public string Max_char_height { get; set; } = "auto";
+
+        [Description("最小字符笔画宽度,auto或数字"), Category("字符参数"), DisplayName("字符最大宽度")
+  , TypeConverter(typeof(ErosConverter)), ErosConverter.ThisDropDown("", false, "auto")]
+        public string Max_char_width { get; set; } = "auto";
+
+        [Description("最小字符宽度,auto或数字"), Category("字符参数"), DisplayName("字符最小宽度")
+           , TypeConverter(typeof(ErosConverter)), ErosConverter.ThisDropDown("", false, "auto")]
+        public string Min_char_width { get; set; } = "auto";
+
+        [Description("最小字符高度,auto或数字"), Category("字符参数"), DisplayName("字符最小高度")
+          , TypeConverter(typeof(ErosConverter)), ErosConverter.ThisDropDown("", false, "auto")]
+        public string min_char_height { get; set; } = "";
+
+        [Description("字符最小间隔，auto或数字"), Category("字符参数"), DisplayName("字符最小间隔"), TypeConverter(typeof(ErosConverter)),
+       ErosConverter.ThisDropDown("", false, "auto")]
+        public string Dot_print_min_char_gap { get; set; } = "";
+
+        [Description("笔画最大间隔，auto或数字"), Category("字符参数"), DisplayName("笔画最大间隔"), TypeConverter(typeof(ErosConverter)),
+       ErosConverter.ThisDropDown("", false, "auto")]
+        public string Dot_print_max_dot_gap { get; set; } = "";
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public void SetParam()
         {
@@ -203,9 +231,44 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 {
                     HOperatorSet.SetTextModelParam(ID, "min_stroke_width", "auto");
                 }
+
+                if (double.TryParse(Min_char_width, out value))
+                {
+                    HOperatorSet.SetTextModelParam(ID, "min_char_width", value);
+                }
+                else
+                {
+                    HOperatorSet.SetTextModelParam(ID, "min_char_width", "auto");
+                }
+                //min_char_height = "20";
+                if (double.TryParse(min_char_height, out value))
+                {
+                    HOperatorSet.SetTextModelParam(ID, "min_char_height", value);
+                }
+                else
+                {
+                    HOperatorSet.SetTextModelParam(ID, "min_char_height", "auto");
+                }
+                HOperatorSet.SetTextModelParam(ID, "separate_touching_chars", "standard");
+                if (double.TryParse(Max_char_height, out value))
+                {
+                    HOperatorSet.SetTextModelParam(ID, "max_char_height", value);
+                }
+                else
+                {
+                    HOperatorSet.SetTextModelParam(ID, "max_char_height", "auto");
+                }
+                if (double.TryParse(Max_char_width, out value))
+                {
+                    HOperatorSet.SetTextModelParam(ID, "max_char_width", value);
+                }
+                else
+                {
+                    HOperatorSet.SetTextModelParam(ID, "max_char_width", "auto");
+                }
+                HOperatorSet.SetTextModelParam(ID, "min_contrast", Min_contrast);
                 if (double.TryParse(Dot_print_min_char_gap, out value))
                 {
-
                     HOperatorSet.SetTextModelParam(ID, "dot_print_min_char_gap", value);
                 }
                 else
@@ -224,22 +287,22 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             catch (Exception)
             {
             }
-
-        }
-        /// <summary>
-        /// 绘制仿射识别区
-        /// </summary>
-        /// <param name="halcon"></param>
-        public HObject DrawHomObj(HalconRun halcon, int intdex = 0)
-        {
-            Intdex = intdex;
-
-            halcon.DrawIng(Drw, out HObject hObject);
-
-            return hObject;
         }
 
-        HObject Drw(HalconRun halcon)
+        ///// <summary>
+        ///// 绘制仿射识别区
+        ///// </summary>
+        ///// <param name="halcon"></param>
+        //public HObject DrawHomObj(IDrawHalcon halcon, int intdex = 0)
+        //{
+        //    Intdex = intdex;
+
+        //    //halcon.dr(Drw, out HObject hObject);
+
+        //    return hObject;
+        //}
+
+        public HObject DrawRectangle2(IDrawHalcon halcon)
         {
             HTuple row, column, phi, length1, length2;
             Vision.Disp_message(halcon.hWindowHalcon(), "画字符区域，注意角度与文字方向相同，点击鼠标右键确认", 20, 20, true, "red", "false");
@@ -288,12 +351,15 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             }
             halcon.ShowObj();
         }
-        public override bool RunHProgram( OneResultOBj oneResultOBj, out List<OneRObj> oneRObjs, AoiObj aoiObj)
+
+        public override bool RunHProgram(OneResultOBj oneResultOBj, out List<OneRObj> oneRObjs, AoiObj aoiObj)
         {
             oneRObjs = new List<OneRObj>();
             SetParam();
             ResultText = new HTuple();
             HObject image = new HObject();
+            HObject errObj = new HObject();
+            errObj.GenEmptyObj();
             try
             {
                 image = GetEmset(oneResultOBj.Image);
@@ -318,37 +384,38 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                             if (QRMode)
                             {
                                 ResltBool = false;
-                                if (text.Length== Project.ProcessControl.ProcessUser.QRCode.Length)
+                                if (text.Length == Project.ProcessControl.ProcessUser.QRCode.Length)
                                 {
                                     for (int d = 0; d < text.Length; d++)
                                     {
                                         char texChar = text[d];
                                         if (texChar == Project.ProcessControl.ProcessUser.QRCode[d])
                                         {
-
                                         }
-                                        else  if (texChar == '0' || texChar == 'O')
+                                        else if (texChar == '0' || texChar == 'O')
                                         {
-                                            if (Project.ProcessControl.ProcessUser.QRCode[d]=='0'|| Project.ProcessControl.ProcessUser.QRCode[d]=='O')
+                                            if (Project.ProcessControl.ProcessUser.QRCode[d] == '0' || Project.ProcessControl.ProcessUser.QRCode[d] == 'O')
                                             {
-
                                             }
                                             else
                                             {
+                                                errObj = errObj.ConcatObj(hObject4.SelectObj(d + 1));
                                                 errNumer++;
                                             }
                                         }
                                         else
                                         {
+                                            errObj = errObj.ConcatObj(hObject4.SelectObj(d + 1));
                                             errNumer++;
                                         }
                                     }
                                 }
                                 else
                                 {
+                                    errObj = hObject4;
                                     errNumer++;
                                 }
-                                if (errNumer==0)
+                                if (errNumer == 0)
                                 {
                                     ResltBool = true;
                                 }
@@ -360,7 +427,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                                 }
                                 else
                                 {
-                                    oneResultOBj. AddNGOBJ( this.Name,"字符与码不等", hObject2, hObject4);
+                                    oneResultOBj.AddNGOBJ(aoiObj.CiName, "ocr", hObject2, errObj, this.GetBackNames());
                                     errNumer++;
                                 }
                             }
@@ -371,7 +438,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                                     if (ModeText != text)
                                     {
                                         errNumer++;
-                                        oneResultOBj.AddNGOBJ(Name, "字符不同", hObject2, hObject4);
+                                        oneResultOBj.AddNGOBJ(aoiObj.CiName, "ocr", hObject2, errObj, this.GetBackNames());
                                     }
                                     else
                                     {
@@ -405,6 +472,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             }
             return false;
         }
+
         public HObject FindText(HObject hObject, out string text, HTuple hwindosID = null)
         {
             HObject hObjects = null;
@@ -421,8 +489,21 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 HOperatorSet.GetTextResult(ResultIDText, ResultTextName, out HTuple hTuple1);
                 if (OCRMLP)
                 {
-                    HOperatorSet.DoOcrWordMlp(hObjects, hObject, OcrHandle, "^[A-Z][A-Z][A-Z][_][A-Z][0-9][_][A-Z][A-Z][A-Z][0-9][0-9][_][0-9]$", 3, 2,
-                   out  hTuple1, out HTuple cof, out HTuple word, out HTuple score);
+                    try
+                    {
+                        if (OCRMLPCosing > 0)
+                        {
+                            HOperatorSet.OpeningCircle(hObjects, out hObjects, OCRMLPCosing);
+                        }
+
+                        HOperatorSet.Connection(hObjects, out hObjects);
+                        HOperatorSet.DoOcrWordMlp(hObjects, hObject, OcrHandle, "^[A-Z][A-Z][A-Z][_][A-Z][0-9][_][A-Z][A-Z][A-Z][0-9][0-9][_][0-9]$", 3, 2,
+                           out HTuple hTuple2, out HTuple cof, out HTuple word, out HTuple score);
+                        hTuple1 = hTuple2;
+                    }
+                    catch (Exception ex)
+                    {
+                    }
                 }
                 if (ResultText == null)
                 {
@@ -447,18 +528,21 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             HOperatorSet.ClearTextModel(ID);
         }
 
-        public override Control GetControl(HalconRun halcon)
+        public override Control GetControl(IDrawHalcon halcon)
         {
             HalconRun halconRun = this.GetPThis() as HalconRun;
             return new OCRTextModeUserContro(halconRun, this);
         }
+
         public class Text_Mo
-        {     
-            HTuple ID { get; set; }
+        {
+            private HTuple ID { get; set; }
+
             [DescriptionAttribute("创建模式"),
             Category("识别参数"), DisplayName("创建模式"), TypeConverter(typeof(ErosConverter)),
             ErosConverter.ThisDropDown("", "auto", "manual")]
             public string CreateMode { get; set; } = "auto";
+
             [DescriptionAttribute("OCR类型选择。默认：Universal_Rej.occ'。可选'Document_Rej.omc'," +
                 " 'Document_0-9_Rej.omc', 'Document_0-9A-Z_Rej.omc', 'Document_A-Z+_Rej.omc', 'DotPrint_Rej.omc'," +
                 " 'DotPrint_0-9_Rej.omc', 'DotPrint_0-9+_Rej.omc', 'DotPrint_0-9A-Z_Rej.omc', 'DotPrint_A-Z+_Rej.omc', " +
@@ -472,8 +556,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             ErosConverter.ThisDropDown("", false, "", "Universal_0-9_NoRej", "Universal_Rej.occ", "Universal_0-9A-Z+_Rej.occ", "Universal_A-Z+_Rej.occ")]
             public string FontName { get; set; } = "Universal_0-9A-Z+_Rej.occ";
 
-
-            HTuple ResultIDText = new HTuple();
+            private HTuple ResultIDText = new HTuple();
 
             [Description("返回区域的特征根据创建模式aoto/manual，all_lines：返回所有分段文本行的所有字符。" +
                "['line', LineIndex]:返回LineIndex指定的文本行中的所有字符。例如，['line'， 0] 返回第一行。" +
@@ -484,6 +567,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
              ErosConverter.ThisDropDown("", "all_lines", "element", "line", "manual_all_lines",
                  "manual_compensated_image", "manual_line")]
             public string ResultObjName { get; set; } = "all_lines";
+
             [Description(" 返回的结果的名称。 'class'OCR信息, 'class_element', 'class_line', 'confidence', 'confidence_element'" +
                 "'confidence_line', 'manual_num_lines', 'manual_thresholds', 'num_classes', 'num_lines'" +
                 "'polarity', 'polarity_element', 'polarity_line'"),
@@ -497,19 +581,24 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 , TypeConverter(typeof(ErosConverter)),
            ErosConverter.ThisDropDown("", false, "auto")]
             public string Min_stroke_width { get; set; } = "";
+
             [Description("字符最小间隔，auto或数字"), Category("识别参数"), DisplayName("字符最小间隔"), TypeConverter(typeof(ErosConverter)),
            ErosConverter.ThisDropDown("", false, "auto")]
             public string Dot_print_min_char_gap { get; set; } = "";
+
             [Description("笔画最大间隔，auto或数字"), Category("识别参数"), DisplayName("笔画最大间隔"), TypeConverter(typeof(ErosConverter)),
            ErosConverter.ThisDropDown("", false, "auto")]
             public string Dot_print_max_dot_gap { get; set; } = "";
+
             [Description("识别到的字符"), Category("结果"), DisplayName("识别的OCR")]
             /// <summary>
             /// 识别的字符
             /// </summary>
             public HTuple ResultText { get; set; } = new HTuple();
+
             [Description("完全匹配的字符"), Category("结果"), DisplayName("目标字符")]
             public string ModeText { get; set; } = "";
+
             public HTuple Row { get; set; } = new HTuple();
 
             public HTuple Column { get; set; } = new HTuple();
@@ -517,8 +606,9 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             public HTuple Length1 { get; set; } = new HTuple();
 
             public HTuple Length2 { get; set; } = new HTuple();
-            int Intdex;
+
             public List<HObject> ListhObjects { get; set; } = new List<HObject>();
+
             public HObject FindText(HObject hObject, out string text, HTuple hwindosID = null)
             {
                 HObject hObjects = null;
@@ -546,19 +636,18 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     }
 
                     HOperatorSet.ClearTextResult(hTuple);
-
                 }
                 catch (Exception ex)
                 {
                 }
                 return hObjects;
             }
-            public  void UpSatrt(string Path)
+
+            public void UpSatrt(string Path)
             {
-              
                 try
                 {
-                    HOperatorSet.CreateTextModelReader(CreateMode,FontName, out HTuple id);
+                    HOperatorSet.CreateTextModelReader(CreateMode, FontName, out HTuple id);
                     ID = id;
                 }
                 catch (Exception ex)
@@ -566,7 +655,9 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     throw new ArgumentNullException("未安装OCR识别或创建参数错误");
                 }
             }
-            HTuple ocrMLPID;
+
+            private HTuple ocrMLPID;
+
             /// <summary>
             /// 创建识别区
             /// </summary>
@@ -577,9 +668,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 {
                     HOperatorSet.ClearTextModel(ID);
                 }
-                catch (Exception)
-                {
-                }
+                catch (Exception) { }
                 try
                 {
                     HOperatorSet.ReadOcrClassMlp("Industrial_0-9A-Z_NoRej.omc", out HTuple hTuple);
@@ -594,53 +683,9 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 }
                 SetParam();
             }
-            HObject Drw(HalconRun halcon)
-            {
-                HTuple row, column, phi, length1, length2;
-                Vision.Disp_message(halcon.hWindowHalcon(), "画字符区域，注意角度与文字方向相同，点击鼠标右键确认", 20, 20, true, "red", "false");
-                if (Row.Length <= Intdex)
-                {
-                    HOperatorSet.DrawRectangle2(halcon.hWindowHalcon(), out row, out column, out phi,
-                        out length1, out length2);
-                }
-                else
-                {
-                    HOperatorSet.DrawRectangle2Mod(halcon.hWindowHalcon(), Row[Intdex], Column[Intdex], Phi[Intdex], Length1[Intdex], Length2[Intdex], out row, out column, out phi,
-                     out length1, out length2);
-                }
-                //提示信息
-                //画模板区域
-                //Row = row;
-                //Column = column;
-                //Phi = phi;
-                //Length1 = length1;
-                //Length2 = length2;
-                HOperatorSet.GenRectangle2(out HObject homObj, row, column, phi, length1, length2);
-                if (Row == null)
-                {
-                    Row = new HTuple();
-                    Column = new HTuple();
-                }
-                if (Row.Length <= Intdex)
-                {
-                    Row.Append(new HTuple());
-                    Column.Append(new HTuple());
-                    Phi.Append(new HTuple());
-                    Length1.Append(new HTuple());
-                    Length2.Append(new HTuple());
-                }
-                Row[Intdex] = row;
-                Column[Intdex] = column;
-                Phi[Intdex] = phi;
-                Length1[Intdex] = length1;
-                Length2[Intdex] = length2;
 
-                HOperatorSet.ReduceDomain(halcon.Image(), homObj, out HObject ImageReduced);
-                halcon.AddObj(homObj);
-                return homObj;
-            }
             /// <summary>
-            /// 
+            ///
             /// </summary>
             public void SetParam()
             {
@@ -656,7 +701,6 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     }
                     if (double.TryParse(Dot_print_min_char_gap, out value))
                     {
-
                         HOperatorSet.SetTextModelParam(ID, "dot_print_min_char_gap", value);
                     }
                     else
@@ -675,9 +719,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 catch (Exception ex)
                 {
                 }
-
             }
         }
-
     }
 }

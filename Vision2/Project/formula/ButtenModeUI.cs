@@ -120,5 +120,60 @@ namespace Vision2.Project.formula
         {
             throw new NotImplementedException();
         }
+
+        public void SetValue(int number, int errNuber)
+        {
+            try
+            {
+                //MainForm1.MainFormF.Invoke(new Action(() =>
+                //{
+                //    Control[] controls = panel1.Controls.Find(number.ToString(), false);
+                //    OneDataVale data = tray.GetDataVales()[number - 1];
+                //    if (controls.Length != 0)
+                //    {
+                //        Label label1 = controls[0] as Label;
+                //        if (label1 != null)
+                //        {
+                //            switch (errNuber)
+                //            {
+                //                case -1:
+                //                    label1.BackColor = Color.Black;
+                //                    break;
+                //                case 0:
+                //                    data.NotNull = false;
+                //                    label1.BackColor = Color.Transparent;
+                //                    break;
+                //                case 1:
+                //                    data.OK = true;
+                //                    label1.BackColor = Color.Green;
+                //                    break;
+                //                case 2:
+                //                    data.OK = false;
+                //                    label1.BackColor = Color.Red;
+                //                    break;
+                //                case 3:
+                //                    data.OK = false;
+                //                    label1.BackColor = Color.Yellow;
+                //                    break;
+                //                case 4:
+                //                    data.OK = false;
+                //                    label1.BackColor = Color.Blue;
+                //                    break;
+                //                case 5:
+                //                    data.OK = false;
+                //                    label1.BackColor = Color.Pink;
+                //                    break;
+                //                default:
+                //                    break;
+                //            }
+                //        }
+                //    }
+                //}));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
     }
 }

@@ -13,6 +13,7 @@ namespace Vision2.Project.formula
             InitializeComponent();
             mesJib = mesJi;
             propertyGrid1.SelectedObject = mesJi.MesData;
+            propertyGrid2.SelectedObject = mesJi;
         }
 
         private delegate void dgNotifyShowRecieveMsg(params string[] message);
@@ -81,8 +82,10 @@ namespace Vision2.Project.formula
                         Rseult.Add(dataGridView1.Rows[i].Cells[2].Value.ToString());
                     }
                 }
-
-                ShowRecieveMsg(mesJib.ReadFvt(trayID.ToArray(), Sns.ToArray(), Rseult.ToArray()));
+                mesJib.ReadFvt(trayID.ToArray(), Sns.ToArray(), Rseult.ToArray(), out String[] FVTSTR);
+                if (FVTSTR[0].TrimEnd(';').ToLower().EndsWith("pass"))
+                {
+                }
             }
             catch (Exception ex)
             {
@@ -131,6 +134,7 @@ namespace Vision2.Project.formula
         {
             try
             {
+                HWindI.Initialize(hWindowControl1);
                 fileS = Directory.GetFiles(mesJib.MesData.FVTPath);
                 for (int i = 0; i < fileS.Length; i++)
                 {
@@ -216,6 +220,148 @@ namespace Vision2.Project.formula
                 }
             }
             catch (Exception ex)
+            {
+            }
+        }
+
+        private void textBox2_KeyDown(object sender, KeyEventArgs e)
+        {
+            try
+            {
+                if (e.KeyCode == Keys.Enter)
+                {
+                    button7.PerformClick();
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+        }
+
+        private string[] imagepsht = new string[] { };
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                listBox2.Items.Clear();
+                richTextBox5.Text = "";
+                richTextBox3.Text = "";
+                richTextBox4.Text = "";
+                richTextBox3.AppendText(",位号,结果,SN     ,机检,  MES    ， FVT，" + Environment.NewLine);
+                string dataTime = dateTimePicker1.Value.ToString("D");
+                string[] files = new string[] { };
+                if (Directory.Exists(vision.Vision.GetSaveImageInfo("上相机").SavePath + "\\" + dataTime))
+                {
+                    imagepsht = ErosProjcetDLL.Project.ProjectINI.GetFilesArrayPath(
+                        vision.Vision.GetSaveImageInfo("上相机").SavePath + "\\" + dataTime,
+                        vision.Vision.GetSaveImageInfo("上相机").SaveImageType);
+
+                    for (int i = 0; i < imagepsht.Length; i++)
+                    {
+                        if (imagepsht[i].Contains(textBox2.Text))
+                        {
+                            listBox2.Items.Add(Path.GetFileNameWithoutExtension(imagepsht[i]));
+                        }
+                    }
+                }
+
+                if (Directory.Exists(mesJib.DataPaht + "//Mes记录//" + dataTime))
+                {
+                    files = Directory.GetFiles(mesJib.DataPaht + "//Mes记录//" + dataTime);
+                    List<string> mestPahts = new List<string>();
+
+                    for (int i = 0; i < files.Length; i++)
+                    {
+                        if (files[i].Contains(textBox2.Text))
+                        {
+                            string[] txte = File.ReadAllLines(files[i]);
+                            richTextBox5.AppendText(files[i] + Environment.NewLine);
+                            foreach (var item in txte)
+                            {
+                                richTextBox5.AppendText(item + Environment.NewLine);
+                            }
+                        }
+                    }
+                }
+
+                if (Directory.Exists(mesJib.DataPaht + "//FVT//" + dataTime))
+                {
+                    files = Directory.GetFiles(mesJib.DataPaht + "//FVT//" + dataTime);
+                    for (int i = 0; i < files.Length; i++)
+                    {
+                        bool iscd = false;
+                        string[] txte = File.ReadAllLines(files[i]);
+                        for (int j = 0; j < txte.Length; j++)
+                        {
+                            if (txte[j].Contains(textBox2.Text))
+                            {
+                                iscd = true;
+                            }
+                        }
+                        if (iscd)
+                        {
+                            for (int j = 0; j < txte.Length; j++)
+                            {
+                                richTextBox4.AppendText(txte[j] + Environment.NewLine);
+                            }
+                        }
+                    }
+                }
+
+                if (File.Exists(mesJib.DataPaht + "//" + dataTime + ".csv"))
+                {
+                    string[] txte = File.ReadAllLines(mesJib.DataPaht + "//" + dataTime + ".csv");
+                    List<string> dasts = new List<string>();
+                    bool isdta = false;
+                    for (int i = 0; i < txte.Length; i++)
+                    {
+                        if (isdta)
+                        {
+                            if (!txte[i].StartsWith(" ,"))
+                            {
+                                foreach (var item in dasts)
+                                {
+                                    richTextBox3.AppendText(item + Environment.NewLine);
+                                }
+                                isdta = false;
+                            }
+                        }
+                        else
+                        {
+                            if (!txte[i].StartsWith(" ,"))
+                            {
+                                if (dasts.Count > 1)
+                                {
+                                    dasts.Clear();
+                                }
+                            }
+                        }
+                        dasts.Add(txte[i]);
+                        if (txte[i].Contains(textBox2.Text))//JSH21342A7BD
+                        {
+                            isdta = true;
+                            //richTextBox3.AppendText(txte[i] + Environment.NewLine);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private vision.HWindID HWindI = new vision.HWindID();
+
+        private void listBox2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                HalconDotNet.HOperatorSet.ReadImage(out HalconDotNet.HObject hObject, imagepsht[listBox2.SelectedIndex]);
+                HWindI.SetImaage(hObject);
+            }
+            catch (Exception)
             {
             }
         }

@@ -47,6 +47,7 @@
             this.numericUpDown2 = new System.Windows.Forms.NumericUpDown();
             this.numericUpDown3 = new System.Windows.Forms.NumericUpDown();
             this.label1 = new System.Windows.Forms.Label();
+            this.hWindowControl1 = new HalconDotNet.HWindowControl();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar4)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar5)).BeginInit();
@@ -83,7 +84,7 @@
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupBox1.Location = new System.Drawing.Point(0, 0);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(550, 161);
+            this.groupBox1.Size = new System.Drawing.Size(550, 144);
             this.groupBox1.TabIndex = 25;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "预处理";
@@ -292,13 +293,27 @@
             this.label1.TabIndex = 19;
             this.label1.Text = "对比强度";
             // 
+            // hWindowControl1
+            // 
+            this.hWindowControl1.BackColor = System.Drawing.Color.Black;
+            this.hWindowControl1.BorderColor = System.Drawing.Color.Black;
+            this.hWindowControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.hWindowControl1.ImagePart = new System.Drawing.Rectangle(0, 0, 640, 480);
+            this.hWindowControl1.Location = new System.Drawing.Point(0, 144);
+            this.hWindowControl1.Name = "hWindowControl1";
+            this.hWindowControl1.Size = new System.Drawing.Size(550, 306);
+            this.hWindowControl1.TabIndex = 26;
+            this.hWindowControl1.WindowSize = new System.Drawing.Size(550, 306);
+            // 
             // PretreatmentUserControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.hWindowControl1);
             this.Controls.Add(this.groupBox1);
             this.Name = "PretreatmentUserControl";
-            this.Size = new System.Drawing.Size(550, 149);
+            this.Size = new System.Drawing.Size(550, 450);
+            this.Load += new System.EventHandler(this.PretreatmentUserControl_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar4)).EndInit();
@@ -336,5 +351,6 @@
         private System.Windows.Forms.NumericUpDown numericUpDown2;
         private System.Windows.Forms.NumericUpDown numericUpDown3;
         private System.Windows.Forms.Label label1;
+        private HalconDotNet.HWindowControl hWindowControl1;
     }
 }

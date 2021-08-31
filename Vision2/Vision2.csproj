@@ -70,9 +70,8 @@
       <HintPath>Dll\HslCommunication.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualBasic" />
-    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\Debug\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="NPOI">
       <HintPath>..\ErosProjcetDLL\bin\Debug\NPOI.dll</HintPath>
@@ -100,6 +99,7 @@
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.Windows" />
+    <Reference Include="System.Windows.Forms.DataVisualization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -526,12 +526,6 @@
     <Compile Include="Project\DebugF\PLC\PLCText.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Project\DebugF\TechnologyFile\TechnologyUserControl1.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Project\DebugF\TechnologyFile\TechnologyUserControl1.Designer.cs">
-      <DependentUpon>TechnologyUserControl1.cs</DependentUpon>
-    </Compile>
     <Compile Include="Project\DebugF\工艺库\AxisDPUserControl1.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -581,7 +575,25 @@
     <Compile Include="Project\formula\FormulaPrForm.Designer.cs">
       <DependentUpon>FormulaPrForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Project\ListSNForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Project\ListSNForm.Designer.cs">
+      <DependentUpon>ListSNForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Project\Mes\FvtForm1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Project\Mes\FvtForm1.Designer.cs">
+      <DependentUpon>FvtForm1.cs</DependentUpon>
+    </Compile>
     <Compile Include="Project\Mes\IMesData.cs" />
+    <Compile Include="Project\SPCForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Project\SPCForm.Designer.cs">
+      <DependentUpon>SPCForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="SocketFiledata\ErosConLink\三菱FX3U.cs" />
     <Compile Include="vision\RestVisionForm\OneNGDataMinMaxControl.cs">
       <SubType>UserControl</SubType>
@@ -714,11 +726,11 @@
     <Compile Include="Project\ProjectNodetControl.Designer.cs">
       <DependentUpon>ProjectNodetControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Project\simulateQRForm.cs">
+    <Compile Include="Project\SimulateQRForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Project\simulateQRForm.Designer.cs">
-      <DependentUpon>simulateQRForm.cs</DependentUpon>
+    <Compile Include="Project\SimulateQRForm.Designer.cs">
+      <DependentUpon>SimulateQRForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Project\SimulateTrayMesForm.cs">
       <SubType>Form</SubType>
@@ -1678,9 +1690,6 @@
     <EmbeddedResource Include="Project\DebugF\PLC\PLCDebug.resx">
       <DependentUpon>PLCDebug.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Project\DebugF\TechnologyFile\TechnologyUserControl1.resx">
-      <DependentUpon>TechnologyUserControl1.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Project\DebugF\工艺库\AxisDPUserControl1.resx">
       <DependentUpon>AxisDPUserControl1.cs</DependentUpon>
     </EmbeddedResource>
@@ -1704,6 +1713,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Project\formula\FormulaPrForm.resx">
       <DependentUpon>FormulaPrForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Project\ListSNForm.resx">
+      <DependentUpon>ListSNForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Project\Mes\FvtForm1.resx">
+      <DependentUpon>FvtForm1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Project\SPCForm.resx">
+      <DependentUpon>SPCForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="vision\RestVisionForm\OneNGDataMinMaxControl.resx">
       <DependentUpon>OneNGDataMinMaxControl.cs</DependentUpon>
@@ -1773,8 +1791,8 @@
     <EmbeddedResource Include="Project\ProjectNodetControl.resx">
       <DependentUpon>ProjectNodetControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Project\simulateQRForm.resx">
-      <DependentUpon>simulateQRForm.cs</DependentUpon>
+    <EmbeddedResource Include="Project\SimulateQRForm.resx">
+      <DependentUpon>SimulateQRForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Project\SimulateTrayMesForm.resx">
       <DependentUpon>SimulateTrayMesForm.cs</DependentUpon>
@@ -2120,6 +2138,7 @@
     <Fakes Include="Fakes\halcondotnetxl.fakes" />
     <None Include="Iamge\HalconDemo1_TemporaryKey.pfx" />
     <Fakes Include="ErosProjcetDLL\Fakes\NPOI.fakes" />
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
