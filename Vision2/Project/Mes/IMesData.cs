@@ -54,6 +54,11 @@ namespace Vision2.Project.Mes
         [Description("线号"), Category("Mes信息"), DisplayName("线号")]
         public virtual string Line_Name { get; set; } = "Bay32";
 
+
+        [Description("Fail结果Mes处理"), Category("Mes处理"), DisplayName("Fail结果上传")]
+
+        public virtual bool FaliMesRest { get; set; } = true;
+
         [DescriptionAttribute("线体标示。"), Category("设备标识"), DisplayName("站号")]
         public virtual string Fixture_ID { get; set; } = "EQDIW00011-01";
 
@@ -133,6 +138,8 @@ namespace Vision2.Project.Mes
     {
         public DateTime StrTime = DateTime.Now;
         public DateTime EndTime;
+
+        public bool UesrRest { get; set; }
         public void ResetOK()
         {
             Dictionary<string, bool> keyValuePairs = new Dictionary<string, bool>();
@@ -146,7 +153,6 @@ namespace Vision2.Project.Mes
         }
         public void ResetNG()
         {
-
             OK = false;
             Done = true;
         }
@@ -155,7 +161,6 @@ namespace Vision2.Project.Mes
             if (NGName == null)
             {
                 NGName = new Dictionary<string, bool>();
-
             }
             if (!NGName.ContainsKey(name))
             {
@@ -226,7 +231,7 @@ namespace Vision2.Project.Mes
        /// <summary>
        /// True不是空
        /// </summary>
-        public bool NotNull;
+        public bool NotNull { get; set; }
         bool ok = true;
         /// <summary>
         /// 结果
@@ -352,13 +357,13 @@ namespace Vision2.Project.Mes
             {
                 if (ListCamsData.ContainsKey(camName))
                 {
-                    for (int i = 0; i < ListCamsData[camName].ResuOBj.Count; i++)
+                    for (int i = 0; i < ListCamsData[camName].ResuOBj().Count; i++)
                     {
                    
-                        if (!runIDs.Contains(ListCamsData[camName].ResuOBj[i].LiyID))
+                        if (!runIDs.Contains(ListCamsData[camName].ResuOBj()[i].LiyID))
                         {
-                            runIDs.Add(ListCamsData[camName].ResuOBj[i].LiyID);
-                            hObjects.Add(ListCamsData[camName].ResuOBj[i].Image);
+                            runIDs.Add(ListCamsData[camName].ResuOBj()[i].LiyID);
+                            hObjects.Add(ListCamsData[camName].ResuOBj()[i].Image);
                         }
                     }
                 }
@@ -430,6 +435,10 @@ namespace Vision2.Project.Mes
     /// </summary>
     public class OneCamData
     {
+        public OneCamData()
+        {
+            ImagePlus.GenEmptyObj();
+        }
         /// <summary>
         /// 视觉程序名称
         /// </summary>
@@ -450,7 +459,6 @@ namespace Vision2.Project.Mes
                     }
                 }
                 return true;
-
             }
             set
             {
@@ -481,7 +489,7 @@ namespace Vision2.Project.Mes
             {
                 foreach (var item in NGObj.DicOnes)
                 {
-                    item.Value.Done = true;
+                    item.Value.Done = value;
                 }
 
             }
@@ -531,13 +539,16 @@ namespace Vision2.Project.Mes
         /// <summary>
         /// 整合图片
         /// </summary>
-        public HObject ImagePlus;
+        public HObject ImagePlus = new HObject();
 
         /// <summary>
         /// 拍照数据集合
         /// </summary>
-        public List<OneResultOBj> ResuOBj = new List<OneResultOBj>();
-
+          List<OneResultOBj> resuOBj = new List<OneResultOBj>();
+        public List<OneResultOBj> ResuOBj()
+        {
+            return resuOBj;
+        }
 
         /// <summary>
         /// NG元件
@@ -570,7 +581,7 @@ namespace Vision2.Project.Mes
         {
             try
             {
-                foreach (var item in ResuOBj)
+                foreach (var item in ResuOBj())
                 {
                     foreach (var itemd in item.GetNgOBJS().DicOnes)
                     {

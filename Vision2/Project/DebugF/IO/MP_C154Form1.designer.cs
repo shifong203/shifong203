@@ -87,7 +87,9 @@ namespace Vision2.Project.DebugF.IO
             this.dataGridViewComboBoxColumn5 = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.dataGridViewComboBoxColumn6 = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.dataGridViewComboBoxColumn7 = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.tabControl1.SuspendLayout();
+            this.tabPage2.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage15.SuspendLayout();
             this.tabPage16.SuspendLayout();
@@ -120,6 +122,7 @@ namespace Vision2.Project.DebugF.IO
             // tabPage2
             // 
             this.tabPage2.AutoScroll = true;
+            this.tabPage2.Controls.Add(this.flowLayoutPanel1);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
@@ -584,6 +587,14 @@ namespace Vision2.Project.DebugF.IO
             this.dataGridViewComboBoxColumn7.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             this.dataGridViewComboBoxColumn7.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
             // 
+            // flowLayoutPanel1
+            // 
+            this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 3);
+            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(1327, 439);
+            this.flowLayoutPanel1.TabIndex = 0;
+            // 
             // MP_C154Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -596,6 +607,7 @@ namespace Vision2.Project.DebugF.IO
             this.Load += new System.EventHandler(this.MP_C154Form1_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MP_C154Form1_KeyDown);
             this.tabControl1.ResumeLayout(false);
+            this.tabPage2.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage15.ResumeLayout(false);
             this.tabPage16.ResumeLayout(false);
@@ -681,5 +693,6 @@ namespace Vision2.Project.DebugF.IO
         private TabPage tabPage15;
         private TabPage tabPage16;
         private TabPage tabPage17;
+        private FlowLayoutPanel flowLayoutPanel1;
     }
 }

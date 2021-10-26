@@ -805,6 +805,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             {
                 hWindowHalconID = hawid;
             }
+        
             return hWindowHalconID;
         }
 
@@ -851,6 +852,14 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             return null;
         }
 
+
+
+        [Description(""), Category("预处理"), DisplayName("预处理模式")]
+
+        public string PretreamtmentMode { get; set; } = "不执行";
+        public PretreatmentVsiion Pretreatment { get; set; } = new PretreatmentVsiion();
+
+
         [Description("NG后再次拍照确认次数"), Category("结果处理"), DisplayName("NG确认次数")]
         public sbyte ResultNGNumber
         {
@@ -874,6 +883,9 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         public int Form2Heigth { get; set; } = 350;
 
         public string ImagePaths { get; set; } = "";
+
+        
+        public List<List<Cams.CamData>> ListCamData { get; set; } = new List<List<Cams.CamData>>();
 
         /// <summary>
         /// 整盘集合
@@ -901,33 +913,40 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
 
         public void AysnetRun()
         {
-            Task task = new Task(() =>
+            if (Vision.Instance. ISVisinList)
             {
-                if (AysBing)
+                Task task = new Task(() =>
                 {
-                    return;
-                }
-                AysBing = true;
-                AysEndble = true;
-                while (AysEndble)
-                {
-                    try
+                    if (AysBing)
                     {
-                        if (!AysBing) AysBing = true;
-                        if (ImageTs.Count != 0)
-                        {
-                            ImagesOneRun resultOBj = ImageTs.Dequeue();
-                            resultOBj.GetImage(this.GetCam());
-                            CamImageEvent(resultOBj.ImageTs);
-                        }
+                        return;
                     }
-                    catch (Exception ex)
-                    { }
-                }
-                AysBing = false;
-            });
-
-            task.Start();
+                    AysBing = true;
+                    AysEndble = true;
+                    while (AysEndble)
+                    {
+                        try
+                        {
+                            if (!AysBing) AysBing = true;
+                            if (ImageTs.Count != 0)
+                            {
+                                ImagesOneRun resultOBj = ImageTs.Dequeue();
+                                resultOBj.GetImage(this.GetCam());
+                                if (this.PretreamtmentMode == "覆盖原图")
+                                {
+                                   resultOBj.ImageTs.Image = this.Pretreatment.GetEmset(resultOBj.ImageTs.Image);
+                                }
+                                CamImageEvent(resultOBj.ImageTs);
+                            }
+                        }
+                        catch (Exception ex)
+                        { }
+                        Thread.Sleep(1);
+                    }
+                    AysBing = false;
+                });
+                task.Start();
+            }
         }
 
         public void AysnetCam(int liyID, int runID, HObject imaged = null)
@@ -1021,12 +1040,22 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         }
 
         private HObject R;
+
         private HObject G;
+
         private HObject B;
+
         private HObject H;
+
         private HObject S;
+
         private HObject V;
+
         private HObject Gray;
+
+        private HObject ImagePret;
+
+
 
         /// <summary>
         /// 图像通道分解
@@ -1043,14 +1072,41 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     HOperatorSet.TransFromRgb(R, G, B, out H, out S, out V, "hsv");
                     HOperatorSet.Rgb1ToGray(hObject, out Gray);
                 }
+                if (PretreamtmentMode == "新图像")
+                {
+                    ImagePret = this.Pretreatment.GetEmset(hObject);
+                }
             }
             catch (Exception ex)
             {
             }
         }
 
+        public string[] GetHoamgeName()
+        {
+            List<string> Names = new List<string>();
+            Names.Add("Image3");
+            if (PretreamtmentMode != "不执行")
+            {
+                Names.Add(ImageTypeObj.ImagePretreatment.ToString());
+            }
+            HOperatorSet.CountChannels(Image(), out HTuple htcon);
+            if (htcon == 3)
+            {
+                Names.Add("Gray");
+                Names.Add("R");
+                Names.Add("G");
+                Names.Add("B");
+                Names.Add("H");
+                Names.Add("S");
+                Names.Add("V");
+            }
+            return Names.ToArray();
+        }
+
         public HObject GetImageOBJ(ImageTypeObj imageType)
         {
+       
             if (R == null)
             {
                 ImageHdt(GetOneImageR().Image);
@@ -1059,7 +1115,8 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             {
                 case ImageTypeObj.Image3:
                     return GetOneImageR().Image;
-
+                case ImageTypeObj.ImagePretreatment:
+                    return ImagePret;
                 case ImageTypeObj.Gray:
                     return Gray;
 
@@ -1472,6 +1529,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         /// 运行时间
         /// </summary>
         public float RunTimeI { get; set; }
+        
 
         #endregion 结果处理
 
@@ -1965,32 +2023,61 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         #endregion 显示处理
 
         #region 釆图程序
-
-        public void SetCamPraegrm(int liyID = 0)
+        /// <summary>
+        /// 设置相机光源参数
+        /// </summary>
+        /// <param name="liyID"></param>
+        public void SetCamPraegrm(int liyID = 0,int camid=1)
         {
             try
             {
-                if (this.GetCam() != null)
+                if (this.GetCam() == null)
                 {
-                    if (liyID == 0)
+                    return;
+                }
+                    if (this.GetCam() != null)
                     {
-                        this.GetCam().ExposureTime = CamData.ExposureTime;
-                        this.GetCam().Gain = CamData.Gain;
-                        this.GetCam().Gamma = CamData.Gamma;
-                    }
-                    else
-                    {
-                        if (liyID <= Vision.GetSaveImageInfo(this.Name).ListCamData.Count)
+                        if (liyID == 0)
                         {
-                            if (this.GetCam() != null)
-                            {
-                                Vision.SetLight(this.GetSaveImageInfo().ListCamData[liyID - 1].Light_Source);
-                                this.GetCam().ExposureTime = this.GetSaveImageInfo().ListCamData[liyID - 1].ExposureTime;
-                                this.GetCam().Gain = this.GetSaveImageInfo().ListCamData[liyID - 1].Gain;
-                                this.GetCam().Gamma = this.GetSaveImageInfo().ListCamData[liyID - 1].Gamma;
-                            }
+                            this.GetCam().ExposureTime = CamData.ExposureTime;
+                            this.GetCam().Gain = CamData.Gain;
+                            this.GetCam().Gamma = CamData.Gamma;
                         }
-                    }
+                        else
+                        {
+                            if (liyID <= this.ListCamData.Count)
+                            {
+                                if (this.ListCamData[liyID - 1].Count>=camid)
+                                {
+                                    Vision.SetLight(this.ListCamData[liyID - 1][camid-1].Light_Source);
+                                    this.GetCam().ExposureTime = this.ListCamData[liyID - 1][camid-1].ExposureTime;
+                                    this.GetCam().Gain = this.ListCamData[liyID - 1][camid-1].Gain;
+                                    this.GetCam().Gamma = this.ListCamData[liyID - 1][camid-1].Gamma;
+                                }
+                                else
+                                 {
+                                        this.GetCam().ExposureTime = CamData.ExposureTime;
+                                        this.GetCam().Gain = CamData.Gain;
+                                        this.GetCam().Gamma = CamData.Gamma;
+                                }
+                             }
+                             else
+                              {
+                                    this.GetCam().ExposureTime = CamData.ExposureTime;
+                                    this.GetCam().Gain = CamData.Gain;
+                                    this.GetCam().Gamma = CamData.Gamma;
+                                }
+                            //if (liyID <= Vision.GetSaveImageInfo(this.Name).ListCamData.Count)
+                            //{
+                            //    if (this.GetCam() != null)
+                            //    {
+                            //        Vision.SetLight(this.GetSaveImageInfo().ListCamData[liyID - 1].Light_Source);
+                            //        this.GetCam().ExposureTime = this.GetSaveImageInfo().ListCamData[liyID - 1].ExposureTime;
+                            //        this.GetCam().Gain = this.GetSaveImageInfo().ListCamData[liyID - 1].Gain;
+                            //        this.GetCam().Gamma = this.GetSaveImageInfo().ListCamData[liyID - 1].Gamma;
+                            //    }
+                            //}
+                        }
                 }
             }
             catch (Exception ex)
@@ -2056,13 +2143,24 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         /// <returns></returns>
         public bool ReadCamImage(string liyID = null, int runid = 0)
         {
+            bool ok = false;
             try
             {
                 if (this.GetCam() != null)
                 {
                     OneResultOBj oneResultOBj = new OneResultOBj();
-                    oneResultOBj.Image = (this.GetCam().GetImage());
-                    //this.Image();
+                    HObject imaget = new HObject();
+                    imaget.GenEmptyObj();
+                    if (GetCam().GetImage(out HObject iamge))
+                    {
+                        ok = true;
+                        imaget = iamge;
+                    }
+                    else
+                    {
+                        ok = false;
+                    }
+                    oneResultOBj.Image = iamge;
                     Vision.TriggerSetup(Vision.GetSaveImageInfo(this.Name).ReadCamOKName, "true");
                     if (liyID != null)
                     {
@@ -2081,7 +2179,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         OneImage.RunID = runid;
                         this.ShowImage();
                     }
-                    return true;
+                    return ok;
                 }
             }
             catch (Exception ex)
@@ -2089,7 +2187,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 this.LogErr("採图错误", "採图失败");
                 //this.Image().GenEmptyObj();
             }
-            return false;
+            return ok;
         }
 
         private bool aysDone;
@@ -2131,7 +2229,14 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         this.SetCamPraegrm(liyID);
                         if (oneResultOBj == null)
                         {
-                            HObject imaget = this.GetCam().GetImage();
+                            HObject imaget = new HObject();
+                            imaget.GenEmptyObj();
+                            if (GetCam().GetImage(out HObject iamge))
+                            {
+                                imaget = iamge;
+                            }
+                  
+                    
                             oneResultOBj = new OneResultOBj();
                             if (imaget != null)
                             {
@@ -2139,7 +2244,10 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                             }
                             else
                             {
-                                oneResultOBj.Image = this.GetCam().GetImage();
+                                if (GetCam().GetImage(out  iamge))
+                                {
+                                    oneResultOBj.Image = iamge;
+                                }
                             }
                         }
                         oneResultOBj.RunID = runid;
@@ -2296,11 +2404,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         /// </summary>
         private OneDataVale OnePatrData;
 
-        public OneDataVale GetData()
-        {
-            return OnePatrData;
-        }
-
+    
         /// <summary>
         /// 托盘ID
         /// </summary>
@@ -2391,13 +2495,11 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         OnePatrData = new OneDataVale();
                     }
                 }
-
                 if (this.GetSaveImageInfo().PiNumber <= 1)
                 {
                     OnePatrData.TrayLocation = TrayLocation;
                     OnePatrData.NotNull = true;
                 }
-
                 //OneCamData.RunVisionName = this.Name;
                 if (keyValuePairs1 == null)
                 {
@@ -2477,22 +2579,20 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 {
                     OneCamData = new OneCamData();
                 }
-                OneCamData.ResuOBj.Add(OneImageData);
+                OneCamData.ResuOBj().Add(OneImageData);
                 if (OnePatrData != null)
                 {
-                    //if (OnePatrData.PanelID == "")
-                    //{
-                    //    OnePatrData.PanelID = Project.ProcessControl.ProcessUser.QRCode;
-                    //}
-                    OnePatrData.PanelID = Project.ProcessControl.ProcessUser.QRCode;
+                    if (OnePatrData.PanelID == "")
+                    {
+                        OnePatrData.PanelID = Project.ProcessControl.ProcessUser.QRCode;
+                        Project.ProcessControl.ProcessUser.QRCode = "";
+                    }
                     if (this.GetSaveImageInfo().PiNumber <= 1)
                     {
                         OnePatrData.AddCamsData(this.Name, OneImageData.RunID, OneCamData);
                     }
                 }
-
                 UPDa(OneImageData, OneImageData.IsSave, hObject, OnePatrData);
-
                 if (PaleMode && OneImageData.LiyID % this.PaleID == 0)
                 {
                     if (ProjectINI.AdminEnbt)
@@ -2529,7 +2629,6 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                             HTuple hTuple = new HTuple();
                             hTuple.Append(DateTimeImage.ToString());
                             HTuple keys = new HTuple();
-
                             if (Vision.Instance.DicSaveType[this.Name].IsQRText)
                             {
                                 hTuple.Append(oneDataVale.PanelID);
@@ -2626,18 +2725,23 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                             imageName = this.RunName[oneResultOBj.RunID - 1];
                         }
                         imageName += oneResultOBj.LiyID;
-                        if (Vision.Instance.DicSaveType[this.Name].ISSaveNGImage)
+                        if (!oneResultOBj.OK)
                         {
-                            if (!rebool)
+                            if (Vision.Instance.DicSaveType[this.Name].ISSaveNGImage)
                             {
                                 string path = Vision.Instance.DicSaveType[this.Name].SavePath + "\\NG\\" + DateTimeImage.ToLongDateString() + "\\" + Product.ProductionName + "\\" +
-                                    oneDataVale.PanelID + "\\" + this.Name + DateTimeImage.ToString("HH时mm分ss秒") + oneResultOBj.RunID + "-" + oneResultOBj.LiyID;
-
+                                 oneDataVale.PanelID + "\\" + this.Name + DateTimeImage.ToString("HH时mm分ss秒") + oneResultOBj.LiyID + "-" + oneResultOBj.RunID;
                                 Vision.Instance.DicSaveType[this.Name].SaveImage(hObject, path);
                                 Vision.SaveWindow(path + "截屏", Vision.GetRunNameVision(Name).hWindowHalcon());
                             }
+                            else
+                            {
+                                    string path = Vision.Instance.DicSaveType[this.Name].SavePath + "\\" + DateTimeImage.ToLongDateString() + "\\" + Product.ProductionName + "\\" +
+                                    oneDataVale.PanelID + "\\" + this.Name + DateTimeImage.ToString("HH时mm分ss秒") + oneResultOBj.LiyID + "-" + oneResultOBj.RunID;
+                                    Vision.SaveWindow(path + "截屏", Vision.GetRunNameVision(Name).hWindowHalcon());
+                            }
                         }
-                        Vision.Instance.DicSaveType[this.Name].SaveImage(hObject, oneResultOBj.RunID, imageName, this.Name, oneDataVale.PanelID, DateTimeImage);
+                         Vision.Instance.DicSaveType[this.Name].SaveImage(hObject, oneResultOBj.RunID, imageName, this.Name, oneDataVale.PanelID, DateTimeImage);
                     }
                     hObject.Dispose();
                 }
@@ -2662,12 +2766,21 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             {
                 try
                 {
+                    OneCamData oneCamD = null;
+                    if (onePatrData.ListCamsData.ContainsKey(this.Name))
+                    {
+                        oneCamD = onePatrData.ListCamsData[this.Name];
+                    }
+                    else
+                    {
+                        oneCamD = OneCamData;
+                    }
                     if (this.PaleID > 1)
                     {
                         HOperatorSet.HomMat2dIdentity(out HTuple HomMat2D);
                         OneCompOBJs oneRObjs = new OneCompOBJs();
-                        OneCamData oneCamD = onePatrData.ListCamsData[this.Name];
-                        for (int i = 0; i < oneCamD.ResuOBj.Count; i++)
+                        oneCamD = onePatrData.ListCamsData[this.Name];
+                        for (int i = 0; i < oneCamD.ResuOBj().Count; i++)
                         {
                             HTuple rowsT = 0;
                             HTuple colsT = 0;
@@ -2679,16 +2792,15 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                             catch (Exception ex)
                             {
                             }
-                            if (oneCamD.ResuOBj[i].GetNgOBJS().DicOnes.Count > 0)
+                            if (oneCamD.ResuOBj()[i].GetNgOBJS().DicOnes.Count > 0)
                             {
                                 HOperatorSet.HomMat2dTranslate(HomMat2D, rowsT, colsT, out HTuple hTuple);
-                                foreach (var item in oneCamD.ResuOBj[i].GetNgOBJS().DicOnes)
+                                foreach (var item in oneCamD.ResuOBj()[i].GetNgOBJS().DicOnes)
                                 {
                                     if (item.Value.oneRObjs.Count == 0)
                                     {
                                         oneRObjs.Add(item.Value);
                                     }
-
                                     foreach (var itemd in item.Value.oneRObjs)
                                     {
                                         try
@@ -2708,6 +2820,12 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                             oneCamD.SetOneContOBJ(oneRObjs);
                         }
                     }
+                    else
+                    {
+                        OneCompOBJs oneRObjs = new OneCompOBJs();
+                        //OneCamData oneCamD = onePatrData.ListCamsData[this.Name];
+                        oneCamD.SetOneContOBJ(oneCamD.ResuOBj()[0].GetNgOBJS());
+                    }
                     HObject hObject = dataP.Image;
                     if (onePatrData != null)
                     {
@@ -2716,7 +2834,12 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                             hObject = Vision.GetRunNameVision(this.Name).TiffeOffsetImageEX.TiffeOffsetImage(onePatrData.GetImages(this.Name));
                             //hObject = Vision.GetRunNameVision(this.Name).TiffeOffsetImageEX.TiffeOffsetImage(this.Name);
                         }
-                        onePatrData.AddCamsData(this.Name, hObject);
+                        if (this.GetSaveImageInfo().PiNumber <= 1)
+                        {
+                            onePatrData.AddCamsData(this.Name, dataP.RunID, oneCamD);
+                            //onePatrData.AddCamsData(this.Name, imageTd);
+                            onePatrData.AddCamsData(this.Name, hObject);
+                        }
                     }
                     else
                     {
@@ -2744,11 +2867,11 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                             {
                                 if (RecipeCompiler.Instance.PalenID)
                                 {
-                                    if (onePatrData.PanelID == null || onePatrData.PanelID == "")
-                                    {
-                                        onePatrData.AddNG("SN未识别", false);
-                                        onePatrData.OK = false;
-                                    }
+                                    //if (onePatrData.PanelID == null || onePatrData.PanelID == "")
+                                    //{
+                                    //    onePatrData.AddNG("SN not identify", false);
+                                    //    onePatrData.OK = false;
+                                    //}
                                 }
                                 onePatrData.AutoOK = onePatrData.OK;
                                 onePatrData.EndTime = DateTime.Now;
@@ -2768,8 +2891,9 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                                 { det = 0; }
                                 for (int i = 0; i < this.GetSaveImageInfo().PiNumber - det; i++)
                                 {
-                                    OneDataVale oneData = trayD.GetOneDataVale((dataP.RunID - 1) * this.GetSaveImageInfo().PiNumber + i - detg + det);
-
+                                    int idext = (dataP.RunID - 1) * this.GetSaveImageInfo().PiNumber + i - detg + det;
+                                    OneDataVale oneData = trayD.GetOneDataVale(idext);
+                                    AlarmText.AddTextNewLine("托盘:"+(idext+1)+":"+det);
                                     OneCamData oneCamData = new OneCamData();
                                     OneResultOBj oneResultOBj = new OneResultOBj();
                                     foreach (var item in dataP.GetNgOBJS().DicOnes)
@@ -2787,20 +2911,58 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                                             }
                                         }
                                     }
+                                    HOperatorSet.SmallestRectangle1(this.GetSaveImageInfo().PObj[i], out HTuple row1, out HTuple colum1, out HTuple row2, out HTuple col2);
+
+                                    oneResultOBj.AddMeassge((idext+1));
                                     //oneResultOBj.GetHobjt_s(dataP.GetHobjt_s());
+                                    //HOperatorSet.SelectShape(dataP.HObjectYellow, out HObject hObject1 ,new HTuple  ("row", "column") , "and", 
+                                    //    new HTuple(row1.D,row2.D), new HTuple(colum1.D, col2.D));
+                              
                                     oneResultOBj.HObjectYellow = dataP.HObjectYellow;
+
+                            //HObject hObject2=        Vision.Region_To_XLD(dataP.HObjectGreen);
+
+                                    //HOperatorSet.SelectShape(dataP.HObjectGreen, out hObject1,
+                                    //    new HTuple("row", "column"), "and", new HTuple(row1.D, row2.D), new HTuple(colum1.D, col2.D));
                                     oneResultOBj.HObjectGreen = dataP.HObjectGreen;
                                     oneResultOBj.HObjectRed = dataP.HObjectRed;
                                     oneResultOBj.HObjectBlue = dataP.HObjectBlue;
-                                    oneResultOBj.MaGreen = dataP.MaGreen;
-                                    oneResultOBj.Image = dataP.Image;
+                                    for (int j = 0; j < dataP.MaGreen.Rows.Count; j++)
+                                    {
+                                        HOperatorSet.GetRegionIndex(this.GetSaveImageInfo().PObj[i], dataP.MaGreen.Rows[j].TupleInt(),
+                                            dataP.MaGreen.Columns[j].TupleInt(), out HTuple intdes);
+                                        if (intdes>=0)
+                                        {
+                                            oneResultOBj.MaGreen.Rows.Add( dataP.MaGreen.Rows[j]);
+                                            oneResultOBj.MaGreen.Columns.Add(dataP.MaGreen.Columns[j]);
+                                            oneResultOBj.MaGreen.Massage.Add(dataP.MaGreen.Massage[j]);
+                                        }
+                                    }
+                                    oneResultOBj.MaGreen.MassageBlute = dataP.MaGreen.MassageBlute;
+                                    oneResultOBj.MaGreen.color = dataP.MaGreen.color;
+                                    for (int j = 0; j < dataP.MaRed.Rows.Count; j++)
+                                    {
+                                        HOperatorSet.GetRegionIndex(this.GetSaveImageInfo().PObj[i], dataP.MaRed.Rows[j].TupleInt(),
+                                            dataP.MaRed.Columns[j].TupleInt(), out HTuple intdes);
+                                        if (intdes >= 0)
+                                        {
+                                            oneResultOBj.MaRed.Rows.Add(dataP.MaRed.Rows[j]);
+                                            oneResultOBj.MaRed.Columns.Add(dataP.MaRed.Columns[j]);
+                                            oneResultOBj.MaRed.Massage.Add(dataP.MaRed.Massage[j]);
+                                        }
+                                    }
+                                    oneResultOBj.MaRed.MassageBlute = dataP.MaRed.MassageBlute;
+
+                                    HOperatorSet.ReduceDomain(dataP.Image, this.GetSaveImageInfo().PObj[i], out HObject imageTd);
+                                    imageTd = dataP.Image;
+                                    oneResultOBj.Image = imageTd;
                                     oneResultOBj.AddObj(this.GetSaveImageInfo().PObj[i]);
                                     oneResultOBj.RunID = dataP.RunID;
+                                    oneResultOBj.LiyID = dataP.LiyID;
+                                    oneCamData.ResuOBj().Add(oneResultOBj);
 
-                                    oneCamData.ResuOBj.Add(oneResultOBj);
                                     oneData.AddCamsData(this.Name, dataP.RunID, oneCamData);
-
-                                    oneData.AddCamsData(this.Name, dataP.Image);
+                                    oneData.AddCamsData(this.Name, imageTd);
                                     if (!oneData.NotNull)
                                     {
                                         trayD.SetNumberValue(oneData.TrayLocation, 0);
@@ -2825,19 +2987,8 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                                                     }
                                                 }
                                             }
-
                                         }
                                     }
-                        
-                                    //if (!oneCamData.aOK)
-                                    //{
-                                 
-                                     
-                                    //}
-                                    //else
-                                    //{
-                                    //    trayD.SetNumberValue(oneData.TrayLocation, 1);
-                                    //}
                                 }
                             }
                             else
@@ -3740,6 +3891,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         {
             try
             {
+                AysEndble = false;
                 if (this.GetCam() != null)
                 {
                     this.GetCam().Swtr -= CamImageEvent;
@@ -3849,6 +4001,9 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             this.Drawing = false;
             return hObject;
         }
+
+
+
 
         /// <summary>
         /// 读取DXF文件
@@ -4911,7 +5066,49 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 return vs.ToArray();
             }
         }
+        public string GetSaveImagePah()
+        {
+         
+            string path = SavePath + "\\" + DateTime.Now.ToLongDateString() + "\\" + Product.ProductionName;
+            string sn = "";
+            if (ImageNameType == "All")
+            {
+                path += "\\" + Name;
+            }
+            else if (ImageNameType == "OK")
+            {
+                path += "\\" + Name + "\\OK";
+            }
+            else if (ImageNameType == "NG")
+            {
+                path += "\\" + Name + "\\NG";
+            }
+            else if (ImageNameType == "QR")
+            {
+                path += "\\" +sn + "\\" + Name;
+            }
+            else if (ImageNameType == "TrayQR")
+            {
+                if (Vision.GetRunNameVision().TrayID >= 0)
+                {
+                    path += "\\" + DebugCompiler.GetTray(Vision.GetRunNameVision().TrayID).GetTrayData().TrayIDQR + "\\" + Name;
+                }
+            }
+            else if (ImageNameType == "TrayQR+QR")
+            {
+                if (Vision.GetRunNameVision().TrayID >= 0)
+                {
+                    path += "\\" + DebugCompiler.GetTray(Vision.GetRunNameVision().TrayID).GetTrayData().TrayIDQR;
+                }
+                path += "\\" + sn + "\\" + Name;
+            }
 
+            if (SaveImageFileName.Contains("时间"))
+            {
+                path+= DateTime.Now.ToString("HH时mm分ss秒");
+            }
+            return path;
+        }
         [Editor(typeof(PageTypeEditor_FolderBrowserDialog), typeof(UITypeEditor))]
         [DescriptionAttribute("保存图片文件夹。"), Category("图像保存"), DisplayName("目标文件夹")]
         public string SavePath { get; set; }
@@ -4919,7 +5116,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         [DescriptionAttribute("创建图像文件夹的方式,No不保存,/n/rAll全部保存一起，NG或OK保存，/n/rNG和OK分开保存以文件夹前缀,/n/rOK.|NG.以文件名前缀,/n/rQR以产品码文件夹"),
             Category("图像保存"), DisplayName("创建文件夹方式")]
         [TypeConverter(typeof(ErosConverter)), ErosConverter.ThisDropDownAttribute("", "No",
-        "All", "NG", "OK", "NG|OK", "OK.|NG.", "QR")]
+        "All", "NG", "OK", "NG|OK", "OK.|NG.", "QR","TrayQR","TrayQR+QR")]
         public string ImageNameType { get; set; }
 
         [DescriptionAttribute("保存图像的格式。"), Category("图像保存"), DisplayName("图像格式")]
@@ -4986,7 +5183,10 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         [DescriptionAttribute("左上显示格式。0显示所有，1只显示NG或OK，-1不显示文本"), Category("显示"), DisplayName("左上结果文本")]
         public byte DispTextType { get; set; }
 
-        public List<Cams.CamData> ListCamData { get; set; } = new List<Cams.CamData>();
+
+
+
+        //public List<Cams.CamData> ListCamData { get; set; } = new List<Cams.CamData>();
 
         /// <summary>
         /// 保存图片到地址
@@ -4998,8 +5198,8 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         /// <param name="timeLog">时间</param>
         public void SaveImage(HObject image, int runID, string imageName, string Name, string sn, DateTime timeLog)
         {
-            string path = "";
-            path = SavePath + "\\" + timeLog.ToLongDateString();
+            string path  = SavePath + "\\" + timeLog.ToLongDateString()+ "\\" + Product.ProductionName; 
+
             if (ImageNameType == "All")
             {
                 path += "\\" + Name;
@@ -5014,7 +5214,22 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             }
             else if (ImageNameType == "QR")
             {
-                path += "\\" + Product.ProductionName + "\\" + sn + "\\" + Name;
+                path +=  "\\" + sn + "\\" + Name;
+            }
+            else if (ImageNameType == "TrayQR")
+            {
+                if (Vision.GetRunNameVision().TrayID>=0)
+                {
+                    path += "\\" + DebugCompiler.GetTray(Vision.GetRunNameVision().TrayID).GetTrayData().TrayIDQR + "\\" + Name;
+                }
+            }
+            else if (ImageNameType == "TrayQR+QR")
+            {
+                if (Vision.GetRunNameVision().TrayID >= 0)
+                {
+                    path += "\\" + DebugCompiler.GetTray(Vision.GetRunNameVision().TrayID).GetTrayData().TrayIDQR ;
+                }
+                path += "\\" + sn + "\\" + Name;
             }
             else
             {
@@ -5025,14 +5240,14 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             {
                 name = timeLog.ToString("HH时mm分ss秒");
             }
+            name += imageName + "-";
             if (SaveImageFileName.Contains("ID"))
             {
                 name += runID;
             }
-            if (SaveImageFileName.Contains("位置名"))
-            {
-                name += "-" + imageName;
-            }
+          
+            
+            
 
             SaveImage(image, path + name);
         }

@@ -743,6 +743,7 @@ namespace Vision2.vision.Cams
 
         private HTuple MaxTuple = new HTuple();
 
+
         /// <summary>
         /// 图像清晰度评估
         /// </summary>
@@ -756,27 +757,25 @@ namespace Vision2.vision.Cams
                 int widgth = 1000;
                 int Rab = widgth / 2;
                 HTuple Tool;
-                HTuple Lift;
-                HTuple Heit;
-                HTuple loot;
+          
                 hTuple = Vision.Evaluate_definition(halcon.Image());
 
-                HOperatorSet.GenRectangle1(out HObject ToPhObject, 1, halcon.Width / 2 - Rab, widgth, halcon.Width / 2 + Rab);
-                HOperatorSet.GenRectangle1(out HObject lefthObject, halcon.Height / 2 - Rab, 1, halcon.Height / 2 + Rab, widgth);
-                HOperatorSet.GenRectangle1(out HObject BottomhObject, halcon.Height - widgth, halcon.Width / 2 - Rab, halcon.Height - 1, halcon.Width / 2 + Rab);
-                HOperatorSet.GenRectangle1(out HObject RigthObject, halcon.Height / 2 - Rab, halcon.Width - widgth, halcon.Height / 2 + Rab, halcon.Width - 1);
-                HOperatorSet.ReduceDomain(halcon.Image(), ToPhObject, out HObject ImageToPhObject);
-                HOperatorSet.ReduceDomain(halcon.Image(), lefthObject, out HObject ImagelefthObject);
-                HOperatorSet.ReduceDomain(halcon.Image(), BottomhObject, out HObject ImageBottomhObject);
-                HOperatorSet.ReduceDomain(halcon.Image(), RigthObject, out HObject ImageRigthObject);
-                Tool = Vision.Evaluate_definition(ImageToPhObject);
-                Lift = Vision.Evaluate_definition(ImagelefthObject);
-                Heit = Vision.Evaluate_definition(ImageBottomhObject);
-                loot = Vision.Evaluate_definition(ImageRigthObject);
-                halcon.AddShowObj(BottomhObject);
-                halcon.AddShowObj(lefthObject);
-                halcon.AddShowObj(ToPhObject);
-                halcon.AddShowObj(RigthObject);
+                //HOperatorSet.GenRectangle1(out HObject ToPhObject, 1, halcon.Width / 2 - Rab, widgth, halcon.Width / 2 + Rab);
+                //HOperatorSet.GenRectangle1(out HObject lefthObject, halcon.Height / 2 - Rab, 1, halcon.Height / 2 + Rab, widgth);
+                //HOperatorSet.GenRectangle1(out HObject BottomhObject, halcon.Height - widgth, halcon.Width / 2 - Rab, halcon.Height - 1, halcon.Width / 2 + Rab);
+                //HOperatorSet.GenRectangle1(out HObject RigthObject, halcon.Height / 2 - Rab, halcon.Width - widgth, halcon.Height / 2 + Rab, halcon.Width - 1);
+                //HOperatorSet.ReduceDomain(halcon.Image(), ToPhObject, out HObject ImageToPhObject);
+                //HOperatorSet.ReduceDomain(halcon.Image(), lefthObject, out HObject ImagelefthObject);
+                //HOperatorSet.ReduceDomain(halcon.Image(), BottomhObject, out HObject ImageBottomhObject);
+                //HOperatorSet.ReduceDomain(halcon.Image(), RigthObject, out HObject ImageRigthObject);
+                Tool = Vision.Evaluate_definition(halcon.Image());
+                //Lift = Vision.Evaluate_definition(ImagelefthObject);
+                //Heit = Vision.Evaluate_definition(ImageBottomhObject);
+                //loot = Vision.Evaluate_definition(ImageRigthObject);
+                //halcon.AddShowObj(BottomhObject);
+                //halcon.AddShowObj(lefthObject);
+                //halcon.AddShowObj(ToPhObject);
+                //halcon.AddShowObj(RigthObject);
 
                 if (MaxTuple.Length == 0)
                 {
@@ -792,10 +791,10 @@ namespace Vision2.vision.Cams
 
                 halcon.GetOneImageR().AddMeassge("整体清晰度:" + hTuple.ToString());
                 halcon.GetOneImageR().AddMeassge("最大清晰度:" + MaxTuple.ToString());
-                halcon.ShowMessage("上" + Tool.ToString(), Rab, halcon.Width / 2);
-                halcon.ShowMessage("下" + loot.ToString(), halcon.Height - Rab, halcon.Width / 2);
-                halcon.ShowMessage("左" + Lift.ToString(), halcon.Height / 2, Rab);
-                halcon.ShowMessage("右" + Heit.ToString(), halcon.Height / 2, halcon.Width - Rab);
+                halcon.ShowMessage( Tool.ToString(), Rab, halcon.Width / 2);
+                //halcon.ShowMessage("下" + loot.ToString(), halcon.Height - Rab, halcon.Width / 2);
+                //halcon.ShowMessage("左" + Lift.ToString(), halcon.Height / 2, Rab);
+                //halcon.ShowMessage("右" + Heit.ToString(), halcon.Height / 2, halcon.Width - Rab);
             }
             if (this.CoordinateMeassage == Coordinate.Coordinate_Type.PixelRC)
             {

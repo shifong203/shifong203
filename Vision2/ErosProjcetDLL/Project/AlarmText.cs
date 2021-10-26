@@ -658,8 +658,8 @@ namespace Vision2.ErosProjcetDLL.Project
         {
             try
             {
-                Directory.CreateDirectory(Vision2.ErosProjcetDLL.Project.ProjectINI.TempPath + "\\报警记录");
-                System.Diagnostics.Process.Start(Vision2.ErosProjcetDLL.Project.ProjectINI.TempPath + "\\报警记录");
+                Directory.CreateDirectory(ProjectINI.TempPath + "\\报警记录");
+                System.Diagnostics.Process.Start(ProjectINI.TempPath + "\\报警记录");
             }
             catch (Exception)
             {
@@ -688,12 +688,28 @@ namespace Vision2.ErosProjcetDLL.Project
 
         private void dsAlphaRichTextBox1_TextChanged(object sender, EventArgs e)
         {
-            if (ThisF.richTextBox1.Lines.Length > ProjectINI.In.MaxText)
+        
+            if (this.InvokeRequired)
             {
-                ThisF.richTextBox1.Lines = ThisF.richTextBox1.Lines.Skip(20).Take(ThisF.richTextBox1.Lines.Length - 20).ToArray();
+                this.Invoke(new Action(() => {
+                    if (ThisF.richTextBox1.Lines.Length > ProjectINI.In.MaxText)
+                    {
+                        ThisF.richTextBox1.Lines = ThisF.richTextBox1.Lines.Skip(20).Take(ThisF.richTextBox1.Lines.Length - 20).ToArray();
+                    }
+                    ThisF.richTextBox1.SelectionStart = ThisF.richTextBox1.Text.Length;
+                    richTextBox1.ScrollToCaret();
+                }));
             }
-            ThisF.richTextBox1.SelectionStart = ThisF.richTextBox1.Text.Length;
-            richTextBox1.ScrollToCaret();
+            else
+            {
+                if (ThisF.richTextBox1.Lines.Length > ProjectINI.In.MaxText)
+                {
+                    ThisF.richTextBox1.Lines = ThisF.richTextBox1.Lines.Skip(20).Take(ThisF.richTextBox1.Lines.Length - 20).ToArray();
+                }
+                ThisF.richTextBox1.SelectionStart = ThisF.richTextBox1.Text.Length;
+                richTextBox1.ScrollToCaret();
+            }
+
         }
 
         /// <summary>
@@ -703,116 +719,116 @@ namespace Vision2.ErosProjcetDLL.Project
         {
             try
             {
-                this.Invoke(new Action(() =>
-                {
-                    char punctuation = '.';
-                    List<string> texts = new List<string>();
-                    if (!全选.Checked)
-                    {
-                        for (int i = 0; i < richTextBox1.Lines.Length; i++)
-                        {
-                            string[] strs = richTextBox1.Lines[i].Split(',');
-                            if (strs.Length > 2)
-                            {
-                                if (strs[1].Contains('.') && !strs[1].StartsWith("."))
-                                {
-                                    ToolStripItem[] dss = DropDownSele.DropDownItems.Find(strs[1].Split('.')[0], false);
-                                    if (dss.Length == 1)
-                                    {
-                                        ToolStripMenuItem toolStripMenuItem = dss[0] as ToolStripMenuItem;
-                                        if (toolStripMenuItem != null)
-                                        {
-                                            if (toolStripMenuItem.Checked)
-                                            {
-                                                texts.Add(richTextBox1.Lines[i]);
-                                                continue;
-                                            }
-                                        }
-                                    }
-                                    else
-                                    {
-                                        texts.Add(richTextBox1.Lines[i]);
-                                    }
-                                }
-                                else
-                                {
-                                    texts.Add(richTextBox1.Lines[i]);
-                                }
-                            }
-                        }
-                        string[] dsas = texts.ToArray();
-                        richTextBox1.Lines = dsas;
-                    }
-                    //改变全部字体颜色
-                    richTextBox1.ForeColor = Color.Black;
-                    int ste = 0;
-                    //     改变关键字颜色
-                    for (int i = 0; i < richTextBox1.Lines.Length; i++)
-                    {
-                        //改变算子关键字颜色
-                        if (richTextBox1.Lines[i].Split(punctuation).Length < 2)
-                        {
-                            ste = ste + richTextBox1.Lines[i].Length;
-                            continue;
-                        }
-                        string[] dat = richTextBox1.Lines[i].Split(punctuation);
+                //this.Invoke(new Action(() =>
+                //{
+                //    char punctuation = '.';
+                //    List<string> texts = new List<string>();
+                //    if (!全选.Checked)
+                //    {
+                //        for (int i = 0; i < richTextBox1.Lines.Length; i++)
+                //        {
+                //            string[] strs = richTextBox1.Lines[i].Split(',');
+                //            if (strs.Length > 2)
+                //            {
+                //                if (strs[1].Contains('.') && !strs[1].StartsWith("."))
+                //                {
+                //                    ToolStripItem[] dss = DropDownSele.DropDownItems.Find(strs[1].Split('.')[0], false);
+                //                    if (dss.Length == 1)
+                //                    {
+                //                        ToolStripMenuItem toolStripMenuItem = dss[0] as ToolStripMenuItem;
+                //                        if (toolStripMenuItem != null)
+                //                        {
+                //                            if (toolStripMenuItem.Checked)
+                //                            {
+                //                                texts.Add(richTextBox1.Lines[i]);
+                //                                continue;
+                //                            }
+                //                        }
+                //                    }
+                //                    else
+                //                    {
+                //                        texts.Add(richTextBox1.Lines[i]);
+                //                    }
+                //                }
+                //                else
+                //                {
+                //                    texts.Add(richTextBox1.Lines[i]);
+                //                }
+                //            }
+                //        }
+                //        string[] dsas = texts.ToArray();
+                //        richTextBox1.Lines = dsas;
+                //    }
+                //    //改变全部字体颜色
+                //    richTextBox1.ForeColor = Color.Black;
+                //    int ste = 0;
+                //    //     改变关键字颜色
+                //    for (int i = 0; i < richTextBox1.Lines.Length; i++)
+                //    {
+                //        //改变算子关键字颜色
+                //        if (richTextBox1.Lines[i].Split(punctuation).Length < 2)
+                //        {
+                //            ste = ste + richTextBox1.Lines[i].Length;
+                //            continue;
+                //        }
+                //        string[] dat = richTextBox1.Lines[i].Split(punctuation);
 
-                        string datastr = dat[1];
-                        string datastrt = "";
-                        if (dat.Length > 4)
-                        {
-                            datastrt = richTextBox1.Lines[i].Split(punctuation)[2] + ".";
+                //        string datastr = dat[1];
+                //        string datastrt = "";
+                //        if (dat.Length > 4)
+                //        {
+                //            datastrt = richTextBox1.Lines[i].Split(punctuation)[2] + ".";
 
-                            datastrt += richTextBox1.Lines[i].Split(punctuation)[3];
-                        }
+                //            datastrt += richTextBox1.Lines[i].Split(punctuation)[3];
+                //        }
 
-                        if (datastrt.Contains(':'))
-                        {
-                            datastrt = datastrt.Split(':')[0];
-                        }
-                        if (datastr.Contains(AlarmType.一般报警.ToString()))
-                        {
-                            richTextBox1.Select(ste + i, richTextBox1.Lines[i].Length);
-                            richTextBox1.SelectionColor = Color.Green;
-                        }
-                        else if (datastr.Contains(AlarmType.致命报警.ToString()))
-                        {
-                            richTextBox1.SelectionBackColor = Color.LightSkyBlue;
-                            richTextBox1.Select(ste + i, richTextBox1.Lines[i].Length);
-                            richTextBox1.SelectionColor = Color.Red;
-                        }
-                        else if (datastr.Contains(AlarmType.提示信息.ToString()))
-                        {
-                            richTextBox1.Select(ste + i, richTextBox1.Lines[i].Length);
-                            richTextBox1.SelectionColor = Color.GreenYellow;
-                        }
-                        else if (datastr.Contains(AlarmType.指示信息.ToString()))
-                        {
-                            richTextBox1.Select(ste + i, richTextBox1.Lines[i].Length);
-                            richTextBox1.SelectionColor = Color.LawnGreen;
-                        }
-                        else if (DicAlarm.ContainsKey(datastrt))
-                        {
-                            richTextBox1.Select(ste + i, richTextBox1.Lines[i].Length);
-                            richTextBox1.SelectionColor = Color.LawnGreen;
-                        }
-                        else
-                        {
-                            richTextBox1.SelectionColor = Color.LawnGreen;
-                        }
-                        ste = ste + richTextBox1.Lines[i].Length;
-                    }
-                    ThisF.richTextBox1.SelectionStart = ThisF.richTextBox1.Text.Length;
-                    //if (DicAlarm.Count() > 0)
-                    //{
-                    //    Vision2.Project.MainForm1.MainFormF.tsButton1.BackColor = Color.Red;
-                    //}
-                    //else
-                    //{
-                    //    Vision2.Project.MainForm1.MainFormF.tsButton1.BackColor = SystemColors.ControlDarkDark;
-                    //}
-                    //Vision2.Project.MainForm1.MainFormF.tsButton1.Text = "报警:" + DicAlarm.Count();
-                }));
+                //        if (datastrt.Contains(':'))
+                //        {
+                //            datastrt = datastrt.Split(':')[0];
+                //        }
+                //        if (datastr.Contains(AlarmType.一般报警.ToString()))
+                //        {
+                //            richTextBox1.Select(ste + i, richTextBox1.Lines[i].Length);
+                //            richTextBox1.SelectionColor = Color.Green;
+                //        }
+                //        else if (datastr.Contains(AlarmType.致命报警.ToString()))
+                //        {
+                //            richTextBox1.SelectionBackColor = Color.LightSkyBlue;
+                //            richTextBox1.Select(ste + i, richTextBox1.Lines[i].Length);
+                //            richTextBox1.SelectionColor = Color.Red;
+                //        }
+                //        else if (datastr.Contains(AlarmType.提示信息.ToString()))
+                //        {
+                //            richTextBox1.Select(ste + i, richTextBox1.Lines[i].Length);
+                //            richTextBox1.SelectionColor = Color.GreenYellow;
+                //        }
+                //        else if (datastr.Contains(AlarmType.指示信息.ToString()))
+                //        {
+                //            richTextBox1.Select(ste + i, richTextBox1.Lines[i].Length);
+                //            richTextBox1.SelectionColor = Color.LawnGreen;
+                //        }
+                //        else if (DicAlarm.ContainsKey(datastrt))
+                //        {
+                //            richTextBox1.Select(ste + i, richTextBox1.Lines[i].Length);
+                //            richTextBox1.SelectionColor = Color.LawnGreen;
+                //        }
+                //        else
+                //        {
+                //            richTextBox1.SelectionColor = Color.LawnGreen;
+                //        }
+                //        ste = ste + richTextBox1.Lines[i].Length;
+                //    }
+                //    ThisF.richTextBox1.SelectionStart = ThisF.richTextBox1.Text.Length;
+                //    //if (DicAlarm.Count() > 0)
+                //    //{
+                //    //    Vision2.Project.MainForm1.MainFormF.tsButton1.BackColor = Color.Red;
+                //    //}
+                //    //else
+                //    //{
+                //    //    Vision2.Project.MainForm1.MainFormF.tsButton1.BackColor = SystemColors.ControlDarkDark;
+                //    //}
+                //    //Vision2.Project.MainForm1.MainFormF.tsButton1.Text = "报警:" + DicAlarm.Count();
+                //}));
             }
             catch (Exception)
             {

@@ -1085,6 +1085,9 @@ namespace Vision2.Project.DebugF
                     double trayID = 1;
                     double DataNumber = 0;
                     List<string> liastStr = new List<string>();
+                    string qr = "";
+
+           
                     if (dataStr.Contains(";"))
                     {
                         string[] dataVat = dataStr.Trim(';').Split(';');
@@ -1109,6 +1112,7 @@ namespace Vision2.Project.DebugF
                     }
                     else
                     {
+                        qr = ProcessControl.ProcessUser.QRCode;
                         liastStr.AddRange(dataStr.Trim(',').Split(','));
                         if (liastStr.Count == 1)
                         {
@@ -1123,6 +1127,8 @@ namespace Vision2.Project.DebugF
                             {
                                 //DebugCompiler.GetTray(RecipeCompiler.Instance.TrayCont).GetITrayRobot().SetValue(liastStr);
                             }
+                         
+                            RecipeCompiler.Instance.Data.AddData(dataStr);
                         }
                     }
                     if (DataNumber == RecipeCompiler.Instance.DataNumber)
@@ -1130,9 +1136,20 @@ namespace Vision2.Project.DebugF
                         if (RecipeCompiler.Instance.TrayCont >= 0)
                         {
                             DebugCompiler.Instance.DDAxis.GetTrayInxt(RecipeCompiler.Instance.TrayCont).GetTrayData().SetNumberValue(RecipeCompiler.Instance.Data.ListDatV, (int)trayID);
-                            //DebugCompiler.GetTray(RecipeCompiler.Instance.TrayCont).GetTrayData().SetNumberValue(RecipeCompiler.Instance.Data.ListDatV, (int)trayID);
                         }
                     }
+                    else
+                    {
+
+                    }
+                    string path = "3D" + DateTime.Now.ToString("HH时mm分ss秒") + ".txt";
+                    string pathImage = vision.Vision.GetSaveImageInfo(vision.Vision.GetRunNameVision().Name).SavePath
+                        + "\\" + DateTime.Now.ToString("yyyy年M月d日") + "\\" + Product.ProductionName + "\\" + qr + "\\";
+                    ErosProjcetDLL.Excel.Npoi.AddText(pathImage+ path, dataStr);
+                }
+                else
+                {
+                    ErosProjcetDLL.Project.AlarmText.AddTextNewLine("数据长度过短:目标长度"+ RecipeCompiler.Instance.DataMinCont+"接收长度"+dataStr.Length);
                 }
             }
             catch (Exception ex)

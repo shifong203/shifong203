@@ -116,7 +116,6 @@ namespace Vision2.vision
                                         {
                                             AddText(data.LinkName + ":连接！" + data.ImagePath);
                                         }
-
                                         if (System.IO.File.Exists(data.ImagePath + ".jpg"))
                                         {
                                             HOperatorSet.ReadImage(out ImageNG, data.ImagePath + ".jpg");

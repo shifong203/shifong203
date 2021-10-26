@@ -218,6 +218,7 @@ namespace Vision2.Project.formula
             ListData.EventAddValue += LinkD_EventAddValue;
             try
             {
+                dataGridView1.Rows.Clear();
                 while (dataGridView1.Rows.Count < ListData.ListDatV.Count)
                 {
                     dataGridView1.Rows.Add();
@@ -578,8 +579,16 @@ namespace Vision2.Project.formula
         {
             try
             {
-                ListData.ListDatV.RemoveAt(ListData.ListDatV.Count - 1);
-                dataGridView1.Rows.RemoveAt(dataGridView1.Rows.Count - 1);
+     
+                int de = dataGridView1.SelectedRows.Count;
+                for (int i = 0; i < de; i++)
+                {
+
+                   ListData.ListDatV.RemoveAt(dataGridView1.SelectedRows[0].Index);
+                    dataGridView1.Rows.RemoveAt(dataGridView1.SelectedRows[0].Index);
+                }
+            
+              
             }
             catch (Exception ex)
             {
@@ -821,6 +830,98 @@ namespace Vision2.Project.formula
                 //DebugF.DebugCompiler.GetTrayDataUserControl().GetTrayEx().Number++;
                 //numericUpDown3.Value = DebugF.DebugCompiler.GetTrayDataUserControl().GetTrayEx().Number;
                 //RecipeCompiler.Instance.Data.AddData(vs);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void 导出参数ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                ErosProjcetDLL.Project.ProjectINI.Weait(RecipeCompiler.Instance.Data);
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void 导入参数ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                LinkData linkData = new LinkData();
+                ErosProjcetDLL.Project.ProjectINI.ReadWeait(out linkData);
+                RecipeCompiler.Instance.Data.ListDatV = linkData.ListDatV;
+                RecipeCompiler.Instance.Data.CheCalssT = linkData.CheCalssT;
+                ListData.ListDatV = RecipeCompiler.Instance.Data.ListDatV;
+                SetData(RecipeCompiler.Instance.Data);
+                LinkD_EventAddValue(ListData.ListDatV);
+                MessageBox.Show("导入成功");
+ 
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void button10_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                int nuber = (int)numericUpDown2.Value;
+                Random rd = new Random();
+                string dataStr = "";/* numericUpDown3.Value.ToString() + ";" + numericUpDown4.Value.ToString() + ";";*/
+
+                for (int ie = 0; ie < 1; ie++)
+                {
+                    List<double> vs = new List<double>();
+                    if (comboBox1.SelectedIndex == 0)
+                    {
+                        for (int i = 0; i < nuber; i++)
+                        {
+                            vs.Add(rd.NextDouble());
+                        }
+                    }
+                    else if (comboBox1.SelectedIndex == 1)
+                    {
+                        for (int i = 0; i < nuber; i++)
+                        {
+                            if (RecipeCompiler.Instance.Data.ListDatV.Count >= nuber)
+                            {
+                                for (int id = 0; id < RecipeCompiler.Instance.Data.ListDatV[i].Reference_Name.Count; id++)
+                                {
+                                    vs.Add(NextDouble(rd, RecipeCompiler.Instance.Data.ListDatV[i].Reference_ValueMin[id], RecipeCompiler.Instance.Data.ListDatV[i].Reference_ValueMax[id]));
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        for (int i = 0; i < nuber; i++)
+                        {
+                            if (RecipeCompiler.Instance.Data.ListDatV.Count >= nuber)
+                            {
+                                for (int id = 0; id < RecipeCompiler.Instance.Data.ListDatV[i].Reference_Name.Count; id++)
+                                {
+                                    vs.Add(NextDouble(rd, RecipeCompiler.Instance.Data.ListDatV[i].Reference_ValueMax[id], RecipeCompiler.Instance.Data.ListDatV[i].Reference_ValueMax[id] + 5));
+                                }
+                            }
+                        }
+                    }
+                    for (int i = 0; i < vs.Count; i++)
+                    {
+                        dataStr += vs[i] + ",";
+                    }
+              
+                }
+
+                DebugF.DebugCompiler.DebugData(dataStr.Trim(';'));
             }
             catch (Exception ex)
             {

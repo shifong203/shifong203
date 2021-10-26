@@ -147,9 +147,9 @@ namespace Vision2.vision.HalconRunFile.Controls
                 HOperatorSet.SetDraw(visionUserControlV.HalconWindow, "margin");
                 Get_Pragram();
                 listBoxPoints.Items.Clear();
-                for (int i = 0; i < Project.formula.RecipeCompiler.Instance.Data.ListDatV.Count; i++)
+                for (int i = 0; i < Project.formula.RecipeCompiler.Instance.Data.ListDatV[0].Reference_Name.Count; i++)
                 {
-                    Column1.Items.Add(Project.formula.RecipeCompiler.Instance.Data.ListDatV[i].ComponentName);
+                    Column1.Items.Add(Project.formula.RecipeCompiler.Instance.Data.ListDatV[0].Reference_Name[i]);
                 }
 
                 for (int i = 0; i < Wire_S.listWelding.Count; i++)
@@ -163,7 +163,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                     int det = dataGridView1.Rows.Add();
                     if (Wire.List3DName[i] >= 0)
                     {
-                        dataGridView1.Rows[det].Cells[0].Value = Project.formula.RecipeCompiler.Instance.Data.ListDatV[Wire.List3DName[i]].ComponentName;
+                        dataGridView1.Rows[det].Cells[0].Value = Project.formula.RecipeCompiler.Instance.Data.ListDatV[0].Reference_Name[Wire.List3DName[i]];
                     }
                 }
             }
@@ -260,12 +260,20 @@ namespace Vision2.vision.HalconRunFile.Controls
                 Wire = Wire_S.listWelding[listBoxPoints.SelectedIndex];
 
                 dataGridView1.Rows.Clear();
+                //for (int i = 0; i < Wire.List3DName.Count; i++)
+                //{
+                //    int det = dataGridView1.Rows.Add();
+                //    if (Wire.List3DName[i] >= 0)
+                //    {
+                //        dataGridView1.Rows[det].Cells[0].Value = Project.formula.RecipeCompiler.Instance.Data.ListDatV[Wire.List3DName[i]].ComponentName;
+                //    }
+                //}
                 for (int i = 0; i < Wire.List3DName.Count; i++)
                 {
                     int det = dataGridView1.Rows.Add();
                     if (Wire.List3DName[i] >= 0)
                     {
-                        dataGridView1.Rows[det].Cells[0].Value = Project.formula.RecipeCompiler.Instance.Data.ListDatV[Wire.List3DName[i]].ComponentName;
+                        dataGridView1.Rows[det].Cells[0].Value = Project.formula.RecipeCompiler.Instance.Data.ListDatV[0].Reference_Name[Wire.List3DName[i]];
                     }
                 }
                 ismove = false;

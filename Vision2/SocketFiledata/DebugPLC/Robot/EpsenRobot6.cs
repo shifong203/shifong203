@@ -212,7 +212,7 @@ namespace ErosSocket.DebugPLC.Robot
         public int[] RunIDs { get; private set; } = new int[10];
         //public bool DebugModei { get; private set; }
 
-        protected override void AsyncReveive(System.Timers.Timer timer, Socket socket, byte[] buffers)
+        protected override void AsyncReveive(System.Timers.Timer timer, Socket socket, byte[] buffers,string endpoint="")
         {
             try
             {

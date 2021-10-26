@@ -58,6 +58,8 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         public OneRObj()
         {
             NGROI.GenEmptyObj();
+            ROI = new HObject();
+            ROI.GenEmptyObj();
         }
 
         public OneRObj(OneRObj oneRObj)
@@ -68,10 +70,12 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             {
                 this.NGText = oneRObj.NGText;
             }
+            aOK = oneRObj.aOK;
             this.dataMinMax = oneRObj.dataMinMax;
             this.Done = oneRObj.Done;
             this.NGROI = oneRObj.NGROI;
             this.ROI = oneRObj.ROI;
+
             //OneOdata[] oneOdat= new OneOdata[] { };
             //oneRObj.oneOdatas.CopyTo(oneOdat);
             //oneOdatas.AddRange(oneOdat);
@@ -126,13 +130,19 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
 
         public void RAddOK()
         {
-            if (ROI != null)
+            try
             {
-                ROI.GenEmptyObj();
+                //if (ROI != null)
+                //{
+                //    ROI.GenEmptyObj();
+                //}
+                //if (NGROI != null)
+                //{
+                //    NGROI.GenEmptyObj();
+                //}
             }
-            if (NGROI != null)
+            catch (System.Exception)
             {
-                NGROI.GenEmptyObj();
             }
             RestText = "OK";
 
@@ -142,14 +152,14 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
 
         public void RAddNG(string restText)
         {
-            if (ROI != null)
-            {
-                ROI.GenEmptyObj();
-            }
-            if (NGROI != null)
-            {
-                NGROI.GenEmptyObj();
-            }
+            //if (ROI != null)
+            //{
+            //    ROI.GenEmptyObj();
+            //}
+            //if (NGROI != null)
+            //{
+            //    NGROI.GenEmptyObj();
+            //}
             RestText = restText;
             Done = true;
             aOK = false;
@@ -350,7 +360,9 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                             return item.NGROI;
                         }
                     }
-                    return new HObject();
+                    HObject hObject = new HObject();
+                    hObject.GenEmptyObj();
+                    return hObject;
                 }
             }
 
@@ -365,7 +377,9 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                             return item.ROI;
                         }
                     }
-                    return new HObject();
+                    HObject hObject = new HObject();
+                    hObject.GenEmptyObj();
+                    return hObject;
                 }
             }
 

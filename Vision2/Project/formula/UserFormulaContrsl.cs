@@ -428,7 +428,7 @@ namespace Vision2.Project.formula
                     case RecipeCompiler.EnumUpDataType.弹出复判按钮:
                         label3.Visible = true;
 
-                        label3.Visible = true;
+                      
 
                         tabControl1.TabPages.Remove(tabPage1);
                         //ButtenModeUI buttenMode = new ButtenModeUI();
@@ -1580,7 +1580,6 @@ namespace Vision2.Project.formula
 
         private static OneDataVale data;
 
-        private static TrayRobot TrayReset;
 
         private static List<OneDataVale> dataVales = new List<OneDataVale>();
 

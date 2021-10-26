@@ -38,9 +38,9 @@ namespace Vision2.vision.HalconRunFile.PCBFile
             this.button6 = new System.Windows.Forms.Button();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.绘制区域ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.绘制焊脚区域ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.添加ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.绘制焊脚区域ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.绘制区域ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.删除ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.label10 = new System.Windows.Forms.Label();
             this.numericUpDown10 = new System.Windows.Forms.NumericUpDown();
@@ -110,7 +110,7 @@ namespace Vision2.vision.HalconRunFile.PCBFile
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupBox1.Location = new System.Drawing.Point(0, 0);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(446, 100);
+            this.groupBox1.Size = new System.Drawing.Size(446, 84);
             this.groupBox1.TabIndex = 22;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "引脚";
@@ -166,12 +166,12 @@ namespace Vision2.vision.HalconRunFile.PCBFile
             this.contextMenuStrip1.Name = "contextMenuStrip1";
             this.contextMenuStrip1.Size = new System.Drawing.Size(149, 92);
             // 
-            // 绘制区域ToolStripMenuItem
+            // 添加ToolStripMenuItem
             // 
-            this.绘制区域ToolStripMenuItem.Name = "绘制区域ToolStripMenuItem";
-            this.绘制区域ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
-            this.绘制区域ToolStripMenuItem.Text = "绘制焊盘区域";
-            this.绘制区域ToolStripMenuItem.Click += new System.EventHandler(this.绘制区域ToolStripMenuItem_Click);
+            this.添加ToolStripMenuItem.Name = "添加ToolStripMenuItem";
+            this.添加ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.添加ToolStripMenuItem.Text = "添加";
+            this.添加ToolStripMenuItem.Click += new System.EventHandler(this.添加ToolStripMenuItem_Click);
             // 
             // 绘制焊脚区域ToolStripMenuItem
             // 
@@ -180,12 +180,12 @@ namespace Vision2.vision.HalconRunFile.PCBFile
             this.绘制焊脚区域ToolStripMenuItem.Text = "绘制焊脚区域";
             this.绘制焊脚区域ToolStripMenuItem.Click += new System.EventHandler(this.绘制焊脚区域ToolStripMenuItem_Click);
             // 
-            // 添加ToolStripMenuItem
+            // 绘制区域ToolStripMenuItem
             // 
-            this.添加ToolStripMenuItem.Name = "添加ToolStripMenuItem";
-            this.添加ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
-            this.添加ToolStripMenuItem.Text = "添加";
-            this.添加ToolStripMenuItem.Click += new System.EventHandler(this.添加ToolStripMenuItem_Click);
+            this.绘制区域ToolStripMenuItem.Name = "绘制区域ToolStripMenuItem";
+            this.绘制区域ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.绘制区域ToolStripMenuItem.Text = "绘制焊盘区域";
+            this.绘制区域ToolStripMenuItem.Click += new System.EventHandler(this.绘制区域ToolStripMenuItem_Click);
             // 
             // 删除ToolStripMenuItem
             // 
@@ -268,7 +268,7 @@ namespace Vision2.vision.HalconRunFile.PCBFile
             this.groupBox2.Controls.Add(this.numericUpDown4);
             this.groupBox2.Controls.Add(this.numericUpDown6);
             this.groupBox2.Dock = System.Windows.Forms.DockStyle.Top;
-            this.groupBox2.Location = new System.Drawing.Point(0, 100);
+            this.groupBox2.Location = new System.Drawing.Point(0, 84);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(446, 166);
             this.groupBox2.TabIndex = 23;
@@ -475,9 +475,9 @@ namespace Vision2.vision.HalconRunFile.PCBFile
             // propertyGrid1
             // 
             this.propertyGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.propertyGrid1.Location = new System.Drawing.Point(0, 266);
+            this.propertyGrid1.Location = new System.Drawing.Point(0, 250);
             this.propertyGrid1.Name = "propertyGrid1";
-            this.propertyGrid1.Size = new System.Drawing.Size(446, 275);
+            this.propertyGrid1.Size = new System.Drawing.Size(446, 291);
             this.propertyGrid1.TabIndex = 39;
             // 
             // select_obj_type1

@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Net;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Vision2.ErosProjcetDLL.Project;
 
@@ -13,6 +16,8 @@ namespace Vision2.Project.Mes.环旭SISF
         public SisfForm1()
         {
             InitializeComponent();
+            ErosProjcetDLL.UI.DataGridViewF.StCon.AddCon(dataGridView3);
+
         }
 
         private SISF mesInfon1;
@@ -83,7 +88,11 @@ namespace Vision2.Project.Mes.环旭SISF
         {
             try
             {
-                richTextBox2.AppendText(mesInfon1.SendStep2(textBox1.Text, textBox2.Text, textBox3.Text) + Environment.NewLine);
+                List<string> dets = new List<string>();
+                dets.Add("PANEL_SERIAL_NUMBER");
+                dets.Add("1_SUFFIX_SERIAL_NUMBER");
+                dets.Add("2_SUFFIX_SERIAL_NUMBER");
+                richTextBox2.AppendText(mesInfon1.SendStep2(textBox1.Text, dets.ToArray(), textBox2.Text, textBox3.Text) + Environment.NewLine);
                 string ds = mesInfon1.GetSocketClint().AlwaysReceive(10000);
                 richTextBox1.AppendText(ds + Environment.NewLine);
             }
@@ -139,6 +148,33 @@ namespace Vision2.Project.Mes.环旭SISF
             try
             {
                 richTextBox1.AppendText(DateTime.Now.ToString() + "接收:" + key.ToString() + socket.RecivesDone + Environment.NewLine);
+                if (true)
+                {
+
+                    if (dataGridView3.Rows.Count==numericUpDown2.Value)
+                    {
+                        if (key.ToString().ToLower().StartsWith("ok"))
+                        {
+                            dataGridView3.Rows[d].Cells[1].Value = key.Length;
+                            if (int.TryParse(dataGridView3.Rows[d].Cells[0].Value.ToString(), out int rest))
+                            {
+                                if (rest != key.Length)
+                                {
+                                    dataGridView3.Rows[d].DefaultCellStyle.BackColor = Color.Red;
+                                }
+                                else
+                                {
+                                    dataGridView3.Rows[d].DefaultCellStyle.BackColor = Color.Green;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            dataGridView3.Rows[d].DefaultCellStyle.BackColor = Color.Red;
+                        }
+                    }
+           
+                }
             }
             catch (Exception)
             {
@@ -186,7 +222,7 @@ namespace Vision2.Project.Mes.环旭SISF
             {
                 Thread thread = new Thread(() =>
                 {
-                    mesInfon1.WrietMes(DebugF.DebugCompiler.GetTray(0).GetTrayData());
+                    mesInfon1.WrietMes(DebugF.DebugCompiler.GetTray((int)numericUpDown1.Value).GetTrayData());
                 });
 
                 thread.IsBackground = true;
@@ -259,6 +295,127 @@ namespace Vision2.Project.Mes.环旭SISF
             catch (Exception)
             {
             }
+        }
+        ErosSocket.ErosConLink.SocketServer SocketServer ;
+
+        string ipdt = "";
+        int d = 0;
+        bool stop ;
+        bool straIng;
+        private void button7_Click(object sender, EventArgs e)
+        {
+            try
+            {
+
+                if (straIng)
+                {
+                    stop = true;
+                    return;
+                }
+                stop = false;
+                label9.Text = "执行中";
+                if (textBox9.Text=="")
+                {
+                    SocketServer = ErosSocket.ErosConLink.StaticCon.GetSocketClint(textBox9.Text) as ErosSocket.ErosConLink.SocketServer;
+                    ipdt = mesInfon1.GetSocketClint().IP;
+                    mesInfon1.GetSocketClint().IP = "127.0.0.1";
+                }
+                 mesInfon1.GetSocketClint().Close();
+                //SocketServer.EndIP = IPAddress.Any.ToString();
+                //SocketServer.EndPort = mesInfon1.GetSocketClint().Port;
+                //SocketServer.initialization();
+
+                if (!mesInfon1.GetSocketClint().IsConn)
+                {
+                    mesInfon1.GetSocketClint().AsynLink(false);
+                }
+                if (SocketServer!=null)
+                {
+                    SocketServer.PassiveStringBuilderEvent += SocketServer_PassiveStringBuilderEvent;
+                }
+
+                dataGridView3.Rows.Clear();
+
+                dataGridView3.Rows.Add((int)numericUpDown2.Value);
+                Task task = new Task(() =>{
+
+                    try
+                    {
+                        straIng = true;
+                        for (int i = 0; i < dataGridView3.Rows.Count; i++)
+                        {
+                            if (stop)
+                            {
+                              
+                                break;
+                            }
+                            if (!mesInfon1.GetSocketClint().IsConn)
+                            {
+                                mesInfon1.GetSocketClint().AsynLink(false);
+                            }
+                            d = i;
+                            //this.Invoke(new Action(() => {
+                             dataGridView3.Rows[i].Cells[0].Value = richTextBox4.Text.Length;
+                            //}));
+                            string datas = mesInfon1.Send(richTextBox4.Text);
+                            mesInfon1.GetSocketClint().Close();
+                            Thread.Sleep((int)numericUpDown3.Value*1000);
+                        }
+                     
+                    }
+                    catch (Exception ex)
+                    {
+                    }
+                    label9.Text = "结束";
+                    straIng = false;
+                    if (SocketServer != null)
+                    {
+                        SocketServer.PassiveStringBuilderEvent -= SocketServer_PassiveStringBuilderEvent;
+                    }
+                });
+                task.Start();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            try
+            {
+                mesInfon1.GetSocketClint().IP = ipdt;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private string SocketServer_PassiveStringBuilderEvent(StringBuilder key, ErosSocket.ErosConLink.SocketClint socket, System.Net.Sockets.Socket socketR)
+        {
+            try
+            {
+                dataGridView3.Rows[d].Cells[1].Value = key.Length;
+                if (int.TryParse(dataGridView3.Rows[d].Cells[0].Value.ToString(),out int rest))
+                {
+                    if (rest!=key.Length)
+                    {
+                        dataGridView3.Rows[d].DefaultCellStyle.BackColor = Color.Red;
+                    }
+                    else
+                    {
+                        dataGridView3.Rows[d].DefaultCellStyle.BackColor = Color.Green;
+                    }
+                }
+                socketR.Send(socket.GetEncoding().GetBytes(richTextBox3.Text));
+                if (SocketServer.GetDictiPoints().ContainsKey(socketR.RemoteEndPoint.ToString()))
+                {
+                    SocketServer.GetDictiPoints().Remove(socketR.RemoteEndPoint.ToString());
+                }
+                socketR.Close();
+            }
+            catch (Exception ex)
+            {
+            }
+            return "";
         }
     }
 }

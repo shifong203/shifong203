@@ -53,6 +53,7 @@ namespace Vision2.vision.RestVisionForm
             }
             catch (Exception ex)
             {
+                MessageBox.Show(ex.Message);
             }
         }
 

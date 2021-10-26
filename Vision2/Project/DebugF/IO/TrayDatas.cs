@@ -266,7 +266,7 @@ namespace Vision2.Project.DebugF.IO
                         if (dataVale.ListCamsData.Count != 0)
                         {
                             vision.Vision.GetRunNameVision().GetOneImageR(
-                   dataVale.ListCamsData[vision.Vision.GetRunNameVision().Name].ResuOBj[0]);
+                   dataVale.ListCamsData[vision.Vision.GetRunNameVision().Name].ResuOBj()[0]);
                             vision.Vision.GetRunNameVision().ShowObj();
                         }
                     }

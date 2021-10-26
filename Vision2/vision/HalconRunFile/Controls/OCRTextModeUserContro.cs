@@ -75,7 +75,7 @@ namespace Vision2.vision.HalconRunFile.Controls
             halcon = halcon_;
             checkBox1.Checked = text_Mode.QRMode;
             HWindID.Initialize(hWindowControl1);
-            pretreatmentUserControl1.SetData(text_);
+            pretreatmentUserControl1.SetData(text_, halcon_.GetOneImageR());
             textBox1.Text = text_Mode.ModeText;
             listBox1.Items.Clear();
             for (int i = 0; i < text_Mode.ListhObjects.Count; i++)

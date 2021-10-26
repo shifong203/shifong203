@@ -595,11 +595,55 @@
       <DependentUpon>SPCForm.cs</DependentUpon>
     </Compile>
     <Compile Include="SocketFiledata\ErosConLink\三菱FX3U.cs" />
+    <Compile Include="vision\HalconRunFile\Controls\ModeColorUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\Controls\ModeColorUserControl.Designer.cs">
+      <DependentUpon>ModeColorUserControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\Controls\OBJSeleForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\Controls\OBJSeleForm.Designer.cs">
+      <DependentUpon>OBJSeleForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\Controls\PretreatmenUserCo.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\Controls\PretreatmenUserCo.Designer.cs">
+      <DependentUpon>PretreatmenUserCo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\Controls\UserCtrlThresholdList.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\Controls\UserCtrlThresholdList.designer.cs">
+      <DependentUpon>UserCtrlThresholdList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\Controls\UserCtrlThreshold.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\Controls\UserCtrlThreshold.designer.cs">
+      <DependentUpon>UserCtrlThreshold.cs</DependentUpon>
+    </Compile>
+    <Compile Include="vision\HalconRunFile\RunProgramFile\InteHomMat.cs" />
+    <Compile Include="vision\HalconRunFile\RunProgramFile\Mode_Color.cs" />
+    <Compile Include="vision\RestVisionForm\AotuFindSNForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="vision\RestVisionForm\AotuFindSNForm.Designer.cs">
+      <DependentUpon>AotuFindSNForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="vision\RestVisionForm\OneNGDataMinMaxControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="vision\RestVisionForm\OneNGDataMinMaxControl.Designer.cs">
       <DependentUpon>OneNGDataMinMaxControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="vision\RestVisionForm\FinSNVisionForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="vision\RestVisionForm\FinSNVisionForm.Designer.cs">
+      <DependentUpon>FinSNVisionForm.cs</DependentUpon>
     </Compile>
     <Compile Include="vision\RunVisionPrForm.cs">
       <SubType>Form</SubType>
@@ -1723,8 +1767,29 @@
     <EmbeddedResource Include="Project\SPCForm.resx">
       <DependentUpon>SPCForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="vision\HalconRunFile\Controls\ModeColorUserControl.resx">
+      <DependentUpon>ModeColorUserControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="vision\HalconRunFile\Controls\OBJSeleForm.resx">
+      <DependentUpon>OBJSeleForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="vision\HalconRunFile\Controls\PretreatmenUserCo.resx">
+      <DependentUpon>PretreatmenUserCo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="vision\HalconRunFile\Controls\UserCtrlThresholdList.resx">
+      <DependentUpon>UserCtrlThresholdList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="vision\HalconRunFile\Controls\UserCtrlThreshold.resx">
+      <DependentUpon>UserCtrlThreshold.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="vision\RestVisionForm\AotuFindSNForm.resx">
+      <DependentUpon>AotuFindSNForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="vision\RestVisionForm\OneNGDataMinMaxControl.resx">
       <DependentUpon>OneNGDataMinMaxControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="vision\RestVisionForm\FinSNVisionForm.resx">
+      <DependentUpon>FinSNVisionForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="vision\RunVisionPrForm.resx">
       <DependentUpon>RunVisionPrForm.cs</DependentUpon>

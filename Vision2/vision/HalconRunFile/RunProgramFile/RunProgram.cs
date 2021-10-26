@@ -33,6 +33,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             AOIObj = new HObject();
             AOIObj.GenEmptyObj();
             DrawObj.GenEmptyObj();
+
             //ImageRoi.GenEmptyObj();
         }
 
@@ -121,6 +122,13 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         /// </summary>
         public HTuple ModeRow { get; set; } = new HTuple();
 
+
+        [Category("坐标位置"), DisplayName("参考坐标角度"), Description("")]
+        /// <summary>
+        /// 参考坐标
+        /// </summary>
+        public HTuple ModeAngle { get; set; } = new HTuple();
+
         [Category("坐标位置"), DisplayName("参考坐标Col"), Description("")]
         /// <summary>
         /// 参考坐标
@@ -151,6 +159,23 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     ModeCol = OutCol;
                 }
             }
+        }
+
+        public bool ModeRowCol(HTuple rows, HTuple colus,out HTuple distfM)
+        {
+            distfM = new HTuple();
+            try
+            {
+                OutRow = rows;
+                OutCol = colus;
+                HOperatorSet.DistancePp(OutRow, OutCol, ModeRow, ModeCol, out distfM);
+                //distfMM = oneResultOBj.GetCaliConstMM(distfMM);
+                return true;
+            }
+            catch (Exception ex)
+            {
+            }
+            return false;
         }
 
         /// <summary>
@@ -285,7 +310,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             set { nGRoi = value; }
         }
 
-        protected HObject nGRoi;
+        public HObject nGRoi;
 
         ///// <summary>
         ///// 图像区域
@@ -335,6 +360,8 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         /// </summary>
         public HObject AOIObj = new HObject();
 
+     
+
         [DescriptionAttribute("使用固定区域。"), Category("检测区域"), DisplayName("使用AOI区域")]
         public bool ISAoiMode { get; set; }
 
@@ -364,6 +391,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             HTuple hTuple = new HTuple();
             try
             {
+                hTuple.Append(this.Defect_Type);
                 if (BackName == "")
                 {
                     return hTuple;
@@ -394,13 +422,18 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         public AoiObj GetAoi()
         {
             AoiObj aoiObj = new AoiObj();
+         
             aoiObj.SelseAoi = AOIObj;
-            HOperatorSet.AreaCenter(AOIObj, out HTuple area, out HTuple row, out HTuple col);
-            if (row.Length != 0)
+            if (AOIObj.IsInitialized())
             {
-                AoiRow = row;
-                AoiCol = col;
+                HOperatorSet.AreaCenter(AOIObj, out HTuple area, out HTuple row, out HTuple col);
+                if (row.Length != 0)
+                {
+                    AoiRow = row;
+                    AoiCol = col;
+                }
             }
+        
 
             aoiObj.AoiRow = this.AoiRow;
             aoiObj.AoiCol = this.AoiCol;
@@ -744,7 +777,9 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         //public string ErrText { get; set; }
         [DescriptionAttribute("显示区域。"), Category("结果显示"), DisplayName("是否显示区域")]
         public bool IsDisObj { get; set; } = true;
-
+        /// <summary>
+        /// 显示文本
+        /// </summary>
         [DescriptionAttribute("显示文本。"), Category("结果显示"), DisplayName("是否显示文本")]
         public bool ISShowText { get; set; } = true;
 
@@ -806,6 +841,20 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 HOperatorSet.HomMat2dIdentity(out HTuple coordHanMat2DXY);
                 return new List<HTuple> { coordHanMat2DXY };
             }
+        }
+
+        public HObject GetHomMatObj(HObject roeing,HTuple homMat)
+        {
+            HObject hObjectROI = roeing;
+            try
+            {
+                HOperatorSet.AffineTransRegion(roeing, out  hObjectROI,
+            homMat, "nearest_neighbor");
+            }
+            catch (Exception)
+            {
+            }
+            return hObjectROI;
         }
 
         public List<string> HomNameList

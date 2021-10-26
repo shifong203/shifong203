@@ -70,7 +70,9 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
 
         [Description(""), Category("划痕处理"), DisplayName("划痕第一次赛选后圆闭运算大小"),]
         public double ColsingSocek { get; set; } = 10;
-
+        /// <summary>
+        /// 轮廓检测
+        /// </summary>
         [Description(""), Category("轮廓检测"), DisplayName("轮廓"),]
         public bool isRoiComparison { get; set; }
 
@@ -86,6 +88,17 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         [Description(""), Category("结果输出"), DisplayName("裂痕显示"),]
         public bool SockeObj { get; set; }
 
+        [Description(""), Category("划痕处理"), DisplayName("使用划痕检测")]
+        public bool EnableScratch { get; set; } = true;
+
+        [Description(""), Category("对称性分析"), DisplayName("使用对称性分析")]
+        public bool EnableSymmetry { get; set; }
+
+
+        [Description(""), Category("对称性分析"), DisplayName("短轴对称")]
+        public bool EnableRB { get; set; }
+
+
         /// <summary>
         /// 模板区域
         /// </summary>
@@ -98,6 +111,69 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
 
         public List<OvergilEX> RunListOvergil { get; set; } = new List<OvergilEX>();
 
+        /// <summary>
+        /// 划痕检测
+        /// </summary>
+        /// <param name="hIamge">图像域</param>
+        /// <param name="hObject2">划痕结果</param>
+        public void Scratch(HObject hIamge,out HObject hObject2)
+        {
+            hObject2 = new HObject();
+            hObject2.GenEmptyObj();
+            try
+            {
+                HOperatorSet.MeanImage(hIamge, out HObject hObject1, MeanWidth, MeanHeith);
+                HOperatorSet.DynThreshold(hIamge, hObject1, out hObject2, DnyValue, DnyTypeValue);
+                HOperatorSet.Connection(hObject2, out hObject2);
+                HOperatorSet.SelectShape(hObject2, out hObject2, "ra", "and", SocekSeleMin1, 9999999999);
+                HOperatorSet.Union1(hObject2, out hObject2);
+            }
+            catch (Exception ex)
+            {
+            }
+        }
+
+        public void Symmetry(OneResultOBj oneResult , int debugID,out HObject hObject2)
+        {
+            hObject2 = new HObject();
+            hObject2.GenEmptyObj();
+            HOperatorSet.HomMat2dIdentity(out HTuple hommat2didentity);
+            try
+            {
+                HOperatorSet.SmallestRectangle2(SelecRoi, out HTuple row, out HTuple column, out HTuple phi, out HTuple length1, out HTuple length2);
+                HOperatorSet.GenRectangle2(out HObject hObject, 0, length1, 0, length1, length2);
+                HOperatorSet.HomMat2dTranslate(hommat2didentity, row, column, out HTuple  hommat2didentity2);
+                HOperatorSet.HomMat2dRotate(hommat2didentity2, phi, row, column, out hommat2didentity2);
+                HOperatorSet.AffineTransRegion(hObject, out HObject hObject1, hommat2didentity2, "nearest_neighbor");
+                HOperatorSet.Difference(SelecRoi, hObject1, out HObject hObject3);
+                HOperatorSet.Intersection(hObject1, SelecRoi, out HObject hObject4);
+                HOperatorSet.HomMat2dSlant(hommat2didentity, new HTuple(180).TupleRad(), "y", row, column, out hommat2didentity2);
+                HOperatorSet.HomMat2dRotate(hommat2didentity2, phi * 2, row, column, out hommat2didentity2);
+                HOperatorSet.AffineTransRegion(hObject4, out HObject hObject5, hommat2didentity2, "nearest_neighbor");
+                HOperatorSet.Difference(hObject5, hObject3, out HObject hObject6);
+                if (debugID == 3)
+                {
+                    oneResult.AddObj(hObject1, ColorResult.firebrick);
+                    oneResult.AddObj(hObject3, ColorResult.red);
+                    oneResult.AddObj(hObject5, ColorResult.orange);
+                    //oneResult.AddObj(hObject6, ColorResult.blue);
+                    return;
+                }
+                HOperatorSet.Difference(hObject3, hObject5, out HObject hObject7);
+                HOperatorSet.Union2(hObject7, hObject6, out hObject6);
+                hObject2 = OpneOrCosingCircle(hObject6, -2);
+                if (debugID == 4)
+                {
+                    oneResult.AddObj(hObject2, ColorResult.firebrick);
+                    HOperatorSet.AreaCenter(hObject2, out HTuple area, out HTuple rows, out HTuple colus);
+                    oneResult.AddImageMassage(rows+20, colus,"缺陷面积"+ area);
+                }
+                //HOperatorSet.Connection(hObject6, out hObject2);
+            }
+            catch (Exception)
+            {
+            }
+        }
         /// <summary>
         /// 查找区域并进行均值划痕检测
         /// </summary>
@@ -151,7 +227,14 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 {
                     halcon.AddObj(rectangle3, ColorResult.yellow);
                 }
+                if (id == 2)
+                {
+                    HOperatorSet.AreaCenter(rectangle3, out HTuple areat, out HTuple row1, out HTuple column1);
+                    
+                    halcon.AddImageMassage(row1+80,column1,"检测区域面积"+areat);
+                }
                 HOperatorSet.ReduceDomain(halcon.GetHalcon().GetImageOBJ(ImageTypeOb), rectangle3, out hImage);
+
                 if (id >= 2)
                 {
                     halcon.AddObj(rectangle3, ColorResult.yellow);
@@ -181,12 +264,19 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 HObject errt = new HObject();
                 errt.GenEmptyObj();
                 SelecRoi = hObject;
-                HOperatorSet.MeanImage(hImage, out HObject hObject1, MeanWidth, MeanHeith);
-                HOperatorSet.DynThreshold(hImage, hObject1, out HObject hObject2, DnyValue, DnyTypeValue);
-                HOperatorSet.Connection(hObject2, out hObject2);
-                HOperatorSet.SelectShape(hObject2, out hObject2, "ra", "and", SocekSeleMin1, 9999999999);
-                HOperatorSet.Union1(hObject2, out hObject2);
-                HOperatorSet.ClosingCircle(hObject2, out hObject2, ColsingSocek);
+                HObject hObject2 = new HObject();
+                hObject2.GenEmptyObj();
+                HObject hObject1 = new HObject();
+
+                if (EnableScratch)
+                {
+                    Scratch(hImage, out hObject2);
+                    HOperatorSet.ClosingCircle(hObject2, out hObject2, ColsingSocek);
+                }
+                if (EnableSymmetry)
+                {
+                    Symmetry(halcon, id,out hObject2);
+                }
                 HOperatorSet.Connection(hObject2, out hObject2);
                 hObject2 = Select_Shape_Min_Outobj.select_shape(hObject2);
                 HOperatorSet.Union1(hObject2, out hObject2);
@@ -261,7 +351,11 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             {
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="oneResultOBj"></param>
+        /// <param name="id"></param>
         public void RunDebug(OneResultOBj oneResultOBj, int id)
         {
             try

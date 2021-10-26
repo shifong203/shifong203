@@ -197,6 +197,8 @@ namespace Vision2.vision.Cams
         [DescriptionAttribute("是否纠正图像"), Category("标定"), DisplayName("纠正图像")]
         public bool ISMap { get; set; }
 
+        public bool Defintion { get ; set ; }
+
         public virtual void OpenCam()
         {
         }
@@ -214,10 +216,10 @@ namespace Vision2.vision.Cams
         /// 采集图片
         /// </summary>
         /// <returns></returns>
-        public virtual HObject GetImage()
+        public virtual bool GetImage(out HObject image)
         {
-            HObject ho_iamge = null;
-            return ho_iamge;
+            image = null;
+            return false;
         }
 
         public virtual string GetFramegrabberParam(string pName)

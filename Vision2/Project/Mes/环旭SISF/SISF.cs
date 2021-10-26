@@ -1,8 +1,10 @@
 ﻿using ErosSocket.DebugPLC.Robot;
 using ErosSocket.ErosConLink;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Vision2.ConClass;
@@ -53,13 +55,13 @@ namespace Vision2.Project.Mes.环旭SISF
                 }
                 dataStr = dataStr.Trim(',');
 
+                this.GetSocketClint().AlwaysReceiveReset();
                 this.GetSocketClint().Send(dataStr);
             }
             catch (Exception ex)
             {
                 AlarmText.AddTextNewLine("SISF写入错误:" + ex.Message, Color.Red);
             }
-
             AddTextSisf("S:" + dataStr);
             return dataStr;
         }
@@ -71,7 +73,6 @@ namespace Vision2.Project.Mes.环旭SISF
             ErosProjcetDLL.Excel.Npoi.AddTextLine(this.DataPaht + "\\SFIS记录" + "\\" +
                       DateTime.Now.ToString("yyyy-MM-dd") + ".txt", text);
         }
-
         [DescriptionAttribute("CODE_NAME,"), Category("SISF"), DisplayName("SISF版本")]
         [TypeConverter(typeof(ErosConverter)), ErosConverter.ThisDropDownAttribute("", "芯片扫码改造V1", "Presasm1_SPEC")]
         public string SISFVersions { get; set; } = "";
@@ -129,7 +130,7 @@ namespace Vision2.Project.Mes.环旭SISF
                 {
                     this.GetSocketClint().AsynLink(false);
                 }
-
+                Thread.Sleep(200);
                 if (!this.GetSocketClint().IsConn)
                 {
                     AlarmListBoxt.AddAlarmText("SISF", "错误:SISF连接断开");
@@ -190,41 +191,134 @@ namespace Vision2.Project.Mes.环旭SISF
         {
             try
             {
+                trayData.SetNumberValue(false);
                 this.SendStep7(trayData.TrayIDQR);
-                string datas = this.GetSocketClint().AlwaysReceive(OutTime);
+                if (!this.GetSocketClint().AlwaysReceive(out string datas, OutTime))
+                {
+                    AddTextSisf("R:" + datas);
+                    this.GetSocketClint().Close();
+                    Thread.Sleep(200);
+                    if (!this.GetSocketClint().IsConn)
+                    {
+                        this.GetSocketClint().AsynLink(false);
+                    }
+                    Thread.Sleep(500);
+                    this.SendStep7(trayData.TrayIDQR);
+                    this.GetSocketClint().AlwaysReceive(out datas, OutTime);
+                }
                 AddTextSisf("R:" + datas);
                 trayData.MesRestStr += datas;
-                if (datas.StartsWith("OK"))
+                int stratInt = 0;
+                int endInt = trayData.Count - 1;
+                if (datas.ToLower().StartsWith("ok7"))
                 {
-                    AlarmText.AddTextNewLine("SISF1OK");
-                    this.SendStep2(trayData.TrayIDQR, trayData.GetTraySN()[0], trayData.GetTraySN()[trayData.Count - 1]);
+                    this.GetSocketClint().Close();
+                    Thread.Sleep(200);
+                    List<string> datatass = new List<string>();
 
-                    datas = this.GetSocketClint().AlwaysReceive(OutTime);
-                    AddTextSisf(" R:" + datas);
-                    trayData.MesRestStr += datas;
-                    if (datas.StartsWith("OK"))
+                    if (datas.Contains(";"))
                     {
-                        AlarmText.AddTextNewLine("SISF2OK");
-                        trayData.SetNumberValue(true);
-                        UserFormulaContrsl.SetOK(3);
+                       string[]  datatas= datas.Remove(0, 4).Split(';');
+                        datatass.AddRange(datatas);
+                    }
+                    if (datatass.Count!=3)
+                    {
+                        datatass.Clear();
+                        datatass.Add("PANEL_SERIAL_NUMBER");
+                        datatass.Add("1_SUFFIX_SERIAL_NUMBER");
+                        datatass.Add("2_SUFFIX_SERIAL_NUMBER");
+                    }
+                    //AlarmText.AddTextNewLine("SISF1OK");
+                    exst:
+                    string statSN = "";
+                    string endSN = "";
+                    for (int i = stratInt; i < trayData.Count; i++)
+                    {
+                        if (trayData.GetOneDataVale(i).PanelID!="")
+                        {
+                            stratInt = i;
+                            statSN = trayData.GetOneDataVale(i).PanelID;
+                            break;
+                        }
+                    }
+                    for (int i = endInt; i>0; i--)
+                    {
+                        if (trayData.GetOneDataVale(i).PanelID != "")
+                        {
+                            endInt = i;
+                            endSN = trayData.GetOneDataVale(i).PanelID;
+                            break;
+                        }
+                    }
+                    if (!this.GetSocketClint().IsConn)
+                    {
+                        this.GetSocketClint().AsynLink(false);
+                    }
+                    Thread.Sleep(200);
+                    if (statSN==""|| endSN=="")
+                    {
+                        AlarmListBoxt.AddAlarmText("SISF", "SISF重复发送超出数量错误,请确认");
+                        trayData.SetNumberValue(false);
+                        UserFormulaContrsl.SetOK(2);
                     }
                     else
                     {
-                        if (datas == "")
+                  
+                        this.SendStep2(trayData.TrayIDQR, datatass.ToArray(), statSN, endSN);
+                        /* datas = this.GetSocketClint().AlwaysReceive(OutTime);*/
+                        if (this.GetSocketClint().AlwaysReceive(out datas, OutTime))
                         {
-                            AlarmListBoxt.AddAlarmText("SISF", "SISF2等待超时错误");
-                            AlarmText.AddTextNewLine("SISF2等待超时错误");
+                            trayData.MesRestStr += datas;
+                            if (datas.StartsWith("OK"))
+                            {
+                                trayData.SetNumberValue(true);
+                                UserFormulaContrsl.SetOK(3);
+                            }
+                            else
+                            {
+                                if (datas.Contains("0x0002"))
+                                {
+                                    bool IS1 = false;
+                                    bool IS2 = false;
+                                    string[] DATAST = datas.Remove(0, 6).Split(';');
+                                    for (int i = 0; i < DATAST.Length; i++)
+                                    {
+                                        if (DATAST[i].StartsWith("1_SUFFIX_SERIAL_NUMBER"))
+                                        {
+                                            stratInt++;
+                                            IS1 = true;
+                                        }
+                                        if (DATAST[i].StartsWith("2_SUFFIX_SERIAL_NUMBER"))
+                                        {
+                                            endInt--;
+                                            IS2 = true;
+                                        }
+                                    }
+                                    this.GetSocketClint().Close();
+                                    goto exst;
+                                }
+                                trayData.SetNumberValue(false);
+                                if (datas != "")
+                                {
+                                    AlarmListBoxt.AddAlarmText("SISF", "SISF2错误:" + datas);
+                                    AlarmText.AddTextNewLine("SISF2" + datas);
+                                }
+                                UserFormulaContrsl.SetOK(2);
+                            }
                         }
                         else
                         {
-                            AlarmListBoxt.AddAlarmText("SISF", "SISF2错误:" + datas);
-                            AlarmText.AddTextNewLine("SISF2" + datas);
+                            AlarmListBoxt.AddAlarmText("SISF", "SISF2等待超时错误");
+                            AlarmText.AddTextNewLine("SISF2等待超时错误");
+                            trayData.SetNumberValue(false);
+                            UserFormulaContrsl.SetOK(2);
                         }
-                        UserFormulaContrsl.SetOK(2);
+                        AddTextSisf(" R:" + datas);
                     }
                 }
                 else
                 {
+                    trayData.SetNumberValue(false);
                     if (datas == "")
                     {
                         AlarmListBoxt.AddAlarmText("SISF", "SISF1等待超时错误");
@@ -237,10 +331,15 @@ namespace Vision2.Project.Mes.环旭SISF
                     }
                     UserFormulaContrsl.SetOK(2);
                 }
+                this.GetSocketClint().Close();
             }
             catch (Exception ex)
             {
+                AlarmText.AddTextNewLine("SISF1报错：" + ex.Message);
+                trayData.SetNumberValue(false);
+                UserFormulaContrsl.SetOK(2);
             }
+
         }
 
         public string SendStep7(string Cid)
@@ -248,9 +347,13 @@ namespace Vision2.Project.Mes.环旭SISF
             return Send(Fixture_ID, Cid, "7", ProjectINI.In.UserID, Line_Name, "", Status, CODE_NAME, "", "", "", "", "", "");
         }
 
-        public string SendStep2(string Cid, params string[] traySn)
+        public string SendStep2(string Cid, string[] pranames, params string[] traySn)
         {
-            return Send(Fixture_ID, Cid, "2", ProjectINI.In.UserID, Line_Name, "", Status, "PANEL_SERIAL_NUMBER=" + Cid + ";1_SUFFIX_SERIAL_NUMBER=" + traySn[0] + ";2_SUFFIX_SERIAL_NUMBER=" + traySn[1]);
+            if (pranames.Length==3)
+            {
+                return Send(Fixture_ID, Cid, "2", ProjectINI.In.UserID, Line_Name, "", Status, pranames[0] + "=" + Cid + ";" + pranames[1] + "=" + traySn[0] + ";" + pranames[2] + "=" + traySn[1]);
+            }
+            return "";
         }
 
         #endregion 4楼芯片扫码改造版SISF2、7
@@ -392,6 +495,11 @@ namespace Vision2.Project.Mes.环旭SISF
                             RecipeCompiler.AddNGNumber(1);
                             trayData.SetNumberValue(dint, false);
                         }
+                        else if (datsItmes[0]=="")     
+                        {
+                            AlarmListBoxt.AddAlarmText("SISF", "SISF格式错误:"+ datastr);
+                            trayData.SetNumberValue(false);
+                        }
                     }
                     trayData.GetITrayRobot().UpData();
                 }
@@ -403,6 +511,12 @@ namespace Vision2.Project.Mes.环旭SISF
             catch (Exception ex)
             {
             }
+            finally
+            {
+
+            }
+
+
         }
 
         #endregion 扫码Presasm1_SPEC

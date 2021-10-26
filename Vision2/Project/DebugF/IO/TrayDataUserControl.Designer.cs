@@ -40,24 +40,24 @@
             this.hWindowControl1 = new HalconDotNet.HWindowControl();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.dataGridView2 = new System.Windows.Forms.DataGridView();
-            this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.treeView1 = new System.Windows.Forms.TreeView();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.toolStripTextBox1 = new System.Windows.Forms.ToolStripTextBox();
-            this.tsButton1 = new Vision2.ErosProjcetDLL.UI.ToolStrip.TSButton();
+            this.label1 = new System.Windows.Forms.Label();
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.tsButton1 = new Vision2.ErosProjcetDLL.UI.ToolStrip.TSButton();
             this.dataGridViewTextBoxColumn5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.label1 = new System.Windows.Forms.Label();
             this.contextMenuStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -157,30 +157,6 @@
             this.dataGridView2.TabIndex = 1;
             this.dataGridView2.Visible = false;
             // 
-            // Column2
-            // 
-            this.Column2.HeaderText = "数据名";
-            this.Column2.Name = "Column2";
-            this.Column2.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            // 
-            // Column3
-            // 
-            this.Column3.HeaderText = "值";
-            this.Column3.Name = "Column3";
-            this.Column3.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            // 
-            // Column5
-            // 
-            this.Column5.HeaderText = "最小值";
-            this.Column5.Name = "Column5";
-            this.Column5.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            // 
-            // Column6
-            // 
-            this.Column6.HeaderText = "最大值";
-            this.Column6.Name = "Column6";
-            this.Column6.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            // 
             // treeView1
             // 
             this.treeView1.BackColor = System.Drawing.Color.Gainsboro;
@@ -262,16 +238,16 @@
             this.toolStripTextBox1.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
             this.toolStripTextBox1.Size = new System.Drawing.Size(300, 34);
             // 
-            // tsButton1
+            // label1
             // 
-            this.tsButton1.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.tsButton1.Image = global::Vision2.Properties.Resources.zoom_in_vector;
-            this.tsButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsButton1.IsCher = true;
-            this.tsButton1.Name = "tsButton1";
-            this.tsButton1.Size = new System.Drawing.Size(52, 31);
-            this.tsButton1.Text = "放大";
-            this.tsButton1.Click += new System.EventHandler(this.tsButton1_Click);
+            this.label1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.label1.Font = new System.Drawing.Font("宋体", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label1.Location = new System.Drawing.Point(0, 0);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(1073, 24);
+            this.label1.TabIndex = 2;
+            this.label1.Text = "TraySN:                  TrayID:0,X:10,Y20,Number:300";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // dataGridViewTextBoxColumn1
             // 
@@ -301,6 +277,41 @@
             this.dataGridViewTextBoxColumn4.ReadOnly = true;
             this.dataGridViewTextBoxColumn4.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
+            // Column2
+            // 
+            this.Column2.HeaderText = "数据名";
+            this.Column2.Name = "Column2";
+            this.Column2.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // Column3
+            // 
+            this.Column3.HeaderText = "值";
+            this.Column3.Name = "Column3";
+            this.Column3.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // Column5
+            // 
+            this.Column5.HeaderText = "最小值";
+            this.Column5.Name = "Column5";
+            this.Column5.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // Column6
+            // 
+            this.Column6.HeaderText = "最大值";
+            this.Column6.Name = "Column6";
+            this.Column6.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // tsButton1
+            // 
+            this.tsButton1.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.tsButton1.Image = global::Vision2.Properties.Resources.zoom_in_vector;
+            this.tsButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsButton1.IsCher = true;
+            this.tsButton1.Name = "tsButton1";
+            this.tsButton1.Size = new System.Drawing.Size(52, 31);
+            this.tsButton1.Text = "放大";
+            this.tsButton1.Click += new System.EventHandler(this.tsButton1_Click);
+            // 
             // dataGridViewTextBoxColumn5
             // 
             this.dataGridViewTextBoxColumn5.HeaderText = "名称";
@@ -315,23 +326,12 @@
             this.dataGridViewTextBoxColumn6.ReadOnly = true;
             this.dataGridViewTextBoxColumn6.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
-            // label1
-            // 
-            this.label1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.label1.Font = new System.Drawing.Font("宋体", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label1.Location = new System.Drawing.Point(0, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(1073, 24);
-            this.label1.TabIndex = 2;
-            this.label1.Text = "TraySN:                  TrayID:0,X:10,Y20,Number:300";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            // 
             // TrayDataUserControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.label1);
             this.Controls.Add(this.panel1);
+            this.Controls.Add(this.label1);
             this.Name = "TrayDataUserControl";
             this.Size = new System.Drawing.Size(1073, 627);
             this.Load += new System.EventHandler(this.TrayDataUserControl_Load);

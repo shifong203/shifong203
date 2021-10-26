@@ -434,9 +434,19 @@ namespace Vision2.vision.HalconRunFile.Controls
 
         private void toolStripSplitButton1_ButtonClick(object sender, EventArgs e)
         {
+            OBJSeleForm oBJSeleForm = new OBJSeleForm();
+
+            oBJSeleForm.Show();
+
+            oBJSeleForm.ShowImage(halcon.GetOneImageR());
+            oBJSeleForm.AddErrObj(runPa.nGRoi);
         }
 
         private void toolStripComboBox1_Click(object sender, EventArgs e)
+        {
+        }
+
+        private void 显示缺陷细节ToolStripMenuItem_Click(object sender, EventArgs e)
         {
         }
     }

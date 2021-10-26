@@ -18,6 +18,9 @@ namespace Vision2.vision.HalconRunFile.Controls
             propertyGrid1.SelectedObject = overgild;
             try
             {
+                this.checkBox3.Checked = overgild.EnableScratch;
+                this.checkBox4.Checked = overgild.EnableSymmetry;
+                //this.checkBox5.Checked = overgild.EnableSymmetry;
                 for (int i = 0; i < overgild.RunListOvergil.Count; i++)
                 {
                     listBox1.Items.Add(i + 1);
@@ -122,6 +125,9 @@ namespace Vision2.vision.HalconRunFile.Controls
                 {
                     return;
                 }
+                overgild.EnableScratch = checkBox3.Checked;
+                overgild.EnableSymmetry = checkBox4.Checked;
+                overgild.EnableRB = checkBox5.Checked;
                 //overgild.ImageTypeOb = (ImageTypeObj)Enum.Parse(typeof(ImageTypeObj),
                 //comboBox1.SelectedItem.ToString());
                 //overgild.ThresSelectMin = (byte)numericUpDown4.Value;
@@ -233,6 +239,22 @@ namespace Vision2.vision.HalconRunFile.Controls
             catch (Exception)
             {
             }
+        }
+
+        private void checkBox3_CheckedChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                SetDatd(1);
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        private void checkBox5_CheckedChanged(object sender, EventArgs e)
+        {
+            SetDatd(1);
         }
     }
 }

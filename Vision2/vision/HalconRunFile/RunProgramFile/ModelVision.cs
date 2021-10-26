@@ -15,6 +15,7 @@ using static Vision2.vision.HalconRunFile.RunProgramFile.Color_Detection;
 
 namespace Vision2.vision.HalconRunFile.RunProgramFile
 {
+
     [Serializable]
     public class ModelVision : RunProgram
     {
@@ -341,7 +342,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         private CModeRowCol cMode = new CModeRowCol();
 
         [DescriptionAttribute("模板彷射模式。图片仿射模式、模板区域仿射模式，和绘制仿射模式"), Category("结果显示"), DisplayName("原点Col")]
-        [TypeConverter(typeof(ErosConverter)), ErosConverter.ThisDropDownAttribute("", true, "图片", "模板区域", "绘制区域")]
+        [TypeConverter(typeof(ErosConverter)), ErosConverter.ThisDropDownAttribute("", true, "图片", "模板区域", "绘制区域","不执行")]
         public string Mode { get; set; } = "";
 
         [DescriptionAttribute("是否显示模板绘制中心点。"), Category("结果显示"), DisplayName("显示模板绘制中心点")]
@@ -1237,12 +1238,19 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             this.SetDefault("模板U");
             bool dst = true;
             Watch.Restart();
-            if (!this.FindShapeModel(oneResultOBj, this.Mode, aoiObj))
+            if (this.Mode!="不执行")
             {
-                oneResultOBj.AddNGOBJ(aoiObj.CiName, "Skewing", aoiObj.SelseAoi, nGRoi, this.GetBackNames());
-                NGNumber++;
+                if (!this.FindShapeModel(oneResultOBj, this.Mode, aoiObj))
+                {
+                    oneResultOBj.AddNGOBJ(aoiObj.CiName, "Skewing", aoiObj.SelseAoi, nGRoi, this.GetBackNames());
+                    NGNumber++;
+                }
             }
-            Watch.Stop();
+            else
+            {
+                aoiObj.SelseAoi = AOIObj;
+                nGRoi = AOIObj.Clone();
+            }
             if (IsDip)
             {
                 SetDip(MRModelHomMat.Row, MRModelHomMat.Col, MRModelHomMat.Phi, out HObject xldt, out HTuple row, out HTuple col, out HTuple phi, out HTuple idt);
@@ -1250,11 +1258,9 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 {
                     NGNumber++;
                     nGRoi = nGRoi.ConcatObj(xldt);
-
                     HOperatorSet.GenRectangle2(out HObject hObject1, row, col, HTuple.TupleGenConst(row.Length, 0),
                         HTuple.TupleGenConst(row.Length, Vision.Instance.DilationRectangle1),
                         HTuple.TupleGenConst(row.Length, Vision.Instance.DilationRectangle1));
-
                     oneResultOBj.AddImageMassage(row, col, phi.TupleString("0.02f") + ":" + DIPs[idt].Name, ColorResult.red);
                     oneResultOBj.AddNGOBJ(aoiObj.CiName, "Skewing", hObject1, nGRoi, this.GetBackNames());
                     dst = false;
@@ -1286,6 +1292,8 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     {
                         continue;
                     }
+                    HObject hObject = new HObject();
+                    hObject.GenEmptyObj();
                     if (item.Value.IsHomMat)
                     {
                         if (MRModelHomMat != null)
@@ -1296,7 +1304,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                                 {
                                     HOperatorSet.AffineTransRegion(item.Value.DrawObj, out HObject hObjectROI, MRModelHomMat.HomMat[i], "nearest_neighbor");
                                     aoiObj.SelseAoi = hObjectROI;
-                                    if (!item.Value.Classify(oneResultOBj, aoiObj, this, out HObject hObject))
+                                    if (!item.Value.Classify(oneResultOBj, aoiObj, this, out  hObject))
                                     {
                                         //oneResultOBj.ADDRed(this.Name, item.Value.Name, hObjectROI, hObject);
                                         NGNumber++;
@@ -1312,7 +1320,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     else
                     {
                         aoiObj.SelseAoi = item.Value.DrawObj;
-                        if (!item.Value.Classify(oneResultOBj, aoiObj, this, out HObject hObject))
+                        if (!item.Value.Classify(oneResultOBj, aoiObj, this, out  hObject))
                         {
                             //    oneResultOBj.ADDRed(this.Name, item.Value.Name, item.Value.DrawObj.Clone(), hObject);
                             NGNumber++;
@@ -1320,6 +1328,36 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         if (this.IsDisObj)
                         {
                             oneResultOBj.AddObj(hObject, item.Value.color);
+                        }
+                    }
+
+                    if (item.Value.ModeHom)
+                    {
+                        HOperatorSet.AreaCenter(hObject, out HTuple area, out HTuple row, out HTuple column);
+                        if (row.Length>=2)
+                        {
+                            Vision.Gen_arrow_contour_xld(out HObject hObject1, row[0], column[0], row[1], column[1]);
+                            oneResultOBj.AddObj(hObject1, item.Value.color);
+                            HOperatorSet.LineOrientation(row[0], column[0], row[1], column[1], out HTuple ohi);
+                            //oneResultOBj.AddImageMassage(row[0], column[0],ohi.TupleDeg());
+                            HOperatorSet.LinePosition(row[0], column[0], row[1], column[1], out HTuple rowC, out HTuple colC, out HTuple length, out HTuple phit);
+                            if (item.Value.IsColt)
+                            {
+                                oneResultOBj.AddImageMassage(rowC, colC, "R" + rowC + "C" + colC + "A" + phit.TupleDeg());
+                            }
+                            if (item.Value.ISModeC)
+                            {
+                                oneResultOBj.AddImageMassage(rowC, colC, "R" + rowC + "C" + colC + "A" + phit.TupleDeg());
+                                this.OriginY = rowC;
+                                this.OriginX = colC;
+                                this.OriginU = phit.TupleDeg();
+                                item.Value.ISModeC = false;
+                                this.ModeRow = row;
+                                this.ModeCol = column;
+                            }
+                            MRModelHomMat.HomMat.Clear();
+                            HOperatorSet.VectorAngleToRigid(this.OriginY, this.OriginX, this.OriginU.TupleRad(), rowC, colC, phit, out HTuple hTuple);
+                            MRModelHomMat.HomMat.Add(hTuple);
                         }
                     }
                 }
@@ -1401,8 +1439,13 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             }
             if (ContNumber >= 0 && ContNumber != MRModelHomMat.NumberT)
             {
+                if (this.Mode == "不执行")
+                {
+                    oneResultOBj.AddNGOBJ(aoiObj.CiName, "Skewing", aoiObj.SelseAoi, nGRoi, this.GetBackNames());
+                }
                 NGNumber++;
             }
+            Watch.Stop();
             if (NGNumber != 0)
             {
                 //oneResultOBj.ADDRed(this.Name, AOIObj, AOIObj);

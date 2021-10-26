@@ -31,15 +31,18 @@ namespace Vision2.Project.formula
         public void AddData(string text)
         {
             //DataStr.Add(text);
+            List<double> lisDouble = new List<double>();
             string[] date = text.Split(',');
             for (int i = RecipeCompiler.Instance.DataLinkStrat; i < date.Length; i++)
             {
                 if (double.TryParse(date[i], out double result))
                 {
+                    lisDouble.Add(result);
                     //ListDatV[i].ValueStrs=
                     //ListDatV.Add(result);
                 }
             }
+            AddData(lisDouble);
             EventAddValue?.Invoke(ListDatV);
         }
 
@@ -89,12 +92,28 @@ namespace Vision2.Project.formula
         {
             int idex = 0;
             int idex2 = 0;
+            int length2 = 0;
+            for (int i = 0; i < ListDatV.Count; i++)
+            {
+                idex += ListDatV[i].doubleV.Count;
+                length2 += ListDatV[i].Reference_Name.Count;
+          
+            }
+            if (length2<= idex)
+            {
+                idex = 0;
+                this.Clear();
+            }
             for (int i = 0; i < vaset.Count; i++)
             {
                 if (ListDatV[idex2].Reference_Name.Count <= idex)
                 {
-                    idex2++;
-                    idex = 0;
+                    if (ListDatV.Count >idex2+1)
+                    {
+                        idex2++;
+                        idex = 0;
+                    }
+
                 }
                 if (ListDatV[idex2].ValueStrs.Count <= idex)
                 {
@@ -266,8 +285,13 @@ namespace Vision2.Project.formula
         private List<string> DataStr = new List<string>();
 
         public bool IsChe { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
         public List<CheCalss> CheCalssT = new List<CheCalss>();
-
+        /// <summary>
+        /// 
+        /// </summary>
         public class CheCalss
         {
             public int StrartNumber { get; set; }
@@ -831,6 +855,16 @@ namespace Vision2.Project.formula
                 }
             }
             return true;
+        }
+        public bool GetRestOK(int number)
+        {
+                if (GetRsetNumber(number) != 0)
+                {
+                    return false;
+                }
+            
+            return true;
+
         }
 
         public void SetResetOK()

@@ -73,7 +73,7 @@ namespace Vision2.Project.DebugF.IO
                 foreach (var item in DebugCompiler.Instance.DDAxis.AxisS)
                 {
                     ErosSocket.DebugPLC.PLC.AxisControl axis = new ErosSocket.DebugPLC.PLC.AxisControl(item);
-                    tabPage2.Controls.Add(axis);
+                    flowLayoutPanel1.Controls.Add(axis);
                     int sd = i / 5;
                     int dt = i % 5;
                     axis.Location = new Point(new Size(axis.Width * dt, axis.Height * sd));
@@ -85,7 +85,7 @@ namespace Vision2.Project.DebugF.IO
                 foreach (var item in DebugCompiler.Instance.DDAxis.Cylinders)
                 {
                     CylinderControl CylinderControlT = new CylinderControl(item);
-                    tabPage2.Controls.Add(CylinderControlT);
+                    flowLayoutPanel1.Controls.Add(CylinderControlT);
                     int sd = i / 3;
                     int dt = i % 3;
                     CylinderControlT.Location = new Point(new Size(CylinderControlT.Width * dt, sdt + CylinderControlT.Height * sd));

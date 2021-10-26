@@ -69,8 +69,7 @@ namespace Vision2.Project.DebugF.IO
             }
         }
 
-        private static ErosSocket.ErosConLink.UClass.ErosValues keyValuePairs
-               = new ErosSocket.ErosConLink.UClass.ErosValues();
+        private static UClass.ErosValues keyValuePairs  = new UClass.ErosValues();
 
         public Dictionary<string, List<string>> AxisGrot { get; set; } = new Dictionary<string, List<string>>();
 
@@ -1459,13 +1458,16 @@ namespace Vision2.Project.DebugF.IO
                     }
                     if (bx && by)
                     {
-                        if (axisZ != null)
+                        if (isMove != EnumXYZUMoveType.直接移动)
                         {
-                            axisZ.SetPoint(zp);
-                        }
-                        if (axisU != null)
-                        {
-                            axisU.SetPoint(up);
+                            if (axisZ != null)
+                            {
+                                axisZ.SetPoint(zp);
+                            }
+                            if (axisU != null)
+                            {
+                                axisU.SetPoint(up);
+                            }
                         }
                         while (watch.ElapsedMilliseconds / 1000 < outTime)
                         {

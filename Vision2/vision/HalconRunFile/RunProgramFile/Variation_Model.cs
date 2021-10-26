@@ -114,14 +114,14 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         [TypeConverter(typeof(ErosConverter)), ErosConverter.ThisDropDownAttribute("", true, "byte", "int2", "uint2")]
         public string CreateModeType { get; set; } = "byte";
 
-        [Description("CreateModeMode 。"), Category("创建模型"), DisplayName("创建形变模式")]
+        [Description("direct 。standard标准;direct强壮;direct直接;"), Category("创建模型"), DisplayName("创建形变模式")]
         [TypeConverter(typeof(ErosConverter)), ErosConverter.ThisDropDownAttribute("", true, "standard", "robust", "direct")]
         public string CreateModeMode { get; set; } = "direct";
 
         /// <summary>
         ///  'light', 'dark', 'light_dark'
         /// </summary>
-        [Description("CompareMode 。"), Category("创建模型"), DisplayName("创建模板模式")]
+        [Description("absolute绝对,light=亮的;dark暗的；light_dark光_暗"), Category("创建模型"), DisplayName("创建模板模式")]
         [TypeConverter(typeof(ErosConverter)), ErosConverter.ThisDropDownAttribute("", true, "absolute", "light", "dark", "light_dark")]
         public string CompareMode { get; set; } = "absolute";
 

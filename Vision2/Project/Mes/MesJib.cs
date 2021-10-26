@@ -17,6 +17,8 @@ namespace Vision2.Project.Mes
     public class MesJib : MesInfon
     {
         public MesData MesData { get; set; } = new MesData();
+
+
         private cnshah0tis01.MES_TIS webservice;
 
         public cnshah0tis01.MES_TIS GetMES_TIS()
@@ -30,9 +32,7 @@ namespace Vision2.Project.Mes
             {
                 webservice = new cnshah0tis01.MES_TIS();
             }
-            catch (Exception ex)
-            {
-            }
+            catch (Exception ex)   { }
         }
 
         public override event IMesData.ResTMesd ResDoneEvent;
@@ -266,7 +266,7 @@ namespace Vision2.Project.Mes
             dat.Add(data.TrayLocation.ToString());
             foreach (var item in data.ListCamsData)
             {
-                foreach (var itemd in item.Value.ResuOBj)
+                foreach (var itemd in item.Value.ResuOBj())
                 {
                     foreach (var itemdt in itemd.GetNgOBJS().DicOnes)
                     {
@@ -318,7 +318,7 @@ namespace Vision2.Project.Mes
                 string pathEx = this.DataPaht + "\\" + strTimed + ".csv";
                 if (!File.Exists(pathEx))
                 {
-                    List<string> columnText = new List<string>() { "StratTime", "EndTime", "status", "SN", "机检", "Mes", "FVt" };
+                    List<string> columnText = new List<string>() { "StratTime", "EndTime", "status", "SN", "机检", "Mes结果", "Fvt结果" };
                     ErosProjcetDLL.Excel.Npoi.AddWriteCSV(pathEx, columnText.ToArray());
                 }
                 dat.Add(DebugCompiler.Instance.DDAxis.StartTime.ToString("HH:mm:ss"));
@@ -331,13 +331,29 @@ namespace Vision2.Project.Mes
                 {
                     dat.Add("NG");
                 }
+                if (tray.Done)
+                {
+                    dat.Add("完成");
+                }
+                else
+                {
+                    dat.Add("未完成");
+                }
+                if (tray.UserRest)
+                {
+                    dat.Add("人工处理");
+                }
+                else
+                {
+                    dat.Add("人工未处理");
+                }
                 ErosProjcetDLL.Excel.Npoi.AddWriteCSV(pathEx, dat.ToArray());
                 List<string> listSn = new List<string>();
                 int ErrBool = 0;
                 string err = "";
                 string mesErr = "";
                 string[] FVTSTR = new string[] { "", "", "", "", "" };
-
+                List<string> fvtRset = new List<string>();
                 for (int i = 0; i < tray.Count; i++)
                 {
                     if (tray.GetDataVales()[i].NotNull)
@@ -350,6 +366,7 @@ namespace Vision2.Project.Mes
                         }
                         else
                         {
+                            fvtRset.Add("");
                             trayID.Add(tray.GetDataVales()[i].TrayLocation);
                             if (listSn.Contains(sn))
                             {
@@ -368,7 +385,7 @@ namespace Vision2.Project.Mes
                         }
                     }
                 }
-
+                FVTSTR = fvtRset.ToArray();
                 if (MesData.FvtReadData)
                 {
                     if (!ReadFvt(trayID.ToArray(), listSn.ToArray(), listResult.ToArray(), out FVTSTR))
@@ -394,6 +411,7 @@ namespace Vision2.Project.Mes
                             if (tray.GetDataVales()[i].NotNull)
                             {
                                 sn = tray.GetDataVales()[i].PanelID;
+                                OneDataVale oneDataVale = tray.GetDataVales()[i];
                                 if (sn == null || sn == "")
                                 {
                                     ErosProjcetDLL.Project.AlarmListBoxt.AddAlarmText(
@@ -403,26 +421,33 @@ namespace Vision2.Project.Mes
                                 {
                                     string errMesString = "null";
                                     bool resMesOK = false;
+                                    //if (!this.FaliMesRest && oneDataVale.OK)
+                                    //{
+                                    //}
                                     if (MesData.IsRardMes)
                                     {
                                         if (!ReadMes(sn, out errMesString))
                                         {
-                                            mesErr += "位置:" + tray.GetDataVales()[i].TrayLocation + ";SN:" + sn + ":" + errMesString;
-                                            ErosProjcetDLL.Project.AlarmText.AddTextNewLine("位置:" + tray.GetDataVales()[i].TrayLocation + ";SN:" + sn, Color.Red);
+                                            mesErr += "位置:" + oneDataVale.TrayLocation + ";SN:" + sn + ":" + errMesString;
+                                            ErosProjcetDLL.Project.AlarmText.AddTextNewLine("位置:" + oneDataVale.TrayLocation + ";SN:" + sn, Color.Red);
                                             resMesOK = false;
                                         }
                                         else
                                         {
                                             resMesOK = true;
                                         }
-                                        tray.GetDataVales()[i].MesStr = errMesString;
+                                        oneDataVale.MesStr = errMesString;
+                                    }
+                                    else
+                                    {
+                                        resMesOK = true;
                                     }
                                     MesDatas[0] = "S" + sn;
                                     dat = new List<string>();
                                     dat.Add("");
-                                    dat.Add(tray.GetDataVales()[i].TrayLocation.ToString());
+                                    dat.Add(oneDataVale.TrayLocation.ToString());
                                     List<string> MesDataList = new List<string>();
-                                    if (tray.GetDataVales()[i].OK)
+                                    if (oneDataVale.OK)
                                     {
                                         MesDatas[5] = "TP";
                                         dat.Add("OK");
@@ -448,9 +473,10 @@ namespace Vision2.Project.Mes
                                                 {
                                                     dd += "PCB - ";
                                                 }
-                                                if (vision.Vision.Instance.DefectTypeDicEx.ContainsKey(item.Value.RestText))
+                                                string[] datas = item.Value.RestText.Split(';');
+                                                if (vision.Vision.Instance.DefectTypeDicEx.ContainsKey(datas[0]))
                                                 {
-                                                    dd += item.Value.RestText;
+                                                    dd += datas[0];
                                                 }
                                                 else
                                                 {
@@ -503,8 +529,9 @@ namespace Vision2.Project.Mes
                                         }
                                     }
                                     dat.Add(sn);
-                                    dat.Add(tray.GetDataVales()[i].AutoOK.ToString());
+                                    dat.Add(oneDataVale.AutoOK.ToString());
                                     dat.Add(errMesString);
+
                                     for (int T = 0; T < listSn.Count; T++)
                                     {
                                         if (listSn[T] == sn)
@@ -517,12 +544,23 @@ namespace Vision2.Project.Mes
                                             break;
                                         }
                                     }
-                                    RecipeCompiler.AddOKNumber(tray.GetDataVales()[i].OK);
+                                    if (oneDataVale.UesrRest)
+                                    {
+                                        dat.Add("人工处理");
+                                    }
+                                    else
+                                    {
+                                        dat.Add("人工未处理");
+                                    }
+                                    RecipeCompiler.AddOKNumber(oneDataVale.OK);
                                     string paht = "//" + sn + DateTime.Now.ToString(" yyyy-MM-dd-HH-mm-ss");
                                     if (resMesOK)
                                     {
-                                        ErosProjcetDLL.Excel.Npoi.WriteF(ProcessControl.ProcessUser.Instancen.ExcelPath + paht, MesDataList, RecipeCompiler.Instance.Filet);
-                                        ErosProjcetDLL.Excel.Npoi.WriteF(this.DataPaht + "\\Mes记录\\" + DateTime.Now.ToString("D") + paht, MesDataList, RecipeCompiler.Instance.Filet);
+                                        if (this.FaliMesRest || oneDataVale.OK)
+                                        {
+                                            ErosProjcetDLL.Excel.Npoi.WriteF(ProcessControl.ProcessUser.Instancen.ExcelPath + paht, MesDataList, RecipeCompiler.Instance.Filet);
+                                            ErosProjcetDLL.Excel.Npoi.WriteF(this.DataPaht + "\\Mes记录\\" + DateTime.Now.ToString("D") + paht, MesDataList, RecipeCompiler.Instance.Filet);
+                                        }
                                     }
                                     ErosProjcetDLL.Excel.Npoi.AddWriteCSV(pathEx, dat.ToArray());
                                 }
@@ -619,9 +657,7 @@ namespace Vision2.Project.Mes
                       data.ToArray());
                 }
             }
-            catch (Exception)
-            {
-            }
+            catch (Exception)        { }
         }
 
         public override void WrietMesAll<T>(T datas, string QRCODE, string Product_Name)
@@ -671,7 +707,7 @@ namespace Vision2.Project.Mes
             List<string> TextWeit = new List<string>();
             for (int i = 0; i < trayID.Length; i++)
             {
-                TextWeit.Add("No:" + trayID[i] + ";SN:" + sn[i] + ";AMVI result:");
+                TextWeit.Add("No:" + trayID[i] + ";SN:" + sn[i] + ";AMVI Result:");
             }
             try
             {
@@ -715,9 +751,8 @@ namespace Vision2.Project.Mes
                             {
                                 string[] dat = strDatas[id].Split(';');
                                 string[] datas = dat[1].Split(':');
-                                if (sn[j] == datas[1])
+                                if (strDatas[id].Contains(sn[j]))
                                 {
-                                    string textStr = "";
                                     RsetOk[j] = true;
                                     fVTsTR[j] = strDatas[id];
                                     if (strDatas[id].ToLower().Contains("empty"))
@@ -733,12 +768,6 @@ namespace Vision2.Project.Mes
                                         resetStr[j] = "Other";
                                     }
                                     strDatas[id] += "AMVI result:" + resetStr[j] + ";";
-                                    for (int k = 0; k < 2; k++)
-                                    {
-                                        textStr += dat[k] + ";";
-                                    }
-                                    //textStr = strDatas[id];
-                                    //TextWeit.Add(textStr += "AMVI result:" + resetStr[j] + ";");
                                     REST[j] = resetStr[j];
                                     break;
                                 }
@@ -774,7 +803,6 @@ namespace Vision2.Project.Mes
                             mest += snTem[j] + ";";
                         }
                         ErosProjcetDLL.Project.AlarmText.AddTextNewLine(mest);
-
                         if (File.Exists(PathFvt))
                         {
                             ErosProjcetDLL.Project.AlarmText.AddTextNewLine(PathFvt);

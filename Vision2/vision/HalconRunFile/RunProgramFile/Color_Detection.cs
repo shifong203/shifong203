@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
+using Vision2.ErosProjcetDLL.UI.PropertyGrid;
 using Vision2.vision.HalconRunFile.Controls;
 
 namespace Vision2.vision.HalconRunFile.RunProgramFile
@@ -50,24 +51,64 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             {
                 get; set;
             }
+            /// <summary>
+            /// 差阈检测
+            /// </summary>
+            public bool EnbleDifference { get; set; }
+            /// <summary>
+            /// 差阈角度仿射
+            /// </summary>
+            public bool EnbleDifferenceAngl { get; set; }
+            public Select_shape_Min_Max Diffe_Max_area { get; set; } = new Select_shape_Min_Max();
 
+            public HObject ModeRoing { get; set; }
+
+            public double DifferenceInt { get; set; } = -3;
+
+
+            [Category("搜索"), DisplayName("使用跟随"), Description("")]
             /// <summary>
             /// 使用跟随
             /// </summary>
             public bool IsHomMat { get; set; }
 
+
+
+            [Category("搜索"), DisplayName("使用搜索"), Description("")]
             /// <summary>
             /// 使用搜索
             /// </summary>
             public bool EnbleSelect { get; set; }
 
-            public string Name { get; set; }
+
+            [Category("异常检测"), DisplayName("自动参数名"), Description("mask_size默认")]
+            /// <summary>
+            /// 自动查找
+            /// </summary>
+            public bool AotuThreshold { get; set; }
+            [Category("异常检测"), DisplayName("自动参数名"), Description("mask_size默认结果,range灰度参考范围,scale,")]
+            [TypeConverter(typeof(ErosConverter)), ErosConverter.ThisDropDownAttribute("", "mask_size", "range", "scale")]
+            public string AotuThresholdPagr { get; set; } = "mask_size";
+            [Category("异常检测"), DisplayName("自动参数值"), Description("")]
+            public double AotuThresholdValue { get; set; } = 20;
+
+            [Category("异常检测"), DisplayName("通道"), Description("")]
+            public ImageTypeObj ImageTypeObj { get; set; }
+
+            [Category("异常检测"), DisplayName("自动暗或亮"), Description("light亮区域，dark暗区域")]
+            [TypeConverter(typeof(ErosConverter)), ErosConverter.ThisDropDownAttribute("", "light", "dark")]
+            public string LightD { get; set; } = "light";
+
+
+
+            public string Name { get; set; } = "颜色";
 
             [Description(""), Category("图像通道"), DisplayName("通道"),]
             public ImageTypeObj ImageType { get; set; }
 
             [Description(""), Category("显示"), DisplayName("显示中心"),]
             public bool IsColt { get; set; } = true;
+
 
             [Description(""), Category("通道灰度"), DisplayName("最小灰度"),]
             public byte ThresSelectMin { get; set; } = 100;
@@ -92,10 +133,17 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
 
             public HTuple color = "blue";
             private Color colorEs = Color.Lime;
-
-            public HObject ModeOBj;
+            ///// <summary>
+            ///// 模板区域
+            ///// </summary>
+            public HObject OutRiong;
+            /// <summary>
+            /// 检测区域
+            /// </summary>
             public HObject DrawObj { get; set; }
-
+            /// <summary>
+            /// 搜索区域
+            /// </summary>
             public HObject SeleRoi;
 
             public HTuple OBJRow = new HTuple();
@@ -133,6 +181,12 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             /// 填充
             /// </summary>
             public bool ISSelecRoiFillUP { get; set; }
+
+
+            public bool ModeHom { get; set; }
+
+            
+            public bool ISModeC { get; set; } 
 
             public void RunSeleRoi(HObject image, int id, out HObject iamget)
             {
@@ -327,9 +381,65 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     oneResultOBj.AddObj(hObject1);
                 }
                 HOperatorSet.AreaCenter(Color_region, out HTuple areaTd, out HTuple rowTd, out HTuple coluTd);
+                RunPa.nGRoi = RunPa.nGRoi.ConcatObj(Color_region);
                 OBJRow = rowTd;
                 OBJCol = coluTd;
                 drawObj.SelseAoi = hObjectROI;
+           
+                OutRiong = Color_region;
+                if (OutRiong.CountObj()==1)
+                {
+                    if (EnbleDifference)
+                    {
+                        HOperatorSet.Union1(OutRiong, out OutRiong);
+                        HOperatorSet.AreaCenter(OutRiong, out HTuple area, out HTuple row, out HTuple colu);
+                        HOperatorSet.AreaCenter(ModeRoing, out HTuple Modearea, out HTuple Moderow, out HTuple Modecolu);
+                        HOperatorSet.HomMat2dIdentity(out HTuple homMat2d);
+                        //HOperatorSet.HomMat2dTranslate(homMat2d, row, colu, out homMat2d);
+                        if (EnbleDifferenceAngl)
+                        {
+                            HOperatorSet.SmallestRectangle2(OutRiong, out HTuple rows, out HTuple colums, out HTuple phi, out HTuple length1, out HTuple length2);
+                            HOperatorSet.SmallestRectangle2(ModeRoing, out  Moderow, out  Modecolu, out HTuple phi2, out HTuple length12, out HTuple length22);
+                            HOperatorSet.VectorAngleToRigid(Moderow, Modecolu, phi2, row, colu, phi, out homMat2d);
+                        }
+                        else
+                        {
+                            HOperatorSet.VectorAngleToRigid(Moderow, Modecolu, 0, row, colu, 0, out homMat2d);
+                        }
+     
+
+                        HOperatorSet.AffineTransRegion(ModeRoing, out HObject modeHomMatRoing, homMat2d, "nearest_neighbor");
+                        HOperatorSet.Difference(modeHomMatRoing, OutRiong, out HObject hObject1);
+                        HOperatorSet.Difference(OutRiong, modeHomMatRoing, out HObject hObject2);
+                        hObject2 = hObject2.ConcatObj(hObject1);
+                        HOperatorSet.Union1(hObject2, out hObject2);
+                        hObject2 = RunProgram.OpneOrCosingCircle(hObject2, DifferenceInt);
+                        HOperatorSet.Connection(hObject2, out hObject2);
+                        hObject2= Diffe_Max_area.select_shape(hObject2);
+                        //oneResultOBj.AddObj(modeHomMatRoing, ColorResult.yellow);
+                        //oneResultOBj.AddObj(ModeRoing, ColorResult.blue);
+                        //hObject2 = RunProgram.DilationOrErosingCircle(hObject2, DifferenceInt);
+                        //hObject1 = RunProgram.DilationOrErosingCircle(hObject1, DifferenceInt);
+                        //HOperatorSet.ErosionCircle(hObject2, out hObject2, DifferenceInt);
+                        //HOperatorSet.ErosionCircle(hObject1, out hObject1, DifferenceInt);
+                        oneResultOBj.AddObj(hObject2, ColorResult.red);
+                    
+                        //oneResultOBj.AddObj(modeHomMatRoing, ColorResult.blue);
+
+                    }
+                }
+          
+                    if (AotuThreshold)
+                    {
+                    //HOperatorSet.BinaryThreshold(imaget, out hObject,
+                    //      "max_separability", "light",
+                    //      out HTuple usedThreshold);
+                      HOperatorSet.ReduceDomain(oneResultOBj.GetHalcon().GetImageOBJ(ImageTypeObj), hObjectROI, out HObject imaget );
+                      HOperatorSet.LocalThreshold(imaget, out hObject, "adapted_std_deviation", LightD, AotuThresholdPagr, AotuThresholdValue);
+                        HOperatorSet.FillUp(hObject, out hObject);
+                    oneResultOBj.AddObj(hObject,ColorResult.red);
+                    }
+                
                 if (NGNumber != 0)
                 {
                     HOperatorSet.Union1(Color_region, out Color_region);
@@ -348,6 +458,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         Colorid = HTuple.TupleGenConst(area.Length, Color_ID);
                         oneResultOBj.AddImageMassage(row, column, drawObj.CiName + "." + Colorid + Name, ColorResult.yellow);
                     }
+                  
                     oneResultOBj.AddNGOBJ(drawObj.CiName, RunPa.Name + "." + Name, hObject1, Color_region, RunPa.GetBackNames());
                     return false;
                 }
@@ -363,6 +474,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             oneRObjs = new List<OneRObj>();
 
             this.AOIObj.GenEmptyObj();
+            
             //HOperatorSet.AreaCenter(aoiObj.Aoi, out HTuple area, out HTuple row, out HTuple col);
             foreach (var item in keyColor)
             {
@@ -398,6 +510,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     //HOperatorSet.AffineTransRegion(aoiObj.Drow, out aoiObj.Drow, hom2dt, "nearest_neighbor");
                     if (!item.Value.Classify(oneResultOBj, aoiObj, this, out HObject hObject))
                     {
+             
                         //HOperatorSet.AreaCenter(hObject, out HTuple area, out HTuple row, out HTuple column);
                         HTuple Colorid = new HTuple();
                         ResltBool = false;
@@ -408,6 +521,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 {
                 }
             }
+
             HOperatorSet.Union1(AOIObj, out AOIObj);
             HOperatorSet.AreaCenter(AOIObj, out HTuple area2, out HTuple rows, out HTuple colu);
 

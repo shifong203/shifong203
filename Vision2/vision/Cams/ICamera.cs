@@ -15,7 +15,7 @@ namespace Vision2.vision.Cams
 
         void CloseCam();
 
-        HObject GetImage();
+        bool GetImage(out HObject image);
 
         bool GetImage(out IGrabbedRawData image);
 
@@ -35,6 +35,7 @@ namespace Vision2.vision.Cams
 
         void Stop();
 
+         bool Defintion { get; set; }
         double CPrecision { get; set; }
 
         /// <summary>

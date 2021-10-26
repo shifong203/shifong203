@@ -56,44 +56,51 @@ namespace Vision2.ErosProjcetDLL.Project
         {
             try
             {
-                if (showText == "浮动窗口")
-                {
-                    //AlarmForm.AlarmFormThis.TopLevel = true;
-                    MainForm1.MainFormF.splitContainer3.Panel2Collapsed = true;
-                    UserFormulaContrsl.This.tabControl1.TabPages.Remove(UserFormulaContrsl.This.tabPage4);
-                    MainForm1.MainFormF.Controls.Add(AlarmForm.AlarmFormThis);
-                    AlarmForm.AlarmFormThis.BringToFront();
-                    AlarmForm.AlarmFormThis.Dock = DockStyle.None;
-                    AlarmForm.AlarmFormThis.FormBorderStyle = FormBorderStyle.Fixed3D;
-                    AlarmForm.AlarmFormThis.TopMost = true;
-                    AlarmForm.AlarmFormThis.Show();
-                }
-                else if (showText == "控制栏左")
-                {
-                    MainForm1.MainFormF.splitContainer3.Panel2Collapsed = true;
-                    if (!UserFormulaContrsl.This.tabControl1.TabPages.Contains(UserFormulaContrsl.This.tabPage4))
+         
+                MainForm1.MainFormF.Invoke(new Action(() => {
+                    if (showText == "浮动窗口")
                     {
-                        UserFormulaContrsl.This.tabControl1.TabPages.Add(UserFormulaContrsl.This.tabPage4);
+                        //AlarmForm.AlarmFormThis.TopLevel = true;
+                        MainForm1.MainFormF.splitContainer3.Panel2Collapsed = true;
+                        UserFormulaContrsl.This.tabControl1.TabPages.Remove(UserFormulaContrsl.This.tabPage4);
+                        MainForm1.MainFormF.Controls.Add(AlarmForm.AlarmFormThis);
+                        AlarmForm.AlarmFormThis.BringToFront();
+                        AlarmForm.AlarmFormThis.Dock = DockStyle.None;
+                        AlarmForm.AlarmFormThis.FormBorderStyle = FormBorderStyle.Fixed3D;
+                        AlarmForm.AlarmFormThis.TopMost = true;
+                        AlarmForm.AlarmFormThis.Show();
                     }
-                    AlarmForm.AlarmFormThis.TopLevel = false;
-                    UserFormulaContrsl.This.tabPage4.Controls.Add(AlarmForm.AlarmFormThis);
+                    else if (showText == "控制栏左")
+                    {
+                        MainForm1.MainFormF.splitContainer3.Panel2Collapsed = true;
+                        if (!UserFormulaContrsl.This.tabControl1.TabPages.Contains(UserFormulaContrsl.This.tabPage4))
+                        {
+                            UserFormulaContrsl.This.tabControl1.TabPages.Add(UserFormulaContrsl.This.tabPage4);
+                        }
+                        AlarmForm.AlarmFormThis.TopLevel = false;
+                        UserFormulaContrsl.This.tabPage4.Controls.Add(AlarmForm.AlarmFormThis);
 
-                    AlarmForm.AlarmFormThis.FormBorderStyle = FormBorderStyle.None;
-                    AlarmForm.AlarmFormThis.Dock = DockStyle.Fill;
-                    AlarmForm.AlarmFormThis.Show();
-                }
-                else
-                {
-                    AlarmForm.AlarmFormThis.TopLevel = false;
-                    UserFormulaContrsl.This.tabControl1.TabPages.Remove(UserFormulaContrsl.This.tabPage4);
-                    MainForm1.MainFormF.splitContainer3.Panel2Collapsed = false;
-                    MainForm1.MainFormF.splitContainer3.Panel2.Controls.Add(AlarmForm.AlarmFormThis);
-                    AlarmForm.AlarmFormThis.BringToFront();
-                    AlarmForm.AlarmFormThis.Dock = DockStyle.Fill;
-                    AlarmForm.AlarmFormThis.FormBorderStyle = FormBorderStyle.None;
-                    AlarmForm.AlarmFormThis.TopMost = false;
-                    AlarmForm.AlarmFormThis.Show();
-                }
+                        AlarmForm.AlarmFormThis.FormBorderStyle = FormBorderStyle.None;
+                        AlarmForm.AlarmFormThis.Dock = DockStyle.Fill;
+                        AlarmForm.AlarmFormThis.Show();
+                    }
+                    else
+                    {
+                        AlarmForm.AlarmFormThis.TopLevel = false;
+                        UserFormulaContrsl.This.tabControl1.TabPages.Remove(UserFormulaContrsl.This.tabPage4);
+                        MainForm1.MainFormF.splitContainer3.Panel2Collapsed = false;
+                        MainForm1.MainFormF.splitContainer3.Panel2.Controls.Add(AlarmForm.AlarmFormThis);
+                        AlarmForm.AlarmFormThis.BringToFront();
+                        AlarmForm.AlarmFormThis.Dock = DockStyle.Fill;
+                        AlarmForm.AlarmFormThis.FormBorderStyle = FormBorderStyle.None;
+                        AlarmForm.AlarmFormThis.TopMost = false;
+                        AlarmForm.AlarmFormThis.Show();
+                    }
+
+
+                }));
+
+        
             }
             catch (Exception ex)
             {

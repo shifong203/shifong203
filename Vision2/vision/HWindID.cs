@@ -12,6 +12,7 @@ namespace Vision2.vision
             hObject = new HObject();
             hObject.GenEmptyObj();
         }
+     
 
         public static void DispImage(HTuple hv_WindowHandle, HObject iamge)
         {
@@ -95,6 +96,21 @@ namespace Vision2.vision
             hSmartWindowControl.HMouseMove += hWindowControl4_HMouseMove;
             hSmartWindowControl.KeyDown += HWindowControl1_KeyDown; ;
             hSmartWindowControl.KeyUp += HWindowControl1_KeyUp;
+            hSmartWindowControl.Resize += HSmartWindowControl_Resize; ;
+        }
+
+        private void HSmartWindowControl_Resize(object sender, EventArgs e)
+        {
+            try
+            {
+                //hSmartWindowControl.Dock = DockStyle.Top;
+                //hSmartWindowControl.Location = new System.Drawing.Point(0, 0);
+
+                ShowImage();
+            }
+            catch (Exception)
+            {
+            }
         }
 
         private HWindowControl hSmartWindowControl;
@@ -116,12 +132,30 @@ namespace Vision2.vision
             {
             }
         }
-
+        public static void SetPart(HTuple hv_WindowHandle, int row, int col, int size, double selt=1)
+        {
+            try
+            {
+                if (selt == 0)
+                {
+                    selt = 1;
+                }
+                int row1 = row - size;
+                int col1 = col - (int)(size * selt);
+                int row2 = row + size;
+                int col2 = col + (int)(size * selt);
+                HOperatorSet.SetPart(hv_WindowHandle, row1, col1, row2, col2);
+            }
+            catch (Exception)
+            {
+            }
+        }
         public void SetPart(HTuple rowStrat, HTuple colStrat, HTuple rowEnd, HTuple colEnd)
         {
             try
             {
                 HOperatorSet.SetPart(hWindow, rowStrat, colStrat, rowEnd, colEnd);
+                ShowImage();
             }
             catch (Exception)
             {
@@ -201,14 +235,17 @@ namespace Vision2.vision
                 {
                     if (!this.Drawing)
                     {
-                        foreach (var item in OneResIamge.GetKeyHobj())
+                        if (this.DrawMode)
                         {
-                            HOperatorSet.GetRegionIndex(item.Value.Object, (int)e.Y, (int)e.X, out HTuple index);
-                            if (index > 0)
+                            foreach (var item in OneResIamge.GetKeyHobj())
                             {
-                                RunProgram.DragMoveOBJS(this, OneResIamge.GetKeyHobj());
-                                this.ShowObj();
-                                break;
+                                HOperatorSet.GetRegionIndex(item.Value.Object, (int)e.Y, (int)e.X, out HTuple index);
+                                if (index > 0)
+                                {
+                                    RunProgram.DragMoveOBJS(this, OneResIamge.GetKeyHobj());
+                                    this.ShowObj();
+                                    break;
+                                }
                             }
                         }
                     }
@@ -362,7 +399,7 @@ namespace Vision2.vision
         public int ImageRowStrat = 0;
         public int ImageColStrat = 0;
 
-        public void SetImaage(HObject imaget)
+        public void SetImaage(HObject imaget,bool isPart=true)
         {
             try
             {
@@ -371,14 +408,19 @@ namespace Vision2.vision
                     OneResIamge = new OneResultOBj();
                 }
                 OneResIamge.Image = imaget;
-                HOperatorSet.GetImageSize(OneResIamge.Image, out HTuple wi, out HTuple heit);
-                if (wi.Length != 0)
-                {
-                    WidthImage = wi;
-                    HeigthImage = heit;
-                }
 
-                hWindow.SetPart(ImageRowStrat, ImageColStrat, HeigthImage, WidthImage);
+  
+
+                if (isPart)
+                {
+                    HOperatorSet.GetImageSize(OneResIamge.Image, out HTuple wi, out HTuple heit);
+                    if (wi.Length != 0)
+                    {
+                        WidthImage = wi;
+                        HeigthImage = heit;
+                    }
+                    hWindow.SetPart(ImageRowStrat, ImageColStrat, HeigthImage, WidthImage);
+                }
                 hWindow.DispObj(OneResIamge.Image);
             }
             catch (Exception ex)
@@ -394,6 +436,8 @@ namespace Vision2.vision
         private HObject hObject;
 
         public bool Drawing { get; set; }
+
+        public bool DrawMode { get; set; }
         public int DrawType { get; set; }
         public bool DrawErasure { get; set; }
 

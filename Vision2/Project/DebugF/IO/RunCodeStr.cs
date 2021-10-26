@@ -8,6 +8,7 @@ using System.Drawing;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
+using Vision2.ErosProjcetDLL.UI;
 using Vision2.Project.formula;
 using Vision2.vision;
 using Vision2.vision.HalconRunFile.RunProgramFile;
@@ -948,8 +949,8 @@ namespace Vision2.Project.DebugF.IO
                     {
                         try
                         {
-                            HalconRun halconRun = vision.Vision.GetRunNameVision(names);
-                            string axisGroupName = vision.Vision.GetSaveImageInfo(halconRun.Name).AxisGrot;
+                            HalconRun halconRun = Vision.GetRunNameVision(names);
+                            string axisGroupName = Vision.GetSaveImageInfo(halconRun.Name).AxisGrot;
                             var list = from n in points
                                        where n.AxisGrabName == axisGroupName
                                        where n.ID <= -10
@@ -978,6 +979,7 @@ namespace Vision2.Project.DebugF.IO
                                 {
                                     break;
                                 }
+
                                 if (DebugCompiler.Instance.DDAxis.SetXYZ1Points(axisGroupName, 10, item.X, item.Y, item.Z, item.U, item.isMove))
                                 {
                                     if (item.ID != -1)
@@ -1187,9 +1189,9 @@ namespace Vision2.Project.DebugF.IO
                     {
                         string names = axisGrabNmae[j];
                         HalconRun halconRun = null;
-                        foreach (var item in vision.Vision.GetHimageList())
+                        foreach (var item in Vision.GetHimageList())
                         {
-                            if (vision.Vision.GetSaveImageInfo(item.Value.Name).AxisGrot == names)
+                            if (Vision.GetSaveImageInfo(item.Value.Name).AxisGrot == names)
                             {
                                 halconRun = item.Value;
                                 break;
@@ -1200,7 +1202,8 @@ namespace Vision2.Project.DebugF.IO
                             errStr.ErrStr = "视觉程序不存在:" + axisGrabNmae + ";";
                             return;
                         }
-                        string axisGroupName = vision.Vision.GetSaveImageInfo(halconRun.Name).AxisGrot;
+                        halconRun.SetCamPraegrm(LiyID);
+                        string axisGroupName = Vision.GetSaveImageInfo(halconRun.Name).AxisGrot;
                         runErr.RunState = "轨迹首次：" + halconRun.Name + ";" + points[0].GetPointStr();
                         RunCode?.Invoke(runErr);
                         if (points[0].AxisGrabName == axisGroupName)
@@ -1219,19 +1222,20 @@ namespace Vision2.Project.DebugF.IO
                             {
                                 ValeU += AxisU.Point;
                             }
-                            if (DebugCompiler.Instance.DDAxis.SetXYZ1Points(axisGroupName, 10, AxisX.Point + points[0].X, AxisY.Point + points[0].Y,
-                              ValeZ, ValeU, points[0].isMove))
+                            if (halconRun.PaleMode)
+                            {
+                                if (halconRun.TrayID >= 0)
+                                {
+                                    int dt = DebugCompiler.Instance.DDAxis.GetTrayInxt(halconRun.TrayID).Number;
+                                    int det = ((dt - 1) * halconRun.MaxRunID + runID) / LiyID;
+                                    runID = ((dt - 1) * halconRun.PaleID + LiyID);
+                                }
+                            }
+
+                            if (DebugCompiler.Instance.DDAxis.SetXYZ1Points(axisGroupName, 10, AxisX.Point 
+                                + points[0].X, AxisY.Point + points[0].Y, ValeZ, ValeU, points[0].isMove))
                             {
                                 Thread.Sleep(DebugCompiler.Instance.MarkWait);
-                                if (halconRun.PaleMode)
-                                {
-                                    if (halconRun.TrayID >= 0)
-                                    {
-                                        int dt = DebugCompiler.Instance.DDAxis.GetTrayInxt(halconRun.TrayID).Number;
-                                        int det = ((dt - 1) * halconRun.MaxRunID + runID) / LiyID;
-                                        runID = ((dt - 1) * halconRun.PaleID + LiyID);
-                                    }
-                                }
                                 if (true)
                                 {
                                     halconRun.AysnetCam(LiyID, runID);
@@ -1304,7 +1308,7 @@ namespace Vision2.Project.DebugF.IO
                     threadData.ErrStr = "视觉程序不存在:" + names;
                     return;
                 }
-                string axisGroupName = vision.Vision.GetSaveImageInfo(halconRun.Name).AxisGrot;
+                string axisGroupName = Vision.GetSaveImageInfo(halconRun.Name).AxisGrot;
                 var list = from n in points
                            where n.AxisGrabName == axisGroupName
                            where n.ID >= -1
@@ -1340,25 +1344,26 @@ namespace Vision2.Project.DebugF.IO
                     RunCode?.Invoke(threadData);
                     if (!IsSimulate)
                     {
+                        LiyID = i;
+                        runID = i;
+                        if (halconRun.PaleMode)
+                        {
+                            if (halconRun.TrayID >= 0)
+                            {
+                                int dt = DebugCompiler.Instance.DDAxis.GetTrayInxt(halconRun.TrayID).Number;
+                                runID = ((dt - 1) * halconRun.PaleID + LiyID);
+                                if (ErosProjcetDLL.Project.ProjectINI.AdminEnbt)
+                                {
+                                    ErosProjcetDLL.Project.AlarmText.AddTextNewLine("托盘数:" + dt + ":" + runID + ":" + LiyID);
+                                }
+                            }
+                        }
+                        halconRun.SetCamPraegrm(LiyID);
                         if (DebugCompiler.Instance.DDAxis.SetXYZ1Points(axisGroupName, 10, item.X + AxisX.Point, item.Y + AxisY.Point, ValeZ, ValeU, item.isMove))
                         {
                             if (item.ID != -1)
                             {
-                                LiyID = i;
-                                runID = i;
                                 Thread.Sleep(DebugCompiler.Instance.MarkWait);
-                                if (halconRun.PaleMode)
-                                {
-                                    if (halconRun.TrayID >= 0)
-                                    {
-                                        int dt = DebugCompiler.Instance.DDAxis.GetTrayInxt(halconRun.TrayID).Number;
-                                        runID = ((dt - 1) * halconRun.PaleID + LiyID);
-                                        if (ErosProjcetDLL.Project.ProjectINI.AdminEnbt)
-                                        {
-                                            ErosProjcetDLL.Project.AlarmText.AddTextNewLine("托盘数:" + dt + ":" + runID + ":" + LiyID);
-                                        }
-                                    }
-                                }
                                 halconRun.AysnetCam(LiyID, runID);
                                 Thread.Sleep(DebugCompiler.Instance.CamWait);
                             }
@@ -1536,6 +1541,28 @@ namespace Vision2.Project.DebugF.IO
 
         #region 图像指令
 
+        public void Screenshot(string code)
+        {
+            string da = Vision.GetRunNameVision().GetSaveImageInfo().GetSaveImagePah() + "截屏.jpg";
+            try
+            {
+                Bitmap bitmap = UICon.GetScreenCapture();
+                //if (code.ToLower()=="qr")
+                //{
+                //    da += "\\" + Product.ProductionName;
+                //    if (Vision.GetRunNameVision().TrayID>=0)
+                //    {
+                //        da += "\\" + DebugCompiler.GetTray(Vision.GetRunNameVision().TrayID).GetTrayData().TrayIDQR;
+                //    }
+                //}
+                System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName( da));
+                bitmap.Save(da);
+            }
+            catch (Exception ex)
+            {
+            }
+        }
+
         public void Cams(RunErr runErr)
         {
             ThreadData threadDatas = new ThreadData("Cam");
@@ -1582,18 +1609,19 @@ namespace Vision2.Project.DebugF.IO
                         }
                         else
                         {
-                            hObject = vision.Vision.GetNameCam(tdat[0]).GetImage();
+                            if (Vision.GetRunNameVision(tdat[0]).GetCam().GetImage(out HObject image))
+                            {
+                                hObject = image;         
+                            }
+                            else
+                            {
+                                hObject.GenEmptyObj();         
+                            }
                         }
                         if (int.TryParse(tdat[2], out int det))
                         {
-                            //if (det == 1)
-                            //{
-                            //    hate.TiffeOffsetImageEX.SetTiffeOff();
-                            //}
                             hate.TiffeOffsetImageEX.SetTiffeOff(hObject, det);
-                            //hate.Image(hate.TiffeOffsetImageEX.TiffeOffsetImage());
                         }
-                        //hate.ShowImage();
                     }
 
                     ErosProjcetDLL.Project.AlarmText.AddTextNewLine(threadData.Code.ToString());
@@ -1612,7 +1640,6 @@ namespace Vision2.Project.DebugF.IO
             try
             {
                 string[] Cmas = runErr.Code.Remove(0, 5).Trim(';').Split(';');
-
                 for (int i = 0; i < Cmas.Length; i++)
                 {
                     threadDatas.Add(Cmas[i].Trim().Trim(','));
@@ -1651,16 +1678,19 @@ namespace Vision2.Project.DebugF.IO
                         RunID = ToDoubleP(tdat[2]);
                     }
 
-                    HalconRun halconRun = vision.Vision.GetRunNameVision(tdat[0]);
+                    HalconRun halconRun = Vision.GetRunNameVision(tdat[0]);
 
                     if (!IsSimulate)
                     {
                         halconRun.GetCam().Key = RunID.ToString();
-                        halconRun.ReadCamImage(LiayID.ToString(), RunID);
+                        if (!halconRun.ReadCamImage(LiayID.ToString(), RunID))
+                        {
+                            threadData.ErrStr +=halconRun.Name+ "采图失败";
+                        }
                     }
                     else
                     {
-                        string path = vision.Vision.VisionPath + "Image\\" + halconRun.Name + LiayID + ".bmp";
+                        string path = Vision.VisionPath + "Image\\" + halconRun.Name + LiayID + ".bmp";
                         if (System.IO.File.Exists(path))
                         {
                             HOperatorSet.ReadImage(out HObject hObject, path);
@@ -1682,7 +1712,72 @@ namespace Vision2.Project.DebugF.IO
         {
             try
             {
-                string[] tdat = code.Code.Remove(0, 8).Trim(';').Split(',');
+                ThreadData threadDatas = new ThreadData("aysCall", 10000);
+                string[] DATAS = code.Code.Remove(0, 8).Trim(';').Split(';');
+                for (int i = 0; i < DATAS.Length; i++)
+                {
+                    threadDatas.Add(DATAS[i].Trim().Trim(','));
+                    ThreadPool.QueueUserWorkItem(new WaitCallback(Ayscall), threadDatas.ThreadDataS[i]);
+                }
+                while (!threadDatas.End)
+                {
+                    if (Abort)
+                    {
+                        break;
+                    }
+                }
+           
+                code.ErrStr += threadDatas.GetErr();
+                code.RunState = threadDatas.CodeName + ":" + threadDatas.RunTime.ToString();
+                RunCode?.Invoke(code);
+          
+                //for (int i = 0; i < DATAS.Length; i++)
+                //{
+
+                //}
+                //string[] tdat = code.Code.Remove(0, 8).Trim(';').Split(',');
+                //int LiayID = ToDoubleP(tdat[1]);
+                //int RunID = LiayID;
+                //if (tdat.Length >= 3)
+                //{
+                //    RunID = ToDoubleP(tdat[2]);
+                //}
+                //HalconRun halconRun = vision.Vision.GetRunNameVision(tdat[0]);
+                //if (!IsSimulate)
+                //{
+                //    if (halconRun.GetCam() != null)
+                //    {
+                //        halconRun.GetCam().Key = RunID.ToString();
+                //        halconRun.AysnetCam(LiayID, RunID);
+                //    }
+                //    else
+                //    {
+                //        code.ErrStr += "相机未实例";
+                //    }
+                //}
+                //else
+                //{
+                //    string path = vision.Vision.VisionPath + "Image\\" + halconRun.Name + LiayID + ".bmp";
+                //    if (System.IO.File.Exists(path))
+                //    {
+                //        HOperatorSet.ReadImage(out HObject hObject, path);
+                //        halconRun.AysnetCam(LiayID, RunID, hObject);
+                //    }
+                //}
+            }
+            catch (Exception ex)
+            {
+                code.ErrStr = ex.Message;
+            }
+        }
+        public void Ayscall(object textd)
+        {
+            RunErr code = textd as RunErr;
+            try
+            {
+      
+
+                string[] tdat = code.Code.Trim(';').Split(',');
                 int LiayID = ToDoubleP(tdat[1]);
                 int RunID = LiayID;
                 if (tdat.Length >= 3)
@@ -1704,7 +1799,29 @@ namespace Vision2.Project.DebugF.IO
                 }
                 else
                 {
+                    if (true)
+                    {
+
+                    }
                     string path = vision.Vision.VisionPath + "Image\\" + halconRun.Name + LiayID + ".bmp";
+
+                    if (true)
+                    {
+                    
+                        try
+                        {
+                            path = halconRun.ImagePaths;
+                            string[] dat = System.IO.Directory.GetFiles(halconRun.ImagePaths);
+                            string ata = System.IO.Path.GetFileNameWithoutExtension(dat[0]);
+                            ata = ata.Remove(ata.LastIndexOf('-'), ata.Length - ata.LastIndexOf('-'));
+                            int dtw = ErosProjcetDLL.Project.ProjectINI.GetStrReturnInt(ata);
+                            path = dat[RunID - 1];
+                        }
+                        catch (Exception ex)
+                        {
+                        }
+        
+                    }
                     if (System.IO.File.Exists(path))
                     {
                         HOperatorSet.ReadImage(out HObject hObject, path);
@@ -1714,8 +1831,9 @@ namespace Vision2.Project.DebugF.IO
             }
             catch (Exception ex)
             {
-                code.ErrStr = ex.Message;
+                code.ErrStr += ex.Message;
             }
+            code.Done = true;
         }
 
         public void SetLight(string lightName)
@@ -1912,6 +2030,10 @@ namespace Vision2.Project.DebugF.IO
                 }
                 else if (imtey[0] == "movematrix")
                 {
+                }
+                else if (imtey[0] == "screenshot")
+                {
+                    Screenshot("QR");
                 }
                 else if (text == "else")
                 {
@@ -2325,9 +2447,12 @@ namespace Vision2.Project.DebugF.IO
                     {
                         vat = Convert.ToBoolean(yutData[1]);
                     }
-                    if (!DebugCompiler.GetDoDi().WritDO(det, vat))
+                    if (!IsSimulate)
                     {
-                        runErr.ErrStr += "Do写入命令失败:" + text;
+                        if (!DebugCompiler.GetDoDi().WritDO(det, vat))
+                        {
+                            runErr.ErrStr += "Do写入命令失败:" + text;
+                        }
                     }
                     for (int i = 1; i < tdat.Length; i++)
                     {
@@ -2862,14 +2987,15 @@ namespace Vision2.Project.DebugF.IO
                     else if (imtey[1].ToLower().StartsWith("tray"))
                     {
                         int idet = ToDoubleP(imtey[2]);
+                        TrayRobot trayRobot = DebugCompiler.Instance.DDAxis.GetTrayInxt(idet);
                         if (ifType == 1)
                         {
                             int det = 0;
-                            for (int i = 0; i < DebugCompiler.Instance.DDAxis.GetTrayInxt(idet).GetTrayData().GetDataVales().Count; i++)
+                            for (int i = 0; i < trayRobot.GetTrayData().GetDataVales().Count; i++)
                             {
-                                if (DebugCompiler.Instance.DDAxis.GetTrayInxt(idet).GetTrayData().GetDataVales()[i] != null
-                                    && DebugCompiler.Instance.DDAxis.GetTrayInxt(idet).GetTrayData().GetDataVales()[i].PanelID != null &&
-                                    DebugCompiler.Instance.DDAxis.GetTrayInxt(idet).GetTrayData().GetDataVales()[i].PanelID.ToString() != "")
+                                if (trayRobot.GetTrayData().GetDataVales()[i] != null
+                                    && trayRobot.GetTrayData().GetDataVales()[i].PanelID != null &&
+                                   trayRobot.GetTrayData().GetDataVales()[i].PanelID.ToString() != "")
                                 {
                                     det++;
                                 }
@@ -2901,20 +3027,62 @@ namespace Vision2.Project.DebugF.IO
                                 }
                                 else if (tdat[1] == "id")
                                 {
-                                    bool isDone = true;
-                                    TrayRobot trayRobot = DebugCompiler.Instance.DDAxis.GetTrayInxt(idet);
-                                    for (int i = 0; i < trayRobot.Count; i++)
-                                    {
-                                        isDone = false;
-
-                                        if (trayRobot.GetTrayData().GetDataVales()[i] == null ||
-                                          trayRobot.GetTrayData().GetDataVales()[i].PanelID == null ||
-                                          trayRobot.GetTrayData().GetDataVales()[i].PanelID == "")
+                                    bool isDone = false;
+                           
+                            
+                                  
+                                        if (trayRobot.GetTrayData().TrayIDQR=="")
                                         {
                                             isDone = true;
-                                            break;
+                                        }
+                                    
+                                    if (!isDone)
+                                    {
+                                     
+                                            for (int i = 0; i < trayRobot.Count; i++)
+                                            {
+                                                if (trayRobot.GetTrayData().GetDataVales()[i] == null ||
+                                                  trayRobot.GetTrayData().GetDataVales()[i].PanelID == null ||
+                                                  trayRobot.GetTrayData().GetDataVales()[i].PanelID == "")
+                                                {
+                                                    isDone = true;
+                                                    break;
+                                                }
+                                            }
+                                        
+                                    }
+                             
+                                    if (isDone)
+                                    {
+                                        IFElseBool = true;
+                                    }
+                                    else
+                                    {
+                                        IFElseBool = false;
+                                    }
+                                }
+                                else if(tdat[1].Contains('.'))
+                                {
+                                    bool isDone = false;
+                                    string[] itmestr = tdat[1].Split('.');
+                                    if (int.TryParse(itmestr[1],out int indext))
+                                    {
+                                        if (indext==0)
+                                        {
+                                            if (trayRobot.GetTrayData().TrayIDQR=="")
+                                            {
+                                                isDone = true;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (trayRobot.GetTrayData().GetOneDataVale(indext).PanelID == "")
+                                            {
+                                                isDone = true;
+                                            }
                                         }
                                     }
+
                                     if (isDone)
                                     {
                                         IFElseBool = true;
@@ -3135,6 +3303,7 @@ namespace Vision2.Project.DebugF.IO
                                 TrayData = MainForm1.MainFormF.tabControl1.TabPages["托盘" + trayID].Tag as TrayDataUserControl;
                             }
                             TrayData.SetTray(DebugCompiler.GetTray(trayID).GetTrayData());
+                            DebugCompiler.GetTray(trayID).AddTary(TrayData);
                             //DebugCompiler.GetTrayDataUserControl(TrayData);
                             if (tdat.Length == 4)
                             {

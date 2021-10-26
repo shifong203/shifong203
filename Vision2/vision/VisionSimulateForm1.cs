@@ -24,7 +24,7 @@ namespace Vision2.vision
             public string ImagePath { get; set; } = "";
         }
 
-        private bool Cambueys;
+     
 
         private List<string> imagePath = new List<string>();
         private DebugI debug = new DebugI();
@@ -44,9 +44,7 @@ namespace Vision2.vision
                     {
                         debug = new DebugI();
                     }
-                    //TempPath + "PrjectData.ini"
-                    //ErosProjcetDLL.Project.ProjectINI.GetTempPrjectDataINI("视觉", "模拟文件夹地址", out TraversalExecutionPath);
-                    //TraversalExecutionPath = Vision.Instance.DicSaveType[Vision.GetRunNameVision().Name].SavePath;
+                  
                 }
                 if (System.IO.Directory.Exists(debug.ImagePath))
                 {
@@ -64,15 +62,16 @@ namespace Vision2.vision
                 var det = ErosProjcetDLL.FileCon.FileConStatic.GetFilesDicListPath(debug.ImagePath, ".bmp,.jpg");
                 if (det.Count == 0)
                 {
-                    Cambueys = false;
+                  
                     MessageBox.Show("本地Image未找到图片");
                     return;
                 }
                 int numbers = 0;
                 dataGridView1.Rows.Clear();
+                dataGridView3.Rows.Clear();
                 if (det.Count == 0)
                 {
-                    Cambueys = false;
+                   
                     MessageBox.Show("本地Image未找到图片");
                     return;
                 }
@@ -133,6 +132,8 @@ namespace Vision2.vision
                     for (int i = 0; i < detd.Length; i++)
                     {
                         listImage.Add(item.Value[detd[i]]);
+                        int indext = dataGridView3.Rows.Add();
+                        dataGridView3.Rows[indext].Cells[0].Value = item.Value[detd[i]];
                     }
                     keyValuePath.Add(item.Key, listImage);
                 }
@@ -322,6 +323,10 @@ namespace Vision2.vision
                     string SN = dataGridView1.Rows[e.RowIndex].Cells[0].Value.ToString();
                     Thread thread = new Thread(() =>
                     {
+                        try
+                        {
+
+              
                         for (int i = 0; i < keyValuePath[SN].Count; i++)
                         {
                             foreach (var itemd in Vision.GetHimageList().Values)
@@ -342,6 +347,12 @@ namespace Vision2.vision
                                     Thread.Sleep(500);
                                 }
                             }
+                        }
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show(ex.Message);
+
                         }
                     });
                     thread.IsBackground = true;
@@ -457,16 +468,7 @@ namespace Vision2.vision
             }
         }
 
-        private void toolStripButton7_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                Vision.GetRunNameVision().AysnetRun();
-            }
-            catch (Exception)
-            {
-            }
-        }
+   
 
         private void toolStripButton8_Click(object sender, EventArgs e)
         {
@@ -483,11 +485,8 @@ namespace Vision2.vision
                     {
                         debug = new DebugI();
                     }
-                    //TempPath + "PrjectData.ini"
-                    //ErosProjcetDLL.Project.ProjectINI.GetTempPrjectDataINI("视觉", "模拟文件夹地址", out TraversalExecutionPath);
-                    //TraversalExecutionPath = Vision.Instance.DicSaveType[Vision.GetRunNameVision().Name].SavePath;
                 }
-                if (System.IO.Directory.Exists(debug.ImagePath))
+                if (Directory.Exists(debug.ImagePath))
                 {
                     dialog.SelectedPath = debug.ImagePath;
                 }
@@ -503,7 +502,7 @@ namespace Vision2.vision
                 var det = ErosProjcetDLL.FileCon.FileConStatic.GetFilesDicListPath(debug.ImagePath, ".bmp,.jpg");
                 if (det.Count == 0)
                 {
-                    Cambueys = false;
+           
                     MessageBox.Show("本地Image未找到图片");
                     return;
                 }
@@ -511,7 +510,7 @@ namespace Vision2.vision
                 dataGridView1.Rows.Clear();
                 if (det.Count == 0)
                 {
-                    Cambueys = false;
+                 
                     MessageBox.Show("本地Image未找到图片");
                     return;
                 }

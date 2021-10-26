@@ -97,7 +97,11 @@ namespace Vision2.vision.HalconRunFile.Controls
                                 if (halcon.ReadImage(dataGridView1.Rows[i].Cells[0].Value.ToString()))
                                 {
                                     halcon.GetOneImageR().IsSave = false;
-                                    halcon.CamImageEvent(numericUpDown1.Value.ToString(), halcon.GetOneImageR(), (int)numericUpDown1.Value);
+                                    string[] names = System.IO.Path.GetFileNameWithoutExtension(dataGridView1.Rows[i].Cells[0].Value.ToString()).Split('-');
+                                    halcon.GetOneImageR().RunID =
+                                    ErosProjcetDLL.Project.ProjectINI.GetStrReturnInt(names[1]);
+                                    halcon.GetOneImageR().LiyID = ErosProjcetDLL.Project.ProjectINI.GetStrReturnInt(names[0]);
+                                    halcon.CamImageEvent( halcon.GetOneImageR());
                                 }
 
                                 this.Invoke(new Action(() =>
@@ -207,9 +211,14 @@ namespace Vision2.vision.HalconRunFile.Controls
                 {
                     if (!checkBox2.Checked || images[i].Contains(halcon.Name))
                     {
-                        if (checkBox1.Checked && !System.IO.Path.GetFileNameWithoutExtension(images[i]).EndsWith(numericUpDown1.Value.ToString()))
+                        if (checkBox1.Checked )
                         {
-                            continue;
+                          string[] names= System.IO.Path.GetFileNameWithoutExtension(images[i]).Split('-');
+                      
+                            if (ErosProjcetDLL.Project.ProjectINI.GetStrReturnInt(names[0]) != numericUpDown1.Value)
+                            {
+                                continue;
+                            }
                         }
                         listImages.Add(images[i]);
                     }
@@ -256,7 +265,11 @@ namespace Vision2.vision.HalconRunFile.Controls
                 {
                     halcon.ReadImage(dataGridView1.Rows[e.RowIndex].Cells[0].Value.ToString());
                     halcon.GetOneImageR().IsSave = false;
-                    halcon.CamImageEvent(halcon.RunIDStr[(int)numericUpDown1.Value - 1], halcon.GetOneImageR(), (int)numericUpDown1.Value);
+                    string[] names = System.IO.Path.GetFileNameWithoutExtension(dataGridView1.Rows[e.RowIndex].Cells[0].Value.ToString()).Split('-');
+                    halcon.GetOneImageR().RunID =
+                    ErosProjcetDLL.Project.ProjectINI.GetStrReturnInt(names[1]);
+                    halcon.GetOneImageR().LiyID = ErosProjcetDLL.Project.ProjectINI.GetStrReturnInt(names[0]);
+                    halcon.CamImageEvent( halcon.GetOneImageR());
                     if (ok > 0 && ng > 0)
                     {
                         if (dataGridView1.Rows[e.RowIndex].Cells[1].Value.ToString() != halcon.Result)

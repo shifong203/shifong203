@@ -82,6 +82,57 @@ namespace Vision2.vision
                     HWindd = new HWindID();
                     HWindd.Initialize(hWindowControl1);
                 }
+                try
+                {
+                    if (!trayImage.OK)
+                    {
+                        if (trayImage.Done)
+                        {
+                            foreach (var item in trayImage.GetDataVales())
+                            {
+                                if (item.OK)
+                                {
+                                    continue;
+                                }
+                                foreach (var itemdt in item.ListCamsData)
+                                {
+                                    foreach (var itemdte in itemdt.Value.NGObj.DicOnes)
+                                    {
+                                        if (!itemdte.Value.aOK)
+                                        {
+                                            if (itemdte.Value.Done)
+                                            {
+                                                itemdte.Value.Done = false;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (Exception)
+                {
+
+                }
+
+                if (Vision.Instance.RestTDT)
+                {
+                    if (RecipeCompiler.Instance.GetMes().MesArye)
+                    {
+                        Task task = new Task(new Action(() =>
+                        {
+                            WeirtAll(trayImage);
+                        }));
+                        task.Start();
+                    }
+                    else
+                    {
+                        WeirtAll(trayImage);
+                    }
+                  
+                    return;
+                }
                 if (!trayImage.OK)
                 {
                     if (!trayImage.Done)
@@ -121,11 +172,37 @@ namespace Vision2.vision
             }
         }
 
+        public void WeirtTray(TrayData trayImage)
+        {
+            try
+            {
+                for (int i = 0; i < trayImage.Count; i++)
+                {
+                    if (trayImage.GetDataVales()[i].NotNull)
+                    {
+                        string path = Vision.GetSaveImageInfo("上相机").SavePath + "\\" + DateTime.Now.ToLongDateString() + "\\" + Product.ProductionName + "\\" +
+                              trayImage.GetOneDataVale(i).PanelID + "\\" +"Data";
+                        foreach (var item in trayImage.GetOneDataVale(i).ListCamsData)
+                        {
+                            item.Value.ImagePlus.GenEmptyObj();
+                        }
+                        ErosProjcetDLL.Project.ProjectINI.ClassToJsonSavePath(trayImage.GetOneDataVale(i), path);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }      
+         
+        }
+
         public void WeirtAll(TrayData trayImage)
         {
             try
             {
                 UserFormulaContrsl.WeirtAll(trayImage);
+                WeirtTray(trayImage);
                 if (DebugCompiler.Instance.OutDischarging > 0)
                 {
                     Task task = new Task(() =>
@@ -153,8 +230,9 @@ namespace Vision2.vision
                     task.Start();
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                MessageBox.Show(ex.Message);
             }
         }
 
@@ -185,6 +263,7 @@ namespace Vision2.vision
             textBox1.Text = OneProductV.PanelID;
             if (OneProductV != null)
             {
+                OneProductV.UesrRest = true;
                 HWindd.OneResIamge.GetNgOBJS(OneProductV.GetNGCompData());
                 HWindd.SetImaage(OneProductV.GetNGImage());
             }
@@ -277,16 +356,20 @@ namespace Vision2.vision
                             HObject imaget = new HObject();
                             imaget.GenEmptyObj();
                             //HOperatorSet.ReadImage(out HObject imaget, Vision.VisionPath + "Image\\" + OneRImage.LiyID + ".bmp");
-                            string[] images = Directory.GetFiles(Vision.VisionPath + "Image\\");
-                            List<string> imageStr = new List<string>(images);
                             bool isbde = false;
-                            for (int i = 0; i < images.Length; i++)
+                            if (Directory.Exists(Vision.VisionPath + "Image\\"))
                             {
-                                if (images[i].StartsWith(Vision.VisionPath + "Image\\" + OneProductV.GetNGCamName() + "拼图"))
+                                string[] images = Directory.GetFiles(Vision.VisionPath + "Image\\");
+                                List<string> imageStr = new List<string>(images);
+                        
+                                for (int i = 0; i < images.Length; i++)
                                 {
-                                    HOperatorSet.ReadImage(out imaget, images[i]);
-                                    isbde = true;
-                                    break;
+                                    if (images[i].StartsWith(Vision.VisionPath + "Image\\" + OneProductV.GetNGCamName() + "拼图"))
+                                    {
+                                        HOperatorSet.ReadImage(out imaget, images[i]);
+                                        isbde = true;
+                                        break;
+                                    }
                                 }
                             }
                             if (!isbde)
@@ -301,6 +384,7 @@ namespace Vision2.vision
                             if (row1.Length != 0)
                             {
                                 HOperatorSet.AreaCenter(hObject1, out HTuple area, out HTuple row, out HTuple col);
+
                                 HOperatorSet.GenContourPolygonXld(out HObject hObject, new HTuple(row, row), new HTuple(new HTuple(0), col1));
                                 HOperatorSet.GenContourPolygonXld(out HObject hObject2, new HTuple(new HTuple(0), row1), new HTuple(col, col));
                                 HOperatorSet.GenContourPolygonXld(out HObject hObject3, new HTuple(new HTuple(row), row), new HTuple(clo2, wid));
@@ -352,6 +436,7 @@ namespace Vision2.vision
             }
             catch (Exception ex)
             {
+                MessageBox.Show("复判显示"+ex.Message);
             }
             HWindd.ShowImage();
         }
@@ -366,8 +451,11 @@ namespace Vision2.vision
                     MessageBox.Show("SN为空,请输入SN");
                     return;
                 }
+                if (!button1.Enabled)
+                {
+                    return;
+                }
                 button1.Enabled = false;
-                timer1.Start();
                 hWindowControl1.Focus();
                 if (TrayImage.OK)
                 {
@@ -381,46 +469,33 @@ namespace Vision2.vision
                 }
                 treeView1.Nodes.Clear();
                 treeView2.Nodes.Clear();
+                TrayImage.UserRest = true;
                 UserFormulaContrsl.WeirtAll(TrayImage);
-                if (ErosProjcetDLL.Project.AlarmListBoxt.AlarmCont == 0)
+                WeirtTray(TrayImage);
+                timer1.Start();
+                Task task = new Task(() =>
                 {
-                    DebugCompiler.GetDoDi().WritDO(DebugCompiler.Instance.OutDischarging, true);
-                }
-                //label3.Text = RecipeCompiler.Instance.GetSPC();
-                if (TrayImageTs.Count == 0)
+                try
                 {
-                    Task task = new Task(() =>
-                    {
-                        try
-                        {
-                            Thread.Sleep(1000);
-                            this.Hide();
-                            Thread.Sleep(2000);
-                            DebugCompiler.GetDoDi().WritDO(DebugCompiler.Instance.OutDischarging, false);
-                        }
-                        catch (Exception) { }
-                    });
-                    task.Start();
-                    TrayImage = null;
-                }
-                else
-                {
-                    Task task = new Task(() =>
-                    {
-                        try
-                        {
-                            Thread.Sleep(2000);
-                            DebugCompiler.GetDoDi().WritDO(DebugCompiler.Instance.OutDischarging, false);
-                        }
-                        catch (Exception) { }
-                    });
-                    task.Start();
-                    DequeueData();
-                }
+                        if (ErosProjcetDLL.Project.AlarmListBoxt.AlarmCont == 0)
+                      {
+                        DebugCompiler.GetDoDi().WritDO(DebugCompiler.Instance.OutDischarging, true);
+                      }
+                         //label3.Text = RecipeCompiler.Instance.GetSPC();
+                 
+                    }
+                    catch (Exception) { }
+                });
+                task.Start();
             }
-            catch (Exception ex) { }
+            catch (Exception ex) {
+                MessageBox.Show("复判提交" + ex.Message);
+            
+            }
         }
-
+        /// <summary>
+        /// 更新复判托盘
+        /// </summary>
         public void DequeueData()
         {
             try
@@ -539,18 +614,32 @@ namespace Vision2.vision
         {
             try
             {
+              
                 if (OneProductV != null)
                 {
                     if (e.KeyCode == Keys.Space || e.KeyCode == Keys.Back)
                     {
+                   
                         this.hWindowControl1.Focus();
-                        if (TrayImage.Done)
+                        if (TrayImage == null)
                         {
-                            button1_Click(null, null);
                             return;
                         }
+                        //if (TrayImage.Done)
+                        //{
+                        //    button1_Click(null, null);
+                        //    return;
+                        //}
                         if (OneProductV.Done)
                         {
+                            if (OneProductV.OK)
+                            {
+                                if (OneProductV.AutoOK != OneProductV.OK)
+                                {
+                                    RecipeCompiler.AddRlsNumber();
+                                    //label3.Text = RecipeCompiler.Instance.GetSPC();
+                                }
+                            }
                             treeView1.Nodes.Clear();
                             treeView2.Nodes.Clear();
                             for (int i = 0; i < TrayImage.Count; i++)
@@ -563,14 +652,7 @@ namespace Vision2.vision
                                     }
                                     if (!TrayImage.GetDataVales()[i].Done)
                                     {
-                                        if (OneProductV.OK)
-                                        {
-                                            if (OneProductV.AutoOK != OneProductV.OK)
-                                            {
-                                                RecipeCompiler.AddRlsNumber();
-                                                //label3.Text = RecipeCompiler.Instance.GetSPC();
-                                            }
-                                        }
+                                     
                                         OneProductV = TrayImage.GetDataVales()[i];
                                         trayDatas1.SelesItem(OneProductV.TrayLocation);
                                         foreach (var item in OneProductV.ListCamsData)
@@ -698,6 +780,7 @@ namespace Vision2.vision
             }
             catch (Exception ex)
             {
+                MessageBox.Show(ex.Message);
             }
         }
 
@@ -730,7 +813,38 @@ namespace Vision2.vision
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            button1.Enabled = true;
+            try
+            {
+                button1.Enabled = true;
+                timer1.Stop();
+                if (TrayImageTs.Count == 0)
+                {
+                    try
+                    {
+                        this.Hide();
+                        Thread.Sleep(1000);
+                        DebugCompiler.GetDoDi().WritDO(DebugCompiler.Instance.OutDischarging, false);
+                    }
+                    catch (Exception) { }
+                    TrayImage = null;
+                }
+                else
+                {
+                    DequeueData();
+                    try
+                    {
+                        Thread.Sleep(2000);
+                        DebugCompiler.GetDoDi().WritDO(DebugCompiler.Instance.OutDischarging, false);
+                    }
+                    catch (Exception)
+                    {
+                    }
+                }
+            }
+            catch (Exception)
+            {
+            }
+
         }
 
         private void toolStripButton1_Click(object sender, EventArgs e)
@@ -830,26 +944,26 @@ namespace Vision2.vision
                         TrayImage = null;
                     }
 
-                    if (TrayImageTs.Count == 0)
-                    {
-                        Thread thread = new Thread(() =>
-                        {
-                            try
-                            {
-                                Thread.Sleep(1000);
-                                this.Hide();
-                            }
-                            catch (Exception)
-                            {
-                            }
-                        });
-                        thread.IsBackground = true;
-                        thread.Start();
-                    }
-                    else
-                    {
-                        DequeueData();
-                    }
+                    //if (TrayImageTs.Count == 0)
+                    //{
+                    //    Thread thread = new Thread(() =>
+                    //    {
+                    //        try
+                    //        {
+                    //            Thread.Sleep(1000);
+                    //            this.Hide();
+                    //        }
+                    //        catch (Exception)
+                    //        {
+                    //        }
+                    //    });
+                    //    thread.IsBackground = true;
+                    //    thread.Start();
+                    //}
+                    //else
+                    //{
+                    //    DequeueData();
+                    //}
                 }
             }
             catch (Exception)
@@ -863,9 +977,11 @@ namespace Vision2.vision
             {
                 UpData();
                 HWindd.ShowImage();
+
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                MessageBox.Show(ex.Message);
             }
         }
 
@@ -887,6 +1003,7 @@ namespace Vision2.vision
             }
             catch (Exception ex)
             {
+                MessageBox.Show(ex.Message);
             }
         }
 
@@ -908,9 +1025,18 @@ namespace Vision2.vision
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                MessageBox.Show(ex.Message);
             }
+        }
+
+        private void toolStripLabel1_Click(object sender, EventArgs e)
+        {
+            SVisionForm sVisionForm = new SVisionForm();
+            sVisionForm.Show();
+            sVisionForm.Finde(textBox1.Text);
+
         }
     }
 }

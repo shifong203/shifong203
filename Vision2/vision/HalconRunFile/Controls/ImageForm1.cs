@@ -12,52 +12,71 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             InitializeComponent();
         }
+        public void SetData(RunProgramFile.HalconRun halcon )
+        {
+            HalconRun = halcon;
+        }
+
+
+        RunProgramFile.HalconRun HalconRun;
 
         private HObject Image;
+
         private HObject BT;
+
+
+
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             try
             {
+
                 HSystem.SetSystem("flush_graphic", "false");
                 HOperatorSet.ClearWindow(visionUserC1.HalconWindow);
                 HSystem.SetSystem("flush_graphic", "true");
-                switch (listBox1.SelectedItem.ToString())
+                HalconRun.ImageHdt(HalconRun.Image());
+
+                Image= HalconRun.GetImageOBJ(ImageTypeObj.Image3);
+                BT = HalconRun.GetImageOBJ(ImageTypeObj.Gray);
+                R = HalconRun.GetImageOBJ(ImageTypeObj.R);
+                G = HalconRun.GetImageOBJ(ImageTypeObj.G);
+                B = HalconRun.GetImageOBJ(ImageTypeObj.B);
+                H = HalconRun.GetImageOBJ(ImageTypeObj.H);
+                S = HalconRun.GetImageOBJ(ImageTypeObj.S);
+                V = HalconRun.GetImageOBJ(ImageTypeObj.V);
+                ImagePrt = HalconRun.GetImageOBJ(ImageTypeObj.ImagePretreatment);
+                ImageTypeObj ImageTypeO = (ImageTypeObj)Enum.Parse(typeof(ImageTypeObj), listBox1.SelectedItem.ToString());
+                switch (ImageTypeO)
                 {
-                    case "RGB":
-                    case "Image":
+                    case ImageTypeObj.Image3:
+
                         visionUserC1.hWindwC.Image(Image);
                         break;
-
-                    case "黑白":
+                    case ImageTypeObj.Gray:
                         visionUserC1.hWindwC.Image(BT);
                         break;
-
-                    case "R":
+                    case ImageTypeObj.R:
                         visionUserC1.hWindwC.Image(R);
                         break;
-
-                    case "G":
+                    case ImageTypeObj.G:
                         visionUserC1.hWindwC.Image(G);
                         break;
-
-                    case "B":
+                    case ImageTypeObj.B:
                         visionUserC1.hWindwC.Image(B);
                         break;
-
-                    case "H":
+                    case ImageTypeObj.H:
                         visionUserC1.hWindwC.Image(H);
                         break;
-
-                    case "S":
+                    case ImageTypeObj.S:
                         visionUserC1.hWindwC.Image(S);
                         break;
-
-                    case "V":
+                    case ImageTypeObj.V:
                         visionUserC1.hWindwC.Image(V);
                         break;
-
+                    case ImageTypeObj.ImagePretreatment:
+                        visionUserC1.hWindwC.Image(ImagePrt);
+                        break;
                     default:
                         break;
                 }
@@ -68,31 +87,38 @@ namespace Vision2.vision.HalconRunFile.Controls
             }
         }
 
-        public void SetUPHalc(HObject hObject)
+        public void SetUPHalc(HObject hObject,RunProgramFile.HalconRun halconRun)
         {
             try
             {
                 Image = hObject;
                 VisionUserC.HWindwC hWindwC = new VisionUserC.HWindwC();
+                HalconRun = halconRun;
+
                 hWindwC.Image(hObject);
+                listBox1.Items.Clear();
+                listBox1.Items.AddRange(halconRun.GetHoamgeName());
+
                 visionUserC1.UpHalcon(hWindwC);
                 //image = hObject;
                 HOperatorSet.CountChannels(hWindwC.Image(), out HTuple htcon);
-                listBox1.Items.Clear();
+                //listBox1.Items.Clear();
                 Column2.Items.Clear();
                 Column1.Items.Clear();
                 Column1.Items.AddRange(date);
                 if (htcon != 3)
                 {
-                    listBox1.Items.AddRange(b);
-                    Column2.Items.AddRange(b);
+                    //listBox1.Items.AddRange(b);
+                    Column2.Items.AddRange(halconRun.GetHoamgeName());
                 }
                 else
                 {
+
                     if (htcon == 3)
                     {
-                        listBox1.Items.AddRange(hsv);
-                        Column2.Items.AddRange(hsv);
+                        //listBox1.Items.AddRange(hsv);
+                     
+                        Column2.Items.AddRange(halconRun.GetHoamgeName());
                         HOperatorSet.Rgb1ToGray(Image, out BT);
                         HOperatorSet.Decompose3(hWindwC.Image(), out R, out G, out B);
                         HOperatorSet.TransFromRgb(R, G, B, out H, out S, out V, "hsv");
@@ -104,15 +130,18 @@ namespace Vision2.vision.HalconRunFile.Controls
             }
         }
 
-        private HObject R, G, B, H, S, V;
+        private HObject R, G, B, H, S, V,ImagePrt;
 
         private void dataGridView1_VisibleChanged(object sender, EventArgs e)
         {
         }
 
-        private string[] hsv = new string[] { "Image", "黑白", "R", "G", "B", "H", "S", "V" };
-        private string[] b = new string[] { "Image" };
+        //private string[] hsv = new string[] { "Image", "黑白", "R", "G", "B", "H", "S", "V" };
+
+        //private string[] b = new string[] { "Image" };
+
         private string[] date = new string[] { "Th", "Selset", "con", "int" };
+
         private List<string> listCode = new List<string>();
 
         private void toolStripButton2_Click(object sender, EventArgs e)
@@ -239,54 +268,89 @@ namespace Vision2.vision.HalconRunFile.Controls
             HSystem.SetSystem("flush_graphic", "false");
             HOperatorSet.ClearWindow(visionUserC1.HalconWindow);
             HSystem.SetSystem("flush_graphic", "true");
-            //HOperatorSet.GetImageSize(hWindwC.Image, out HTuple width, out HTuple height);
-            //HOperatorSet.SetPart(visionUserC1.HalconWindow, -1, -1, height, width);
-            switch (imaget)
+
+            ImageTypeObj ImageTypeO = (ImageTypeObj)Enum.Parse(typeof(ImageTypeObj), imaget);
+            switch (ImageTypeO)
             {
-                case "RGB":
-                case "Image":
+                case ImageTypeObj.Image3:
+
                     visionUserC1.hWindwC.Image(Image);
-
-                    //HOperatorSet.DispObj(hWindwC.Image, visionUserC1.HalconWindow);
-
                     break;
-
-                case "R":
+                case ImageTypeObj.Gray:
+                    visionUserC1.hWindwC.Image(BT);
+                    break;
+                case ImageTypeObj.R:
                     visionUserC1.hWindwC.Image(R);
-                    //HOperatorSet.DispObj(R, visionUserC1.HalconWindow);
-
                     break;
-
-                case "G":
+                case ImageTypeObj.G:
                     visionUserC1.hWindwC.Image(G);
-                    //HOperatorSet.DispObj(G, visionUserC1.HalconWindow);
-
                     break;
-
-                case "B":
+                case ImageTypeObj.B:
                     visionUserC1.hWindwC.Image(B);
-                    //HOperatorSet.DispObj(B, visionUserC1.HalconWindow);
-
                     break;
-
-                case "H":
+                case ImageTypeObj.H:
                     visionUserC1.hWindwC.Image(H);
-                    //HOperatorSet.DispObj(H, visionUserC1.HalconWindow);
                     break;
-
-                case "S":
+                case ImageTypeObj.S:
                     visionUserC1.hWindwC.Image(S);
-                    //HOperatorSet.DispObj(S, visionUserC1.HalconWindow);
                     break;
-
-                case "V":
+                case ImageTypeObj.V:
                     visionUserC1.hWindwC.Image(V);
-                    //HOperatorSet.DispObj(V, visionUserC1.HalconWindow);
                     break;
-
+                case ImageTypeObj.ImagePretreatment:
+                    visionUserC1.hWindwC.Image(ImagePrt);
+                    break;
                 default:
                     break;
             }
+            //HOperatorSet.GetImageSize(hWindwC.Image, out HTuple width, out HTuple height);
+            ////HOperatorSet.SetPart(visionUserC1.HalconWindow, -1, -1, height, width);
+            //switch (imaget)
+            //{
+            //    case "RGB":
+            //    case "Image":
+            //        visionUserC1.hWindwC.Image(Image);
+
+            //        //HOperatorSet.DispObj(hWindwC.Image, visionUserC1.HalconWindow);
+
+            //        break;
+
+            //    case "R":
+            //        visionUserC1.hWindwC.Image(R);
+            //        //HOperatorSet.DispObj(R, visionUserC1.HalconWindow);
+
+            //        break;
+
+            //    case "G":
+            //        visionUserC1.hWindwC.Image(G);
+            //        //HOperatorSet.DispObj(G, visionUserC1.HalconWindow);
+
+            //        break;
+
+            //    case "B":
+            //        visionUserC1.hWindwC.Image(B);
+            //        //HOperatorSet.DispObj(B, visionUserC1.HalconWindow);
+
+            //        break;
+
+            //    case "H":
+            //        visionUserC1.hWindwC.Image(H);
+            //        //HOperatorSet.DispObj(H, visionUserC1.HalconWindow);
+            //        break;
+
+            //    case "S":
+            //        visionUserC1.hWindwC.Image(S);
+            //        //HOperatorSet.DispObj(S, visionUserC1.HalconWindow);
+            //        break;
+
+            //    case "V":
+            //        visionUserC1.hWindwC.Image(V);
+            //        //HOperatorSet.DispObj(V, visionUserC1.HalconWindow);
+            //        break;
+
+            //    default:
+            //        break;
+            //}
             visionUserC1.hWindwC.ShowOBJ();
             return visionUserC1.hWindwC.Image();
         }

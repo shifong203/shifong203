@@ -9,6 +9,8 @@ using Vision2.ErosProjcetDLL.PLCUI;
 using Vision2.ErosProjcetDLL.Project;
 using Vision2.ErosProjcetDLL.UI;
 using Vision2.Project.DebugF;
+using Vision2.Project.formula;
+using Vision2.vision.RestVisionForm;
 
 namespace Vision2.Project
 {
@@ -389,6 +391,15 @@ namespace Vision2.Project
                                     catch (Exception)
                                     {
                                     }
+                                    if (DateTimet!=DateTime.MinValue )
+                                    {
+                                        if (DateTime.Now.Day != DateTimet.Day)
+                                        {
+                                            RecipeCompiler.ClerSPC();
+                                        }
+                                    }
+                           
+                                    DateTimet = DateTime.Now;
                                     toolStripLabel4.Text = DateTime.Now.ToString();
                                 }));
                             }
@@ -408,6 +419,8 @@ namespace Vision2.Project
                 MessageBox.Show("加载主窗口错误：" + ex.Message);
             }
         }
+        DateTime DateTimet;
+
 
         public void RunCodeT_RunStratCode(DebugF.IO.RunCodeStr.RunErr key)
         {
@@ -1164,9 +1177,9 @@ namespace Vision2.Project
         {
             try
             {
-                if (File.Exists(ErosProjcetDLL.Project.ProjectINI.ProjectPathRun + "\\操作手册.PDF"))
+                if (File.Exists(ProjectINI.ProjectPathRun + "\\操作手册.PDF"))
                 {
-                    Process.Start(ErosProjcetDLL.Project.ProjectINI.ProjectPathRun + "\\操作手册.PDF");
+                    Process.Start(ProjectINI.ProjectPathRun + "\\操作手册.PDF");
                 }
                 else
                 {
@@ -1176,6 +1189,17 @@ namespace Vision2.Project
             catch (Exception)
             {
             }
+        }
+        SVisionForm sVisionForm;
+
+        private void 查询SNToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+             sVisionForm = new SVisionForm();
+            if (sVisionForm == null || sVisionForm.IsDisposed)
+            {
+                sVisionForm = new SVisionForm();
+            }
+            UICon.WindosFormerShow(ref sVisionForm);
         }
     }
 }

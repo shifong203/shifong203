@@ -121,7 +121,9 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             {
             }
         }
-
+        /// <summary>
+        /// 初始化
+        /// </summary>
         public void CatTimetPoint()
         {
             if (Vertical)
@@ -229,13 +231,13 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             hObject.GenEmptyObj();
             try
             {
-                if (Rows1.Length != Imgaes.Length)
-                {
-                    Rows1 = HTuple.TupleGenConst(Imgaes.Length, -1);
-                    Cols1 = HTuple.TupleGenConst(Imgaes.Length, -1);
-                    Rows2 = HTuple.TupleGenConst(Imgaes.Length, -1);
-                    Cols2 = HTuple.TupleGenConst(Imgaes.Length, -1);
-                }
+                //if (Rows1.Length != Imgaes.Length)
+                //{
+                //    Rows1 = HTuple.TupleGenConst(Imgaes.Length, -1);
+                //    Cols1 = HTuple.TupleGenConst(Imgaes.Length, -1);
+                //    Rows2 = HTuple.TupleGenConst(Imgaes.Length, -1);
+                //    Cols2 = HTuple.TupleGenConst(Imgaes.Length, -1);
+                //}
                 for (int i = 0; i < Imgaes.Length; i++)
                 {
                     if (Imgaes[i] == null)
@@ -282,13 +284,13 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             }
             try
             {
-                if (Rows1.Length != hObjects.Length)
-                {
-                    Rows1 = HTuple.TupleGenConst(hObjects.Length, -1);
-                    Cols1 = HTuple.TupleGenConst(hObjects.Length, -1);
-                    Rows2 = HTuple.TupleGenConst(hObjects.Length, -1);
-                    Cols2 = HTuple.TupleGenConst(hObjects.Length, -1);
-                }
+                //if (Rows1.Length != hObjects.Length)
+                //{
+                //    Rows1 = HTuple.TupleGenConst(hObjects.Length, -1);
+                //    Cols1 = HTuple.TupleGenConst(hObjects.Length, -1);
+                //    Rows2 = HTuple.TupleGenConst(hObjects.Length, -1);
+                //    Cols2 = HTuple.TupleGenConst(hObjects.Length, -1);
+                //}
                 for (int i = 0; i < hObjects.Length; i++)
                 {
                     if (hObjects[i] == null)

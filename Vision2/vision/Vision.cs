@@ -38,6 +38,7 @@ namespace Vision2.vision
         H = 5,
         S = 6,
         V = 7,
+        ImagePretreatment = 8,
     }
 
     public enum ColorResult
@@ -193,6 +194,7 @@ namespace Vision2.vision
 
         public override void initialization()
         {
+
         }
 
         public static string GetFilePath()
@@ -225,6 +227,27 @@ namespace Vision2.vision
         [Description("复判端口"), Category("远程复判"), DisplayName("复判端口")]
         public int RsetPort { get; set; } = -1;
 
+        [DescriptionAttribute("查询SN地址。"), Category("远程查询"), DisplayName("查询地址1")]
+        [Editor(typeof(PageTypeEditor_FolderBrowserDialog), typeof(UITypeEditor))]
+        /// <summary>
+        /// 
+        /// </summary>
+        public string StrigPathImages { get; set; } = "E:\\图片";
+
+        [DescriptionAttribute("查询SN地址。"), Category("远程查询"), DisplayName("查询地址2")]
+        [Editor(typeof(PageTypeEditor_FolderBrowserDialog), typeof(UITypeEditor))]
+        /// <summary>
+        /// 
+        /// </summary>
+        public string StrigPathImages2 { get; set; } = "";
+
+        [DescriptionAttribute("查询SN地址。"), Category("远程查询"), DisplayName("查询地址3")]
+        [Editor(typeof(PageTypeEditor_FolderBrowserDialog), typeof(UITypeEditor))]
+        /// <summary>
+        /// 
+        /// </summary>
+        public string StrigPathImages3 { get; set; } = "";
+
         [Description("图像属性，"), Category("显示"), DisplayName("显示区域宽度")]
         public int LineWidth { get; set; } = 1;
 
@@ -254,6 +277,12 @@ namespace Vision2.vision
         /// 复判单个位置
         /// </summary>
         public bool RestT { get; set; }
+
+        [DescriptionAttribute("是否需要复判检测。"), Category("复判模式"), DisplayName("无需复判")]
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool RestTDT { get; set; }
 
         [DescriptionAttribute("复判等待。"), Category("复判模式"), DisplayName("复判等待")]
         /// <summary>
@@ -291,6 +320,12 @@ namespace Vision2.vision
         public string OffName { get; set; }
 
         public string Rs232Name { get; set; } = "COM1";
+
+        [DescriptionAttribute("启动队列。"), Category("队列处理"), DisplayName("启动队列")]
+        /// <summary>
+        /// 复盘等待
+        /// </summary>
+        public bool ISVisinList { get; set; } = true;
 
         #endregion 属性
 
@@ -445,7 +480,6 @@ namespace Vision2.vision
                     default:
                         break;
                 }
-
                 //UpProjectNode(Node.Parent);
             }
             return "";
@@ -470,7 +504,6 @@ namespace Vision2.vision
                 }
                 Node.Nodes.Clear();
                 Node.ImageKey = Node.SelectedImageKey = "video-camera-vector.png";
-
                 treeNodeRun = new TreeNode() { Name = "视觉程序", Text = "视觉程序" };
                 treeNodeDCams = new TreeNode() { Name = "dCams", Text = "本地相机" };
                 treeNodeCams = new TreeNode() { Name = "Cams", Text = "相机" };
@@ -668,7 +701,6 @@ namespace Vision2.vision
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.InitialDirectory = Application.StartupPath;
             openFileDialog.Filter = "所有文件|*";
-
             openFileDialog.ShowDialog();                   //展示对话框
             string name = openFileDialog.FileName;          //获得打开的文件的路径
 
@@ -890,10 +922,10 @@ namespace Vision2.vision
 
         public void SaveRunPojcet()
         {
-            string prodName = Project.formula.Product.ProductionName;
+            string prodName = Product.ProductionName;
             foreach (var item in Himagelist)
             {
-                item.Value.SaveThis(ErosProjcetDLL.Project.ProjectINI.ProjectPathRun + "\\" + FileName + "\\" + prodName + "\\");
+                item.Value.SaveThis(ProjectINI.ProjectPathRun + "\\" + FileName + "\\" + prodName + "\\");
             }
         }
 
@@ -1016,8 +1048,11 @@ namespace Vision2.vision
                             {
                                 if (StaticCon.GetLingkNameValue(item.Value.ReadCamName).GetType() == typeof(bool) && ErosSocket.ErosConLink.StaticCon.GetLingkNameValue(item.Value.ReadCamName))
                                 {
-                                    Instance.Himagelist[item.Key].Image(Instance.Himagelist[item.Key].GetCam().GetImage());
-                                    Instance.Himagelist[item.Key].CamImageEvent("1", null, 1);
+                                    if (Instance.Himagelist[item.Key].GetCam().GetImage(out HObject IMAGE))
+                                    {
+                                        Instance.Himagelist[item.Key].Image(IMAGE);
+                                        Instance.Himagelist[item.Key].CamImageEvent("1", null, 1);
+                                    }
                                 }
                                 else if (int.TryParse(StaticCon.GetLingkNameValue(item.Value.ReadCamName).ToString(), out int resultRun))
                                 {
@@ -1026,8 +1061,10 @@ namespace Vision2.vision
                                         if (StaticCon.GetLingkIDValue(item.Value.ReadRunIDName, UClass.Int16, out dynamic value))
                                         {
                                             int.TryParse(value.ToString(), out int resultD);
-                                            Instance.Himagelist[item.Key].Image(Instance.Himagelist[item.Key].GetCam().GetImage());
-
+                                            if (Instance.Himagelist[item.Key].GetCam().GetImage(out HObject IMAGE))
+                                            {
+                                                Instance.Himagelist[item.Key].Image(IMAGE);
+                                            }
                                             StaticCon.SetLingkValue(item.Value.ReadCamName, 0, out string err);
                                             Instance.Himagelist[item.Key].CamImageEvent(resultD.ToString(), null, resultD);
                                         }
@@ -1122,7 +1159,7 @@ namespace Vision2.vision
                 bool icong = false;
                 MainForm1.MainFormF.Invoke(new Action(() =>
                 {
-                    string listPath = ErosProjcetDLL.Project.ProjectINI.ProjectPathRun + "\\" + Instance.FileName + "\\" + nameP;
+                    string listPath = ProjectINI.ProjectPathRun + "\\" + Instance.FileName + "\\" + nameP;
                     if (Directory.Exists(listPath))
                     {
                         foreach (var item in Vision.Instance.Himagelist)
@@ -2000,11 +2037,6 @@ namespace Vision2.vision
 
         //public static TrayRobot TraydataVale = new TrayRobot();
 
-        /// <summary>
-        /// 独立显示复判
-        /// </summary>
-        [DescriptionAttribute("独立显示复判窗口。"), Category("复判模式"), DisplayName("启用复判")]
-        public bool IsShowImage { get; set; }
 
         /// <summary>
         /// 活动图像保存信息
@@ -2063,12 +2095,12 @@ namespace Vision2.vision
         }
 
         /// <summary>
-        /// 计算图像清晰度
+        /// 计算图像清晰度,Deviation方差法,laplace拉普拉斯能量函数,energy能量梯度函数,Brenner函数法,Tenegrad函数法
         /// </summary>
         /// <param name="hObjectImage">图像</param>
         /// <param name="method">计算方法</param>
         /// <returns>清晰度</returns>
-        public static double Evaluate_definition(HObject Image, string method)
+        public static double Evaluate_definition(HObject Image, string method= "Brenner")
         {
             HTuple value = new HTuple();
             HTuple Deviation = new HTuple();
@@ -2165,15 +2197,7 @@ namespace Vision2.vision
             return value.D;
         }
 
-        /// <summary>
-        /// 计算清晰度
-        /// </summary>
-        /// <param name="Image"></param>
-        /// <returns></returns>
-        public static double Evaluate_definition(HObject Image)
-        {
-            return Evaluate_definition(Image, "Brenner");
-        }
+
 
         /// <summary>
         /// 对指定的链接触发器写参数
@@ -2344,7 +2368,7 @@ namespace Vision2.vision
                 }
                 //
                 //display text box depending on text size
-                if (hv_Box == "true")
+                if (hv_Box.ToLower() == "true")
                 {
                     //calculate box extents
                     hv_String_COPY_INP_TMP = (" " + hv_String_COPY_INP_TMP) + " ";

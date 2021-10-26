@@ -38,9 +38,9 @@
             this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
+            this.toolStripCheckbox1 = new Vision2.ErosProjcetDLL.UI.ToolStrip.ToolStripCheckbox();
             this.visionUserC1 = new Vision2.vision.HalconRunFile.Controls.VisionUserC();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.toolStripCheckbox1 = new Vision2.ErosProjcetDLL.UI.ToolStrip.ToolStripCheckbox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
@@ -56,14 +56,6 @@
             this.listBox1.Font = new System.Drawing.Font("宋体", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.listBox1.FormattingEnabled = true;
             this.listBox1.ItemHeight = 20;
-            this.listBox1.Items.AddRange(new object[] {
-            "RGB",
-            "R",
-            "G",
-            "B",
-            "H",
-            "S",
-            "V"});
             this.listBox1.Location = new System.Drawing.Point(3, 42);
             this.listBox1.Name = "listBox1";
             this.listBox1.Size = new System.Drawing.Size(287, 144);
@@ -161,6 +153,13 @@
             this.toolStripButton1.Text = "将图片保存";
             this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
             // 
+            // toolStripCheckbox1
+            // 
+            this.toolStripCheckbox1.Name = "toolStripCheckbox1";
+            this.toolStripCheckbox1.Size = new System.Drawing.Size(51, 22);
+            this.toolStripCheckbox1.Text = "填充";
+            this.toolStripCheckbox1.Click += new System.EventHandler(this.toolStripCheckbox1_Click);
+            // 
             // visionUserC1
             // 
             this.visionUserC1.BackColor = System.Drawing.Color.Black;
@@ -187,13 +186,6 @@
             this.splitContainer1.Size = new System.Drawing.Size(1140, 560);
             this.splitContainer1.SplitterDistance = 843;
             this.splitContainer1.TabIndex = 6;
-            // 
-            // toolStripCheckbox1
-            // 
-            this.toolStripCheckbox1.Name = "toolStripCheckbox1";
-            this.toolStripCheckbox1.Size = new System.Drawing.Size(51, 22);
-            this.toolStripCheckbox1.Text = "填充";
-            this.toolStripCheckbox1.Click += new System.EventHandler(this.toolStripCheckbox1_Click);
             // 
             // ImageForm1
             // 

@@ -905,7 +905,6 @@ namespace ErosSocket.ErosConLink
                     try
                     {
                         ReciveBufferLenth = socket.EndReceive(asyncResult);
-
                         OnEventArge(Recivebuffer.Skip(0).Take(ReciveBufferLenth).ToArray(), socket);
                         watchSen.Restart();
                         if (ReciveBufferLenth != 0)
@@ -946,8 +945,16 @@ namespace ErosSocket.ErosConLink
             {
                 socket.BeginSend(data, 0, data.Length, SocketFlags.None, asyncResult =>
                 {
-                    //完成发送消息
-                    int length = socket.EndSend(asyncResult);
+                    try
+                    {
+                        //完成发送消息
+                        int length = socket.EndSend(asyncResult);
+                    }
+                    catch (Exception ex)
+                    {
+                        this.ErrerLog(ex);
+                    }
+         
                 }, null);
             }
             catch (Exception ex)
@@ -998,6 +1005,20 @@ namespace ErosSocket.ErosConLink
 
         public Stopwatch watcht = new Stopwatch();
 
+        public void AlwaysReceiveReset()
+        {
+            try
+            {
+                if (timeOutRest == null)
+                {
+                    timeOutRest = new ManualResetEvent(false);
+                }
+                timeOutRest.Reset();
+            }
+            catch (Exception)
+            {
+            }
+        }
         /// <summary>
         /// 等待通信反馈
         /// </summary>
@@ -1007,8 +1028,12 @@ namespace ErosSocket.ErosConLink
         {
             try
             {
-                timeOutRest = new ManualResetEvent(false);
-
+                if (timeOutRest==null)
+                {
+                    timeOutRest = new ManualResetEvent(false);
+                }
+                timeOutRest.Reset();
+                //timeOutRest = new ManualResetEvent(false);
                 if (timeOutRest.WaitOne(outTime, false))
                 {
                     return dataStr.ToString();
@@ -1016,54 +1041,39 @@ namespace ErosSocket.ErosConLink
             }
             catch (Exception re)
             {
+                AlarmText.AddTextNewLine(this.Name+"通信等待异常:"+re.Message);
             }
+            AlarmText.AddTextNewLine(this.Name + "通信等待异常");
             return "";
-
-            //RecivesDone = false;
-            //try
-            //{
-            //    Stopwatch watcht = new System.Diagnostics.Stopwatch();
-            //    watcht.Restart();
-            //    int dd = 0;
-            //    while (true)
-            //    {
-            //        dd++;
-            //        Thread.Sleep(10);
-            //        if (RecivesDone)
-            //        {
-            //            return dataStr.ToString();
-            //        }
-            //        if (watcht.ElapsedMilliseconds > de)
-            //        {
-            //            return "";
-            //        }
-            //    }
-            //}
-            //catch (Exception re) { }
-            //return "";
         }
-
-        ///// <summary>
-        ///// 等待返回信息
-        ///// </summary>
-        ///// <returns></returns>
-        //public string AlwaysRece(int outTime = 5000)
-        //{
-        //    try
-        //    {
-        //        timeOutRest = new ManualResetEvent(false);
-        //        timeOutRest.WaitOne(outTime,false);
-
-        //        //var task = Task<string>.Factory.StartNew(new Func<object, string>(gettrst), outTime);
-        //        //task.Wait();
-        //        return dataStr.ToString();
-        //    }
-        //    catch (Exception re)
-        //    {
-        //    }
-        //    return dataStr.ToString();
-        //}
-
+        /// <summary>
+        /// 等待通信反馈
+        /// </summary>
+        /// <param name="de">等待毫秒</param>
+        /// <returns></returns>
+        public virtual bool AlwaysReceive(out  string datas,  int outTime = 5000)
+        {
+            datas = "";
+            try
+            {
+                if (timeOutRest == null)
+                {
+                    timeOutRest = new ManualResetEvent(false);
+                }
+                //timeOutRest = new ManualResetEvent(false);
+                if (timeOutRest.WaitOne(outTime, false))
+                {
+                    datas = dataStr.ToString();
+                    return true    ;
+                }
+            }
+            catch (Exception re)
+            {
+                AlarmText.AddTextNewLine(this.Name + "通信等待异常:" + re.Message);
+            }
+            AlarmText.AddTextNewLine(this.Name + "通信等待异常");
+            return false;
+        }
         /// <summary>
         ///触发首次连接事件
         /// </summary>
@@ -1093,16 +1103,24 @@ namespace ErosSocket.ErosConLink
             try
             {
                 PassiveEvent?.Invoke(key, this, socketR);
-                if (key.Length < 50000)
+             
+                  if (key.Length < 50000)
                 {
-                    dataStr = new StringBuilder(GetEncoding().GetString(key));
-                    timeOutRest.Set();
-                    PassiveStringBuilderEvent?.Invoke(dataStr, this, socketR);
+                    if (key.Length > 2)
+                    {
+                        dataStr = new StringBuilder(GetEncoding().GetString(key));
+                        if (timeOutRest != null)
+                        {
+                            timeOutRest.Set();
+                        }
+                        PassiveStringBuilderEvent?.Invoke(dataStr, this, socketR);
+                    }
                     if (IsAlramText)
                     {
                         AddTextBox("(R):" + dataStr, System.Drawing.Color.Green);
                     }
                 }
+     
             }
             catch (Exception ex)
             {
@@ -1287,6 +1305,8 @@ namespace ErosSocket.ErosConLink
                         AddTextBox("(S)发送失败(" + this.LinkState + "):" + GetEncoding().GetString(buffr), System.Drawing.Color.Red);
                     }
                 }
+       
+                buffr = null;
             }
             catch (Exception ex)
             {
@@ -1332,6 +1352,7 @@ namespace ErosSocket.ErosConLink
                 dataStr = dataStr + "\r";
             }
             return this.Send(GetEncoding().GetBytes(dataStr));
+
         }
 
         /// <summary>
@@ -1505,7 +1526,10 @@ namespace ErosSocket.ErosConLink
         /// </summary>
         public virtual void AsynConnect(bool isCycle, IPEndPoint ipe = null)
         {
-            timeOutObject = new ManualResetEvent(false);
+            if (timeOutObject==null)
+            {
+                timeOutObject = new ManualResetEvent(false);
+            }
             if (ipe == null)
             {
                 ipe = new IPEndPoint(IPAddress.Parse(this.IP), Convert.ToInt32(this.Port));
@@ -1657,7 +1681,7 @@ namespace ErosSocket.ErosConLink
 
         [DescriptionAttribute("终端信息标志"), CategoryAttribute("发送机制"), DisplayName("终端标志"),
             TypeConverter(typeof(ErosConverter)), ErosConverter.ThisDropDownAttribute("", "CR", "LF", "CRLF", "")]
-        public string FTU { get; set; } = "CRLF";
+        public string FTU { get; set; } = "";
 
         [DescriptionAttribute("解码方式"), CategoryAttribute("发送机制"), DisplayName("解码方式"),
         TypeConverter(typeof(ErosConverter)), ErosConverter.ThisDropDownAttribute("GetEncodingNames")]

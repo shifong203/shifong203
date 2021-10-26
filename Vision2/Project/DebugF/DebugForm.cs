@@ -946,7 +946,14 @@ namespace Vision2.Project.DebugF
                                         if (det <= 0)
                                         {
                                             Vision.GetRunNameVision(item).HobjClear();
-                                            Vision.GetRunNameVision(item).Image(Vision.GetRunNameVision(item).GetCam().GetImage());
+                                            if (Vision.GetRunNameVision(item).GetCam().GetImage(out HObject image))
+                                            {
+                                                Vision.GetRunNameVision(item).Image(image);
+                                            }
+                                            else
+                                            {
+                                                Vision.GetRunNameVision(item).Image().GenEmptyObj();
+                                            }
                                         }
                                         else
                                         {
@@ -1352,7 +1359,15 @@ namespace Vision2.Project.DebugF
                                 {
                                     if (productEX.Relativel.RelativelyId <= 0)
                                     {
-                                        Vision.GetRunNameVision(item).Image(Vision.GetRunNameVision(item).GetCam().GetImage());
+                                        if (Vision.GetRunNameVision(item).GetCam().GetImage(out HObject image))
+                                        {
+                                            Vision.GetRunNameVision(item).Image(image);
+                                        }
+                                        else
+                                        {
+                                            Vision.GetRunNameVision(item).Image().GenEmptyObj();
+                                        }
+                                        //Vision.GetRunNameVision(item).Image(Vision.GetRunNameVision(item).GetCam().GetImage());
                                     }
                                     else
                                     {
@@ -1417,7 +1432,15 @@ namespace Vision2.Project.DebugF
                                 {
                                     if (productEX.Relativel.RelativelyId <= 0)
                                     {
-                                        Vision.GetRunNameVision(item).Image(Vision.GetRunNameVision(item).GetCam().GetImage());
+                                        if (Vision.GetRunNameVision(item).GetCam().GetImage(out HObject image))
+                                        {
+                                            Vision.GetRunNameVision(item).Image(image);
+                                        }
+                                        else
+                                        {
+                                            Vision.GetRunNameVision(item).Image().GenEmptyObj();
+                                        }
+                                        //Vision.GetRunNameVision(item).Image(Vision.GetRunNameVision(item).GetCam().GetImage());
                                     }
                                     else
                                     {
@@ -2134,7 +2157,15 @@ namespace Vision2.Project.DebugF
                                     if (det <= 0)
                                     {
                                         Vision.GetRunNameVision(item).HobjClear();
-                                        Vision.GetRunNameVision(item).Image(Vision.GetRunNameVision(item).GetCam().GetImage());
+                                        if (Vision.GetRunNameVision(item).GetCam().GetImage(out HObject image))
+                                        {
+                                            Vision.GetRunNameVision(item).Image(image);
+                                        }
+                                        else
+                                        {
+                                            Vision.GetRunNameVision(item).Image().GenEmptyObj();
+                                        }
+                                        //Vision.GetRunNameVision(item).Image(Vision.GetRunNameVision(item).GetCam().GetImage());
                                     }
                                     else
                                     {

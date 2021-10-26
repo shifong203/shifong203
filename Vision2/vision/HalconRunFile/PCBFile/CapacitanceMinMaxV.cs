@@ -7,17 +7,7 @@ namespace Vision2.vision.HalconRunFile.PCBFile
         [DisplayName("±值"), Description(""), Category("偏移")]
         public double Positive_and_Negative { get; set; } = 10;
 
-        //[DisplayName("标准值"), Description(""), Category("偏移")]
-        //public double Value { get; set; } = 10;
-
-        //[DisplayName("Min"), Description(""), Category("偏移")]
-        //public double Min { get; set; } = 10;
-
-        //[DisplayName("Max"), Description(""), Category("偏移")]
-        //public double Max { get; set; } = 100;
-
-        //[DisplayName("使用标准值"), Description("使用标准值=true,fales使用最大最小值"), Category("长度")]
-        //public bool PMBool { get; set; } = true;
+    
         [DisplayName("当前值"), Description(""), Category("偏移"), ReadOnly(true)]
         public double SkewingValue { get; set; }
 

@@ -302,8 +302,8 @@
             this.comboBox2.FormattingEnabled = true;
             this.comboBox2.Items.AddRange(new object[] {
             "全部",
-            "黑到白",
-            "白到黑"});
+            "反向",
+            "正向"});
             this.comboBox2.Location = new System.Drawing.Point(33, 85);
             this.comboBox2.Name = "comboBox2";
             this.comboBox2.Size = new System.Drawing.Size(83, 20);

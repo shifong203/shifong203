@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using Vision2.ErosProjcetDLL.UI.PropertyGrid;
 using Vision2.Project.DebugF;
 using Vision2.vision.HalconRunFile.Controls;
+using static Vision2.vision.HalconRunFile.RunProgramFile.Color_Detection;
 
 namespace Vision2.vision.HalconRunFile.RunProgramFile
 {
@@ -375,6 +376,9 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         public int XNumber { get; set; } = 4;
         public int YNumber { get; set; } = 5;
 
+
+        public Color_classify color_Classify { get; set; } = new Color_classify();
+
         /// <summary>
         /// 起点
         /// </summary>
@@ -386,6 +390,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         public int YLocation { get; set; } = 100;
 
         public int Height { get; set; } = 100;
+        public int Weight { get; set; } = 100;
 
         /// <summary>
         /// 间距
@@ -667,7 +672,8 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     if (this.Rows != null && this.Rows.Length > 0)
                     {
                         HOperatorSet.GenRectangle1(out HObject hObject4, 0, 0, 2, 2);
-                        HOperatorSet.GenRectangle1(out hObject3, this.Rows - Height, Cols - this.Height, Rows + this.Height, Cols + this.Height);
+                        //HOperatorSet.GenRectangle2(out hObject3, this.Rows,)
+                        HOperatorSet.GenRectangle1(out hObject3, this.Rows - Height, Cols - this.Weight, Rows + this.Height, Cols + this.Weight);
                         hObject3 = hObject3.ConcatObj(hObject4);
                         HOperatorSet.Union1(hObject3, out hObject2);
                         HOperatorSet.ReduceDomain(hObject, hObject2, out hObject);
@@ -758,10 +764,11 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     {
                         if (Rows != null && this.Rows.Length > 0)
                         {
-                            HOperatorSet.DilationCircle(hOQERoi, out HObject hObject4, Height / 2);
+                            HOperatorSet.DilationRectangle1(hOQERoi, out HObject  hObject4, Weight, Height);
+                            //HOperatorSet.DilationCircle(hOQERoi, out HObject hObject4, Height / 2);
                             //HOperatorSet.Connection(hObject4, out hObject2);
                             HOperatorSet.Difference(hObject3, hObject4, out hObject2);
-                            HOperatorSet.SelectShape(hObject2, out hObject2, "area", "and", (this.Height * 2 * this.Height * 2) - 300, 9999999999999);
+                            HOperatorSet.SelectShape(hObject2, out hObject2, "area", "and", (this.Height * 2 * this.Weight * 2) - 300, 9999999999999);
                             if (hObject2.CountObj() != 0)
                             {
                                 this.GetPThis().AddObj(hObject2, ColorResult.red);
@@ -859,7 +866,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                             else
                             {
                                 HOperatorSet.GenRectangle1(out hObject3, this.Rows - Height,
-                              Cols - this.Height, Rows + this.Height, Cols + this.Height);
+                              Cols - this.Weight, Rows + this.Height, Cols + this.Weight);
                             }
                             HTuple de = indexS + 1;
                             HOperatorSet.SelectObj(hObject3, out HObject hObject4, de);
@@ -945,6 +952,11 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             HTuple tupleStr = new HTuple();
             try
             {
+                if (color_Classify.Enble)
+                {
+                    aoiObj.SelseAoi = color_Classify.DrawObj;
+                    color_Classify.Classify(oneResultOBj, aoiObj, this, out HObject color);
+                }
                 QRText.Clear();
                 GenParamName = "stop_after_result_num";
                 HObject hObject3;
@@ -1320,7 +1332,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 HTuple Row2 = new HTuple();
                 HTuple cols2 = new HTuple();
                 HTuple idxs = new HTuple();
-                HOperatorSet.GenRectangle1(out HObject hObject2, this.Rows - Height, Cols - this.Height, Rows + this.Height, Cols + this.Height);
+                HOperatorSet.GenRectangle1(out HObject hObject2, this.Rows - Height, Cols - this.Weight, Rows + this.Height, Cols + this.Weight);
                 switch (MatrixType)
                 {
                     case 0:
@@ -1348,12 +1360,12 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         while (hObject2.CountObj() != 0)
                         {
                             HOperatorSet.AreaCenter(hObject2, out area, out HTuple Row22, out HTuple cols22);
-                            HOperatorSet.SelectShape(hObject2, out HObject hObject, "column", "and", cols22.TupleMax() - this.Height, cols22.TupleMax() + this.Height);
+                            HOperatorSet.SelectShape(hObject2, out HObject hObject, "column", "and", cols22.TupleMax() - this.Weight, cols22.TupleMax() + this.Weight);
                             HOperatorSet.SortRegion(hObject, out hObject, "character", "true", "column");
                             HOperatorSet.AreaCenter(hObject, out area, out HTuple Row1, out HTuple cols1);
                             Row2.Append(Row1);
                             cols2.Append(cols1);
-                            HOperatorSet.SelectShape(hObject2, out hObject2, "column", "and", cols22.TupleMin() - this.Height, cols22.TupleMax() - this.Height);
+                            HOperatorSet.SelectShape(hObject2, out hObject2, "column", "and", cols22.TupleMin() - this.Weight, cols22.TupleMax() - this.Weight);
                         }
                         break;
 
@@ -1376,12 +1388,12 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         while (hObject2.CountObj() != 0)
                         {
                             HOperatorSet.AreaCenter(hObject2, out area, out HTuple Row22, out HTuple cols22);
-                            HOperatorSet.SelectShape(hObject2, out HObject hObject, "column", "and", cols22.TupleMin() - this.Height, cols22.TupleMin() + this.Height);
+                            HOperatorSet.SelectShape(hObject2, out HObject hObject, "column", "and", cols22.TupleMin() - this.Weight, cols22.TupleMin() + this.Weight);
                             HOperatorSet.SortRegion(hObject, out hObject, "character", "false", "column");
                             HOperatorSet.AreaCenter(hObject, out area, out HTuple Row1, out HTuple cols1);
                             Row2.Append(Row1);
                             cols2.Append(cols1);
-                            HOperatorSet.SelectShape(hObject2, out hObject2, "column", "and", cols22.TupleMin() + this.Height, cols22.TupleMax() + this.Height);
+                            HOperatorSet.SelectShape(hObject2, out hObject2, "column", "and", cols22.TupleMin() + this.Weight, cols22.TupleMax() + this.Weight);
                         }
                         break;
 
@@ -1417,7 +1429,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 Rows = Row2;
                 Cols = cols2;
 
-                HOperatorSet.GenRectangle1(out hObject2, this.Rows - Height, Cols - this.Height, Rows + this.Height, Cols + this.Height);
+                HOperatorSet.GenRectangle1(out hObject2, this.Rows - Height, Cols - this.Weight, Rows + this.Height, Cols + this.Weight);
                 halcon.AddObj(hObject2);
             }
             catch (Exception ex)
@@ -1468,11 +1480,11 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         while (hObject2.CountObj() != 0)
                         {
                             HOperatorSet.AreaCenter(hObject2, out area, out HTuple Row22, out HTuple cols22);
-                            HOperatorSet.SelectShape(hObject2, out HObject hObject, "column", "and", cols22.TupleMax() - this.Height, cols22.TupleMax() + this.Height);
+                            HOperatorSet.SelectShape(hObject2, out HObject hObject, "column", "and", cols22.TupleMax() - this.Weight, cols22.TupleMax() + this.Weight);
                             HOperatorSet.SortRegion(hObject, out hObject, "character", "true", "column");
                             HOperatorSet.AreaCenter(hObject, out area, out HTuple Row1, out HTuple cols1);
                             hObject1 = hObject1.ConcatObj(hObject);
-                            HOperatorSet.SelectShape(hObject2, out hObject2, "column", "and", cols22.TupleMin() - this.Height, cols22.TupleMax() - this.Height);
+                            HOperatorSet.SelectShape(hObject2, out hObject2, "column", "and", cols22.TupleMin() - this.Weight, cols22.TupleMax() - this.Weight);
                         }
                         hObject2 = hObject1;
                         break;
@@ -1496,11 +1508,11 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         while (hObject2.CountObj() != 0)
                         {
                             HOperatorSet.AreaCenter(hObject2, out area, out HTuple Row22, out HTuple cols22);
-                            HOperatorSet.SelectShape(hObject2, out HObject hObject, "column", "and", cols22.TupleMin() - this.Height, cols22.TupleMin() + this.Height);
+                            HOperatorSet.SelectShape(hObject2, out HObject hObject, "column", "and", cols22.TupleMin() - this.Weight, cols22.TupleMin() + this.Weight);
                             HOperatorSet.SortRegion(hObject, out hObject, "character", "false", "column");
                             HOperatorSet.AreaCenter(hObject, out area, out HTuple Row1, out HTuple cols1);
                             hObject1 = hObject1.ConcatObj(hObject);
-                            HOperatorSet.SelectShape(hObject2, out hObject2, "column", "and", cols22.TupleMin() + this.Height, cols22.TupleMax() + this.Height);
+                            HOperatorSet.SelectShape(hObject2, out hObject2, "column", "and", cols22.TupleMin() + this.Weight, cols22.TupleMax() + this.Weight);
                         }
 
                         hObject2 = hObject1;

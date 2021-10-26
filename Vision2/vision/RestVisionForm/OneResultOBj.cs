@@ -61,6 +61,9 @@ namespace Vision2.vision
         public string NGMestage { get; set; } = "";
 
         public HTuple Massage { get; set; } = new HTuple();
+        public bool ISMassageBack { get; set; }
+        public ColorResult ColorResu = ColorResult.green;
+
         public HTuple OKMassage { get; set; } = new HTuple();
         public HTuple NGMassage { get; set; } = new HTuple();
 
@@ -189,7 +192,7 @@ namespace Vision2.vision
                 NGROI = err,
                 RunName = runPa,
             };
-            if (row.Length >= 0)
+            if (row.Length > 0)
             {
                 rObj.Row = row.TupleInt();
                 rObj.Col = colu.TupleInt();
@@ -560,7 +563,11 @@ namespace Vision2.vision
                 {
                 }
             }
-            HOperatorSet.DispObj(hObject, hWindowHalconID);
+            if (hObject.IsInitialized())
+            {
+                HOperatorSet.DispObj(hObject, hWindowHalconID);
+            }
+     
         }
 
         public void ShowAll(HTuple hWindowHalconID, int rowi = 0, int coli = 0, bool ismovet = false)
@@ -696,11 +703,11 @@ namespace Vision2.vision
                         }
                         if (!ResultBool)
                         {
-                            Vision.Disp_message(hWindowHalconID, text, 20, 20, true, "red");
+                            Vision.Disp_message(hWindowHalconID, text, 20, 20, true, "red", ISMassageBack.ToString());
                         }
                         else
                         {
-                            Vision.Disp_message(hWindowHalconID, text, 20, 20, true, "green");
+                            Vision.Disp_message(hWindowHalconID, text, 20, 20, true, ColorResu.ToString(), ISMassageBack.ToString());
                         }
                     }
                 }
@@ -818,6 +825,7 @@ namespace Vision2.vision
         /// 主图像
         /// </summary>
         public HObject Image { get; set; }
+        public bool ImagePretreatmentDone;
 
         /// <summary>
         /// 绿色区域

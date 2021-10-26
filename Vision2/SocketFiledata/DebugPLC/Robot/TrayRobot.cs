@@ -14,7 +14,7 @@ using static ErosSocket.DebugPLC.Robot.TrayRobot;
 namespace ErosSocket.DebugPLC.Robot
 {
     /// <summary>
-    ///
+    //托盘接口
     /// </summary>
 
     public interface ITrayRobot
@@ -641,7 +641,10 @@ namespace ErosSocket.DebugPLC.Robot
         }
 
         public string MesRestStr = "";
-
+        /// <summary>
+        ///人工处理
+        /// </summary>
+        public bool UserRest { get; set; }
         public bool Done
         {
             get
@@ -829,6 +832,10 @@ namespace ErosSocket.DebugPLC.Robot
                 if (Vaules)
                 {
                     if (dataVales1[i].PanelID != "")
+                    {
+                        dataVales1[i].OK = Vaules;
+                    }
+                    if (!tray1.IsSN)
                     {
                         dataVales1[i].OK = Vaules;
                     }

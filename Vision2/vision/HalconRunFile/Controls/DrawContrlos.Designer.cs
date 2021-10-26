@@ -42,6 +42,7 @@
             this.清除掩模区域ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.绘制掩模区域ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.绘制掩模方型ToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.显示缺陷细节ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripComboBox1 = new System.Windows.Forms.ToolStripComboBox();
             this.toolStripCheckbox1 = new Vision2.ErosProjcetDLL.UI.ToolStrip.ToolStripCheckbox();
             this.hWindowControl1 = new HalconDotNet.HWindowControl();
@@ -50,7 +51,8 @@
             // 
             // toolStrip1
             // 
-            this.toolStrip1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.toolStrip1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.toolStrip1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripDropDownButton1,
             this.toolStripTrackBar1,
@@ -64,7 +66,7 @@
             this.toolStripCheckbox1});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(771, 48);
+            this.toolStrip1.Size = new System.Drawing.Size(771, 32);
             this.toolStrip1.TabIndex = 0;
             this.toolStrip1.Text = "绘制区域";
             // 
@@ -74,7 +76,7 @@
             this.toolStripDropDownButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripDropDownButton1.Image")));
             this.toolStripDropDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripDropDownButton1.Name = "toolStripDropDownButton1";
-            this.toolStripDropDownButton1.Size = new System.Drawing.Size(54, 45);
+            this.toolStripDropDownButton1.Size = new System.Drawing.Size(49, 29);
             this.toolStripDropDownButton1.Text = "执行";
             this.toolStripDropDownButton1.Click += new System.EventHandler(this.toolStripDropDownButton1_Click);
             // 
@@ -142,45 +144,54 @@
             // 
             // toolStripSplitButton1
             // 
+            this.toolStripSplitButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.toolStripSplitButton1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.移动掩模区域ToolStripMenuItem,
             this.清除掩模区域ToolStripMenuItem,
             this.绘制掩模区域ToolStripMenuItem,
-            this.绘制掩模方型ToolStripMenuItem1});
+            this.绘制掩模方型ToolStripMenuItem1,
+            this.显示缺陷细节ToolStripMenuItem});
             this.toolStripSplitButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripSplitButton1.Image")));
             this.toolStripSplitButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripSplitButton1.Name = "toolStripSplitButton1";
-            this.toolStripSplitButton1.Size = new System.Drawing.Size(105, 45);
-            this.toolStripSplitButton1.Text = "动态参数";
+            this.toolStripSplitButton1.Size = new System.Drawing.Size(80, 29);
+            this.toolStripSplitButton1.Text = "缺陷细节";
             this.toolStripSplitButton1.ButtonClick += new System.EventHandler(this.toolStripSplitButton1_ButtonClick);
             // 
             // 移动掩模区域ToolStripMenuItem
             // 
             this.移动掩模区域ToolStripMenuItem.Name = "移动掩模区域ToolStripMenuItem";
-            this.移动掩模区域ToolStripMenuItem.Size = new System.Drawing.Size(174, 24);
+            this.移动掩模区域ToolStripMenuItem.Size = new System.Drawing.Size(180, 24);
             this.移动掩模区域ToolStripMenuItem.Text = "移动掩模区域";
             this.移动掩模区域ToolStripMenuItem.Click += new System.EventHandler(this.移动掩模区域ToolStripMenuItem_Click);
             // 
             // 清除掩模区域ToolStripMenuItem
             // 
             this.清除掩模区域ToolStripMenuItem.Name = "清除掩模区域ToolStripMenuItem";
-            this.清除掩模区域ToolStripMenuItem.Size = new System.Drawing.Size(174, 24);
+            this.清除掩模区域ToolStripMenuItem.Size = new System.Drawing.Size(180, 24);
             this.清除掩模区域ToolStripMenuItem.Text = "清除掩模区域";
             this.清除掩模区域ToolStripMenuItem.Click += new System.EventHandler(this.清除掩模区域ToolStripMenuItem_Click);
             // 
             // 绘制掩模区域ToolStripMenuItem
             // 
             this.绘制掩模区域ToolStripMenuItem.Name = "绘制掩模区域ToolStripMenuItem";
-            this.绘制掩模区域ToolStripMenuItem.Size = new System.Drawing.Size(174, 24);
+            this.绘制掩模区域ToolStripMenuItem.Size = new System.Drawing.Size(180, 24);
             this.绘制掩模区域ToolStripMenuItem.Text = "绘制掩模区域";
             this.绘制掩模区域ToolStripMenuItem.Click += new System.EventHandler(this.绘制掩模区域ToolStripMenuItem_Click);
             // 
             // 绘制掩模方型ToolStripMenuItem1
             // 
             this.绘制掩模方型ToolStripMenuItem1.Name = "绘制掩模方型ToolStripMenuItem1";
-            this.绘制掩模方型ToolStripMenuItem1.Size = new System.Drawing.Size(174, 24);
+            this.绘制掩模方型ToolStripMenuItem1.Size = new System.Drawing.Size(180, 24);
             this.绘制掩模方型ToolStripMenuItem1.Text = "绘制掩模方型";
             this.绘制掩模方型ToolStripMenuItem1.Click += new System.EventHandler(this.绘制掩模方型ToolStripMenuItem1_Click);
+            // 
+            // 显示缺陷细节ToolStripMenuItem
+            // 
+            this.显示缺陷细节ToolStripMenuItem.Name = "显示缺陷细节ToolStripMenuItem";
+            this.显示缺陷细节ToolStripMenuItem.Size = new System.Drawing.Size(180, 24);
+            this.显示缺陷细节ToolStripMenuItem.Text = "显示缺陷细节";
+            this.显示缺陷细节ToolStripMenuItem.Click += new System.EventHandler(this.显示缺陷细节ToolStripMenuItem_Click);
             // 
             // toolStripComboBox1
             // 
@@ -201,13 +212,12 @@
             // 
             this.hWindowControl1.BackColor = System.Drawing.Color.Black;
             this.hWindowControl1.BorderColor = System.Drawing.Color.Black;
-            this.hWindowControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.hWindowControl1.ImagePart = new System.Drawing.Rectangle(0, 0, 640, 480);
             this.hWindowControl1.Location = new System.Drawing.Point(0, 48);
             this.hWindowControl1.Name = "hWindowControl1";
-            this.hWindowControl1.Size = new System.Drawing.Size(771, 1);
+            this.hWindowControl1.Size = new System.Drawing.Size(771, 36);
             this.hWindowControl1.TabIndex = 3;
-            this.hWindowControl1.WindowSize = new System.Drawing.Size(771, 1);
+            this.hWindowControl1.WindowSize = new System.Drawing.Size(771, 36);
             // 
             // DrawContrlos
             // 
@@ -216,7 +226,7 @@
             this.Controls.Add(this.hWindowControl1);
             this.Controls.Add(this.toolStrip1);
             this.Name = "DrawContrlos";
-            this.Size = new System.Drawing.Size(771, 49);
+            this.Size = new System.Drawing.Size(771, 32);
             this.Load += new System.EventHandler(this.DrawContrlos_Load);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
@@ -243,5 +253,6 @@
         private System.Windows.Forms.ToolStripMenuItem 清除掩模区域ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 绘制掩模区域ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 绘制掩模方型ToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem 显示缺陷细节ToolStripMenuItem;
     }
 }

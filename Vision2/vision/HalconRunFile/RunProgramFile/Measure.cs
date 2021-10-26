@@ -2751,13 +2751,14 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 Vision.Pts_to_best_circle(out HObject _Object, outRows, outCols, this.Min_Measure_Point_Number, arc_Type,
                     out HTuple hvRow_Center, out HTuple hvCol_Center,
                   out HTuple hvRadius, out HTuple hvStartPhi, out HTuple hvEndPhi, out HTuple hvPointOrder, out HTuple HvArcAngle);
-                this.MeasureHObj = _Object;
+                this.MeasureHObj = Vision.XLD_To_Region(_Object);
+         
                 if (hvEndPhi.Length == 0)
                 {
                     return _Object;
                 }
-                HOperatorSet.GenCrossContourXld(out HObject hObject1, hvRow_Center, hvCol_Center, 60, 0);
-                _Object = _Object.ConcatObj(hObject1);
+                //HOperatorSet.GenCrossContourXld(out HObject hObject1, hvRow_Center, hvCol_Center, 60, 0);
+                //_Object = _Object.ConcatObj(hObject1);
 
                 OutCentreRow = hvRow_Center;
                 OutCentreCol = hvCol_Center;
@@ -2881,7 +2882,6 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                                 halcon.AddObj(cross, ColorResult.red);
                             }
                         }
-
                         HOperatorSet.GenContourPolygonXld(out line, outRowst, outColst);
                     }
                 }
@@ -3313,12 +3313,12 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             all = 0,
 
             /// <summary>
-            /// 黑到白，阴
+            /// 黑到白，阴，反向
             /// </summary>
             negative = 1,
 
             /// <summary>
-            /// 白到黑，阳
+            /// 白到黑，阳，正向
             /// </summary>
             positive = 2,
         }

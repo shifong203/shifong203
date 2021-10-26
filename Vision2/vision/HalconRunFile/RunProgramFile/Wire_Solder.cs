@@ -42,9 +42,11 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
 
         public Threshold_Min_Max thresholdV_2 { get; set; } = new Threshold_Min_Max();
 
-        public bool RunP(OneResultOBj halcon, AoiObj aoiObj, HTuple visionUserControlH = null, HTuple visionUserControlS = null,
+        public bool RunP(OneResultOBj oneResultOBj, AoiObj aoiObj, HTuple visionUserControlH = null, HTuple visionUserControlS = null,
             HTuple visionUserControlV = null, HTuple hwindRgb = null)
         {
+            HObject errObj = new HObject();
+            errObj.GenEmptyObj();
             int err = 0;
             try
             {
@@ -59,20 +61,20 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         if (listWelding[i].List3DName[j] >= 0)
                         {
                             //halcon.GetOneImageR().AddData(Project.formula.RecipeCompiler.Instance.Data.GetMaxMinValue(listWelding[i].List3DName[j]));
-                            if (!Project.formula.RecipeCompiler.Instance.Data.GetChet(listWelding[i].List3DName[j]))
+                            if (!Project.formula.RecipeCompiler.Instance.Data.ListDatV[0].GetRestOK(listWelding[i].List3DName[j]))
                             {
-                                datStr.Append(Project.formula.RecipeCompiler.Instance.Data.ListDatV[listWelding[i].List3DName[j]].ComponentName);
-                                halcon.AddObj(listWelding[i].HObject, ColorResult.red);
+                                datStr.Append(Project.formula.RecipeCompiler.Instance.Data.ListDatV[0].Reference_Name[listWelding[i].List3DName[j]]);
+                                oneResultOBj.AddObj(listWelding[i].HObject, ColorResult.red);
                                 err++;
                             }
                         }
                     }
                     if (datStr.Length != 0)
                     {
-                        halcon.AddImageMassage(rows + 60, colus, datStr, ColorResult.red);
+                        oneResultOBj.AddImageMassage(rows + 60, colus, datStr, ColorResult.red);
                     }
                 }
-                HOperatorSet.ReduceDomain(halcon.Image, DrawObj, out HObject hObject);
+                HOperatorSet.ReduceDomain(oneResultOBj.Image, DrawObj, out HObject hObject);
                 HOperatorSet.Decompose3(hObject, out HObject image1, out HObject image2, out HObject image3);
                 HOperatorSet.TransFromRgb(image1, image2, image3, out image1, out image2, out image3, "hsv");
 
@@ -139,164 +141,183 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 HOperatorSet.SmallestRectangle2(hObject1, out HTuple row, out HTuple column, out HTuple phi, out HTuple length1, out HTuple length2);
 
                 HTuple lengt2MaxGre = length2.TupleGreaterElem(MaxLength2);
-
-                HOperatorSet.GenRectangle2(out HObject hObject2, row, column, phi, length1, length2);
-
-                for (int i = 0; i < listWelding.Count; i++)
+                if (row.Length!=0)
                 {
-                    HOperatorSet.AreaCenter(listWelding[i].HObject, out HTuple area, out HTuple rows1, out HTuple columns1);
-                    HOperatorSet.GetRegionIndex(hObject2, rows1.TupleInt(), columns1.TupleInt(), out HTuple index);
-                    if (index.Length == 0)
+                    HOperatorSet.GenRectangle2(out HObject hObject2, row, column, phi, length1, length2);
+                    for (int i = 0; i < listWelding.Count; i++)
                     {
-                        break;
-                    }
-                    HOperatorSet.SelectObj(hObject2, out HObject obj, index);
-                    HOperatorSet.SmallestRectangle2(obj, out HTuple rowst1, out HTuple columnst1, out HTuple phist1, out HTuple length1st1, out HTuple length2st1);
-                    Vision.gen_rectangle2_line_point(rowst1, columnst1, phist1, length1st1.TupleMult(2).TupleDiv(1.3), out HTuple rowsT1, out HTuple columnsT1, out HTuple rowsT2, out HTuple columnsT2);
-                    Vision.gen_rectangle2_line_point(rowst1, columnst1, phist1, length1st1.TupleMult(2).TupleDiv(4), out HTuple rowsT12, out HTuple columnsT12, out HTuple rowsT22, out HTuple columnsT22);
-                    HOperatorSet.GenRectangle2(out HObject hObject51, rowsT1, columnsT1, phist1, length1st1.TupleDiv(4), length2st1 + 5);
-                    HOperatorSet.GenRectangle2(out HObject hObject52, rowsT2, columnsT2, phist1, length1st1.TupleDiv(4), length2st1 + 5);
-                    HOperatorSet.GenRectangle2(out HObject hObject53, rowsT12, columnsT12, phist1, length1st1.TupleDiv(4), length2st1 + 5);
-                    HOperatorSet.GenRectangle2(out HObject hObject54, rowsT22, columnsT22, phist1, length1st1.TupleDiv(4), length2st1 + 5);
-                    HOperatorSet.Intersection(hObject51, hObject1, out hObject51);
-                    HOperatorSet.Connection(hObject51, out hObject51);
-                    HOperatorSet.AreaCenter(hObject51, out HTuple area2, out HTuple row35, out HTuple hTuple2);
-                    HOperatorSet.SelectShape(hObject51, out hObject51, "area", "and", area2.TupleMax().TupleSub(1), 9999999999);
-                    HOperatorSet.SmallestRectangle2(hObject51, out HTuple row1_s, out HTuple column1_s, out HTuple phi1_s, out HTuple length1_s, out HTuple length2_s);
-                    if (aoiObj.DebugID > 2)
-                    {
-                        halcon.AddImageMassage(row1_s, column1_s, "1宽:" + (length2_s * 2).TupleString("0.1f"));
+                        HOperatorSet.AreaCenter(listWelding[i].HObject, out HTuple area, out HTuple rows1, out HTuple columns1);
+                        HOperatorSet.GetRegionIndex(hObject2, rows1.TupleInt(), columns1.TupleInt(), out HTuple index);
+                        if (index.Length == 0)
+                        {
+                            break;
+                        }
+                        HOperatorSet.SelectObj(hObject2, out HObject obj, index);
+                        HOperatorSet.SmallestRectangle2(obj, out HTuple rowst1, out HTuple columnst1, out HTuple phist1, out HTuple length1st1, out HTuple length2st1);
+                        Vision.gen_rectangle2_line_point(rowst1, columnst1, phist1, length1st1.TupleMult(2).TupleDiv(1.3), out HTuple rowsT1, out HTuple columnsT1, out HTuple rowsT2, out HTuple columnsT2);
+                        Vision.gen_rectangle2_line_point(rowst1, columnst1, phist1, length1st1.TupleMult(2).TupleDiv(4), out HTuple rowsT12, out HTuple columnsT12, out HTuple rowsT22, out HTuple columnsT22);
+                        HOperatorSet.GenRectangle2(out HObject hObject51, rowsT1, columnsT1, phist1, length1st1.TupleDiv(4), length2st1 + 5);
+                        HOperatorSet.GenRectangle2(out HObject hObject52, rowsT2, columnsT2, phist1, length1st1.TupleDiv(4), length2st1 + 5);
+                        HOperatorSet.GenRectangle2(out HObject hObject53, rowsT12, columnsT12, phist1, length1st1.TupleDiv(4), length2st1 + 5);
+                        HOperatorSet.GenRectangle2(out HObject hObject54, rowsT22, columnsT22, phist1, length1st1.TupleDiv(4), length2st1 + 5);
+                        HOperatorSet.Intersection(hObject51, hObject1, out hObject51);
+                        HOperatorSet.Connection(hObject51, out hObject51);
+                        HOperatorSet.AreaCenter(hObject51, out HTuple area2, out HTuple row35, out HTuple hTuple2);
+                        HOperatorSet.SelectShape(hObject51, out hObject51, "area", "and", area2.TupleMax().TupleSub(1), 9999999999);
+                        HOperatorSet.SmallestRectangle2(hObject51, out HTuple row1_s, out HTuple column1_s, out HTuple phi1_s, out HTuple length1_s, out HTuple length2_s);
+                        if (aoiObj.DebugID > 2)
+                        {
+                            oneResultOBj.AddImageMassage(row1_s, column1_s, "1宽:" + (length2_s * 2).TupleString("0.1f"));
+                        }
+
+                        HOperatorSet.GenRectangle2(out hObject51, row1_s, column1_s, phi1_s, length1_s, length2_s);
+                        //halcon.AddObj(hObject51, ColorResult.Red);
+
+                        HOperatorSet.Intersection(hObject52, hObject1, out hObject52);
+                        HOperatorSet.Connection(hObject52, out hObject52);
+                        HOperatorSet.AreaCenter(hObject52, out area, out row35, out hTuple2);
+                        HOperatorSet.SelectShape(hObject52, out hObject52, "area", "and", area.TupleMax().TupleSub(1), 9999999999);
+                        HOperatorSet.SmallestRectangle2(hObject52, out row1_s, out column1_s, out phi1_s, out length1_s, out length2_s);
+                        if (aoiObj.DebugID > 2)
+                        {
+                            oneResultOBj.AddImageMassage(row1_s, column1_s, "2宽:" + (length2_s * 2).TupleString("0.1f"));
+                        }
+                        HOperatorSet.GenRectangle2(out hObject51, row1_s, column1_s, phi1_s, length1_s, length2_s);
+                        //halcon.AddObj(hObject51, ColorResult.Red);
+
+                        HOperatorSet.Intersection(hObject53, hObject1, out hObject53);
+                        HOperatorSet.Connection(hObject53, out hObject53);
+                        HOperatorSet.AreaCenter(hObject53, out area, out row35, out hTuple2);
+                        HOperatorSet.SelectShape(hObject53, out hObject53, "area", "and", area.TupleMax().TupleSub(1), 9999999999);
+                        HOperatorSet.SmallestRectangle2(hObject53, out row1_s, out column1_s, out phi1_s, out length1_s, out length2_s);
+                        if (aoiObj.DebugID > 2)
+                        {
+                            oneResultOBj.AddImageMassage(row1_s, column1_s, "3宽:" + (length2_s * 2).TupleString("0.1f"));
+                        }
+                        HOperatorSet.GenRectangle2(out hObject51, row1_s, column1_s, phi1_s, length1_s, length2_s);
+                        //halcon.AddObj(hObject51, ColorResult.Red);
+                        HOperatorSet.Intersection(hObject54, hObject1, out hObject54);
+                        HOperatorSet.Connection(hObject54, out hObject54);
+                        HOperatorSet.AreaCenter(hObject54, out area, out row35, out hTuple2);
+                        HOperatorSet.SelectShape(hObject54, out hObject54, "area", "and", area.TupleMax().TupleSub(1), 9999999999);
+
+                        HOperatorSet.SmallestRectangle2(hObject54, out row1_s, out column1_s, out phi1_s, out length1_s, out length2_s);
+                        if (aoiObj.DebugID > 2)
+                        {
+                            oneResultOBj.AddImageMassage(row1_s, column1_s, "4宽:" + (length2_s * 2).TupleString("0.1f"));
+                        }
+                        HOperatorSet.GenRectangle2(out hObject51, row1_s, column1_s, phi1_s, length1_s, length2_s);
+                        //halcon.AddObj(hObject51, ColorResult.Red);
                     }
 
-                    HOperatorSet.GenRectangle2(out hObject51, row1_s, column1_s, phi1_s, length1_s, length2_s);
-                    //halcon.AddObj(hObject51, ColorResult.Red);
-
-                    HOperatorSet.Intersection(hObject52, hObject1, out hObject52);
-                    HOperatorSet.Connection(hObject52, out hObject52);
-                    HOperatorSet.AreaCenter(hObject52, out area, out row35, out hTuple2);
-                    HOperatorSet.SelectShape(hObject52, out hObject52, "area", "and", area.TupleMax().TupleSub(1), 9999999999);
-                    HOperatorSet.SmallestRectangle2(hObject52, out row1_s, out column1_s, out phi1_s, out length1_s, out length2_s);
-                    if (aoiObj.DebugID > 2)
+                    for (int i = 0; i < lengt2MaxGre.Length; i++)
                     {
-                        halcon.AddImageMassage(row1_s, column1_s, "2宽:" + (length2_s * 2).TupleString("0.1f"));
-                    }
-                    HOperatorSet.GenRectangle2(out hObject51, row1_s, column1_s, phi1_s, length1_s, length2_s);
-                    //halcon.AddObj(hObject51, ColorResult.Red);
+                        bool resod = true;
+                        HObject seleOBJ = hObject1.SelectObj(i + 1);
+                        HObject seleOBJ2 = hObject2.SelectObj(i + 1);
+                        HOperatorSet.SmallestRectangle2(seleOBJ, out HTuple row4, out HTuple column4, out HTuple phi4, out HTuple length14, out HTuple length24);
+                        HOperatorSet.GenRectangle2(out seleOBJ, row4, column4, phi4, length14, length24);
+                        HTuple cont = 0;
+                        HTuple indexs = new HTuple();
+                        for (int i2 = 0; i2 < listWelding.Count; i2++)
+                        {
+                            HOperatorSet.AreaCenter(listWelding[i2].HObject, out HTuple area, out HTuple rows1, out HTuple columns1);
 
-                    HOperatorSet.Intersection(hObject53, hObject1, out hObject53);
-                    HOperatorSet.Connection(hObject53, out hObject53);
-                    HOperatorSet.AreaCenter(hObject53, out area, out row35, out hTuple2);
-                    HOperatorSet.SelectShape(hObject53, out hObject53, "area", "and", area.TupleMax().TupleSub(1), 9999999999);
-                    HOperatorSet.SmallestRectangle2(hObject53, out row1_s, out column1_s, out phi1_s, out length1_s, out length2_s);
-                    if (aoiObj.DebugID > 2)
-                    {
-                        halcon.AddImageMassage(row1_s, column1_s, "3宽:" + (length2_s * 2).TupleString("0.1f"));
-                    }
-                    HOperatorSet.GenRectangle2(out hObject51, row1_s, column1_s, phi1_s, length1_s, length2_s);
-                    //halcon.AddObj(hObject51, ColorResult.Red);
-                    HOperatorSet.Intersection(hObject54, hObject1, out hObject54);
-                    HOperatorSet.Connection(hObject54, out hObject54);
-                    HOperatorSet.AreaCenter(hObject54, out area, out row35, out hTuple2);
-                    HOperatorSet.SelectShape(hObject54, out hObject54, "area", "and", area.TupleMax().TupleSub(1), 9999999999);
+                            HOperatorSet.GetRegionIndex(seleOBJ, rows1.TupleInt(), columns1.TupleInt(), out HTuple index);
+                            if (index.Length > 0)
+                            {
+                                cont++;
+                                indexs.Append(i2);
+                            }
+                        }
+                        if (indexs.Length > 1)
+                        {
+                            HTuple rowstCi = new HTuple();
+                            HTuple ColumnstCi = new HTuple();
+                            for (int i2 = 0; i2 < indexs.Length; i2++)
+                            {
+                                HOperatorSet.AreaCenter(listWelding[indexs[i2]].HObject, out HTuple area, out HTuple rows1, out HTuple columns1);
+                                HOperatorSet.GenCircle(out HObject circle, rows1, columns1, 30);
+                                oneResultOBj.AddObj(circle, ColorResult.red);
+                                oneResultOBj.AddImageMassage(rows1, columns1, "short circuit", ColorResult.red);
+                                rowstCi.Append(rows1);
+                                err++;
+                                resod = false;
+                                ColumnstCi.Append(columns1);
+                            }
+                            HOperatorSet.GenContourPolygonXld(out HObject hObject4, rowstCi, ColumnstCi);
+                            oneResultOBj.AddObj(hObject4, ColorResult.red);
+                            oneResultOBj.AddObj(hObject1.SelectObj(i + 1), ColorResult.yellow);
+                        }
+                        else if (indexs.Length == 1)
+                        {
+                            HOperatorSet.SmallestRectangle2(listWelding[indexs].HObject, out HTuple rowR, out HTuple columnR, out HTuple phiR, out HTuple length1R, out HTuple length2R);
+                            HOperatorSet.SmallestRectangle2(seleOBJ, out HTuple rowR2, out HTuple columnR2, out HTuple phiR2, out HTuple length1R2, out HTuple length2R2);
+                            HOperatorSet.AreaCenter(listWelding[indexs].HObject, out HTuple area, out HTuple rows1, out HTuple columns1);
+                            double phidoub = (phiR.TupleDeg().TupleAbs() - phiR2.TupleDeg().TupleAbs()).TupleAbs();
 
-                    HOperatorSet.SmallestRectangle2(hObject54, out row1_s, out column1_s, out phi1_s, out length1_s, out length2_s);
-                    if (aoiObj.DebugID > 2)
-                    {
-                        halcon.AddImageMassage(row1_s, column1_s, "4宽:" + (length2_s * 2).TupleString("0.1f"));
+                            if (phidoub > MaxDeg)
+                            {
+                                resod = false;
+                                err++;
+                                ResltBool = false;
+                                oneResultOBj.AddImageMassage(rows1, columns1, "deg:" + phidoub.ToString("0.00°"), ColorResult.red);
+                            }
+                            else if (aoiObj.DebugID > 2)
+                            {
+                                oneResultOBj.AddImageMassage(rows1, columns1, "deg:" + phidoub.ToString("0.00°"));
+                            }
+                            if (length2R2 * 2 >= MaxLength2)
+                            {
+                                resod = false;
+                                err++;
+                                ResltBool = false;
+                                oneResultOBj.AddImageMassage(rows1 + 50, columns1 + 40, "宽:" + (length2R2 * 2), ColorResult.red);
+                            }
+                            else if (aoiObj.DebugID > 2)
+                            {
+                                oneResultOBj.AddImageMassage(rows1 + 50, columns1 + 40, "宽:" + (length2R2 * 2));
+                            }
+
+                            if (length2R2 * 2 >= MaxLength2 || phidoub > MaxDeg)
+                            {
+                                resod = false;
+                                err++;
+                                ResltBool = false;
+                                oneResultOBj.AddObj(seleOBJ2, ColorResult.red);
+                            }
+                            else if (aoiObj.DebugID > 2)
+                            {
+                                oneResultOBj.AddObj(seleOBJ2, ColorResult.blue);
+                            }
+                            oneResultOBj.AddObj(hObject1.SelectObj(i + 1), ColorResult.yellow);
+                        }
+                        else
+                        {
+                            //halcon.AddMessage("空错误");
+                        }
+                        if (resod)
+                        {
+                            errObj = errObj.ConcatObj(seleOBJ2);
+                        }
                     }
-                    HOperatorSet.GenRectangle2(out hObject51, row1_s, column1_s, phi1_s, length1_s, length2_s);
-                    //halcon.AddObj(hObject51, ColorResult.Red);
                 }
 
-                for (int i = 0; i < lengt2MaxGre.Length; i++)
-                {
-                    HObject seleOBJ = hObject1.SelectObj(i + 1);
-                    HObject seleOBJ2 = hObject2.SelectObj(i + 1);
-                    HOperatorSet.SmallestRectangle2(seleOBJ, out HTuple row4, out HTuple column4, out HTuple phi4, out HTuple length14, out HTuple length24);
-                    HOperatorSet.GenRectangle2(out seleOBJ, row4, column4, phi4, length14, length24);
-                    HTuple cont = 0;
-                    HTuple indexs = new HTuple();
-                    for (int i2 = 0; i2 < listWelding.Count; i2++)
-                    {
-                        HOperatorSet.AreaCenter(listWelding[i2].HObject, out HTuple area, out HTuple rows1, out HTuple columns1);
-
-                        HOperatorSet.GetRegionIndex(seleOBJ, rows1.TupleInt(), columns1.TupleInt(), out HTuple index);
-                        if (index.Length > 0)
-                        {
-                            cont++;
-                            indexs.Append(i2);
-                        }
-                    }
-                    if (indexs.Length > 1)
-                    {
-                        HTuple rowstCi = new HTuple();
-                        HTuple ColumnstCi = new HTuple();
-                        for (int i2 = 0; i2 < indexs.Length; i2++)
-                        {
-                            HOperatorSet.AreaCenter(listWelding[indexs[i2]].HObject, out HTuple area, out HTuple rows1, out HTuple columns1);
-                            HOperatorSet.GenCircle(out HObject circle, rows1, columns1, 30);
-                            halcon.AddObj(circle, ColorResult.red);
-                            halcon.AddImageMassage(rows1, columns1, "short circuit", ColorResult.red);
-                            rowstCi.Append(rows1);
-                            err++;
-                            ColumnstCi.Append(columns1);
-                        }
-                        HOperatorSet.GenContourPolygonXld(out HObject hObject4, rowstCi, ColumnstCi);
-                        halcon.AddObj(hObject4, ColorResult.red);
-                        halcon.AddObj(hObject1.SelectObj(i + 1), ColorResult.yellow);
-                    }
-                    else if (indexs.Length == 1)
-                    {
-                        HOperatorSet.SmallestRectangle2(listWelding[indexs].HObject, out HTuple rowR, out HTuple columnR, out HTuple phiR, out HTuple length1R, out HTuple length2R);
-                        HOperatorSet.SmallestRectangle2(seleOBJ, out HTuple rowR2, out HTuple columnR2, out HTuple phiR2, out HTuple length1R2, out HTuple length2R2);
-                        HOperatorSet.AreaCenter(listWelding[indexs].HObject, out HTuple area, out HTuple rows1, out HTuple columns1);
-                        double phidoub = (phiR.TupleDeg().TupleAbs() - phiR2.TupleDeg().TupleAbs()).TupleAbs();
-
-                        if (phidoub > MaxDeg)
-                        {
-                            ResltBool = false;
-                            halcon.AddImageMassage(rows1, columns1, "deg:" + phidoub.ToString("0.00°"), ColorResult.red);
-                        }
-                        else if (aoiObj.DebugID > 2)
-                        {
-                            halcon.AddImageMassage(rows1, columns1, "deg:" + phidoub.ToString("0.00°"));
-                        }
-                        if (length2R2 * 2 >= MaxLength2)
-                        {
-                            ResltBool = false;
-                            halcon.AddImageMassage(rows1 + 50, columns1 + 40, "宽:" + (length2R2 * 2), ColorResult.red);
-                        }
-                        else if (aoiObj.DebugID > 2)
-                        {
-                            halcon.AddImageMassage(rows1 + 50, columns1 + 40, "宽:" + (length2R2 * 2));
-                        }
-
-                        if (length2R2 * 2 >= MaxLength2 || phidoub > MaxDeg)
-                        {
-                            ResltBool = false;
-                            halcon.AddObj(seleOBJ2, ColorResult.red);
-                        }
-                        else if (aoiObj.DebugID > 2)
-                        {
-                            halcon.AddObj(seleOBJ2, ColorResult.blue);
-                        }
-                        halcon.AddObj(hObject1.SelectObj(i + 1), ColorResult.yellow);
-                    }
-                    else
-                    {
-                        //halcon.AddMessage("空错误");
-                    }
-                }
+              
             }
             catch (Exception ex)
             {
-                halcon.AddMeassge(ex.Message);
+                oneResultOBj.AddMeassge(ex.Message);
             }
             if (err != 0)
             {
+                oneResultOBj.AddNGOBJ(aoiObj.CiName, this.Name, errObj, aoiObj.SelseAoi, this.GetBackNames());
                 ResltBool = false;
                 return false;
             }
+
+
+
             return ResltBool;
         }
 

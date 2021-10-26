@@ -286,15 +286,17 @@ namespace ErosSocket.ErosConLink
             System.Timers.Timer timer = new System.Timers.Timer();
             SendTimeMesag(timer, Client);
             byte[] buffers = new byte[1024 * 1024 * 500];
-            AsyncReveive(timer, Client, buffers);
+            AsyncReveive(timer, Client, buffers, Client.RemoteEndPoint.ToString());
+
         }
 
         /// <summary>
         /// 递归接收消息
         /// </summary>
         /// <param name="client"></param>
-        protected virtual void AsyncReveive(System.Timers.Timer timer, Socket socket, byte[] buffers)
+        protected virtual void AsyncReveive(System.Timers.Timer timer, Socket socket, byte[] buffers, string endPoint = "")
         {
+       
             try
             {
                 //开始接收消息
@@ -308,29 +310,50 @@ namespace ErosSocket.ErosConLink
                         {
                             timer.Stop();
                             EventArge(buffers.Skip(0).Take(length).ToArray(), socket);
-
                             timer.Start();
                         }
-                        else
+                        if (!socket.Connected)
                         {
-                            if (socket.Connected)
+                            if (this.DictiPoint.ContainsKey(endPoint))
                             {
-                                GetDictiPoints().Remove(socket.RemoteEndPoint.ToString());
-                                OnNewLink(socket.RemoteEndPoint.ToString() + "断开连接!");
-                                return;
+                                this.DictiPoint.Remove(endPoint);
                             }
+                           OnNewLink(endPoint + "断开连接!");
+                            buffers = null; 
+                            return;
                         }
-                        buffers = new byte[buffers.Length];
+                        //buffers = null;
+                        //buffers = new byte[1024 * 1024 * 500];
                     }
                     catch (Exception ex)
                     {
                     }
-                    this.AsyncReveive(timer, socket, buffers);
+                    if (socket.Connected)
+                    {
+                        this.AsyncReveive(timer, socket, buffers, socket.RemoteEndPoint.ToString());
+                    }
                 }, null);
             }
             catch (Exception ex)
             {
+                try
+                {
+                    if (!socket.Connected)
+                    {
+                   
+                        if (this.DictiPoint.ContainsKey(endPoint))
+                        {
+                            this.DictiPoint.Remove(endPoint);
+                        }
+                        buffers = null;
+                    }
+                }
+                catch (Exception)
+                {
+                }
             }
+        
+
         }
 
         public override string AlwaysReceive(int de)

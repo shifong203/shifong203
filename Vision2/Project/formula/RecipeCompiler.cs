@@ -101,6 +101,21 @@ namespace Vision2.Project.formula
             多个流程一个产品 = 1,
             托盘扫码计数 = 2,
         }
+        public static void ClerSPC()
+        {
+            try
+            {
+                RecipeCompiler.Instance.oKNumberClasses = new OKNumberClass[24];
+                for (int i = 0; i < Instance.oKNumberClasses.Length; i++)
+                {
+                    Instance.oKNumberClasses[i] = new OKNumberClass();
+                }
+                GetSPC();
+            }
+            catch (Exception)
+            {
+            }
+        }
 
         public static string GetSPC()
         {
@@ -515,7 +530,6 @@ namespace Vision2.Project.formula
                 Instance.OKNumber.Number++;
                 Instance.oKNumberClasses[det].Number++;
                 Instance.OKNumber.OKNG = (Single)((double)Instance.OKNumber.OKNumber / (double)Instance.OKNumber.Number) * 100.0F;
-
                 UserFormulaContrsl.StaticAddData(Instance.OKNumber);
             }
             catch (Exception)

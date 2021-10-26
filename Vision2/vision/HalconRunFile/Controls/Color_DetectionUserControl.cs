@@ -62,12 +62,14 @@ namespace Vision2.vision.HalconRunFile.Controls
             Color_detection = color_Detection;
             propertyGrid1.SelectedObject = color_Detection;
             halcon = (HalconRun)color_Detection.GetPThis();
+            RunProgram = Color_detection;
             foreach (var item in Color_detection.keyColor.Keys)
             {
                 listBox1.Items.Add(item);
             }
-            comboBox1.Items.Clear();
-            comboBox1.Items.AddRange(Enum.GetNames(typeof(ImageTypeObj)));
+            comboBox_ImageType.Items.Clear();
+            //UpDataOBJ(welding_Spot);
+            comboBox_ImageType.Items.AddRange(Enum.GetNames(typeof(ImageTypeObj)));
         }
 
         public HalconRun halcon;
@@ -81,6 +83,7 @@ namespace Vision2.vision.HalconRunFile.Controls
             try
             {
                 _Classify = color_Classify;
+                propertyGrid2.SelectedObject = _Classify;
                 if (color_Classify.H_enabled)
                 {
                     color_Classify.H_enabled = false;
@@ -111,23 +114,28 @@ namespace Vision2.vision.HalconRunFile.Controls
                         Max = color_Classify.Threshold_S.Max,
                     }); ;
                 }
-                checkBox6.Checked = _Classify.Enble;
-                checkBox5.Checked = _Classify.IsColt;
+                checkBoxEnbleDifference.Checked = _Classify.EnbleDifference;
+                checkBoxEnbleDifferenceAngl.Checked = _Classify.EnbleDifferenceAngl;
+
+                checkBox_Enble.Checked = _Classify.Enble;
+                checkBox_IsColt.Checked = _Classify.IsColt;
                 thresholdControl1.SetData(color_Classify.threshold_Min_Maxes);
                 select_obj_type1.SetData(color_Classify.Max_area);
-                numericUpDown2.Value = color_Classify.ColorNumber;
+                select_obj_type2.SetData(color_Classify.Diffe_Max_area);
+                numericUpDown_ColorNumber.Value = color_Classify.ColorNumber;
                 button3.BackColor = color_Classify.COlorES;
-                numericUpDown1.Value = color_Classify.Color_ID;
-                comboBox1.SelectedItem = color_Classify.ImageType.ToString();
-                checkBox3.Checked = color_Classify.EnbleSelect;
-                numericUpDown4.Value = color_Classify.ThresSelectMin;
-                numericUpDown5.Value = color_Classify.ThresSelectMax;
-                numericUpDown7.Value = (decimal)color_Classify.SelectMax;
-                numericUpDown8.Value = (decimal)color_Classify.SelectMin;
-                numericUpDown6.Value = (decimal)color_Classify.ClosingCir;
-                checkBox1.Checked = color_Classify.ISFillUp;
-                checkBox4.Checked = color_Classify.ISSelecRoiFillUP;
-                numericUpDown3.Value = (decimal)color_Classify.ClosingCircleValue;
+                numericUpDown_Color_ID.Value = color_Classify.Color_ID;
+                comboBox_ImageType.SelectedItem = color_Classify.ImageType.ToString();
+                checkBox_EnbleSelect.Checked = color_Classify.EnbleSelect;
+                numericUpDown_ThresSelectMin.Value = color_Classify.ThresSelectMin;
+                numericUpDown_ThresSelectMax.Value = color_Classify.ThresSelectMax;
+                numericUpDown_SelectMax.Value = (decimal)color_Classify.SelectMax;
+                numericUpDown_SelectMin.Value = (decimal)color_Classify.SelectMin;
+                numericUpDown_ClosingCir.Value = (decimal)color_Classify.ClosingCir;
+                numericUpDownDifferenceInt.Value = (decimal)_Classify.DifferenceInt;
+                checkBox_ISFillUp.Checked = color_Classify.ISFillUp;
+                checkBox_ISSelecRoiFillUP.Checked = color_Classify.ISSelecRoiFillUP;
+                numericUpDown_ClosingCircleValue.Value = (decimal)color_Classify.ClosingCircleValue;
             }
             catch (Exception ex)
             {
@@ -146,21 +154,25 @@ namespace Vision2.vision.HalconRunFile.Controls
             {
                 _Classify = color_Classify;
                 halcon.HobjClear();
-                _Classify.ImageType = (ImageTypeObj)Enum.Parse(typeof(ImageTypeObj), comboBox1.SelectedItem.ToString());
-                _Classify.EnbleSelect = checkBox3.Checked;
-                _Classify.IsColt = checkBox5.Checked;
-                _Classify.ISSelecRoiFillUP = checkBox4.Checked;
-                _Classify.Enble = checkBox6.Checked;
-                _Classify.ThresSelectMin = (byte)numericUpDown4.Value;
-                _Classify.ThresSelectMax = (byte)numericUpDown5.Value;
-                _Classify.SelectMin = (double)numericUpDown8.Value;
-                _Classify.SelectMax = (double)numericUpDown7.Value;
-                _Classify.ClosingCir = (double)numericUpDown6.Value;
-                _Classify.ColorNumber = (byte)numericUpDown2.Value;
-                _Classify.Color_ID = (byte)numericUpDown1.Value;
+                _Classify.EnbleDifferenceAngl = checkBoxEnbleDifferenceAngl.Checked;
+                _Classify.ImageType = (ImageTypeObj)Enum.Parse(typeof(ImageTypeObj), comboBox_ImageType.SelectedItem.ToString());
+                _Classify.EnbleSelect = checkBox_EnbleSelect.Checked;
+                _Classify.IsColt = checkBox_IsColt.Checked;
+                _Classify.ISSelecRoiFillUP = checkBox_ISSelecRoiFillUP.Checked;
+                _Classify.Enble = checkBox_Enble.Checked;
+                _Classify.EnbleDifference = checkBoxEnbleDifference.Checked;
+                _Classify.ThresSelectMin = (byte)numericUpDown_ThresSelectMin.Value;
+                _Classify.ThresSelectMax = (byte)numericUpDown_ThresSelectMax.Value;
+                _Classify.SelectMin = (double)numericUpDown_SelectMin.Value;
+                _Classify.SelectMax = (double)numericUpDown_SelectMax.Value;
+                _Classify.ClosingCir = (double)numericUpDown_ClosingCir.Value;
+                _Classify.ColorNumber = (byte)numericUpDown_ColorNumber.Value;
+                _Classify.Color_ID = (byte)numericUpDown_Color_ID.Value;
+                _Classify.DifferenceInt = (double)numericUpDownDifferenceInt.Value;
                 _Classify.COlorES = button3.BackColor;
-                _Classify.ISFillUp = checkBox1.Checked;
-                _Classify.ClosingCircleValue = (double)numericUpDown3.Value;
+                _Classify.ISFillUp = checkBox_ISFillUp.Checked;
+                _Classify.EnbleDifference = checkBoxEnbleDifference.Checked;
+                _Classify.ClosingCircleValue = (double)numericUpDown_ClosingCircleValue.Value;
                 AoiObj aoiObj = new AoiObj();
 
                 aoiObj.SelseAoi = _Classify.DrawObj;
@@ -174,17 +186,17 @@ namespace Vision2.vision.HalconRunFile.Controls
             catch (Exception ex) { }
         }
 
-        public Color_DetectionUserControl(RunProgramFile.Welding_Spot welding_Spot) : this()
+        public Color_DetectionUserControl( RunProgram welding_Spot) : this()
         {
-            UpDataOBJ(welding_Spot);
+            //UpDataOBJ(welding_Spot);
         }
 
-        private RunProgramFile.Welding_Spot Welding;
+       private RunProgramFile.RunProgram RunProgram;
 
-        public void UpDataOBJ(RunProgramFile.Welding_Spot welding_Spot)
-        {
-            Welding = welding_Spot;
-        }
+        //public void UpDataOBJ(RunProgramFile.Welding_Spot welding_Spot)
+        //{
+        //    Welding = welding_Spot;
+        //}
 
         private void numericUpDown2_ValueChanged(object sender, EventArgs e)
         {
@@ -218,7 +230,10 @@ namespace Vision2.vision.HalconRunFile.Controls
                 }
 
                 Get_Pragram(Color_detection.keyColor[listBox1.SelectedItem.ToString()]);
-          
+                HOperatorSet.ReduceDomain(halcon.GetImageOBJ((ImageTypeObj)Enum.Parse(typeof(ImageTypeObj), _Classify.threshold_Min_Maxes[0].ImageTypeObj.ToString())),
+                    _Classify.DrawObj, out HObject images);
+
+                userCtrlThreshold2.SetData(_Classify.threshold_Min_Maxes[0], images);
                 listBox2.Items.Clear();
                 listBox2.Items.Add("并集");
                 for (int i = 0; i < _Classify.threshold_Min_Maxes.Count; i++)
@@ -227,9 +242,8 @@ namespace Vision2.vision.HalconRunFile.Controls
                 }
                 AoiObj aoiObj = new AoiObj();
                 aoiObj.SelseAoi = _Classify.DrawObj;
-
                 aoiObj.CiName = _Classify.Name;
-             List<HTuple> homitd=      Color_detection.GetHomMatList(halcon.GetOneImageR());
+                List<HTuple> homitd=      Color_detection.GetHomMatList(halcon.GetOneImageR());
                 //if (homitd.Count >= 1)
                 //{
                 //    HOperatorSet.AffineTransRegion(aoiObj.SelseAoi, out aoiObj.SelseAoi, homitd[0], "nearest_neighbor");
@@ -244,11 +258,17 @@ namespace Vision2.vision.HalconRunFile.Controls
                 aoiObj.DebugID = 1;
                 _Classify.Classify(halcon.GetOneImageR(), aoiObj, Color_detection, out HObject hObject,
                 this.hObjects);
-                listBox2.SelectedIndex = 0;
+                //hWindID.SetImaage(halcon.GetImageOBJ((ImageTypeObj)Enum.Parse(typeof(ImageTypeObj), _Classify.threshold_Min_Maxes[0].ImageTypeObj.ToString())));
+                //listBox2.SelectedIndex = 1;
+                HOperatorSet.SmallestRectangle1(_Classify.DrawObj, out HTuple row, out HTuple col1, out HTuple row2, out HTuple col2);
+
+                hWindID.SetPerpetualPart(row - 100, col1 - 100, row2 + 100, col2 + 100);
+                thresholdControl1_DispButt(_Classify.threshold_Min_Maxes[0].ImageTypeObj.ToString(), 0);
+               
                 hWindID.ShowImage();
                 hWindID.ShowObj();
                 halcon.AddObj(hObject, _Classify.color);
-                HOperatorSet.AreaCenter(hObject, out HTuple area, out HTuple row, out HTuple column);
+                HOperatorSet.AreaCenter(hObject, out HTuple area, out  row, out HTuple column);
                 HOperatorSet.EllipticAxis(hObject, out HTuple ra, out HTuple rb, out HTuple phi);
                 //HOperatorSet.SmallestRectangle2(hObject, out row, out column, out HTuple  phi2,out HTuple length1,out  HTuple length2);
                 HOperatorSet.HeightWidthRatio(hObject, out HTuple height, out HTuple width, out HTuple cir);
@@ -264,7 +284,6 @@ namespace Vision2.vision.HalconRunFile.Controls
                         + "rb" + halcon.GetCaliConstMM(rb).TupleString("0.3f") + "高" + halcon.GetCaliConstMM(height).TupleString("0.3f") + "宽" + halcon.GetCaliConstMM(width).TupleString("0.3f") +
                         "半径" + halcon.GetCaliConstMM(radius).TupleString("0.3f"));
                 }
-
                 halcon.ShowImage();
                 halcon.ShowObj();
             }
@@ -486,12 +505,28 @@ namespace Vision2.vision.HalconRunFile.Controls
                 {
                     hWindID.SetImaage(halcon.GetImageOBJ((ImageTypeObj)Enum.Parse(typeof(ImageTypeObj), listBox2.SelectedItem.ToString())));
                 }
+                AoiObj aoiObj = RunProgram.GetAoi();
+        
+                if (_Classify.IsHomMat)
+                {
+                    List<HTuple> listHomet = RunProgram.GetHomMatList(halcon.GetOneImageR());
+                    HOperatorSet.AffineTransRegion(_Classify.DrawObj, out HObject hObjectROI,
+                    listHomet[0], "nearest_neighbor");
+                    aoiObj.SelseAoi = hObjectROI;
+                }
+                else
+                {
+                    aoiObj.SelseAoi = _Classify.DrawObj;
+                }
                 groupBox3.Text = listBox2.SelectedItem.ToString();
                 hWindID.SetPerpetualPart(row - 100, col1 - 100, row2 + 100, col2 + 100);
                 hWindID.SetDraw(checkBox2.Checked);
                 hWindID.OneResIamge.AddObj(_Classify.DrawObj, ColorResult.blue);
                 hWindID.OneResIamge.AddObj(hObjects[listBox2.SelectedIndex]);
                 hWindID.ShowObj();
+              
+                //HImage hImage = new HImage(hWindID.Image());
+                //userCtrlThreshold1.Fuction(hImage);
             }
             catch (Exception)
             {
@@ -540,8 +575,197 @@ namespace Vision2.vision.HalconRunFile.Controls
             }
         }
 
-        private void checkBox4_CheckedChanged(object sender, EventArgs e)
+        private void button7_Click(object sender, EventArgs e)
         {
+            try
+            {
+                halcon.HobjClear();
+                if (_Classify != null)
+                {
+                    _Classify.SeleRoi = RunProgram.DrawRmoveObj(halcon, _Classify.SeleRoi);
+                }
+                if (_Classify.SeleRoi == null || _Classify.SeleRoi.IsInitialized())
+                {
+                    halcon.AddObj(_Classify.SeleRoi, ColorResult.pink);
+                }
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        private void Color_DetectionUserControl_Load(object sender, EventArgs e)
+        {
+            try
+            {
+              
+
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        private void UserCtrlThreshold1_ThresholdChanged(Threshold_Min_Max threshold_Min_Max)
+        {
+            try
+            {
+
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        private void button8_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                HOperatorSet.SmallestRectangle2(_Classify.OutRiong, out HTuple row, out HTuple colum, out HTuple phi, out HTuple length1, out HTuple length2);
+                HOperatorSet.SmallestRectangle2(_Classify.ModeRoing, out HTuple Moderow, out HTuple Modecolu, out HTuple phi2, out HTuple length12, out HTuple length22);
+                HTuple homMat2d;
+                if (_Classify.EnbleDifferenceAngl)
+                {
+                    HOperatorSet.VectorAngleToRigid(Moderow, Modecolu, phi2, row, colum, phi, out homMat2d);
+                }
+                else
+                {
+                    HOperatorSet.VectorAngleToRigid(Moderow, Modecolu, 0, row, colum, 0, out homMat2d);
+                }
+                HOperatorSet.GenCrossContourXld(out HObject hObject, row, colum, 60, phi);
+                HOperatorSet.GenCrossContourXld(out HObject hObjectx, Moderow, Modecolu, 60, phi2);
+
+                HOperatorSet.AffineTransRegion(_Classify.ModeRoing, out HObject modeHomMatRoing, homMat2d, "nearest_neighbor");
+                HOperatorSet.Difference(modeHomMatRoing, _Classify.OutRiong, out HObject hObject1);
+                HOperatorSet.Difference(_Classify.OutRiong, modeHomMatRoing, out HObject hObject2);
+                halcon.GetOneImageR().AddObj(hObjectx, ColorResult.green);
+                halcon.GetOneImageR().AddObj(hObject, ColorResult.green);
+                halcon.GetOneImageR().AddObj(modeHomMatRoing, ColorResult.yellow);
+                halcon.GetOneImageR().AddObj(_Classify.ModeRoing, ColorResult.blue);
+                halcon.GetOneImageR().AddObj(_Classify.OutRiong, ColorResult.green);
+            }
+            catch (Exception)
+            {
+
+            }
+        }
+
+        private void button9_Click(object sender, EventArgs e)
+        {
+            try
+            {
+
+                _Classify.ModeRoing = _Classify.OutRiong;
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        private void thresholdControl1_DispButt(string dispV,int dispIdxe)
+        {
+            try
+            {
+                try
+                {
+                    hWindID.HobjClear();
+                    HOperatorSet.SmallestRectangle1(_Classify.DrawObj, out HTuple row, out HTuple col1, out HTuple row2, out HTuple col2);
+                    //if (listBox2.SelectedIndex == 0)
+                    //{
+                    //    hWindID.SetImaage(halcon.Image());
+                    //}
+                 
+                   hWindID.SetImaage(halcon.GetImageOBJ((ImageTypeObj)Enum.Parse(typeof(ImageTypeObj), dispV)),false);
+                    
+                    AoiObj aoiObj = RunProgram.GetAoi();
+
+                    if (_Classify.IsHomMat)
+                    {
+                        List<HTuple> listHomet = RunProgram.GetHomMatList(halcon.GetOneImageR());
+                        HOperatorSet.AffineTransRegion(_Classify.DrawObj, out HObject hObjectROI,
+                        listHomet[0], "nearest_neighbor");
+                        aoiObj.SelseAoi = hObjectROI;
+                    }
+                    else
+                    {
+                        aoiObj.SelseAoi = _Classify.DrawObj;
+                    }
+                    groupBox3.Text = dispV;
+                    //hWindID.SetPerpetualPart(row - 100, col1 - 100, row2 + 100, col2 + 100);
+                    hWindID.SetDraw(checkBox2.Checked);
+                    hWindID.OneResIamge.AddObj(_Classify.DrawObj, ColorResult.blue);
+                    hWindID.OneResIamge.AddObj(hObjects[dispIdxe+1]);
+                    hWindID.ShowObj();
+
+                    //HImage hImage = new HImage(hWindID.Image());
+                  
+                }
+                catch (Exception)
+                {
+                }
+
+            }
+            catch (Exception)
+            {
+
+            }
+        }
+
+        private void userCtrlThreshold2_ThresholdChanged(Threshold_Min_Max threshold_Min_Max)
+        {
+            try
+            {
+                hWindID.HobjClear();
+                AoiObj aoiObj = RunProgram.GetAoi();
+                aoiObj.SelseAoi = _Classify.DrawObj;
+
+                aoiObj.CiName = _Classify.Name;
+                List<HTuple> homitd = Color_detection.GetHomMatList(halcon.GetOneImageR());
+          
+                aoiObj.DebugID = 1;
+                _Classify.Classify(halcon.GetOneImageR(), aoiObj, Color_detection, out HObject hObject,
+                          this.hObjects);
+                HOperatorSet.SmallestRectangle1(_Classify.DrawObj, out HTuple row, out HTuple col1, out HTuple row2, out HTuple col2);
+                //if (listBox2.SelectedIndex == 0)
+                //{
+                //    hWindID.SetImaage(halcon.Image(),false);
+                //}
+                //else
+                //{
+                    hWindID.SetImaage(halcon.GetImageOBJ((ImageTypeObj)Enum.Parse(typeof(ImageTypeObj),
+                       threshold_Min_Max.ImageTypeObj.ToString())),false);
+                //}
+           
+
+                if (_Classify.IsHomMat)
+                {
+                    List<HTuple> listHomet = RunProgram.GetHomMatList(halcon.GetOneImageR());
+                    HOperatorSet.AffineTransRegion(_Classify.DrawObj, out HObject hObjectROI,
+                    listHomet[0], "nearest_neighbor");
+                    aoiObj.SelseAoi = hObjectROI;
+                }
+                else
+                {
+                    aoiObj.SelseAoi = _Classify.DrawObj;
+                }
+                groupBox3.Text = listBox2.SelectedItem.ToString();
+                //hWindID.SetPerpetualPart(row - 100, col1 - 100, row2 + 100, col2 + 100);
+                hWindID.SetDraw(checkBox2.Checked);
+                hWindID.OneResIamge.AddObj(_Classify.DrawObj, ColorResult.blue);
+                hWindID.OneResIamge.AddObj(hObjects[listBox2.SelectedIndex]);
+                hWindID.ShowObj();
+
+                //HImage hImage = new HImage(hWindID.Image());
+                //userCtrlThreshold1.Fuction(hImage);
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        private void button10_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

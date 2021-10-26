@@ -43,6 +43,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 halcon.UPStart();
                 halcon.ShowVision(_Model.Name, halcon.GetOneImageR());
                 halcon.EndChanged(halcon.GetOneImageR());
+                halcon.ShowObj();
                 numOrX.Text = _Model.OriginX.TupleString(".3f");
                 numOrY.Text = _Model.OriginY.TupleString(".3f");
                 numOrU.Text = _Model.OriginU.TupleDeg().TupleString("0.03f");
@@ -828,6 +829,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 _Classify.Enble = checkBox3.Checked;
                 _Classify.IsColt = checkBox6.Checked;
                 _Classify.IsHomMat = checkBox4.Checked;
+                _Classify.ModeHom = checkBox11.Checked;
                 _Classify.ThresSelectMin = (byte)numericUpDown4.Value;
                 _Classify.ThresSelectMax = (byte)numericUpDown5.Value;
                 _Classify.SelectMin = (double)numericUpDown8.Value;
@@ -857,6 +859,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 checkBox3.Checked = _Classify.Enble;
                 checkBox4.Checked = _Classify.IsHomMat;
                 checkBox7.Checked = _Classify.ISSelecRoiFillUP;
+                checkBox11.Checked = _Classify.ModeHom;
                 thresholdControl1.SetData(color_Classify.threshold_Min_Maxes);
                 select_obj_type2.SetData(color_Classify.Max_area);
                 numericUpDown10.Value = color_Classify.ColorNumber;
@@ -880,10 +883,18 @@ namespace Vision2.vision.HalconRunFile.Controls
 
                 for (int i = 0; i < _Model.MRModelHomMat.NumberT; i++)
                 {
-                    HOperatorSet.AffineTransRegion(_Classify.DrawObj, out HObject hObjectROI,
-                        _Model.MRModelHomMat.HomMat[i], "nearest_neighbor");
+                
                     AoiObj aoiObj = _Model.GetAoi();
-                    aoiObj.SelseAoi = hObjectROI;
+                    if (_Classify.IsHomMat)
+                    {
+                        HOperatorSet.AffineTransRegion(_Classify.DrawObj, out HObject hObjectROI,
+                       _Model.MRModelHomMat.HomMat[i], "nearest_neighbor");
+                        aoiObj.SelseAoi = hObjectROI;
+                    }
+                    else
+                    {
+                        aoiObj.SelseAoi = _Classify.DrawObj;
+                    }
                     _Classify.Classify(halcon.GetOneImageR(), aoiObj, _Model, out HObject hObject, hObjects);
                     halcon.AddObj(hObject);
                     HOperatorSet.AreaCenter(hObject, out HTuple area, out HTuple row, out HTuple column);
@@ -1129,7 +1140,19 @@ namespace Vision2.vision.HalconRunFile.Controls
                     return;
                 }
                 hWindID.HobjClear();
-                HOperatorSet.SmallestRectangle1(_Classify.DrawObj, out HTuple row, out HTuple col1, out HTuple row2, out HTuple col2);
+                AoiObj aoiObj = _Model.GetAoi();
+                if (_Classify.IsHomMat)
+                {
+                    HOperatorSet.AffineTransRegion(_Classify.DrawObj, out HObject hObjectROI,
+                   _Model.MRModelHomMat.HomMat[0], "nearest_neighbor");
+                    aoiObj.SelseAoi = hObjectROI;
+                }
+                else
+                {
+                    aoiObj.SelseAoi = _Classify.DrawObj;
+                }
+
+                HOperatorSet.SmallestRectangle1(aoiObj.SelseAoi, out HTuple row, out HTuple col1, out HTuple row2, out HTuple col2);
                 if (listBox3.SelectedIndex == 0)
                 {
                     hWindID.SetImaage(halcon.Image());
@@ -1188,6 +1211,66 @@ namespace Vision2.vision.HalconRunFile.Controls
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void button26_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                _Classify.ISModeC = true;
+                halcon.UPStart();
+                halcon.ShowVision(_Model.Name, halcon.GetOneImageR());
+                halcon.EndChanged(halcon.GetOneImageR());
+                halcon.ShowObj();
+            }
+            catch (Exception)
+            {
+            }   
+        }
+
+        private void button27_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                HOperatorSet.GenCrossContourXld(out HObject hObject, _Model.OriginY, _Model.OriginX, 100, _Model.OriginU);
+
+                HOperatorSet.GenCrossContourXld(out HObject hObject2, _Model.ModeRow, _Model.ModeCol, 100, 0);
+                halcon.AddObj(hObject2);
+                Vision.Gen_arrow_contour_xld(out HObject hObject1, _Model.ModeRow[0], 
+                    _Model.ModeCol[0], _Model.ModeRow[1], _Model.ModeCol[1]);
+                halcon.AddObj(hObject1);
+                halcon.AddObj(hObject);
+                halcon.ShowObj();
+
+
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        private void cbbMode_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button37_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                halcon.HobjClear();
+                if (_Classify != null)
+                {
+                    _Classify.SeleRoi = RunProgram.DrawRmoveObj(halcon, _Classify.SeleRoi);
+                }
+                if (_Classify.SeleRoi == null || _Classify.SeleRoi.IsInitialized())
+                {
+                    halcon.AddObj(_Classify.SeleRoi, ColorResult.pink);
+                }
+            }
+            catch (Exception)
+            {
             }
         }
     }

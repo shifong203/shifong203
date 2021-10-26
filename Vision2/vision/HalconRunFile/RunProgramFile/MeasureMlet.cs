@@ -23,7 +23,10 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             oneRObjs = new List<OneRObj>();
             OneRObj oneRObj = new OneRObj();
             oneRObj.ComponentID = this.Name;
-
+            if (CRDName!="")
+            {
+                oneRObj.ComponentID = CRDName;
+            }
             HObject hObjectRoi = new HObject();
             hObjectRoi.GenEmptyObj();
             bool OK = false; HObject image;
@@ -82,8 +85,11 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 {
                     measure2 = Dic_Measure.Keys_Measure[name2[0]];
                 }
-                HTuple rows = new HTuple(measure2.OutRows, measure1.OutRows);
-                HTuple cols = new HTuple(measure2.OutCols, measure1.OutCols);
+         
+                HTuple rows = new HTuple(measure2["DrawRows"], measure1["DrawRows"]);
+                HTuple cols = new HTuple(measure2["DrawCols"], measure1["DrawCols"]);
+         
+  
                 HOperatorSet.GenRegionPolygonFilled(out hObjectRoi, rows, cols);
                 HOperatorSet.SmallestRectangle1(hObjectRoi, out HTuple row1, out HTuple col1, out HTuple row2, out HTuple col2);
 
@@ -132,13 +138,13 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         {
                             oneResultOBj.GetHalcon().keyValuePairs1.Add(this.Name + "", lengtMM);
                         }
-                        oneResultOBj.AddImageMassage(this.Dic_Measure.Keys_Measure[MeasureName2].OutCentreRow,
-                            this.Dic_Measure.Keys_Measure[MeasureName2].OutCentreCol, this.Name + "=" +
-                            lengtMM.TupleString("0.3f"), ColorResult.blue);
+                     
                         this["垂足mm"] = lengtMM;
                         if (!rest)
                             OK = false;
                         oneRObj.dataMinMax.AddData("垂足", lengtMM, DistanceMin, DistanceMax);
+                        Roi = Roi.ConcatObj(measure2.MeasureHObj);
+                        Roi = Roi.ConcatObj(measure1.MeasureHObj);
                         if (DistanceMax < lengtMM.D || DistanceMin > lengtMM.D)
                         {
                             oneResultOBj.AddObj(Roi, ColorResult.red);
@@ -146,10 +152,21 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         }
                         else
                         {
-                            oneResultOBj.AddObj(Roi, this.color);
+                            oneResultOBj.AddObj(Roi, ColorResult.green);
+
                             OK = true;
                         }
-
+                        ColorResult color = ColorResult.green;
+                        if (OK)
+                        {
+                            color = ColorResult.red;
+                        }
+                        if (this.ISShowText)
+                        {
+                            oneResultOBj.AddImageMassage(this.Dic_Measure.Keys_Measure[MeasureName2].OutCentreRow,
+                             this.Dic_Measure.Keys_Measure[MeasureName2].OutCentreCol, this.Name + "=" +
+                             lengtMM.TupleString("0." + Vision.Instance.Decimal_point + "f"), color);
+                        }
                         break;
 
                     case MeasureModeEnum.同心圆:
@@ -352,16 +369,17 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 }
             }
             HOperatorSet.AreaCenter(hObjectRoi, out HTuple area, out HTuple row, out HTuple colue);
-            HOperatorSet.DilationCircle(hObjectRoi, out HObject hObjectRoi2, 10);
+            HOperatorSet.DilationCircle(hObjectRoi, out HObject hObjectRoi2, 100);
             if (row.Length >= 1)
             {
                 oneRObj.Row = row.TupleInt();
                 oneRObj.Col = colue.TupleInt();
             }
+            oneRObj.RestStrings .AddRange(this.GetBackNames().ToSArr());
             oneRObj.NGROI = hObjectRoi;
             oneRObj.ROI = hObjectRoi2;
             oneRObj.NGText = this.Name;
-            oneRObj.aOK = OK;
+            oneRObj.Done =oneRObj.aOK = OK;
             oneResultOBj.AddNGOBJ(oneRObj);
             return OK;
         }

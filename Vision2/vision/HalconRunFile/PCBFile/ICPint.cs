@@ -66,8 +66,10 @@ namespace Vision2.vision.HalconRunFile.PCBFile
             [Category("焊脚异物"), DisplayName("异物面积"), Description("")]
             public int Pint_Foreign_Matter_Area { get; set; } = 100;
 
-            [Category("焊盘破损"), DisplayName("焊盘破损面积"), Description("")]
-            public int HP_Foreign_Matter_Area { get; set; } = 150;
+    
+
+            //[Category("焊盘破损"), DisplayName("焊盘最小面积"), Description("")]
+            //public int HP_Foreign_Matter_Area { get; set; } = 150;
 
             /// <summary>
             ///
@@ -107,15 +109,14 @@ namespace Vision2.vision.HalconRunFile.PCBFile
                     HOperatorSet.ReduceDomain(iamge, HjAOI, out HObject hObject2);
                     HOperatorSet.SmallestRectangle2(hObject1H, out HTuple rwo, out HTuple col, out HTuple phi, out HTuple leng1, out HTuple leng2);
                     HOperatorSet.ReduceDomain(iamge, hObject1H, out HObject HJImage);
-
                     HOperatorSet.Threshold(HJImage, out HObject hObjectH2, iCPint.HanPMin, iCPint.HanPMax);
                     HOperatorSet.OpeningCircle(hObjectH2, out hObjectH2, 2);
                     HOperatorSet.Connection(hObjectH2, out HObject hObjectH1);
-
-                    HOperatorSet.SelectShape(hObjectH1, out hObjectH2, "area", "and", iCPint.HPAreaMin, iCPint.HPAreaMax);
+                    HOperatorSet.SelectShape(hObjectH1, out hObjectH2, "area", "and", iCPint.HPAreaMin,9999999);
                     if (hObjectH2.CountObj() > 0)
                     {
-                        NGText += "焊盘错误:";
+                        //NGText += "焊盘错误:";
+                        NGText += "  Bonding pad error:";
                         oneResultOBj.AddObj(hObjectH2, ColorResult.red);
                         ErrNumber++;
                         if (debug == 3)
@@ -127,6 +128,7 @@ namespace Vision2.vision.HalconRunFile.PCBFile
                     HOperatorSet.Threshold(hObject2, out HObject hObject11, iCPint.PintMin, iCPint.PintMax);
                     HOperatorSet.OpeningCircle(hObject11, out hObject11, 2.5);
                     HOperatorSet.Connection(hObject11, out hObject11);
+         
                     HOperatorSet.SelectShape(hObject11, out HObject hObject3, "area", "and", iCPint.PintAreaMin, iCPint.PintAreaMax);
                     HOperatorSet.AreaCenter(hObject3, out HTuple area, out HTuple row3, out HTuple column3);
                     HOperatorSet.GenCrossContourXld(out HObject cross, row3, column3, 10, 0);
@@ -155,18 +157,26 @@ namespace Vision2.vision.HalconRunFile.PCBFile
                         HOperatorSet.Closing(hObject5, hObject4, out hObject4);
                         HOperatorSet.FillUp(hObject4, out hObject4);
                         HOperatorSet.Union1(hObject4, out hObject4);
-                        HOperatorSet.DilationCircle(hObject4, out hObject4, iCPint.PintDif);
+                        if (debug != 0)
+                        {
+                            oneResultOBj.AddObj(hObject4, ColorResult.blue);
+                        }
+                            HOperatorSet.DilationCircle(hObject4, out hObject4, iCPint.PintDif);
+                      
+
                         if (phi.TupleDeg().TupleAbs() + 5 > 90) HOperatorSet.SortRegion(hObject4, out hObject4, "first_point", "true", "row");
                         else HOperatorSet.SortRegion(hObject4, out hObject4, "first_point", "true", "column");
 
                         HOperatorSet.Connection(hObject4, out hObject4);
                         HOperatorSet.Intersection(hObject4, hObjectH1, out HObject hObject);
+
                         HOperatorSet.Intersection(hObject4, hObject1H, out HObject hObject6);
+                   
                         HOperatorSet.AreaCenter(hObject, out HTuple areah1, out HTuple rowh1, out HTuple coluh1);
 
                         for (int i = 0; i < areah1.Length; i++)
                         {  //Leg broken 焊脚破损
-                            if (areah1[i] < HP_Foreign_Matter_Area)
+                            if (areah1[i] < iCPint.HPAreaminT)
                             {
                                 if (!NGText.Contains("Leg broken"))
                                 {
@@ -187,8 +197,34 @@ namespace Vision2.vision.HalconRunFile.PCBFile
                         HOperatorSet.DilationCircle(hObject4, out HObject hObjectDil, 3);
                         HOperatorSet.ClosingRectangle1(ROI, out HJROI, 1000, 1000);
                         HOperatorSet.Difference(HJROI, hObject1H, out HJROI);
-
+                        HOperatorSet.Intersection(HJROI, hObject4, out HObject hjtOBj);
+                        HOperatorSet.ReduceDomain(iamge, HJROI, out HJImage);
+                        HOperatorSet.Threshold(HJImage, out HObject hObjectErr, Pint_Foreign_MatterMin, Pint_Foreign_MatterMax);
+                        HOperatorSet.Difference(hObjectErr, hObject4, out HObject err);
+                        HOperatorSet.Connection(err, out err);
+                        HOperatorSet.SelectShape(err, out err, "area", "and", iCPint. Pint_Skew_Area, 999999999);
+                        if (debug != 0)
+                        {
+                            oneResultOBj.AddObj(hObjectErr, ColorResult.coral);
+                            oneResultOBj.AddObj(err, ColorResult.red);
+                            oneResultOBj.AddObj(hjtOBj, ColorResult.yellow);
+                            HOperatorSet.AreaCenter(err, out HTuple areaErr, out HTuple rowErr, out HTuple columnErr);
+                            oneResultOBj.AddImageMassage(rowErr, columnErr, areaErr);
+                        }
+                 
+                        if (err.CountObj()!=0)
+                        {
+                            HOperatorSet.DilationCircle(err, out err, 3);
+                            ErrDobj = ErrDobj.ConcatObj(err);
+                            if (!NGText.Contains("Pin skew"))
+                            {
+                                ErrNumber++;
+                                NGText += "Pin skew:";
+                            }
+                            oneResultOBj.AddObj(err, ColorResult.red);
+                        }
                         HOperatorSet.Difference(HJROI, hObjectDil, out HObject hObject7);
+
                         //oneResultOBj.AddObj(hObject3, ColorResult.red);
                         HOperatorSet.ReduceDomain(iamge, hObject7, out HJImage);
                         HOperatorSet.Threshold(HJImage, out HObject hObject8, Pint_Foreign_MatterMin, Pint_Foreign_MatterMax);
@@ -199,7 +235,6 @@ namespace Vision2.vision.HalconRunFile.PCBFile
                         {
                             HOperatorSet.DilationCircle(hObject8, out HObject errObj, 5);
                             oneResultOBj.AddObj(errObj, ColorResult.red);
-
                             ErrDobj = ErrDobj.ConcatObj(errObj);
                             if (!NGText.Contains("Foreign body in welding foot "))
                             {
@@ -208,7 +243,6 @@ namespace Vision2.vision.HalconRunFile.PCBFile
                             }
                         }
                     }
-
                     HOperatorSet.GenCrossContourXld(out cross, row3, column3, 10, 0);
                     oneResultOBj.AddObj(cross, ColorResult.green);
                     HTuple DistanceS = new HTuple();
@@ -288,6 +322,14 @@ namespace Vision2.vision.HalconRunFile.PCBFile
                             oneResultOBj.AddMeassge("数量" + length11.Length + "长度" + length11.TupleMean() + "宽度" + length22.TupleMean() + "距离" + DistanceS.TupleMean());
                             DistanceS.Append(0);
                             oneResultOBj.AddImageMassage(row4, column4, Indetx + "长度" + length11 + "宽度" + length22 + "距离" + DistanceS);
+                        }
+                        if (debug == 3)
+                        {
+                            oneResultOBj.AddObj(hObjectH2, ColorResult.blue);
+                            oneResultOBj.AddObj(hObjectH1, ColorResult.yellow);
+                        //    oneResultOBj.AddMeassge("数量" + length11.Length + "长度" + length11.TupleMean() + "宽度" + length22.TupleMean() + "距离" + DistanceS.TupleMean());
+                        //    DistanceS.Append(0);
+                        //    oneResultOBj.AddImageMassage(row4, column4, Indetx + "长度" + length11 + "宽度" + length22 + "距离" + DistanceS);
                         }
                     }
                     if (ErrNumber == 0)
@@ -425,14 +467,16 @@ namespace Vision2.vision.HalconRunFile.PCBFile
         [Category("焊盘检测区域"), DisplayName("焊盘灰度Min"), Description("")]
         public byte HanPMin { get; set; } = 105;
 
-        [Category("焊盘检测区域"), DisplayName("焊盘面积Min"), Description("")]
+        [Category("焊盘检测区域"), DisplayName("焊盘最大面积"), Description("")]
         public double HPAreaMin { get; set; } = 800;
 
-        [Category("焊盘检测区域"), DisplayName("焊盘面积Max"), Description("")]
-        public double HPAreaMax { get; set; } = 999999;
+        [Category("焊盘检测区域"), DisplayName("焊盘最小面积"), Description("")]
+        public double HPAreaminT { get; set; } = 300;
 
         [Category("焊盘检测区域"), DisplayName("焊盘灰度Max"), Description("")]
         public byte HanPMax { get; set; } = 255;
+        [Category("焊脚偏移"), DisplayName("焊脚偏移面积"), Description("缺陷大于这个面积将会被标记")]
+        public int Pint_Skew_Area { get; set; } = 50;
 
         public bool Homat2dT { get; set; }
 
@@ -499,7 +543,7 @@ namespace Vision2.vision.HalconRunFile.PCBFile
                 if (!ziPoints[i].PintRun(V, homMat2D, this, oneResultOBj, out HObject errObj, out HObject roi))
                 {
                     //oneResultOBj.AddObj(errObj);
-                    oneResultOBj.AddNGOBJ(this.Name, (i + 1) + "针脚缺陷", roi, errObj, this.GetBackNames());
+                    oneResultOBj.AddNGOBJ(this.Name, (i + 1) + "Pin Err", roi, errObj, this.GetBackNames());
                     //ErrDobj = ErrDobj.ConcatObj(errObj);
                     NGNumber++;
                 }

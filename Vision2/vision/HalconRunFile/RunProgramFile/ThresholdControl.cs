@@ -7,9 +7,10 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
     public partial class ThresholdControl : UserControl
     {
         public delegate void EventValue(List<Threshold_Min_Max> threshold_Min_s);
+        public delegate void dispButt(string  dispV,int  dispIdex);
 
         public event EventValue evValue;
-
+        public event dispButt DispButt;
         public ThresholdControl()
         {
             InitializeComponent();
@@ -43,6 +44,18 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
+            try
+            {
+                if (e.ColumnIndex == 4)
+                {
+                    DispButt?.Invoke(dataGridView1.Rows[e.RowIndex].Cells[0].Value.ToString(),e.RowIndex);
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+       
         }
 
         private void dataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
@@ -116,6 +129,11 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
 
         private void dataGridView1_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
+        }
+
+        private void dataGridView1_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -69,7 +69,25 @@ namespace Vision2.Project.Mes.环旭SISF
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.listBox1 = new System.Windows.Forms.ListBox();
+            this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.groupBox7 = new System.Windows.Forms.GroupBox();
+            this.richTextBox4 = new System.Windows.Forms.RichTextBox();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.textBox9 = new System.Windows.Forms.TextBox();
+            this.label9 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.button7 = new System.Windows.Forms.Button();
+            this.numericUpDown2 = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDown3 = new System.Windows.Forms.NumericUpDown();
+            this.label8 = new System.Windows.Forms.Label();
+            this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.richTextBox3 = new System.Windows.Forms.RichTextBox();
+            this.dataGridView3 = new System.Windows.Forms.DataGridView();
+            this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.label10 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.groupBox5.SuspendLayout();
@@ -83,6 +101,17 @@ namespace Vision2.Project.Mes.环旭SISF
             this.tabPage3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBox4.SuspendLayout();
+            this.tabPage4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+            this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.Panel2.SuspendLayout();
+            this.splitContainer1.SuspendLayout();
+            this.groupBox7.SuspendLayout();
+            this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).BeginInit();
+            this.groupBox6.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).BeginInit();
             this.SuspendLayout();
             // 
             // propertyGrid1
@@ -98,6 +127,7 @@ namespace Vision2.Project.Mes.环旭SISF
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage3);
+            this.tabControl1.Controls.Add(this.tabPage4);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
@@ -486,11 +516,212 @@ namespace Vision2.Project.Mes.环旭SISF
             this.listBox1.TabIndex = 1;
             this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
             // 
+            // tabPage4
+            // 
+            this.tabPage4.Controls.Add(this.splitContainer1);
+            this.tabPage4.Location = new System.Drawing.Point(4, 22);
+            this.tabPage4.Name = "tabPage4";
+            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage4.Size = new System.Drawing.Size(1274, 704);
+            this.tabPage4.TabIndex = 3;
+            this.tabPage4.Text = "模拟";
+            this.tabPage4.UseVisualStyleBackColor = true;
+            // 
+            // splitContainer1
+            // 
+            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.Location = new System.Drawing.Point(3, 3);
+            this.splitContainer1.Name = "splitContainer1";
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.Controls.Add(this.groupBox7);
+            this.splitContainer1.Panel1.Controls.Add(this.panel1);
+            this.splitContainer1.Panel1.Controls.Add(this.groupBox6);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.dataGridView3);
+            this.splitContainer1.Size = new System.Drawing.Size(1268, 698);
+            this.splitContainer1.SplitterDistance = 413;
+            this.splitContainer1.TabIndex = 9;
+            // 
+            // groupBox7
+            // 
+            this.groupBox7.Controls.Add(this.richTextBox4);
+            this.groupBox7.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox7.Location = new System.Drawing.Point(0, 235);
+            this.groupBox7.Name = "groupBox7";
+            this.groupBox7.Size = new System.Drawing.Size(413, 284);
+            this.groupBox7.TabIndex = 6;
+            this.groupBox7.TabStop = false;
+            this.groupBox7.Text = "模拟设备发送";
+            // 
+            // richTextBox4
+            // 
+            this.richTextBox4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.richTextBox4.Location = new System.Drawing.Point(3, 17);
+            this.richTextBox4.Name = "richTextBox4";
+            this.richTextBox4.Size = new System.Drawing.Size(407, 264);
+            this.richTextBox4.TabIndex = 0;
+            this.richTextBox4.Text = "EQDIW00011-01,21036018100118052000001083,2,,JQ01-4FAP-93,,OK,PANEL_SERIAL_NUMBER=" +
+    "21036018100118052000001083;1_SUFFIX_SERIAL_NUMBER=21036018100118052000001059;2_S" +
+    "UFFIX_SERIAL_NUMBER=";
+            // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.label10);
+            this.panel1.Controls.Add(this.textBox9);
+            this.panel1.Controls.Add(this.label9);
+            this.panel1.Controls.Add(this.label7);
+            this.panel1.Controls.Add(this.button7);
+            this.panel1.Controls.Add(this.numericUpDown2);
+            this.panel1.Controls.Add(this.numericUpDown3);
+            this.panel1.Controls.Add(this.label8);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(413, 235);
+            this.panel1.TabIndex = 8;
+            // 
+            // textBox9
+            // 
+            this.textBox9.Location = new System.Drawing.Point(67, 50);
+            this.textBox9.Name = "textBox9";
+            this.textBox9.Size = new System.Drawing.Size(100, 21);
+            this.textBox9.TabIndex = 9;
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(218, 7);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(53, 12);
+            this.label9.TabIndex = 8;
+            this.label9.Text = "执行次数";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(14, 7);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(53, 12);
+            this.label7.TabIndex = 2;
+            this.label7.Text = "重复次数";
+            // 
+            // button7
+            // 
+            this.button7.Location = new System.Drawing.Point(137, 2);
+            this.button7.Name = "button7";
+            this.button7.Size = new System.Drawing.Size(75, 23);
+            this.button7.TabIndex = 7;
+            this.button7.Text = "开始模拟";
+            this.button7.UseVisualStyleBackColor = true;
+            this.button7.Click += new System.EventHandler(this.button7_Click);
+            // 
+            // numericUpDown2
+            // 
+            this.numericUpDown2.Location = new System.Drawing.Point(69, 4);
+            this.numericUpDown2.Name = "numericUpDown2";
+            this.numericUpDown2.Size = new System.Drawing.Size(64, 21);
+            this.numericUpDown2.TabIndex = 1;
+            this.numericUpDown2.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            // 
+            // numericUpDown3
+            // 
+            this.numericUpDown3.DecimalPlaces = 2;
+            this.numericUpDown3.Location = new System.Drawing.Point(68, 27);
+            this.numericUpDown3.Maximum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.numericUpDown3.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDown3.Name = "numericUpDown3";
+            this.numericUpDown3.Size = new System.Drawing.Size(65, 21);
+            this.numericUpDown3.TabIndex = 3;
+            this.numericUpDown3.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(14, 30);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(53, 12);
+            this.label8.TabIndex = 4;
+            this.label8.Text = "重复间隔";
+            // 
+            // groupBox6
+            // 
+            this.groupBox6.Controls.Add(this.richTextBox3);
+            this.groupBox6.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.groupBox6.Location = new System.Drawing.Point(0, 519);
+            this.groupBox6.Name = "groupBox6";
+            this.groupBox6.Size = new System.Drawing.Size(413, 179);
+            this.groupBox6.TabIndex = 5;
+            this.groupBox6.TabStop = false;
+            this.groupBox6.Text = "模拟SISF发送";
+            // 
+            // richTextBox3
+            // 
+            this.richTextBox3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.richTextBox3.Location = new System.Drawing.Point(3, 17);
+            this.richTextBox3.Name = "richTextBox3";
+            this.richTextBox3.Size = new System.Drawing.Size(407, 159);
+            this.richTextBox3.TabIndex = 0;
+            this.richTextBox3.Text = "OK7";
+            // 
+            // dataGridView3
+            // 
+            this.dataGridView3.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView3.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.Column2,
+            this.Column3});
+            this.dataGridView3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridView3.Location = new System.Drawing.Point(0, 0);
+            this.dataGridView3.Name = "dataGridView3";
+            this.dataGridView3.RowTemplate.Height = 23;
+            this.dataGridView3.Size = new System.Drawing.Size(851, 698);
+            this.dataGridView3.TabIndex = 0;
+            // 
+            // Column2
+            // 
+            this.Column2.HeaderText = "发送长度";
+            this.Column2.Name = "Column2";
+            this.Column2.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // Column3
+            // 
+            this.Column3.HeaderText = "接收长度";
+            this.Column3.Name = "Column3";
+            this.Column3.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
             // dataGridViewTextBoxColumn1
             // 
             this.dataGridViewTextBoxColumn1.HeaderText = "线别名";
             this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
             this.dataGridViewTextBoxColumn1.Width = 407;
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(12, 55);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(53, 12);
+            this.label10.TabIndex = 10;
+            this.label10.Text = "连接名称";
             // 
             // SisfForm1
             // 
@@ -518,6 +749,18 @@ namespace Vision2.Project.Mes.环旭SISF
             this.tabPage3.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.groupBox4.ResumeLayout(false);
+            this.tabPage4.ResumeLayout(false);
+            this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
+            this.splitContainer1.ResumeLayout(false);
+            this.groupBox7.ResumeLayout(false);
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).EndInit();
+            this.groupBox6.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -564,5 +807,23 @@ namespace Vision2.Project.Mes.环旭SISF
         private System.Windows.Forms.GroupBox groupBox5;
         private System.Windows.Forms.TextBox textBox8;
         private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.TabPage tabPage4;
+        private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.GroupBox groupBox7;
+        private System.Windows.Forms.RichTextBox richTextBox4;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Button button7;
+        private System.Windows.Forms.NumericUpDown numericUpDown2;
+        private System.Windows.Forms.NumericUpDown numericUpDown3;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.GroupBox groupBox6;
+        private System.Windows.Forms.RichTextBox richTextBox3;
+        private System.Windows.Forms.DataGridView dataGridView3;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column3;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.TextBox textBox9;
+        private System.Windows.Forms.Label label10;
     }
 }

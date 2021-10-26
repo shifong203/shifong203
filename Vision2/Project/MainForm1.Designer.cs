@@ -60,6 +60,7 @@
             this.隐藏工具ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.窗口模式ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.方案管理ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.查询SNToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.SaveAll = new System.Windows.Forms.ToolStripButton();
             this.ToolSripButtonHelp = new System.Windows.Forms.ToolStripDropDownButton();
             this.镜头信息ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -311,7 +312,8 @@
             this.查看操作手册ToolStripMenuItem,
             this.库管理ToolStripMenuItem,
             this.窗口分布ToolStripMenuItem,
-            this.方案管理ToolStripMenuItem});
+            this.方案管理ToolStripMenuItem,
+            this.查询SNToolStripMenuItem});
             this.toolStripDropDownButton1.Font = new System.Drawing.Font("宋体", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.toolStripDropDownButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripDropDownButton1.Image")));
             this.toolStripDropDownButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
@@ -401,6 +403,13 @@
             this.方案管理ToolStripMenuItem.Text = "方案管理";
             this.方案管理ToolStripMenuItem.Visible = false;
             this.方案管理ToolStripMenuItem.Click += new System.EventHandler(this.方案管理ToolStripMenuItem_Click);
+            // 
+            // 查询SNToolStripMenuItem
+            // 
+            this.查询SNToolStripMenuItem.Name = "查询SNToolStripMenuItem";
+            this.查询SNToolStripMenuItem.Size = new System.Drawing.Size(198, 24);
+            this.查询SNToolStripMenuItem.Text = "查询SN";
+            this.查询SNToolStripMenuItem.Click += new System.EventHandler(this.查询SNToolStripMenuItem_Click);
             // 
             // SaveAll
             // 
@@ -771,5 +780,6 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
         private System.Windows.Forms.ToolStripLabel toolStripLabel9;
         private System.Windows.Forms.ToolStripMenuItem 查看操作手册ToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem 查询SNToolStripMenuItem;
     }
 }

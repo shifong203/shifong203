@@ -414,13 +414,13 @@ namespace Vision2.Project.DebugF.IO
                                     {
                                         dataSn = "";
                                         label1.label1.BackColor = Color.Red;
-                                        trayData.GetDataVales()[tryaid[i] - 1].AddNG("SN未识别");
+                                        trayData.GetDataVales()[tryaid[i] - 1].AddNG("SN not identify");
                                     }
                                     else if (dataSn == "")
                                     {
                                         dataSn = "";
                                         label1.label1.BackColor = Color.Red;
-                                        trayData.GetDataVales()[tryaid[i] - 1].AddNG("SN未识别");
+                                        trayData.GetDataVales()[tryaid[i] - 1].AddNG("SN not identify");
                                     }
                                     else
                                     {
@@ -603,7 +603,8 @@ namespace Vision2.Project.DebugF.IO
                 }
                 GetTexup();
                 int heit, Wita;
-                heit = (this.Height - 20) / (rows);
+             
+                heit = (this.Height - label1.Height) / (rows);
                 Wita = (this.Width - 20) / (columnCount);
                 if (heit < 20)
                 {
@@ -774,37 +775,39 @@ namespace Vision2.Project.DebugF.IO
                             int index = 0;
                             foreach (var itemd in item.Value.NGObj.DicOnes)
                             {
-                                DataMinMax da = itemd.Value.oneRObjs[0].dataMinMax;
-                                if (da != null)
+                                if (itemd.Value.oneRObjs.Count>0)
                                 {
-                                    if (da.Reference_Name.Count == 0)
+                                    DataMinMax da = itemd.Value.oneRObjs[0].dataMinMax;
+                                    if (da != null)
                                     {
-                                        continue;
-                                    }
-                                    dataGridView2.Rows.Add(da.Reference_Name.Count);
-                                    for (int i = 0; i < da.Reference_Name.Count; i++)
-                                    {
-                                        dataGridView2.Rows[index].Cells[0].Value = itemd.Key + "." + da.Reference_Name[i];
-                                        if (da.ValueStrs.Count > i)
+                                        if (da.Reference_Name.Count == 0)
                                         {
-                                            dataGridView2.Rows[index].Cells[1].Value = da.ValueStrs[i];
+                                            continue;
                                         }
-                                        dataGridView2.Rows[index].Cells[2].Value = da.Reference_ValueMin[i];
-                                        dataGridView2.Rows[index].Cells[3].Value = da.Reference_ValueMax[i];
-                                        index++;
-                                    }
-                                    if (da.ValueStrs.Count > dataGridView2.Rows.Count)
-                                    {
-                                        dataGridView2.Rows.Add(da.ValueStrs.Count - da.Reference_Name.Count);
-                                        for (int i = da.Reference_Name.Count; i < da.ValueStrs.Count; i++)
+                                        dataGridView2.Rows.Add(da.Reference_Name.Count);
+                                        for (int i = 0; i < da.Reference_Name.Count; i++)
                                         {
-                                            dataGridView2.Rows[index].Cells[1].Value = da.ValueStrs[i];
+                                            dataGridView2.Rows[index].Cells[0].Value = itemd.Key + "." + da.Reference_Name[i];
+                                            if (da.ValueStrs.Count > i)
+                                            {
+                                                dataGridView2.Rows[index].Cells[1].Value = da.ValueStrs[i];
+                                            }
+                                            dataGridView2.Rows[index].Cells[2].Value = da.Reference_ValueMin[i];
+                                            dataGridView2.Rows[index].Cells[3].Value = da.Reference_ValueMax[i];
                                             index++;
+                                        }
+                                        if (da.ValueStrs.Count > dataGridView2.Rows.Count)
+                                        {
+                                            dataGridView2.Rows.Add(da.ValueStrs.Count - da.Reference_Name.Count);
+                                            for (int i = da.Reference_Name.Count; i < da.ValueStrs.Count; i++)
+                                            {
+                                                dataGridView2.Rows[index].Cells[1].Value = da.ValueStrs[i];
+                                                index++;
+                                            }
                                         }
                                     }
                                 }
                             }
-
                             dataGridView2.Dock = DockStyle.Fill;
                             dataGridView2.Visible = true;
                             dataGridView2.BringToFront();
@@ -842,9 +845,10 @@ namespace Vision2.Project.DebugF.IO
                         }
                         foreach (var item in dataObj.ListCamsData)
                         {
-                            HWi.SetImaage(item.Value.ResuOBj[0].Image);
-                            HWi.OneResIamge = item.Value.ResuOBj[0];
-                            HWi.ShowImage();
+                            HWi.OneResIamge = item.Value.ResuOBj()[0];
+                            HWi.SetImaage(item.Value.ImagePlus);
+                            //HWi.ShowImage();
+                            HWi.ShowObj();
                             break;
                         }
                         if (DebugCompiler.Instance.IsImage)
@@ -867,11 +871,11 @@ namespace Vision2.Project.DebugF.IO
                     HWindowControl controlH = halcon.GetHWindow().GetNmaeWindowControl("Image." + control.Text);
                     if (controlH != null)
                     {
-                        halcon.HobjClear();
-                        OneResultOBj halconResult = controlH.Tag as OneResultOBj;
-                        halcon.ShowImage(halconResult.Image);
-                        halcon.SetResultOBj(halconResult);
-                        halcon.GetOneImageR().ShowAll(halcon.hWindowHalcon());
+                        //halcon.HobjClear();
+                        //OneResultOBj halconResult = controlH.Tag as OneResultOBj;
+                        //halcon.ShowImage(halconResult.Image);
+                        //halcon.SetResultOBj(halconResult);
+                        //halcon.GetOneImageR().ShowAll(halcon.hWindowHalcon());
                     }
                 }
             }

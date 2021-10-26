@@ -374,8 +374,10 @@ namespace Vision2.vision.Cams
         /// 采集图片
         /// </summary>
         /// <returns></returns>
-        public override HObject GetImage()
+        public override bool GetImage(out HObject image)
         {
+            image = new HObject();
+            image.GenEmptyObj();
             Watch.Restart();
             if (!this.Grabbing)
             {
@@ -388,8 +390,7 @@ namespace Vision2.vision.Cams
             lock (this)
             {
                 int err = 0;
-                HObject ho_image2 = new HObject();
-                ho_image2.GenEmptyObj();
+              
             ST:
                 if (dahuaCam != null)
                 {
@@ -414,7 +415,7 @@ namespace Vision2.vision.Cams
                                 int nRGB = RGBFactory.EncodeLen(frame.Width, frame.Height, false);
                                 IntPtr pData = Marshal.AllocHGlobal(nRGB);
                                 Marshal.Copy(frame.GrabResult.Image, 0, pData, frame.GrabResult.ImageSize);
-                                HOperatorSet.GenImage1Extern(out ho_image2, "byte", frame.Width, frame.Height, (HTuple)pData, 0);
+                                HOperatorSet.GenImage1Extern(out image, "byte", frame.Width, frame.Height, (HTuple)pData, 0);
                                 Marshal.FreeHGlobal(pData);
                             }
                             //彩色图像
@@ -423,12 +424,12 @@ namespace Vision2.vision.Cams
                                 int nRGB = RGBFactory.EncodeLen(frame.Width, frame.Height, true);
                                 IntPtr pData = Marshal.AllocHGlobal(nRGB);
                                 RGBFactory.ToRGB(frame.GrabResult.Image, frame.Width, frame.Height, true, frame.GrabResult.PixelFmt, pData, nRGB);
-                                HOperatorSet.GenImageInterleaved(out ho_image2, (HTuple)pData, "bgr", frame.Width, frame.Height, 0, "byte", frame.Width, frame.Height, 0, 0, 8, 0);
+                                HOperatorSet.GenImageInterleaved(out image, (HTuple)pData, "bgr", frame.Width, frame.Height, 0, "byte", frame.Width, frame.Height, 0, 0, 8, 0);
                                 Marshal.FreeHGlobal(pData);
                             }
                             if (RotateTypeStr != "None")
                             {
-                                HOperatorSet.MirrorImage(ho_image2, out ho_image2, RotateTypeStr);
+                                HOperatorSet.MirrorImage(image, out image, RotateTypeStr);
                             }
                             Watch.Stop();
                             RunTime = Watch.ElapsedMilliseconds;
@@ -437,7 +438,7 @@ namespace Vision2.vision.Cams
                                 Vision.TriggerSetup(this.FlashLampName, false.ToString());
                             }
                             frame.Dispose();
-                            return ho_image2;
+                            return true;
                         }
                         else
                         {
@@ -461,7 +462,7 @@ namespace Vision2.vision.Cams
                 {
                     ErosProjcetDLL.Project.AlarmText.AddTextNewLine("程序未关联相机" + this.name);
                 }
-                return ho_image2;
+                return false;
             }
         }
 
@@ -547,9 +548,22 @@ namespace Vision2.vision.Cams
                     try
                     {
                         halconRun.HobjClear();
-                        halconRun.Image(this.GetImage());
-                        halconRun.AddMeassge("采图时间:" + RunTime);
-                        halconRun.ShowObj();
+                        if (this.GetImage(out HObject image))
+                        {
+                            //if (Defintion)
+                            //{
+                            //    Vision.Evaluate_definition(image);
+                            //}
+                            halconRun.Image(image);
+                            halconRun.AddMeassge("采图时间:" + RunTime);
+                            halconRun.ShowObj();
+                        }
+                        else
+                        {
+                            halconRun.Image().GenEmptyObj();
+                            halconRun.AddMeassge("采图失败:" + RunTime);
+                            halconRun.ShowObj();
+                        }
                     }
                     catch (Exception)
                     {

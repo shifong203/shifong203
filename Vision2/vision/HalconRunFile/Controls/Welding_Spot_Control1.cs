@@ -186,20 +186,29 @@ namespace Vision2.vision.HalconRunFile.Controls
                     listBox2.Items.Add(listBox2.Items.Count + 1);
                 }
 
-                HOperatorSet.ReduceDomain(Halcon.Image(), WeldingCCT.HObject, out hObjectImage);
-                HOperatorSet.SmallestRectangle1(WeldingCCT.HObject, out HTuple row1, out HTuple column1, out HTuple row2, out HTuple column2);
+                List<HTuple> hTuples = welding_.GetHomMatList(Halcon.GetOneImageR());
+                HObject  imageObj = WeldingCCT.HObject;
+
+                if (hTuples.Count!=0)
+                {
+
+                    imageObj= welding_.GetHomMatObj(imageObj, hTuples[0]);
+                }
+                HOperatorSet.ReduceDomain(Halcon.Image(), imageObj, out hObjectImage);
+                HOperatorSet.SmallestRectangle1(imageObj, out HTuple row1, out HTuple column1, out HTuple row2, out HTuple column2);
                 hWind.SetPerpetualPart(row1, column1, row2, column2);
                 hWind.SetImaage(hObjectImage);
                 hWind.ShowImage();
                 if (WeldingCCT.Solder_joint_inspection(welding_, Halcon.GetOneImageR(), out bool iscon, out bool isless, out HTuple areas, hWind, RGBHSVEnum, id))
                 {
-                    Halcon.AddObj(WeldingCCT.HObject);
+                    Halcon.AddObj(imageObj);
                 }
                 else
                 {
-                    Halcon.AddObj(WeldingCCT.HObject, ColorResult.red);
+                    Halcon.AddObj(imageObj, ColorResult.red);
                 }
-
+                hWind.SetPerpetualPart(row1, column1, row2, column2);
+                hWind.ShowImage();
                 Halcon.ShowObj();
             }
             catch (Exception ex)

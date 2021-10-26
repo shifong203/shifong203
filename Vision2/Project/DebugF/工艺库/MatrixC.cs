@@ -493,7 +493,9 @@ namespace Vision2.Project.DebugF.工艺库
                             hWindID.OneResIamge.AddImageMassage(yp, xp, (i + 1), ColorResult.green);
                         }
                         System.Threading.Thread.Sleep(500);
-                        Vision.GetRunNameVision(VisionName).Image(Vision.GetRunNameVision(VisionName).GetCam().GetImage());
+                        Vision.GetRunNameVision(VisionName).GetCam().GetImage(out HalconDotNet.HObject imageT);
+                     
+                        Vision.GetRunNameVision(VisionName).Image(imageT);
                         Vision.GetRunNameVision(VisionName).CamImageEvent(MarkName1, null, i + 1);
                         if (Vision.GetRunNameVision(VisionName).ResultBool)
                         {

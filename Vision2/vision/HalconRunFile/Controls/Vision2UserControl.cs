@@ -1260,7 +1260,7 @@ namespace Vision2.vision.HalconRunFile.Controls
         private void toolStripButton3_Click(object sender, EventArgs e)
         {
             Vision2.ErosProjcetDLL.UI.UICon.WindosFormerShow(ref ImageForm1);
-            ImageForm1.SetUPHalc(halcon.Image());
+            ImageForm1.SetUPHalc(halcon.Image(),halcon);
         }
 
         private void 查看区域细节ToolStripMenuItem_Click(object sender, EventArgs e)

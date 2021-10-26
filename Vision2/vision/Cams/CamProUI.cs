@@ -40,7 +40,8 @@ namespace Vision2.vision.Cams
             try
             {
                 HWindI.HobjClear();
-                LisImage.Add(Cam.GetImage());
+                Cam.GetImage(out HObject iamges);
+                LisImage.Add(iamges);
                 listBox1.Items.Add(LisImage.Count);
                 HWindI.SetImaage(LisImage[LisImage.Count - 1]);
                 HOperatorSet.FindCalibObject(LisImage[LisImage.Count - 1], calibDataID, 0, 0, LisImage.Count - 1, new HTuple(), new HTuple());

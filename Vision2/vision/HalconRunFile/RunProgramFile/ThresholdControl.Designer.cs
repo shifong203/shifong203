@@ -31,10 +31,6 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         {
             this.components = new System.ComponentModel.Container();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.Column1 = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.Column2 = new Vision2.ErosProjcetDLL.UI.DataGridViewF.DataGridViewNumericUpDownColumn();
-            this.Column3 = new Vision2.ErosProjcetDLL.UI.DataGridViewF.DataGridViewNumericUpDownColumn();
-            this.Column4 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.添加ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.删除ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -43,6 +39,11 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             this.dataGridViewNumericUpDownColumn2 = new Vision2.ErosProjcetDLL.UI.DataGridViewF.DataGridViewNumericUpDownColumn();
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column1 = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.Column2 = new Vision2.ErosProjcetDLL.UI.DataGridViewF.DataGridViewNumericUpDownColumn();
+            this.Column3 = new Vision2.ErosProjcetDLL.UI.DataGridViewF.DataGridViewNumericUpDownColumn();
+            this.Column4 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.Column5 = new System.Windows.Forms.DataGridViewButtonColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -55,7 +56,8 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             this.Column1,
             this.Column2,
             this.Column3,
-            this.Column4});
+            this.Column4,
+            this.Column5});
             this.dataGridView1.ContextMenuStrip = this.contextMenuStrip1;
             this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView1.Location = new System.Drawing.Point(0, 0);
@@ -68,43 +70,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             this.dataGridView1.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellValueChanged);
             this.dataGridView1.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dataGridView1_DataError);
             this.dataGridView1.UserAddedRow += new System.Windows.Forms.DataGridViewRowEventHandler(this.dataGridView1_UserAddedRow);
-            // 
-            // Column1
-            // 
-            this.Column1.HeaderText = "通道";
-            this.Column1.Name = "Column1";
-            this.Column1.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.Column1.Width = 80;
-            // 
-            // Column2
-            // 
-            this.Column2.HeaderText = "Min";
-            this.Column2.Maximum = new decimal(new int[] {
-            255,
-            0,
-            0,
-            0});
-            this.Column2.Name = "Column2";
-            this.Column2.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.Column2.Width = 50;
-            // 
-            // Column3
-            // 
-            this.Column3.HeaderText = "Max";
-            this.Column3.Maximum = new decimal(new int[] {
-            255,
-            0,
-            0,
-            0});
-            this.Column3.Name = "Column3";
-            this.Column3.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.Column3.Width = 50;
-            // 
-            // Column4
-            // 
-            this.Column4.HeaderText = "启用";
-            this.Column4.Name = "Column4";
-            this.Column4.Width = 50;
+            this.dataGridView1.Click += new System.EventHandler(this.dataGridView1_Click);
             // 
             // contextMenuStrip1
             // 
@@ -179,6 +145,52 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             this.dataGridViewTextBoxColumn2.ReadOnly = true;
             this.dataGridViewTextBoxColumn2.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             // 
+            // Column1
+            // 
+            this.Column1.HeaderText = "通道";
+            this.Column1.Name = "Column1";
+            this.Column1.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.Column1.Width = 80;
+            // 
+            // Column2
+            // 
+            this.Column2.HeaderText = "Min";
+            this.Column2.Maximum = new decimal(new int[] {
+            255,
+            0,
+            0,
+            0});
+            this.Column2.Name = "Column2";
+            this.Column2.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.Column2.Width = 50;
+            // 
+            // Column3
+            // 
+            this.Column3.HeaderText = "Max";
+            this.Column3.Maximum = new decimal(new int[] {
+            255,
+            0,
+            0,
+            0});
+            this.Column3.Name = "Column3";
+            this.Column3.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.Column3.Width = 50;
+            // 
+            // Column4
+            // 
+            this.Column4.HeaderText = "启用";
+            this.Column4.Name = "Column4";
+            this.Column4.Width = 50;
+            // 
+            // Column5
+            // 
+            this.Column5.HeaderText = "显示";
+            this.Column5.Name = "Column5";
+            this.Column5.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.Column5.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.Column5.Text = "显示";
+            this.Column5.UseColumnTextForButtonValue = true;
+            // 
             // ThresholdControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -207,5 +219,6 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         private ErosProjcetDLL.UI.DataGridViewF.DataGridViewNumericUpDownColumn Column2;
         private ErosProjcetDLL.UI.DataGridViewF.DataGridViewNumericUpDownColumn Column3;
         private System.Windows.Forms.DataGridViewCheckBoxColumn Column4;
+        private System.Windows.Forms.DataGridViewButtonColumn Column5;
     }
 }

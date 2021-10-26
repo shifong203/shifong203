@@ -1,5 +1,7 @@
-﻿using System;
+﻿using HalconDotNet;
+using System;
 using System.Drawing;
+using System.Threading;
 using System.Windows.Forms;
 using Vision2.vision.HalconRunFile.RunProgramFile;
 
@@ -60,6 +62,8 @@ namespace Vision2.vision.Cams
                 if (Cam != null)
                 {
                     propertyGrid1.SelectedObject = Cam;
+                    comboBox1.SelectedIndex = 0;
+              
                     cam.LinkEnvet += Cam_LinkSt;
                     if (cam.IsCamConnected)
                     {
@@ -147,7 +151,8 @@ namespace Vision2.vision.Cams
                 //Cam.CoordinateMeassage = Coordinate.Coordinate_Type.XYZU3D;
 
                 Halcon.UPStart();
-                Halcon.Image(Cam.GetImage());
+                Cam.GetImage(out HalconDotNet.HObject hObject);
+                Halcon.Image(hObject);
                 Halcon.EndChanged(Halcon.GetOneImageR());
                 // halcon.GetOneImageR().AddMeassge(Cam.RunTime + "ms");
                 Halcon.ShowObj();
@@ -301,15 +306,68 @@ namespace Vision2.vision.Cams
             }
         }
 
-        private void button2_Click(object sender, EventArgs e)
-        {
-            //CamParam camParam = new CamParam();
-            //camParam.m_IDStr = Cam.Name;
-            //Cam = camParam;
-        }
+  
 
         private void panel1_Paint(object sender, PaintEventArgs e)
         {
+        }
+        private ErosSocket.DebugPLC.IAxis AxisZ;
+        private void button1_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Cam.Defintion = true;
+                stop = false;
+                Thread thread = new Thread(() => {
+                    AxisZ = Project.DebugF.DebugCompiler.Instance.DDAxis.GetAxisGrotNameEx(Vision.GetSaveImageInfo(Halcon.Name).AxisGrot, ErosSocket.DebugPLC.EnumAxisType.Z);
+                    while (!stop)
+                    {
+                        try
+                        {
+                            
+                            Halcon.HobjClear();
+                            if (Cam.GetImage(out HObject image))
+                            {
+                                double dtds = Vision.Evaluate_definition(image, comboBox1.SelectedItem.ToString());
+                                Halcon.Image(image);
+                                Halcon.AddMeassge("采图时间:" + Cam.RunTime);
+                                Halcon.AddMeassge("清晰度:" + dtds.ToString("0.0"));
+                                Halcon.ShowObj();
+                                this.Invoke(new Action(() => {
+                                    label9.Text = "Z位置:"+ AxisZ.Point;
+                                }));
+
+                            }
+                            else
+                            {
+                                Halcon.Image().GenEmptyObj();
+                                Halcon.AddMeassge("采图失败:" + Cam.RunTime);
+                                Halcon.ShowObj();
+                            }
+                        }
+                        catch (Exception)
+                        {
+                        }
+                    }
+
+                });
+                thread.IsBackground = true;
+                thread.Start();
+
+            }
+            catch (Exception ex)
+            {
+            }
+        }
+
+        private void button2_Click_1(object sender, EventArgs e)
+        {
+            stop = true;
+        }
+        bool stop;
+        private void button3_Click(object sender, EventArgs e)
+        {
+         
         }
     }
 }
