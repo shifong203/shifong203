@@ -190,7 +190,7 @@ namespace Vision2.Project
                     recipeCompiler.initialization();
 
                     dss1.label1.Text = "载入视觉信息......";
-                    Vision.Instance.UpReadThis(ErosProjcetDLL.Project.ProjectINI.ProjectPathRun, Product.ProductionName);
+                    Vision.Instance.UpReadThis(ProjectINI.ProjectPathRun, Product.ProductionName);
                     if (Vision.Instance.RsetPort >= 0)
                     {
                         MainForm1.MainFormF.Hide();
@@ -198,27 +198,28 @@ namespace Vision2.Project
                     }
                     RecipeCompiler.GetUserFormulaContrsl().AddData(RecipeCompiler.Instance.OKNumber);
 
-                    debugComp = debugComp.ReadThis<ErosSocket.DebugPLC.DebugComp>(ErosProjcetDLL.Project.ProjectINI.ProjectPathRun);
+                    debugComp = debugComp.ReadThis<ErosSocket.DebugPLC.DebugComp>(ProjectINI.ProjectPathRun);
                     if (debugComp == null)
                     {
                         debugComp = new ErosSocket.DebugPLC.DebugComp();
                     }
                     debugComp.initialization();
 
-                    debugCalss = debugCalss.ReadThis<DebugCompiler>(ErosProjcetDLL.Project.ProjectINI.ProjectPathRun);
+                    debugCalss = debugCalss.ReadThis<DebugCompiler>(ProjectINI.ProjectPathRun);
                     if (debugCalss == null)
                     {
                         debugCalss = new DebugCompiler();
                     }
 
                 endt:
-                    process = process.ReadThis<ProcessUser>(ErosProjcetDLL.Project.ProjectINI.ProjectPathRun);
+                    process = process.ReadThis<ProcessUser>(ProjectINI.ProjectPathRun);
                     //添加程序服务
                     ProjectINI.In.AddProject(process);
                     ProjectINI.In.AddProject(Vision.Instance);
                     ProjectINI.In.AddProject(debugComp);
                     ProjectINI.In.AddProject(dicSocket);
                     ProjectINI.In.AddProject(debugCalss);
+                    AlarmForm.UpDa(DebugCompiler.Instance.ErrTextS);
                     //SocketUI.Project.HMIDIC hMIDIC = new SocketUI.Project.HMIDIC();
                     //hMIDIC = hMIDIC.ReadThis<SocketUI.Project.HMIDIC>( ErosProjcetDLL.Project.ProjectINI.ProjectPathRun);
                     //ProjectINI.In.AddProject(hMIDIC);
@@ -296,6 +297,7 @@ namespace Vision2.Project
                             }
                         }
                     }
+                    Vision.Instance.initialization();
                     if (DebugCompiler.Instance.Run_Mode == ProjectINI.RunMode.Debug)
                     {
                         User.Loge("Eros", "ErosEE1988");
@@ -310,8 +312,9 @@ namespace Vision2.Project
                 }
                 MainForm1.MainFormF.Invoke(new MethodInvoker(() =>
                 {
-                    RecipeCompiler.GetUserFormulaContrsl().UPSetGetPargam();
+         
                 }));
+                RecipeCompiler.GetUserFormulaContrsl().UPSetGetPargam();
                 //UserFormulaContrsl.This.tabControl1.TabPages.Remove(UserFormulaContrsl.This.tabPage4);
                 //MainForm1.MainFormF.splitContainer3.Panel2Collapsed = false;
 
@@ -326,7 +329,8 @@ namespace Vision2.Project
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                ErosProjcetDLL.Project.ErrForm.Show(ex);
+ 
             }
         }
 

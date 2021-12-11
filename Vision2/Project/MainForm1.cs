@@ -10,6 +10,7 @@ using Vision2.ErosProjcetDLL.Project;
 using Vision2.ErosProjcetDLL.UI;
 using Vision2.Project.DebugF;
 using Vision2.Project.formula;
+using Vision2.vision;
 using Vision2.vision.RestVisionForm;
 
 namespace Vision2.Project
@@ -100,7 +101,7 @@ namespace Vision2.Project
                 }
                 toolStripLabel9.Text = DebugCompiler.Instance.DeviceNameText;
                 tsButton5.Text = ProjectINI.In.UserName;
-                toolStripLabel1.Text = ProjectINI.In.Right + ":" + ProjectINI.In.UserName;
+                //toolStripLabel1.Text = ProjectINI.In.Right + ":" + ProjectINI.In.UserName;
                 if (ProjectINI.AdminEnbt)
                 {
                     方案管理ToolStripMenuItem.Visible = true;
@@ -122,18 +123,38 @@ namespace Vision2.Project
             frm.Width = Screen.PrimaryScreen.WorkingArea.Width;
             frm.Height = Screen.PrimaryScreen.WorkingArea.Height;
         }
+        public static void SelectTab(string selename)
+        {
+            MainForm1.MainFormF.Invoke(new Action(() =>
+            {
+                if (int.TryParse(selename, out int selindex))
+                {
+                    MainForm1.MainFormF.tabControl1.SelectedIndex = selindex;
+                }
+                else
+                {
+                    if (MainForm1.MainFormF.tabControl1.TabPages.ContainsKey(selename))
+                    {
+                        MainForm1.MainFormF.tabControl1.SelectTab(selename);
+                    }
+                    else
+                    {
+                        //runErr.ErrStr += tdat[1] + "选项栏不存在！";
+                    }
+                }
+            }));
+        }
 
         private void MainForm1_Load(object sender, EventArgs e)
         {
             try
             {
                 ProjectINI.In.User.EventLog += User_EventLog;
-
-                //splitContainer3.Panel2Collapsed = true;
+                this.镜头信息ToolStripMenuItem.Text ="更新日期:"+ System.IO.File.
+                    GetLastWriteTime(this.GetType().Assembly.Location).ToString("yy-MM-dd HH:mm");
                 AlarmListBoxt.AlarmFormThis.Hide();
                 timer100.Start();
                 timer500.Start();
-
                 string[] paths = Directory.GetFiles(Application.StartupPath);
                 for (int i = 0; i < paths.Length; i++)
                 {
@@ -154,7 +175,7 @@ namespace Vision2.Project
 
                 this.LayoutMdi(MdiLayout.TileVertical);
                 HMIDIC hMIDIC = new HMIDIC();
-                hMIDIC = hMIDIC.ReadThis<HMIDIC>(ErosProjcetDLL.Project.ProjectINI.ProjectPathRun);
+                hMIDIC = hMIDIC.ReadThis<HMIDIC>(ProjectINI.ProjectPathRun);
                 hMIDIC.initialization();
                 ProjectINI.In.AddProject(hMIDIC);
                 tsButton7.BackColor = Color.Red;
@@ -167,6 +188,11 @@ namespace Vision2.Project
                     bool iste = false;
                     bool ISdaMen = false;
                     bool StopE = false;
+                    string data = "";
+                    //Thread.Sleep(6000);
+                    //ToolStripLabel toolStripLabel11 = new ToolStripLabel();
+                    //toolStrip1.Items.Add(toolStripLabel11);
+        
                     while (!this.IsDisposed)
                     {
                         try
@@ -177,19 +203,28 @@ namespace Vision2.Project
                                 {
                                     try
                                     {
+                                        data = "";
+                                        for (int i = 0; i < DebugCompiler.Instance.DDAxis.AxisS.Count; i++)
+                                        {
+                                            if (DebugCompiler.Instance.DDAxis.AxisS[i].AxisType!=ErosSocket.DebugPLC.EnumAxisType.S && DebugCompiler.Instance.DDAxis.AxisS[i].AxisType != ErosSocket.DebugPLC.EnumAxisType.T)
+                                            {
+                                                data += DebugCompiler.Instance.DDAxis.AxisS[i].Name + ":" + DebugCompiler.Instance.DDAxis.AxisS[i].Point.ToString("000.00");
+                                            }
+                                        }
+                                        toolStripLabel10.Text = data;
                                         CycleEven?.Invoke();
-                                        if (DebugF.DebugCompiler.GetDoDi() != null)
+                                        if (DebugCompiler.GetDoDi() != null)
                                         {
                                             iste = false;
-                                            if (DebugF.DebugCompiler.Instance.RunButton.ANmen >= 0)
+                                            if (DebugCompiler.Instance.RunButton.ANmen >= 0)
                                             {
                                                 if (!tsButton7.Visible)
                                                 {
                                                     tsButton7.Visible = true;
                                                 }
-                                                if (isv != DebugF.DebugCompiler.GetDoDi().Out[DebugF.DebugCompiler.Instance.RunButton.ANmen])
+                                                if (isv != DebugCompiler.GetDoDi().Out[DebugCompiler.Instance.RunButton.ANmen])
                                                 {
-                                                    isv = DebugF.DebugCompiler.GetDoDi().Out[DebugF.DebugCompiler.Instance.RunButton.ANmen];
+                                                    isv = DebugCompiler.GetDoDi().Out[DebugCompiler.Instance.RunButton.ANmen];
                                                     if (!isv)
                                                     {
                                                         tsButton7.Text = "门锁开";
@@ -199,16 +234,16 @@ namespace Vision2.Project
                                                         tsButton7.Text = "门锁关";
                                                     }
                                                 }
-                                                if (ISa != DebugF.DebugCompiler.GetDoDi().Int[DebugF.DebugCompiler.Instance.RunButton.ANmenTI])
+                                                if (ISa != DebugCompiler.GetDoDi().Int[DebugCompiler.Instance.RunButton.ANmenTI])
                                                 {
-                                                    ISa = DebugF.DebugCompiler.GetDoDi().Int[DebugF.DebugCompiler.Instance.RunButton.ANmenTI];
+                                                    ISa = DebugCompiler.GetDoDi().Int[DebugCompiler.Instance.RunButton.ANmenTI];
                                                     if (!ISa)
                                                     {
                                                         tsButton7.BackColor = Color.Red;
                                                     }
                                                     else
                                                     {
-                                                        DebugF.DebugCompiler.GetDoDi().WritDO(DebugF.DebugCompiler.Instance.RunButton.ANmen, true);
+                                                        DebugCompiler.GetDoDi().WritDO(DebugCompiler.Instance.RunButton.ANmen, true);
                                                         tsButton7.BackColor = Color.GreenYellow;
                                                     }
                                                 }
@@ -220,35 +255,35 @@ namespace Vision2.Project
                                                     tsButton7.Visible = false;
                                                 }
                                             }
-                                            if (DebugF.DebugCompiler.Instance.RunButton.StopTButten >= 0)
+                                            if (DebugCompiler.Instance.RunButton.StopTButten >= 0)
                                             {
                                                 if (!toolStripLabel6.Visible)
                                                 {
                                                     toolStripLabel6.Visible = true;
                                                 }
-                                                if (StopE != DebugF.DebugCompiler.GetDoDi().Int[DebugF.DebugCompiler.Instance.RunButton.StopTButten])
+                                                if (StopE != DebugCompiler.GetDoDi().Int[DebugCompiler.Instance.RunButton.StopTButten])
                                                 {
-                                                    StopE = DebugF.DebugCompiler.GetDoDi().Int[DebugF.DebugCompiler.Instance.RunButton.StopTButten];
+                                                    StopE = DebugCompiler.GetDoDi().Int[DebugCompiler.Instance.RunButton.StopTButten];
                                                     if (StopE)
                                                     {
                                                         toolStripLabel6.Image = null;
-                                                        ErosProjcetDLL.Project.AlarmListBoxt.RomveAlarm("急停按钮开启");
+                                                        AlarmListBoxt.RomveAlarm("急停按钮开启");
                                                         toolStripLabel6.BackColor = Color.GreenYellow;
                                                     }
                                                     if (!StopE)
                                                     {
                                                         toolStripLabel6.Image = global::Vision2.Properties.Resources.down_right_vector;
-                                                        if (DebugF.DebugCompiler.GetDoDi().IsInitialBool)
+                                                        if (DebugCompiler.GetDoDi().IsInitialBool)
                                                         {
-                                                            if (DebugF.DebugCompiler.EquipmentStatus == ErosSocket.ErosConLink.EnumEquipmentStatus.运行中)
+                                                            if (DebugCompiler.EquipmentStatus == ErosSocket.ErosConLink.EnumEquipmentStatus.运行中)
                                                             {
-                                                                if (DebugF.DebugCompiler.Instance.IsRunStrat)
+                                                                if (DebugCompiler.Instance.IsRunStrat)
                                                                 {
-                                                                    DebugF.DebugCompiler.ISHome = false;
+                                                                    DebugCompiler.ISHome = false;
                                                                 }
-                                                                DebugF.DebugCompiler.RunStop = true;
-                                                                DebugF.DebugCompiler.Stop();
-                                                                ErosProjcetDLL.Project.AlarmListBoxt.AddAlarmText("运行中急停按钮开启停止");
+                                                                DebugCompiler.RunStop = true;
+                                                                DebugCompiler.Stop();
+                                                                AlarmListBoxt.AddAlarmText("运行中急停按钮开启停止");
                                                             }
                                                             if (DebugCompiler.EquipmentStatus == ErosSocket.ErosConLink.EnumEquipmentStatus.初始化中)
                                                             {
@@ -274,46 +309,46 @@ namespace Vision2.Project
                                                 }
                                             }
 
-                                            if (DebugF.DebugCompiler.Instance.RunButton.adMent1 >= 0)
+                                            if (DebugCompiler.Instance.RunButton.adMent1 >= 0)
                                             {
                                                 if (!toolStripLabel5.Visible)
                                                 {
                                                     toolStripLabel5.Visible = true;
                                                 }
-                                                if (ISdaMen != DebugF.DebugCompiler.GetDoDi().Int[DebugF.DebugCompiler.Instance.RunButton.adMent1])
+                                                if (ISdaMen != DebugCompiler.GetDoDi().Int[DebugCompiler.Instance.RunButton.adMent1])
                                                 {
-                                                    ISdaMen = DebugF.DebugCompiler.GetDoDi().Int[DebugF.DebugCompiler.Instance.RunButton.adMent1];
+                                                    ISdaMen = DebugCompiler.GetDoDi().Int[DebugCompiler.Instance.RunButton.adMent1];
                                                     if (ISdaMen)
                                                     {
-                                                        ErosProjcetDLL.Project.AlarmListBoxt.RomveAlarm("安全门打开");
+                                                        AlarmListBoxt.RomveAlarm("安全门打开");
                                                         toolStripLabel5.BackColor = Color.GreenYellow;
                                                     }
                                                 }
                                                 if (!ISdaMen)
                                                 {
-                                                    if (DebugF.DebugCompiler.GetDoDi().IsInitialBool)
+                                                    if (DebugCompiler.GetDoDi().IsInitialBool)
                                                     {
-                                                        if (DebugF.DebugCompiler.EquipmentStatus == ErosSocket.ErosConLink.EnumEquipmentStatus.运行中)
+                                                        if (DebugCompiler.EquipmentStatus == ErosSocket.ErosConLink.EnumEquipmentStatus.运行中)
                                                         {
-                                                            if (DebugF.DebugCompiler.Instance.IsRunStrat)
+                                                            if (DebugCompiler.Instance.IsRunStrat)
                                                             {
-                                                                DebugF.DebugCompiler.ISHome = false;
+                                                                DebugCompiler.ISHome = false;
                                                             }
-                                                            DebugF.DebugCompiler.RunStop = true;
-                                                            DebugF.DebugCompiler.Stop();
-                                                            ErosProjcetDLL.Project.AlarmListBoxt.AddAlarmText("运行中安全检测停止");
+                                                            DebugCompiler.RunStop = true;
+                                                            DebugCompiler.Stop();
+                                                            AlarmListBoxt.AddAlarmText("运行中安全检测停止");
                                                         }
-                                                        if (DebugF.DebugCompiler.EquipmentStatus == ErosSocket.ErosConLink.EnumEquipmentStatus.初始化中)
+                                                        if (DebugCompiler.EquipmentStatus == ErosSocket.ErosConLink.EnumEquipmentStatus.初始化中)
                                                         {
-                                                            if (DebugF.DebugCompiler.Instance.IsRunStrat)
+                                                            if (DebugCompiler.Instance.IsRunStrat)
                                                             {
-                                                                DebugF.DebugCompiler.ISHome = false;
+                                                                DebugCompiler.ISHome = false;
                                                             }
-                                                            DebugF.DebugCompiler.RunStop = true;
-                                                            DebugF.DebugCompiler.Stop();
-                                                            ErosProjcetDLL.Project.AlarmListBoxt.AddAlarmText("初始化中安全检测停止");
+                                                            DebugCompiler.RunStop = true;
+                                                            DebugCompiler.Stop();
+                                                            AlarmListBoxt.AddAlarmText("初始化中安全检测停止");
                                                         }
-                                                        ErosProjcetDLL.Project.AlarmListBoxt.AddAlarmText("安全门打开");
+                                                        AlarmListBoxt.AddAlarmText("安全门打开");
                                                         toolStripLabel5.BackColor = Color.Red;
                                                     }
                                                 }
@@ -325,15 +360,15 @@ namespace Vision2.Project
                                                     toolStripLabel5.Visible = false;
                                                 }
                                             }
-                                            if (DebugF.DebugCompiler.Instance.RunButton.ANmenI >= 0)
+                                            if (DebugCompiler.Instance.RunButton.ANmenI >= 0)
                                             {
                                                 if (!toolStripButton2.Visible)
                                                 {
                                                     toolStripButton2.Visible = true;
                                                 }
-                                                if (ISdT != DebugF.DebugCompiler.GetDoDi().Int[DebugF.DebugCompiler.Instance.RunButton.ANmenI])
+                                                if (ISdT != DebugCompiler.GetDoDi().Int[DebugCompiler.Instance.RunButton.ANmenI])
                                                 {
-                                                    ISdT = DebugF.DebugCompiler.GetDoDi().Int[DebugF.DebugCompiler.Instance.RunButton.ANmenI];
+                                                    ISdT = DebugCompiler.GetDoDi().Int[DebugCompiler.Instance.RunButton.ANmenI];
                                                     if (ISdT)
                                                     {
                                                         toolStripButton2.BackColor = Color.GreenYellow;
@@ -341,27 +376,27 @@ namespace Vision2.Project
                                                 }
                                                 if (!ISdT)
                                                 {
-                                                    if (DebugF.DebugCompiler.GetDoDi().IsInitialBool)
+                                                    if (DebugCompiler.GetDoDi().IsInitialBool)
                                                     {
-                                                        if (DebugF.DebugCompiler.EquipmentStatus == ErosSocket.ErosConLink.EnumEquipmentStatus.运行中)
+                                                        if (DebugCompiler.EquipmentStatus == ErosSocket.ErosConLink.EnumEquipmentStatus.运行中)
                                                         {
-                                                            if (DebugF.DebugCompiler.Instance.IsRunStrat)
+                                                            if (DebugCompiler.Instance.IsRunStrat)
                                                             {
-                                                                DebugF.DebugCompiler.ISHome = false;
+                                                                DebugCompiler.ISHome = false;
                                                             }
-                                                            DebugF.DebugCompiler.RunStop = true;
-                                                            DebugF.DebugCompiler.Stop();
-                                                            ErosProjcetDLL.Project.AlarmListBoxt.AddAlarmText("运行中安全检测停止");
+                                                            DebugCompiler.RunStop = true;
+                                                            DebugCompiler.Stop();
+                                                            AlarmListBoxt.AddAlarmText("运行中安全检测停止");
                                                         }
-                                                        if (DebugF.DebugCompiler.EquipmentStatus == ErosSocket.ErosConLink.EnumEquipmentStatus.初始化中)
+                                                        if (DebugCompiler.EquipmentStatus == ErosSocket.ErosConLink.EnumEquipmentStatus.初始化中)
                                                         {
-                                                            if (DebugF.DebugCompiler.Instance.IsRunStrat)
+                                                            if (DebugCompiler.Instance.IsRunStrat)
                                                             {
-                                                                DebugF.DebugCompiler.ISHome = false;
+                                                                DebugCompiler.ISHome = false;
                                                             }
-                                                            DebugF.DebugCompiler.RunStop = true;
-                                                            DebugF.DebugCompiler.Stop();
-                                                            ErosProjcetDLL.Project.AlarmListBoxt.AddAlarmText("初始化中安全检测停止");
+                                                            DebugCompiler.RunStop = true;
+                                                            DebugCompiler.Stop();
+                                                            AlarmListBoxt.AddAlarmText("初始化中安全检测停止");
                                                         }
                                                     }
                                                     toolStripButton2.BackColor = Color.Red;
@@ -374,9 +409,9 @@ namespace Vision2.Project
                                                     toolStripButton2.Visible = false;
                                                 }
                                             }
-                                            if (DebugF.DebugCompiler.Instance.IsCtr != toolStripCheckbox2.Visible)
+                                            if (DebugCompiler.Instance.IsCtr != toolStripCheckbox2.Visible)
                                             {
-                                                toolStripCheckbox2.Visible = DebugF.DebugCompiler.Instance.IsCtr;
+                                                toolStripCheckbox2.Visible = DebugCompiler.Instance.IsCtr;
                                             }
                                         }
                                         else if (!iste)
@@ -413,6 +448,36 @@ namespace Vision2.Project
                 thread.Priority = ThreadPriority.Highest;
                 thread.IsBackground = true;
                 thread.Start();
+                //Thread thread2 = new Thread(() =>
+                //{
+                //    while (!this.IsDisposed)
+                //    {
+                //        try
+                //        {
+                //            if (this.InvokeRequired)
+                //            {
+                //                this.Invoke(new Action(() =>
+                //                {
+                //                    try
+                //                    {
+                                       
+
+                //                    }
+                //                    catch (Exception)
+                //                    {
+                //                    }
+                //                }));
+                //            }
+                //        }
+                //        catch (Exception ex)
+                //        {
+                //        }
+                //        Thread.Sleep(10);
+                //    }
+                //});
+                //thread2.Priority = ThreadPriority.Highest;
+                //thread2.IsBackground = true;
+                //thread2.Start();
             }
             catch (Exception ex)
             {
@@ -518,7 +583,11 @@ namespace Vision2.Project
         /// <param name="toolStripItem"></param>
         public void BoolToolStripAdd(ToolStripItem toolStripItem)
         {
-            toolStrip1.Items.Add(toolStripItem);
+            if (!toolStrip1.Items.ContainsKey(toolStripItem.Name))
+            {
+                toolStrip1.Items.Add(toolStripItem);
+            }
+          
         }
 
         private LandingForm landingForm = new LandingForm();
@@ -710,13 +779,13 @@ namespace Vision2.Project
         {
             try
             {
-                if (DebugF.DebugCompiler.Instance.DDAxis.Out[DebugF.DebugCompiler.Instance.RunButton.ANmen])
+                if (DebugCompiler.Instance.DDAxis.Out[DebugCompiler.Instance.RunButton.ANmen])
                 {
-                    DebugF.DebugCompiler.Instance.DDAxis.WritDO(DebugF.DebugCompiler.Instance.RunButton.ANmen, false);
+                    DebugCompiler.Instance.DDAxis.WritDO(DebugCompiler.Instance.RunButton.ANmen, false);
                 }
                 else
                 {
-                    DebugF.DebugCompiler.Instance.DDAxis.WritDO(DebugF.DebugCompiler.Instance.RunButton.ANmen, true);
+                    DebugCompiler.Instance.DDAxis.WritDO(DebugCompiler.Instance.RunButton.ANmen, true);
                 }
             }
             catch (Exception)
@@ -740,9 +809,9 @@ namespace Vision2.Project
         {
             try
             {
-                if (File.Exists(ErosProjcetDLL.Project.ProjectINI.ProjectPathRun + "\\电气图纸.PDF"))
+                if (File.Exists(ProjectINI.ProjectPathRun + "\\电气图纸.PDF"))
                 {
-                    Process.Start(ErosProjcetDLL.Project.ProjectINI.ProjectPathRun + "\\电气图纸.PDF");
+                    Process.Start(ProjectINI.ProjectPathRun + "\\电气图纸.PDF");
                 }
                 else
                 {
@@ -758,7 +827,7 @@ namespace Vision2.Project
         {
             try
             {
-                DebugF.DebugCompiler.CPMode = (toolStripCheckbox2.Control as CheckBox).Checked;
+                DebugCompiler.CPMode = (toolStripCheckbox2.Control as CheckBox).Checked;
             }
             catch (Exception)
             {
@@ -769,7 +838,7 @@ namespace Vision2.Project
         {
         }
 
-        private Project.DebugF.IO.IOForm IOForm;
+        private DebugF.  IO.IOForm IOForm;
 
         private void 查看操作手册ToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -819,8 +888,6 @@ namespace Vision2.Project
             catch (Exception ex)
             {
             }
-            //Vision2.ErosProjcetDLL.Project.AlarmListBoxt.AlarmFormThis.Show();
-            //Vision2.ErosProjcetDLL.Project.AlarmListBoxt.AlarmFormThis.Visible = true;
         }
 
         private void 拆分ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -869,7 +936,7 @@ namespace Vision2.Project
 
         private void 打开目录文件夹ToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start(Application.StartupPath);
+            Process.Start(Application.StartupPath);
         }
 
         private void ToolSripButtonHelp_MouseMove(object sender, MouseEventArgs e)
@@ -899,36 +966,36 @@ namespace Vision2.Project
                 {
                     HZ500 = true;
                 }
-                if (DebugF.DebugCompiler.Buzzer)
+                if (DebugCompiler.Buzzer)
                 {
-                    if (isbuz != DebugF.DebugCompiler.Buzzer)
+                    if (isbuz != DebugCompiler.Buzzer)
                     {
-                        isbuz = DebugF.DebugCompiler.Buzzer;
+                        isbuz = DebugCompiler.Buzzer;
                     }
                     if (HZ500)
                     {
-                        DebugF.DebugCompiler.GetDoDi().WritDO(DebugF.DebugCompiler.Instance.RunButton.ResetButtenS, true);
-                        DebugF.DebugCompiler.GetDoDi().WritDO(DebugF.DebugCompiler.Instance.RunButton.red, true);
-                        if (!DebugF.DebugCompiler.FmqIS)
+                        DebugCompiler.GetDoDi().WritDO(DebugCompiler.Instance.RunButton.ResetButtenS, true);
+                        DebugCompiler.GetDoDi().WritDO(DebugCompiler.Instance.RunButton.red, true);
+                        if (!DebugCompiler.FmqIS)
                         {
-                            DebugF.DebugCompiler.GetDoDi().WritDO(DebugF.DebugCompiler.Instance.RunButton.Fmq, true);
+                            DebugCompiler.GetDoDi().WritDO(DebugCompiler.Instance.RunButton.Fmq, true);
                         }
                     }
                     else
                     {
-                        DebugF.DebugCompiler.GetDoDi().WritDO(DebugF.DebugCompiler.Instance.RunButton.red, false);
-                        DebugF.DebugCompiler.GetDoDi().WritDO(DebugF.DebugCompiler.Instance.RunButton.Fmq, false);
-                        DebugF.DebugCompiler.GetDoDi().WritDO(DebugF.DebugCompiler.Instance.RunButton.ResetButtenS, false);
+                        DebugCompiler.GetDoDi().WritDO(DebugCompiler.Instance.RunButton.red, false);
+                        DebugCompiler.GetDoDi().WritDO(DebugCompiler.Instance.RunButton.Fmq, false);
+                        DebugCompiler.GetDoDi().WritDO(DebugCompiler.Instance.RunButton.ResetButtenS, false);
                     }
                 }
                 else
                 {
-                    if (isbuz != DebugF.DebugCompiler.Buzzer)
+                    if (isbuz != DebugCompiler.Buzzer)
                     {
-                        isbuz = DebugF.DebugCompiler.Buzzer;
-                        DebugF.DebugCompiler.GetDoDi().WritDO(DebugF.DebugCompiler.Instance.RunButton.red, false);
-                        DebugF.DebugCompiler.GetDoDi().WritDO(DebugF.DebugCompiler.Instance.RunButton.Fmq, false);
-                        DebugF.DebugCompiler.GetDoDi().WritDO(DebugF.DebugCompiler.Instance.RunButton.ResetButtenS, false);
+                        isbuz = DebugCompiler.Buzzer;
+                        DebugCompiler.GetDoDi().WritDO(DebugCompiler.Instance.RunButton.red, false);
+                        DebugCompiler.GetDoDi().WritDO(DebugCompiler.Instance.RunButton.Fmq, false);
+                        DebugCompiler.GetDoDi().WritDO(DebugCompiler.Instance.RunButton.ResetButtenS, false);
                     }
                 }
             }
@@ -1009,7 +1076,7 @@ namespace Vision2.Project
                 {
                     DebugCompiler.ISHome = false;
                 }
-                DebugF.DebugCompiler.RunStop = true;
+                DebugCompiler.RunStop = true;
                 DebugCompiler.Stop();
             }
             catch (System.Exception ex)
@@ -1164,9 +1231,18 @@ namespace Vision2.Project
             try
             {
                 ToolStripItem toolStripButton = sender as ToolStripItem;
+        
                 ErosSocket.ErosConLink.SocketClint socketClint = ErosSocket.ErosConLink.StaticCon.GetSocketClint(toolStripButton.Text);
-                Form form = socketClint.ShowForm();
-                form.Show();
+         
+                if (socketClint.KeysValues.DictionaryValueD!=null&& socketClint.KeysValues.DictionaryValueD.Count!=0)
+                {
+                    socketClint.ShowValuesForm();
+                }
+                else
+                {
+                    Form form = socketClint.ShowForm();
+                    form.Show();
+                }
             }
             catch (Exception)
             {
@@ -1200,6 +1276,51 @@ namespace Vision2.Project
                 sVisionForm = new SVisionForm();
             }
             UICon.WindosFormerShow(ref sVisionForm);
+        }
+        vision.Offline_Debugging_Form1 offline_Debugging_;
+        private void 远程管理ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //offline_Debugging_ = new vision. Offline_Debugging_Form1();
+            if (offline_Debugging_ == null || offline_Debugging_.IsDisposed)
+            {
+                offline_Debugging_ = new vision. Offline_Debugging_Form1();
+            }
+            UICon.WindosFormerShow(ref offline_Debugging_);
+        }
+
+
+        //AutoSNForm aotuFindSNForm = new AutoSNForm();
+
+
+        private void 远程复判ToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                UICon.SwitchToThisWindow(RestObjImage2.RestObjImageFrom.Handle, true);
+                RestObjImage2.RestObjImageFrom.Show();
+            }
+            catch (Exception)
+            {
+            }
+            //if (aotuFindSNForm == null || aotuFindSNForm.IsDisposed)
+            //{
+            //    aotuFindSNForm = new AutoSNForm();
+            //}
+            //UICon.WindosFormerShow(ref aotuFindSNForm);
+        }
+
+        private void toolStripButton3_Click(object sender, EventArgs e)
+        {
+            ImagesForm.ShowD();
+        }
+        Vision2.vision.DeepLearning.ImageForm1Save imageForm1Save;
+        private void 深度学习ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (imageForm1Save == null || imageForm1Save.IsDisposed)
+            {
+                imageForm1Save = new vision.DeepLearning.ImageForm1Save();
+            }
+            UICon.WindosFormerShow(ref imageForm1Save);
         }
     }
 }

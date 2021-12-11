@@ -75,13 +75,23 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             this.Done = oneRObj.Done;
             this.NGROI = oneRObj.NGROI;
             this.ROI = oneRObj.ROI;
-
+            messages = oneRObj.messages;
+            rows = oneRObj.rows;
+            cols = oneRObj.cols;
             //OneOdata[] oneOdat= new OneOdata[] { };
             //oneRObj.oneOdatas.CopyTo(oneOdat);
             //oneOdatas.AddRange(oneOdat);
             this.RestStrings = oneRObj.RestStrings;
         }
-
+        public void AddImageMessage(HTuple row,HTuple col, HTuple message)
+        {
+            messages.Append(message);
+            rows.Append(row);
+            cols.Append(col);
+        }
+        public       HTuple rows = new HTuple();
+        public HTuple cols = new HTuple();
+        public HTuple messages = new HTuple();
         /// <summary>
         /// 参数集合
         /// </summary>
@@ -99,7 +109,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         public string ComponentID { get; set; } = "";
 
         /// <summary>
-        /// NG选项
+        /// NG缺陷
         /// </summary>
         public string NGText
         {
@@ -125,7 +135,9 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         /// 复判缺陷
         /// </summary>
         public string RestText = "";
-
+        /// <summary>
+        /// 缺陷下拉选项
+        /// </summary>
         public List<string> RestStrings = new List<string>();
 
         public void RAddOK()
@@ -240,6 +252,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 }
             }
 
+            public bool AutoOK;
             public string ComponentID { get; set; } = "";
 
             public bool Done
@@ -262,7 +275,9 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     }
                 }
             }
-
+            /// <summary>
+            /// NG项
+            /// </summary>
             public string NGText
             {
                 get
@@ -279,7 +294,9 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     return data.Trim(';');
                 }
             }
-
+            /// <summary>
+            /// 机器结果
+            /// </summary>
             public string CNGText
             {
                 get
@@ -298,7 +315,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             }
 
             /// <summary>
-            ///
+            ///缺陷下拉集合
             /// </summary>
             public List<string> RestStrings
             {
@@ -326,7 +343,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             private List<string> restStrings = new List<string>();
 
             /// <summary>
-            ///
+            ///复判结果
             /// </summary>
             public string RestText
             {

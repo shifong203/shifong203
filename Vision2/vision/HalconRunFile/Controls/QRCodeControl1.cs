@@ -18,6 +18,7 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             isCheave = true;
             InitializeComponent();
+            ErosProjcetDLL.UI.DataGridViewF.StCon.AddCon(dataGridView3);
             hWindID.Initialize(hWindowControl3);
             _Classify = qRCode.color_Classify;
             Get_Pragram(_Classify);
@@ -64,7 +65,11 @@ namespace Vision2.vision.HalconRunFile.Controls
                     {
                         dataGridView2.Rows.Add(runProgram.Rows.Length - dataGridView2.Rows.Count);
                     }
-                    for (int i = 0; i < runProgram.Rows.Length; i++)
+                    if (dataGridView2.Rows.Count < runProgram.TrayIDS.Count)
+                    {
+                        dataGridView2.Rows.Add(runProgram.TrayIDS.Count - dataGridView2.Rows.Count);
+                    }
+                    for (int i = 0; i < dataGridView2.Rows.Count; i++)
                     {
                         if (runProgram.TrayIDS.Count > i)
                         {
@@ -84,6 +89,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                             dataGridView2.Rows[i].Cells[4].Value = runProgram.Cols.TupleSelect(i);
                         }
                     }
+        
                 }
                 numericUpDown13.Value = runProgram.IDValue;
                 ErosProjcetDLL.UI.DataGridViewF.StCon.AddCon(dataGridView2);
@@ -97,6 +103,13 @@ namespace Vision2.vision.HalconRunFile.Controls
                 numericUpDown12.Value = trackBar4.Value;
                 numericUpDown11.Value = trackBar5.Value;
                 GetP();
+                
+                for (int i = 0; i < runProgram.ModeRow.Length; i++)
+                {
+                  int  dde=  dataGridView3.Rows.Add();
+                    dataGridView3.Rows[i].Cells[0].Value = runProgram.ModeRow.TupleSelect(i).ToString();
+                    dataGridView3.Rows[i].Cells[1].Value = runProgram.ModeCol.TupleSelect(i).ToString();
+                }
             }
             catch (Exception EX)
             {
@@ -195,8 +208,9 @@ namespace Vision2.vision.HalconRunFile.Controls
             try
             {
                 isCheave = true;
+                checkBox6.Checked = runProgram.IsTrain;
                 checkBox5.Checked = runProgram.Enble;
-
+                numericUpDown22.Value = (decimal)runProgram.CMint;
                 dataGridView1.Rows.Clear();
                 if (runProgram.MarkName.Count != 0)
                 {
@@ -517,8 +531,7 @@ namespace Vision2.vision.HalconRunFile.Controls
             }
             runProgram.Height = (int)numericUpDown14.Value;
         }
-
-        private void numericUpDown10_ValueChanged(object sender, EventArgs e)
+        public void SetPorma(int debugid=0)
         {
             try
             {
@@ -526,8 +539,10 @@ namespace Vision2.vision.HalconRunFile.Controls
                 {
                     return;
                 }
-                string dante = ((Control)sender).Text;
-                string DAET = ((Control)sender).Name;
+                runProgram.IsTrain = checkBox6.Checked;
+                //string dante = ((Control)sender).Text;
+                //string DAET = ((Control)sender).Name;
+                runProgram.CMint= (double)numericUpDown22.Value;
                 runProgram.ISCont = (int)numericUpDown10.Value;
                 runProgram.TrayNumber = (int)numericUpDown16.Value;
                 runProgram.IDValue = (int)numericUpDown13.Value;
@@ -567,7 +582,12 @@ namespace Vision2.vision.HalconRunFile.Controls
             catch (Exception)
             {
             }
+
         }
+        private void numericUpDown10_ValueChanged(object sender, EventArgs e)
+        {
+            SetPorma();
+         }
 
         private void dataGridView2_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -581,6 +601,11 @@ namespace Vision2.vision.HalconRunFile.Controls
                 {
                     return;
                 }
+                if (runProgram.TrayIDS.Count <= e.RowIndex)
+                {
+                    runProgram.TrayIDS.Add(1);
+                }
+            
                 if (e.ColumnIndex == 1 && e.RowIndex >= 0)
                 {
                     runProgram.TrayIDS[e.RowIndex] = int.Parse(dataGridView2.Rows[e.RowIndex].Cells[1].Value.ToString());
@@ -598,8 +623,9 @@ namespace Vision2.vision.HalconRunFile.Controls
                     runProgram.Cols[e.RowIndex] = double.Parse(dataGridView2.Rows[e.RowIndex].Cells[4].Value.ToString());
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                MessageBox.Show(ex.Message);
             }
         }
 
@@ -1130,7 +1156,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 //_Classify.SelectMin = (double)numericUpDown8.Value;
                 //_Classify.SelectMax = (double)numericUpDown7.Value;
                 //_Classify.ClosingCir = (double)numericUpDown6.Value;
-                _Classify.ColorNumber = (byte)numericUpDownNuber.Value;
+                _Classify.ColorNumber = (int)numericUpDownNuber.Value;
                 //_Classify.Color_ID = (byte)numericUpDown1.Value;
                 //_Classify.COlorES = button3.BackColor;
                 _Classify.ISFillUp = checkBoxRoing.Checked;
@@ -1201,6 +1227,61 @@ namespace Vision2.vision.HalconRunFile.Controls
             catch (Exception ex)
             {
             }
+        }
+
+        private void button11_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                runProgram.ModeRow = runProgram.OutRow;
+                runProgram.ModeCol = runProgram.OutCol;
+                dataGridView3.Rows.Clear();
+                isCheave = true;
+                for (int i = 0; i < runProgram.ModeRow.Length; i++)
+                {
+                    int dde = dataGridView3.Rows.Add();
+                    dataGridView3.Rows[i].Cells[0].Value = runProgram.ModeRow.TupleSelect(i).ToString();
+                    dataGridView3.Rows[i].Cells[1].Value = runProgram.ModeCol.TupleSelect(i).ToString();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            isCheave = false;
+        }
+
+        private void numericUpDown22_ValueChanged(object sender, EventArgs e)
+        {
+            SetPorma();
+        }
+
+        private void dataGridView3_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            if (isCheave)
+            {
+                return;
+            }
+            if (e.ColumnIndex==0)
+            {
+                runProgram.ModeRow[e.RowIndex] = double.Parse(dataGridView3.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString());
+            }
+            else if (e.ColumnIndex == 1)
+            {
+                runProgram.ModeCol[e.RowIndex] = double.Parse(dataGridView3.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString());
+            }
+
+        }
+
+        private void checkBox6_CheckedChanged(object sender, EventArgs e)
+        {
+            SetPorma();
+
+        }
+
+        private void dataGridView3_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
         }
     }
 }

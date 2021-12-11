@@ -24,9 +24,11 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>0</ApplicationRevision>
+    <MinimumRequiredVersion>1.0.0.1</MinimumRequiredVersion>
+    <ApplicationRevision>2</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -37,7 +39,7 @@
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>0</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -56,12 +58,35 @@
   <PropertyGroup>
     <StartupObject>Vision2.Program</StartupObject>
   </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>0A583008641C9C6500D21FB3EBD808D20C131EA8</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>Vision2_TemporaryKey.pfx</ManifestKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>true</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <TargetZone>LocalIntranet</TargetZone>
+  </PropertyGroup>
+  <PropertyGroup />
+  <PropertyGroup>
+    <SignManifests>true</SignManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="AdvMotAPI">
       <HintPath>Dll\AdvMotAPI.dll</HintPath>
     </Reference>
     <Reference Include="AmphenolMES">
       <HintPath>bin\Debug\x64\AmphenolMES.dll</HintPath>
+    </Reference>
+    <Reference Include="GxIAPINET, Version=1.0.6590.26805, Culture=neutral, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\x64\GxIAPINET.dll</HintPath>
     </Reference>
     <Reference Include="halcondotnet">
       <HintPath>bin\Debug\x64\halcondotnet.dll</HintPath>
@@ -148,6 +173,15 @@
     </Compile>
     <Compile Include="ErosProjcetDLL\Project\AlarmListBoxt.Designer.cs">
       <DependentUpon>AlarmListBoxt.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ErosProjcetDLL\Project\ErrForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ErosProjcetDLL\Project\ErrForm.Designer.cs">
+      <DependentUpon>ErrForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ErosProjcetDLL\UI\PanelEx.cs">
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="ErosProjcetDLL\UI\DataGridViewF\DataGridViewNumericUpDownCell.cs" />
     <Compile Include="ErosProjcetDLL\UI\DataGridViewF\DataGridViewNumericUpDownColumn.cs" />
@@ -428,6 +462,7 @@
     <Compile Include="Project\DebugF\DebugForm.Designer.cs">
       <DependentUpon>DebugForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Project\DebugF\Device_State.cs" />
     <Compile Include="Project\DebugF\DllCon.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -457,6 +492,7 @@
       <DependentUpon>Form1C154DIDO.cs</DependentUpon>
     </Compile>
     <Compile Include="Project\DebugF\IO\FY6400.cs" />
+    <Compile Include="Project\DebugF\IO\gts.cs" />
     <Compile Include="Project\DebugF\IO\IAxisGrub.cs" />
     <Compile Include="Project\DebugF\IO\IOForm.cs">
       <SubType>Form</SubType>
@@ -475,6 +511,12 @@
     </Compile>
     <Compile Include="Project\DebugF\IO\MP_C154Form1.designer.cs">
       <DependentUpon>MP_C154Form1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Project\DebugF\IO\RunCirculation.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Project\DebugF\IO\RunCirculation.Designer.cs">
+      <DependentUpon>RunCirculation.cs</DependentUpon>
     </Compile>
     <Compile Include="Project\DebugF\IO\RunCodeStr.cs" />
     <Compile Include="Project\DebugF\IO\RunCodeUserControl.cs">
@@ -495,6 +537,12 @@
     </Compile>
     <Compile Include="Project\DebugF\IO\TrayControl.Designer.cs">
       <DependentUpon>TrayControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Project\DebugF\IO\TrayDataForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Project\DebugF\IO\TrayDataForm.Designer.cs">
+      <DependentUpon>TrayDataForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Project\DebugF\IO\TrayDatas.cs">
       <SubType>UserControl</SubType>
@@ -581,6 +629,13 @@
     <Compile Include="Project\ListSNForm.Designer.cs">
       <DependentUpon>ListSNForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Project\Mes\DefaultMes.cs" />
+    <Compile Include="Project\Mes\DefaultMesForm1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Project\Mes\DefaultMesForm1.Designer.cs">
+      <DependentUpon>DefaultMesForm1.cs</DependentUpon>
+    </Compile>
     <Compile Include="Project\Mes\FvtForm1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -595,6 +650,38 @@
       <DependentUpon>SPCForm.cs</DependentUpon>
     </Compile>
     <Compile Include="SocketFiledata\ErosConLink\三菱FX3U.cs" />
+    <Compile Include="vision\AoiObj.cs" />
+    <Compile Include="vision\Cams\CamsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="vision\Cams\CamsForm.Designer.cs">
+      <DependentUpon>CamsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="vision\Cams\CamShow.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="vision\Cams\CamShow.Designer.cs">
+      <DependentUpon>CamShow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="vision\Cams\DaHenCamera.cs" />
+    <Compile Include="vision\DeepLearning\ImageForm1Save.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="vision\DeepLearning\ImageForm1Save.Designer.cs">
+      <DependentUpon>ImageForm1Save.cs</DependentUpon>
+    </Compile>
+    <Compile Include="vision\elementControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="vision\elementControl.Designer.cs">
+      <DependentUpon>elementControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="vision\ElementForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="vision\ElementForm.Designer.cs">
+      <DependentUpon>ElementForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="vision\HalconRunFile\Controls\ModeColorUserControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -625,13 +712,32 @@
     <Compile Include="vision\HalconRunFile\Controls\UserCtrlThreshold.designer.cs">
       <DependentUpon>UserCtrlThreshold.cs</DependentUpon>
     </Compile>
+    <Compile Include="vision\HalconRunFile\PCBFile\DataMaxMinDic.cs" />
     <Compile Include="vision\HalconRunFile\RunProgramFile\InteHomMat.cs" />
     <Compile Include="vision\HalconRunFile\RunProgramFile\Mode_Color.cs" />
+    <Compile Include="vision\ImagesForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="vision\ImagesForm.Designer.cs">
+      <DependentUpon>ImagesForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="vision\Offline_Debugging_Form1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="vision\Offline_Debugging_Form1.Designer.cs">
+      <DependentUpon>Offline_Debugging_Form1.cs</DependentUpon>
+    </Compile>
     <Compile Include="vision\RestVisionForm\AotuFindSNForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="vision\RestVisionForm\AotuFindSNForm.Designer.cs">
       <DependentUpon>AotuFindSNForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="vision\RestVisionForm\AutoSNForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="vision\RestVisionForm\AutoSNForm.Designer.cs">
+      <DependentUpon>AutoSNForm.cs</DependentUpon>
     </Compile>
     <Compile Include="vision\RestVisionForm\OneNGDataMinMaxControl.cs">
       <SubType>UserControl</SubType>
@@ -644,6 +750,12 @@
     </Compile>
     <Compile Include="vision\RestVisionForm\FinSNVisionForm.Designer.cs">
       <DependentUpon>FinSNVisionForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="vision\RestVisionForm\RestObjImage2.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="vision\RestVisionForm\RestObjImage2.Designer.cs">
+      <DependentUpon>RestObjImage2.cs</DependentUpon>
     </Compile>
     <Compile Include="vision\RunVisionPrForm.cs">
       <SubType>Form</SubType>
@@ -1586,6 +1698,9 @@
       <DependentUpon>AlarmListBoxt.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="ErosProjcetDLL\Project\ErrForm.resx">
+      <DependentUpon>ErrForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ErosUI\DataTimeForm.resx">
       <DependentUpon>DataTimeForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -1603,6 +1718,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ErosUI\OpenDis.resx">
       <DependentUpon>OpenDis.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="ErosProjcetDLL\Code\UserCode.resx">
       <DependentUpon>UserCode.cs</DependentUpon>
@@ -1631,6 +1747,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ErosProjcetDLL\Project\LogMessage.resx">
       <DependentUpon>LogMessage.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="ErosProjcetDLL\Project\NewPragram.resx">
       <DependentUpon>NewPragram.cs</DependentUpon>
@@ -1649,6 +1766,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ErosProjcetDLL\Project\ToolForm.resx">
       <DependentUpon>ToolForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="ErosProjcetDLL\Project\ToolKitForm.resx">
       <DependentUpon>ToolKitForm.cs</DependentUpon>
@@ -1691,6 +1809,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Project\DebugF\DebugForm.resx">
       <DependentUpon>DebugForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Project\DebugF\DllCon.resx">
       <DependentUpon>DllCon.cs</DependentUpon>
@@ -1713,6 +1832,9 @@
     <EmbeddedResource Include="Project\DebugF\IO\MP_C154Form1.resx">
       <DependentUpon>MP_C154Form1.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Project\DebugF\IO\RunCirculation.resx">
+      <DependentUpon>RunCirculation.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Project\DebugF\IO\RunCodeUserControl.resx">
       <DependentUpon>RunCodeUserControl.cs</DependentUpon>
     </EmbeddedResource>
@@ -1721,6 +1843,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Project\DebugF\IO\TrayControl.resx">
       <DependentUpon>TrayControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Project\DebugF\IO\TrayDataForm.resx">
+      <DependentUpon>TrayDataForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Project\DebugF\IO\TrayDatas.resx">
       <DependentUpon>TrayDatas.cs</DependentUpon>
@@ -1761,11 +1886,29 @@
     <EmbeddedResource Include="Project\ListSNForm.resx">
       <DependentUpon>ListSNForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Project\Mes\DefaultMesForm1.resx">
+      <DependentUpon>DefaultMesForm1.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Project\Mes\FvtForm1.resx">
       <DependentUpon>FvtForm1.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Project\SPCForm.resx">
       <DependentUpon>SPCForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="vision\Cams\CamsForm.resx">
+      <DependentUpon>CamsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="vision\Cams\CamShow.resx">
+      <DependentUpon>CamShow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="vision\DeepLearning\ImageForm1Save.resx">
+      <DependentUpon>ImageForm1Save.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="vision\elementControl.resx">
+      <DependentUpon>elementControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="vision\ElementForm.resx">
+      <DependentUpon>ElementForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="vision\HalconRunFile\Controls\ModeColorUserControl.resx">
       <DependentUpon>ModeColorUserControl.cs</DependentUpon>
@@ -1782,14 +1925,26 @@
     <EmbeddedResource Include="vision\HalconRunFile\Controls\UserCtrlThreshold.resx">
       <DependentUpon>UserCtrlThreshold.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="vision\ImagesForm.resx">
+      <DependentUpon>ImagesForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="vision\Offline_Debugging_Form1.resx">
+      <DependentUpon>Offline_Debugging_Form1.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="vision\RestVisionForm\AotuFindSNForm.resx">
       <DependentUpon>AotuFindSNForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="vision\RestVisionForm\AutoSNForm.resx">
+      <DependentUpon>AutoSNForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="vision\RestVisionForm\OneNGDataMinMaxControl.resx">
       <DependentUpon>OneNGDataMinMaxControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="vision\RestVisionForm\FinSNVisionForm.resx">
       <DependentUpon>FinSNVisionForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="vision\RestVisionForm\RestObjImage2.resx">
+      <DependentUpon>RestObjImage2.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="vision\RunVisionPrForm.resx">
       <DependentUpon>RunVisionPrForm.cs</DependentUpon>
@@ -2204,6 +2359,7 @@
     <None Include="Iamge\HalconDemo1_TemporaryKey.pfx" />
     <Fakes Include="ErosProjcetDLL\Fakes\NPOI.fakes" />
     <None Include="packages.config" />
+    <None Include="Properties\app.manifest" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -2213,6 +2369,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="Vision2_TemporaryKey.pfx" />
     <None Include="Web References\cnshah0tis01\Reference.map" />
     <None Include="Web References\cnshah0tis01\TIS.wsdl" />
   </ItemGroup>
@@ -3018,9 +3175,7 @@
     <None Include="Resources\zoom_out.png" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Iamge\favicon-20180531010245196.ico" />
     <Content Include="Iamge\favicon-20180531010639581.ico" />
-    <Content Include="Iamge\笔头.jpg" />
     <None Include="ErosProjcetDLL\Resources\LOGO.jpg" />
     <None Include="ErosProjcetDLL\Resources\nokida.png" />
     <None Include="ErosProjcetDLL\Resources\user-male-circle-vector.png" />
@@ -3044,6 +3199,27 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Dll\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PublishFile Include="Vision2.pdb">
+      <Visible>False</Visible>
+      <Group>
+      </Group>
+      <TargetPath>
+      </TargetPath>
+      <PublishState>Auto</PublishState>
+      <IncludeHash>False</IncludeHash>
+      <FileType>File</FileType>
+    </PublishFile>
+    <PublishFile Include="zh-Hant\Microsoft.QualityTools.Testing.Fakes.resources">
+      <Visible>False</Visible>
+      <Group>必备</Group>
+      <TargetPath>
+      </TargetPath>
+      <PublishState>Auto</PublishState>
+      <IncludeHash>True</IncludeHash>
+      <FileType>Satellite</FileType>
+    </PublishFile>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

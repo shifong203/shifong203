@@ -41,14 +41,18 @@ namespace Vision2.vision.RestVisionForm
             {
                 oneContOBJs = oBJs;
                 dataGridView1.Rows.Clear();
-                dataGridView1.Rows.Add(oneContOBJs.oneRObjs.Count);
-                int d = 0;
-                foreach (var item in oneContOBJs.oneRObjs)
+                if (oneContOBJs.oneRObjs.Count!=0)
                 {
-                    dataGridView1.Rows[d].Cells[0].Value = item.NGText;
-                    dataGridView1.Rows[d].Cells[1].Value = item.NGText;
-                    d++;
+                    dataGridView1.Rows.Add(oneContOBJs.oneRObjs.Count);
+                    int d = 0;
+                    foreach (var item in oneContOBJs.oneRObjs)
+                    {
+                        dataGridView1.Rows[d].Cells[0].Value = item.NGText;
+                        dataGridView1.Rows[d].Cells[1].Value = item.NGText;
+                        d++;
+                    }
                 }
+         
                 UpOnes();
             }
             catch (Exception ex)
@@ -68,14 +72,25 @@ namespace Vision2.vision.RestVisionForm
                 if (!item.Done)
                 {
                     dataGridView1.Rows[intd].DefaultCellStyle.BackColor = Color.Yellow;
+                    if (this.dataGridView1.Rows.Count>intd + 8)
+                    {
+                        intd = intd + 8;
+                    }
+                    this.dataGridView1.CurrentCell = this.dataGridView1.Rows[intd].Cells[0];
+                    //dataGridView1.see
                     OneRObjT = item;
                     Rectangle rectangle = dataGridView1.GetCellDisplayRectangle(1, intd, false);
                     Rectangle rectangle2 = dataGridView1.RectangleToScreen(rectangle);
-                    listBox1.Location = new Point(rectangle.X - 50, rectangle.Y + dataGridView1.ColumnHeadersHeight);
+                    listBox1.Location = new Point(100, 20+dataGridView1.ColumnHeadersHeight);
                     listBox1.Visible = true;
                     listBox1.Items.Clear();
                     //listBox1.Items.Add(0+ OneRObjT.NGText);
                     //listBox1.SelectedIndex = 0;
+                    if (!OneRObjT.RestStrings.Contains(OneRObjT.CNGText))
+                    {
+                        OneRObjT.RestStrings.Add(OneRObjT.CNGText);
+                    }
+                   
                     for (int i = 0; i < OneRObjT.RestStrings.Count; i++)
                     {
                         if (Vision.Instance.DefectTypeDicEx.ContainsKey(OneRObjT.RestStrings[i]))

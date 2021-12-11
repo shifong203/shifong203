@@ -110,6 +110,10 @@
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.measureConTrolEx1 = new Vision2.vision.HalconRunFile.Controls.MeasureConTrolEx();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.label21 = new System.Windows.Forms.Label();
+            this.comboBox5 = new System.Windows.Forms.ComboBox();
+            this.label20 = new System.Windows.Forms.Label();
+            this.comboBox4 = new System.Windows.Forms.ComboBox();
             this.dataGridView3 = new System.Windows.Forms.DataGridView();
             this.Column6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column7 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -131,10 +135,6 @@
             this.dataGridViewComboBoxColumnEx1 = new Vision2.ErosProjcetDLL.UI.DataGridViewF.DataGridViewComboBoxColumnEx();
             this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.label20 = new System.Windows.Forms.Label();
-            this.comboBox4 = new System.Windows.Forms.ComboBox();
-            this.label21 = new System.Windows.Forms.Label();
-            this.comboBox5 = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.numUpDownHeigthMax)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownAreaMax)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numUpDownHeigthMin)).BeginInit();
@@ -894,10 +894,10 @@
             this.dataGridView2.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Column5});
             this.dataGridView2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.dataGridView2.Location = new System.Drawing.Point(3, 424);
+            this.dataGridView2.Location = new System.Drawing.Point(3, 377);
             this.dataGridView2.Name = "dataGridView2";
             this.dataGridView2.RowTemplate.Height = 23;
-            this.dataGridView2.Size = new System.Drawing.Size(579, 207);
+            this.dataGridView2.Size = new System.Drawing.Size(579, 254);
             this.dataGridView2.TabIndex = 101;
             this.dataGridView2.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView2_CellContentClick);
             this.dataGridView2.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView2_CellValueChanged);
@@ -1404,6 +1404,42 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "轴测量区域";
             // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(145, 78);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(47, 12);
+            this.label21.TabIndex = 64;
+            this.label21.Text = "Y中轴线";
+            // 
+            // comboBox5
+            // 
+            this.comboBox5.FormattingEnabled = true;
+            this.comboBox5.Location = new System.Drawing.Point(193, 75);
+            this.comboBox5.Name = "comboBox5";
+            this.comboBox5.Size = new System.Drawing.Size(77, 20);
+            this.comboBox5.TabIndex = 63;
+            this.comboBox5.SelectedIndexChanged += new System.EventHandler(this.comboBox2_SelectedIndexChanged);
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Location = new System.Drawing.Point(145, 56);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(47, 12);
+            this.label20.TabIndex = 62;
+            this.label20.Text = "X中轴线";
+            // 
+            // comboBox4
+            // 
+            this.comboBox4.FormattingEnabled = true;
+            this.comboBox4.Location = new System.Drawing.Point(193, 53);
+            this.comboBox4.Name = "comboBox4";
+            this.comboBox4.Size = new System.Drawing.Size(77, 20);
+            this.comboBox4.TabIndex = 61;
+            this.comboBox4.SelectedIndexChanged += new System.EventHandler(this.comboBox2_SelectedIndexChanged);
+            // 
             // dataGridView3
             // 
             this.dataGridView3.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -1597,42 +1633,6 @@
             this.dataGridViewTextBoxColumn3.HeaderText = "最大值";
             this.dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
             this.dataGridViewTextBoxColumn3.Width = 66;
-            // 
-            // label20
-            // 
-            this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(145, 56);
-            this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(47, 12);
-            this.label20.TabIndex = 62;
-            this.label20.Text = "X中轴线";
-            // 
-            // comboBox4
-            // 
-            this.comboBox4.FormattingEnabled = true;
-            this.comboBox4.Location = new System.Drawing.Point(193, 53);
-            this.comboBox4.Name = "comboBox4";
-            this.comboBox4.Size = new System.Drawing.Size(77, 20);
-            this.comboBox4.TabIndex = 61;
-            this.comboBox4.SelectedIndexChanged += new System.EventHandler(this.comboBox2_SelectedIndexChanged);
-            // 
-            // label21
-            // 
-            this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(145, 78);
-            this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(47, 12);
-            this.label21.TabIndex = 64;
-            this.label21.Text = "Y中轴线";
-            // 
-            // comboBox5
-            // 
-            this.comboBox5.FormattingEnabled = true;
-            this.comboBox5.Location = new System.Drawing.Point(193, 75);
-            this.comboBox5.Name = "comboBox5";
-            this.comboBox5.Size = new System.Drawing.Size(77, 20);
-            this.comboBox5.TabIndex = 63;
-            this.comboBox5.SelectedIndexChanged += new System.EventHandler(this.comboBox2_SelectedIndexChanged);
             // 
             // PinUserControl1
             // 

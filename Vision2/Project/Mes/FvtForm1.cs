@@ -3,6 +3,7 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Vision2.ErosProjcetDLL.Project;
 using Vision2.Project.formula;
 
 namespace Vision2.Project.Mes
@@ -48,7 +49,9 @@ namespace Vision2.Project.Mes
                             if (mesJib.ReadFvt(Number, Sn, RsetsTR, out String[] FVTSTR))
                             {
                                 label1.Text = "读取成功";
+                                AlarmListBoxt.RomveAlarm("FVT");
                                 Thread.Sleep(1000);
+                              //  { Name = "FVT", Text = "FVT读取失败" });
                                 this.Close();
                                 return;
                             }
@@ -132,7 +135,9 @@ namespace Vision2.Project.Mes
             {
                 if (mesJib.ReadFvt(Number, Sn, RsetsTR, out String[] FVTSTR))
                 {
-                    MessageBox.Show("成功");
+                    label1.Text = "读取成功";
+                    Thread.Sleep(1000);
+                    this.Close();
                 }
                 else
                 {
@@ -150,8 +155,13 @@ namespace Vision2.Project.Mes
             {
                 if (mesJib.WriteFatData(Number, Sn, RsetsTR))
                 {
-                    MessageBox.Show("成功");
+                    label1.Text = "模拟成功";
+                    AlarmListBoxt.RomveAlarm("FVT");
+                    Thread.Sleep(1000);
+                    //  { Name = "FVT", Text = "FVT读取失败" });
+                    this.Close();
                 }
+                AlarmListBoxt.RomveAlarm("FVT");
             }
             catch (Exception)
             {

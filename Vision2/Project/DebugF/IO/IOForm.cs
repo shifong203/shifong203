@@ -58,11 +58,6 @@ namespace Vision2.Project.DebugF.IO
         {
             try
             {
-                //if (int.TryParse(DebugCompiler.Instance.AxisNameS, out int outd))
-                //{
-                //    return Out[outd];
-                //}
-
                 if (DebugCompiler.Instance.DDAxis.GetAxisName(DebugCompiler.Instance.AxisNameS) != null)
                 {
                     if (DebugCompiler.Instance.DDAxis.GetAxisName(DebugCompiler.Instance.AxisNameS).IsMove)

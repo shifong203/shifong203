@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using Vision2.ErosProjcetDLL.Excel;
+using Vision2.ErosProjcetDLL.Project;
 using Vision2.Project;
 using Vision2.Project.DebugF.IO;
 using Vision2.Project.formula;
@@ -551,14 +552,34 @@ namespace ErosSocket.DebugPLC.Robot
         public TrayData(TrayRobot trayRobot)
         {
             tray1 = trayRobot;
+            Name = tray1.Name;
             SetITrayRobot(tray1.GetITrayRobot());
             Clear();
         }
+        public TrayData()
+        {
 
+        }
+
+        public void Dispose()
+        {
+            try
+            {
+                for (int i = 0; i < this.Count; i++)
+                {
+                   
+                        this.GetDataVales()[i].Dispose();
+                    
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+        }
         public string GetTrayString()
         {
             return string.Format("TraySN:{0};  TrayID:{1},X{2}*Y{3}/数量:{4},NG数:{5}当前:{6}",
-                      this.TrayIDQR, tray1.Name, XNumber, YNumber, Count, NGLocation.Count, Number);
+                      this.TrayIDQR, Name, XNumber, YNumber, Count, NGLocation.Count, Number);
         }
 
         private TrayRobot tray1;
@@ -617,9 +638,9 @@ namespace ErosSocket.DebugPLC.Robot
                             return false;
                         }
                     }
-
                     if (GetDataVales() != null)
                     {
+                        int not = 0;
                         for (int i = 0; i < GetDataVales().Count; i++)
                         {
                             if (GetDataVales()[i].NotNull)
@@ -629,8 +650,17 @@ namespace ErosSocket.DebugPLC.Robot
                                     return false;
                                 }
                             }
+                            else
+                            {
+                                not++;
+                            }
+                        }
+                        if (not == GetDataVales().Count)
+                        {
+                            return false;
                         }
                     }
+                 
                     return true;
                 }
                 catch (Exception)
@@ -639,12 +669,17 @@ namespace ErosSocket.DebugPLC.Robot
                 return false;
             }
         }
-
+        //bool Not = false;
         public string MesRestStr = "";
+
+        public DateTime StadateTime = DateTime.Now;
         /// <summary>
         ///人工处理
         /// </summary>
         public bool UserRest { get; set; }
+        /// <summary>
+        /// 复判完成
+        /// </summary>
         public bool Done
         {
             get
@@ -708,6 +743,8 @@ namespace ErosSocket.DebugPLC.Robot
         /// </summary>
         public string Product_Name { get; set; }
 
+        public string Name { get; set; }
+
         [DescriptionAttribute("托盘ID。"), Category("结果"), DisplayName("托盘ID")]
         public string TrayIDQR { get; set; } = "";
 
@@ -754,11 +791,13 @@ namespace ErosSocket.DebugPLC.Robot
 
         public void RestValue()
         {
+           
             Clear();
             if (trayRobots != null)
             {
                 trayRobots.RestValue(this);
             }
+     
         }
 
         /// <summary>
@@ -855,19 +894,20 @@ namespace ErosSocket.DebugPLC.Robot
 
         public void SetNumberValue(List<DataMinMax> dataMins, int number = 0)
         {
-            //if (number != 0)
-            //{
-            //    Number = number;
-            //}
-            //if (Number <=0)
-            //{
-            //    Number = 1;
-            //}
-            for (int i = 0; i < dataMins.Count; i++)
+            try
             {
-                this.GetDataVales()[number - 1].AddCamOBj(RecipeCompiler.Instance.DataMCamName, dataMins[i].GetOneRObj());
+                for (int i = 0; i < dataMins.Count; i++)
+                {
+                    this.GetDataVales()[number - 1].AddCamOBj(RecipeCompiler.Instance.DataMCamName, dataMins[i].GetOneRObj());
+                }
+                SetNumberValue(number, this.GetDataVales()[number - 1]);
+
             }
-            SetNumberValue(number, this.GetDataVales()[number - 1]);
+            catch (Exception ex)
+            {
+                ErrForm.Show(ex);
+                AlarmText.AddTextNewLine("写入异常,位置" +number +"信息"+ ex.Message);
+            }
         }
 
         /// <summary>

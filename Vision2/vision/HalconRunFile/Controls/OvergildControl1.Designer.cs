@@ -30,11 +30,27 @@
         {
             this.components = new System.ComponentModel.Container();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.tabControl2 = new System.Windows.Forms.TabControl();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.checkBox3 = new System.Windows.Forms.CheckBox();
+            this.numericUpDown5 = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDown3 = new System.Windows.Forms.NumericUpDown();
+            this.label3 = new System.Windows.Forms.Label();
+            this.domainUpDown1 = new System.Windows.Forms.DomainUpDown();
+            this.numericUpDown4 = new System.Windows.Forms.NumericUpDown();
+            this.label2 = new System.Windows.Forms.Label();
+            this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.numericUpDown6 = new System.Windows.Forms.NumericUpDown();
+            this.label5 = new System.Windows.Forms.Label();
+            this.checkBox5 = new System.Windows.Forms.CheckBox();
+            this.checkBox4 = new System.Windows.Forms.CheckBox();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.select_obj_type2 = new Vision2.vision.HalconRunFile.RunProgramFile.Select_obj_type();
             this.checkBox2 = new System.Windows.Forms.CheckBox();
             this.label4 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.button2 = new System.Windows.Forms.Button();
             this.select_obj_type1 = new Vision2.vision.HalconRunFile.RunProgramFile.Select_obj_type();
             this.label1 = new System.Windows.Forms.Label();
             this.thresholdControls1 = new Vision2.vision.HalconRunFile.Controls.ThresholdControls();
@@ -43,18 +59,10 @@
             this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.listBox2 = new System.Windows.Forms.ListBox();
-            this.select_obj_type2 = new Vision2.vision.HalconRunFile.RunProgramFile.Select_obj_type();
-            this.numericUpDown5 = new System.Windows.Forms.NumericUpDown();
-            this.label3 = new System.Windows.Forms.Label();
-            this.numericUpDown4 = new System.Windows.Forms.NumericUpDown();
-            this.label2 = new System.Windows.Forms.Label();
-            this.domainUpDown1 = new System.Windows.Forms.DomainUpDown();
-            this.numericUpDown3 = new System.Windows.Forms.NumericUpDown();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.button6 = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -67,33 +75,28 @@
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
-            this.tabControl2 = new System.Windows.Forms.TabControl();
-            this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.tabPage4 = new System.Windows.Forms.TabPage();
-            this.checkBox3 = new System.Windows.Forms.CheckBox();
-            this.checkBox4 = new System.Windows.Forms.CheckBox();
-            this.checkBox5 = new System.Windows.Forms.CheckBox();
-            this.numericUpDown6 = new System.Windows.Forms.NumericUpDown();
-            this.label5 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.numericUpDown7 = new System.Windows.Forms.NumericUpDown();
             this.groupBox1.SuspendLayout();
+            this.tabControl2.SuspendLayout();
+            this.tabPage3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown5)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown4)).BeginInit();
+            this.tabPage4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown6)).BeginInit();
             this.groupBox6.SuspendLayout();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.groupBox5.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown5)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown4)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).BeginInit();
             this.groupBox2.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
-            this.tabControl2.SuspendLayout();
-            this.tabPage3.SuspendLayout();
-            this.tabPage4.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown6)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown7)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -118,6 +121,200 @@
             this.groupBox1.Text = "1、绘制区域——划痕检测";
             this.groupBox1.Enter += new System.EventHandler(this.groupBox1_Enter);
             // 
+            // tabControl2
+            // 
+            this.tabControl2.Controls.Add(this.tabPage3);
+            this.tabControl2.Controls.Add(this.tabPage4);
+            this.tabControl2.Location = new System.Drawing.Point(3, 177);
+            this.tabControl2.Name = "tabControl2";
+            this.tabControl2.SelectedIndex = 0;
+            this.tabControl2.Size = new System.Drawing.Size(339, 87);
+            this.tabControl2.TabIndex = 159;
+            // 
+            // tabPage3
+            // 
+            this.tabPage3.Controls.Add(this.label6);
+            this.tabPage3.Controls.Add(this.checkBox3);
+            this.tabPage3.Controls.Add(this.numericUpDown7);
+            this.tabPage3.Controls.Add(this.numericUpDown5);
+            this.tabPage3.Controls.Add(this.numericUpDown3);
+            this.tabPage3.Controls.Add(this.label3);
+            this.tabPage3.Controls.Add(this.domainUpDown1);
+            this.tabPage3.Controls.Add(this.numericUpDown4);
+            this.tabPage3.Controls.Add(this.label2);
+            this.tabPage3.Location = new System.Drawing.Point(4, 22);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage3.Size = new System.Drawing.Size(331, 61);
+            this.tabPage3.TabIndex = 0;
+            this.tabPage3.Text = "3、划痕检测";
+            this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // checkBox3
+            // 
+            this.checkBox3.AutoSize = true;
+            this.checkBox3.Location = new System.Drawing.Point(158, 5);
+            this.checkBox3.Name = "checkBox3";
+            this.checkBox3.Size = new System.Drawing.Size(48, 16);
+            this.checkBox3.TabIndex = 157;
+            this.checkBox3.Text = "启用";
+            this.checkBox3.UseVisualStyleBackColor = true;
+            this.checkBox3.CheckedChanged += new System.EventHandler(this.checkBox3_CheckedChanged);
+            // 
+            // numericUpDown5
+            // 
+            this.numericUpDown5.Location = new System.Drawing.Point(110, 4);
+            this.numericUpDown5.Name = "numericUpDown5";
+            this.numericUpDown5.Size = new System.Drawing.Size(42, 21);
+            this.numericUpDown5.TabIndex = 156;
+            this.numericUpDown5.Value = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            this.numericUpDown5.ValueChanged += new System.EventHandler(this.Sele3);
+            // 
+            // numericUpDown3
+            // 
+            this.numericUpDown3.Location = new System.Drawing.Point(60, 28);
+            this.numericUpDown3.Maximum = new decimal(new int[] {
+            50,
+            0,
+            0,
+            0});
+            this.numericUpDown3.Name = "numericUpDown3";
+            this.numericUpDown3.Size = new System.Drawing.Size(42, 21);
+            this.numericUpDown3.TabIndex = 150;
+            this.numericUpDown3.Value = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            this.numericUpDown3.ValueChanged += new System.EventHandler(this.Sele3);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label3.Location = new System.Drawing.Point(2, 7);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(63, 14);
+            this.label3.TabIndex = 155;
+            this.label3.Text = "均值滤波";
+            // 
+            // domainUpDown1
+            // 
+            this.domainUpDown1.Items.Add("dark");
+            this.domainUpDown1.Items.Add("equal");
+            this.domainUpDown1.Items.Add("light");
+            this.domainUpDown1.Items.Add("not_equal");
+            this.domainUpDown1.Location = new System.Drawing.Point(105, 27);
+            this.domainUpDown1.Name = "domainUpDown1";
+            this.domainUpDown1.Size = new System.Drawing.Size(90, 21);
+            this.domainUpDown1.TabIndex = 149;
+            this.domainUpDown1.Text = "dark";
+            this.domainUpDown1.SelectedItemChanged += new System.EventHandler(this.domainUpDown1_SelectedItemChanged);
+            // 
+            // numericUpDown4
+            // 
+            this.numericUpDown4.Location = new System.Drawing.Point(67, 4);
+            this.numericUpDown4.Name = "numericUpDown4";
+            this.numericUpDown4.Size = new System.Drawing.Size(42, 21);
+            this.numericUpDown4.TabIndex = 154;
+            this.numericUpDown4.Value = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            this.numericUpDown4.ValueChanged += new System.EventHandler(this.Sele3);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label2.Location = new System.Drawing.Point(7, 31);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(49, 14);
+            this.label2.TabIndex = 153;
+            this.label2.Text = "灵敏度";
+            // 
+            // tabPage4
+            // 
+            this.tabPage4.Controls.Add(this.numericUpDown6);
+            this.tabPage4.Controls.Add(this.label5);
+            this.tabPage4.Controls.Add(this.checkBox5);
+            this.tabPage4.Controls.Add(this.checkBox4);
+            this.tabPage4.Location = new System.Drawing.Point(4, 22);
+            this.tabPage4.Name = "tabPage4";
+            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage4.Size = new System.Drawing.Size(331, 61);
+            this.tabPage4.TabIndex = 1;
+            this.tabPage4.Text = "对称检测";
+            this.tabPage4.UseVisualStyleBackColor = true;
+            // 
+            // numericUpDown6
+            // 
+            this.numericUpDown6.Location = new System.Drawing.Point(56, 18);
+            this.numericUpDown6.Maximum = new decimal(new int[] {
+            50,
+            0,
+            0,
+            0});
+            this.numericUpDown6.Name = "numericUpDown6";
+            this.numericUpDown6.Size = new System.Drawing.Size(42, 21);
+            this.numericUpDown6.TabIndex = 161;
+            this.numericUpDown6.Value = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label5.Location = new System.Drawing.Point(4, 21);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(49, 14);
+            this.label5.TabIndex = 162;
+            this.label5.Text = "灵敏度";
+            // 
+            // checkBox5
+            // 
+            this.checkBox5.AutoSize = true;
+            this.checkBox5.Location = new System.Drawing.Point(56, 3);
+            this.checkBox5.Name = "checkBox5";
+            this.checkBox5.Size = new System.Drawing.Size(72, 16);
+            this.checkBox5.TabIndex = 159;
+            this.checkBox5.Text = "短轴对称";
+            this.checkBox5.UseVisualStyleBackColor = true;
+            this.checkBox5.CheckedChanged += new System.EventHandler(this.checkBox5_CheckedChanged);
+            // 
+            // checkBox4
+            // 
+            this.checkBox4.AutoSize = true;
+            this.checkBox4.Location = new System.Drawing.Point(6, 3);
+            this.checkBox4.Name = "checkBox4";
+            this.checkBox4.Size = new System.Drawing.Size(48, 16);
+            this.checkBox4.TabIndex = 158;
+            this.checkBox4.Text = "启用";
+            this.checkBox4.UseVisualStyleBackColor = true;
+            // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(407, 43);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(89, 21);
+            this.textBox1.TabIndex = 155;
+            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+            // 
+            // select_obj_type2
+            // 
+            this.select_obj_type2.Location = new System.Drawing.Point(4, 268);
+            this.select_obj_type2.Name = "select_obj_type2";
+            this.select_obj_type2.Size = new System.Drawing.Size(337, 89);
+            this.select_obj_type2.TabIndex = 148;
+            // 
             // checkBox2
             // 
             this.checkBox2.AutoSize = true;
@@ -138,14 +335,6 @@
             this.label4.Size = new System.Drawing.Size(63, 14);
             this.label4.TabIndex = 157;
             this.label4.Text = "缺陷名称";
-            // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(407, 43);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(89, 21);
-            this.textBox1.TabIndex = 155;
-            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
             // groupBox6
             // 
@@ -172,6 +361,16 @@
             this.panel1.Size = new System.Drawing.Size(336, 115);
             this.panel1.TabIndex = 148;
             // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(203, 1);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(70, 25);
+            this.button2.TabIndex = 1;
+            this.button2.Text = "提取区域";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
             // select_obj_type1
             // 
             this.select_obj_type1.Location = new System.Drawing.Point(0, 26);
@@ -183,7 +382,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label1.Location = new System.Drawing.Point(245, 57);
+            this.label1.Location = new System.Drawing.Point(247, 57);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(35, 14);
             this.label1.TabIndex = 147;
@@ -259,100 +458,16 @@
             this.listBox2.FormattingEnabled = true;
             this.listBox2.ItemHeight = 12;
             this.listBox2.Items.AddRange(new object[] {
-            "1",
-            "2",
-            "3",
-            "4",
-            "5"});
+            "1搜索后区域",
+            "2赛选后区域",
+            "3闭合后区域",
+            "4缺陷后区域",
+            "5赛选后区域"});
             this.listBox2.Location = new System.Drawing.Point(3, 17);
             this.listBox2.Name = "listBox2";
             this.listBox2.Size = new System.Drawing.Size(83, 98);
             this.listBox2.TabIndex = 151;
             this.listBox2.SelectedIndexChanged += new System.EventHandler(this.listBox2_SelectedIndexChanged);
-            // 
-            // select_obj_type2
-            // 
-            this.select_obj_type2.Location = new System.Drawing.Point(4, 268);
-            this.select_obj_type2.Name = "select_obj_type2";
-            this.select_obj_type2.Size = new System.Drawing.Size(337, 89);
-            this.select_obj_type2.TabIndex = 148;
-            // 
-            // numericUpDown5
-            // 
-            this.numericUpDown5.Location = new System.Drawing.Point(110, 4);
-            this.numericUpDown5.Name = "numericUpDown5";
-            this.numericUpDown5.Size = new System.Drawing.Size(42, 21);
-            this.numericUpDown5.TabIndex = 156;
-            this.numericUpDown5.Value = new decimal(new int[] {
-            5,
-            0,
-            0,
-            0});
-            this.numericUpDown5.ValueChanged += new System.EventHandler(this.Sele3);
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label3.Location = new System.Drawing.Point(2, 7);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(63, 14);
-            this.label3.TabIndex = 155;
-            this.label3.Text = "均值滤波";
-            // 
-            // numericUpDown4
-            // 
-            this.numericUpDown4.Location = new System.Drawing.Point(67, 4);
-            this.numericUpDown4.Name = "numericUpDown4";
-            this.numericUpDown4.Size = new System.Drawing.Size(42, 21);
-            this.numericUpDown4.TabIndex = 154;
-            this.numericUpDown4.Value = new decimal(new int[] {
-            5,
-            0,
-            0,
-            0});
-            this.numericUpDown4.ValueChanged += new System.EventHandler(this.Sele3);
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label2.Location = new System.Drawing.Point(7, 31);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(49, 14);
-            this.label2.TabIndex = 153;
-            this.label2.Text = "灵敏度";
-            // 
-            // domainUpDown1
-            // 
-            this.domainUpDown1.Items.Add("dark");
-            this.domainUpDown1.Items.Add("equal");
-            this.domainUpDown1.Items.Add("light");
-            this.domainUpDown1.Items.Add("not_equal");
-            this.domainUpDown1.Location = new System.Drawing.Point(105, 27);
-            this.domainUpDown1.Name = "domainUpDown1";
-            this.domainUpDown1.Size = new System.Drawing.Size(90, 21);
-            this.domainUpDown1.TabIndex = 149;
-            this.domainUpDown1.Text = "dark";
-            this.domainUpDown1.SelectedItemChanged += new System.EventHandler(this.domainUpDown1_SelectedItemChanged);
-            // 
-            // numericUpDown3
-            // 
-            this.numericUpDown3.Location = new System.Drawing.Point(60, 28);
-            this.numericUpDown3.Maximum = new decimal(new int[] {
-            50,
-            0,
-            0,
-            0});
-            this.numericUpDown3.Name = "numericUpDown3";
-            this.numericUpDown3.Size = new System.Drawing.Size(42, 21);
-            this.numericUpDown3.TabIndex = 150;
-            this.numericUpDown3.Value = new decimal(new int[] {
-            5,
-            0,
-            0,
-            0});
-            this.numericUpDown3.ValueChanged += new System.EventHandler(this.Sele3);
             // 
             // checkBox1
             // 
@@ -394,16 +509,6 @@
             this.button4.Text = "将搜索到作为模板";
             this.button4.UseVisualStyleBackColor = true;
             this.button4.Click += new System.EventHandler(this.button4_Click);
-            // 
-            // button2
-            // 
-            this.button2.Location = new System.Drawing.Point(203, 1);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(70, 25);
-            this.button2.TabIndex = 1;
-            this.button2.Text = "提取区域";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // groupBox2
             // 
@@ -523,105 +628,33 @@
             this.propertyGrid1.Size = new System.Drawing.Size(521, 561);
             this.propertyGrid1.TabIndex = 0;
             // 
-            // tabControl2
+            // label6
             // 
-            this.tabControl2.Controls.Add(this.tabPage3);
-            this.tabControl2.Controls.Add(this.tabPage4);
-            this.tabControl2.Location = new System.Drawing.Point(3, 177);
-            this.tabControl2.Name = "tabControl2";
-            this.tabControl2.SelectedIndex = 0;
-            this.tabControl2.Size = new System.Drawing.Size(339, 87);
-            this.tabControl2.TabIndex = 159;
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label6.Location = new System.Drawing.Point(237, 37);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(35, 14);
+            this.label6.TabIndex = 149;
+            this.label6.Text = "联通";
             // 
-            // tabPage3
+            // numericUpDown7
             // 
-            this.tabPage3.Controls.Add(this.checkBox3);
-            this.tabPage3.Controls.Add(this.numericUpDown5);
-            this.tabPage3.Controls.Add(this.numericUpDown3);
-            this.tabPage3.Controls.Add(this.label3);
-            this.tabPage3.Controls.Add(this.domainUpDown1);
-            this.tabPage3.Controls.Add(this.numericUpDown4);
-            this.tabPage3.Controls.Add(this.label2);
-            this.tabPage3.Location = new System.Drawing.Point(4, 22);
-            this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(331, 61);
-            this.tabPage3.TabIndex = 0;
-            this.tabPage3.Text = "3、划痕检测";
-            this.tabPage3.UseVisualStyleBackColor = true;
-            // 
-            // tabPage4
-            // 
-            this.tabPage4.Controls.Add(this.numericUpDown6);
-            this.tabPage4.Controls.Add(this.label5);
-            this.tabPage4.Controls.Add(this.checkBox5);
-            this.tabPage4.Controls.Add(this.checkBox4);
-            this.tabPage4.Location = new System.Drawing.Point(4, 22);
-            this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(331, 61);
-            this.tabPage4.TabIndex = 1;
-            this.tabPage4.Text = "对称检测";
-            this.tabPage4.UseVisualStyleBackColor = true;
-            // 
-            // checkBox3
-            // 
-            this.checkBox3.AutoSize = true;
-            this.checkBox3.Location = new System.Drawing.Point(158, 5);
-            this.checkBox3.Name = "checkBox3";
-            this.checkBox3.Size = new System.Drawing.Size(48, 16);
-            this.checkBox3.TabIndex = 157;
-            this.checkBox3.Text = "启用";
-            this.checkBox3.UseVisualStyleBackColor = true;
-            this.checkBox3.CheckedChanged += new System.EventHandler(this.checkBox3_CheckedChanged);
-            // 
-            // checkBox4
-            // 
-            this.checkBox4.AutoSize = true;
-            this.checkBox4.Location = new System.Drawing.Point(6, 3);
-            this.checkBox4.Name = "checkBox4";
-            this.checkBox4.Size = new System.Drawing.Size(48, 16);
-            this.checkBox4.TabIndex = 158;
-            this.checkBox4.Text = "启用";
-            this.checkBox4.UseVisualStyleBackColor = true;
-            // 
-            // checkBox5
-            // 
-            this.checkBox5.AutoSize = true;
-            this.checkBox5.Location = new System.Drawing.Point(56, 3);
-            this.checkBox5.Name = "checkBox5";
-            this.checkBox5.Size = new System.Drawing.Size(72, 16);
-            this.checkBox5.TabIndex = 159;
-            this.checkBox5.Text = "短轴对称";
-            this.checkBox5.UseVisualStyleBackColor = true;
-            this.checkBox5.CheckedChanged += new System.EventHandler(this.checkBox5_CheckedChanged);
-            // 
-            // numericUpDown6
-            // 
-            this.numericUpDown6.Location = new System.Drawing.Point(56, 18);
-            this.numericUpDown6.Maximum = new decimal(new int[] {
-            50,
+            this.numericUpDown7.Location = new System.Drawing.Point(273, 34);
+            this.numericUpDown7.Minimum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            -2147483648});
+            this.numericUpDown7.Name = "numericUpDown7";
+            this.numericUpDown7.Size = new System.Drawing.Size(52, 21);
+            this.numericUpDown7.TabIndex = 148;
+            this.numericUpDown7.Value = new decimal(new int[] {
+            10,
             0,
             0,
             0});
-            this.numericUpDown6.Name = "numericUpDown6";
-            this.numericUpDown6.Size = new System.Drawing.Size(42, 21);
-            this.numericUpDown6.TabIndex = 161;
-            this.numericUpDown6.Value = new decimal(new int[] {
-            5,
-            0,
-            0,
-            0});
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label5.Location = new System.Drawing.Point(4, 21);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(49, 14);
-            this.label5.TabIndex = 162;
-            this.label5.Text = "灵敏度";
+            this.numericUpDown7.ValueChanged += new System.EventHandler(this.numericUpDown7_ValueChanged);
             // 
             // OvergildControl1
             // 
@@ -632,27 +665,28 @@
             this.Size = new System.Drawing.Size(535, 593);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            this.tabControl2.ResumeLayout(false);
+            this.tabPage3.ResumeLayout(false);
+            this.tabPage3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown5)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown4)).EndInit();
+            this.tabPage4.ResumeLayout(false);
+            this.tabPage4.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown6)).EndInit();
             this.groupBox6.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             this.groupBox5.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown5)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown4)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.contextMenuStrip1.ResumeLayout(false);
             this.groupBox3.ResumeLayout(false);
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
-            this.tabControl2.ResumeLayout(false);
-            this.tabPage3.ResumeLayout(false);
-            this.tabPage3.PerformLayout();
-            this.tabPage4.ResumeLayout(false);
-            this.tabPage4.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown6)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown7)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -705,5 +739,7 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.CheckBox checkBox5;
         private System.Windows.Forms.CheckBox checkBox4;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.NumericUpDown numericUpDown7;
     }
 }

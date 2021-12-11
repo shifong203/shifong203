@@ -50,6 +50,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.button10 = new System.Windows.Forms.Button();
             this.numericUpDown4 = new System.Windows.Forms.NumericUpDown();
             this.label1 = new System.Windows.Forms.Label();
             this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
@@ -81,7 +82,8 @@
             this.Column5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn8 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn9 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.button10 = new System.Windows.Forms.Button();
+            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.button11 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -305,6 +307,8 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.button11);
+            this.tabPage2.Controls.Add(this.richTextBox1);
             this.tabPage2.Controls.Add(this.button10);
             this.tabPage2.Controls.Add(this.numericUpDown4);
             this.tabPage2.Controls.Add(this.checkBox1);
@@ -327,6 +331,16 @@
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "托盘模拟";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // button10
+            // 
+            this.button10.Location = new System.Drawing.Point(0, 121);
+            this.button10.Name = "button10";
+            this.button10.Size = new System.Drawing.Size(112, 32);
+            this.button10.TabIndex = 27;
+            this.button10.Text = "添加模拟数据";
+            this.button10.UseVisualStyleBackColor = true;
+            this.button10.Click += new System.EventHandler(this.button10_Click);
             // 
             // numericUpDown4
             // 
@@ -396,9 +410,9 @@
             // 
             // button8
             // 
-            this.button8.Location = new System.Drawing.Point(70, 209);
+            this.button8.Location = new System.Drawing.Point(232, 71);
             this.button8.Name = "button8";
-            this.button8.Size = new System.Drawing.Size(64, 43);
+            this.button8.Size = new System.Drawing.Size(69, 43);
             this.button8.TabIndex = 21;
             this.button8.Text = "模拟发送复判数据";
             this.button8.UseVisualStyleBackColor = true;
@@ -406,7 +420,7 @@
             // 
             // button6
             // 
-            this.button6.Location = new System.Drawing.Point(-1, 209);
+            this.button6.Location = new System.Drawing.Point(232, 28);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(69, 43);
             this.button6.TabIndex = 13;
@@ -601,15 +615,24 @@
             this.dataGridViewTextBoxColumn9.Name = "dataGridViewTextBoxColumn9";
             this.dataGridViewTextBoxColumn9.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
-            // button10
+            // richTextBox1
             // 
-            this.button10.Location = new System.Drawing.Point(0, 121);
-            this.button10.Name = "button10";
-            this.button10.Size = new System.Drawing.Size(112, 32);
-            this.button10.TabIndex = 27;
-            this.button10.Text = "添加模拟数据";
-            this.button10.UseVisualStyleBackColor = true;
-            this.button10.Click += new System.EventHandler(this.button10_Click);
+            this.richTextBox1.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.richTextBox1.Location = new System.Drawing.Point(3, 204);
+            this.richTextBox1.Name = "richTextBox1";
+            this.richTextBox1.Size = new System.Drawing.Size(351, 270);
+            this.richTextBox1.TabIndex = 28;
+            this.richTextBox1.Text = "";
+            // 
+            // button11
+            // 
+            this.button11.Location = new System.Drawing.Point(5, 166);
+            this.button11.Name = "button11";
+            this.button11.Size = new System.Drawing.Size(112, 32);
+            this.button11.TabIndex = 29;
+            this.button11.Text = "模拟文本框数据";
+            this.button11.UseVisualStyleBackColor = true;
+            this.button11.Click += new System.EventHandler(this.button11_Click);
             // 
             // LinkDataForm1
             // 
@@ -696,5 +719,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Column8;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column5;
         private System.Windows.Forms.Button button10;
+        private System.Windows.Forms.Button button11;
+        private System.Windows.Forms.RichTextBox richTextBox1;
     }
 }

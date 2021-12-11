@@ -229,6 +229,7 @@ namespace Vision2.捷普
             this.tabPage2.Size = new System.Drawing.Size(1193, 287);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Browser View";
+            this.tabPage2.Click += new System.EventHandler(this.tabPage2_Click);
             // 
             // tabPage1
             // 

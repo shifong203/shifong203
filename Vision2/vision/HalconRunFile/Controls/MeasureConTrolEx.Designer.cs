@@ -212,10 +212,10 @@
             this.groupBox1.Controls.Add(this.显示测量区域);
             this.groupBox1.Controls.Add(this.显示测量点);
             this.groupBox1.Controls.Add(this.button4);
-            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupBox1.Location = new System.Drawing.Point(0, 0);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(590, 169);
+            this.groupBox1.Size = new System.Drawing.Size(590, 142);
             this.groupBox1.TabIndex = 55;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "groupBox1";
@@ -314,7 +314,7 @@
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("宋体", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label3.Location = new System.Drawing.Point(7, 136);
+            this.label3.Location = new System.Drawing.Point(282, 112);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(99, 20);
             this.label3.TabIndex = 61;
@@ -324,7 +324,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("宋体", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label1.Location = new System.Drawing.Point(7, 108);
+            this.label1.Location = new System.Drawing.Point(2, 112);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(99, 20);
             this.label1.TabIndex = 60;
@@ -333,7 +333,7 @@
             // trackBar2
             // 
             this.trackBar2.AutoSize = false;
-            this.trackBar2.Location = new System.Drawing.Point(115, 136);
+            this.trackBar2.Location = new System.Drawing.Point(383, 109);
             this.trackBar2.Maximum = 255;
             this.trackBar2.Name = "trackBar2";
             this.trackBar2.Size = new System.Drawing.Size(174, 27);
@@ -346,7 +346,7 @@
             // trackBar1
             // 
             this.trackBar1.AutoSize = false;
-            this.trackBar1.Location = new System.Drawing.Point(115, 109);
+            this.trackBar1.Location = new System.Drawing.Point(110, 109);
             this.trackBar1.Maximum = 320;
             this.trackBar1.Name = "trackBar1";
             this.trackBar1.Size = new System.Drawing.Size(174, 26);
@@ -377,18 +377,18 @@
             // 
             // propertyGrid1
             // 
-            this.propertyGrid1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.propertyGrid1.Location = new System.Drawing.Point(0, 169);
+            this.propertyGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.propertyGrid1.Location = new System.Drawing.Point(0, 142);
             this.propertyGrid1.Name = "propertyGrid1";
-            this.propertyGrid1.Size = new System.Drawing.Size(590, 279);
+            this.propertyGrid1.Size = new System.Drawing.Size(590, 306);
             this.propertyGrid1.TabIndex = 57;
             // 
             // MeasureConTrolEx
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.propertyGrid1);
+            this.Controls.Add(this.groupBox1);
             this.Name = "MeasureConTrolEx";
             this.Size = new System.Drawing.Size(590, 448);
             this.Load += new System.EventHandler(this.MeasureConTrolEx_Load);

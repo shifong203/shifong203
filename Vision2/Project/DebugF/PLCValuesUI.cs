@@ -355,7 +355,7 @@ namespace Vision2.Project.DebugF
                         }
                     }
                 }));
-                string dataTime = DateTime.Now.ToLongDateString();
+                string dataTime =  DateTime.Now.ToString("yyyy年M月d日");
                 if (!System.IO.File.Exists(ProcessControl.ProcessUser.Instancen.ExcelPath + "//" + dataTime + ".xls"))
                 {
                     ErosProjcetDLL.Excel.Npoi.AddWriteColumnToExcel(ProcessControl.ProcessUser.Instancen.ExcelPath + "//" + dataTime, "数据", ContNAMES.ToArray());
@@ -365,7 +365,7 @@ namespace Vision2.Project.DebugF
 
                 if (RecipeCompiler.Instance.GetMes() != null)
                 {
-                    RecipeCompiler.Instance.GetMes().WrietMesAll(resto, QR, "");
+                    RecipeCompiler.Instance.GetMes().WrietMesAll(resto,  "");
                 }
                 else
                 {

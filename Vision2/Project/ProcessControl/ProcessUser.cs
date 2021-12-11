@@ -63,9 +63,9 @@ namespace Vision2.Project.ProcessControl
         private static String qrCode = "";
 
         /// <summary>
-        ///
+        ///Mes记录地址
         /// </summary>
-        public string ExcelPath { get; set; } = Application.StartupPath;
+        public string ExcelPath { get; set; } = "E:\\Mes";
 
         /// <summary>
         /// 托盘ID名称
@@ -515,16 +515,16 @@ namespace Vision2.Project.ProcessControl
                         {
                             dataNames.Add(item.Key + "{" + item.Value + "}");
                         }
-                        if (!File.Exists(ErosProjcetDLL.Project.ProjectINI.ProjectPathRun + "\\过程记录\\ 码信息" + DateTime.Now.ToLongDateString() + ".xls"))
+                        if (!File.Exists(ErosProjcetDLL.Project.ProjectINI.ProjectPathRun + "\\过程记录\\ 码信息" +  DateTime.Now.ToString("yyyy年M月d日") + ".xls"))
                         {
                             //List<string> dataColumn = new List<string>();
                             //dataColumn.Add("时间");
                             //dataColumn.Add("ID码");
-                            //Vision2.ErosProjcetDLL.Excel.Npoi.AddWriteColumnToExcel( ErosProjcetDLL.Project.ProjectINI.ProjectPathRun + "\\过程记录\\ 码信息" + DateTime.Now.ToLongDateString()
+                            //Vision2.ErosProjcetDLL.Excel.Npoi.AddWriteColumnToExcel( ErosProjcetDLL.Project.ProjectINI.ProjectPathRun + "\\过程记录\\ 码信息" +  DateTime.Now.ToString("yyyy年M月d日")
                             //    + ".xls", "过程码",
                             // dataColumn.ToArray());
                         }
-                        Vision2.ErosProjcetDLL.Excel.Npoi.AddRosWriteToExcel(ErosProjcetDLL.Project.ProjectINI.ProjectPathRun + "\\过程记录\\ 码信息" + DateTime.Now.ToLongDateString() + ".xls", "过程码",
+                        Vision2.ErosProjcetDLL.Excel.Npoi.AddRosWriteToExcel(ErosProjcetDLL.Project.ProjectINI.ProjectPathRun + "\\过程记录\\ 码信息" +  DateTime.Now.ToString("yyyy年M月d日") + ".xls", "过程码",
                         dataNames.ToArray());
                     }
                     //Remove(code);
@@ -549,7 +549,7 @@ namespace Vision2.Project.ProcessControl
         {
             if (!This.TrayID.ContainsKey(id))
             {
-                string times = DateTime.Now.ToLongDateString() + DateTime.Now.ToLongTimeString();
+                string times =  DateTime.Now.ToString("yyyy年M月d日") + DateTime.Now.ToLongTimeString();
                 string timeB = StaticCon.GetLingkNameValueString("点胶机.胶水A ID");
                 string timeA = StaticCon.GetLingkNameValueString("点胶机.胶水B ID");
                 string timeC = StaticCon.GetLingkNameValueString("打螺丝30.螺丝物料ID");
@@ -560,7 +560,7 @@ namespace Vision2.Project.ProcessControl
 
         private void setID(string id)
         {
-            string times = DateTime.Now.ToLongDateString() + DateTime.Now.ToLongTimeString();
+            string times =  DateTime.Now.ToString("yyyy年M月d日") + DateTime.Now.ToLongTimeString();
             SetTrayIDP(id, "出站时间", times);
             Newtonsoft.Json.Linq.JObject jsDataS = new Newtonsoft.Json.Linq.JObject();
             jsDataS.Add("载具码", id);
@@ -589,7 +589,7 @@ namespace Vision2.Project.ProcessControl
         /// <param name="id"></param>
         public void SendTyID(string id)
         {
-            string times = DateTime.Now.ToLongDateString() + DateTime.Now.ToLongTimeString();
+            string times =  DateTime.Now.ToString("yyyy年M月d日") + DateTime.Now.ToLongTimeString();
             SetTrayIDP(id, "出站时间", times);
             //Newtonsoft.Json.Linq.JObject jsDataS = new Newtonsoft.Json.Linq.JObject();
             //jsDataS.Add("载具码", id);
@@ -745,7 +745,7 @@ namespace Vision2.Project.ProcessControl
                             {
                                 StaticCon.SetLingkValue(This.EapGetOKName, true, out err);
                                 AlarmText.AddTextNewLine(DebugCompiler.dicstr["NEXTTRAYID"] + "查询成功:" + DebugCompiler.dicstr["PPID"]);
-                                string times = DateTime.Now.ToLongDateString() + DateTime.Now.ToLongTimeString();
+                                string times =  DateTime.Now.ToString("yyyy年M月d日") + DateTime.Now.ToLongTimeString();
 
                                 Project.ProcessControl.ProcessUser.SetTrayIDP(DebugCompiler.dicstr["NEXTTRAYID"], "入站时间", times);
                             }
@@ -767,7 +767,7 @@ namespace Vision2.Project.ProcessControl
             }
             else
             {
-                string times = DateTime.Now.ToLongDateString() + DateTime.Now.ToLongTimeString();
+                string times =  DateTime.Now.ToString("yyyy年M月d日") + DateTime.Now.ToLongTimeString();
                 string timeB = StaticCon.GetLingkNameValueString("点胶机.胶水A ID");
                 string timeA = StaticCon.GetLingkNameValueString("点胶机.胶水B ID");
 

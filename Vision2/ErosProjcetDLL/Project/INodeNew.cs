@@ -68,12 +68,12 @@ namespace Vision2.ErosProjcetDLL.Project
             {
                 return;
             }
-            Vision2.ErosProjcetDLL.Project.AlarmListBoxt.AddAlarmText(new Vision2.ErosProjcetDLL.Project.AlarmText.alarmStruct() { Name = Name, Text = text, Time = DateTime.Now.ToLongDateString() });
+            AlarmListBoxt.AddAlarmText(new AlarmText.alarmStruct() { Name = Name, Text = text, });
         }
 
         public virtual void Reset()
         {
-            Vision2.ErosProjcetDLL.Project.AlarmListBoxt.RomveAlarm(this.Name);
+           AlarmListBoxt.RomveAlarm(this.Name);
         }
 
         public virtual void Remove(TreeNode treeNode)

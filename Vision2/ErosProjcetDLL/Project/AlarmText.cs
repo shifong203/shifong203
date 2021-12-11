@@ -38,13 +38,12 @@ namespace Vision2.ErosProjcetDLL.Project
             }
         }
 
-        private static object locktime = new object();
 
         //[PropertyTabAttribute(typeof(TypeCategoryTab), PropertyTabScope.Component)]
         /// <summary>
         /// 报警类
         /// </summary>
-        public class Alarm : System.ComponentModel.Component
+        public class Alarm : Component
         {
             [DescriptionAttribute("触发器。")]
             public class Trigger
@@ -96,7 +95,7 @@ namespace Vision2.ErosProjcetDLL.Project
 
             private double valuet;
             private bool alarm = false;
-            private bool isar = false;
+    
 
             /// <summary>
             /// 检测报警触发器
@@ -262,16 +261,11 @@ namespace Vision2.ErosProjcetDLL.Project
             /// <param name="text">文本</param>
             public void SetAlarm(string name, string text)
             {
-                SetText(name, AlarmType, text);
+                AlarmListBoxt.AddAlarmText(new alarmStruct() {Name=name,Text=text,AlaType=AlarmType });
+
                 this.IsAlarm = true;
                 _name = name;
-                try
-                {
-                    //Stub.StubManager.getEAP().PushAlarm(name, text);
-                }
-                catch (Exception)
-                {
-                }
+           
             }
 
             private string _name = "";
@@ -326,7 +320,7 @@ namespace Vision2.ErosProjcetDLL.Project
         {
             public alarmStruct()
             {
-                Time = DateTime.Now.ToString();
+                Time = DateTime.Now.ToString("MM/dd HH:mm:ss");
                 Text = "";
                 Name = "";
                 AlaType = "一般报警";
@@ -359,132 +353,7 @@ namespace Vision2.ErosProjcetDLL.Project
             }
         }
 
-        /// <summary>
-        /// 添加到提示文本信息,已存在的信息不会触发添加
-        /// </summary>
-        /// <param name="name">触发名称</param>
-        /// <param name="text">文本内容</param>
-        public static void SetText(string name, string type, string text)
-        {
-            try
-            {
-                if (ThisF.InvokeRequired)
-                {
-                    ThisF.Invoke(new Action<string, string, string>(SetText), name, type, text);
-                }
 
-                if (name.StartsWith("."))
-                {
-                    name = name.Substring(1);
-                }
-
-                if (DicAlarm.ContainsKey(name))
-                {
-                    //Program.UpAlarmText();
-                    string da = ThisF.richTextBox1.Text;
-                    if (da == "")
-                    {
-                        return;
-                    }
-                    if (!da.Contains(DicAlarm[name].Time + "." + DicAlarm[name].AlaType + "." + DicAlarm[name].Name + "{")
-                         )
-                    {
-                        ThisF.richTextBox1.AppendText(DicAlarm[name].Time + "." + DicAlarm[name].AlaType + "." + DicAlarm[name].Name + "{" + DicAlarm[name].Text + Environment.NewLine);
-                        ThisF.UpAlarmText();
-                    }
-                    else
-                    {
-                        //string D = DicAlarm[text].Time + "." + DicAlarm[text].AlaType + "." + DicAlarm[text].Name + ":";
-                        //int DST = Program.richTextBox1.Text.IndexOf(D);
-                        //Program.richTextBox1.Lines.ToArray().Contains(D);
-                        //////Program.richTextBox1.Lines.ToArray().
-                    }
-                    if (DicAlarm[name].Text == name + ":" + text)
-                    {
-                        return;
-                    }
-                    DicAlarm[name] = new alarmStruct() { Time = DicAlarm[name].Time, Text = text, Name = name, AlaType = type };
-                }
-                else
-                {
-                    string timeStr = DateTime.Now.ToString("MM/dd HH:mm:ss");
-                    string timedey = DateTime.Now.ToString("yy年MM月dd日");
-                    //Excel.Npoi.AddText(ProjectINI.TempPath + "\\报警记录\\ " + timedey, timeStr+name+type+text);
-
-                    Excel.Npoi.AddTextLine(ProjectINI.TempPath + "\\报警记录\\ " + timedey + ".txt", new string[] { timeStr, name, type, text });
-
-                    DicAlarm.Add(name, new alarmStruct() { Time = timeStr, Name = name, Text = text, AlaType = type });
-                    if (type.StartsWith("指示信息"))
-                    {
-                        string das = text.Substring(5);
-                        //MethodInvoker methodInvoker = new MethodInvoker(newUpWindow);
-                        //void newUpWindow()
-                        //{
-                        //    Pop_UpWindow UpWindow = new Pop_UpWindow(das, "指示信息");
-                        //}
-                        //Program.richTextBox1.Invoke(methodInvoker);
-                    }
-                    foreach (var item in DicAlarm.Keys)
-                    {
-                        if (item.Contains('.'))
-                        {
-                            if (!ThisF.DropDownSele.DropDownItems.ContainsKey(item.Split('.')[0]))
-                            {
-                                ToolStripMenuItem toolStripPanel = new ToolStripMenuItem();
-                                toolStripPanel.Name = toolStripPanel.Text = item.Split('.')[0];
-                                toolStripPanel.Checked = ThisF.全选.Checked;
-                                ThisF.DropDownSele.DropDownItems.Add(toolStripPanel);
-                                toolStripPanel.Click += ToolStripPanel_Click;
-                                void ToolStripPanel_Click(object sender, EventArgs e)
-                                {
-                                    if (toolStripPanel.Checked)
-                                    {
-                                        toolStripPanel.Checked = false;
-                                        if (ThisF.全选.Checked)
-                                        {
-                                            ThisF.全选.Checked = false;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        toolStripPanel.Checked = true;
-                                    }
-                                    ThisF.DropDownSele.ShowDropDown();
-                                    ThisF.UpAlarmText();
-                                }
-                            }
-                        }
-                    }
-
-                    if (type.Contains(AlarmType.一般报警.ToString()))
-                    {
-                        AddTextNewLine(timeStr + "." + type + "." + name + "{" + text, Color.Cyan);
-                        ThisF.richTextBox1.SelectionColor = Color.Cyan;
-                    }
-                    else if (type.Contains(AlarmType.致命报警.ToString()))
-                    {
-                        AddTextNewLine(timeStr + "." + type + "." + name + "{" + text, Color.Red);
-                    }
-                    else if (type.Contains(AlarmType.提示信息.ToString()))
-                    {
-                        AddTextNewLine(timeStr + "." + type + "." + name + "{" + text, Color.GreenYellow);
-                    }
-                    else if (type.Contains(AlarmType.指示信息.ToString()))
-                    {
-                        AddTextNewLine(timeStr + "." + type + "." + name + "{" + text, Color.LawnGreen);
-                    }
-                    else
-                    {
-                        AddTextNewLine(timeStr + "." + type + "." + name + "{" + text, Color.LawnGreen);
-                    }
-                    AlarmListBoxt.AddAlarmText(DicAlarm[name]);
-                    ThisF.UpAlarmText();
-                }
-            }
-            catch (Exception ex)
-            {
-            }
-        }
 
         public static void AddText(string text)
         {
@@ -493,9 +362,7 @@ namespace Vision2.ErosProjcetDLL.Project
 
         public static void AddText(string text, Color color)
         {
-            Excel.Npoi.AddText(ProjectINI.TempPath + "\\文本记录\\" +
-                DateTime.Now.ToLongDateString() + ".CSV", text);
-
+          
             if (ThisF.richTextBox1.InvokeRequired)
             {
                 ThisF.richTextBox1.Invoke(new Action<string, Color>(AddText), text, color);
@@ -503,12 +370,13 @@ namespace Vision2.ErosProjcetDLL.Project
             else
             {
                 text = DateTime.Now.ToString("T") + ":" + text;
+                Excel.Npoi.AddText(ProjectINI.TempPath + "\\文本记录\\" +
+                    DateTime.Now.ToString("yyyy年M月d日") + ".CSV", text);
                 lisetText.Add(new TextColor() { Text = text, Color = color });
                 try
                 {
                     Color col = ThisF.richTextBox1.SelectionColor;
                     ThisF.richTextBox1.AppendText(text);
-                    //Excel.Npoi.AddRosWriteToExcel(ProjectINI.ProjectPathRun + "\\报警记录\\ " + timedey + ".xls", timedey, new string[] { timeStr, text });
                     int strati = ThisF.richTextBox1.Text.Length - text.Length;
                     if (strati < 0)
                     {
@@ -535,23 +403,18 @@ namespace Vision2.ErosProjcetDLL.Project
             AddText(text + Environment.NewLine);
         }
 
-        private static int errNumber;
+        
 
         public static void LogErr(string text, string name)
         {
-            string timeStr = DateTime.Now.ToString("MM/dd HH:mm:ss");
-            string timedey = DateTime.Now.ToString("yy年MM月dd日");
-            Excel.Npoi.AddTextLine(ProjectINI.TempPath + "\\报警记录\\ " + timedey + ".txt", new string[] { timeStr, text });
-            AddTextNewLine(name + ":" + text, Color.Red);
-            errNumber++;
+             AddTextNewLine(name + ":" + text, Color.Red);
         }
 
-        private static int warningNumber;
+   
 
         public static void LogWarning(string name, string text)
         {
             AddTextNewLine(name + ":" + text, Color.Yellow);
-            warningNumber++;
         }
 
         /// <summary>
@@ -564,11 +427,11 @@ namespace Vision2.ErosProjcetDLL.Project
             try
             {
                 AlarmText.AddTextNewLine("登录事件:" + name + ":" + message);
-                if (!File.Exists(Application.StartupPath + @"\Log\LogIncident.txt"))
+                if (!File.Exists(ProjectINI.TempPath+ @"\Log\LogIncident.txt"))
                 {
-                    File.AppendAllText(Application.StartupPath + @"\Log\LogIncident.txt", string.Format("事件信息登记!版本1.00,作者：Eros;更新时间：2018年7月19日14:11;事件分隔符“>+换行符”,结构分隔符“|”>" + Environment.NewLine));//在文本后追加
+                    File.AppendAllText(ProjectINI.TempPath + @"\Log\LogIncident.txt", string.Format("事件信息登记!版本1.00,作者：Eros;更新时间：2018年7月19日14:11;事件分隔符“>+换行符”,结构分隔符“|”>" + Environment.NewLine));//在文本后追加
                 }
-                File.AppendAllText(Application.StartupPath + @"\Log\LogIncident.txt", string.Format(name + "|" + DateTime.Now + "|" +
+                File.AppendAllText(ProjectINI.TempPath + @"\Log\LogIncident.txt", string.Format(name + "|" + DateTime.Now + "|" +
                     message + ">" + Environment.NewLine));//在文本后追加
             }
             catch (Exception ex)
@@ -616,15 +479,6 @@ namespace Vision2.ErosProjcetDLL.Project
             {
                 return;
             }
-            //if (DicAlarm.Count() > 0)
-            //{
-            //    Vision2.Project.MainForm1.MainFormF.tsButton1 .BackColor = Color.Red;
-            //}
-            //else
-            //{
-            //    Vision2.Project.MainForm1.MainFormF.tsButton1.BackColor = SystemColors.ControlDarkDark;
-            //}
-            //Vision2.Project.MainForm1.MainFormF.tsButton1.Text = "报警:" + DicAlarm.Count();
             AlarmListBoxt.RomveAlarmText();
         }
 
@@ -636,12 +490,12 @@ namespace Vision2.ErosProjcetDLL.Project
             /// <summary>
             /// 提示信息
             /// </summary>
-            提示信息 = 0,
+            信息 = 0,
 
             /// <summary>
             /// 指示信息
             /// </summary>
-            指示信息 = 1,
+            提示信息 = 1,
 
             /// <summary>
             /// 报警信息
@@ -668,22 +522,22 @@ namespace Vision2.ErosProjcetDLL.Project
 
         private void 添加危险报警ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            AlarmText.SetText("激光.危险故障", AlarmType.致命报警.ToString(), "请联系专业人员处理");
+            AlarmListBoxt.AddAlarmText("激光.危险故障", AlarmType.致命报警.ToString(), "请联系专业人员处理");
         }
 
         private void 添加一般故障ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            AlarmText.SetText("点胶", AlarmType.一般报警.ToString(), "请排除故障");
+            AlarmListBoxt.AddAlarmText("点胶", AlarmType.一般报警.ToString(), "请排除故障");
         }
 
         private void 添加提示信息ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            AlarmText.SetText("已暂停", AlarmType.提示信息.ToString(), "已暂停");
+            AlarmListBoxt.AddAlarmText("已暂停", AlarmType.信息.ToString(), "已暂停");
         }
 
         private void 添加指示信息ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            AlarmText.SetText("初始化位", AlarmType.指示信息.ToString(), "请初始化");
+            AlarmListBoxt.AddAlarmText("初始化位", AlarmType.信息.ToString(), "请初始化");
         }
 
         private void dsAlphaRichTextBox1_TextChanged(object sender, EventArgs e)
@@ -712,131 +566,8 @@ namespace Vision2.ErosProjcetDLL.Project
 
         }
 
-        /// <summary>
-        /// 更新报警信息颜色
-        /// </summary>
-        public void UpAlarmText()
-        {
-            try
-            {
-                //this.Invoke(new Action(() =>
-                //{
-                //    char punctuation = '.';
-                //    List<string> texts = new List<string>();
-                //    if (!全选.Checked)
-                //    {
-                //        for (int i = 0; i < richTextBox1.Lines.Length; i++)
-                //        {
-                //            string[] strs = richTextBox1.Lines[i].Split(',');
-                //            if (strs.Length > 2)
-                //            {
-                //                if (strs[1].Contains('.') && !strs[1].StartsWith("."))
-                //                {
-                //                    ToolStripItem[] dss = DropDownSele.DropDownItems.Find(strs[1].Split('.')[0], false);
-                //                    if (dss.Length == 1)
-                //                    {
-                //                        ToolStripMenuItem toolStripMenuItem = dss[0] as ToolStripMenuItem;
-                //                        if (toolStripMenuItem != null)
-                //                        {
-                //                            if (toolStripMenuItem.Checked)
-                //                            {
-                //                                texts.Add(richTextBox1.Lines[i]);
-                //                                continue;
-                //                            }
-                //                        }
-                //                    }
-                //                    else
-                //                    {
-                //                        texts.Add(richTextBox1.Lines[i]);
-                //                    }
-                //                }
-                //                else
-                //                {
-                //                    texts.Add(richTextBox1.Lines[i]);
-                //                }
-                //            }
-                //        }
-                //        string[] dsas = texts.ToArray();
-                //        richTextBox1.Lines = dsas;
-                //    }
-                //    //改变全部字体颜色
-                //    richTextBox1.ForeColor = Color.Black;
-                //    int ste = 0;
-                //    //     改变关键字颜色
-                //    for (int i = 0; i < richTextBox1.Lines.Length; i++)
-                //    {
-                //        //改变算子关键字颜色
-                //        if (richTextBox1.Lines[i].Split(punctuation).Length < 2)
-                //        {
-                //            ste = ste + richTextBox1.Lines[i].Length;
-                //            continue;
-                //        }
-                //        string[] dat = richTextBox1.Lines[i].Split(punctuation);
+  
 
-                //        string datastr = dat[1];
-                //        string datastrt = "";
-                //        if (dat.Length > 4)
-                //        {
-                //            datastrt = richTextBox1.Lines[i].Split(punctuation)[2] + ".";
-
-                //            datastrt += richTextBox1.Lines[i].Split(punctuation)[3];
-                //        }
-
-                //        if (datastrt.Contains(':'))
-                //        {
-                //            datastrt = datastrt.Split(':')[0];
-                //        }
-                //        if (datastr.Contains(AlarmType.一般报警.ToString()))
-                //        {
-                //            richTextBox1.Select(ste + i, richTextBox1.Lines[i].Length);
-                //            richTextBox1.SelectionColor = Color.Green;
-                //        }
-                //        else if (datastr.Contains(AlarmType.致命报警.ToString()))
-                //        {
-                //            richTextBox1.SelectionBackColor = Color.LightSkyBlue;
-                //            richTextBox1.Select(ste + i, richTextBox1.Lines[i].Length);
-                //            richTextBox1.SelectionColor = Color.Red;
-                //        }
-                //        else if (datastr.Contains(AlarmType.提示信息.ToString()))
-                //        {
-                //            richTextBox1.Select(ste + i, richTextBox1.Lines[i].Length);
-                //            richTextBox1.SelectionColor = Color.GreenYellow;
-                //        }
-                //        else if (datastr.Contains(AlarmType.指示信息.ToString()))
-                //        {
-                //            richTextBox1.Select(ste + i, richTextBox1.Lines[i].Length);
-                //            richTextBox1.SelectionColor = Color.LawnGreen;
-                //        }
-                //        else if (DicAlarm.ContainsKey(datastrt))
-                //        {
-                //            richTextBox1.Select(ste + i, richTextBox1.Lines[i].Length);
-                //            richTextBox1.SelectionColor = Color.LawnGreen;
-                //        }
-                //        else
-                //        {
-                //            richTextBox1.SelectionColor = Color.LawnGreen;
-                //        }
-                //        ste = ste + richTextBox1.Lines[i].Length;
-                //    }
-                //    ThisF.richTextBox1.SelectionStart = ThisF.richTextBox1.Text.Length;
-                //    //if (DicAlarm.Count() > 0)
-                //    //{
-                //    //    Vision2.Project.MainForm1.MainFormF.tsButton1.BackColor = Color.Red;
-                //    //}
-                //    //else
-                //    //{
-                //    //    Vision2.Project.MainForm1.MainFormF.tsButton1.BackColor = SystemColors.ControlDarkDark;
-                //    //}
-                //    //Vision2.Project.MainForm1.MainFormF.tsButton1.Text = "报警:" + DicAlarm.Count();
-                //}));
-            }
-            catch (Exception)
-            {
-            }
-        }
-
-        //[DllImport("user32", EntryPoint = "HideCaret")]
-        //private static extern bool HideCaret(IntPtr hWnd);
 
         private void richTextBox1_MouseDown(object sender, MouseEventArgs e)
         {
@@ -846,8 +577,6 @@ namespace Vision2.ErosProjcetDLL.Project
         public static void ResetAlarm()
         {
             AlarmListBoxt.RomveAlarmText();
-            //DicAlarm.Clear();
-            ThisF.UpAlarmText();
         }
 
         private void toolStripDropDownButton4_MouseEnter(object sender, EventArgs e)
@@ -868,7 +597,7 @@ namespace Vision2.ErosProjcetDLL.Project
                 全选.Checked = false;
             }
             DropDownSele.ShowDropDown();
-            ThisF.UpAlarmText();
+            //ThisF.UpAlarmText();
         }
 
         private void toolStripButton1_Click(object sender, EventArgs e)
@@ -880,8 +609,9 @@ namespace Vision2.ErosProjcetDLL.Project
 
         private void 查看事件信息ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            LogMessageForm logMessageForm = new LogMessageForm(Application.StartupPath + @"\Log\LogIncident.txt");
+            LogMessageForm logMessageForm = new LogMessageForm(ProjectINI.TempPath + @"\Log\LogIncident.txt");
             logMessageForm.Show();
+         
         }
 
         private void toolStripDropDownButton1_MouseMove(object sender, MouseEventArgs e)
@@ -902,35 +632,7 @@ namespace Vision2.ErosProjcetDLL.Project
             //弹出报警列表ToolStripMenuItem.Checked = ProjectINI.In.IsShowAlarmText;
         }
 
-        private void toolStripButton3_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                MainForm1.MainFormF.splitContainer3.Panel2Collapsed = true;
-                if (MainForm1.MainFormF.Controls.Contains(AlarmForm.AlarmFormThis))
-                {
-                    UserFormulaContrsl.This.tabControl1.TabPages.Add(UserFormulaContrsl.This.tabPage4);
-                    UserFormulaContrsl.This.tabPage4.Controls.Add(AlarmForm.AlarmFormThis);
-                    AlarmForm.AlarmFormThis.TopLevel = false;
-                    AlarmForm.AlarmFormThis.FormBorderStyle = FormBorderStyle.None;
-                    AlarmForm.AlarmFormThis.Dock = DockStyle.Fill;
-                    AlarmForm.AlarmFormThis.Show();
-                }
-                else
-                {
-                    UserFormulaContrsl.This.tabControl1.TabPages.Remove(UserFormulaContrsl.This.tabPage4);
-                    MainForm1.MainFormF.Controls.Add(AlarmForm.AlarmFormThis);
-                    AlarmForm.AlarmFormThis.BringToFront();
-                    AlarmForm.AlarmFormThis.Dock = DockStyle.None;
-                    AlarmForm.AlarmFormThis.FormBorderStyle = FormBorderStyle.Fixed3D;
-                    AlarmForm.AlarmFormThis.TopMost = true;
-                    AlarmForm.AlarmFormThis.Show();
-                }
-            }
-            catch (Exception ex)
-            { }
-        }
-
+     
         private void AlarmText_Load(object sender, EventArgs e)
         {
             //tooSButtonAlarmListNumber.Text = "报警列表" + DicAlarm.Count();
@@ -957,29 +659,24 @@ namespace Vision2.ErosProjcetDLL.Project
             }
         }
 
-        private void toolStripButton2_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                UserFormulaContrsl.This.tabControl1.TabPages.Remove(UserFormulaContrsl.This.tabPage4);
-                MainForm1.MainFormF.splitContainer3.Panel2Collapsed = false;
-                MainForm1.MainFormF.splitContainer3.Panel2.Controls.Add(AlarmForm.AlarmFormThis);
-                AlarmForm.AlarmFormThis.BringToFront();
-                AlarmForm.AlarmFormThis.Dock = DockStyle.Fill;
-                AlarmForm.AlarmFormThis.FormBorderStyle = FormBorderStyle.None;
-                AlarmForm.AlarmFormThis.TopMost = false;
-                AlarmForm.AlarmFormThis.Show();
-            }
-            catch (Exception)
-            {
-            }
-        }
 
         private void toolStripComboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             try
             {
                 AlarmForm.UpDa(toolStripComboBox1.SelectedItem.ToString());
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        private void 打开文本记录ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Directory.CreateDirectory(ProjectINI.TempPath + "\\文本记录");
+                System.Diagnostics.Process.Start(ProjectINI.TempPath + "\\文本记录");
             }
             catch (Exception)
             {

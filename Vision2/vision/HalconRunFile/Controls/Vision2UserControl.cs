@@ -11,7 +11,7 @@ using Vision2.vision.HalconRunFile.RunProgramFile;
 
 namespace Vision2.vision.HalconRunFile.Controls
 {
-    public partial class Vision2UserControl : System.Windows.Forms.UserControl, HalconRun.IUpDataVisionWindow
+    public partial class Vision2UserControl :UserControl, HalconRun.IUpDataVisionWindow
     {
         public Vision2UserControl()
         {
@@ -292,10 +292,14 @@ namespace Vision2.vision.HalconRunFile.Controls
             }
         }
 
-        public HWindowControl GetNmaeWindowControl(string name)
+        public HWindowControl GetNmaeWindowControl(string name=null)
         {
             try
             {
+                if (name==null)
+                {
+                    return visionUserControl1;
+                }
                 if (panel2 != null)
                 {
                     for (int i = 0; i < panel2.Controls.Count; i++)
@@ -454,13 +458,25 @@ namespace Vision2.vision.HalconRunFile.Controls
             if (this.InvokeRequired)
             {
                 this.Invoke(new Func<HalconRun, string, HObject>(ShowObj), hRun, objName);
+                return null; 
             }
-            this.Invoke(new MethodInvoker(sd));
+            sd();           
+
             void sd()
             {
                 try
                 {
-                    toolStripLabel2.Text = "Cont:" + this.halcon.GetRuns().Count;
+                    toolStripLabel2.Text = "Count:" + this.halcon.GetRuns().Count;
+                    if (hRun.TrayRestData.OK)
+                    {
+                        ImageRGB.ForeColor = Color.Green;
+                        ImageRGB.BackColor = Color.Green;
+                    }
+                    else
+                    {
+                        ImageRGB.ForeColor = Color.Red;
+                        ImageRGB.BackColor = Color.Red;
+                    } 
                     if (hRun.GetCam() != null && hRun.GetCam().Grabbing)
                     {
                         toolStripButton6.Text = "停止";
@@ -545,13 +561,11 @@ namespace Vision2.vision.HalconRunFile.Controls
                     {
                         halcon.GetCam().Stop();
                     }
-
                     this.toolStripButton6.Text = "实时采图";
                 }
                 else
                 {
                     halcon.GetCam().Straing(halcon);
-
                     this.toolStripButton6.Text = "停止";
                 }
             }
@@ -595,15 +609,15 @@ namespace Vision2.vision.HalconRunFile.Controls
                     {
                         case Coordinate.Coordinate_Type.XYU2D:
                             Vision2.vision.Coordinate.CpointXY coordinate2D = halcon.CoordinatePXY.GetPointRctoYX(rowi, coli);
-                            ImageXY.Text = "X" + coordinate2D.X.ToString("0.00") + ",Y" + coordinate2D.Y.ToString("0.00")
-                                + "(Row" + rowi.ToString("0000") + ",Col" + coli.ToString("0000") + ")";
+                            ImageXY.Text = "X" + coordinate2D.X.ToString("0.00") + "Y" + coordinate2D.Y.ToString("0.00")
+                                + "(Row" + rowi.ToString("0000") + "Col" + coli.ToString("0000") + ")";
 
                             //coordinate2D = null;
                             break;
 
                         default:
 
-                            ImageXY.Text = "Row(Y) = " + rowi.ToString("0000") + ",Col(X) = " + coli.ToString("0000");
+                            ImageXY.Text = "Row(Y)" + rowi.ToString("0000") + "Col(X)" + coli.ToString("0000");
                             break;
                     }
                 }
@@ -612,7 +626,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                     HOperatorSet.GetGrayval(halcon.Image(), rowi, coli, out HTuple Grey);
                     if (Grey.Length == 3)
                     {
-                        ImageRGB.Text = " RGB:" + Grey.TupleSelect(0).D.ToString("000") + "," + Grey.TupleSelect(1).D.ToString("000") + "," + Grey.TupleSelect(2).D.ToString("000");
+                        ImageRGB.Text = "RGB:" + Grey.TupleSelect(0).D.ToString("000") + "," + Grey.TupleSelect(1).D.ToString("000") + "," + Grey.TupleSelect(2).D.ToString("000");
                     }
                     else if (Grey.Length == 1)
                     {
@@ -635,7 +649,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 {
                     halcon.WhidowAdd = false;
                 }
-                if (Vision2.ErosProjcetDLL.Project.ProjectINI.GetUserJurisdiction("管理") && e.Control)
+                if (ProjectINI.GetUserJurisdiction("管理") && e.Control)
                 {
                     if (e.KeyCode == Keys.Left)
                     {
@@ -654,7 +668,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                         AxisY.JogAdd(true, toolStripButton4.Checked, 1);
                     }
                 }
-                else if (Vision2.ErosProjcetDLL.Project.ProjectINI.GetUserJurisdiction("管理") && e.Alt)
+                else if (ProjectINI.GetUserJurisdiction("管理") && e.Alt)
                 {
                     if (e.KeyCode == Keys.Up)
                     {
@@ -1238,7 +1252,7 @@ namespace Vision2.vision.HalconRunFile.Controls
             {
                 if (ProjectINI.Enbt)
                 {
-                    Vision2.ErosProjcetDLL.Project.PropertyForm.UPProperty(halcon);
+                    PropertyForm.UPProperty(halcon);
                 }
                 else
                 {
@@ -1423,6 +1437,35 @@ namespace Vision2.vision.HalconRunFile.Controls
             catch (Exception)
             {
             }
+        }
+        ElementForm ElementForm ;
+
+        private void toolStripButton5_Click(object sender, EventArgs e)
+        {
+            try
+            {
+
+                if (ElementForm == null || ElementForm.IsDisposed)
+                {
+                    ElementForm = new ElementForm();
+                    ElementForm.TopLevel = false;
+                    ProjectINI.Form().Controls.Add(ElementForm);
+                    ElementForm.Location = new Point(800, 0);
+                }
+                ElementForm.BringToFront();
+                ElementForm.TopMost = true;
+                ElementForm.Show();
+            }
+            catch (Exception)
+            {
+
+           
+            }
+        }
+
+        private void toolStripButton7_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

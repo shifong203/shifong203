@@ -297,7 +297,7 @@ namespace Vision2.vision.RestVisionForm
                 {
                     SNLsitD.RemoveAt(0);
                 }
-                path = Array.Find(ImagePath, x => x.EndsWith("Data.txt"));
+                path = Array.Find(ImagePath, x => x.Contains("Data"));
                 if (path!=null)
                 {
                     ErosProjcetDLL.Project.ProjectINI.ReadPathJsonToCalss<OneDataVale>(path, out OneProductV);
@@ -309,7 +309,8 @@ namespace Vision2.vision.RestVisionForm
                             {
                                 if (itemt.Contains("拼图"))
                                 {
-                                    HOperatorSet.ReadImage(out item.Value.ImagePlus, itemt);
+                                    HOperatorSet.ReadImage(out HObject hObject, itemt);
+                                    item.Value.GetImagePlus(hObject);
                                     RaedCamImage(item.Key);
                                     break;
                                 }
@@ -346,6 +347,17 @@ namespace Vision2.vision.RestVisionForm
                                 TreeNode treeNode1 = treeNode.Nodes.Add(itemdte.Key);
                                 treeNode1.Tag = itemdte.Value;
                                 treeNode1.ImageIndex = 5;
+                                HWindd.OneResIamge.GetNgOBJS().Add(itemdte.Value);
+                            }
+                            if (itemdte.Value.NGText=="")
+                            {
+                                if (OneRObjT == null)
+                                {
+                                    OneRObjT = itemdte.Value;
+                                }
+                                TreeNode treeNode1 = treeNode.Nodes.Add(itemdte.Key);
+                                treeNode1.Tag = itemdte.Value;
+                                treeNode1.ImageIndex = 2;
                                 HWindd.OneResIamge.GetNgOBJS().Add(itemdte.Value);
                             }
                             //itemdte.Value.Done = false;
@@ -592,12 +604,12 @@ namespace Vision2.vision.RestVisionForm
                                         {
                                             if (itemdt.ImageIndex != 3)
                                             {
-                                                itemdt.ImageIndex = 3;
+                                                itemdt.ImageIndex = 2;
                                             }
                                         }
                                         else
                                         {
-                                            itemdt.ImageIndex = 4;
+                                            itemdt.ImageIndex = 5;
                                         }
                                     }
                                 }

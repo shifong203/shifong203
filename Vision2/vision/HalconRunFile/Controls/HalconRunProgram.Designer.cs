@@ -71,6 +71,7 @@
             this.panel2 = new System.Windows.Forms.Panel();
             this.button12 = new System.Windows.Forms.Button();
             this.button10 = new System.Windows.Forms.Button();
+            this.button9 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.checkBox2 = new System.Windows.Forms.CheckBox();
@@ -80,7 +81,6 @@
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.button4 = new System.Windows.Forms.Button();
-            this.button9 = new System.Windows.Forms.Button();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.tabControl3 = new System.Windows.Forms.TabControl();
             this.tabPage13 = new System.Windows.Forms.TabPage();
@@ -180,6 +180,7 @@
             this.dataGridViewTextBoxColumn31 = new Vision2.ErosProjcetDLL.UI.DataGridViewF.DataGridViewNumericUpDownColumn();
             this.dataGridViewTextBoxColumn32 = new Vision2.ErosProjcetDLL.UI.DataGridViewF.DataGridViewNumericUpDownColumn();
             this.dataGridViewTextBoxColumn33 = new Vision2.ErosProjcetDLL.UI.DataGridViewF.DataGridViewNumericUpDownColumn();
+            this.Column27 = new Vision2.ErosProjcetDLL.UI.DataGridViewF.DataGridViewNumericUpDownColumn();
             this.Column24 = new System.Windows.Forms.DataGridViewButtonColumn();
             this.LightSoCoMS = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.添加ToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
@@ -653,6 +654,7 @@
             // 
             this.panel2.Controls.Add(this.button12);
             this.panel2.Controls.Add(this.button10);
+            this.panel2.Controls.Add(this.button9);
             this.panel2.Controls.Add(this.button2);
             this.panel2.Controls.Add(this.button1);
             this.panel2.Controls.Add(this.checkBox2);
@@ -668,9 +670,9 @@
             // button12
             // 
             this.button12.Dock = System.Windows.Forms.DockStyle.Left;
-            this.button12.Location = new System.Drawing.Point(585, 0);
+            this.button12.Location = new System.Drawing.Point(575, 0);
             this.button12.Name = "button12";
-            this.button12.Size = new System.Drawing.Size(123, 33);
+            this.button12.Size = new System.Drawing.Size(82, 33);
             this.button12.TabIndex = 45;
             this.button12.Text = "写入托盘";
             this.button12.UseVisualStyleBackColor = true;
@@ -679,20 +681,31 @@
             // button10
             // 
             this.button10.Dock = System.Windows.Forms.DockStyle.Left;
-            this.button10.Location = new System.Drawing.Point(506, 0);
+            this.button10.Location = new System.Drawing.Point(515, 0);
             this.button10.Name = "button10";
-            this.button10.Size = new System.Drawing.Size(79, 33);
+            this.button10.Size = new System.Drawing.Size(60, 33);
             this.button10.TabIndex = 44;
             this.button10.Text = "NGShow";
             this.button10.UseVisualStyleBackColor = true;
             this.button10.Click += new System.EventHandler(this.button10_Click);
             // 
+            // button9
+            // 
+            this.button9.Dock = System.Windows.Forms.DockStyle.Left;
+            this.button9.Location = new System.Drawing.Point(442, 0);
+            this.button9.Name = "button9";
+            this.button9.Size = new System.Drawing.Size(73, 33);
+            this.button9.TabIndex = 36;
+            this.button9.Text = "CPK测试";
+            this.button9.UseVisualStyleBackColor = true;
+            this.button9.Click += new System.EventHandler(this.button9_Click);
+            // 
             // button2
             // 
             this.button2.Dock = System.Windows.Forms.DockStyle.Left;
-            this.button2.Location = new System.Drawing.Point(383, 0);
+            this.button2.Location = new System.Drawing.Point(354, 0);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(123, 33);
+            this.button2.Size = new System.Drawing.Size(88, 33);
             this.button2.TabIndex = 43;
             this.button2.Text = "模拟ID调用";
             this.button2.UseVisualStyleBackColor = true;
@@ -703,7 +716,7 @@
             this.button1.Dock = System.Windows.Forms.DockStyle.Left;
             this.button1.Location = new System.Drawing.Point(290, 0);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(93, 33);
+            this.button1.Size = new System.Drawing.Size(64, 33);
             this.button1.TabIndex = 41;
             this.button1.Text = "下一步";
             this.button1.UseVisualStyleBackColor = true;
@@ -778,7 +791,6 @@
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.button4);
-            this.groupBox1.Controls.Add(this.button9);
             this.groupBox1.Controls.Add(this.textBox1);
             this.groupBox1.Controls.Add(this.button3);
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Top;
@@ -792,24 +804,13 @@
             // button4
             // 
             this.button4.Dock = System.Windows.Forms.DockStyle.Left;
-            this.button4.Location = new System.Drawing.Point(422, 19);
+            this.button4.Location = new System.Drawing.Point(349, 19);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(101, 22);
             this.button4.TabIndex = 37;
             this.button4.Text = "图像名ID转换";
             this.button4.UseVisualStyleBackColor = true;
             this.button4.Click += new System.EventHandler(this.button4_Click_1);
-            // 
-            // button9
-            // 
-            this.button9.Dock = System.Windows.Forms.DockStyle.Left;
-            this.button9.Location = new System.Drawing.Point(349, 19);
-            this.button9.Name = "button9";
-            this.button9.Size = new System.Drawing.Size(73, 22);
-            this.button9.TabIndex = 36;
-            this.button9.Text = "CPK测试";
-            this.button9.UseVisualStyleBackColor = true;
-            this.button9.Click += new System.EventHandler(this.button9_Click);
             // 
             // tabPage3
             // 
@@ -1034,7 +1035,7 @@
             // hSBExposure
             // 
             this.hSBExposure.Location = new System.Drawing.Point(4, 5);
-            this.hSBExposure.Maximum = 100000000;
+            this.hSBExposure.Maximum = 10000000;
             this.hSBExposure.Minimum = 100;
             this.hSBExposure.Name = "hSBExposure";
             this.hSBExposure.Size = new System.Drawing.Size(187, 18);
@@ -1092,7 +1093,7 @@
             0,
             0});
             this.numericUpDown4.Minimum = new decimal(new int[] {
-            100,
+            1,
             0,
             0,
             0});
@@ -1486,7 +1487,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("宋体", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label4.Location = new System.Drawing.Point(10, 1242);
+            this.label4.Location = new System.Drawing.Point(10, 1280);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(118, 21);
             this.label4.TabIndex = 0;
@@ -1767,7 +1768,7 @@
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(5, 301);
+            this.label11.Location = new System.Drawing.Point(5, 339);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(63, 14);
             this.label11.TabIndex = 5;
@@ -1799,7 +1800,7 @@
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(122, 536);
+            this.label9.Location = new System.Drawing.Point(122, 574);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(63, 14);
             this.label9.TabIndex = 4;
@@ -1818,7 +1819,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(174, 898);
+            this.label8.Location = new System.Drawing.Point(174, 936);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(63, 14);
             this.label8.TabIndex = 2;
@@ -1856,6 +1857,7 @@
             this.dataGridViewTextBoxColumn31,
             this.dataGridViewTextBoxColumn32,
             this.dataGridViewTextBoxColumn33,
+            this.Column27,
             this.Column24});
             this.dataGridView6.ContextMenuStrip = this.LightSoCoMS;
             this.dataGridView6.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -1937,6 +1939,16 @@
             -2147483648});
             this.dataGridViewTextBoxColumn33.Name = "dataGridViewTextBoxColumn33";
             this.dataGridViewTextBoxColumn33.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            // 
+            // Column27
+            // 
+            this.Column27.HeaderText = "DO";
+            this.Column27.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            -2147483648});
+            this.Column27.Name = "Column27";
             // 
             // Column24
             // 
@@ -2508,12 +2520,6 @@
         private System.Windows.Forms.ContextMenuStrip LightSoCoMS;
         private System.Windows.Forms.ToolStripMenuItem 添加ToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem 删除ToolStripMenuItem2;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column26;
-        private ErosProjcetDLL.UI.DataGridViewF.DataGridViewNumericUpDownColumn dataGridViewTextBoxColumn30;
-        private ErosProjcetDLL.UI.DataGridViewF.DataGridViewNumericUpDownColumn dataGridViewTextBoxColumn31;
-        private ErosProjcetDLL.UI.DataGridViewF.DataGridViewNumericUpDownColumn dataGridViewTextBoxColumn32;
-        private ErosProjcetDLL.UI.DataGridViewF.DataGridViewNumericUpDownColumn dataGridViewTextBoxColumn33;
-        private System.Windows.Forms.DataGridViewButtonColumn Column24;
         private System.Windows.Forms.GroupBox groupBox5;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.NumericUpDown numericUpDown7;
@@ -2562,5 +2568,12 @@
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column26;
+        private ErosProjcetDLL.UI.DataGridViewF.DataGridViewNumericUpDownColumn dataGridViewTextBoxColumn30;
+        private ErosProjcetDLL.UI.DataGridViewF.DataGridViewNumericUpDownColumn dataGridViewTextBoxColumn31;
+        private ErosProjcetDLL.UI.DataGridViewF.DataGridViewNumericUpDownColumn dataGridViewTextBoxColumn32;
+        private ErosProjcetDLL.UI.DataGridViewF.DataGridViewNumericUpDownColumn dataGridViewTextBoxColumn33;
+        private ErosProjcetDLL.UI.DataGridViewF.DataGridViewNumericUpDownColumn Column27;
+        private System.Windows.Forms.DataGridViewButtonColumn Column24;
     }
 }

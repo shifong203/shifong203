@@ -65,7 +65,11 @@
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.treeView2 = new System.Windows.Forms.TreeView();
+            this.tabControl2 = new System.Windows.Forms.TabControl();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
             this.panel5 = new System.Windows.Forms.Panel();
+            this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
             this.panel1 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
             this.panel4 = new System.Windows.Forms.Panel();
@@ -83,12 +87,16 @@
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
+            this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.groupBox1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
+            this.tabControl2.SuspendLayout();
+            this.tabPage3.SuspendLayout();
+            this.tabPage4.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panel4.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -174,10 +182,10 @@
             // 
             // restOneComUserControl1
             // 
-            this.restOneComUserControl1.Location = new System.Drawing.Point(176, 147);
+            this.restOneComUserControl1.Location = new System.Drawing.Point(8, 133);
             this.restOneComUserControl1.Margin = new System.Windows.Forms.Padding(5);
             this.restOneComUserControl1.Name = "restOneComUserControl1";
-            this.restOneComUserControl1.Size = new System.Drawing.Size(512, 538);
+            this.restOneComUserControl1.Size = new System.Drawing.Size(512, 380);
             this.restOneComUserControl1.TabIndex = 1;
             // 
             // treeView1
@@ -231,7 +239,7 @@
             // tabPage2
             // 
             this.tabPage2.Controls.Add(this.treeView2);
-            this.tabPage2.Controls.Add(this.panel5);
+            this.tabPage2.Controls.Add(this.tabControl2);
             this.tabPage2.Location = new System.Drawing.Point(4, 30);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
@@ -272,17 +280,58 @@
             treeNode13,
             treeNode14});
             this.treeView2.SelectedImageIndex = 1;
-            this.treeView2.Size = new System.Drawing.Size(348, 251);
+            this.treeView2.Size = new System.Drawing.Size(348, 229);
             this.treeView2.TabIndex = 1;
             this.treeView2.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView2_AfterSelect);
             // 
+            // tabControl2
+            // 
+            this.tabControl2.Controls.Add(this.tabPage3);
+            this.tabControl2.Controls.Add(this.tabPage4);
+            this.tabControl2.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.tabControl2.Location = new System.Drawing.Point(3, 232);
+            this.tabControl2.Name = "tabControl2";
+            this.tabControl2.SelectedIndex = 0;
+            this.tabControl2.Size = new System.Drawing.Size(348, 333);
+            this.tabControl2.TabIndex = 0;
+            // 
+            // tabPage3
+            // 
+            this.tabPage3.Controls.Add(this.panel5);
+            this.tabPage3.Location = new System.Drawing.Point(4, 30);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage3.Size = new System.Drawing.Size(340, 299);
+            this.tabPage3.TabIndex = 0;
+            this.tabPage3.Text = "参数";
+            this.tabPage3.UseVisualStyleBackColor = true;
+            // 
             // panel5
             // 
-            this.panel5.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel5.Location = new System.Drawing.Point(3, 254);
+            this.panel5.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel5.Location = new System.Drawing.Point(3, 3);
             this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(348, 311);
+            this.panel5.Size = new System.Drawing.Size(334, 293);
             this.panel5.TabIndex = 2;
+            // 
+            // tabPage4
+            // 
+            this.tabPage4.Controls.Add(this.propertyGrid1);
+            this.tabPage4.Location = new System.Drawing.Point(4, 30);
+            this.tabPage4.Name = "tabPage4";
+            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage4.Size = new System.Drawing.Size(340, 299);
+            this.tabPage4.TabIndex = 1;
+            this.tabPage4.Text = "属性";
+            this.tabPage4.UseVisualStyleBackColor = true;
+            // 
+            // propertyGrid1
+            // 
+            this.propertyGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.propertyGrid1.Location = new System.Drawing.Point(3, 3);
+            this.propertyGrid1.Name = "propertyGrid1";
+            this.propertyGrid1.Size = new System.Drawing.Size(334, 293);
+            this.propertyGrid1.TabIndex = 0;
             // 
             // panel1
             // 
@@ -410,7 +459,8 @@
             this.tsButton1,
             this.toolStripButton1,
             this.toolStripButton2,
-            this.toolStripLabel1});
+            this.toolStripLabel1,
+            this.toolStripButton3});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(1451, 25);
@@ -455,6 +505,16 @@
             this.toolStripLabel1.Text = "查询";
             this.toolStripLabel1.Click += new System.EventHandler(this.toolStripLabel1_Click);
             // 
+            // toolStripButton3
+            // 
+            this.toolStripButton3.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.toolStripButton3.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton3.Image")));
+            this.toolStripButton3.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton3.Name = "toolStripButton3";
+            this.toolStripButton3.Size = new System.Drawing.Size(36, 22);
+            this.toolStripButton3.Text = "单点";
+            this.toolStripButton3.ToolTipText = "单点";
+            // 
             // dataGridViewTextBoxColumn1
             // 
             this.dataGridViewTextBoxColumn1.FillWeight = 60F;
@@ -497,6 +557,9 @@
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
+            this.tabControl2.ResumeLayout(false);
+            this.tabPage3.ResumeLayout(false);
+            this.tabPage4.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel4.ResumeLayout(false);
             this.panel4.PerformLayout();
@@ -542,5 +605,10 @@
         private System.Windows.Forms.ImageList imageList1;
         private System.Windows.Forms.TreeView treeView2;
         private System.Windows.Forms.Panel panel5;
+        private System.Windows.Forms.ToolStripButton toolStripButton3;
+        private System.Windows.Forms.TabControl tabControl2;
+        private System.Windows.Forms.TabPage tabPage3;
+        private System.Windows.Forms.TabPage tabPage4;
+        private System.Windows.Forms.PropertyGrid propertyGrid1;
     }
 }

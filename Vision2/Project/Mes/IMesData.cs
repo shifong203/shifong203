@@ -4,9 +4,11 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing.Design;
+using System.IO;
 using System.Windows.Forms;
 using Vision2.ErosProjcetDLL.Project;
 using Vision2.ErosProjcetDLL.UI.PropertyGrid;
+using Vision2.Project.DebugF;
 using Vision2.Project.formula;
 using Vision2.vision;
 using Vision2.vision.HalconRunFile.RunProgramFile;
@@ -17,10 +19,10 @@ namespace Vision2.Project.Mes
     {
         delegate void ResTMesd(bool ok, string mesRestStr);
         event ResTMesd ResDoneEvent;
-        void WrietMes(UserFormulaContrsl userFormulaContrsl, string QRCODE, string Product_Name);
+       
         void WrietMes(TrayData trayData, string Product_Name);
         void WrietMes(OneDataVale trayData, string Product_Name);
-        void WrietMesAll<T>(T data, string QRCODE, string Product_Name);
+        void WrietMesAll<T>(T data,  string Product_Name);
         /// <summary>
         /// 根据sn查询mes信息
         /// </summary>
@@ -42,13 +44,102 @@ namespace Vision2.Project.Mes
         public abstract Form GetForm();
 
         public abstract event IMesData.ResTMesd ResDoneEvent;
+
+        [Description("记录Mes长度"), Category("Mes"), DisplayName("Mes历史长度")]
+        public int MesLength { get; set; } = 1000;
+        public List<string> MesSN { get; set; } = new List<string>();
+        [Description("使用SN重复检测"), Category("Mes"), DisplayName("使用SN重复检测")]
+        public bool MesReduplication { get; set; } = true;
+
+
+        //    return datas;
+        //}
         /// <summary>
-        ///历史记录地址
+        /// 写入产品CRD数据
         /// </summary>
-        [Editor(typeof(PageTypeEditor_FolderBrowserDialog), typeof(UITypeEditor))]
-        [Description(""), Category("历史记录"), DisplayName("历史记录地址")]
-     
-        public string DataPaht { get; set; } = "E:\\历史记录";
+        /// <param name="oneDataVale"></param>
+        public virtual void WrietDATA(OneDataVale oneDataVale)
+        {
+            try
+            {
+                string path = RecipeCompiler.Instance.DataPaht + "\\CRD数据\\" + DateTime.Now.ToString("yyyyMMdd") + ".CSV";
+                if (!File.Exists(path))
+                {
+                    List<string> columnText = new List<string>() { "NO",/*"Line", "Customer",*/"Mode",
+                        "Defect Type","Location" ,"Serial Number","Result","Date" ,
+                        "Start Time" ,"End Time","User", "Placement Route Step","位置","机检"};
+                    ErosProjcetDLL.Excel.Npoi.AddWriteCSV(path, columnText.ToArray());
+                }
+                int no = 0;
+                foreach (var item in oneDataVale.GetAllCompOBJs().DicOnes)
+                {
+                    no++;
+                    List<string> data = new List<string>();
+                    data.Add(no.ToString());
+                    //data.AddRange(RecipeCompiler.Instance.GetMes().GetCRDMesData());
+                    //data.Add(RecipeCompiler.Instance.GetMes().Customer);
+                    data.Add(oneDataVale.Product_Name);
+                    data.Add(item.Value.RestText);
+                    data.Add(item.Value.ComponentID);
+                    data.Add(oneDataVale.PanelID);
+                    if (item.Value.aOK)
+                    {
+                        data.Add("Pass");
+                    }
+                    else
+                    {
+                        data.Add("Fail");
+                    }
+                    data.Add(DateTime.Now.ToString("d"));
+                    data.Add(oneDataVale.StrTime.ToString("T"));
+                    data.Add(oneDataVale.EndTime.ToString("T"));
+                    data.Add(ProjectINI.In.UserName);
+                    data.Add(DebugCompiler.Instance.DeviceNameText);
+                    data.Add(oneDataVale.TrayLocation.ToString());
+                    data.Add(item.Value.NGText);
+                    ErosProjcetDLL.Excel.Npoi.AddWriteCSV(path,
+                      data.ToArray());
+                }
+            }
+            catch (Exception) { }
+        }
+        public virtual void WrietOneData(OneDataVale oneDataVale,string path)
+        {
+            try
+            {
+                List<string>dat = new List<string>();
+                dat.Add(oneDataVale.StrTime.ToString("HH:mm:ss"));
+                dat.Add(oneDataVale.TrayLocation.ToString());
+                if (oneDataVale.OK)
+                {
+                    dat.Add("OK");
+                }
+                else
+                {
+                    dat.Add("NG");
+                }
+                dat.Add(oneDataVale.PanelID);
+                dat.Add(oneDataVale.AutoOK.ToString());
+                dat.Add(oneDataVale.MesStr);
+                dat.Add(oneDataVale.FVTStr);
+                if (oneDataVale.UesrRest)
+                {
+                    dat.Add("人工提交");
+                }
+                else
+                {
+                    dat.Add("");
+                }
+                 dat.Add(oneDataVale.Done.ToString());
+              
+               
+                ErosProjcetDLL.Excel.Npoi.AddWriteCSV(path, dat.ToArray());
+
+            }
+            catch (Exception)
+            {
+            }
+        } 
 
 
         [Description("线号"), Category("Mes信息"), DisplayName("线号")]
@@ -68,6 +159,10 @@ namespace Vision2.Project.Mes
         [Description("线号选择"), Category("Mes信息"), DisplayName("线号选择")]
         public List<string> ListStr { get; set; } = new List<string>();
 
+
+
+        [Description("默认写入缺陷"), Category("缺陷管理"), DisplayName("默认缺陷")]
+        public string DefaultFlaw { get; set; } = "MISSING";
 
 
         [Description(""), Category("Mes查询"), DisplayName("异步查询")]
@@ -106,8 +201,7 @@ namespace Vision2.Project.Mes
             return obj;
         }
 
-        public abstract void WrietMes(UserFormulaContrsl userFormulaContrsl,
-            string QRCODE, string Product_Name);
+    
 
 
         public abstract void WrietMes(TrayData trayData, string Product_Name);
@@ -122,7 +216,26 @@ namespace Vision2.Project.Mes
         {
             WrietMes(trayData, Product.ProductionName);
         }
-        public abstract void WrietMesAll<T>(T data, string QRCODE, string Product_Name);
+        public virtual void WrietMesAll<T>(T data, string Product_Name)
+        {
+            try
+            {
+                TrayData tray = data as TrayData;
+                if (tray != null)
+                {
+                    WrietMes(tray, Product_Name);
+                }
+                else
+                {
+                    OneDataVale one = data as OneDataVale;
+                    WrietMes(one, Product_Name);
+                }
+            }
+            catch (Exception ex)
+            {
+                AlarmListBoxt.AddAlarmText(new AlarmText.alarmStruct() { Name = "WrietMesAll写入失败", Text = ex.Message });
+            }
+        }
 
         public abstract bool ReadMes(out string resetMesString, TrayData trayData);
 
@@ -134,11 +247,77 @@ namespace Vision2.Project.Mes
     /// <summary>
     /// 单个产品信息
     /// </summary>
-    public class OneDataVale
+    public class OneDataVale :IDisposable
     {
-        public DateTime StrTime = DateTime.Now;
-        public DateTime EndTime;
+        public void Dispose()
+        {
+            KeyPamgr.Clear();
+            foreach (var item in ListCamsData)
+            {
+                //item.Value.GetImagePlus().Dispose();
+                for (int i = 0; i < item.Value.ResuOBj().Count; i++)
+                {
+                    item.Value.ResuOBj()[i].Dispose();
+                }
+                foreach (var itemDT in item.Value.AllCompObjs.DicOnes)
+                {
+                    //itemDT.Value.NGROI.Dispose();
+                    //itemDT.Value.ROI.Dispose();
+                    foreach (var itemDTE in itemDT.Value.oneRObjs)
+                    {
+                        //itemDTE.ROI.Dispose();
+                        //itemDTE.NGROI.Dispose();
+                    }
+                }
+                //foreach (var item in oneContOBJs.DicOnes)
+                //{
+                //    foreach (var itemtd in item.Value.oneRObjs)
+                //    {
+                foreach (var itemOBJ in item.Value.NGObj.DicOnes)
+                {
+                    //itemOBJ.Value.NGROI.Dispose();
+                    //itemOBJ.Value.ROI.Dispose();
+                    foreach (var itemDTE in itemOBJ.Value.oneRObjs)
+                    {
+                        //itemDTE.ROI.Dispose();
+                        //itemDTE.NGROI.Dispose();
+                    }
+                }
+                //item.Value.NGObj.DicOnes.Clear();
+            }
 
+        }
+        ~OneDataVale()
+        {
+            try
+            {
+                foreach (var item in ListCamsData)
+                {
+                    item.Value.GetImagePlus().Dispose();
+                }
+                //Dispose();
+            }
+            catch (Exception)
+            {
+
+          
+            }
+        
+        }
+        /// <summary>
+        /// 图像文件夹
+        /// </summary>
+        public string ImagePaht = "";
+        /// <summary>
+        /// 开始时间
+        /// </summary>
+        public DateTime StrTime = DateTime.Now;
+        /// <summary>
+        /// 结束时间
+        /// </summary>
+        public DateTime EndTime;
+        public Dictionary<string, string> KeyPamgr { get; set; } = new Dictionary<string, string>();
+        public string DeviceName { get; set; } = "AVI";
         public bool UesrRest { get; set; }
         public void ResetOK()
         {
@@ -225,13 +404,23 @@ namespace Vision2.Project.Mes
                 {
                     item.Value.Done = value;
                 }
+                //if (value)
+                //{
+                //    ok = true;
+                //}
             }
         }
+        public void SetOKBit(bool okB=true)
+        {
+            ok = okB;
+        }
         public string MesStr = "";
+        public string FVTStr = "";
        /// <summary>
        /// True不是空
        /// </summary>
         public bool NotNull { get; set; }
+
         bool ok = true;
         /// <summary>
         /// 结果
@@ -339,12 +528,12 @@ namespace Vision2.Project.Mes
             {
                 if (!item.Value.Done)
                 {
-                    return item.Value.ImagePlus;
+                    return item.Value.GetImagePlus();
                 }
             }
             foreach (var item in ListCamsData)
             {
-                return item.Value.ImagePlus;
+                return item.Value.GetImagePlus();
             }
             return null;
         }
@@ -407,11 +596,11 @@ namespace Vision2.Project.Mes
         {
             if (!ListCamsData.ContainsKey(runName))
             {
-                //ListCamsData.Add(runName, oneCam);
+           //     ListCamsData.Add(runName, oneCam);
             }
             else
             {
-                ListCamsData[runName].ImagePlus = imagePalus;
+                ListCamsData[runName].GetImagePlus(imagePalus);
             }
         }
 
@@ -512,10 +701,7 @@ namespace Vision2.Project.Mes
         /// 产品托盘穴位号
         /// </summary>
         public int TrayLocation;
-        /// <summary>
-        /// 产品SN
-        /// </summary>
-        public string PanelID;
+
         /// <summary>
         /// 误判数量
         /// </summary>
@@ -536,10 +722,20 @@ namespace Vision2.Project.Mes
                 return DicNGObj.DicOnes.Count;
             }
         }
+
+        public HObject GetImagePlus(HObject hObject=null)
+        {
+            if (hObject!=null)
+            {
+                ImagePlus = hObject;
+            }
+            return ImagePlus ;
+        }
+        public string ImagePaht = "";
         /// <summary>
         /// 整合图片
         /// </summary>
-        public HObject ImagePlus = new HObject();
+        HObject ImagePlus = new HObject();
 
         /// <summary>
         /// 拍照数据集合

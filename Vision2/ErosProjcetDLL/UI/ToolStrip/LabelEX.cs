@@ -15,8 +15,8 @@ namespace Vision2.ErosProjcetDLL.UI.ToolStrip
                 g.DrawRectangle(new Pen(borderColor, BordecWith), 0, 0, this.Width - BordecWith, this.Height - BordecWith);
             }
         }
-
-        public int BordecWith = 5;
+        [DisplayName("边框宽度"), Category("边框")]
+        public int BordecWith { get; set; } = 5;
 
         [DisplayName("是否显示选择项"), Category("边框")]
         public bool ISBorder

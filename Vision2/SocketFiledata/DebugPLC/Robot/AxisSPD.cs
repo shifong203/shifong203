@@ -956,7 +956,7 @@ namespace ErosSocket.DebugPLC.Robot
         {
             ErrString = "初始化中";
             this.Busy = true;
-            Task.Run(() =>
+            Task.Run((Action)(() =>
             {
                 try
                 {
@@ -1026,7 +1026,7 @@ namespace ErosSocket.DebugPLC.Robot
                 {
                 }
                 Busy = false;
-            }
+            })
             );
         }
 
@@ -1134,10 +1134,7 @@ namespace ErosSocket.DebugPLC.Robot
         /// <returns></returns>
         public bool SetIOOut(string id, string value)
         {
-            return ErosConLink.StaticCon.SetLinkAddressValue(DebugComp.GetThis().DicPLCIO[id],
-                   value);
-            //ErosConLink.StaticCon.SetLinkAddressValue(id, value);
-            return false;
+            return StaticCon.SetLinkAddressValue(DebugComp.GetThis().DicPLCIO[id],value);
         }
 
         /// <summary>

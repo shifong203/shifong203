@@ -38,6 +38,7 @@ namespace Vision2.捷普
         {
             try
             {
+            
                 if (ProjectINI.DebugMode || MesRestBool)
                 {
                     //RecipeCompiler.Instance.MesDatat.UserID = textBox3.Text;
@@ -65,6 +66,7 @@ namespace Vision2.捷普
         {
             try
             {
+
                 mesJib = RecipeCompiler.Instance.GetMes() as MesJib;
                 this.Text += Application.StartupPath;
                 comboBox1.Items.Clear();
@@ -77,7 +79,7 @@ namespace Vision2.捷普
                 timer1.Start();
                 ProjectINI.In.User.EventLog += User_EventLog; ;
                 HalconRun halconRun = Vision.GetRunNameVision();
-
+                textBox5.Text = RecipeCompiler.Instance.OKNumber.TrayNumber.ToString();
                 foreach (var item in halconRun.GetRunProgram())
                 {
                     MeasureMlet measureMlet = item.Value as MeasureMlet;
@@ -223,6 +225,7 @@ namespace Vision2.捷普
             }
         }
 
+
         /// <summary>
         /// 执行完成
         /// </summary>
@@ -231,8 +234,10 @@ namespace Vision2.捷普
         {
             try
             {
+               
                 this.Invoke(new Action(() =>
                 {
+      
                     for (int i = 0; i < dataGridView1.Rows.Count; i++)
                     {
                         dataGridView1.Rows[i].Cells[8].Value = key.RunTime;
@@ -260,17 +265,19 @@ namespace Vision2.捷普
                     textBox1.Text = "";
                     string textd = "00:00:";
                     label9.Text = textd + key.RunTime.ToString("00");
+            
                     if (!name.Contains("DEBUG"))
                     {
                         HtmlMaker.Html.GenerateCode(path, key.RunTime, UserFormulaContrsl.timeStrStrat,
                          DateTime.Now, UserFormulaContrsl.GetDataVale());
                     }
-                    HtmlMaker.Html.GenerateCode(mesJib.DataPaht + "\\" + DateTime.Now.ToString("yyyyMMdd") + "\\" + name
+                    HtmlMaker.Html.GenerateCode(RecipeCompiler.Instance.DataPaht + "\\" + DateTime.Now.ToString("yyyyMMdd") + "\\" + name
                                , key.RunTime, UserFormulaContrsl.timeStrStrat, DateTime.Now, UserFormulaContrsl.GetDataVale());
                 }));
             }
             catch (Exception ex)
             {
+                MessageBox.Show(ex.Message);
             }
         }
 
@@ -304,10 +311,14 @@ namespace Vision2.捷普
                             dataGridView1.Rows[index].Cells[1].Value = item.Value.ComponentID;
                             dataGridView1.Rows[index].Cells[1].Value = itemdt.ComponentID;
                             dataGridView1.Rows[index].Cells[5].Value = vision.Vision.Instance.TransformName;
-                            dataGridView1.Rows[index].Cells[3].Value = itemdt.dataMinMax.Reference_Name[0];
-                            dataGridView1.Rows[index].Cells[4].Value = itemdt.dataMinMax.doubleV[0].Value.ToString("0.000000");
-                            dataGridView1.Rows[index].Cells[6].Value = itemdt.dataMinMax.Reference_ValueMin[0];
-                            dataGridView1.Rows[index].Cells[7].Value = itemdt.dataMinMax.Reference_ValueMax[0];
+                            if (itemdt.dataMinMax.Reference_Name.Count>=1)
+                            {
+                                dataGridView1.Rows[index].Cells[3].Value = itemdt.dataMinMax.Reference_Name[0];
+                                dataGridView1.Rows[index].Cells[4].Value = itemdt.dataMinMax.doubleV[0].Value.ToString("0.000000");
+                                dataGridView1.Rows[index].Cells[6].Value = itemdt.dataMinMax.Reference_ValueMin[0];
+                                dataGridView1.Rows[index].Cells[7].Value = itemdt.dataMinMax.Reference_ValueMax[0];
+                            }
+                         
                         }
                     }
                 }));
@@ -332,6 +343,19 @@ namespace Vision2.捷普
             Project.MainForm1.MainFormF.WindowState = FormWindowState.Minimized;
             timer1.Stop();
             DebugCompiler.Instance.DDAxis.RunCodeT.RunDone += RunCodeT_RunDone;
+            DebugCompiler.Instance.DDAxis.EventRunDone += DDAxis_EventRunDone; ;
+        }
+
+        private void DDAxis_EventRunDone(bool done)
+        {
+            try
+            {
+                textBox5.Text= RecipeCompiler.Instance.OKNumber.TrayNumber.ToString();
+            }
+            catch (Exception)
+            {
+            }
+          
         }
 
         private void toolStripButton1_Click(object sender, EventArgs e)
@@ -355,6 +379,10 @@ namespace Vision2.捷普
                         debugSele.ShowDialog();
                     }
                     bool Passr = true;
+                    if (!RestMesEnb)
+                    {
+                        MesRestBool = true;
+                    }
                     if (!ProjectINI.DebugMode)
                     {
                         if (RestMesEnb)
@@ -513,6 +541,11 @@ namespace Vision2.捷普
 
         private void textBox3_TextChanged(object sender, EventArgs e)
         {
+        }
+
+        private void tabPage2_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

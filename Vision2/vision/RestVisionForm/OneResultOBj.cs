@@ -32,6 +32,7 @@ namespace Vision2.vision
         /// 是否保存图像
         /// </summary>
         public bool IsSave = true;
+        public DateTime CamNewTime;
 
         public Coordinate CoordinatePXY = new Coordinate();
 
@@ -52,7 +53,10 @@ namespace Vision2.vision
         /// 库ID
         /// </summary>
         public int LiyID { get; set; }
-
+        /// <summary>
+        /// 调试
+        /// </summary>
+        public int DebugID { get; set; }
         /// <summary>
         /// 程序名
         /// </summary>
@@ -142,6 +146,7 @@ namespace Vision2.vision
             {
                 HOperatorSet.ReadImage(out HObject hObject, path);
                 Image = hObject;
+                CamNewTime = DateTime.Now;
             }
             catch (Exception)
             {
@@ -183,7 +188,8 @@ namespace Vision2.vision
         public void AddNGOBJ(string component, string nGText, HObject roi, HObject err,
             HTuple ngText, string runPa = "")
         {
-            HOperatorSet.AreaCenter(roi, out HTuple area, out HTuple row, out HTuple colu);
+        
+
             OneRObj rObj = new OneRObj()
             {
                 NGText = nGText,
@@ -192,12 +198,15 @@ namespace Vision2.vision
                 NGROI = err,
                 RunName = runPa,
             };
-            if (row.Length > 0)
+            if (roi.IsInitialized())
             {
-                rObj.Row = row.TupleInt();
-                rObj.Col = colu.TupleInt();
+                HOperatorSet.AreaCenter(roi, out HTuple area, out HTuple row, out HTuple colu);
+                if (row.Length > 0)
+                {
+                    rObj.Row = row.TupleInt();
+                    rObj.Col = colu.TupleInt();
+                }
             }
-
             if (ngText != null)
             {
                 for (int i = 0; i < ngText.Length; i++)
@@ -381,6 +390,62 @@ namespace Vision2.vision
 
         private HObject Colrrs = new HObject();
 
+        public void SetObjCross(HObject obj,out HTuple row1,out HTuple col1,out HTuple row2,out HTuple col2)
+        {
+             row1 = new HTuple();
+            col1 = new HTuple();
+            row2 = new HTuple();
+            col2 = new HTuple();
+          
+            try
+            {
+                HOperatorSet.GetImageSize(this.Image, out HTuple wid, out HTuple hei);
+                double d = (double)wid / (double)hei;
+                HOperatorSet.Union1(obj, out HObject hObject1);
+                hObject1 = Vision.XLD_To_Region(hObject1);
+                HOperatorSet.SmallestRectangle1(hObject1, out  row1, out  col1, out  row2, out col2);
+                HOperatorSet.AreaCenter(hObject1, out HTuple area, out HTuple row, out HTuple col);
+                if (row1.Length == 1 && hei.Length == 1 && row.Length == 1)
+                {
+                    HOperatorSet.GenContourPolygonXld(out HObject hObject, new HTuple(row, row), new HTuple(new HTuple(0), col1));
+                    HOperatorSet.GenContourPolygonXld(out HObject hObject2, new HTuple(new HTuple(0), row1), new HTuple(col, col));
+                    HOperatorSet.GenContourPolygonXld(out HObject hObject3, new HTuple(new HTuple(row), row), new HTuple(col2, wid));
+                    HOperatorSet.GenContourPolygonXld(out HObject hObject4, new HTuple(new HTuple(row2), hei), new HTuple(col, col));
+                    this.SetCross(hObject.ConcatObj(hObject2).ConcatObj(hObject3).ConcatObj(hObject4));
+             
+                    //hWindowControl3.HalconWindow.SetPart(row1 - (200 * 1), col1 - (200 * d), row2 + (200 * 1), col2 + (200 * d));
+                    //hWindowControl4.HalconWindow.SetPart(row1 - (200 * 1), col1 - (200 * d), row2 + (200 * 1), col2 + (200 * d));
+                }
+                else
+                {
+                    hObject1 = Vision.XLD_To_Region(obj);
+                    HOperatorSet.AreaCenter(hObject1, out area, out row, out col);
+                    HOperatorSet.SmallestRectangle1(hObject1, out row1, out col1, out row2, out col2);
+                    if (row1.Length == 1)
+                    {
+                        //HOperatorSet.AreaCenter(hObject1, out HTuple area, out HTuple row, out HTuple col);
+                        HOperatorSet.GenContourPolygonXld(out HObject hObject, new HTuple(row, row), new HTuple(new HTuple(0), col1));
+                        HOperatorSet.GenContourPolygonXld(out HObject hObject2, new HTuple(new HTuple(0), row1), new HTuple(col, col));
+                        HOperatorSet.GenContourPolygonXld(out HObject hObject3, new HTuple(new HTuple(row), row), new HTuple(col2, wid));
+                        HOperatorSet.GenContourPolygonXld(out HObject hObject4, new HTuple(new HTuple(row2), hei), new HTuple(col, col));
+                        this.SetCross(hObject.ConcatObj(hObject2).ConcatObj(hObject3).ConcatObj(hObject4));
+                      
+                        
+                        //    hWindowControl3.HalconWindow.SetPart(row1 - (200 * 1), col1 - (200 * d), row2 + (200 * 1), col2 + (200 * d));
+                        //    hWindowControl4.HalconWindow.SetPart(row1 - (200 * 1), col1 - (200 * d), row2 + (200 * 1), col2 + (200 * d));
+                    }
+
+                }
+                row1 = row1 - (200 * 1);
+                col1 = col1 - (200 * d);
+                row2 = row2 + (200 * 1);
+                col2 = col2 + (200 * d);
+            }
+            catch (Exception)
+            {
+            }
+
+        }
         public void SetCross(HObject hObject)
         {
             Colrrs = hObject;
@@ -502,10 +567,20 @@ namespace Vision2.vision
             try
             {
                 Image.Dispose();
-                for (int i = 0; i < ListHobj.Count; i++)
+                foreach (var item in oneContOBJs.DicOnes)
                 {
-                    ListHobj[i].Object.Dispose();
+                    foreach (var itemtd in item.Value.oneRObjs)
+                    {
+                       // itemtd.ROI.Dispose();
+                        //itemtd.NGROI.Dispose();
+                    }
                 }
+                oneContOBJs.DicOnes.Clear();
+
+                //for (int i = 0; i < ListHobj.Count; i++)
+                //{
+                //    ListHobj[i].Object.Dispose();
+                //}
                 HObjectYellow.GenEmptyObj();
                 HObjectGreen.GenEmptyObj();
                 HObjectBlue.GenEmptyObj();
@@ -666,10 +741,11 @@ namespace Vision2.vision
                                 {
                                     Vision.Disp_message(hWindowHalconID, itemtd.NGText, row, column, true, "red");
                                 }
-                                HOperatorSet.SetColor(hWindowHalconID, "red");
+                               HOperatorSet.SetColor(hWindowHalconID, "red");
                                 HOperatorSet.DispObj(itemtd.NGROI, hWindowHalconID);
                                 HOperatorSet.SetColor(hWindowHalconID, Vision.Instance.ROIColr.ToString());
                                 HOperatorSet.DispObj(itemtd.ROI, hWindowHalconID);
+                                Vision.Disp_message(hWindowHalconID, itemtd.messages, itemtd.rows, itemtd.cols, false, "red");
                             }
                         }
                     }
@@ -681,26 +757,6 @@ namespace Vision2.vision
                         HTuple text = Massage;
                         text.Append(NGMassage);
                         text.Append(OKMassage);
-                        if (this.RunName != null)
-                        {
-                            //switch (Vision.GetSaveImageInfo(this.RunName).DispTextType)
-                            //{
-                            //    case 0:
-                            //        break;
-                            //    case 1:
-                            //        if (ResultBool)
-                            //        {
-                            //            text = "OK";
-                            //        }
-                            //        else
-                            //        {
-                            //            text = "NG";
-                            //        }
-                            //        break;
-                            //    default:
-                            //        break;
-                            //}
-                        }
                         if (!ResultBool)
                         {
                             Vision.Disp_message(hWindowHalconID, text, 20, 20, true, "red", ISMassageBack.ToString());
@@ -824,7 +880,9 @@ namespace Vision2.vision
         /// <summary>
         /// 主图像
         /// </summary>
-        public HObject Image { get; set; }
+        public HObject Image { get; set; } = new HObject();
+
+
         public bool ImagePretreatmentDone;
 
         /// <summary>

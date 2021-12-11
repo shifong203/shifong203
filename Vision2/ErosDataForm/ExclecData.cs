@@ -70,10 +70,10 @@ namespace Vision2.ErosUI
 
         private void toolStripButton2_Click(object sender, EventArgs e)
         {
-            //ConClass.Npoi.UpDataExclec(Application.StartupPath + "\\遍历数据\\" + DateTime.Now.ToLongDateString() + ".xls");
-            //Npoi.AddWriteToExcel(ptahFile + DateTime.Now.ToLongDateString() + ".xls", DateTime.Now.ToLongDateString(),
+            //ConClass.Npoi.UpDataExclec(Application.StartupPath + "\\遍历数据\\" +  DateTime.Now.ToString("yyyy年M月d日") + ".xls");
+            //Npoi.AddWriteToExcel(ptahFile +  DateTime.Now.ToString("yyyy年M月d日") + ".xls",  DateTime.Now.ToString("yyyy年M月d日"),
             //   "NG", "1", "0.1", "12");
-            //Npoi.AddWriteColumnToExcel(ptahFile + DateTime.Now.ToLongDateString() + ".xls", DateTime.Now.ToLongDateString(),
+            //Npoi.AddWriteColumnToExcel(ptahFile +  DateTime.Now.ToString("yyyy年M月d日") + ".xls",  DateTime.Now.ToString("yyyy年M月d日"),
             //   new string[] { "名称", "结果", "最大误差", "边界数量" });
             try
             {
@@ -87,7 +87,7 @@ namespace Vision2.ErosUI
 
         private void ExclecUI_Load(object sender, EventArgs e)
         {
-            //Npoi.UpDataExclec(ptahFile + DateTime.Now.ToLongDateString() + ".xls", tabControl1, pictureBox1, groupBox1, HalconRun);
+            //Npoi.UpDataExclec(ptahFile +  DateTime.Now.ToString("yyyy年M月d日") + ".xls", tabControl1, pictureBox1, groupBox1, HalconRun);
             string[] stringArray = Vision2.ErosProjcetDLL.Project.ProjectINI.GetFilesArrayPath(ptahFile, ".xls");
             for (int i = 0; i < stringArray.Length; i++)
             {

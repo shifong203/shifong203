@@ -17,6 +17,7 @@ namespace Vision2
         private static void Main()
         {
             bool noRun = false;
+            BindExceptionHandler();
             Run = new System.Threading.Mutex(true, "HumControl2", out noRun);
             if (noRun)
             {
@@ -46,7 +47,7 @@ namespace Vision2
                 if (!Directory.Exists(ProjectINI.ProjietPath))
                 {
                     ProjectINI.ProjietPath = "D:\\Vision2\\";
-                    if (!System.IO.Directory.Exists(ProjectINI.ProjietPath))
+                    if (!Directory.Exists(ProjectINI.ProjietPath))
                     {
                         MessageBox.Show("缺少项目文件");
                         return;
@@ -58,7 +59,7 @@ namespace Vision2
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message);
+                    ErrForm.Show(ex,"主界面");
                     Program.Run.Close();
                     ProjectINI.In.Clros();
                 }
@@ -78,5 +79,36 @@ namespace Vision2
                 }
             }
         }
+        /// <summary>
+        /// 绑定程序中的异常处理
+        /// </summary>
+        private static void BindExceptionHandler()
+        {
+            //设置应用程序处理异常方式：ThreadException处理
+            Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
+            //处理UI线程异常
+            Application.ThreadException += new System.Threading.ThreadExceptionEventHandler(Application_ThreadException);
+            //处理未捕获的异常
+            AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
+        }
+        /// <summary>
+        /// 处理UI线程异常
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        static void Application_ThreadException(object sender, System.Threading.ThreadExceptionEventArgs e)
+        {
+            MessageBox.Show(e.Exception.ToString());
+        }
+        /// <summary>
+        /// 处理未捕获的异常
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            MessageBox.Show(e.ExceptionObject.ToString());
+        }
+
     }
 }

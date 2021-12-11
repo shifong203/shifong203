@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Windows.Forms;
 using Vision2.ErosProjcetDLL.Project;
+using Vision2.ErosProjcetDLL.UI.PropertyGrid;
 
 namespace Vision2.Project.DebugF
 {
@@ -15,9 +16,18 @@ namespace Vision2.Project.DebugF
             {
                 DebugC = compiler;
                 propertyGrid2.SelectedObject = ProjectINI.In.UsData;
+                for (int i = 0; i < ProjectINI.In.DicNameRunFacility.Count; i++)
+                {
+
+                      int d=     dataGridView2.Rows.Add();
+                    dataGridView2.Rows[d].Cells[0].Value = ProjectINI.In.DicNameRunFacility[i];
+
+                }
+       
                 propertyGrid1.SelectedObject = compiler.RunButton;
                 //propertyGrid2.SelectedObject = compiler.SeelpData;
                 Vision2.ErosProjcetDLL.UI.DataGridViewF.StCon.AddCon(dataGridView1, 0);
+                Vision2.ErosProjcetDLL.UI.DataGridViewF.StCon.AddCon(dataGridView2);
                 dataGridView1.Rows.Add(DebugC.DDAxis.Out.Count);
 
                 for (int i = 0; i < DebugC.DDAxis.Out.Count; i++)
@@ -43,36 +53,12 @@ namespace Vision2.Project.DebugF
         {
         }
 
-        private void treeView1_MouseClick(object sender, MouseEventArgs e)
-        {
-            try
-            {
-                //propertyGrid1.SelectedObject = treeView1.GetNodeAt(e.Location).Tag;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
 
-        private void treeView1_KeyPress(object sender, KeyPressEventArgs e)
-        {
-        }
 
-        private void treeView1_KeyUp(object sender, KeyEventArgs e)
-        {
-        }
 
-        private void treeView1_MouseUp(object sender, MouseEventArgs e)
-        {
-            try
-            {
-                //propertyGrid1.SelectedObject = treeView1.SelectedNode.Tag;
-            }
-            catch (Exception)
-            {
-            }
-        }
+
+
+
 
         private void 添加轴ToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -248,6 +234,99 @@ namespace Vision2.Project.DebugF
                 }
             }
             catch (Exception)
+            {
+            }
+        }
+
+        private void dataGridView2_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            try
+            {
+                if (!isChaerv)
+                {
+                    if (ProjectINI.In.DicNameRunFacility.Count<e.RowIndex)
+                    {
+                        ProjectINI.In.DicNameRunFacility[e.RowIndex] = dataGridView2.Rows[e.RowIndex].Cells[0].Value.ToString();
+                    }
+                    else
+                    {
+                        ProjectINI.In.DicNameRunFacility.Add ( dataGridView2.Rows[e.RowIndex].Cells[0].Value.ToString());
+                    }
+            
+                }
+
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        private void dataGridView2_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            try
+            {
+                if (e.ColumnIndex==1)
+                {
+                    string value = "";
+                    if (dataGridView2.Rows[e.RowIndex].Cells[0].Value!=null)
+                    {
+                        value= dataGridView2.Rows[e.RowIndex].Cells[0].Value.ToString();
+                    }
+     
+                    FolderBrowserDialog fbd = new FolderBrowserDialog();
+                    fbd.Description = "请选择文件夹";
+                    if (value == null)
+                    {
+                        value = Application.StartupPath;
+                    }
+                    fbd.SelectedPath = value.ToString();
+                    DialogResult dialog = FolderBrowserLauncher.ShowFolderBrowser(fbd);
+                    if (dialog == DialogResult.OK)
+                    {
+                        if (dataGridView2.Rows.Count == e.RowIndex + 1)
+                        {
+              
+                            dataGridView2.Rows.Add();
+                        }
+                        dataGridView2.Rows[e.RowIndex].Cells[0].Value= fbd.SelectedPath;
+                   
+                    }
+
+                }
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        private void 删除ToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                int det = dataGridView2.SelectedCells.Count;
+                for (int i = 0; i < det; i++)
+                {
+
+                    dataGridView2.Rows.RemoveAt(dataGridView2.SelectedCells[0].RowIndex);
+                }
+                ProjectINI.In.DicNameRunFacility.Clear();
+                for (int i = 0; i < dataGridView2.Rows.Count; i++)
+                {
+                    if (dataGridView2.Rows[i].Cells[0].Value==null)
+                    {
+                        continue;
+                    }
+                    if (ProjectINI.In.DicNameRunFacility.Count <i)
+                    {
+                        ProjectINI.In.DicNameRunFacility[i] = dataGridView2.Rows[i].Cells[0].Value.ToString();
+                    }
+                    else
+                    {
+                        ProjectINI.In.DicNameRunFacility.Add(dataGridView2.Rows[i].Cells[0].Value.ToString());
+                    }
+                }
+            }
+            catch (Exception ex)
             {
             }
         }

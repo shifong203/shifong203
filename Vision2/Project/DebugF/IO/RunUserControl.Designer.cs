@@ -77,7 +77,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("宋体", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label2.Location = new System.Drawing.Point(1, 49);
+            this.label2.Location = new System.Drawing.Point(1, 48);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(29, 20);
             this.label2.TabIndex = 2;
@@ -98,7 +98,7 @@
             // 
             this.label4OutSen.AutoSize = true;
             this.label4OutSen.Font = new System.Drawing.Font("宋体", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label4OutSen.Location = new System.Drawing.Point(227, 24);
+            this.label4OutSen.Location = new System.Drawing.Point(226, 24);
             this.label4OutSen.Name = "label4OutSen";
             this.label4OutSen.Size = new System.Drawing.Size(29, 20);
             this.label4OutSen.TabIndex = 9;
@@ -113,6 +113,7 @@
             this.pictureBox4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox4.TabIndex = 11;
             this.pictureBox4.TabStop = false;
+            this.pictureBox4.DoubleClick += new System.EventHandler(this.pictureBox4_DoubleClick);
             // 
             // pictureBox6
             // 
@@ -123,6 +124,7 @@
             this.pictureBox6.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox6.TabIndex = 12;
             this.pictureBox6.TabStop = false;
+            this.pictureBox6.DoubleClick += new System.EventHandler(this.pictureBox6_DoubleClick);
             // 
             // pictureBox1
             // 
@@ -156,6 +158,7 @@
             this.pictureBox8.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox8.TabIndex = 20;
             this.pictureBox8.TabStop = false;
+            this.pictureBox8.DoubleClick += new System.EventHandler(this.pictureBox8_DoubleClick);
             // 
             // pictureBox5
             // 
@@ -171,7 +174,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("宋体", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label1.Location = new System.Drawing.Point(137, 70);
+            this.label1.Location = new System.Drawing.Point(39, 19);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(29, 20);
             this.label1.TabIndex = 21;
@@ -291,6 +294,7 @@
             this.label5Await.Size = new System.Drawing.Size(11, 12);
             this.label5Await.TabIndex = 32;
             this.label5Await.Text = "W";
+            this.label5Await.Click += new System.EventHandler(this.label5Await_Click);
             // 
             // label6PT
             // 
@@ -300,6 +304,7 @@
             this.label6PT.Size = new System.Drawing.Size(11, 12);
             this.label6PT.TabIndex = 33;
             this.label6PT.Text = "D";
+            this.label6PT.Click += new System.EventHandler(this.label6PT_Click);
             // 
             // pictureBoxIntoPlate
             // 

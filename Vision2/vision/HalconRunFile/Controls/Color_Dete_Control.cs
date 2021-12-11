@@ -182,7 +182,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 _Classify.SelectMin = (double)numericUpDown8.Value;
                 _Classify.SelectMax = (double)numericUpDown7.Value;
                 _Classify.ClosingCir = (double)numericUpDown6.Value;
-                _Classify.ColorNumber = (byte)numericUpDown2.Value;
+                _Classify.ColorNumber = (int)numericUpDown2.Value;
                 _Classify.Color_ID = (byte)numericUpDown1.Value;
                 _Classify.COlorES = button3.BackColor;
                 _Classify.ISFillUp = checkBox1.Checked;
@@ -240,8 +240,7 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             try
             {
-                _Classify.RunSeleRoi(runProgram.
-                    GetEmset(halcon.GetImageOBJ(_Classify.ImageType)), 0, out HObject hObject);
+                _Classify.RunSeleRoi(runProgram.GetEmset(halcon.GetImageOBJ(_Classify.ImageType)), 0, out HObject hObject);
                 _Classify.DrawObj = hObject;
             }
             catch (Exception ex)

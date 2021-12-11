@@ -54,18 +54,28 @@
             this.btnSend = new System.Windows.Forms.ToolStripButton();
             this.Button3 = new System.Windows.Forms.ToolStripButton();
             this.comboBox2 = new System.Windows.Forms.ToolStripComboBox();
-            this.toolStrip2 = new System.Windows.Forms.ToolStrip();
-            this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
-            this.comboBox1 = new System.Windows.Forms.ToolStripComboBox();
             this.panel2 = new System.Windows.Forms.Panel();
             this.button2 = new System.Windows.Forms.Button();
+            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.toolStrip2 = new System.Windows.Forms.ToolStrip();
+            this.toolStripButton2 = new System.Windows.Forms.ToolStripButton();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.protInt)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.protOut)).BeginInit();
             this.panel1.SuspendLayout();
             this.toolStrip3.SuspendLayout();
-            this.toolStrip2.SuspendLayout();
             this.panel2.SuspendLayout();
+            this.tabControl1.SuspendLayout();
+            this.tabPage1.SuspendLayout();
+            this.tabPage2.SuspendLayout();
+            this.groupBox1.SuspendLayout();
+            this.groupBox2.SuspendLayout();
+            this.toolStrip2.SuspendLayout();
             this.SuspendLayout();
             // 
             // label9
@@ -200,25 +210,25 @@
             // 
             // txtR
             // 
-            this.txtR.Dock = System.Windows.Forms.DockStyle.Top;
-            this.txtR.Location = new System.Drawing.Point(0, 25);
+            this.txtR.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtR.Location = new System.Drawing.Point(3, 17);
             this.txtR.Margin = new System.Windows.Forms.Padding(2);
             this.txtR.Multiline = true;
             this.txtR.Name = "txtR";
             this.txtR.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtR.Size = new System.Drawing.Size(700, 110);
+            this.txtR.Size = new System.Drawing.Size(680, 142);
             this.txtR.TabIndex = 66;
             this.txtR.Text = "接受文本";
             // 
             // TXTS
             // 
             this.TXTS.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TXTS.Location = new System.Drawing.Point(0, 135);
+            this.TXTS.Location = new System.Drawing.Point(3, 17);
             this.TXTS.Margin = new System.Windows.Forms.Padding(2);
             this.TXTS.Multiline = true;
             this.TXTS.Name = "TXTS";
             this.TXTS.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.TXTS.Size = new System.Drawing.Size(700, 308);
+            this.TXTS.Size = new System.Drawing.Size(680, 229);
             this.TXTS.TabIndex = 67;
             this.TXTS.Text = "发送文本";
             // 
@@ -283,10 +293,7 @@
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.TXTS);
-            this.panel1.Controls.Add(this.toolStrip3);
-            this.panel1.Controls.Add(this.txtR);
-            this.panel1.Controls.Add(this.toolStrip2);
+            this.panel1.Controls.Add(this.tabControl1);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 100);
             this.panel1.Name = "panel1";
@@ -300,9 +307,9 @@
             this.btnSend,
             this.Button3,
             this.comboBox2});
-            this.toolStrip3.Location = new System.Drawing.Point(0, 443);
+            this.toolStrip3.Location = new System.Drawing.Point(3, 246);
             this.toolStrip3.Name = "toolStrip3";
-            this.toolStrip3.Size = new System.Drawing.Size(700, 33);
+            this.toolStrip3.Size = new System.Drawing.Size(680, 33);
             this.toolStrip3.TabIndex = 76;
             this.toolStrip3.Text = "toolStrip3";
             // 
@@ -353,45 +360,6 @@
             this.comboBox2.Click += new System.EventHandler(this.comboBox2_Click);
             this.comboBox2.TextChanged += new System.EventHandler(this.comboBox2_TextChanged);
             // 
-            // toolStrip2
-            // 
-            this.toolStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripButton2,
-            this.comboBox1});
-            this.toolStrip2.Location = new System.Drawing.Point(0, 0);
-            this.toolStrip2.Name = "toolStrip2";
-            this.toolStrip2.Size = new System.Drawing.Size(700, 25);
-            this.toolStrip2.TabIndex = 75;
-            this.toolStrip2.Text = "toolStrip2";
-            // 
-            // toolStripButton2
-            // 
-            this.toolStripButton2.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.toolStripButton2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.toolStripButton2.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton2.Image")));
-            this.toolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton2.Name = "toolStripButton2";
-            this.toolStripButton2.Size = new System.Drawing.Size(36, 22);
-            this.toolStripButton2.Text = "清除";
-            this.toolStripButton2.Click += new System.EventHandler(this.button2_Click);
-            // 
-            // comboBox1
-            // 
-            this.comboBox1.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox1.Items.AddRange(new object[] {
-            "UTF8",
-            "ASCII",
-            "Default",
-            "UTF-16",
-            "Unicode",
-            "UTF32",
-            "UTF7",
-            "ByteHex"});
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(121, 25);
-            this.comboBox1.Click += new System.EventHandler(this.comboBox1_Click);
-            // 
             // panel2
             // 
             this.panel2.Controls.Add(this.button2);
@@ -426,6 +394,92 @@
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click_1);
             // 
+            // tabControl1
+            // 
+            this.tabControl1.Controls.Add(this.tabPage1);
+            this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabControl1.Location = new System.Drawing.Point(0, 0);
+            this.tabControl1.Name = "tabControl1";
+            this.tabControl1.SelectedIndex = 0;
+            this.tabControl1.Size = new System.Drawing.Size(700, 476);
+            this.tabControl1.TabIndex = 77;
+            // 
+            // tabPage1
+            // 
+            this.tabPage1.Controls.Add(this.groupBox1);
+            this.tabPage1.Controls.Add(this.groupBox2);
+            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(692, 450);
+            this.tabPage1.TabIndex = 0;
+            this.tabPage1.Text = "信息框";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.Controls.Add(this.toolStrip2);
+            this.tabPage2.Controls.Add(this.richTextBox1);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(692, 450);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "模拟";
+            this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.TXTS);
+            this.groupBox1.Controls.Add(this.toolStrip3);
+            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox1.Location = new System.Drawing.Point(3, 165);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(686, 282);
+            this.groupBox1.TabIndex = 68;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "发送";
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.txtR);
+            this.groupBox2.Dock = System.Windows.Forms.DockStyle.Top;
+            this.groupBox2.Location = new System.Drawing.Point(3, 3);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(686, 162);
+            this.groupBox2.TabIndex = 69;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "接收";
+            // 
+            // richTextBox1
+            // 
+            this.richTextBox1.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.richTextBox1.Location = new System.Drawing.Point(3, 89);
+            this.richTextBox1.Name = "richTextBox1";
+            this.richTextBox1.Size = new System.Drawing.Size(686, 358);
+            this.richTextBox1.TabIndex = 0;
+            this.richTextBox1.Text = "";
+            // 
+            // toolStrip2
+            // 
+            this.toolStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripButton2});
+            this.toolStrip2.Location = new System.Drawing.Point(3, 3);
+            this.toolStrip2.Name = "toolStrip2";
+            this.toolStrip2.Size = new System.Drawing.Size(686, 25);
+            this.toolStrip2.TabIndex = 79;
+            this.toolStrip2.Text = "toolStrip2";
+            // 
+            // toolStripButton2
+            // 
+            this.toolStripButton2.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton2.Image")));
+            this.toolStripButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton2.Name = "toolStripButton2";
+            this.toolStripButton2.Size = new System.Drawing.Size(76, 22);
+            this.toolStripButton2.Text = "模拟接收";
+            this.toolStripButton2.Click += new System.EventHandler(this.toolStripButton2_Click);
+            // 
             // NewSocketForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -444,13 +498,20 @@
             ((System.ComponentModel.ISupportInitialize)(this.protInt)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.protOut)).EndInit();
             this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
             this.toolStrip3.ResumeLayout(false);
             this.toolStrip3.PerformLayout();
-            this.toolStrip2.ResumeLayout(false);
-            this.toolStrip2.PerformLayout();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
+            this.tabControl1.ResumeLayout(false);
+            this.tabPage1.ResumeLayout(false);
+            this.tabPage2.ResumeLayout(false);
+            this.tabPage2.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
+            this.toolStrip2.ResumeLayout(false);
+            this.toolStrip2.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -480,11 +541,16 @@
         private System.Windows.Forms.ToolStripButton btnSend;
         private System.Windows.Forms.ToolStripButton Button3;
         private System.Windows.Forms.ToolStripComboBox comboBox2;
-        private System.Windows.Forms.ToolStrip toolStrip2;
-        private System.Windows.Forms.ToolStripButton toolStripButton2;
-        private System.Windows.Forms.ToolStripComboBox comboBox1;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.ToolStripButton toolStripButton3;
         private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.RichTextBox richTextBox1;
+        private System.Windows.Forms.ToolStrip toolStrip2;
+        private System.Windows.Forms.ToolStripButton toolStripButton2;
     }
 }

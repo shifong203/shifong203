@@ -110,7 +110,7 @@ namespace Vision2.Project.formula
                         List<string> liatsName = new List<string>();
                         for (int i = 0; i < dataGridView1.Rows.Count; i++)
                         {
-                            if (dataGridView1.Rows[i].Cells[0].Value != null && dataGridView1.Rows[i].Cells[0].Value != "")
+                            if (dataGridView1.Rows[i].Cells[0].Value != null && dataGridView1.Rows[i].Cells[0].Value.ToString() != "")
                             {
                                 if (Product.GetProduct().Parameter_Dic.GetParameters().ContainsKey(dataGridView1.Rows[i].Cells[0].Value.ToString()))
                                 {

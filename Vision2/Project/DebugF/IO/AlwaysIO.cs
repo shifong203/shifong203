@@ -111,7 +111,7 @@ namespace Vision2.Project.DebugF.IO
             Int_EventValueCh(DebugCompiler.GetDoDi().Int[Dnumber], 0);
         }
 
-        private void Int_EventValueCh(bool value, long timeRun)
+        private void Int_EventValueCh(bool value, double timeRun)
         {
             WatchT.Restart();
 

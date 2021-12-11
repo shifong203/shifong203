@@ -27,11 +27,11 @@ namespace Vision2.Project.Mes
             return true;
         }
 
-        public override void WrietMes(UserFormulaContrsl userFormulaContrsl, string QRCODE, string product_Name)
+        public  void WrietMes(UserFormulaContrsl userFormulaContrsl, string QRCODE, string product_Name)
         {
             List<string> ListText = new List<string>();
             string timeStr = DateTime.Now.ToString();
-            string timeLong = DateTime.Now.ToLongDateString();
+            string timeLong = DateTime.Now.ToString("yyyy年M月d日");
             string paht = ProcessControl.ProcessUser.Instancen.ExcelPath + "//" + QRCODE;
             if (RecipeCompiler.Instance.TrayQRType == RecipeCompiler.TrayEnumType.多个流程一个产品)
             {
@@ -134,22 +134,83 @@ namespace Vision2.Project.Mes
             {
                 ListText.Add(product_Name + "," + QRCODE + "," + reset + "," + UserFormulaContrsl.timeStrStrat.ToString("yyyy-MM-dd HH:mm:ss") + "," + timeStr + ",,," + Mest);
             }
-            Vision2.ErosProjcetDLL.Excel.Npoi.WriteF(paht, ListText);
+            ErosProjcetDLL.Excel.Npoi.WriteF(paht, ListText);
             if (ListText.Count == 1)
             {
-                Vision2.ErosProjcetDLL.Project.AlarmText.LogErr("写入Mes错误长度1", "写入数据");
+                ErosProjcetDLL.Project.AlarmText.LogErr("写入Mes错误长度1", "写入数据");
             }
         }
 
         public override void WrietMes(OneDataVale data, string Product_Name)
         {
+            try
+            {
+               
+                List<string> ListText = new List<string>();
+                string timeStr = DateTime.Now.ToString();
+                string timeLong = DateTime.Now.ToString("yyyy年M月d日");
+                string paht = ProcessControl.ProcessUser.Instancen.ExcelPath + "//" + data.PanelID;
+                if (RecipeCompiler.Instance.TrayQRType == RecipeCompiler.TrayEnumType.多个流程一个产品)
+                {
+                    paht = ProcessControl.ProcessUser.Instancen.ExcelPath + "//" + DateTime.Now.ToString("yy年MM月dd日HH时mm分ss秒");
+                }
+                if (System.IO.File.Exists(paht))
+                {
+                    System.IO.File.Delete(paht);
+                }
+                ListText.Add("程序名,条码,检测结果,开始时间,结束时间,NG点,机检不良项,人工复判结果,高度");
+                string reset = "";
+           
+                    if (data.OK)
+                    {
+                        reset = "OK";
+                    }
+                    else
+                    {
+                        reset = "NG";
+                    }
+                
+                string NG1 = "";
+                string QrCode = "";
+                string Mest = "";
+                string jtt = "";
+                string jtvales = "";
+                string name = "";
+                ListText.Add(Product.ProductionName + "," + data.PanelID + "," + reset + "," + 
+                    data.StrTime.ToString("yyyy-MM-dd HH:mm:ss")  + "," + timeStr + "," + name + "," + jtvales + "," + NG1 + "," + Mest);
+                //if (jtt == name)
+                //    {
+                //        if (i == 0)
+                //        {
+                //            ListText.Add(Product.ProductionName + "," + data.PanelID + "," + reset + "," + UserFormulaContrsl.timeStrStrat.ToString("yyyy-MM-dd HH:mm:ss") + "," + timeStr + "," + name + "," + jtvales + "," + NG1 + "," + Mest);
+                //        }
+                //        else
+                //        {
+                //            ListText.Add("," + QrCode + "," + reset + ", , ," + name + "," + jtvales + "," + NG1);
+                //        }
+                //        QrCode = "";
+                //    }
+                //    else
+                //    {
+                //        ListText.Add("," + QrCode + "," + reset + ", , ," + name + "," + jtvales + "," + NG1);
+                //    }
+                    reset = "";
+                    jtvales = "";
+                    name = "";
+                    NG1 = "";
+                ErosProjcetDLL.Excel.Npoi.WriteF(paht, ListText);
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
 
         public override void WrietMes(TrayData trayData, string Product_Name)
         {
         }
 
-        public override void WrietMesAll<T>(T data, string QRCODE, string product_Name)
+        public override void WrietMesAll<T>(T data,  string product_Name)
         {
             try
             {
@@ -157,11 +218,11 @@ namespace Vision2.Project.Mes
 
                 List<string> ListText = new List<string>();
                 string timeStr = DebugF.DebugCompiler.Instance.DDAxis.StartTime.ToString();
-                string timeLong = DateTime.Now.ToLongDateString();
-                string paht = ProcessControl.ProcessUser.Instancen.ExcelPath + "//" + QRCODE;
+                string timeLong =  DateTime.Now.ToString("yyyy年M月d日");
+                string paht = ProcessControl.ProcessUser.Instancen.ExcelPath + "//" + ProcessControl.ProcessUser.QRCode;
                 if (RecipeCompiler.Instance.TrayQRType == RecipeCompiler.TrayEnumType.多个流程一个产品)
                 {
-                    paht = ProcessControl.ProcessUser.Instancen.ExcelPath + "//" + DateTime.Now.ToString("yy年MM月dd日HH时mm分ss秒");
+                    paht = ProcessControl.ProcessUser.Instancen.ExcelPath + "//" + DateTime.Now.ToString("yyyy年M月d日HH时mm分ss秒");
                 }
                 if (System.IO.File.Exists(paht))
                 {
@@ -183,7 +244,7 @@ namespace Vision2.Project.Mes
                 {
                     reset = "NG";
                 }
-                ListText.Add(Product.ProductionName + "," + QRCODE + "," + reset + "," + UserFormulaContrsl.timeStrStrat.ToString("yyyy-MM-dd HH:mm:ss") + "," + timeStr + "," + name + "," + jtvales + "," + NG1 + "," + Mest);
+                ListText.Add(Product.ProductionName + "," + ProcessControl.ProcessUser.QRCode + "," + reset + "," + UserFormulaContrsl.timeStrStrat.ToString("yyyy-MM-dd HH:mm:ss") + "," + timeStr + "," + name + "," + jtvales + "," + NG1 + "," + Mest);
                 QrCode = "";
                 foreach (var item in dataVale.GetTrayData().GetDataVales())
                 {

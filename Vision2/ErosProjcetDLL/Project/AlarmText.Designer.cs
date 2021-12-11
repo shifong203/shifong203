@@ -43,8 +43,9 @@
             this.DropDownSele = new System.Windows.Forms.ToolStripDropDownButton();
             this.全选 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
-            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.toolStripComboBox1 = new System.Windows.Forms.ToolStripComboBox();
+            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.打开文本记录ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -78,7 +79,7 @@
             // 弹出报警列表ToolStripMenuItem
             // 
             this.弹出报警列表ToolStripMenuItem.Name = "弹出报警列表ToolStripMenuItem";
-            this.弹出报警列表ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.弹出报警列表ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
             this.弹出报警列表ToolStripMenuItem.Text = "弹出报警列表";
             this.弹出报警列表ToolStripMenuItem.Click += new System.EventHandler(this.弹出报警列表ToolStripMenuItem_Click);
             // 
@@ -87,6 +88,7 @@
             this.toolStripDropDownButton2.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.toolStripDropDownButton2.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.打开记录ToolStripMenuItem,
+            this.打开文本记录ToolStripMenuItem,
             this.查看事件信息ToolStripMenuItem});
             this.toolStripDropDownButton2.Image = ((System.Drawing.Image)(resources.GetObject("toolStripDropDownButton2.Image")));
             this.toolStripDropDownButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
@@ -97,14 +99,14 @@
             // 打开记录ToolStripMenuItem
             // 
             this.打开记录ToolStripMenuItem.Name = "打开记录ToolStripMenuItem";
-            this.打开记录ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
-            this.打开记录ToolStripMenuItem.Text = "打开记录";
+            this.打开记录ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.打开记录ToolStripMenuItem.Text = "打开报警记录";
             this.打开记录ToolStripMenuItem.Click += new System.EventHandler(this.打开记录ToolStripMenuItem_Click);
             // 
             // 查看事件信息ToolStripMenuItem
             // 
             this.查看事件信息ToolStripMenuItem.Name = "查看事件信息ToolStripMenuItem";
-            this.查看事件信息ToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.查看事件信息ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.查看事件信息ToolStripMenuItem.Text = "查看事件信息";
             this.查看事件信息ToolStripMenuItem.Click += new System.EventHandler(this.查看事件信息ToolStripMenuItem_Click);
             // 
@@ -182,6 +184,19 @@
             this.toolStripButton1.Text = "清除文本";
             this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
             // 
+            // toolStripComboBox1
+            // 
+            this.toolStripComboBox1.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.toolStripComboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.toolStripComboBox1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.toolStripComboBox1.Items.AddRange(new object[] {
+            "主窗口下",
+            "控制栏左",
+            "浮动窗口"});
+            this.toolStripComboBox1.Name = "toolStripComboBox1";
+            this.toolStripComboBox1.Size = new System.Drawing.Size(121, 25);
+            this.toolStripComboBox1.SelectedIndexChanged += new System.EventHandler(this.toolStripComboBox1_SelectedIndexChanged);
+            // 
             // richTextBox1
             // 
             this.richTextBox1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
@@ -198,18 +213,12 @@
             this.richTextBox1.TextChanged += new System.EventHandler(this.dsAlphaRichTextBox1_TextChanged);
             this.richTextBox1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.richTextBox1_MouseDown);
             // 
-            // toolStripComboBox1
+            // 打开文本记录ToolStripMenuItem
             // 
-            this.toolStripComboBox1.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.toolStripComboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.toolStripComboBox1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.toolStripComboBox1.Items.AddRange(new object[] {
-            "主窗口下",
-            "控制栏左",
-            "浮动窗口"});
-            this.toolStripComboBox1.Name = "toolStripComboBox1";
-            this.toolStripComboBox1.Size = new System.Drawing.Size(121, 25);
-            this.toolStripComboBox1.SelectedIndexChanged += new System.EventHandler(this.toolStripComboBox1_SelectedIndexChanged);
+            this.打开文本记录ToolStripMenuItem.Name = "打开文本记录ToolStripMenuItem";
+            this.打开文本记录ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.打开文本记录ToolStripMenuItem.Text = "打开文本记录";
+            this.打开文本记录ToolStripMenuItem.Click += new System.EventHandler(this.打开文本记录ToolStripMenuItem_Click);
             // 
             // AlarmText
             // 
@@ -245,5 +254,6 @@
         private System.Windows.Forms.ToolStripMenuItem 查看事件信息ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 弹出报警列表ToolStripMenuItem;
         private System.Windows.Forms.ToolStripComboBox toolStripComboBox1;
+        private System.Windows.Forms.ToolStripMenuItem 打开文本记录ToolStripMenuItem;
     }
 }

@@ -31,7 +31,7 @@ namespace Vision2.vision.HalconRunFile.Controls
 
             private HObject iamget;
             public HTuple magessage = new HTuple();
-            public HTuple hWindowHalconID { get; set; }
+            HWindow hWindowHalconID;
             public HTuple Width;
             public HTuple Height;
 
@@ -211,8 +211,12 @@ namespace Vision2.vision.HalconRunFile.Controls
                 keyValuePairs.Clear();
             }
 
-            public HTuple hWindowHalcon(HTuple hawid = null)
+            public HWindow hWindowHalcon(HWindow hawid = null)
             {
+                if (hawid!=null)
+                {
+                    hWindowHalconID = hawid;
+                }
                 return hWindowHalconID;
             }
 
@@ -285,7 +289,7 @@ namespace Vision2.vision.HalconRunFile.Controls
             {
                 if (hWindwC != null)
                 {
-                    hWindwC.hWindowHalconID = this.HalconWindow;
+                    hWindwC.hWindowHalcon( this.HalconWindow);
                 }
                 //HOperatorSet.SetDraw(this.HalconWindow, "margin");
                 //HOperatorSet.SetColored(this.HalconWindow, 12);
@@ -362,7 +366,7 @@ namespace Vision2.vision.HalconRunFile.Controls
             catch (Exception)
             {
             }
-            hWindwC.hWindowHalconID = this.HalconWindow;
+            hWindwC.hWindowHalcon (this.HalconWindow);
             hWindwC.ShowOBJ();
         }
 

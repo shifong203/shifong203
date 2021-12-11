@@ -12,6 +12,7 @@ namespace Vision2.HtmlMaker
 
         public static bool GenerateCode(string filepth, double timems, DateTime sTime, DateTime eTime, OneDataVale dataVale)
         {
+            System.IO.Directory.CreateDirectory( Path.GetDirectoryName (filepth));
             // 文件存在时是否覆盖
             filename = filepth + ".html";
             FileInfo f = new FileInfo(filename);

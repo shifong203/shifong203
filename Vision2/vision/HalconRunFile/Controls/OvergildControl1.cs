@@ -28,7 +28,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 thresholdControls1.SetData(overgild.threshold_Min_Max);
                 select_obj_type1.SetData(overgild.Select_Shape_Min_Max);
                 select_obj_type2.SetData(overgild.Select_Shape_Min_Outobj);
-
+                numericUpDown7.Value =(decimal) overgild.ColsingSocek;
                 //comboBox1.Items.Clear();
 
                 //comboBox1.Items.AddRange(Enum.GetNames(typeof(ImageTypeObj)));
@@ -125,6 +125,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 {
                     return;
                 }
+                overgild.ColsingSocek =(double) numericUpDown7.Value;
                 overgild.EnableScratch = checkBox3.Checked;
                 overgild.EnableSymmetry = checkBox4.Checked;
                 overgild.EnableRB = checkBox5.Checked;
@@ -168,7 +169,7 @@ namespace Vision2.vision.HalconRunFile.Controls
             try
             {
                 halcon.HobjClear();
-                overgild.Run(halcon.GetOneImageR(), new AoiObj());
+                overgild.Run(halcon.GetOneImageR());
                 overgild.ModeOBj = overgild.SelecRoi;
                 halcon.AddObj(overgild.ModeOBj);
                 halcon.ShowObj();
@@ -255,6 +256,11 @@ namespace Vision2.vision.HalconRunFile.Controls
         private void checkBox5_CheckedChanged(object sender, EventArgs e)
         {
             SetDatd(1);
+        }
+
+        private void numericUpDown7_ValueChanged(object sender, EventArgs e)
+        {
+            SetDatd(4);
         }
     }
 }

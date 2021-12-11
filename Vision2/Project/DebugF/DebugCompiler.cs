@@ -63,7 +63,7 @@ namespace Vision2.Project.DebugF
         private TreeNode treeNodeDebug = new TreeNode() { Name = "调试窗口", Text = "调试窗口" };
 
         [DescriptionAttribute("。"), Category("设备硬件"), DisplayName("板卡名称")]
-        [TypeConverter(typeof(ErosConverter)), ErosConverter.ThisDropDownAttribute("", "FY6400", "C154", "PCI-1245L")]
+        [TypeConverter(typeof(ErosConverter)), ErosConverter.ThisDropDownAttribute("", "","FY6400", "C154", "PCI-1245L", "PCI-Gst")]
         public string ListKat { get; set; } = "";
 
         [DescriptionAttribute("是否附加IO模块。"), Category("设备硬件"), DisplayName("附加IO模块")]
@@ -126,43 +126,6 @@ namespace Vision2.Project.DebugF
             DDAxis.Close();
         }
 
-        /// <summary>
-        /// 管理控件
-        /// </summary>
-        /// <param name="formText"></param>
-        public void SetUesrContrsl()
-        {
-            try
-            {
-                PointFile.ReadPoint();
-                StartWhil0eRun();
-                thread = new Thread(ThreadRun);
-                thread.IsBackground = true;
-                thread.Start();
-                thread = new Thread(RunTime);
-                thread.IsBackground = true;
-                thread.Start();
-                thread = new Thread(RunBtuun);
-                thread.IsBackground = true;
-                thread.Start();
-            }
-            catch (Exception ex)
-            {
-            }
-        }
-
-        public enum FeedingModeEnum
-        {
-            载具模式 = 0,
-            托盘模式 = 1,
-            流水线模式 = 2,
-        }
-
-        /// <summary>
-        /// 上料模式
-        /// </summary>
-        public FeedingModeEnum feedingModeEnum { get; set; }
-
         [DescriptionAttribute("。"), Category("选项功能"), DisplayName("显示产品选项")]
         public bool IsPoName { get; set; } = true;
 
@@ -207,11 +170,11 @@ namespace Vision2.Project.DebugF
         //[DescriptionAttribute("控制方式数据。"), Category("控制"), DisplayName("用户控制方式"), Browsable(false)]
         //public UserInterfaceControl.UserInterfaceData Data { get; set; } = new UserInterfaceControl.UserInterfaceData();
 
-        [Editor(typeof(ErosSocket.ErosConLink.LinkNameAddreControl.Editor), typeof(UITypeEditor))]
+        [Editor(typeof(LinkNameAddreControl.Editor), typeof(UITypeEditor))]
         [DescriptionAttribute("。"), Category("设备控制"), DisplayName("继续变量名")]
         public string LinkConnectName { get; set; }
 
-        [Editor(typeof(ErosSocket.ErosConLink.LinkNameAddreControl.Editor), typeof(UITypeEditor))]
+        [Editor(typeof(LinkNameAddreControl.Editor), typeof(UITypeEditor))]
         [DescriptionAttribute("。"), Category("设备控制"), DisplayName("自动模式")]
         public string LinkAutoMode { get; set; }
 
@@ -239,15 +202,15 @@ namespace Vision2.Project.DebugF
         [DescriptionAttribute("。"), Category("设备状态"), DisplayName("错误变量名")]
         public string LinkAlarmName { get; set; }
 
-        [Editor(typeof(ErosSocket.ErosConLink.LinkName_ValuesNameUserControl.Editor), typeof(UITypeEditor))]
+        [Editor(typeof(LinkName_ValuesNameUserControl.Editor), typeof(UITypeEditor))]
         [DescriptionAttribute("。"), Category("设备状态"), DisplayName("暂停中变量名")]
         public string LinkPauseName { get; set; }
 
-        [Editor(typeof(ErosSocket.ErosConLink.LinkName_ValuesNameUserControl.Editor), typeof(UITypeEditor))]
+        [Editor(typeof(LinkName_ValuesNameUserControl.Editor), typeof(UITypeEditor))]
         [DescriptionAttribute("。"), Category("设备状态"), DisplayName("运行中变量名")]
         public string LinkRunName { get; set; }
 
-        [Editor(typeof(ErosSocket.ErosConLink.LinkName_ValuesNameUserControl.Editor), typeof(UITypeEditor))]
+        [Editor(typeof(LinkName_ValuesNameUserControl.Editor), typeof(UITypeEditor))]
         [DescriptionAttribute("。"), Category("设备状态"), DisplayName("初始化中变量名")]
         public string LinkREName { get; set; }
 
@@ -760,7 +723,7 @@ namespace Vision2.Project.DebugF
         /// </summary>
         [DescriptionAttribute("气缸名称。"), Category("线体"), DisplayName("定位气缸名称")]
         [TypeConverter(typeof(ErosConverter)),
-    ErosConverter.ThisDropDown("ListCylinders", false, "")]
+        ErosConverter.ThisDropDown("ListCylinders", false, "")]
         public string LoctionCylinder { get; set; } = "定位气缸";
 
         public List<string> ListCylinders
@@ -846,10 +809,10 @@ namespace Vision2.Project.DebugF
         {
             //DDAxis.axisG = new C154();
             run_Project = DebugCompiler.Instance.DDAxis as Run_project;
-
             run_Project.RunCodeT.RunStratCode += MainForm1.MainFormF.RunCodeT_RunStratCode;
+            run_Project.RunCodeT.RunDone += MainForm1.MainFormF.RunCodeT_RunStratCode;
             DDAxis.HomeCodeT.RunCode += HomeCodeT_RunCode;
-            DDAxis.HomeCodeT.RunDone += HomeCodeT_RunDone; ;
+            DDAxis.HomeCodeT.RunDone += HomeCodeT_RunDone; 
             if (Cont >= 1)
             {
                 if (DDAxis.Out.Name.Count == 0)
@@ -863,7 +826,6 @@ namespace Vision2.Project.DebugF
                     DDAxis.Int.AddCont(16 * Cont);
                 }
             }
-
             if (ListIO)
             {
                 IO.FY6400 fY6400 = new IO.FY6400() { ID = 0, };
@@ -894,20 +856,6 @@ namespace Vision2.Project.DebugF
             }
             try
             {
-                //if (TrayCont > 0)
-                //{
-                //    if (TrayData == null)
-                //    {
-                //        TrayData = new TrayDataUserControl();
-                //        TrayData.Dock = DockStyle.Fill;
-                //        TabPage tabPage = new TabPage();
-                //        tabPage.Text = tabPage.Name = "托盘状态";
-                //        tabPage.Controls.Add(TrayData);
-                //        MainForm1.MainFormF.tabControl1.Controls.Add(tabPage);
-                //    }
-                //}
-
-                //TrayData.SetTray(this.DDAxis.GetTrayInxt(int.Parse(Project.formula.Product.GetProd()["托盘编号"])));
                 if (StaticCon.GetSocketClint(RecipeCompiler.Instance.DataLinkName) != null)
                 {
                     StaticCon.GetSocketClint(RecipeCompiler.Instance.DataLinkName).PassiveEvent += DebugCompiler_PassiveEvent;
@@ -1023,7 +971,7 @@ namespace Vision2.Project.DebugF
                 {
                     if (RecipeCompiler.Instance.GetMes() != null)
                     {
-                        RecipeCompiler.Instance.GetMes().WrietMesAll(tray, ProcessControl.ProcessUser.QRCode, Product.ProductionName);
+                        RecipeCompiler.Instance.GetMes().WrietMesAll(tray,  Product.ProductionName);
                     }
                 }
             }
@@ -1069,25 +1017,32 @@ namespace Vision2.Project.DebugF
             try
             {
                 string dataStr = socket.GetEncoding().GetString(key);
-                DebugData(dataStr);
+
+                string[] striparr = dataStr.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
+                for (int i = 0; i < striparr.Length; i++)
+                {
+                    DebugData(striparr[i]);
+                }
             }
             catch (Exception ex) { }
             return "";
         }
 
-        //static ErosSocket.DebugPLC.Robot.TrayData TrayData;
+        
         public static void DebugData(string dataStr)
         {
             try
             {
+                if (dataStr.Length<=8)
+                {
+                    return;
+                }
                 if (RecipeCompiler.Instance.DataMinCont < dataStr.Length)
                 {
                     double trayID = 1;
                     double DataNumber = 0;
                     List<string> liastStr = new List<string>();
                     string qr = "";
-
-           
                     if (dataStr.Contains(";"))
                     {
                         string[] dataVat = dataStr.Trim(';').Split(';');
@@ -1095,6 +1050,7 @@ namespace Vision2.Project.DebugF
                         double.TryParse(dataVat[1].Trim('+').Trim(','), out DataNumber);
                         string[] dataStrTd = new string[dataVat.Length - 2];
                         Array.Copy(dataVat, 2, dataStrTd, 0, dataStrTd.Length);
+                        qr= DebugCompiler.GetTray(RecipeCompiler.Instance.TrayCont).GetTrayData().GetOneDataVale((int)trayID-1).PanelID;
                         AlarmText.AddTextNewLine("穴位" + trayID + "次数" + DataNumber + "数据长度" + dataStrTd.Length.ToString());
                         if (DataNumber == 1)
                         {
@@ -1131,6 +1087,7 @@ namespace Vision2.Project.DebugF
                             RecipeCompiler.Instance.Data.AddData(dataStr);
                         }
                     }
+
                     if (DataNumber == RecipeCompiler.Instance.DataNumber)
                     {
                         if (RecipeCompiler.Instance.TrayCont >= 0)
@@ -1138,22 +1095,19 @@ namespace Vision2.Project.DebugF
                             DebugCompiler.Instance.DDAxis.GetTrayInxt(RecipeCompiler.Instance.TrayCont).GetTrayData().SetNumberValue(RecipeCompiler.Instance.Data.ListDatV, (int)trayID);
                         }
                     }
-                    else
-                    {
-
-                    }
-                    string path = "3D" + DateTime.Now.ToString("HH时mm分ss秒") + ".txt";
-                    string pathImage = vision.Vision.GetSaveImageInfo(vision.Vision.GetRunNameVision().Name).SavePath
-                        + "\\" + DateTime.Now.ToString("yyyy年M月d日") + "\\" + Product.ProductionName + "\\" + qr + "\\";
+                    string path = "3D" + DateTime.Now.ToString("HH时mm分ss秒") + DataNumber + ".txt";
+                    string pathImage = vision.Vision.GetSaveImageInfo(vision.Vision.GetRunNameVision().Name).SavePath+"\\"
+                        + DateTime.Now.ToString("yyyy年M月d日") + "\\" + Product.ProductionName + "\\" + qr + "\\";
                     ErosProjcetDLL.Excel.Npoi.AddText(pathImage+ path, dataStr);
                 }
                 else
                 {
-                    ErosProjcetDLL.Project.AlarmText.AddTextNewLine("数据长度过短:目标长度"+ RecipeCompiler.Instance.DataMinCont+"接收长度"+dataStr.Length);
+                    AlarmText.AddTextNewLine("数据长度过短:目标长度"+ RecipeCompiler.Instance.DataMinCont+"接收长度"+dataStr.Length);
                 }
             }
             catch (Exception ex)
             {
+                AlarmText.AddTextNewLine("数据异常:"+ex.Message);
             }
         }
 
@@ -1184,17 +1138,32 @@ namespace Vision2.Project.DebugF
         /// </summary>
         public static bool CPMode;
 
+        Device_State Device_State = new Device_State();
+
+
         /// <summary>
-        /// 时间
+        /// 循环线程
         /// </summary>
         private void RunTime()
         {
-        }
+            while (true)
+            {
+                try
+                {
+                    Device_State.GetDeviceState();
+                    ProjectINI.ClassToJsonSave(Device_State, ProjectINI.TempPath + "\\设备状态");
+                }
+                catch (Exception)
+                {
+                }
+                Thread.Sleep(100);
+            }
+         }
 
         public static bool Buzzer;
 
         /// <summary>
-        /// 指示灯线程
+        /// 指示灯循环线程
         /// </summary>
         private void RunBtuun()
         {
@@ -1278,9 +1247,22 @@ namespace Vision2.Project.DebugF
                             DODI.WritDO(RunButton.RunButtenS, false);
                             //Thread.Sleep(500);
                         }
+                        else if(EquipmentStatus == EnumEquipmentStatus.运行中)
+                        {
+                            if (!this.DDAxis.Out[RunButton.yellow])
+                            {
+                                DODI.WritDO(RunButton.green, true);
+                                DODI.WritDO(RunButton.ANmen, true);
+                                DODI.WritDO(RunButton.yellow, false);
+                                DODI.WritDO(RunButton.RunButtenS, false);
+                                DODI.WritDO(RunButton.RunButtenS, true);
+                                DODI.WritDO(RunButton.StopButtenS, false);
+                            }
+                           
+                        }
                     }
                 }
-                Thread.Sleep(1);
+                Thread.Sleep(10);
             }
         }
 

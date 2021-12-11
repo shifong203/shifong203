@@ -54,8 +54,7 @@ namespace ErosSocket.ErosConLink
 
                 foreach (var item in base.KeysValues.DictionaryValueD.Values)
                 {
-                    if (item._Type == "Boolean") ;
-                    else
+                    if (item._Type != "Boolean") 
                     {
                         try
                         {

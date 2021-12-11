@@ -372,7 +372,7 @@ namespace Vision2.Project.formula
             if (!threadStop)
             {
                 return;
-                e.Cancel = true;//拦截，不响应操作
+         
             }
             off = true;
         }

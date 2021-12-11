@@ -29,16 +29,7 @@ namespace Vision2.Project.Mes
             Vision2.ErosProjcetDLL.Excel.Npoi.WriteF(path, ListText, ".dat");
         }
 
-        public override void WrietMes(UserFormulaContrsl userFormulaContrsl, string QrCode, string Product_Name)
-        {
-            try
-            {
-            }
-            catch (Exception ex)
-            {
-                Vision2.ErosProjcetDLL.Project.AlarmText.LogErr(ex.Message, "写入数据");
-            }
-        }
+
 
         public override bool ReadMes(out string resetMesString, TrayData trayData)
         {
@@ -50,7 +41,7 @@ namespace Vision2.Project.Mes
             throw new NotImplementedException();
         }
 
-        public override void WrietMesAll<T>(T datas, string QrCode, string Product_Name)
+        public override void WrietMesAll<T>(T datas,  string Product_Name)
         {
             WrietMes(datas as OneDataVale, Product_Name);
         }
@@ -73,7 +64,7 @@ namespace Vision2.Project.Mes
                 }
                 List<string> ListText = new List<string>();
                 string timeStr = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-                string timeLong = DateTime.Now.ToLongDateString();
+                string timeLong =  DateTime.Now.ToString("yyyy年M月d日");
                 string reset = "";
                 ListText.Clear();
                 if (trayData.OK)

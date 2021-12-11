@@ -156,7 +156,6 @@ namespace Vision2.vision.HalconRunFile.Controls
                 //welding_.R_area_compute_thr_min = (byte)numericUpDown2.Value;
                 //welding_.R_area_compute_thr_max = (byte)numericUpDown1.Value;
                 welding_.Compute_sele_area_min = (double)numericUpDownComputeSeleAreaMin.Value;
-
                 welding_.Compute_sele_area_max = (double)numericUpDownComputeSeleAreaMax.Value;
                 WeldingCCT.Number = (byte)numericUpDownNumber.Value;
                 welding_.NoNeedle_H_thr_min = (byte)numericUpDown9.Value;

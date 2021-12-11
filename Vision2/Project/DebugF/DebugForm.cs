@@ -937,12 +937,14 @@ namespace Vision2.Project.DebugF
                                 {
                                     this.dataGridView1.Rows[de].DefaultCellStyle.BackColor = Color.Red;
                                 }
-                                Thread.Sleep(1000);
                                 foreach (var item in Vision.GetHimageList().Keys)
                                 {
                                     if (this.dataGridView1.Rows[de].Cells[7].Value.ToString() == Vision.GetSaveImageInfo(item).AxisGrot)
                                     {
+                                      
                                         int det = int.Parse(this.dataGridView1.Rows[de].Cells[5].Value.ToString());
+                                        Vision.GetRunNameVision(item).SetCamPraegrm(det);
+                                        Thread.Sleep(1000);
                                         if (det <= 0)
                                         {
                                             Vision.GetRunNameVision(item).HobjClear();
@@ -960,6 +962,7 @@ namespace Vision2.Project.DebugF
                                             Vision.GetRunNameVision(item).ReadCamImage(this.dataGridView1.Rows[de].Cells[5].Value.ToString(), int.Parse(this.dataGridView1.Rows[de].Cells[5].Value.ToString()));
                                         }
                                         Vision.GetRunNameVision(item).ShowObj();
+                                        this.dataGridView1.Rows[e.RowIndex].DefaultCellStyle.BackColor = Color.Green;
                                         break;
                                     }
                                 }
@@ -2764,6 +2767,89 @@ namespace Vision2.Project.DebugF
             {
                 MessageBox.Show(ex.Message);
             }
+        }
+
+        private void toolStripButton11_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                isCot = true;
+                if (toolStripComboBox1.SelectedItem != null)
+                {
+                    List<XYZPoint> xes = new List<XYZPoint>();
+                    XYZPoint xYZPoint0 = productEX.GetPoint(toolStripComboBox1.SelectedItem.ToString());
+                    int index = productEX.GetPointIntdx(toolStripComboBox1.SelectedItem.ToString());
+                    if (xYZPoint0 != null)
+                    {
+                        List<XYZPoint> xYZPoints = new List<XYZPoint>();
+                        for (int i = index; i < productEX.DPoint.Count; i++)
+                        {
+                            xYZPoints.Add(productEX.DPoint[i]);
+                            if (productEX.DPoint[i].AxisGrabName == xYZPoint0.AxisGrabName)
+                            {
+                              
+                            }
+                        }
+                        XYZPoint xYZPoint1 = new XYZPoint();
+                        xYZPoint1.X = 0;
+                        xYZPoint1.Y = 0;
+                        xYZPoint1.Z = 0;
+                        xYZPoint1.U =0;
+                        xYZPoint1.AxisGrabName = xYZPoint0.AxisGrabName;
+                        xYZPoint1.ID = xYZPoint0.ID;
+                        xYZPoint1.isMove = xYZPoint0.isMove;
+                        xYZPoint1.Name = "PX1";
+                        xes.Add(xYZPoint1);
+                        for (int i = 0; i < xYZPoints.Count - 1; i++)
+                        {
+                          
+                            xYZPoint0 = xYZPoints[i];
+                            XYZPoint xYZPoint2 = xYZPoints[i + 1];
+                            xYZPoint1 = new XYZPoint();
+                            xYZPoint1.X = Math.Round(xYZPoint2.X - xYZPoint0.X, 2);
+                            xYZPoint1.Y = Math.Round(xYZPoint2.Y - xYZPoint0.Y, 2);
+                            xYZPoint1.Z = Math.Round(xYZPoint2.Z - xYZPoint0.Z, 2);
+                            xYZPoint1.U = Math.Round(xYZPoint2.U - xYZPoint0.U, 2);
+                            if (i == 0)
+                            {
+                                //xYZPoints[0].U
+                            }
+                            xYZPoint1.AxisGrabName = xYZPoint2.AxisGrabName;
+                            xYZPoint1.ID = xYZPoint2.ID;
+                            xYZPoint1.isMove = xYZPoint2.isMove;
+                            xYZPoint1.Name = "PX" + (i + 2);
+                            xes.Add(xYZPoint1);
+                        }
+                        productEX.Relativel.DicRelativelyPoint[listBox4.SelectedItem.ToString()].AddRange(xes);
+                        dataGridView2.Rows.Clear();
+                        if (RelativelyPoint != null)
+                        {
+                            for (int i = 0; i < RelativelyPoint.Count; i++)
+                            {
+                                int de = dataGridView2.Rows.Add();
+                                XYZPoint xYZPoint = RelativelyPoint[i];
+                                dataGridView2.Rows[de].Cells[0].Value = xYZPoint.Name;
+                                dataGridView2.Rows[de].Cells[1].Value = xYZPoint.X;
+                                dataGridView2.Rows[de].Cells[2].Value = xYZPoint.Y;
+                                dataGridView2.Rows[de].Cells[3].Value = xYZPoint.Z;
+                                dataGridView2.Rows[de].Cells[4].Value = xYZPoint.U;
+                                dataGridView2.Rows[de].Cells[5].Value = xYZPoint.ID;
+                                dataGridView2.Rows[de].Cells[6].Value = xYZPoint.isMove.ToString();
+                                dataGridView2.Rows[de].Cells[7].Value = xYZPoint.AxisGrabName;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("未选择起点");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            isCot = false;
         }
     }
 }

@@ -142,19 +142,24 @@ namespace Vision2.vision.HalconRunFile.Controls
                         HOperatorSet.HomMat2dInvert(home2d, out home2d);
                         if (hObject2 != null)
                         {
+
                             HOperatorSet.SmallestRectangle1(hObject1, out HTuple row1, out HTuple colu1, out HTuple row2, out HTuple colu2);
 
                             HWindID.SetImaage(hObject3);
                             HWindID.SetPerpetualPart(row1 - 100, colu1 - 100, row2 + 100, colu2 + 100);
                             HWindID.OneResIamge.AddObj(hObject1);
-                            HWindID.OneResIamge.AddObj(hObject4);
-                            HOperatorSet.AreaCenter(hObject4, out HTuple area, out HTuple row, out HTuple column);
-                            string textStr = "";
-                            for (int i2 = 0; i2 < row.Length; i2++)
+                            if (hObject4!=null)
                             {
-                                textStr = text[i2].ToString();
-                                HWindID.OneResIamge.AddImageMassage(row[i2] - 100, column[i2], textStr, ColorResult.blue, "true");
+                                HWindID.OneResIamge.AddObj(hObject4);
+                                HOperatorSet.AreaCenter(hObject4, out HTuple area, out HTuple row, out HTuple column);
+                                string textStr = "";
+                                for (int i2 = 0; i2 < row.Length; i2++)
+                                {
+                                    textStr = text[i2].ToString();
+                                    HWindID.OneResIamge.AddImageMassage(row[i2] - 100, column[i2], textStr, ColorResult.blue, "true");
+                                }
                             }
+                       
                         }
                     }
                     HWindID.ShowImage();

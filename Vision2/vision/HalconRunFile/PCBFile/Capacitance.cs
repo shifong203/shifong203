@@ -9,7 +9,7 @@ namespace Vision2.vision.HalconRunFile.PCBFile
     /// <summary>
     ///圆形电阻
     /// </summary>
-    public class Capacitance : RunProgram
+    public class Capacitance : RunProgram, InterfacePCBA
     {
         //public HObject TestingRoi = new HObject();
         public Capacitance()
@@ -27,7 +27,7 @@ namespace Vision2.vision.HalconRunFile.PCBFile
             return bPCBoJB;
         }
 
-        public void SaveThis(string path)
+        public new void SaveThis(string path)
         {
             HalconRun.ClassToJsonSavePath(this, path);
         }
@@ -72,8 +72,11 @@ namespace Vision2.vision.HalconRunFile.PCBFile
                 HOperatorSet.ReduceDomain(oneResultOBj.GetHalcon().GetImageOBJ(ImageTypeObj), this.AOIObj, out HObject hObject);
                 HOperatorSet.Threshold(hObject, out HObject Thresholdt, Periphery_ThreadMin, Periphery_ThreadMax);
                 HOperatorSet.Connection(Thresholdt, out Thresholdt);
-                HOperatorSet.SelectShape(Thresholdt, out Thresholdt, new HTuple("area", "circularity"), "and", new HTuple(150, 0.6), new HTuple(99999, 1));
-                HOperatorSet.AreaCenter(Thresholdt, out HTuple area, out HTuple row, out HTuple column);
+
+                //HOperatorSet.SelectShape(Thresholdt, out Thresholdt, "area", "and", 9050, 9999999);
+
+                HOperatorSet.SelectShape(Thresholdt, out HObject ERRd, new HTuple("area", "circularity"), "and", new HTuple(150, 0.6), new HTuple(99999999, 1));
+                HOperatorSet.AreaCenter(ERRd, out HTuple area, out HTuple row, out HTuple column);
                 if (row.Length == 1)
                 {
                     HOperatorSet.GenCircle(out ErrRoi, row, column, this.Inside_Circle);
@@ -92,12 +95,13 @@ namespace Vision2.vision.HalconRunFile.PCBFile
                     else
                     {
                         HOperatorSet.AngleLx(row, column, row2, colu2, out HTuple angle);
+                        Vision.Gen_arrow_contour_xld(out HObject hoarrow, row, column, row2, colu2);
                         Angle = angle.TupleDeg();
                         if (Angle < 0)
                         {
                             Angle = 360 + Angle;
                         }
-                        Vision.Gen_arrow_contour_xld(out HObject hoarrow, row, column, row2, colu2);
+                
                         if (Angle < AngleMin || Angle > AngleMax)
                         {
                             oneResultOBj.AddObj(this.AOIObj, ColorResult.red); NGNumber++;
@@ -110,7 +114,58 @@ namespace Vision2.vision.HalconRunFile.PCBFile
                         if (IsText) oneResultOBj.AddImageMassage(row, column, Angle);
                     }
                 }
-                else oneResultOBj.AddObj(this.AOIObj, ColorResult.red); NGNumber++;
+                else
+                {
+                    HOperatorSet.Threshold(hObject, out HObject Thresholdt2, Inside_Thread_Min, Inside_Thread_Max);
+                    HOperatorSet.Connection(Thresholdt2, out Thresholdt2);
+                    HOperatorSet.AreaCenter(Thresholdt2, out area, out row, out column);
+                    HOperatorSet.SelectShape(Thresholdt2, out Thresholdt2, new HTuple("area"), "and", new HTuple(area.TupleMax()-1), new HTuple(99999999));
+                    HOperatorSet.SmallestCircle(Thresholdt2, out HTuple rowTd, out HTuple columntd, out HTuple radiustD);
+                    HOperatorSet.GenCircle(out HObject hObject1, rowTd, columntd, radiustD-5);
+                    HOperatorSet.FillUp(Thresholdt2, out Thresholdt2);
+                    HOperatorSet.Difference(hObject1, Thresholdt2, out Thresholdt2);
+                    HOperatorSet.ReduceDomain(hObject, Thresholdt2, out HObject hObjectt);
+        
+                    HOperatorSet.Threshold(hObjectt, out HObject Thresholdt3, Periphery_ThreadMin, Periphery_ThreadMax);
+                    //HOperatorSet.ClosingCircle(Thresholdt3, out Thresholdt3, Erosion_Circle);
+                    //HOperatorSet.OpeningCircle(Thresholdt3, out Thresholdt3, 10);
+                    HOperatorSet.Connection(Thresholdt3, out Thresholdt3);
+       
+                   
+                    //HOperatorSet.SelectShape(Thresholdt, out Thresholdt, "area", "and", 9050, 9999999);
+
+
+                    HOperatorSet.AreaCenter(Thresholdt3, out  area, out  row, out  column);
+                    HOperatorSet.SelectShape(Thresholdt3, out  ERRd, new HTuple("area"), "and", new HTuple(area.TupleMax()-1), new HTuple(99999999));
+                    HOperatorSet.AreaCenter(ERRd, out  area, out  row, out  column);
+     
+                    Vision.Gen_arrow_contour_xld(out HObject hObjectarr, rowTd, columntd, row, column);
+                    oneResultOBj.AddObj(hObjectarr, ColorResult.yellow);
+                    HOperatorSet.AngleLx(rowTd, columntd, row, column, out HTuple angle);
+                    Angle = angle.TupleDeg();
+    
+                    if (Angle < 0)
+                    {
+                        Angle = 360 + Angle;
+                    }
+
+                    if (Angle < AngleMin || Angle > AngleMax)
+                    {
+                        oneResultOBj.AddObj(hObject1, ColorResult.red); NGNumber++;
+                        oneResultOBj.AddImageMassage(rowTd+40, columntd, Angle);
+                    }
+                    else
+                    {
+                        oneResultOBj.AddObj(hObject1, ColorResult.green);
+                        if (IsRoi) oneResultOBj.AddObj(this.AOIObj, ColorResult.blue);
+
+                    }
+          
+   
+                }
+   
+
+                hObject.Dispose();
                 if (NGNumber != 0)
                 {
                     RsetBool = false;
@@ -119,10 +174,13 @@ namespace Vision2.vision.HalconRunFile.PCBFile
                 {
                     RsetBool = true;
                 }
+                return RsetBool;
             }
             catch (Exception ex)
             {
             }
+            oneResultOBj.AddObj(this.AOIObj, ColorResult.red);
+            NGNumber++;
             return RsetBool;
         }
     }

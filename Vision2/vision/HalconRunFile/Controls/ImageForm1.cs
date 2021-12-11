@@ -185,6 +185,18 @@ namespace Vision2.vision.HalconRunFile.Controls
             }
         }
 
+        private void toolStripButton2_Click_1(object sender, EventArgs e)
+        {
+            try
+            {
+
+
+            }
+            catch (Exception)
+            {
+            }
+        }
+
         private void toolStripCheckbox1_Click(object sender, EventArgs e)
         {
             try

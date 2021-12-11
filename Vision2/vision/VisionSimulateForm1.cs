@@ -22,6 +22,16 @@ namespace Vision2.vision
         public class DebugI
         {
             public string ImagePath { get; set; } = "";
+            /// <summary>
+            /// 读取深度学习图片
+            /// </summary>
+            public string ImageDeepLearning { get; set; } = "";
+            /// <summary>
+            /// 保存图片地址
+            /// </summary>
+            public string ImageDeepLearningSavePaht { get; set; } = "";
+
+
         }
 
      

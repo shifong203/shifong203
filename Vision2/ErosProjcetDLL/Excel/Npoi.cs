@@ -122,7 +122,7 @@ namespace Vision2.ErosProjcetDLL.Excel
 
             Stream stream = File.OpenRead(filePath);
             DataTable dt = new DataTable();
-            IWorkbook workbook;
+            IWorkbook workbook = null;
             try
             {
                 //xls使用HSSFWorkbook类实现，xlsx使用XSSFWorkbook类实现
@@ -131,10 +131,15 @@ namespace Vision2.ErosProjcetDLL.Excel
                     //把xls文件中的数据写入wk中
                     workbook = new HSSFWorkbook(stream);
                 }
-                else
+                else if (filePath.EndsWith(".xlsx"))
                 {
                     //把xlsx文件中的数据写入wk中
                     workbook = new XSSFWorkbook(stream);
+                }
+                else
+                {
+                    Project.AlarmText.AddTextNewLine("读取失败：" + filePath );
+                    return null  ;
                 }
 
                 stream.Close();
@@ -206,7 +211,8 @@ namespace Vision2.ErosProjcetDLL.Excel
             catch (Exception ex)
             {
                 dt = null;
-                ErosProjcetDLL.Project.AlarmText.AddTextNewLine(ex.Message);
+
+                ErosProjcetDLL.Project.AlarmText.AddTextNewLine("读取"+ filePath + ex.Message);
             }
             finally
             {
@@ -396,34 +402,7 @@ namespace Vision2.ErosProjcetDLL.Excel
                     }
                     tet += text[i] + ',';
                 }
-
                 File.AppendAllText(path, tet + Environment.NewLine);
-                return;
-                //创建文件流写入对象,绑定文件流对象
-                //创建数据对象
-                StringBuilder sb = new StringBuilder();
-                string[] ste = new string[] { };
-                if (System.IO.File.Exists(path))//文件不存在时,创建新文件,并写入文件标题
-                {
-                    ste = File.ReadAllLines(path);
-                }
-                FileStream fs = new FileStream(path, FileMode.OpenOrCreate, FileAccess.ReadWrite);
-
-                StreamWriter sw = new StreamWriter(fs, Encoding.UTF8);
-                //创建文件流对象
-
-                for (int i = 0; i < ste.Length; i++)
-                {
-                    sb.AppendLine(ste[i]);
-                }
-
-                //sb.Append("RunTime").Append(",").Append("BarCode").Append(",").Append("OverStation");
-                sb.AppendLine(tet);
-                //把标题内容写入到文件流中
-                sw.Write(sb);
-                sw.Flush();
-                sw.Close();
-                fs.Close();
             }
             catch (Exception ex)
             {
@@ -488,7 +467,7 @@ namespace Vision2.ErosProjcetDLL.Excel
         }
 
         /// <summary>
-        ///
+        ///写文本到文件，默认CSV格式
         /// </summary>
         /// <param name="path"></param>
         /// <param name="text"></param>

@@ -35,11 +35,11 @@ namespace ErosSocket
                     Link.PassiveEvent -= Socket_PassiveEvent;
                     return "";
                 }
-                if (comboBox1.SelectedItem == null)
+                if (comboBox2.SelectedItem == null)
                 {
-                    comboBox1.SelectedItem = Link.GetEncoding().HeaderName;
+                    comboBox2.SelectedItem = Link.GetEncoding().HeaderName;
                 }
-                txtR.AppendText(Encoding.GetEncoding(comboBox1.SelectedItem.ToString()).GetString(key) + Environment.NewLine);
+                txtR.AppendText(Encoding.GetEncoding(comboBox2.SelectedItem.ToString()).GetString(key) + Environment.NewLine);
             }
             catch (Exception)
             {
@@ -60,13 +60,13 @@ namespace ErosSocket
 
                 UpDATA();
                 comboBoxLinkType.SelectedIndex = 0;
-                comboBox1.Items.Clear();
+             
                 comboBox2.Items.Clear();
-                comboBox1.Items.AddRange(SocketClint.GetEncodingNamese.ToArray());
+             
                 comboBox2.Items.AddRange(SocketClint.GetEncodingNamese.ToArray());
                 if (Link != null)
                 {
-                    comboBox1.SelectedItem = Link.GetEncoding().HeaderName;
+                  
                     txtSocketName.Text = Link.Name;
                     comboBox2.SelectedItem = Link.GetEncoding().HeaderName;
                     comboBoxLinkType.SelectedItem = Link.NetType;
@@ -97,10 +97,12 @@ namespace ErosSocket
                 }
                 if (Link == null)
                 {
+                    Link = SocketClint.NewTypeLink(comboBoxLinkType.Text);
+                    Link.PassiveEvent += Socket_PassiveEvent;
                 }
-                Link = SocketClint.NewTypeLink(comboBoxLinkType.Text);
+           
 
-                Link.PassiveEvent += Socket_PassiveEvent;
+      
                 Link.Name = txtSocketName.Text;
                 Link.IP = txtOutIP.Text;
                 Link.Port = (ushort)protOut.Value;
@@ -210,12 +212,13 @@ namespace ErosSocket
 
         private void button2_Click(object sender, EventArgs e)
         {
-            txtR.Text = "";
+  
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
             TXTS.Text = "";
+            txtR.Text = "";
         }
 
         private void toolStripButton3_Click(object sender, EventArgs e)
@@ -243,6 +246,22 @@ namespace ErosSocket
         private void button2_Click_1(object sender, EventArgs e)
         {
             Link.initialization();
+        }
+
+        private void toolStripButton2_Click(object sender, EventArgs e)
+        {
+            try
+            {
+
+                Link .OnEventArge(Encoding.GetEncoding(comboBox2.SelectedItem.ToString())
+                    .GetBytes(richTextBox1.Text), null);
+            ;
+
+            }
+            catch (Exception)
+            {
+
+            }
         }
     }
 }

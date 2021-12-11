@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Vision2.ErosProjcetDLL.Project;
 using Vision2.vision.HalconRunFile.RunProgramFile;
 
 namespace Vision2.Project.formula
@@ -38,8 +39,6 @@ namespace Vision2.Project.formula
                 if (double.TryParse(date[i], out double result))
                 {
                     lisDouble.Add(result);
-                    //ListDatV[i].ValueStrs=
-                    //ListDatV.Add(result);
                 }
             }
             AddData(lisDouble);
@@ -97,7 +96,6 @@ namespace Vision2.Project.formula
             {
                 idex += ListDatV[i].doubleV.Count;
                 length2 += ListDatV[i].Reference_Name.Count;
-          
             }
             if (length2<= idex)
             {
@@ -146,12 +144,17 @@ namespace Vision2.Project.formula
             int idex2 = index;
             for (int i = index; i < ListDatV.Count; i++)
             {
-                if (ListDatV[i].ValueStrs.Count >= ListDatV[i].Reference_Name.Count)
+                if (ListDatV[i].ValueStrs.Count >= ListDatV[i].Reference_ValueMax.Count)
                 {
                     idex2++;
                 }
                 else
                 {
+                    if (ListDatV[i].ValueStrs.Count>=1)
+                    {
+                        //idex2++;
+                    }
+                    //idex2++;
                     break;
                 }
             }
@@ -168,6 +171,10 @@ namespace Vision2.Project.formula
                 if (ListDatV[idex2].Reference_Name.Count <= idex)
                 {
                     //break;
+                }
+                else if (ListDatV[idex2].Reference_Name.Count > datas.Count)
+                {
+
                 }
                 if (ListDatV[idex2].ValueStrs.Count <= idex)
                 {
@@ -216,7 +223,6 @@ namespace Vision2.Project.formula
             {
                 ListDatV[i].Clear();
             }
-
             EventAddValue?.Invoke(ListDatV);
         }
 
@@ -775,9 +781,22 @@ namespace Vision2.Project.formula
                 string[] vs = RunNameOBJ.Split('.');
                 if (vs.Length == 2)
                 {
-                    oneRObj.NGROI = RecipeCompiler.GetProductEX().Key_Navigation_Picture[vs[0]].KeyRoi[vs[1]].Clone();
-                    oneRObj.ROI = RecipeCompiler.GetProductEX().Key_Navigation_Picture[vs[0]].KeyRoi[vs[1]].Clone();
-                    //oneRObj.NGText = vs[1];
+                    if (RecipeCompiler.GetProductEX().Key_Navigation_Picture.ContainsKey(vs[0]))
+                    {
+                        if (RecipeCompiler.GetProductEX().Key_Navigation_Picture[vs[0]].KeyRoi.ContainsKey(vs[1]))
+                        {
+                            oneRObj.NGROI = RecipeCompiler.GetProductEX().Key_Navigation_Picture[vs[0]].KeyRoi[vs[1]].Clone();
+                            oneRObj.ROI = RecipeCompiler.GetProductEX().Key_Navigation_Picture[vs[0]].KeyRoi[vs[1]].Clone();
+                        }
+                        else
+                        {
+                            AlarmText.AddTextNewLine("不存在导航图坐标:" + vs[1]);
+                        }
+                    }
+                    else
+                    {
+                        AlarmText.AddTextNewLine("不存在导航图:"+ vs[0]);
+                    }
                 }
             }
             oneRObj.aOK = GetRsetOK();

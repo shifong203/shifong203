@@ -185,14 +185,14 @@ namespace Vision2.vision.HalconRunFile.Controls
         /// 最大值的被选中标志
         /// </summary>
         bool IsMaxValSelected = false;
-        /// <summary>
-        /// 最大值在变化中的标志
-        /// </summary>
-        bool IsMaxValChanging = false;
-        /// <summary>
-        /// 最小值在变化中的标志
-        /// </summary>
-        bool IsMinValChanging = false;
+        ///// <summary>
+        ///// 最大值在变化中的标志
+        ///// </summary>
+        //bool IsMaxValChanging = false;
+        ///// <summary>
+        ///// 最小值在变化中的标志
+        ///// </summary>
+        //bool IsMinValChanging = false;
         /// <summary>
         /// 二值化变化事件
         /// </summary>
@@ -525,8 +525,8 @@ namespace Vision2.vision.HalconRunFile.Controls
         private void chart1_MouseUp(object sender, MouseEventArgs e)
         {
             IsMouseDown = false;
-            IsMaxValChanging = false;
-            IsMinValChanging = false;
+            //IsMaxValChanging = false;
+            //IsMinValChanging = false;
             MinValline.StripWidth = 1;
             MaxValline.StripWidth = 1;
             //Graphics Grap = chart1.CreateGraphics();
@@ -552,8 +552,8 @@ namespace Vision2.vision.HalconRunFile.Controls
 
             IsMouseDown = false;
             this.Cursor = Cursors.Default;
-            IsMaxValChanging = false;
-            IsMinValChanging = false;
+            //IsMaxValChanging = false;
+            //IsMinValChanging = false;
             MinValline.StripWidth = 1;
             MaxValline.StripWidth = 1;
 

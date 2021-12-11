@@ -42,6 +42,21 @@ namespace Vision2.vision
             try
             {
                 checkedListBox1.Items.Clear();
+                ErosProjcetDLL.UI.DataGridViewF.StCon.AddCon(dataGridView1);
+
+                foreach (var item in Vision.GetHimageList())
+                {
+                    if (!Vision.Instance.VisionList.ContainsKey(item.Key))
+                    {
+                        Vision.Instance.VisionList.Add(item.Key, true);
+                    }
+                }
+                foreach (var item in Vision.Instance.VisionList)
+                {
+                  int dset=  dataGridView1.Rows.Add();
+                    dataGridView1.Rows[dset].Cells[0].Value = item.Key;
+                    dataGridView1.Rows[dset].Cells[1].Value = item.Value;
+                }
                 foreach (var item in Vision.Instance.VisionPr)
                 {
                     checkedListBox1.Items.Add(item.Key, item.Value);

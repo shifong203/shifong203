@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace Vision2.Project.formula
@@ -14,6 +15,7 @@ namespace Vision2.Project.formula
             InitializeComponent();
             checkBox1.Checked = RecipeCompiler.Instance.Data.IsChe;
             ErosProjcetDLL.UI.DataGridViewF.StCon.AddCon(dataGridView1);
+            ErosProjcetDLL.UI.DataGridViewF.StCon.AddCon(dataGridView2);
             dataGridView1.CellValueChanged += DataGridView1_CellValueChanged;
             dataGridView1.CurrentCellDirtyStateChanged += DataGridView1_CurrentCellDirtyStateChanged;
             try
@@ -190,14 +192,6 @@ namespace Vision2.Project.formula
                         {
                             ListData.ListDatV[i].RunNameOBJ = (dataGridView1.Rows[i].Cells[1].Value.ToString());
                         }
-                        //if (dataGridView1.Rows[i].Cells[2].Value!=null)
-                        //{
-                        //    ListData.PointXID[i] = (dataGridView1.Rows[i].Cells[2].Value.ToString());
-                        //}
-                        //if (dataGridView1.Rows[i].Cells[3].Value != null)
-                        //{
-                        //    ListData.PointYID[i] = (dataGridView1.Rows[i].Cells[3].Value.ToString());
-                        //}
                     }
                 }
             }
@@ -229,20 +223,7 @@ namespace Vision2.Project.formula
                     dataGridView1.Rows[i].Cells[1].Value = ListData.ListDatV[i].RunNameOBJ;
                     dataGridView1.Rows[i].Cells[0].Tag = ListData.ListDatV[i];
                 }
-                //for (int i = 0; i < ListData.ListDatV.Count; i++)
-                //{
-                //    if (ListData.ListDatV.Count > i)
-                //    {
-                //        if (!ListData.ListDatV[i].GetRset())
-                //        {
-                //            dataGridView1.Rows[i].Cells[0].Style.BackColor = Color.Red;
-                //        }
-                //        else
-                //        {
-                //            dataGridView1.Rows[i].Cells[0].Style.BackColor = Color.Green;
-                //        }
-                //    }
-                //}
+
             }
             catch (Exception ex)
             {
@@ -722,46 +703,50 @@ namespace Vision2.Project.formula
                 iscavet = true;
                 dataGridView2.Visible = true;
                 dataGridView2.Rows.Clear();
-                data = dataGridView1.Rows[e.RowIndex].Cells[0].Tag as DataMinMax;
-                if (data.Reference_Name.Count != 0)
+                if (e.RowIndex>=0)
                 {
-                    int cont = data.Reference_Name.Count;
-                    if (data.ValueStrs.Count > cont)
+                    data = dataGridView1.Rows[e.RowIndex].Cells[0].Tag as DataMinMax;
+                    if (data.Reference_Name.Count != 0)
                     {
-                        cont = data.ValueStrs.Count;
-                    }
-                    dataGridView2.Rows.Add(cont);
-                    for (int i = 0; i < cont; i++)
-                    {
-                        if (data.Reference_Name.Count > i)
+                        int cont = data.Reference_Name.Count;
+                        if (data.ValueStrs.Count > cont)
                         {
-                            dataGridView2.Rows[i].Cells[0].Value = data.Reference_Name[i];
-                            dataGridView2.Rows[i].Cells[1].Value = data.Reference_ValueMin[i];
-                            dataGridView2.Rows[i].Cells[3].Value = data.Reference_ValueMax[i];
-                            int resInt = data.GetRsetNumber(i);
-                            if (resInt == 0)
-                            {
-                                //dataGridView2.Rows[i].Cells[2].Style.BackColor = Color.Red;
-                            }
-                            else if (resInt == -1)
-                            {
-                                dataGridView2.Rows[i].Cells[2].Style.BackColor = Color.Red;
-                            }
-                            else if (resInt == -2)
-                            {
-                                dataGridView2.Rows[i].Cells[1].Style.BackColor = Color.Red;
-                            }
-                            else if (resInt == -3)
-                            {
-                                dataGridView2.Rows[i].Cells[3].Style.BackColor = Color.Red;
-                            }
+                            cont = data.ValueStrs.Count;
                         }
-                        if (data.ValueStrs.Count > i)
+                        dataGridView2.Rows.Add(cont);
+                        for (int i = 0; i < cont; i++)
                         {
-                            dataGridView2.Rows[i].Cells[2].Value = data.ValueStrs[i];
+                            if (data.Reference_Name.Count > i)
+                            {
+                                dataGridView2.Rows[i].Cells[0].Value = data.Reference_Name[i];
+                                dataGridView2.Rows[i].Cells[1].Value = data.Reference_ValueMin[i];
+                                dataGridView2.Rows[i].Cells[3].Value = data.Reference_ValueMax[i];
+                                int resInt = data.GetRsetNumber(i);
+                                if (resInt == 0)
+                                {
+                                    //dataGridView2.Rows[i].Cells[2].Style.BackColor = Color.Red;
+                                }
+                                else if (resInt == -1)
+                                {
+                                    dataGridView2.Rows[i].Cells[2].Style.BackColor = Color.Red;
+                                }
+                                else if (resInt == -2)
+                                {
+                                    dataGridView2.Rows[i].Cells[1].Style.BackColor = Color.Red;
+                                }
+                                else if (resInt == -3)
+                                {
+                                    dataGridView2.Rows[i].Cells[3].Style.BackColor = Color.Red;
+                                }
+                            }
+                            if (data.ValueStrs.Count > i)
+                            {
+                                dataGridView2.Rows[i].Cells[2].Value = data.ValueStrs[i];
+                            }
                         }
                     }
                 }
+             
             }
             catch (Exception ex)
             {
@@ -927,6 +912,32 @@ namespace Vision2.Project.formula
             {
                 MessageBox.Show(ex.Message);
             }
+        }
+
+        private void button11_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string[] striparr = richTextBox1.Text.Split(new string[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
+
+                striparr = striparr.Where(s => !string.IsNullOrEmpty(s)).ToArray();
+
+               
+
+            List<string> striparrTd = richTextBox1.Text.Split(new string[] { Environment.NewLine},
+                StringSplitOptions.RemoveEmptyEntries).ToList();
+
+                //striparr = striparr.Where(s => !string.IsNullOrEmpty(s)).ToList();
+                for (int i = 0; i < striparr.Length; i++)
+                {
+                    DebugF.DebugCompiler.DebugData(striparr[i]);
+                }
+               
+            }
+            catch (Exception)
+            {
+            }
+ 
         }
     }
 }

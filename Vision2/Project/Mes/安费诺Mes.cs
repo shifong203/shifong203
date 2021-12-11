@@ -10,7 +10,7 @@ namespace Vision2.Project.Mes
 {
     public class 安费诺Mes : MesInfon
     {
-        private AmphenolMES.mespublic mespubl = new mespublic();
+        private mespublic mespubl = new mespublic();
 
         public override event IMesData.ResTMesd ResDoneEvent;
 
@@ -77,21 +77,19 @@ namespace Vision2.Project.Mes
             return false;
         }
 
-        public override void WrietMes(UserFormulaContrsl userFormulaContrsl, string QRCODE, string Product_Name)
-        {
-        }
+      
 
         public override void WrietMes(OneDataVale data, string Product_Name)
         {
         }
 
-        public override void WrietMesAll<T>(T data, string QRCODE, string Product_Name)
+        public override void WrietMesAll<T>(T data,  string Product_Name)
         {
             try
             {
                 int restOK = Convert.ToInt32(data);
                 //AmphenolMES.mespublic.a
-                mespubl.AMP_SaveProcedure(QRCODE, restOK, RecipeCompiler.Instance.MesDa.ResCode, RecipeCompiler.Instance.MesDa.UserCode, RecipeCompiler.Instance.MesDa.SWVesion, RecipeCompiler.Instance.MesDa.ecgcode, RecipeCompiler.Instance.MesDa.Ecode, out int outruResult, out string outerrorinfo);
+                mespubl.AMP_SaveProcedure(ProcessControl.ProcessUser.QRCode, restOK, RecipeCompiler.Instance.MesDa.ResCode, RecipeCompiler.Instance.MesDa.UserCode, RecipeCompiler.Instance.MesDa.SWVesion, RecipeCompiler.Instance.MesDa.ecgcode, RecipeCompiler.Instance.MesDa.Ecode, out int outruResult, out string outerrorinfo);
                 if (outruResult == 1)
                 {
                     ErosProjcetDLL.Project.AlarmText.AddTextNewLine("结果ok:" + outerrorinfo, Color.Green);

@@ -8,6 +8,7 @@ using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Vision2.ErosProjcetDLL.Project;
 using Vision2.ErosProjcetDLL.UI.PropertyGrid;
 using Vision2.Project.DebugF;
 using Vision2.Project.formula;
@@ -18,7 +19,58 @@ namespace Vision2.Project.Mes
     {
         public MesData MesData { get; set; } = new MesData();
 
+     
 
+        /// <summary>
+        /// 写入产品CRD数据
+        /// </summary>
+        /// <param name="oneDataVale"></param>
+        public override void WrietDATA(OneDataVale oneDataVale)
+        {
+            try
+            {
+                string path = RecipeCompiler.Instance.DataPaht + "\\CRD数据\\" + DateTime.Now.ToString("yyyyMMdd") + ".CSV";
+                if (!File.Exists(path))
+                {
+                    List<string> columnText = new List<string>() { "NO","Line", "Customer","Mode","	Defect Type","Location" ,"Serial Number","Result"   ,"Date" ,
+                        "Start Time"    ,"End Time","User", "Placement Route Step","位置","机检"};
+                    ErosProjcetDLL.Excel.Npoi.AddWriteCSV(path, columnText.ToArray());
+                }
+                int no = 0;
+                foreach (var item in oneDataVale.GetAllCompOBJs().DicOnes)
+                {
+                    no++;
+                    List<string> data = new List<string>();
+                    data.Add(no.ToString());
+                    data.Add(MesData.Line);
+                    data.Add(MesData.Customer);
+                    data.Add(oneDataVale.Product_Name);
+                    data.Add(item.Value.RestText);
+                    data.Add(item.Value.ComponentID);
+                    data.Add(oneDataVale.PanelID);
+                    if (item.Value.aOK)
+                    {
+                        data.Add("Pass");
+                    }
+                    else
+                    {
+                        data.Add("Fail");
+                    }
+                    data.Add(DateTime.Now.ToString("d"));
+                    data.Add(oneDataVale.StrTime.ToString("T"));
+                    data.Add(oneDataVale.EndTime.ToString("T"));
+                    data.Add(ProjectINI.In.UserName);
+                    data.Add(DebugCompiler.Instance.DeviceNameText);
+                    data.Add(oneDataVale.TrayLocation.ToString());
+                    data.Add(item.Value.NGText);
+                    ErosProjcetDLL.Excel.Npoi.AddWriteCSV(path,
+                      data.ToArray());
+                }
+
+                //ErosProjcetDLL.Excel.Npoi.AddWriteCSV(pathEx, dat.ToArray());
+            }
+            catch (Exception) { }
+        }
         private cnshah0tis01.MES_TIS webservice;
 
         public cnshah0tis01.MES_TIS GetMES_TIS()
@@ -110,106 +162,12 @@ namespace Vision2.Project.Mes
             //return ReadMes(out resetMesString, DebugCompiler.Instance.DDAxis.GetTrayInxt(0).GetTrayData().GetDataVales()[0].PanelID);
         }
 
-        public override void WrietMes(UserFormulaContrsl userFormulaContrsl, string QRCODE, string Product_Name)
-        {
-            List<string> ListText = new List<string>();
-
-            ListText.Add("S");
-            ListText.Add("C" + MesData.Customer);
-            ListText.Add("I" + MesData.DiviSion);
-            ListText.Add("N" + MesData.Testre_Name);
-            ListText.Add("P" + MesData.Test_Process);
-            ListText.Add("TF");
-            //ListText.Add(RecipeCompiler.Instance.MesDatat.CRD);
-            ListText.Add("O" + ErosProjcetDLL.Project.ProjectINI.In.UserName);
-            ListText.Add("[" + DebugF.DebugCompiler.Instance.DDAxis.StartTime.ToString("yyyy-MM-dd HH:mm:ss"));
-            ListText.Add("]" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
-
-            string sn = "";
-            string strTimed = DateTime.Now.ToString("yyyy-MM-dd");
-            string pathEx = this.DataPaht + "//" + strTimed + ".xls";
-            if (!File.Exists(pathEx))
-            {
-                List<string> columnText = new List<string>() { "进站时间", "结束时间", "状态", "SN" };
-                for (int i = 0; i < RecipeCompiler.Instance.Data.ListDatV.Count; i++)
-                {
-                    columnText.Add(RecipeCompiler.Instance.Data.ListDatV[i].ComponentName);
-                }
-                ErosProjcetDLL.Excel.Npoi.AddWriteCSV(pathEx, columnText.ToArray());
-            }
-            List<string> dat = new List<string>();
-            dat.Add(DebugCompiler.Instance.DDAxis.StartTime.ToString("HH:mm:ss"));
-            dat.Add(DateTime.Now.ToString("HH:mm:ss"));
-
-            TrayRobot trayRobot = DebugF.IO.TrayDataUserControl.GetTray();
-            if (trayRobot != null)
-            {
-                if (DebugF.IO.TrayDataUserControl.GetTray().GetTrayData().OK)
-                {
-                    dat.Add("OK");
-                }
-                else
-                {
-                    dat.Add("NG");
-                }
-            }
-            ErosProjcetDLL.Excel.Npoi.AddWriteCSV(pathEx, dat.ToArray());
-            if (trayRobot != null)
-            {
-                TrayData trayData = trayRobot.GetTrayData();
-                for (int i = 0; i < trayData.GetDataVales().Count; i++)
-                {
-                    if (trayData.GetDataVales()[i] != null)
-                    {
-                        if (trayData.GetDataVales()[i].PanelID != null && trayData.GetDataVales()[i].PanelID != "")
-                        {
-                            sn = trayData.GetDataVales()[i].PanelID;
-                            if (sn == null || sn == "")
-                            {
-                                ErosProjcetDLL.Project.AlarmListBoxt.AddAlarmText(new ErosProjcetDLL.Project.AlarmText.alarmStruct()
-                                { Name = "ID未读取", Text = "ID未读取到" });
-                            }
-                            else
-                            {
-                                ListText[0] = "S" + sn;
-                                dat = new List<string>();
-                                dat.Add("");
-                                dat.Add((i + 1).ToString());
-                                if (trayData.GetDataVales()[i].OK)
-                                {
-                                    ListText[5] = "TP";
-                                    dat.Add("OK");
-                                }
-                                else
-                                {
-                                    ListText[5] = "TF";
-                                    dat.Add("NG");
-                                }
-                                dat.Add(sn);
-                                //ListText[6] = RecipeCompiler.Instance.MesDatat.CRD + (i + 1);
-                                string paht = ProcessControl.ProcessUser.Instancen.ExcelPath + "//" + sn + DateTime.Now.ToString(" yyyy-MM-dd-HH-mm-ss");
-                                ErosProjcetDLL.Excel.Npoi.WriteF(paht, ListText, ".txt");
-                                List<double> valuse = trayData.GetDataVales()[i].Data as List<double>;
-                                if (valuse != null)
-                                {
-                                    for (int j = 0; j < valuse.Count; j++)
-                                    {
-                                        dat.Add(valuse[j].ToString());
-                                    }
-                                }
-                                ErosProjcetDLL.Excel.Npoi.AddWriteCSV(pathEx, dat.ToArray());
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
+       
         public override void WrietMes(OneDataVale data, string Product_Name)
         {
             if (data.PanelID == null || data.PanelID == "")
             {
-                ErosProjcetDLL.Project.AlarmListBoxt.AddAlarmText(new ErosProjcetDLL.Project.AlarmText.alarmStruct() { Text = "Mes信息缺少SN", Name = "Mes" });
+                AlarmListBoxt.AddAlarmText(new AlarmText.alarmStruct() { Text = "Mes信息缺少SN", Name = "Mes" });
                 return;
             }
             List<string> ListText = new List<string>();
@@ -234,14 +192,14 @@ namespace Vision2.Project.Mes
 
             if (data.OK) ListText.Add("TP");
             else ListText.Add("TF");
-            ListText.Add("O" + ErosProjcetDLL.Project.ProjectINI.In.UserID);
+            ListText.Add("O" + ProjectINI.In.UserID);
             ListText.Add("L" + MesData.Line);
             ListText.Add("p" + MesData.Site);
             ListText.Add("[" + DebugCompiler.Instance.DDAxis.StartTime.ToString("yyyy-MM-dd HH:mm:ss"));
             ListText.Add("]" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
 
             string strTimed = data.EndTime.ToString(MesData.FileTimeName);
-            string pathEx = this.DataPaht + "//" + data.EndTime.ToString("yyyyMMdd") + ".csv";
+            string pathEx = RecipeCompiler.Instance.DataPaht + "//" + data.EndTime.ToString("yyyyMMdd") + ".csv";
             if (!File.Exists(pathEx))
             {
                 List<string> columnText = new List<string>() { "进站时间", "结束时间", "状态", "SN", "托盘位" };
@@ -282,7 +240,7 @@ namespace Vision2.Project.Mes
             }
             ErosProjcetDLL.Excel.Npoi.AddWriteCSV(pathEx, dat.ToArray());
             string paht = data.PanelID + strTimed;
-            if (ErosProjcetDLL.Project.ProjectINI.DebugMode)
+            if (ProjectINI.DebugMode)
             {
                 paht = "DEBUG-" + paht;
             }
@@ -291,7 +249,7 @@ namespace Vision2.Project.Mes
                 ErosProjcetDLL.Excel.Npoi.WriteF(ProcessControl.ProcessUser.Instancen.ExcelPath + "//" + paht,
                     ListText, RecipeCompiler.Instance.Filet);
             }
-            ErosProjcetDLL.Excel.Npoi.WriteF(this.DataPaht + "\\" + DateTime.Now.ToString("yyyyMMdd") + "//" + paht,
+            ErosProjcetDLL.Excel.Npoi.WriteF(RecipeCompiler.Instance.DataPaht + "\\" + DateTime.Now.ToString("yyyyMMdd") + "//" + paht,
                 ListText, RecipeCompiler.Instance.Filet);
         }
 
@@ -300,8 +258,6 @@ namespace Vision2.Project.Mes
             List<int> trayID = new List<int>();
             List<string> MesDatas = new List<string>();
             List<string> listResult = new List<string>();
-            List<string> dat = new List<string>();
-            List<bool> Resmes = new List<bool>();
             string sn = "";
             try
             {
@@ -311,43 +267,9 @@ namespace Vision2.Project.Mes
                 MesDatas.Add("N" + MesData.Testre_Name);
                 MesDatas.Add("P" + MesData.Test_Process);
                 MesDatas.Add("TF");
-                MesDatas.Add("O" + ErosProjcetDLL.Project.ProjectINI.In.UserName);
+                MesDatas.Add("O" + ProjectINI.In.UserName);
                 MesDatas.Add("[" + DebugCompiler.Instance.DDAxis.StartTime.ToString("yyyy-MM-dd HH:mm:ss"));
                 MesDatas.Add("]" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
-                string strTimed = DateTime.Now.ToString("D");
-                string pathEx = this.DataPaht + "\\" + strTimed + ".csv";
-                if (!File.Exists(pathEx))
-                {
-                    List<string> columnText = new List<string>() { "StratTime", "EndTime", "status", "SN", "机检", "Mes结果", "Fvt结果" };
-                    ErosProjcetDLL.Excel.Npoi.AddWriteCSV(pathEx, columnText.ToArray());
-                }
-                dat.Add(DebugCompiler.Instance.DDAxis.StartTime.ToString("HH:mm:ss"));
-                dat.Add(DateTime.Now.ToString("HH:mm:ss"));
-                if (tray.OK)
-                {
-                    dat.Add("OK");
-                }
-                else
-                {
-                    dat.Add("NG");
-                }
-                if (tray.Done)
-                {
-                    dat.Add("完成");
-                }
-                else
-                {
-                    dat.Add("未完成");
-                }
-                if (tray.UserRest)
-                {
-                    dat.Add("人工处理");
-                }
-                else
-                {
-                    dat.Add("人工未处理");
-                }
-                ErosProjcetDLL.Excel.Npoi.AddWriteCSV(pathEx, dat.ToArray());
                 List<string> listSn = new List<string>();
                 int ErrBool = 0;
                 string err = "";
@@ -361,8 +283,9 @@ namespace Vision2.Project.Mes
                         sn = tray.GetDataVales()[i].PanelID;
                         if (sn == null || sn == "")
                         {
-                            ErosProjcetDLL.Project.AlarmListBoxt.AddAlarmText(
-                                new ErosProjcetDLL.Project.AlarmText.alarmStruct() { Name = "SN为空", Text = "ID未读取到" });
+                            AlarmListBoxt.AddAlarmText(
+                                new AlarmText.alarmStruct() { Name = "SN为空", Text =
+                                tray.GetDataVales()[i].TrayLocation+ "ID未读取到" });
                         }
                         else
                         {
@@ -370,7 +293,7 @@ namespace Vision2.Project.Mes
                             trayID.Add(tray.GetDataVales()[i].TrayLocation);
                             if (listSn.Contains(sn))
                             {
-                                ErosProjcetDLL.Project.AlarmListBoxt.AddAlarmText(new ErosProjcetDLL.Project.AlarmText.alarmStruct()
+                                AlarmListBoxt.AddAlarmText(new AlarmText.alarmStruct()
                                 { Name = "SN重复", Text = "SN重复请确认" + sn });
                             }
                             listSn.Add(sn);
@@ -397,11 +320,12 @@ namespace Vision2.Project.Mes
                         }
                     }
                 }
+                string Err = "";
                 for (int i = 0; i < tray.Count; i++)
                 {
                     if (tray.GetDataVales().Count <= i)
                     {
-                        ErosProjcetDLL.Project.AlarmText.AddTextNewLine("mes产品数量错误");
+                        AlarmText.AddTextNewLine("mes产品数量错误");
                         continue;
                     }
                     try
@@ -414,43 +338,45 @@ namespace Vision2.Project.Mes
                                 OneDataVale oneDataVale = tray.GetDataVales()[i];
                                 if (sn == null || sn == "")
                                 {
-                                    ErosProjcetDLL.Project.AlarmListBoxt.AddAlarmText(
-                                        new ErosProjcetDLL.Project.AlarmText.alarmStruct() { Name = "ID未读取", Text = "ID未读取到" });
+                                   AlarmListBoxt.AddAlarmText( new AlarmText.alarmStruct() { Name = "ID未读取", Text = "ID未读取到" });
                                 }
                                 else
                                 {
                                     string errMesString = "null";
                                     bool resMesOK = false;
-                                    //if (!this.FaliMesRest && oneDataVale.OK)
-                                    //{
-                                    //}
+                                    for (int T = 0; T < listSn.Count; T++)
+                                    {
+                                        if (listSn[T] == sn)
+                                        {
+                                            oneDataVale.FVTStr = FVTSTR[T].TrimEnd(';');
+                                            break;
+                                        }
+                                    }
                                     if (MesData.IsRardMes)
                                     {
-                                        if (!ReadMes(sn, out errMesString))
-                                        {
-                                            mesErr += "位置:" + oneDataVale.TrayLocation + ";SN:" + sn + ":" + errMesString;
-                                            ErosProjcetDLL.Project.AlarmText.AddTextNewLine("位置:" + oneDataVale.TrayLocation + ";SN:" + sn, Color.Red);
-                                            resMesOK = false;
-                                        }
-                                        else
-                                        {
-                                            resMesOK = true;
-                                        }
-                                        oneDataVale.MesStr = errMesString;
+                                            if (!ReadMes(sn, out errMesString))
+                                            {
+                                                mesErr += "位置:" + oneDataVale.TrayLocation + ";SN:" + sn + ":" + errMesString;
+                                                AlarmText.AddTextNewLine("位置:" + oneDataVale.TrayLocation + ";SN:" + sn, Color.Red);
+                                                resMesOK = false;
+                                            }
+                                            else
+                                            {
+                                                resMesOK = true;
+                                            }
+                                            oneDataVale.MesStr = errMesString;
                                     }
                                     else
                                     {
                                         resMesOK = true;
                                     }
                                     MesDatas[0] = "S" + sn;
-                                    dat = new List<string>();
-                                    dat.Add("");
-                                    dat.Add(oneDataVale.TrayLocation.ToString());
+                
                                     List<string> MesDataList = new List<string>();
                                     if (oneDataVale.OK)
                                     {
                                         MesDatas[5] = "TP";
-                                        dat.Add("OK");
+                    
                                         listResult.Add("Pass");
                                         MesDataList.AddRange(MesDatas);
                                     }
@@ -458,7 +384,7 @@ namespace Vision2.Project.Mes
                                     {
                                         listResult.Add("Fail");
                                         MesDatas[5] = "TF";
-                                        dat.Add("NG");
+                
                                         MesDataList.AddRange(MesDatas);
                                         foreach (var item in tray.GetDataVales()[i].GetAllCompOBJs().DicOnes)
                                         {
@@ -523,20 +449,17 @@ namespace Vision2.Project.Mes
                                                 isd = true;
                                             }
                                         }
-                                        if (isd == false)
+                                        if (!isd)
                                         {
                                             MesDataList.Add("FPCB - " + MesData.DefaultFlaw);
                                         }
                                     }
-                                    dat.Add(sn);
-                                    dat.Add(oneDataVale.AutoOK.ToString());
-                                    dat.Add(errMesString);
-
+                                
                                     for (int T = 0; T < listSn.Count; T++)
                                     {
                                         if (listSn[T] == sn)
                                         {
-                                            dat.Add(FVTSTR[T]);
+        
                                             if (FVTSTR[T].TrimEnd(';').ToLower().EndsWith("pass"))
                                             {
                                                 resMesOK = true;
@@ -544,25 +467,39 @@ namespace Vision2.Project.Mes
                                             break;
                                         }
                                     }
-                                    if (oneDataVale.UesrRest)
-                                    {
-                                        dat.Add("人工处理");
-                                    }
-                                    else
-                                    {
-                                        dat.Add("人工未处理");
-                                    }
                                     RecipeCompiler.AddOKNumber(oneDataVale.OK);
                                     string paht = "//" + sn + DateTime.Now.ToString(" yyyy-MM-dd-HH-mm-ss");
                                     if (resMesOK)
                                     {
                                         if (this.FaliMesRest || oneDataVale.OK)
                                         {
-                                            ErosProjcetDLL.Excel.Npoi.WriteF(ProcessControl.ProcessUser.Instancen.ExcelPath + paht, MesDataList, RecipeCompiler.Instance.Filet);
-                                            ErosProjcetDLL.Excel.Npoi.WriteF(this.DataPaht + "\\Mes记录\\" + DateTime.Now.ToString("D") + paht, MesDataList, RecipeCompiler.Instance.Filet);
+                                            if (MesReduplication)
+                                            {
+                                                if (MesSN.Count > MesLength)
+                                                {
+                                                    MesSN.RemoveRange(0, 10);
+                                                }
+                                                if (!MesSN.Contains(sn))
+                                                {
+                                                    MesSN.Add(sn);
+                                                    ErosProjcetDLL.Excel.Npoi.WriteF(ProcessControl.ProcessUser.Instancen.ExcelPath + paht, MesDataList, RecipeCompiler.Instance.Filet);
+                                                    ErosProjcetDLL.Excel.Npoi.WriteF(RecipeCompiler.Instance.DataPaht + "\\Mes记录\\" + DateTime.Now.ToString("D") + paht, MesDataList, RecipeCompiler.Instance.Filet);
+                                                }
+                                                else
+                                                {
+                                                    Err += "Mes重复:" + "位置" + oneDataVale.TrayLocation + "sn" + sn + ";";
+                                                    AlarmText.AddTextNewLine("Mes重复:" + "位置" + oneDataVale.TrayLocation + "sn" + sn);
+                                                }
+                                            }
+                                            else
+                                            {
+                                                ErosProjcetDLL.Excel.Npoi.WriteF(ProcessControl.ProcessUser.Instancen.ExcelPath + paht, MesDataList, RecipeCompiler.Instance.Filet);
+                                                ErosProjcetDLL.Excel.Npoi.WriteF(RecipeCompiler.Instance.DataPaht + "\\Mes记录\\" + DateTime.Now.ToString("D") + paht, MesDataList, RecipeCompiler.Instance.Filet);
+
+                                            }
+
                                         }
                                     }
-                                    ErosProjcetDLL.Excel.Npoi.AddWriteCSV(pathEx, dat.ToArray());
                                 }
                             }
                         }
@@ -571,96 +508,85 @@ namespace Vision2.Project.Mes
                     {
                         ErrBool++;
                         err += i + ex.Message;
-                        ErosProjcetDLL.Project.AlarmText.AddTextNewLine("mesTray" + i + ":" + ex.StackTrace.Substring(ex.StackTrace.Length / 2 - 1, ex.StackTrace.Length / 2));
+                        AlarmText.AddTextNewLine("mesTray" + i + ":" + ex.StackTrace.Substring(ex.StackTrace.Length / 2 - 1, ex.StackTrace.Length / 2));
                     }
                 }
-                Task task = new Task(new Action(() =>
+                if (Err!="")
                 {
-                    for (int i = 0; i < tray.Count; i++)
+                    AlarmListBoxt.AddAlarmText(new AlarmText.alarmStruct()
+                    { Name = "MES重复", Text = Err });
+                }
+                if (MesData.IsErrMes)
+                {
+                    if (mesErr != "")
                     {
-                        if (tray.GetDataVales().Count <= i)
-                        {
-                            ErosProjcetDLL.Project.AlarmText.AddTextNewLine("mes产品数量错误");
-                            continue;
-                        }
-                        if (tray.GetDataVales()[i].NotNull)
-                        {
-                            WrietDATA(tray.GetOneDataVale(i));
-                        }
+                        AlarmListBoxt.AddAlarmText(new AlarmText.alarmStruct()
+                        { Name = "Mes查询错误", Text = mesErr });
                     }
-                }));
-                task.Start();
-
-                if (mesErr != "")
-                {
-                    ErosProjcetDLL.Project.AlarmListBoxt.AddAlarmText(new ErosProjcetDLL.Project.AlarmText.alarmStruct()
-                    { Name = "Mes查询错误", Text = mesErr });
                 }
                 if (ErrBool > 0)
                 {
-                    ErosProjcetDLL.Project.AlarmListBoxt.AddAlarmText
-                   (new ErosProjcetDLL.Project.AlarmText.alarmStruct()
+                    AlarmListBoxt.AddAlarmText (new AlarmText.alarmStruct()
                    { Name = "Mes写入Tray失败", Text = "错误数:" + ErrBool + ";" + err });
                 }
             }
             catch (Exception ex)
             {
-                ErosProjcetDLL.Project.AlarmListBoxt.AddAlarmText(new ErosProjcetDLL.Project.AlarmText.alarmStruct()
-                { Name = "Mes写入Tray失败", Text = ex.Message });
-                ErosProjcetDLL.Project.AlarmText.AddTextNewLine("mesTrya:" + ex.StackTrace.Substring(ex.StackTrace.Length / 2 - 1, ex.StackTrace.Length / 2));
+               AlarmListBoxt.AddAlarmText(new AlarmText.alarmStruct() { Name = "Mes写入Tray失败", Text = ex.Message });
+               AlarmText.AddTextNewLine("mesTrya:" + ex.StackTrace.Substring(ex.StackTrace.Length / 2 - 1, ex.StackTrace.Length / 2));
             }
         }
 
-        /// <summary>
-        /// 写入产品CRD数据
-        /// </summary>
-        /// <param name="oneDataVale"></param>
-        public void WrietDATA(OneDataVale oneDataVale)
-        {
-            try
-            {
-                string path = this.DataPaht + "\\CRD数据\\" + DateTime.Now.ToString("yyyyMMdd") + ".CSV";
-                if (!File.Exists(path))
-                {
-                    List<string> columnText = new List<string>() { "NO","Line", "Customer","Mode","	Defect Type","Location" ,"Serial Number","Result"   ,"Date" ,
-                        "Start Time"    ,"End Time","User", "Placement Route Step","位置","机检"};
-                    ErosProjcetDLL.Excel.Npoi.AddWriteCSV(path, columnText.ToArray());
-                }
-                int no = 0;
-                foreach (var item in oneDataVale.GetAllCompOBJs().DicOnes)
-                {
-                    no++;
-                    List<string> data = new List<string>();
-                    data.Add(no.ToString());
-                    data.Add(MesData.Line);
-                    data.Add(MesData.Customer);
-                    data.Add(oneDataVale.Product_Name);
-                    data.Add(item.Value.RestText);
-                    data.Add(item.Value.ComponentID);
-                    data.Add(oneDataVale.PanelID);
-                    if (item.Value.aOK)
-                    {
-                        data.Add("Pass");
-                    }
-                    else
-                    {
-                        data.Add("Fail");
-                    }
-                    data.Add(DateTime.Now.ToString("d"));
-                    data.Add(oneDataVale.StrTime.ToString("T"));
-                    data.Add(oneDataVale.EndTime.ToString("T"));
-                    data.Add(ErosProjcetDLL.Project.ProjectINI.In.UserName);
-                    data.Add(DebugCompiler.Instance.DeviceNameText);
-                    data.Add(oneDataVale.TrayLocation.ToString());
-                    data.Add(item.Value.NGText);
-                    ErosProjcetDLL.Excel.Npoi.AddWriteCSV(path,
-                      data.ToArray());
-                }
-            }
-            catch (Exception)        { }
-        }
+        ///// <summary>
+        ///// 写入产品CRD数据
+        ///// </summary>
+        ///// <param name="oneDataVale"></param>
+        //public void WrietDATA(OneDataVale oneDataVale)
+        //{
+        //    try
+        //    {
+        //        string path = this.DataPaht + "\\CRD数据\\" + DateTime.Now.ToString("yyyyMMdd") + ".CSV";
+        //        if (!File.Exists(path))
+        //        {
+        //            List<string> columnText = new List<string>() { "NO","Line", "Customer","Mode","	Defect Type","Location" ,"Serial Number","Result"   ,"Date" ,
+        //                "Start Time"    ,"End Time","User", "Placement Route Step","位置","机检"};
+        //            ErosProjcetDLL.Excel.Npoi.AddWriteCSV(path, columnText.ToArray());
+        //        }
+        //        int no = 0;
+        //        foreach (var item in oneDataVale.GetAllCompOBJs().DicOnes)
+        //        {
+        //            no++;
+        //            List<string> data = new List<string>();
+        //            data.Add(no.ToString());
+        //            data.Add(MesData.Line);
+        //            data.Add(MesData.Customer);
+        //            data.Add(oneDataVale.Product_Name);
+        //            data.Add(item.Value.RestText);
+        //            data.Add(item.Value.ComponentID);
+        //            data.Add(oneDataVale.PanelID);
+        //            if (item.Value.aOK)
+        //            {
+        //                data.Add("Pass");
+        //            }
+        //            else
+        //            {
+        //                data.Add("Fail");
+        //            }
+        //            data.Add(DateTime.Now.ToString("d"));
+        //            data.Add(oneDataVale.StrTime.ToString("T"));
+        //            data.Add(oneDataVale.EndTime.ToString("T"));
+        //            data.Add(ErosProjcetDLL.Project.ProjectINI.In.UserName);
+        //            data.Add(DebugCompiler.Instance.DeviceNameText);
+        //            data.Add(oneDataVale.TrayLocation.ToString());
+        //            data.Add(item.Value.NGText);
+        //            ErosProjcetDLL.Excel.Npoi.AddWriteCSV(path,
+        //              data.ToArray());
+        //        }
+        //    }
+        //    catch (Exception) { }
+        //}
 
-        public override void WrietMesAll<T>(T datas, string QRCODE, string Product_Name)
+        public override void WrietMesAll<T>(T datas, string Product_Name)
         {
             try
             {
@@ -677,7 +603,7 @@ namespace Vision2.Project.Mes
             }
             catch (Exception ex)
             {
-                ErosProjcetDLL.Project.AlarmListBoxt.AddAlarmText(new ErosProjcetDLL.Project.AlarmText.alarmStruct() { Name = "Mes写入失败", Text = ex.Message });
+                AlarmListBoxt.AddAlarmText(new AlarmText.alarmStruct() { Name = "Mes写入失败", Text = ex.Message });
             }
         }
 
@@ -713,13 +639,13 @@ namespace Vision2.Project.Mes
             {
                 if (sn.Length == 0)
                 {
-                    ErosProjcetDLL.Project.AlarmText.AddTextNewLine("FVT:码数量为0");
+                    AlarmText.AddTextNewLine("FVT:码数量为0");
                     return false;
                 }
                 string fileName = sn[0];
                 string PathFvt = MesData.FVTDataPath + "\\" + fileName + ".txt";
-                //Directory.CreateDirectory(MesData.FVTDataPath);
-                Directory.CreateDirectory(this.DataPaht + "\\FVT\\" + DateTime.Now.ToString("D"));
+            
+                Directory.CreateDirectory(RecipeCompiler.Instance.DataPaht + "\\FVT\\" + DateTime.Now.ToString("D"));
                 if (MesData.FvtSimulateDATA)
                 {
                     for (int i = 0; i < sn.Length; i++)
@@ -727,9 +653,9 @@ namespace Vision2.Project.Mes
                         TextWeit[i] += resetStr[i] + ";";
                     }
                     File.WriteAllLines(PathFvt, TextWeit);
-                    string Path = this.DataPaht + "\\FVT\\" + DateTime.Now.ToString("D") + "\\" + fileName + ".txt";
+                    string Path = RecipeCompiler.Instance.DataPaht + "\\FVT\\" + DateTime.Now.ToString("D") + "\\" + fileName + ".txt";
                     File.WriteAllLines(Path, TextWeit);
-                    ErosProjcetDLL.Project.AlarmText.AddTextNewLine("FVT写入完成:" + PathFvt);
+                    AlarmText.AddTextNewLine("FVT写入完成:" + PathFvt);
                     return true;
                 }
                 List<bool> RsetOk = new List<bool>();
@@ -783,18 +709,19 @@ namespace Vision2.Project.Mes
                         }
                         //Directory.CreateDirectory(MesData.FVTDataPath + "\\");
                         File.WriteAllLines(PathFvt, TextWeit);
-                        string path = this.DataPaht + "\\FVT\\" + DateTime.Now.ToString("D") + "\\" + fileName + ".txt";
+                        string path = RecipeCompiler.Instance.DataPaht + "\\FVT\\" + DateTime.Now.ToString("yyyy年M月d日") + "\\" + fileName + ".txt";
                         File.WriteAllLines(path, TextWeit);
                         if (MesData.IsDelete)
                         {
                             if (File.Exists(fileS[i]))
                             {
-                                string Pathd = this.DataPaht + "\\FVT历史\\" + DateTime.Now.ToString("D") + "\\" + Path.GetFileName(fileS[i]);
-                                if (File.Exists(Pathd))
+                                string pathds = MesData.FVTPath + "\\历史\\" + DateTime.Now.ToString("yyyy年M月d日") + "\\" + Path.GetFileName(fileS[i]);
+                                if (File.Exists(pathds))
                                 {
-                                    File.Delete(Pathd);
+                                    File.Delete(pathds);
                                 }
-                                File.Move(fileS[i], Pathd);
+                                Directory.CreateDirectory(MesData.FVTPath + "\\历史\\" + DateTime.Now.ToString("yyyy年M月d日"));
+                                File.Move(fileS[i], pathds);
                             }
                         }
                         string mest = "F:";
@@ -802,14 +729,14 @@ namespace Vision2.Project.Mes
                         {
                             mest += snTem[j] + ";";
                         }
-                        ErosProjcetDLL.Project.AlarmText.AddTextNewLine(mest);
+                         AlarmText.AddTextNewLine(mest);
                         if (File.Exists(PathFvt))
                         {
-                            ErosProjcetDLL.Project.AlarmText.AddTextNewLine(PathFvt);
+                            AlarmText.AddTextNewLine(PathFvt);
                         }
                         else
                         {
-                            ErosProjcetDLL.Project.AlarmText.AddTextNewLine("写入失败：" + PathFvt);
+                            AlarmText.AddTextNewLine("写入失败：" + PathFvt);
                             return false;
                         }
                         return true;
@@ -818,10 +745,10 @@ namespace Vision2.Project.Mes
             }
             catch (Exception ex)
             {
-                ErosProjcetDLL.Project.AlarmText.AddTextNewLine("FVT错误信息:" + ex.Message);
-                ErosProjcetDLL.Project.AlarmText.AddTextNewLine("FVT错误:" + ex.StackTrace);
+                AlarmText.AddTextNewLine("FVT错误信息:" + ex.Message);
+               AlarmText.AddTextNewLine("FVT错误:" + ex.StackTrace);
             }
-            ErosProjcetDLL.Project.AlarmListBoxt.AddAlarmText(new ErosProjcetDLL.Project.AlarmText.alarmStruct()
+            AlarmListBoxt.AddAlarmText(new AlarmText.alarmStruct()
             { Name = "FVT", Text = "FVT读取失败" });
             return false;
         }
@@ -841,7 +768,7 @@ namespace Vision2.Project.Mes
                 string fileName = sn[0];
                 string PathFvt = MesData.FVTDataPath + "\\" + fileName + ".txt";
                 Directory.CreateDirectory(MesData.FVTDataPath);
-                Directory.CreateDirectory(this.DataPaht + "\\FVT\\" + DateTime.Now.ToString("D"));
+                Directory.CreateDirectory(RecipeCompiler.Instance.DataPaht + "\\FVT\\" + DateTime.Now.ToString("D"));
                 List<string> snTem = new List<string>();
                 for (int i = 0; i < sn.Length; i++)
                 {
@@ -849,20 +776,20 @@ namespace Vision2.Project.Mes
                     snTem.Add(sn[i] + "=" + resetStr[i]);
                 }
                 File.WriteAllLines(PathFvt, TextWeit);
-                string paths = this.DataPaht + "\\FVT\\" + DateTime.Now.ToString("D") + "\\" + Path.GetFileName(fileName) + ".txt";
+                string paths = RecipeCompiler.Instance.DataPaht + "\\FVT\\" + DateTime.Now.ToString("D") + "\\" + Path.GetFileName(fileName) + ".txt";
                 File.WriteAllLines(paths, TextWeit);
                 string mest = "F强制写入:";
                 for (int j = 0; j < snTem.Count; j++)
                 {
                     mest += snTem[j] + ";";
                 }
-                ErosProjcetDLL.Project.AlarmText.AddTextNewLine(mest);
+                AlarmText.AddTextNewLine(mest);
                 return true;
             }
             catch (Exception ex)
             {
-                ErosProjcetDLL.Project.AlarmText.AddTextNewLine("FVT错误:" + ex.Message);
-                ErosProjcetDLL.Project.AlarmText.AddTextNewLine("FVT错误:" + ex.StackTrace);
+               AlarmText.AddTextNewLine("FVT错误:" + ex.Message);
+               AlarmText.AddTextNewLine("FVT错误:" + ex.StackTrace);
             }
             return false;
         }
@@ -876,6 +803,7 @@ namespace Vision2.Project.Mes
         }
 
         public int MesIntd { get; set; } = 1;
+
 
         [Description("文件名明名时间规则"), Category("文件名称"), DisplayName("文件名时间规则")]
         public string FileTimeName { get; set; } = "yyyy-MM-dd";//(MM-dd-yyyy HH-mm-ss)
@@ -1013,5 +941,12 @@ namespace Vision2.Project.Mes
         /// 是否读取
         /// </summary>
         public bool IsRardMes { get; set; }
+
+
+        [Description(""), Category("Mes查询"), DisplayName("Mes错误报警")]
+        /// <summary>
+        /// 是否
+        /// </summary>
+        public bool IsErrMes { get; set; } = true;
     }
 }

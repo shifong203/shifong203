@@ -132,8 +132,9 @@ namespace Vision2.Project.formula
             }
             try
             {
+                MainForm1.MainFormF.toolStripLabel2.Text = "Count:" + Instance.OKNumber.TrayNumber;
                 userVisionManagement.label3.Text = Instance.OKNumber.GetSPC();
-                RecipeCompiler.OKNumberClass[] oKNumberClass = RecipeCompiler.Instance.GetOKNumberList();
+                OKNumberClass[] oKNumberClass = RecipeCompiler.Instance.GetOKNumberList();
                 List<int> vs = new List<int>();
                 userVisionManagement.chartType.Series["Series1"].Points.Clear();
                 for (int i = 0; i < oKNumberClass.Length; i++)
@@ -220,26 +221,38 @@ namespace Vision2.Project.formula
         [DescriptionAttribute("。"), Category("显示数据"), DisplayName("显示手动输入ID")]
         public bool PalenIDVsible { get; set; }
 
-        //[Description("是否复盘"), Category("复判"), DisplayName("是否复盘")]
-        //public bool IsRestOk { get; set; }
 
         [Description("文件后缀"), Category("Mes数据"), DisplayName("文件后缀")]
         [TypeConverter(typeof(ErosConverter)), ErosConverter.ThisDropDownAttribute("", false, ".txt", ".Csv", "")]
         public string Filet { get; set; } = ".txt";
 
-        //[Description("文件命名规则"), Category("Mes数据"), DisplayName("写文件命名规则")]
-        //[TypeConverter(typeof(ErosConverter)), ErosConverter.ThisDropDownAttribute("", "QR", "Time", "")]
-        //public string WritDataFileName { get; set; } = "QR";
+        [Description("写文件规则，默认提供几种写文件格式"), Category("Mes数据"), DisplayName("写文件规则")]
+        [TypeConverter(typeof(ErosConverter)), ErosConverter.ThisDropDownAttribute("", "", "CSV格式1", "")]
+        public string WritDataFileName { get; set; } = "CSV格式1";
 
         [Description("Mes厂家规则,"), Category("Mes数据"), DisplayName("写Mes厂家规则")]
         [TypeConverter(typeof(ErosConverter)), ErosConverter.ThisDropDownAttribute("", "", "伟世通", "丸旭", "捷普", "安费诺", "SISF")]
         public string MesType { get; set; }
+     
+        /// <summary>
+        ///历史记录地址
+        /// </summary>
+        [Editor(typeof(PageTypeEditor_FolderBrowserDialog), typeof(UITypeEditor))]
+        [Description(""), Category("Mes数据"), DisplayName("写Mes历史地址")]
+
+        public string DataPaht { get; set; } = "E:\\历史记录";
+  
+
 
         [Description("Mes厂家规则,"), Category("Mes数据"), DisplayName("Mes类")]
         public string MesTypeName { get; set; }
 
         [Description("复判数据回传去程序PC,"), Category("Mes数据"), DisplayName("复判数据回传")]
         public bool RsetSever { get; set; }
+
+
+
+
 
         [Description("扫码触发信号连接变量名"), Category("产品扫码"), DisplayName("扫码触发信号名")]
         [Editor(typeof(ErosSocket.ErosConLink.LinkName_ValuesNameUserControl.Editor), typeof(UITypeEditor))]
@@ -326,6 +339,7 @@ namespace Vision2.Project.formula
                             break;
 
                         default:
+                            mesData = new DefaultMes();
                             break;
                     }
                 }
@@ -337,7 +351,7 @@ namespace Vision2.Project.formula
                     dynamic obj = assembly.CreateInstance(MesTypeName);
                     if (obj != null)
                     {
-                        data1 = obj.ReadThis(ErosProjcetDLL.Project.ProjectINI.ProjectPathRun + "\\产品配方", obj);
+                        data1 = obj.ReadThis(ProjectINI.ProjectPathRun + "\\产品配方", obj);
                     }
                 }
             }
@@ -418,17 +432,17 @@ namespace Vision2.Project.formula
      
             Data.Set();
             ErosSocket.ErosConLink.SocketClint socketClint = ErosSocket.ErosConLink.StaticCon.GetSocketClint(DataLinkName);
-            if (socketClint != null)
-            {
-                socketClint.PassiveEvent += SocketClint_PassiveEvent;
-            }
+            //if (socketClint != null)
+            //{
+            //    socketClint.PassiveEvent += SocketClint_PassiveEvent;
+            //}
             Product.SetUserFormulaContrsl(userVisionManagement);
             try
             {
                 Directory.CreateDirectory(ProjectINI.TempPath + "计数\\");
-                if (File.Exists(ProjectINI.TempPath + "计数\\" + DateTime.Now.ToString("yy年MM月dd日") + "计数.txt"))
+                if (File.Exists(ProjectINI.TempPath + "计数\\" + DateTime.Now.ToString("yyyy年M月d日") + "计数.txt"))
                 {
-                    if (!ProjectINI.ReadPathJsonToCalss(ProjectINI.TempPath + "计数\\" + DateTime.Now.ToString("yy年MM月dd日") + "计数.txt", out oKNumberClasses))
+                    if (!ProjectINI.ReadPathJsonToCalss(ProjectINI.TempPath + "计数\\" + DateTime.Now.ToString("yyyy年M月d日") + "计数.txt", out oKNumberClasses))
                     {
                         oKNumberClasses = new OKNumberClass[24];
                         for (int i = 0; i < oKNumberClasses.Length; i++)
@@ -475,16 +489,28 @@ namespace Vision2.Project.formula
             {
             }
         }
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        ///// <param name="key"></param>
+        ///// <param name="socket"></param>
+        ///// <param name="socketR"></param>
+        ///// <returns></returns>
+        //private string SocketClint_PassiveEvent(byte[] key, ErosSocket.ErosConLink.SocketClint socket, System.Net.Sockets.Socket socketR)
+        //{
+        //    string data = socket.GetEncoding().GetString(key);
 
-        private string SocketClint_PassiveEvent(byte[] key, ErosSocket.ErosConLink.SocketClint socket, System.Net.Sockets.Socket socketR)
-        {
-            string data = socket.GetEncoding().GetString(key);
+        //    //Data.AddData(data.Substring(RecipeCompiler.Instance.DataStrat));
 
-            Data.AddData(data.Substring(RecipeCompiler.Instance.DataStrat));
-
-            return "";
-        }
-
+        //    return "";
+        //}
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="socket"></param>
+        /// <param name="socketR"></param>
+        /// <returns></returns>
         private string RecipeCompiler_PassiveEvent(byte[] key, ErosSocket.ErosConLink.SocketClint socket, System.Net.Sockets.Socket socketR)
         {
             UserFormulaContrsl.StaticAddQRCode(socket.GetEncoding().GetString(key));
@@ -499,6 +525,8 @@ namespace Vision2.Project.formula
             Instance.OKNumber.OKNG = 0;
             Instance.OKNumber.AutoNGNumber = 0;
             Instance.OKNumber.IsOK = false;
+            Instance.OKNumber.TrayNumber = 0;
+            Instance.OKNumber.TrayOKNumber = 0;
             UserFormulaContrsl.StaticAddData(Instance.OKNumber);
         }
 
@@ -674,59 +702,31 @@ namespace Vision2.Project.formula
 
         public OKNumberClass OKNumber = new OKNumberClass();
 
+        public static void ADDTrayNumber(int trayID)
+        {
+            try
+            {
+                if (DebugCompiler.GetTray(trayID).GetTrayData().OK)
+                {
+                    RecipeCompiler.Instance.OKNumber.AddTrayNumber(true);
+                }
+                else
+                {
+                    RecipeCompiler.Instance.OKNumber.AddTrayNumber(false);
+                }
+                return;
+            }
+            catch (Exception ex)
+            {
+                AlarmText.AddTextNewLine("托盘"+ trayID + "计数失败"+ex.Message);
+            }
+            RecipeCompiler.Instance.OKNumber.TrayNumber++;
+        }
         private OKNumberClass[] oKNumberClasses;
 
         public OKNumberClass[] GetOKNumberList()
         {
             return oKNumberClasses;
-        }
-
-        public class OKNumberClass
-        {
-            public string GetSPC()
-            {
-                return "计数:" + Number + "  良率%:" + OKNG.ToString("0.00") + "\n\rOK:" + OKNumber + "  NG:" + NGNumber + "  NOK:" + AutoNGNumber;
-            }
-
-            /// <summary>
-            /// 是否OK
-            /// </summary>
-            public bool IsOK { get; set; }
-
-            /// <summary>
-            /// OK数量
-            /// </summary>
-            public int OKNumber { get; set; }
-
-            /// <summary>
-            /// NG数量
-            /// </summary>
-            public int NGNumber { get; set; }
-
-            /// <summary>
-            /// 总数数量
-            /// </summary>
-            public int Number { get; set; }
-
-            /// <summary>
-            /// 良率
-            /// </summary>
-            public Single OKNG { get; set; }
-
-            /// <summary>
-            /// 机器误判数量
-            /// </summary>
-            public int AutoNGNumber { get; set; }
-
-            /// <summary>
-            /// NG点数量
-            /// </summary>
-            public int PointNGNumber { get; set; }
-
-            /// <summary>
-            /// NG误判点数量
-            /// </summary>
-            public int autoPointNGNumber { get; set; }
         }
 
         public override void SaveThis(string path)
@@ -736,14 +736,17 @@ namespace Vision2.Project.formula
                 data1.SaveThis(path + "\\产品配方");
             }
             Product.SaveDicExcel(path + "\\产品配方\\产品文件.xls");
-            string paths = ErosProjcetDLL.Project.ProjectINI.ProjectPathRun + "\\" + vision.Vision.Instance.FileName + "\\";
+            string paths = ProjectINI.ProjectPathRun + "\\" + vision.Vision.Instance.FileName + "\\";
             foreach (var item in Produc)
             {
                 ProjectINI.ClassToJsonSavePath(item.Value, paths + item.Key + "\\配方参数");
             }
             foreach (var item in Instance.ProductEX)
             {
-                ProjectINI.ClassToJsonSavePath(item.Value, paths + item.Key + "\\产品参数");
+                if (item.Value!=null)
+                {
+                    ProjectINI.ClassToJsonSavePath(item.Value, paths + item.Key + "\\产品参数");
+                }
             }
             //if (RecipeCompiler.Instance.ProductEX.ContainsKey(listBox1.SelectedItem.ToString()))
             //{
@@ -752,6 +755,73 @@ namespace Vision2.Project.formula
             //}
             base.SaveThis(path);
         }
+    }
+    public class OKNumberClass
+    {
+        public string GetSPC()
+        {
+            return "计数:" + Number  + "良率%:" + OKNG.ToString("0.00") + "\n\rOK:" + OKNumber + "  NG:" + NGNumber + "  NOK:" + AutoNGNumber;
+        }
+
+        public void AddTrayNumber(bool ok)
+        {
+            TrayNumber++;
+            if (ok)
+            {
+                TrayOKNumber++;
+            }
+        }
+        /// <summary>
+        /// 托盘数量
+        /// </summary>
+        public int TrayNumber { get; set; }
+
+
+
+        /// <summary>
+        /// 托盘数量
+        /// </summary>
+        public int TrayOKNumber { get; set; }
+
+        /// <summary>
+        /// 是否OK
+        /// </summary>
+        public bool IsOK { get; set; }
+
+        /// <summary>
+        /// OK数量
+        /// </summary>
+        public int OKNumber { get; set; }
+
+        /// <summary>
+        /// NG数量
+        /// </summary>
+        public int NGNumber { get; set; }
+
+        /// <summary>
+        /// 总数数量
+        /// </summary>
+        public int Number { get; set; }
+
+        /// <summary>
+        /// 良率
+        /// </summary>
+        public Single OKNG { get; set; }
+
+        /// <summary>
+        /// 机器误判数量
+        /// </summary>
+        public int AutoNGNumber { get; set; }
+
+        /// <summary>
+        /// NG点数量
+        /// </summary>
+        public int PointNGNumber { get; set; }
+
+        /// <summary>
+        /// NG误判点数量
+        /// </summary>
+        public int autoPointNGNumber { get; set; }
     }
 
     #endregion 继承重写方法

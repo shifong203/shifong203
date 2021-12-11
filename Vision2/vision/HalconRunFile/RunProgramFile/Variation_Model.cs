@@ -203,7 +203,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 hObject.GenEmptyObj();
                 HObject hObjectRed = new HObject();
                 hObjectRed.GenEmptyObj();
-                HObject ImageTD = run.GetEmset(oneResultOBj.Image);
+                HObject ImageTD = oneResultOBj.Image;
                 for (int i = 0; i < hTuples.Count; i++)
                 {
                     HTuple home2d = hTuples[i];
@@ -213,12 +213,13 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     {
                         HOperatorSet.HomMat2dInvert(home2d, out home2d);
                         HOperatorSet.AffineTransImage(hObject1, out hObject1, home2d, "constant", "false");
-                        if (hWindID != null)
-                        {
-                            hWindID.SetImaage(hObject1);
-                        }
+                    }
+                    if (hWindID != null)
+                    {
+                        hWindID.SetImaage(hObject1);
                     }
                     HOperatorSet.ReduceDomain(hObject1, Xld, out hObject1);
+                  
                     HOperatorSet.CompareExtVariationModel(hObject1, out hObject3, ID, CompareMode);
                     if (hWindID != null)
                     {
@@ -299,6 +300,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             }
             catch (Exception ex)
             {
+                ErosProjcetDLL.Project.AlarmText.AddTextNewLine(this.Name+":"+ex.Message);
             }
             return false;
         }

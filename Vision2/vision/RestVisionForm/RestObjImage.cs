@@ -8,6 +8,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Vision2.ErosProjcetDLL.Project;
 using Vision2.ErosProjcetDLL.UI;
 using Vision2.Project.DebugF;
 using Vision2.Project.formula;
@@ -27,10 +28,6 @@ namespace Vision2.vision
 
         public int MaxNumber = 0;
 
-        /// <summary>
-        /// 产品集合
-        /// </summary>
-        private static Queue<OneDataVale> OneProductVS = new Queue<OneDataVale>();
 
         /// <summary>
         /// 整盘集合
@@ -52,7 +49,7 @@ namespace Vision2.vision
         /// <summary>
         /// 整盘
         /// </summary>
-        private static TrayData TrayImage;
+        public static TrayData TrayImage;
 
         public static RestObjImage RestObjImageFrom
         {
@@ -84,6 +81,21 @@ namespace Vision2.vision
                 }
                 try
                 {
+                    foreach (var item in trayImage.GetDataVales())
+                    {
+                        if (item.NotNull)
+                        {
+                            if (item.PanelID == null || item.PanelID == "")
+                            {
+                                foreach (var itemdt in item.ListCamsData)
+                                {
+                                    HOperatorSet.GenRectangle1(out HObject hObject, 0, 0, 2555, 2555);
+                                    itemdt.Value.NGObj.AddCont(new HalconRunFile.RunProgramFile.OneRObj() {
+                                        ComponentID = "SN", NGText = "SN为空", NGROI = hObject, ROI = hObject });
+                                }
+                            }
+                        }
+                    }
                     if (!trayImage.OK)
                     {
                         if (trayImage.Done)
@@ -94,9 +106,10 @@ namespace Vision2.vision
                                 {
                                     continue;
                                 }
-                                foreach (var itemdt in item.ListCamsData)
-                                {
-                                    foreach (var itemdte in itemdt.Value.NGObj.DicOnes)
+                         
+                                    foreach (var itemdt in item.ListCamsData)
+                                   {
+                                      foreach (var itemdte in itemdt.Value.NGObj.DicOnes)
                                     {
                                         if (!itemdte.Value.aOK)
                                         {
@@ -109,13 +122,12 @@ namespace Vision2.vision
                                 }
                             }
                         }
+                        //UpData();
                     }
+           
                 }
                 catch (Exception)
-                {
-
-                }
-
+                {}
                 if (Vision.Instance.RestTDT)
                 {
                     if (RecipeCompiler.Instance.GetMes().MesArye)
@@ -130,7 +142,6 @@ namespace Vision2.vision
                     {
                         WeirtAll(trayImage);
                     }
-                  
                     return;
                 }
                 if (!trayImage.OK)
@@ -144,33 +155,85 @@ namespace Vision2.vision
                         toolStripLabel1.Text = "复判剩余:" + TrayImageTs.Count;
                         UICon.SwitchToThisWindow(RestObjImage.RestObjImageFrom.Handle, true);
                         RestObjImage.RestObjImageFrom.Show();
-                        if (TrayImage == null)
-                        {
-                            DequeueData();
-                        }
+                        //if (TrayImage == null)
+                        //{
+                        //    DequeueData();
+                        //}
                     }
                 }
                 if (trayImage.Done)
                 {
-                    if (RecipeCompiler.Instance.GetMes().MesArye)
+                    if (RecipeCompiler.Instance.GetMes()!=null)
                     {
-                        Task task = new Task(new Action(() =>
+                        if (RecipeCompiler.Instance.GetMes().MesArye)
+                        {
+                            Task task = new Task(new Action(() =>
+                            {
+                                WeirtAll(trayImage);
+                            }));
+                            task.Start();
+                        }
+                        else
                         {
                             WeirtAll(trayImage);
-                        }));
-                        task.Start();
-                    }
-                    else
-                    {
-                        WeirtAll(trayImage);
+                        }
                     }
                 }
             }
             catch (Exception ex)
             {
-                ErosProjcetDLL.Project.AlarmText.AddTextNewLine("复判窗口:" + ex.Message, Color.Red);
+                AlarmText.AddTextNewLine("复判窗口:" + ex.Message, Color.Red);
             }
         }
+        
+        //public void ShowImage(OneDataVale oneDataVale)
+        //{
+        //    try
+        //    {
+        //        hWindowControl1.Focus();
+        //        if (HWindd == null)
+        //        {
+        //            HWindd = new HWindID();
+        //            HWindd.Initialize(hWindowControl1);
+        //        }
+        //        OneProductV = oneDataVale;
+
+        //        trayDatas1.SelesItem(OneProductV.TrayLocation);
+        //        treeView1.Nodes.Clear();
+        //        treeView2.Nodes.Clear();
+
+        //        foreach (var itemdt in OneProductV.ListCamsData)
+        //        {
+        //            TreeNode treeNode = treeView1.Nodes.Add(itemdt.Key);
+        //            treeNode.Tag = itemdt.Value;
+        //            TreeNode treeNodeOK = treeView2.Nodes.Add(itemdt.Key);
+        //            treeNodeOK.Tag = itemdt.Value;
+        //            foreach (var itemdte in itemdt.Value.AllCompObjs.DicOnes)
+        //            {
+        //                TreeNode treeNode1 = treeNodeOK.Nodes.Add(itemdte.Key);
+        //                treeNode1.Tag = itemdte.Value;
+        //                treeNode1.ImageIndex = 6;
+        //            }
+        //            foreach (var itemdte in itemdt.Value.NGObj.DicOnes)
+        //            {
+        //                if (!itemdte.Value.aOK)
+        //                {
+        //                    TreeNode treeNode1 = treeNode.Nodes.Add(itemdte.Key);
+        //                    treeNode1.Tag = itemdte.Value;
+        //                    treeNode1.ImageIndex = 5;
+        //                }
+        //            }
+        //            treeNodeOK.Expand();
+        //            treeNode.Expand();
+        //        }
+             
+        //        UICon.SwitchToThisWindow(RestObjImage.RestObjImageFrom.Handle, true);
+        //        RestObjImage.RestObjImageFrom.Show();
+        //    }
+        //    catch (Exception)
+        //    {
+        //    }
+        //}
 
         public void WeirtTray(TrayData trayImage)
         {
@@ -180,13 +243,15 @@ namespace Vision2.vision
                 {
                     if (trayImage.GetDataVales()[i].NotNull)
                     {
-                        string path = Vision.GetSaveImageInfo("上相机").SavePath + "\\" + DateTime.Now.ToLongDateString() + "\\" + Product.ProductionName + "\\" +
-                              trayImage.GetOneDataVale(i).PanelID + "\\" +"Data";
-                        foreach (var item in trayImage.GetOneDataVale(i).ListCamsData)
+                        string sn = trayImage.GetOneDataVale(i).PanelID;
+                        if (sn == "")
                         {
-                            item.Value.ImagePlus.GenEmptyObj();
+                            sn = "SN";
                         }
-                        ErosProjcetDLL.Project.ProjectINI.ClassToJsonSavePath(trayImage.GetOneDataVale(i), path);
+                        string path = Vision.GetSaveImageInfo(Vision.GetRunNameVision().Name).SavePath + 
+                            "\\" +  DateTime.Now.ToString("yyyy年M月d日") + "\\" + Product.ProductionName + "\\" +
+                              sn + "\\" +"Data" + DateTime.Now.ToString("HH时mm分ss秒");
+                         ProjectINI.ClassToJsonSavePath(trayImage.GetOneDataVale(i), path);
                     }
                 }
             }
@@ -203,6 +268,7 @@ namespace Vision2.vision
             {
                 UserFormulaContrsl.WeirtAll(trayImage);
                 WeirtTray(trayImage);
+                trayImage.Dispose();
                 if (DebugCompiler.Instance.OutDischarging > 0)
                 {
                     Task task = new Task(() =>
@@ -240,7 +306,6 @@ namespace Vision2.vision
         {
             try
             {
-                OneProductVS.Clear();
                 TrayImageTs.Clear();
             }
             catch (Exception)
@@ -252,24 +317,36 @@ namespace Vision2.vision
 
         private void UpData()
         {
-            string PatText = "";
-            dee = HWindd.HeigthImage / HWindd.WidthImage;
-            hWindowControl1.Height = (int)(hWindowControl1.Width * dee);
-            if (panel2.Height < hWindowControl1.Height)
+     
+            try
             {
-                hWindowControl1.Height = panel2.Height;
-            }
-            hWindowControl1.Dock = DockStyle.Top;
-            textBox1.Text = OneProductV.PanelID;
-            if (OneProductV != null)
-            {
-                OneProductV.UesrRest = true;
-                HWindd.OneResIamge.GetNgOBJS(OneProductV.GetNGCompData());
-                HWindd.SetImaage(OneProductV.GetNGImage());
-            }
-            PatText = "托盘号:" + OneProductV.TrayLocation + "." + OneProductV.GetNGCamName() + Environment.NewLine;
-            if (Vision.Instance.RestT)
-            {
+                string PatText = "";
+                if (Vision.Instance.RestT)
+                {
+                    toolStripButton3.Text = "单个点";
+                }
+                else
+                {
+                    toolStripButton3.Text = "单个产品";
+                }
+                dee = HWindd.HeigthImage / HWindd.WidthImage;
+                hWindowControl1.Height = (int)(hWindowControl1.Width * dee);
+                if (panel2.Height < hWindowControl1.Height)
+                {
+                    hWindowControl1.Height = panel2.Height;
+                }
+                hWindowControl1.Dock = DockStyle.Top;
+                textBox1.Text = OneProductV.PanelID;
+                if (!OneProductV.Done)
+                {
+                    if (OneProductV != null)
+                    {
+                        OneProductV.UesrRest = true;
+                        HWindd.OneResIamge.GetNgOBJS(OneProductV.GetNGCompData());
+                        HWindd.SetImaage(OneProductV.GetNGImage());
+                    }
+                }
+                PatText = "托盘号:" + OneProductV.TrayLocation + "." + OneProductV.GetNGCamName() + Environment.NewLine;
                 foreach (TreeNode item in treeView1.Nodes)
                 {
                     if (item.Nodes.Count == 0)
@@ -306,35 +383,42 @@ namespace Vision2.vision
                             }
                         }
                     }
-                    if (!OneRObjT.Done)
+                    if (OneRObjT != null)
                     {
-                        break;
+                        if (!OneRObjT.Done)
+                        {
+                            break;
+                        }
                     }
                 }
-                if (!OneProductV.Done)
+                foreach (var item in OneProductV.GetNGCompData().DicOnes)
                 {
+                    if (!item.Value.Done)
+                    {
+                        if (!item.Value.Done)
+                        {
+                            OneRObjT = item.Value;
+                            //restOneComUserControl1.Location = new Point(itemdt.Bounds.X, itemdt.Bounds.Y + itemdt.Bounds.Height + 2);
+                            restOneComUserControl1.Visible = true;
+                            restOneComUserControl1.BringToFront();
+                            restOneComUserControl1.UpData(OneRObjT);
+                            break;
+                        }
+                    }
                 }
-                else
+                if (OneProductV.Done)
                 {
                     restOneComUserControl1.Visible = false;
                 }
-            }
-            if (OneRObjT != null)
-            {
-                PatText += OneRObjT.ComponentID + "NG信息:" + OneRObjT.NGText + "\\" + OneProductV.NGNumber;
-                if (OneRObjT.ComponentID != "")
+                if (OneRObjT != null)
                 {
-                    //PatText += ";位号:" + OneRObjT.ComponentID + Environment.NewLine;
+                    PatText += OneRObjT.ComponentID + "NG信息:" + OneRObjT.NGText + "\\" + OneProductV.NGNumber;
+                    restOneComUserControl1.UpData(OneRObjT);
                 }
-                restOneComUserControl1.UpData(OneRObjT);
-            }
-            label4.Text = PatText;
-            label3.Text = RecipeCompiler.GetSPC();
-            try
-            {
-                if (Vision.Instance.RestT)
-                {
-                    if (OneProductV != null)
+
+                label4.Text = PatText;
+                label3.Text = RecipeCompiler.GetSPC();
+                if (OneProductV != null)
                     {
                         foreach (var item in OneProductV.GetNGCompData().DicOnes)
                         {
@@ -342,7 +426,6 @@ namespace Vision2.vision
                             {
                                 continue;
                             }
-                            HOperatorSet.GetImageSize(OneProductV.GetNGImage(), out HTuple wid, out HTuple hei);
                             hWindowControl3.HalconWindow.ClearWindow();
                             hWindowControl4.HalconWindow.ClearWindow();
                             try
@@ -350,7 +433,7 @@ namespace Vision2.vision
                                 HOperatorSet.SetDraw(hWindowControl3.HalconWindow, "margin");
                                 HOperatorSet.SetLineWidth(hWindowControl3.HalconWindow, Vision.Instance.LineWidth);
                                 Vision.SetFont(hWindowControl3.HalconWindow);
-                                HOperatorSet.SetColor(hWindowControl3.HalconWindow, "red");
+                               
                             }
                             catch (Exception) { }
                             HObject imaget = new HObject();
@@ -377,79 +460,74 @@ namespace Vision2.vision
                                 hWindowControl4.HalconWindow.DispText("未创建参考图片" + OneProductV.GetNGCamName(),
                                     "window", 0, 0, "red", new HTuple(), new HTuple());
                             }
-                            HOperatorSet.Union1(item.Value.NGROI, out HObject hObject1);
-                            hObject1 = Vision.XLD_To_Region(hObject1);
+                        HWindd.OneResIamge.SetObjCross(item.Value.NGROI, out HTuple row1, out HTuple col1, out HTuple row2, out HTuple col2) ;
+                        if (row1.Length==0)
+                        {
+                            HWindd.OneResIamge.SetObjCross(item.Value.ROI, out  row1, out  col1, out  row2, out  col2);
 
-                            HOperatorSet.SmallestRectangle1(hObject1, out HTuple row1, out HTuple col1, out HTuple row2, out HTuple clo2);
-                            if (row1.Length != 0)
-                            {
-                                HOperatorSet.AreaCenter(hObject1, out HTuple area, out HTuple row, out HTuple col);
-
-                                HOperatorSet.GenContourPolygonXld(out HObject hObject, new HTuple(row, row), new HTuple(new HTuple(0), col1));
-                                HOperatorSet.GenContourPolygonXld(out HObject hObject2, new HTuple(new HTuple(0), row1), new HTuple(col, col));
-                                HOperatorSet.GenContourPolygonXld(out HObject hObject3, new HTuple(new HTuple(row), row), new HTuple(clo2, wid));
-                                HOperatorSet.GenContourPolygonXld(out HObject hObject4, new HTuple(new HTuple(row2), hei), new HTuple(col, col));
-                                HWindd.OneResIamge.SetCross(hObject.ConcatObj(hObject2).ConcatObj(hObject3).ConcatObj(hObject4));
-                                double d = (double)wid / (double)hei;
-                                hWindowControl3.HalconWindow.SetPart(row1 - (200 * 1), col1 - (200 * d), row2 + (200 * 1), clo2 + (200 * d));
-                                hWindowControl4.HalconWindow.SetPart(row1 - (200 * 1), col1 - (200 * d), row2 + (200 * 1), clo2 + (200 * d));
-                            }
-                            else
-                            {
-                                hObject1 = Vision.XLD_To_Region(item.Value.ROI);
-                                HOperatorSet.SmallestRectangle1(hObject1, out row1, out col1, out row2, out clo2);
-                                if (row1.Length != 0)
-                                {
-                                    HOperatorSet.AreaCenter(hObject1, out HTuple area, out HTuple row, out HTuple col);
-                                    HOperatorSet.GenContourPolygonXld(out HObject hObject, new HTuple(row, row), new HTuple(new HTuple(0), col1));
-                                    HOperatorSet.GenContourPolygonXld(out HObject hObject2, new HTuple(new HTuple(0), row1), new HTuple(col, col));
-                                    HOperatorSet.GenContourPolygonXld(out HObject hObject3, new HTuple(new HTuple(row), row), new HTuple(clo2, wid));
-                                    HOperatorSet.GenContourPolygonXld(out HObject hObject4, new HTuple(new HTuple(row2), hei), new HTuple(col, col));
-                                    HWindd.OneResIamge.SetCross(hObject.ConcatObj(hObject2).ConcatObj(hObject3).ConcatObj(hObject4));
-                                    double d = (double)wid / (double)hei;
-                                    hWindowControl3.HalconWindow.SetPart(row1 - (200 * 1), col1 - (200 * d), row2 + (200 * 1), clo2 + (200 * d));
-                                    hWindowControl4.HalconWindow.SetPart(row1 - (200 * 1), col1 - (200 * d), row2 + (200 * 1), clo2 + (200 * d));
-                                }
-                            }
+                        }
+                        if (row1.Length != 0)
+                        {
+                            hWindowControl3.HalconWindow.SetPart(row1, col1, row2, col2);
+                            hWindowControl4.HalconWindow.SetPart(row1, col1, row2, col2);
+                        }
+                        HOperatorSet.Union1(item.Value.NGROI, out HObject hObject1);
                             hWindowControl3.HalconWindow.DispObj(OneProductV.GetNGImage());
                             hWindowControl4.HalconWindow.DispObj(imaget);
                             if (item.Value.oneRObjs.Count >= 0)
                             {
                                 HWindd.OneResIamge.Massage = new HTuple();
                                 List<string> vstd = item.Value.oneRObjs[0].dataMinMax.GetStrTextNG();
-                                HTuple hTuple2 = new HTuple(vstd.ToArray());
-                                HWindd.AddMeassge(hTuple2);
+                                if (vstd.Count!=0)
+                                {
+                                    HTuple hTuple2 = new HTuple(vstd.ToArray());
+                                    HWindd.AddMeassge(hTuple2);
+                                }
+                          
                                 List<string> vs = item.Value.oneRObjs[0].dataMinMax.GetStrNG();
-
+                            if (vs.Count != 0)
+                            {
                                 HTuple hTuple = new HTuple(vs.ToArray());
 
                                 HWindd.AddMeassge(hTuple);
                             }
-                            HOperatorSet.DilationCircle(hObject1, out HObject hObject5, 50);
-                            HOperatorSet.AreaCenter(item.Value.NGROI, out HTuple areas, out HTuple rows, out HTuple colus);
-                            hWindowControl3.HalconWindow.DispObj(hObject5);
-                            hWindowControl3.HalconWindow.DispText(item.Value.NGText + "{" + item.Value.NGText + "}", "window", 0, 0, "red", new HTuple(), new HTuple());
-                            break;
                         }
+                        HOperatorSet.SetColor(hWindowControl3.HalconWindow, ColorResult.blue.ToString());
+                        hWindowControl3.HalconWindow.DispObj(item.Value.ROI);
+                        HOperatorSet.SetColor(hWindowControl3.HalconWindow, "red");
+                        HOperatorSet.DilationCircle(hObject1, out HObject hObject5, 50);
+                        HOperatorSet.AreaCenter(item.Value.NGROI, out HTuple areas, out HTuple rows, out HTuple colus);
+                        hWindowControl3.HalconWindow.DispObj(hObject5);
+                         hWindowControl3.HalconWindow.DispText(item.Value.NGText + "{" + item.Value.NGText + "}", "window", 0, 0, "red", new HTuple(), new HTuple());
+                        break;
+                       }
                     }
-                }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("复判显示"+ex.Message);
+                ErrForm.Show(ex, "复判显示");
             }
             HWindd.ShowImage();
         }
+
 
         private void button1_Click(object sender, EventArgs e)
         {
             try
             {
-                if (OneProductV.PanelID == "")
+                if (DebugCompiler.GetDoDi()!=null)
                 {
-                    textBox1.Focus();
-                    MessageBox.Show("SN为空,请输入SN");
-                    return;
+                    DebugCompiler.GetDoDi().WritDO(DebugCompiler.Instance.OutDischarging, false);
+                }
+        
+                if (OneProductV != null)
+                {
+                    if (OneProductV.PanelID == "")
+                    {
+                        textBox1.Focus();
+                        MessageBox.Show("SN为空,请输入SN");
+                        return;
+                    }
                 }
                 if (!button1.Enabled)
                 {
@@ -469,28 +547,46 @@ namespace Vision2.vision
                 }
                 treeView1.Nodes.Clear();
                 treeView2.Nodes.Clear();
-                TrayImage.UserRest = true;
-                UserFormulaContrsl.WeirtAll(TrayImage);
-                WeirtTray(TrayImage);
-                timer1.Start();
-                Task task = new Task(() =>
-                {
-                try
-                {
-                        if (ErosProjcetDLL.Project.AlarmListBoxt.AlarmCont == 0)
-                      {
-                        DebugCompiler.GetDoDi().WritDO(DebugCompiler.Instance.OutDischarging, true);
-                      }
-                         //label3.Text = RecipeCompiler.Instance.GetSPC();
-                 
+                 TrayImage.UserRest = true;
+                  OneProductV = null;
+                    UserFormulaContrsl.WeirtAll(TrayImage);
+                    WeirtTray(TrayImage);
+                    for (int i = 0; i < TrayImage.Count; i++)
+                    {
+                        if (TrayImage.GetDataVales()[i].NotNull)
+                        {
+                            TrayImage.GetDataVales()[i].Dispose();
+                            try
+                            {
+                                if (File.Exists(ProjectINI.TempPath + "\\ResetImageData\\" + TrayImage.GetDataVales()[i].PanelID + ".txt"))
+                                {
+                                    File.Delete(ProjectINI.TempPath + "\\ResetImageData\\" + TrayImage.GetDataVales()[i].PanelID + ".txt");
+                                }
+                                if (File.Exists(ProjectINI.TempPath + "\\ResetImage\\" + TrayImage.GetDataVales()[i].PanelID + ".txt"))
+                                {
+                                    File.Delete(ProjectINI.TempPath + "\\ResetImage\\" + TrayImage.GetDataVales()[i].PanelID + ".txt");
+                                }
+                            }
+                            catch (Exception)
+                            {
+                            }
                     }
-                    catch (Exception) { }
-                });
-                task.Start();
+                  }
+                    timer1.Start();
+                   TrayImage = null;
+                    Task task = new Task(() =>
+                    {
+                        try
+                        {
+                            Thread.Sleep(1000);
+                            DebugCompiler.GetDoDi().WritDO(DebugCompiler.Instance.OutDischarging, true);
+                        }
+                        catch (Exception) { }
+                    });
+                    task.Start();
             }
             catch (Exception ex) {
-                MessageBox.Show("复判提交" + ex.Message);
-            
+                ErrForm.Show(ex, "复判提交");
             }
         }
         /// <summary>
@@ -502,9 +598,32 @@ namespace Vision2.vision
             {
                 if (TrayImageTs.Count == 0)
                 {
+                    Thread.Sleep(500);
+                    this.Hide();
                     return;
                 }
                 TrayImage = TrayImageTs.Dequeue();
+                foreach (var item in TrayImage.GetDataVales())
+                {
+                     try
+                     {
+                        if (item.NotNull)
+                        {
+                            if (item.OK)
+                            {
+                                continue;
+                            }
+                            if (!File.Exists(ProjectINI.TempPath + "\\ResetImage\\" + item.PanelID + ".txt"))
+                            {
+                                    item.DeviceName = DebugCompiler.Instance.DeviceNameText;
+                                    ProjectINI.ClassToJsonSave(item,
+                                    ProjectINI.TempPath + "\\ResetImage\\" + item.PanelID);
+                            }
+                        }
+                        }
+                        catch (Exception)
+                        {}
+                }
                 trayDatas1.Initialize(TrayImage);
                 //trayDatas1.SetTray(TrayImage);
                 TrayImage.SetITrayRobot(trayDatas1);
@@ -527,10 +646,10 @@ namespace Vision2.vision
                             }
 
                             OneProductV = item;
+                            button1.Enabled = true;
                             trayDatas1.SelesItem(OneProductV.TrayLocation);
                             treeView1.Nodes.Clear();
                             treeView2.Nodes.Clear();
-
                             foreach (var itemdt in OneProductV.ListCamsData)
                             {
                                 TreeNode treeNode = treeView1.Nodes.Add(itemdt.Key);
@@ -564,7 +683,6 @@ namespace Vision2.vision
                             if (OneProductV.GetNGImage() != null)
                             {
                                 HWindd.SetImaage(OneProductV.GetNGImage());
-                                //HWindd.OneResIamge = halconResult;
                             }
                             UpData();
                         }
@@ -573,7 +691,7 @@ namespace Vision2.vision
                     }
                     catch (Exception ex)
                     {
-                        ErosProjcetDLL.Project.AlarmText.AddTextNewLine("复判窗口:" + ex.StackTrace, Color.Red);
+                        AlarmText.AddTextNewLine("复判窗口:" + ex.StackTrace, Color.Red);
                     }
                 }));
             }
@@ -586,7 +704,75 @@ namespace Vision2.vision
         {
             try
             {
+                if (Vision.Instance.RestT)
+                {
+                    toolStripButton3.Text = "单个点";
+                }
+                else
+                {
+                    toolStripButton3.Text = "单个原件";
+                } 
                 this.restOneComUserControl1.EventShowObj += RestOneComUserControl1_EventShowObj;
+                Directory.CreateDirectory(ProjectINI.TempPath + "\\ResetImage\\");
+                Directory.CreateDirectory(ProjectINI.TempPath + "\\ResetImageData\\");
+                Thread thread = new Thread(() => {
+                while (true)
+                {
+                        Thread.Sleep(100);
+                        try
+                        {
+
+                            if (this.Visible)
+                            {   if (TrayImage == null)
+                                {
+                                    DequeueData();
+                                }
+                                string paths = ProjectINI.TempPath + "\\ResetImageData\\" + OneProductV.PanelID + ".txt";
+                                if (File.Exists(paths))
+                                {
+                                    if (ProjectINI.ReadPathJsonToCalssEX(paths, out OneDataVale oneDataVale))
+                                    {
+                                        OneProductV = oneDataVale;
+                                        TrayImage.GetDataVales()[OneProductV.TrayLocation - 1] = OneProductV;
+                                        this.Invoke(new Action(() =>
+                                        {
+                                            RestObjImage_KeyDown(null, new KeyEventArgs(Keys.Space));
+                                        }));
+                                        File.Delete(paths);
+                                        if (File.Exists(ProjectINI.TempPath + "\\ResetImage\\" + OneProductV.PanelID + ".txt"))
+                                        {
+                                            File.Delete(ProjectINI.TempPath + "\\ResetImage\\" + OneProductV.PanelID + ".txt");
+                                        }
+                                        if (File.Exists(ProjectINI.TempPath + "\\ResetImage\\Time\\" + OneProductV.PanelID + ".txt"))
+                                        {
+                                            File.Delete(ProjectINI.TempPath + "\\ResetImage\\Time\\" + OneProductV.PanelID + ".txt");
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    string PATH = ProjectINI.TempPath + "\\ResetImage\\Time\\";
+                                    if (Directory.Exists(PATH))
+                                    {
+                                        string[] imagef = Directory.GetFiles(PATH);
+                                        for (int i = 0; i < imagef.Length; i++)
+                                        {
+                                            if (File.Exists(imagef[i]))
+                                            {
+                                                File.Delete(imagef[i]);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                        }
+                 }
+                });
+                thread.IsBackground = true;
+                thread.Start();
             }
             catch (Exception ex)
             {
@@ -619,17 +805,11 @@ namespace Vision2.vision
                 {
                     if (e.KeyCode == Keys.Space || e.KeyCode == Keys.Back)
                     {
-                   
                         this.hWindowControl1.Focus();
                         if (TrayImage == null)
                         {
                             return;
                         }
-                        //if (TrayImage.Done)
-                        //{
-                        //    button1_Click(null, null);
-                        //    return;
-                        //}
                         if (OneProductV.Done)
                         {
                             if (OneProductV.OK)
@@ -637,7 +817,6 @@ namespace Vision2.vision
                                 if (OneProductV.AutoOK != OneProductV.OK)
                                 {
                                     RecipeCompiler.AddRlsNumber();
-                                    //label3.Text = RecipeCompiler.Instance.GetSPC();
                                 }
                             }
                             treeView1.Nodes.Clear();
@@ -780,7 +959,8 @@ namespace Vision2.vision
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+               ErrForm.Show(ex,"复判按键");
+
             }
         }
 
@@ -815,22 +995,22 @@ namespace Vision2.vision
         {
             try
             {
-                button1.Enabled = true;
+                //button1.Enabled = true;
                 timer1.Stop();
                 if (TrayImageTs.Count == 0)
                 {
                     try
                     {
-                        this.Hide();
+                        //this.Hide();
                         Thread.Sleep(1000);
                         DebugCompiler.GetDoDi().WritDO(DebugCompiler.Instance.OutDischarging, false);
                     }
                     catch (Exception) { }
-                    TrayImage = null;
+                    //TrayImage = null;
                 }
                 else
                 {
-                    DequeueData();
+                    //DequeueData();
                     try
                     {
                         Thread.Sleep(2000);
@@ -856,7 +1036,7 @@ namespace Vision2.vision
         {
             try
             {
-                Directory.CreateDirectory(Application.StartupPath + "\\截取屏幕\\" + DateTime.Now.ToLongDateString());
+                Directory.CreateDirectory(Application.StartupPath + "\\截取屏幕\\" +  DateTime.Now.ToString("yyyy年M月d日"));
                 Bitmap bitmap = UICon.GetScreenCapture();
                 SaveFileDialog saveFileDialog = new SaveFileDialog();
                 saveFileDialog.InitialDirectory = Application.StartupPath + @"\截取屏幕\";
@@ -930,40 +1110,25 @@ namespace Vision2.vision
             {
                 if (MessageBox.Show("取消提交将不处理当前产品！", "是否取消提交？", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
-                    timer1.Start();
-                    hWindowControl1.Focus();
-                    //dataGridView1.Rows.Clear();
-
-                    if (TrayImage == null)
+                    if (TrayImageTs.Count == 0)
                     {
-                        DequeueData();
+                        this.Hide();
                     }
                     else
                     {
+                        //DequeueData();
+                    } 
+                    hWindowControl1.Focus();
+                    if (TrayImage == null)
+                    {
+                    }
+                    else
+                    {
+                        TrayImage.Dispose();
                         TrayImage.Clear();
                         TrayImage = null;
                     }
 
-                    //if (TrayImageTs.Count == 0)
-                    //{
-                    //    Thread thread = new Thread(() =>
-                    //    {
-                    //        try
-                    //        {
-                    //            Thread.Sleep(1000);
-                    //            this.Hide();
-                    //        }
-                    //        catch (Exception)
-                    //        {
-                    //        }
-                    //    });
-                    //    thread.IsBackground = true;
-                    //    thread.Start();
-                    //}
-                    //else
-                    //{
-                    //    DequeueData();
-                    //}
                 }
             }
             catch (Exception)
@@ -975,6 +1140,7 @@ namespace Vision2.vision
         {
             try
             {
+               propertyGrid1.SelectedObject=    e.Node.Tag;
                 UpData();
                 HWindd.ShowImage();
 
@@ -1027,7 +1193,7 @@ namespace Vision2.vision
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                ErrForm.Show(ex);
             }
         }
 

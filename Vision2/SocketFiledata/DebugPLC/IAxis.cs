@@ -29,7 +29,7 @@ namespace ErosSocket.DebugPLC
 
         bool IsHome { get; }
 
-        bool IsError { get; set; }
+        bool Alarm { get; set; }
 
         bool IsEnabled { get; set; }
         sbyte IsBand_type_brakeNumber { get; set; }

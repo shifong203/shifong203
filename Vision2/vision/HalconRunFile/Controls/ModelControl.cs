@@ -59,7 +59,7 @@ namespace Vision2.vision.HalconRunFile.Controls
             try
             {
                 this.Cursor = Cursors.WaitCursor;
-                modify();
+                Setmodify();
                 if (comboBox3.SelectedItem == null)
                 {
                     MessageBox.Show("请选择创建模式！");
@@ -103,7 +103,7 @@ namespace Vision2.vision.HalconRunFile.Controls
 
         private bool isChe = true;
 
-        private void modify()
+        private void Setmodify()
         {
             try
             {
@@ -117,6 +117,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                     MessageBox.Show("请选择仿射模式");
                     return;
                 }
+                _Model.HomMatName = comboBox5.SelectedItem.ToString();
                 _Model.Mode = cbbMode.SelectedItem.ToString();
                 _Model.NumberI = Convert.ToInt16(modelNumber.Value);
                 _Model.ScoreD = Convert.ToDouble(ModelSeat.Value);
@@ -139,7 +140,7 @@ namespace Vision2.vision.HalconRunFile.Controls
 
         private void modifyModel_Click(object sender, EventArgs e)
         {
-            modify();
+            Setmodify();
         }
 
         private void btnSaveModel_Click(object sender, EventArgs e)
@@ -181,7 +182,7 @@ namespace Vision2.vision.HalconRunFile.Controls
             {
                 //如果单击“确认键"，showDialog方法返回DialogResult.OK
                 button2.BackColor = colorDialog1.Color;//设置label1的背景颜色
-                modify();
+                Setmodify();
             }
         }
 
@@ -211,7 +212,11 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             try
             {
+                halcon.HobjClear();
+
+               Vision.Gen_arrow_contour_xld(out HObject HOARROW, _Model.ArrowRow1, _Model.ArrowCol1, _Model.ArrowRow2, _Model.ArrowCol2);
                 halcon.AddObj(_Model.ROIModeXLD.Clone());
+                halcon.AddObj(HOARROW,ColorResult.blue);
                 halcon.ShowObj();
             }
             catch (Exception)
@@ -232,7 +237,12 @@ namespace Vision2.vision.HalconRunFile.Controls
                 {
                     listBox2.Items.Add(item.Key);
                 }
-
+                comboBox5.Items.Add("");
+                foreach (var item in _Model.ColorDic)
+                {
+                    comboBox5.Items.Add(item.Key);
+                }
+                comboBox5.SelectedItem = _Model.HomMatName;
                 comboBox3.SelectedIndex = 1;
                 textBox1.Text = _Model.Variation_Model.Name;
                 switch (_Model.Variation_Model.CreateModeMode)
@@ -829,13 +839,13 @@ namespace Vision2.vision.HalconRunFile.Controls
                 _Classify.Enble = checkBox3.Checked;
                 _Classify.IsColt = checkBox6.Checked;
                 _Classify.IsHomMat = checkBox4.Checked;
-                _Classify.ModeHom = checkBox11.Checked;
+                //_Classify.ModeHom = checkBoxHommat11.Checked;
                 _Classify.ThresSelectMin = (byte)numericUpDown4.Value;
                 _Classify.ThresSelectMax = (byte)numericUpDown5.Value;
                 _Classify.SelectMin = (double)numericUpDown8.Value;
                 _Classify.SelectMax = (double)numericUpDown7.Value;
                 _Classify.ClosingCir = (double)numericUpDown6.Value;
-                _Classify.ColorNumber = (byte)numericUpDown10.Value;
+                _Classify.ColorNumber = (int)numericUpDown10.Value;
                 _Classify.Color_ID = (byte)numericUpDown9.Value;
                 _Classify.ISFillUp = checkBox10.Checked;
                 _Classify.ClosingCircleValue = (double)numericUpDown11.Value;
@@ -859,7 +869,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 checkBox3.Checked = _Classify.Enble;
                 checkBox4.Checked = _Classify.IsHomMat;
                 checkBox7.Checked = _Classify.ISSelecRoiFillUP;
-                checkBox11.Checked = _Classify.ModeHom;
+                //checkBoxHommat11.Checked = _Classify.ModeHom;
                 thresholdControl1.SetData(color_Classify.threshold_Min_Maxes);
                 select_obj_type2.SetData(color_Classify.Max_area);
                 numericUpDown10.Value = color_Classify.ColorNumber;
@@ -907,11 +917,11 @@ namespace Vision2.vision.HalconRunFile.Controls
                     {
                         id = HTuple.TupleGenConst(area.Length, _Classify.Color_ID);
                         //halcon.AddMessage("ID:" + id + "面积:" + area + "长度:" + ra + "宽度:" + rb + "角度:" + phi.TupleDeg());
-                        halcon.GetOneImageR().AddImageMassage(row, column, "面积" + area.TupleString("0.3f") + "ra" + ra.TupleString("0.3f") + "rb" + rb.TupleString("0.3f") + "高" +
-                            height.TupleString("0.3f") + "宽" + width.TupleString("0.3f") + "半径" + radius.TupleString("0.3f"));
-                        halcon.GetOneImageR().AddImageMassage(row + 40, column, "MM:面积" + Math.Sqrt(halcon.GetCaliConstMM(area)).ToString("0.000") + "ra" + halcon.GetCaliConstMM(ra).TupleString("0.3f")
-                            + "rb" + halcon.GetCaliConstMM(rb).TupleString("0.3f") + "高" + halcon.GetCaliConstMM(height).TupleString("0.3f") + "宽" + halcon.GetCaliConstMM(width).TupleString("0.3f") +
-                            "半径" + halcon.GetCaliConstMM(radius).TupleString("0.3f"));
+                        halcon.GetOneImageR().AddImageMassage(row, column, "面积" + area + "ra" + ra.TupleString("0.2f") + "rb" + rb.TupleString("0.2f") + "高" +
+                            height.TupleString("0.2f") + "宽" + width.TupleString("0.2f") + "半径" + radius.TupleString("0.2f"));
+                        halcon.GetOneImageR().AddImageMassage(row + 40, column, "MM:面积" + halcon.GetCaliConstMM(area).TupleSqrt().TupleString("0.2f") + "ra" + halcon.GetCaliConstMM(ra).TupleString("0.2f")
+                            + "rb" + halcon.GetCaliConstMM(rb).TupleString("0.2f") + "高" + halcon.GetCaliConstMM(height).TupleString("0.2f") + "宽" + halcon.GetCaliConstMM(width).TupleString("0.2f") +
+                            "半径" + halcon.GetCaliConstMM(radius).TupleString("0.2f"));
                     }
                 }
                 listBox3.SelectedIndex = 0;
@@ -1102,9 +1112,13 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             try
             {
+                halcon.HobjClear();
+
                 _Classify.RunSeleRoi(_Model.
                     GetEmset(halcon.GetImageOBJ(_Classify.ImageType)), 0, out HObject hObject);
                 _Classify.DrawObj = hObject;
+                halcon.AddObj(hObject);
+                halcon.ShowObj();
             }
             catch (Exception ex)
             {
@@ -1233,7 +1247,7 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             try
             {
-                HOperatorSet.GenCrossContourXld(out HObject hObject, _Model.OriginY, _Model.OriginX, 100, _Model.OriginU);
+                HOperatorSet.GenCrossContourXld(out HObject hObject, _Model.OriginColorY, _Model.OriginColorX, 100, _Model.OriginColorA);
 
                 HOperatorSet.GenCrossContourXld(out HObject hObject2, _Model.ModeRow, _Model.ModeCol, 100, 0);
                 halcon.AddObj(hObject2);
@@ -1272,6 +1286,71 @@ namespace Vision2.vision.HalconRunFile.Controls
             catch (Exception)
             {
             }
+        }
+
+        private void comboBox5_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Setmodify();
+        }
+
+   
+
+        private void listBox4_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                halcon.HobjClear();
+                if (listBox1.SelectedItem != null)
+                {
+                    //Measure.Dic_Measure[listBox1.SelectedItem.ToString()].HomName = Measure.HomName;
+                    measureConTrolEx1.Updata(_Model.Dic_Measure[listBox1.SelectedItem.ToString()], halcon);
+                    halcon.AddObj(_Model.Dic_Measure[listBox1.SelectedItem.ToString()].GetHamMatDraw());
+                    halcon.ShowObj();
+                }
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        private void comboBox5_DropDown(object sender, EventArgs e)
+        {
+            try
+            {
+                comboBox5.Items.Clear();
+                comboBox5.Items.Add("");
+                foreach (var item in _Model.ColorDic)
+                {
+                    comboBox5.Items.Add(item.Key);
+                }
+            }
+            catch (Exception)
+            {
+            }
+          
+        }
+
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            try
+            {
+                if (true)
+                {
+                    halcon.HobjClear();
+                    HOperatorSet.GenCircle(out HObject hObject, _Model.DIPs[e.RowIndex].Row,
+                    _Model.DIPs[e.RowIndex].Col, halcon.GetCaliConstPx(_Model.DIPs[e.RowIndex].DistanceMax));
+                    HObject hObject1=  Vision.GenLine(_Model.DIPs[e.RowIndex].Row,
+                    _Model.DIPs[e.RowIndex].Col, new   HTuple( _Model.DIPs[e.RowIndex].Angle).TupleRad(),
+                    halcon.GetCaliConstPx(_Model.DIPs[e.RowIndex].DistanceMax));
+                    halcon.AddObj(hObject1,ColorResult.blue);
+                    halcon.AddObj(hObject);
+                    halcon.ShowObj();
+                }
+            }
+            catch (Exception)
+            {
+            }   
+      
         }
     }
 }

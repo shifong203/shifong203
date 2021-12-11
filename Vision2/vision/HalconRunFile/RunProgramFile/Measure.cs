@@ -2747,6 +2747,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                  out outRows, out outCols, out HTuple arc_Type);
                 this["拟合点Rows"] = outRows;
                 this["拟合点Columns"] = outCols;
+          
                 this["测量类型"] = arc_Type;
                 Vision.Pts_to_best_circle(out HObject _Object, outRows, outCols, this.Min_Measure_Point_Number, arc_Type,
                     out HTuple hvRow_Center, out HTuple hvCol_Center,
@@ -2757,6 +2758,10 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 {
                     return _Object;
                 }
+                HOperatorSet.DistancePp(outRows, outCols, HTuple.TupleGenConst(outCols.Length, hvRow_Center),
+                 HTuple.TupleGenConst(outCols.Length, hvCol_Center), out distance);
+                HTuple min = distance.TupleMin();
+                HTuple max = distance.TupleMax();
                 //HOperatorSet.GenCrossContourXld(out HObject hObject1, hvRow_Center, hvCol_Center, 60, 0);
                 //_Object = _Object.ConcatObj(hObject1);
 
@@ -2768,8 +2773,10 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 this["半径MM"] = outRadiusMM;
                 if (IsRadius)
                 {
-                    this["半径MM"] = halcon.GetCalib().SetCet(hvRadius);
-                    halcon.AddImageMassage(hvRow_Center, hvCol_Center, "半径:" + this["半径MM"]);
+                    //this["半径MM"] = halcon.GetCalib().SetCet(hvRadius);
+                    halcon.AddImageMassage(hvRow_Center+40, hvCol_Center, "半径"+ hvRadius + "Min" + distance.TupleMin()+"Max"+ distance.TupleMax());
+                    halcon.AddImageMassage(hvRow_Center + 80, hvCol_Center, "MM半径" + outRadiusMM.Value.ToString("0.000") + "Min" + halcon.GetCaliConstMM(distance.TupleMin()) + "Max" + halcon.GetCaliConstMM(distance.TupleMax()));
+
                 }
                 this["开始角度"] = hvStartPhi.TupleDeg();
                 this["结束角度"] = hvEndPhi.TupleDeg();
@@ -2801,6 +2808,11 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             line.GenEmptyObj();
             try
             {
+                if (this["DrawCols"].Length!=2)
+                {
+                    halcon.AddObj(this.MeasureHObj, ColorResult.red);
+                    return line;
+                }
                 Vision.Rake(image, out this.HamMatDrawObj, this.MeasurePointNumber, this.Measure_Heigth, this.Measure_Waigth,
                 this.Sigma, this.Threshold, this.TransitionStr.ToString(), this.SelectStr.ToString(), this["DrawRows"].TupleSelect(0), this["DrawCols"].TupleSelect(0),
                 this["DrawRows"].TupleSelect(1), this["DrawCols"].TupleSelect(1), out HTuple outRowst, out HTuple outColst);

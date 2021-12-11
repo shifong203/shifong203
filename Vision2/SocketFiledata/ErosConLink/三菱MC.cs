@@ -306,6 +306,16 @@ namespace ErosSocket.ErosConLink
             err = "";
             try
             {
+                if (id.Contains(","))
+                {
+                  string[] dasts=      id.Split(',');
+                    id = dasts[0];
+       
+                    if (UClass.GetTypeValue(dasts[1], value, out dynamic dynamic))
+                    {
+                        value = dynamic;
+                    }
+                }
                 // 写入操作，这里的M100可以替换成I100,Q100,DB20.100效果时一样的
                 OperateResult operateResult = networkDeviceBase.Write(id, value);                // 写位，注意M100.0等同于M100
                 if (operateResult.IsSuccess)

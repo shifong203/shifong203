@@ -2,6 +2,7 @@
 using System;
 using ThridLibray;
 using Vision2.vision.HalconRunFile.RunProgramFile;
+using static Vision2.vision.HalconRunFile.RunProgramFile.HalconRun;
 
 namespace Vision2.vision.Cams
 {
@@ -17,7 +18,7 @@ namespace Vision2.vision.Cams
 
         bool GetImage(out HObject image);
 
-        bool GetImage(out IGrabbedRawData image);
+        bool GetImage(out ImagesOneRun image);
 
         HObject IGrabbedRawDataTOImage(IGrabbedRawData data);
 
@@ -25,11 +26,12 @@ namespace Vision2.vision.Cams
 
         void SetExposureTime(double VALUE);
 
-        void Straing(HalconRun halconRun);
-
+        void Straing(HWindowControl halconRun =null);
+        void Straing(HalconRun halconRun );
         event Action<string, OneResultOBj, int> Swtr;
 
         event Action<bool> LinkEnvet;
+        event Action<bool> TriggerCon;
 
         //delegate void Sw(string key, HObject image, int runID, bool isSave = true);
 
@@ -94,6 +96,7 @@ namespace Vision2.vision.Cams
         string Key { get; set; }
         long RunTime { get; }
 
+        string CamFOLT();
         double CaliConst { get; set; }
 
         int Index { get; set; }

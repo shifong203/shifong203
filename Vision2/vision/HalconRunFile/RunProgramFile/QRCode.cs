@@ -375,7 +375,11 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         public OneQR One_QR { get; set; } = new OneQR();
         public int XNumber { get; set; } = 4;
         public int YNumber { get; set; } = 5;
-
+        [Description(""), Category("偏移检测"), DisplayName("距离差")]
+        /// <summary>
+        /// 
+        /// </summary>
+        public double CMint { get; set; } = 1;
 
         public Color_classify color_Classify { get; set; } = new Color_classify();
 
@@ -411,6 +415,12 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         /// 二维码ID
         /// </summary>
         private HTuple ID = new HTuple(-1);
+
+
+        /// <summary>
+        /// 失败训练
+        /// </summary>
+        public bool IsTrain { get; set; }
 
         [DescriptionAttribute("控制操作符行为的(可选)参数的名称。'stop_after_result_num', 'train'"),
             Category("识别参数"), DisplayName("参数操作符"), TypeConverter(typeof(ErosConverter)),
@@ -926,6 +936,9 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         }
 
         public List<string> MarkName = new List<string>();
+        /// <summary>
+        /// 输出坐标
+        /// </summary>
         public HTuple Rows { get; set; } = new HTuple();
 
         public HTuple Cols { get; set; } = new HTuple();
@@ -950,12 +963,38 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             NumberInt = 0;
             DecodedDataString.Clear();
             HTuple tupleStr = new HTuple();
+            HObject errObj = new HObject();
+            XLDT = new HObject();
+            XLDT.GenEmptyObj();
             try
             {
+                HTuple row1p = new HTuple();
+                HTuple row2p = new HTuple();
+                HTuple row3p = new HTuple();
+                HTuple Col1p = new HTuple();
+                HTuple Col2p = new HTuple();
+         
+                HTuple Col3p = new HTuple();
                 if (color_Classify.Enble)
                 {
                     aoiObj.SelseAoi = color_Classify.DrawObj;
                     color_Classify.Classify(oneResultOBj, aoiObj, this, out HObject color);
+                    HOperatorSet.Connection(color, out color);
+                    HOperatorSet.AreaCenter(color, out HTuple area, out HTuple row, out HTuple column);
+                    Vision.Pts_to_best_line(out HObject line, row, column, 2, out row1p, out Col1p, out row2p, out Col2p);
+                    Vision.Gen_arrow_contour_xld(out line, row1p, Col1p, row2p, Col2p);
+                    HOperatorSet.HomMat2dIdentity(out HTuple hTuple);
+                    HOperatorSet.HomMat2dRotate(hTuple, new HTuple(-90).TupleRad(), row1p, Col1p, out hTuple);
+                    //HOperatorSet.HomMat2dTranslateLocal(hTuple, heith, 0, out hTuple1);
+                    HOperatorSet.AffineTransPoint2d(hTuple, row2p, Col2p, out  row3p, out  Col3p);
+                    //HOperatorSet.DistancePp()
+                    HOperatorSet.GenCrossContourXld(out HObject cor, row3p, Col3p, 150, 10);
+                    oneResultOBj.AddImageMassage(row3p, Col3p, "C");
+                    oneResultOBj.AddImageMassage(row2p, Col2p, "R");
+                    oneResultOBj.AddObj(cor);
+                    oneResultOBj.AddObj(line);
+                    Vision.Gen_arrow_contour_xld(out line, row1p, Col1p, row3p, Col3p);
+                    oneResultOBj.AddObj(line);
                 }
                 QRText.Clear();
                 GenParamName = "stop_after_result_num";
@@ -982,14 +1021,102 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     {
                         TrainQRCode(hObject3, oneResultOBj, out HObject hObject1);
                     }
-                    oneResultOBj.AddMeassge("识别数量" + QRText.Count);
                 }
-                number = QRText.Count;
-                //image.Dispose();
-                if (nGRoi.IsInitialized())
+                if (IDValue == 1)
                 {
-                    HOperatorSet.CountObj(nGRoi, out HTuple hTuple);
+                    if (IsTrain && QRText.Count == 0)
+                    {
+                        HOperatorSet.FindDataCode2d(hObject3, out HObject hObjecXLD, ID,
+                            "train", "all", out resultHandles, out tupleStr);
+                        QRText.Add(tupleStr);
+                        oneResultOBj.AddObj(hObjecXLD);
+                        if (tupleStr.Length != 0)
+                        {
+                            DecodedDataString.Append(tupleStr.S);
+                        }
+                    }
                 }
+        
+                number = QRText.Count;
+                if (color_Classify.Enble)
+                {
+                    HOperatorSet.DistancePl(Rows, Cols, row1p, Col1p, row2p, Col2p, out HTuple dist);
+                    dist= oneResultOBj.GetCaliConstMM(dist);
+                    HOperatorSet.ProjectionPl(Rows, Cols, HTuple.TupleGenConst(Rows.Length, row1p)
+                    , HTuple.TupleGenConst(Rows.Length, Col1p), HTuple.TupleGenConst(Rows.Length, row2p), 
+                    HTuple.TupleGenConst(Rows.Length, Col2p), out HTuple outRows, out HTuple outcols);
+                    oneResultOBj.AddImageMassage(Rows - (Height+100), Cols,"R"+ dist);
+                    HOperatorSet.DistancePl(Rows, Cols, row1p, Col1p, row3p, Col3p, out HTuple dist2);
+                    dist2 = oneResultOBj.GetCaliConstMM(dist2);
+                    oneResultOBj.AddImageMassage(Rows - (Height), Cols, "C" + dist2);
+                    //HOperatorSet.DistancePp()
+                    HOperatorSet.GenCrossContourXld(out HObject cor, outRows, outcols,100,0);
+                    OutRow = dist;
+                    OutCol = dist2;
+                    if (ModeRow.Length==0)
+                    {
+                        ModeRow = OutRow;
+                    }
+                    if (ModeCol.Length == 0)
+                    {
+                        ModeCol = OutCol;
+                    }
+                    if (ModeRow.Length!= OutRow.Length)
+                    {
+                        NGNumber++;
+                    }
+                    else
+                    {
+                        HTuple minR = ModeRow.TupleSub(OutRow);
+                        //minR[10] = 10;
+                        HTuple det = minR.TupleAbs().TupleGreaterEqualElem(CMint);
+                        det = det.TupleFind(1);
+                        if (det>=0)
+                        {
+                            if (det.Length != 0)
+                            {
+                                NGNumber++;
+                                HOperatorSet.GenRectangle2(out HObject err, Rows.TupleSelect(det),
+                                    Cols.TupleSelect(det), HTuple.TupleGenConst(det.Length, 0),
+                                    HTuple.TupleGenConst(det.Length, Height + 20), HTuple.TupleGenConst(det.Length, Weight + 20));
+                                aoiObj.NGErr = aoiObj.NGErr.ConcatObj(err);
+
+                                oneResultOBj.AddImageMassage(Rows.TupleSelect(det) + (Height + 10), Cols.TupleSelect(det), "r" + minR.TupleSelect(det), ColorResult.red);
+                            }
+                        }
+                        //minR.TupleGreaterElem(1);
+                    } 
+                    if (ModeCol.Length != OutCol.Length)
+                    {
+                        NGNumber++;
+                    }
+                    else
+                    {
+                        HTuple minC = ModeCol.TupleSub(OutCol);
+                        //minC[12] = 10;
+                        HTuple det = minC.TupleAbs().TupleGreaterEqualElem(CMint);
+                        det = det.TupleFind(1);
+                        if (det >= 0)
+                        {
+                            if (det.Length != 0)
+                            {
+                                NGNumber++;
+                                HOperatorSet.GenRectangle2(out HObject err, Rows.TupleSelect(det),
+                                 Cols.TupleSelect(det), HTuple.TupleGenConst(det.Length, 0),
+                                 HTuple.TupleGenConst(det.Length, Height + 20), HTuple.TupleGenConst(det.Length, Weight + 20));
+                                aoiObj.NGErr = aoiObj.NGErr.ConcatObj(err);
+                                oneResultOBj.AddImageMassage(Rows.TupleSelect(det) + (Height + 60), Cols.TupleSelect(det), "c" + minC.TupleSelect(det), ColorResult.red);
+                            }
+                        }
+                    }
+                    oneResultOBj.AddObj(cor);
+                }
+                if (NGNumber!=0)
+                {
+                    oneResultOBj.AddObj(aoiObj.NGErr,ColorResult.red);
+                    oneResultOBj.AddNGOBJ(aoiObj.CiName, "偏移", aoiObj.SelseAoi, aoiObj.NGErr, this.GetBackNames());
+                }
+                oneResultOBj.AddMeassge("识别数量" + QRText.Count);
                 string dataT = "";
                 if (number != this.IDValue)
                 {
@@ -1032,14 +1159,18 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     {
                         if (this.QRText.Count == 1)
                         {
-                            if (IsCont)
+                            if (DecodedDataString.ToString() != "")
                             {
-                                Project.formula.UserFormulaContrsl.StaticAddQRCode(DecodedDataString.ToString(), (int)oneResultOBj.RunID);
+                                if (IsCont)
+                                {
+                                    Project.formula.UserFormulaContrsl.StaticAddQRCode(DecodedDataString.ToString(), (int)oneResultOBj.RunID);
+                                }
+                                else
+                                {
+                                    Project.formula.UserFormulaContrsl.StaticAddQRCode(DecodedDataString.ToString());
+                                }
                             }
-                            else
-                            {
-                                Project.formula.UserFormulaContrsl.StaticAddQRCode(DecodedDataString.ToString());
-                            }
+                         
                             if (TrayIDNumber >= 0)
                             {
                                 DebugCompiler.GetTray(TrayIDNumber).GetTrayData().SetPanleSN(this.QRText, this.TrayIDS);
@@ -1059,6 +1190,10 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                             }
                             return false;
                         }
+                    }
+                    if (NGNumber!=0)
+                    {
+                        return false;
                     }
                     return true;
                 }

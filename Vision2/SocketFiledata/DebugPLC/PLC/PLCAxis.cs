@@ -32,7 +32,7 @@ namespace ErosSocket.DebugPLC.PLC
         /// <summary>
         /// 故障
         /// </summary>
-        public bool Alarm { get; set; }
+        public bool AlarmB { get; set; }
 
         [DescriptionAttribute("。"), Category("执行机制"), DisplayName("回原点超时")]
         public int HomeTime { get; set; } = 20000;
@@ -158,8 +158,10 @@ namespace ErosSocket.DebugPLC.PLC
         public int PlusLimit { get; set; }
         public int MinusLimit { get; set; }
         public double MaxVel { get; set; }
-
-        public bool IsError { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool Alarm { get; set; }
         public bool IsEnabled { get; set; }
         public sbyte IsBand_type_brakeNumber { get; set; } = -1;
 
@@ -309,7 +311,7 @@ namespace ErosSocket.DebugPLC.PLC
             {
                 if (XISHomeAddress != null && XISHomeAddress != "")
                 {
-                    Task.Run(() =>
+                    Task.Run((Action)(() =>
                     {
                         try
                         {
@@ -324,8 +326,8 @@ namespace ErosSocket.DebugPLC.PLC
                         catch (Exception)
                         {
                         }
-                        Alarm = true;
-                    }
+                        this.Alarm = true;
+                    })
                   );
                 }
                 else

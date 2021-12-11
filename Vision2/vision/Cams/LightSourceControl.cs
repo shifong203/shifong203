@@ -4,6 +4,7 @@ using System.IO.Ports;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+using Vision2.Project.DebugF;
 
 namespace Vision2.vision.Cams
 {
@@ -21,14 +22,14 @@ namespace Vision2.vision.Cams
                 iscont = true;
                 this.groupBox1.Text = "光源" + lightSo.Rs232Name;
                 lightSource = lightSo;
-                trackBar1.Value = lightSource.H1;
-                trackBar2.Value = lightSource.H2;
-                trackBar3.Value = lightSource.H3;
-                trackBar4.Value = lightSource.H4;
-                numericUpDown1.Value = lightSource.H1;
-                numericUpDown2.Value = lightSource.H2;
-                numericUpDown3.Value = lightSource.H3;
-                numericUpDown4.Value = lightSource.H4;
+                trackBar1.Value = lightSource.lightSource1.H1;
+                trackBar2.Value = lightSource.lightSource1.H2;
+                trackBar3.Value = lightSource.lightSource1.H3;
+                trackBar4.Value = lightSource.lightSource1.H4;
+                numericUpDown1.Value = lightSource.lightSource1.H1;
+                numericUpDown2.Value = lightSource.lightSource1.H2;
+                numericUpDown3.Value = lightSource.lightSource1.H3;
+                numericUpDown4.Value = lightSource.lightSource1.H4;
                 checkBox1.Checked = lightSource.H1Off;
                 checkBox2.Checked = lightSource.H2Off;
                 checkBox3.Checked = lightSource.H3Off;
@@ -64,14 +65,14 @@ namespace Vision2.vision.Cams
                     return;
                 }
                 iscont = true;
-                lightSource.H1 = (byte)trackBar1.Value;
-                lightSource.H2 = (byte)trackBar2.Value;
-                lightSource.H3 = (byte)trackBar3.Value;
-                lightSource.H4 = (byte)trackBar4.Value;
-                numericUpDown1.Value = lightSource.H1;
-                numericUpDown2.Value = lightSource.H2;
-                numericUpDown3.Value = lightSource.H3;
-                numericUpDown4.Value = lightSource.H4;
+                lightSource.lightSource1.H1 = (byte)trackBar1.Value;
+                lightSource.lightSource1.H2 = (byte)trackBar2.Value;
+                lightSource.lightSource1.H3 = (byte)trackBar3.Value;
+                lightSource.lightSource1.H4 = (byte)trackBar4.Value;
+                numericUpDown1.Value = lightSource.lightSource1.H1;
+                numericUpDown2.Value = lightSource.lightSource1.H2;
+                numericUpDown3.Value = lightSource.lightSource1.H3;
+                numericUpDown4.Value = lightSource.lightSource1.H4;
                 lightSource.SetHx();
             }
             catch (Exception ex)
@@ -90,14 +91,14 @@ namespace Vision2.vision.Cams
                     return;
                 }
                 iscont = true;
-                lightSource.H1 = (byte)numericUpDown1.Value;
-                lightSource.H2 = (byte)numericUpDown2.Value;
-                lightSource.H3 = (byte)numericUpDown3.Value;
-                lightSource.H4 = (byte)numericUpDown4.Value;
-                trackBar1.Value = lightSource.H1;
-                trackBar2.Value = lightSource.H2;
-                trackBar3.Value = lightSource.H3;
-                trackBar4.Value = lightSource.H4;
+                lightSource.lightSource1.H1 = (byte)numericUpDown1.Value;
+                lightSource.lightSource1.H2 = (byte)numericUpDown2.Value;
+                lightSource.lightSource1.H3 = (byte)numericUpDown3.Value;
+                lightSource.lightSource1.H4 = (byte)numericUpDown4.Value;
+                trackBar1.Value = lightSource.lightSource1.H1;
+                trackBar2.Value = lightSource.lightSource1.H2;
+                trackBar3.Value = lightSource.lightSource1.H3;
+                trackBar4.Value = lightSource.lightSource1.H4;
                 lightSource.H1Off = checkBox1.Checked;
                 lightSource.H2Off = checkBox2.Checked;
                 lightSource.H3Off = checkBox3.Checked;
@@ -178,6 +179,9 @@ namespace Vision2.vision.Cams
 
             [DescriptionAttribute("光源控制器1通道。"), Category("光源控制"), DisplayName("4通道")]
             public Int16 H4 { get; set; }
+            [DescriptionAttribute("光源控制器1通道。"), Category("光源控制"), DisplayName("DO输出")]
+            public sbyte DO { get; set; } = -1;
+
         }
 
         private SerialPortHelper serialPort;
@@ -203,38 +207,38 @@ namespace Vision2.vision.Cams
         private string CheckChData()
         {
             string data = "S";
-            if (H1 > 0)
+            if (lightSource1.H1 > 0)
             {
-                data += H1.ToString("000") + "T";
+                data += lightSource1.H1.ToString("000") + "T";
             }
             else
             {
-                data += H1.ToString("000") + "F";
+                data += lightSource1.H1.ToString("000") + "F";
             }
-            if (H2 > 0)
+            if (lightSource1.H2 > 0)
             {
-                data += H2.ToString("000") + "T";
+                data += lightSource1.H2.ToString("000") + "T";
             }
             else
             {
-                data += H2.ToString("000") + "F";
+                data += lightSource1.H2.ToString("000") + "F";
             }
 
-            if (H3 > 0)
+            if (lightSource1.H3 > 0)
             {
-                data += H3.ToString("000") + "T";
+                data += lightSource1.H3.ToString("000") + "T";
             }
             else
             {
-                data += H3.ToString("000") + "F";
+                data += lightSource1.H3.ToString("000") + "F";
             }
-            if (H4 > 0)
+            if (lightSource1.H4 > 0)
             {
-                data += H4.ToString("000") + "T";
+                data += lightSource1.H4.ToString("000") + "T";
             }
             else
             {
-                data += H4.ToString("000") + "F";
+                data += lightSource1.H4.ToString("000") + "F";
             }
 
             return data + "C#";
@@ -249,47 +253,47 @@ namespace Vision2.vision.Cams
             string data = "S";
             if (H1Off)
             {
-                data += H1.ToString("000") + "T";
+                data += lightSource1.H1.ToString("000") + "T";
                 serialPort.Write("#1106411");
             }
             else
             {
                 serialPort.Write("#2106411");
 
-                data += H1.ToString("000") + "F";
+                data += lightSource1.H1.ToString("000") + "F";
             }
             Thread.Sleep(100);
             if (H2Off)
             {
                 serialPort.Write("#1206412");
-                data += H2.ToString("000") + "T";
+                data += lightSource1.H2.ToString("000") + "T";
             }
             else
             {
                 serialPort.Write("#2106412");
-                data += H2.ToString("000") + "F";
+                data += lightSource1.H2.ToString("000") + "F";
             }
             Thread.Sleep(100);
             if (H3Off)
             {
                 serialPort.Write("#1306413");
-                data += H3.ToString("000") + "T";
+                data += lightSource1.H3.ToString("000") + "T";
             }
             else
             {
                 serialPort.Write("#2106412");
-                data += H3.ToString("000") + "F";
+                data += lightSource1.H3.ToString("000") + "F";
             }
             Thread.Sleep(100);
             if (H4Off)
             {
                 serialPort.Write("#1406414");
-                data += H4.ToString("000") + "T";
+                data += lightSource1.H4.ToString("000") + "T";
             }
             else
             {
                 serialPort.Write("#2106413");
-                data += H4.ToString("000") + "F";
+                data += lightSource1.H4.ToString("000") + "F";
             }
 
             return data;
@@ -343,12 +347,13 @@ namespace Vision2.vision.Cams
             {
                 CheckChKWData();
             }
+            DebugCompiler.GetDoDi().WritDO(lightSource1.DO, true);
         }
 
         public void SetOFF()
         {
             Opne();
-            H2 = H3 = H4 = H1 = 0;
+            lightSource1.H2 = lightSource1.H3 = lightSource1.H4 = lightSource1.H1 = 0;
             if (Vision.Instance.OffName == "浮根")
             {
                 serialPort.Write(CheckChData() + "C#");
@@ -364,12 +369,14 @@ namespace Vision2.vision.Cams
             {
                 CheckChKWData();
             }
+      
+            DebugCompiler.GetDoDi().WritDO(lightSource1.DO, false);
         }
 
         public void SetOn()
         {
             Opne();
-            H2 = H3 = H4 = H1 = 255;
+            lightSource1.H2 = lightSource1.H3 = lightSource1.H4 = lightSource1.H1 = 255;
 
             if (Vision.Instance.OffName == "浮根")
             {
@@ -386,39 +393,45 @@ namespace Vision2.vision.Cams
             {
                 CheckChKWData();
             }
+            DebugCompiler.GetDoDi().WritDO(lightSource1.DO, true);
+
         }
 
         public void SetLightSource(LightSourceData lightSource)
         {
             try
             {
-                H1 = lightSource.H1;
-                H2 = lightSource.H2;
-                H3 = lightSource.H3;
-                H4 = lightSource.H4;
+
+                lightSource1. H1 = lightSource.H1;
+                lightSource1. H2 = lightSource.H2;
+                lightSource1.H3 = lightSource.H3;
+                lightSource1. H4 = lightSource.H4;
+                lightSource1.DO = lightSource.DO;
                 this.SetHx();
+       
             }
             catch (Exception ex)
             {
             }
         }
+        public LightSourceData lightSource1 { get; set; } = new LightSourceData();
 
-        [DescriptionAttribute("光源控制器1通道。"), Category("光源控制"), DisplayName("1通道")]
-        public Int16 H1 { get; set; } = 255;
+        //[DescriptionAttribute("光源控制器1通道。"), Category("光源控制"), DisplayName("1通道")]
+        //public Int16 H1 { get; set; } = 255;
 
-        [DescriptionAttribute("光源控制器1通道。"), Category("光源控制"), DisplayName("2通道")]
-        public Int16 H2 { get; set; } = 255;
+        //[DescriptionAttribute("光源控制器1通道。"), Category("光源控制"), DisplayName("2通道")]
+        //public Int16 H2 { get; set; } = 255;
 
-        [DescriptionAttribute("光源控制器1通道。"), Category("光源控制"), DisplayName("3通道")]
-        public Int16 H3 { get; set; } = 255;
+        //[DescriptionAttribute("光源控制器1通道。"), Category("光源控制"), DisplayName("3通道")]
+        //public Int16 H3 { get; set; } = 255;
 
-        [DescriptionAttribute("光源控制器1通道。"), Category("光源控制"), DisplayName("4通道")]
-        public Int16 H4 { get; set; } = 255;
+        //[DescriptionAttribute("光源控制器1通道。"), Category("光源控制"), DisplayName("4通道")]
+        //public Int16 H4 { get; set; } = 255;
 
-        private short h1 = -10;
-        private short h2 = -10;
-        private short h3 = -10;
-        private short h4 = -10;
+        //private short h1 = -10;
+        //private short h2 = -10;
+        //private short h3 = -10;
+        //private short h4 = -10;
         public bool H1Off;
 
         public bool H2Off;
@@ -471,50 +484,50 @@ namespace Vision2.vision.Cams
         /// </summary>
         public void SetLightV()
         {
-            if (H1 >= 0)
+            if (lightSource1.H1 >= 0)
             {
-                if (H1 > 0)
+                if (lightSource1.H1 > 0)
                 {
-                    SetTimeValue('1', '1', H1.ToString("000"));
+                    SetTimeValue('1', '1', lightSource1.H1.ToString("000"));
                 }
                 else
                 {
-                    SetTimeValue('2', '1', H1.ToString("000"));
+                    SetTimeValue('2', '1', lightSource1.H1.ToString("000"));
                 }
             }
 
-            if (H2 >= 0)
+            if (lightSource1.H2 >= 0)
             {
-                if (H2 > 0)
+                if (lightSource1.H2 > 0)
                 {
-                    SetTimeValue('1', '2', H2.ToString("000"));
+                    SetTimeValue('1', '2', lightSource1.H2.ToString("000"));
                 }
                 else
                 {
-                    SetTimeValue('2', '2', H2.ToString("000"));
+                    SetTimeValue('2', '2', lightSource1.H2.ToString("000"));
                 }
             }
 
-            if (H3 >= 0)
+            if (lightSource1.H3 >= 0)
             {
-                if (H3 > 0)
+                if (lightSource1.H3 > 0)
                 {
-                    SetTimeValue('1', '3', H3.ToString("000"));
+                    SetTimeValue('1', '3', lightSource1.H3.ToString("000"));
                 }
                 else
                 {
-                    SetTimeValue('2', '3', H3.ToString("000"));
+                    SetTimeValue('2', '3', lightSource1.H3.ToString("000"));
                 }
             }
-            if (H4 >= 0)
+            if (lightSource1.H4 >= 0)
             {
-                if (H4 > 0)
+                if (lightSource1.H4 > 0)
                 {
-                    SetTimeValue('1', '4', H4.ToString("000"));
+                    SetTimeValue('1', '4', lightSource1.H4.ToString("000"));
                 }
                 else
                 {
-                    SetTimeValue('2', '4', H4.ToString("000"));
+                    SetTimeValue('2', '4', lightSource1.H4.ToString("000"));
                 }
             }
         }

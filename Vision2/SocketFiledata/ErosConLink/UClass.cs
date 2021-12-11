@@ -803,9 +803,10 @@ namespace ErosSocket.ErosConLink
                     }
                     return true;
                 }
-                catch (Exception me)
+                catch (Exception ex )
                 {
-                    MessageBox.Show(me.Message.ToString());
+                    Vision2.ErosProjcetDLL.Project.ErrForm.Show(ex);
+                    //MessageBox.Show(me.Message.ToString());
                     return false;
                 }
             }
@@ -1165,10 +1166,11 @@ namespace ErosSocket.ErosConLink
                     }
                     return "";
                 }
-                catch (Exception me)
+                catch (Exception ex )
                 {
-                    MessageBox.Show(me.Message);
-                    return me.Message.ToString();
+                    Vision2.ErosProjcetDLL.Project.ErrForm.Show(ex);
+                    //MessageBox.Show(ex.Message);
+                    return ex.Message.ToString();
                 }
             }
         }

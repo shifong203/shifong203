@@ -310,7 +310,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             set { nGRoi = value; }
         }
 
-        public HObject nGRoi;
+        protected HObject nGRoi;
 
         ///// <summary>
         ///// 图像区域
@@ -423,7 +423,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         {
             AoiObj aoiObj = new AoiObj();
          
-            aoiObj.SelseAoi = AOIObj;
+            aoiObj.SelseAoi = AOIObj.Clone();
             if (AOIObj.IsInitialized())
             {
                 HOperatorSet.AreaCenter(AOIObj, out HTuple area, out HTuple row, out HTuple col);
@@ -437,7 +437,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
 
             aoiObj.AoiRow = this.AoiRow;
             aoiObj.AoiCol = this.AoiCol;
-            aoiObj.Drow = DrawObj;
+            aoiObj.Drow = DrawObj.Clone();
             aoiObj.CiName = this.Name;
             aoiObj.RPName = this.Name;
             return aoiObj;
@@ -472,12 +472,16 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     nGRoi = new HObject();
                     nGRoi.GenEmptyObj();
                 }
+                //XLD.GenEmptyObj();
+                nGRoi.GenEmptyObj();
                 HObjectGreen = new HObject();
                 HObjectBule = new HObject();
                 HObjectYellow = new HObject();
                 HObjectGreen.GenEmptyObj();
                 HObjectYellow.GenEmptyObj();
                 HObjectBule.GenEmptyObj();
+                OutRow = new HTuple();
+                OutCol = new HTuple();
                 this.NGNumber = 0;
                 Watch.Restart();
                 oneCompo = new OneComponent();
@@ -490,7 +494,6 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 {
                     aoiObj.CiName = this.CRDName;
                 }
-
                 ResltBool = RunHProgram(oneResultOBj, out List<OneRObj> oneRObj, aoiObj);
                 Watch.Stop();
                 Dictionary<string, HTuple> sdd = this.SetData();

@@ -1,5 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
+using System.Threading;
 using System.Windows.Forms;
+using HalconDotNet;
+using Vision2.Project.DebugF;
 
 namespace Vision2.vision.HalconRunFile.Controls
 {
@@ -8,6 +14,9 @@ namespace Vision2.vision.HalconRunFile.Controls
         public CPKForm1()
         {
             InitializeComponent();
+            dataGridTextBoxColumnID.Name = "序号";
+            dataGridTextBoxColumnID.HeaderText = dataGridTextBoxColumnID.Name;
+            dataGridTextBoxColumnID.SortMode = DataGridViewColumnSortMode.NotSortable;
         }
 
         public HalconRunFile.RunProgramFile.HalconRun HalconRun;
@@ -17,23 +26,33 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             try
             {
-                button4.Enabled = false;
-                if (isThrad)
+                FileDat = true;
+                //button4.Enabled = false;
+                if (button1.Text=="停止")
                 {
+                    isThrad = false;
+                    button1.Text = "开始";
                     return;
                 }
-                isThrad = true;
-                if (checkBox1.Checked)
+                if (isThrad)
                 {
+                    button1.Text = "停止";
+                    return;
+                }
+                //dataGridView1.Columns.Clear();
+                button1.Text = "停止";
+                isThrad = true;
+                Thread thread = new Thread(() =>
+                {
+
                     for (int j = 0; j < dataGridView2.Rows.Count; j++)
                     {
                         if (numericUpDown2.Value >= dataGridView2.Rows.Count)
                         {
-                            button4.Enabled = true;
+                            //button4.Enabled = true;
                             MessageBox.Show("已完成");
                             return;
                         }
-
                         HalconRun.ReadImage(dataGridView2.Rows[(int)numericUpDown2.Value].Cells[0].Value.ToString());
                         HalconRun.GetOneImageR().LiyID = (int)numericUpDown1.Value;
                         HalconRun.GetOneImageR().RunID = (int)numericUpDown1.Value;
@@ -42,11 +61,11 @@ namespace Vision2.vision.HalconRunFile.Controls
                         if (numericUpDown2.Value == 0)
                         {
                             dataGridView1.Columns.Clear();
-                            DataGridViewTextBoxColumn dataGridTextBoxColumn = new DataGridViewTextBoxColumn();
-                            dataGridTextBoxColumn.Name = "序号";
-                            dataGridTextBoxColumn.HeaderText = dataGridTextBoxColumn.Name;
-                            dataGridTextBoxColumn.SortMode = DataGridViewColumnSortMode.NotSortable;
-                            dataGridView1.Columns.Add(dataGridTextBoxColumn);
+                            //DataGridViewTextBoxColumn dataGridTextBoxColumn = new DataGridViewTextBoxColumn();
+                            //dataGridTextBoxColumn.Name = "序号";
+                            //dataGridTextBoxColumn.HeaderText = dataGridTextBoxColumn.Name;
+                            //dataGridTextBoxColumn.SortMode = DataGridViewColumnSortMode.NotSortable;
+                            dataGridView1.Columns.Add(dataGridTextBoxColumnID);
                             foreach (var item in HalconRun.GetOneImageR().GetNgOBJS().DicOnes)
                             {
                                 //DataGridViewTextBoxColumn dataGridTextBoxColumn = new DataGridViewTextBoxColumn();
@@ -58,7 +77,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                                 {
                                     for (int i = 0; i < itemd.dataMinMax.Reference_Name.Count; i++)
                                     {
-                                        dataGridTextBoxColumn = new DataGridViewTextBoxColumn();
+                                        DataGridViewTextBoxColumn dataGridTextBoxColumn = new DataGridViewTextBoxColumn();
                                         dataGridTextBoxColumn.Name = item.Key + "." + itemd.dataMinMax.Reference_Name[i];
                                         dataGridTextBoxColumn.HeaderText = dataGridTextBoxColumn.Name;
                                         dataGridTextBoxColumn.SortMode = DataGridViewColumnSortMode.NotSortable;
@@ -68,23 +87,75 @@ namespace Vision2.vision.HalconRunFile.Controls
                             }
                             dataGridView1.Rows.Clear();
                         }
-                        int det = dataGridView1.Rows.Add();
+                        //int det = dataGridView1.Rows.Add();
+                        //dataGridView1.Rows[det].Cells[0].Value = System.IO.Path.GetFileNameWithoutExtension(dataGridView2.Rows[(int)numericUpDown2.Value].Cells[0].Value.ToString());
+                        //int cellIndex = 1;
+                        //foreach (var item in HalconRun.GetOneImageR().GetNgOBJS().DicOnes)
+                        //{
+                        //    foreach (var itemd in item.Value.oneRObjs)
+                        //    {
+                        //        for (int i = 0; i < itemd.dataMinMax.ValueStrs.Count; i++)
+                        //        {
+                        //            dataGridView1.Rows[det].Cells[cellIndex].Value = itemd.dataMinMax.ValueStrs[i];
+                        //            cellIndex++;
+                        //        }
+                        //    }
+                        //}
+                     
+                    }
+                    isThrad = false;
+                });
+                thread.IsBackground = true;
+                thread.Start();
+
+         
+           
+            }
+            catch (Exception ex)
+            {
+            }
+        }
+
+        private void CPKForm1_Load(object sender, EventArgs e)
+        {
+            try
+            {
+                HalconRun.EventDoen += HalconRun_EventDoen;
+                ErosProjcetDLL.UI.DataGridViewF.StCon.AddCon(dataGridView1);
+                ErosProjcetDLL.UI.DataGridViewF.StCon.AddCon(dataGridView2);
+                runCodeUserControl4.SetData(DebugCompiler.Instance.DDAxis.CPKCodeT);
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+   
+        }
+        DataGridViewTextBoxColumn dataGridTextBoxColumnID = new DataGridViewTextBoxColumn();
+        bool FileDat = false;
+        private void HalconRun_EventDoen(vision.OneResultOBj halcon)
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new Action<OneResultOBj>(HalconRun_EventDoen), halcon);
+            }
+            else
+            {
+                try
+                {
+
+
+                    if (!dataGridView1.Columns.Contains(dataGridTextBoxColumnID))
+                    {
+                        dataGridView1.Columns.Add(dataGridTextBoxColumnID);
+                    }
+                    int det = dataGridView1.Rows.Add();
+                    if (FileDat)
+                    {
                         dataGridView1.Rows[det].Cells[0].Value = System.IO.Path.GetFileNameWithoutExtension(dataGridView2.Rows[(int)numericUpDown2.Value].Cells[0].Value.ToString());
-                        int cellIndex = 1;
-                        foreach (var item in HalconRun.GetOneImageR().GetNgOBJS().DicOnes)
-                        {
-                            foreach (var itemd in item.Value.oneRObjs)
-                            {
-                                for (int i = 0; i < itemd.dataMinMax.ValueStrs.Count; i++)
-                                {
-                                    dataGridView1.Rows[det].Cells[cellIndex].Value = itemd.dataMinMax.ValueStrs[i];
-                                    cellIndex++;
-                                }
-                            }
-                        }
                         numericUpDown2.Value++;
-                        if (checkBox1.Checked)
-                        {
+                      
                             if (numericUpDown2.Value >= dataGridView2.Rows.Count)
                             {
                                 HalconDotNet.HTuple hTupleC = new HalconDotNet.HTuple();
@@ -118,97 +189,52 @@ namespace Vision2.vision.HalconRunFile.Controls
                                 dataGridView1.Rows[dataGridView1.Rows.Count - 3].Cells[0].Value = "平均值";
                                 dataGridView1.Rows[dataGridView1.Rows.Count - 2].Cells[0].Value = "最大值";
                                 dataGridView1.Rows[dataGridView1.Rows.Count - 1].Cells[0].Value = "差";
-                                button4.Enabled = true;
+                                //button4.Enabled = true;
                                 MessageBox.Show("已完成");
+                                isThrad = false;
                                 return;
                             }
-                        }
+                        
                     }
-                }
-                else
-                {
-                    HalconRun.ReadCamImage((numericUpDown1.Value).ToString(), (int)numericUpDown1.Value);
-                    if (numericUpDown2.Value == 0)
+                    else
                     {
-                        dataGridView1.Columns.Clear();
-                        DataGridViewTextBoxColumn dataGridTextBoxColumn = new DataGridViewTextBoxColumn();
-                        dataGridTextBoxColumn.Name = "元件名称";
-                        dataGridTextBoxColumn.HeaderText = dataGridTextBoxColumn.Name;
-                        dataGridTextBoxColumn.SortMode = DataGridViewColumnSortMode.NotSortable;
-                        dataGridView1.Columns.Add(dataGridTextBoxColumn);
-                        foreach (var item in HalconRun.GetOneImageR().GetNgOBJS().DicOnes)
+                        dataGridView1.Rows[det].Cells[0].Value = halcon.CamNewTime;
+                    }
+                    foreach (var item in HalconRun.GetOneImageR().GetNgOBJS().DicOnes)
+                    {
+                        foreach (var itemd in item.Value.oneRObjs)
                         {
-                            foreach (var itemd in item.Value.oneRObjs)
+                            for (int i = 0; i < itemd.dataMinMax.Reference_Name.Count; i++)
                             {
-                                for (int i = 0; i < itemd.dataMinMax.Reference_Name.Count; i++)
+                                DataGridViewTextBoxColumn dataGridTextBoxColumn = new DataGridViewTextBoxColumn();
+                                dataGridTextBoxColumn.Name = item.Key + "." + itemd.dataMinMax.Reference_Name[i];
+                                dataGridTextBoxColumn.HeaderText = dataGridTextBoxColumn.Name;
+                                dataGridTextBoxColumn.SortMode = DataGridViewColumnSortMode.NotSortable;
+                                if (!dataGridView1.Columns.Contains(dataGridTextBoxColumn.Name))
                                 {
-                                    dataGridTextBoxColumn = new DataGridViewTextBoxColumn();
-                                    dataGridTextBoxColumn.Name = itemd.dataMinMax.Reference_Name[i];
-                                    dataGridTextBoxColumn.HeaderText = dataGridTextBoxColumn.Name;
-                                    dataGridTextBoxColumn.SortMode = DataGridViewColumnSortMode.NotSortable;
                                     dataGridView1.Columns.Add(dataGridTextBoxColumn);
                                 }
                             }
                         }
-                        dataGridView1.Rows.Clear();
                     }
-                    int det = dataGridView1.Rows.Add();
+                    int cellIndex = 1;
                     foreach (var item in HalconRun.GetOneImageR().GetNgOBJS().DicOnes)
                     {
-                        dataGridView1.Rows[det].Cells[0].Value = item.Key;
-                        int cellIndex = 1;
                         foreach (var itemd in item.Value.oneRObjs)
                         {
-                            string dataCName = itemd.dataMinMax.ComponentName;
-                            string data = "";
                             for (int i = 0; i < itemd.dataMinMax.ValueStrs.Count; i++)
                             {
-                                data = itemd.dataMinMax.ValueStrs[i];
-                                dataGridView1.Rows[det].Cells[cellIndex].Value = data;
+                                dataGridView1.Rows[det].Cells[cellIndex].Value = itemd.dataMinMax.ValueStrs[i];
                                 cellIndex++;
                             }
                         }
                     }
-                    numericUpDown2.Value++;
                 }
-                isThrad = false;
-                //HalconRun.CamImageEvent(numericUpDown1.Value.ToString(), null, (int)numericUpDown1.Value);
+                catch (Exception ex)
+                {
+                }
             }
-            catch (Exception ex)
-            {
-            }
-        }
-
-        private void CPKForm1_Load(object sender, EventArgs e)
-        {
-            HalconRun.EventDoen += HalconRun_EventDoen;
-            Vision2.ErosProjcetDLL.UI.DataGridViewF.StCon.AddCon(dataGridView1);
-        }
-
-        private void HalconRun_EventDoen(vision.OneResultOBj halcon)
-        {
-            try
-            {
-                //foreach (var item in halcon.keyValuePairs1)
-                //{
-                //    if (!dataGridView1.Columns.Contains(item.Key))
-                //    {
-                //        DataGridViewTextBoxColumn dataGridTextBoxColumn = new DataGridViewTextBoxColumn();
-                //        dataGridTextBoxColumn.Name = item.Key;
-                //        dataGridTextBoxColumn.HeaderText = dataGridTextBoxColumn.Name;
-                //        dataGridTextBoxColumn.SortMode = DataGridViewColumnSortMode.NotSortable;
-                //        dataGridView1.Columns.Add(dataGridTextBoxColumn);
-                //    }
-                //}
-                //int de = dataGridView1.Rows.Add();
-                //foreach (var item in halcon.keyValuePairs1)
-                //{
-                //    dataGridView1[item.Key, de].Value = item.Value.ToString();
-                //}
-            }
-            catch (Exception)
-            {
-            }
+        
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -218,7 +244,9 @@ namespace Vision2.vision.HalconRunFile.Controls
                 HalconDotNet.HTuple hTupleMin = new HalconDotNet.HTuple();
                 HalconDotNet.HTuple hTupleMan = new HalconDotNet.HTuple();
                 HalconDotNet.HTuple hTupleCt = new HalconDotNet.HTuple();
-                for (int i2 = 0; i2 < dataGridView1.ColumnCount; i2++)
+                List<HalconDotNet.HTuple> hTuples = new List<HalconDotNet.HTuple>();
+
+                for (int i2 = 1; i2 < dataGridView1.ColumnCount; i2++)
                 {
                     HalconDotNet.HTuple hTuple = new HalconDotNet.HTuple();
                     for (int i = 0; i < dataGridView1.Rows.Count - 1; i++)
@@ -232,25 +260,36 @@ namespace Vision2.vision.HalconRunFile.Controls
                     hTupleMin.Append(hTuple.TupleMin());
                     hTupleMan.Append(hTuple.TupleMax());
                     hTupleCt.Append(hTuple.TupleMax() - hTuple.TupleMin());
+                    hTuples.Add(hTuple);
                 }
+
                 int de = dataGridView1.Rows.Add();
-                for (int i2 = 0; i2 < dataGridView1.ColumnCount; i2++)
+                dataGridView1.Rows[de].Cells[0].Value = "min";
+                for (int i2 = 1; i2 < dataGridView1.ColumnCount; i2++)
                 {
-                    dataGridView1.Rows[de].Cells[i2].Value = hTupleMin.TupleSelect(i2);
+                    HTuple id=      hTuples[i2 - 1].TupleFind(hTupleMin.TupleSelect(i2 - 1));
+                    dataGridView1.Rows[id.TupleInt().I].Cells[i2].Style.BackColor = Color.Yellow;
+                    dataGridView1.Rows[de].Cells[i2].Value = hTupleMin.TupleSelect(i2-1);
+
                 }
                 de = dataGridView1.Rows.Add();
-                for (int i2 = 0; i2 < dataGridView1.ColumnCount; i2++)
+                dataGridView1.Rows[de].Cells[0].Value = "max";
+                for (int i2 = 1; i2 < dataGridView1.ColumnCount; i2++)
                 {
-                    dataGridView1.Rows[de].Cells[i2].Value = hTupleMan.TupleSelect(i2);
+                    HTuple id = hTuples[i2 - 1].TupleFind(hTupleMan.TupleSelect(i2 - 1));
+                    dataGridView1.Rows[id.TupleInt().I].Cells[i2].Style.BackColor = Color.Red;
+                    dataGridView1.Rows[de].Cells[i2].Value = hTupleMan.TupleSelect(i2-1);
                 }
                 de = dataGridView1.Rows.Add();
-                for (int i2 = 0; i2 < dataGridView1.ColumnCount; i2++)
+                dataGridView1.Rows[de].Cells[0].Value = "max-min";
+                for (int i2 = 1; i2 < dataGridView1.ColumnCount; i2++)
                 {
-                    dataGridView1.Rows[de].Cells[i2].Value = hTupleCt.TupleSelect(i2);
+                    dataGridView1.Rows[de].Cells[i2].Value = hTupleCt.TupleSelect(i2-1);
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                MessageBox.Show(ex.Message);
             }
         }
 
@@ -265,8 +304,9 @@ namespace Vision2.vision.HalconRunFile.Controls
                     dataGridView1.Rows.Remove(dataGridView1.SelectedRows[0]);
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                MessageBox.Show(ex.Message);
             }
         }
 
@@ -277,11 +317,11 @@ namespace Vision2.vision.HalconRunFile.Controls
                 SaveFileDialog openFileDialog = new SaveFileDialog();
                 openFileDialog.Filter = "Exlce文件|*.xls;*.xlsx";
 
-                openFileDialog.FileName = "CPK.xls";
+                openFileDialog.FileName = DateTime.Now.ToString("yy年MM月dd日") + "CPK.xls";
                 DialogResult dialogResult = openFileDialog.ShowDialog();
                 if (dialogResult == DialogResult.OK)
                 {
-                    Vision2.ErosProjcetDLL.Excel.Npoi.DataGridViewExportExcel(openFileDialog.FileName, "CPK", dataGridView1);
+                    ErosProjcetDLL.Excel.Npoi.DataGridViewExportExcel(openFileDialog.FileName, "CPK", dataGridView1);
                 }
             }
             catch (Exception ex)
@@ -299,15 +339,24 @@ namespace Vision2.vision.HalconRunFile.Controls
                 openFileDialog.Multiselect = true;
                 openFileDialog.Filter = "图片文件|*.jpg;*.tif;*.tiff;*.gif;*.bmp;*.jpg;*.jpeg;*.jp2;*.png;*.pcx;*.pgm;*.ppm;*.pbm;*.xwd;*.ima;*.hobj";
                 if (openFileDialog.ShowDialog() != DialogResult.OK) return;
-                dataGridView2.Rows.Clear();
-                dataGridView2.Rows.Add(openFileDialog.FileNames.Length);
-                for (int i = 0; i < openFileDialog.FileNames.Length; i++)
-                {
-                    dataGridView2.Rows[i].Cells[0].Value = openFileDialog.FileNames[i];
-                }
+                //dataGridView2.Rows.Clear();
+                List<string> listImages = new List<string>();
+                listImages.AddRange(openFileDialog.FileNames);
+         
+                this.dataGridView2.DataSource = (from paths in listImages select new { paths }).ToList();
+        
+                //dataGridView2.DataSource = openFileDialog.FileNames;
+                //this.dataGridView2.DataSource = (from paths in openFileDialog.FileNames select new { paths }).ToList();
+                //dataGridView2.Rows.Add(openFileDialog.FileNames.Length);
+
+                //for (int i = 0; i < openFileDialog.FileNames.Length; i++)
+                //{
+                //    dataGridView2.Rows[i].Cells[0].Value = openFileDialog.FileNames[i];
+                //}
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                MessageBox.Show(ex.Message);
             }
         }
 
@@ -389,8 +438,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                         }
                     }
                 }
-                if (checkBox1.Checked)
-                {
+            
                     if (e.RowIndex >= dataGridView2.Rows.Count)
                     {
                         HalconDotNet.HTuple hTupleC = new HalconDotNet.HTuple();
@@ -424,15 +472,62 @@ namespace Vision2.vision.HalconRunFile.Controls
                         dataGridView1.Rows[dataGridView1.Rows.Count - 3].Cells[0].Value = "平均值";
                         dataGridView1.Rows[dataGridView1.Rows.Count - 2].Cells[0].Value = "最大值";
                         dataGridView1.Rows[dataGridView1.Rows.Count - 1].Cells[0].Value = "差";
-                        button4.Enabled = true;
+                        //button4.Enabled = true;
                         MessageBox.Show("已完成");
                         return;
                     }
-                }
+                
             }
             catch (Exception)
             {
             }
+        }
+
+        private void 全部删除ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                dataGridView1.Rows.Clear();
+                dataGridView1.Columns.Clear();
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void button4_Click_1(object sender, EventArgs e)
+        {
+            FileDat = false;
+            try
+            {
+                if (!DebugCompiler.Instance.DDAxis.Runing)
+                {
+                    Thread thread = new Thread(() =>
+                    {
+                        button4.Enabled = false;
+                        DebugCompiler.Instance.DDAxis.CPKCodeT.Run();
+                        button2.PerformClick();
+                        button4.Enabled = true;
+                    });
+                    thread.IsBackground = true;
+                    thread.Start();
+                }
+          
+
+            }
+            catch (Exception ex)
+            {
+
+            }
+       
+        
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            DebugCompiler.Instance.DDAxis.CPKCodeT.Stop();
         }
     }
 }

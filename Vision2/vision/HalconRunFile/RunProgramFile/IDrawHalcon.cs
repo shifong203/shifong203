@@ -13,7 +13,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
 
         void Focus();
 
-        HTuple hWindowHalcon(HTuple hawid = null);
+        HWindow hWindowHalcon(HWindow hawid = null);
 
         HObject Image(HObject hObject = null);
 

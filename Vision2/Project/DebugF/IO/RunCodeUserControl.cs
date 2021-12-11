@@ -103,6 +103,10 @@ namespace Vision2.Project.DebugF.IO
 
         private void showLineNo(int COT, string text)
         {
+            try
+            {
+
+         
             if (codeStr.Runing)
             {
                 tsButton3.BackColor = Color.Green;
@@ -194,6 +198,10 @@ namespace Vision2.Project.DebugF.IO
             font.Dispose();
 
             brush.Dispose();
+            }
+            catch (Exception)
+            {
+            }
         }
 
         private void showLineNoTime(int COT, Panel panel, string text)

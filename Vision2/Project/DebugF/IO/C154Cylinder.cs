@@ -48,7 +48,9 @@ namespace Vision2.Project.DebugF.IO
         /// </summary>
         [DescriptionAttribute("缩回信号变量名。"), Category("控制"), DisplayName("气缸报警状态")]
         public string CylinderAlram { get; set; }
-
+        /// <summary>
+        /// 单点控制
+        /// </summary>
         [DescriptionAttribute("单点控制只控制伸出。"), Category("控制"), DisplayName("是否单点控制")]
         public bool ISOne { get; set; }
 
@@ -73,7 +75,7 @@ namespace Vision2.Project.DebugF.IO
 
                     Thread thread = new Thread(() =>
                     {
-                        Thread.Sleep(1000);
+                        Thread.Sleep(100);
                         int errTime = 0;
                         while (!DebugCompiler.GetDoDi().Int[ProtInt])
                         {
@@ -148,7 +150,7 @@ namespace Vision2.Project.DebugF.IO
                     Thread thread = new Thread(() =>
                     {
                         int errTime = 0;
-                        Thread.Sleep(1000);
+                        Thread.Sleep(100);
                         while (!DebugCompiler.GetDoDi().Int[AnI])
                         {
                             Thread.Sleep(10);
@@ -197,12 +199,20 @@ namespace Vision2.Project.DebugF.IO
         }
 
         private int AnI = -10;
+        /// <summary>
+        /// 缩回DO
+        /// </summary>
         private int AnOut = -10;
 
         private int ProtInt = -10;
-
+        /// <summary>
+        /// 伸出DO
+        /// </summary>
         private int ProtOut = -10;
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public bool ToInt()
         {
             if (int.TryParse(ProtrudeQ, out ProtOut) && int.TryParse(ProtrudeI, out ProtInt) &&
@@ -224,6 +234,10 @@ namespace Vision2.Project.DebugF.IO
         {
             get
             {
+                if (ISOne)
+                {
+                    return DebugCompiler.GetDoDi().Out[ProtOut];
+                }
                 int.TryParse(AnastoleI, out AnI);
                 if (DebugCompiler.GetDoDi() == null)
                 {
@@ -234,13 +248,17 @@ namespace Vision2.Project.DebugF.IO
         }
 
         /// <summary>
-        ///
+        ///获得伸出
         /// </summary>
         /// <returns></returns>
         public bool PrValue
         {
             get
             {
+                if (ISOne)
+                {
+                    return DebugCompiler.GetDoDi().Out[ProtOut];
+                }
                 int.TryParse(ProtrudeI, out ProtInt);
                 if (DebugCompiler.GetDoDi() == null)
                 {

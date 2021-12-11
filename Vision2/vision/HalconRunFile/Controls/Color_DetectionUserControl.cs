@@ -15,6 +15,9 @@ namespace Vision2.vision.HalconRunFile.Controls
             InitializeComponent();
             thresholdControl1.evValue += ThresholdControl1_evalue;
             hWindID.Initialize(hWindowControl1);
+            ErosProjcetDLL.UI.DataGridViewF.StCon.AddCon(dataGridView2);
+            ErosProjcetDLL.UI.DataGridViewF.StCon.AddCon(dataGridView3);
+
         }
 
         private List<HObject> hObjects = new List<HObject>();
@@ -59,23 +62,63 @@ namespace Vision2.vision.HalconRunFile.Controls
         //public List<HWindID> hWindIDs = new List<HWindID>();
         public Color_DetectionUserControl(Color_Detection color_Detection) : this()
         {
-            Color_detection = color_Detection;
-            propertyGrid1.SelectedObject = color_Detection;
-            halcon = (HalconRun)color_Detection.GetPThis();
-            RunProgram = Color_detection;
-            foreach (var item in Color_detection.keyColor.Keys)
+            try
             {
-                listBox1.Items.Add(item);
+                Color_detection = color_Detection;
+
+                comboBox3.Items.Clear();
+                foreach (var item in Color_detection.keyColor.Keys)
+                {
+                    comboBox3.Items.Add(item);
+                }
+           
+                comboBox3.SelectedItem = Color_detection.AxisXName;
+                numericUpDown1.Value = (decimal)Color_detection.CMint;
+                checkBox1.Checked = Color_detection.IsAxisName;
+                dataGridView3.Rows.Clear();
+                for (int i = 0; i < Color_detection.ModeRow.Length; i++)
+                {
+                    int dde = dataGridView3.Rows.Add();
+                    dataGridView3.Rows[i].Cells[0].Value =Math.Round(Color_detection.ModeRow.TupleSelect(i).D,2);
+                    dataGridView3.Rows[i].Cells[1].Value = Math.Round(Color_detection.ModeCol.TupleSelect(i).D,2);
+                    if (Color_detection.OutRow.Length > i)
+                    {
+                        dataGridView3.Rows[i].Cells[2].Value = Math.Round(Color_detection.OutRow.TupleSelect(i).D, 2);
+                        dataGridView3.Rows[i].Cells[3].Value = Math.Round(Color_detection.OutCol.TupleSelect(i).D, 2);
+                    }
+                    if (Color_detection.MRows.Length > i)
+                    {
+                        dataGridView3.Rows[i].Cells[4].Value = Math.Round(Color_detection.MRows.TupleSelect(i).D, 2);
+                        dataGridView3.Rows[i].Cells[5].Value = Math.Round(Color_detection.MCols.TupleSelect(i).D, 2);
+                    }
+                    if (Color_detection.Rows.Length > i)
+                    {
+                        dataGridView3.Rows[i].Cells[6].Value = Math.Round(Color_detection.Rows.TupleSelect(i).D, 2);
+                        dataGridView3.Rows[i].Cells[7].Value = Math.Round(Color_detection.Cols.TupleSelect(i).D, 2);
+                    }
+                }
+                propertyGrid1.SelectedObject = color_Detection;
+                halcon = (HalconRun)color_Detection.GetPThis();
+                RunProgram = Color_detection;
+                foreach (var item in Color_detection.keyColor.Keys)
+                {
+                    listBox1.Items.Add(item);
+                }
+                comboBox_ImageType.Items.Clear();
+                //UpDataOBJ(welding_Spot);
+                comboBox_ImageType.Items.AddRange(Enum.GetNames(typeof(ImageTypeObj)));
             }
-            comboBox_ImageType.Items.Clear();
-            //UpDataOBJ(welding_Spot);
-            comboBox_ImageType.Items.AddRange(Enum.GetNames(typeof(ImageTypeObj)));
+            catch (Exception ex)
+            {
+                ErosProjcetDLL.Project.ErrForm.Show(ex);
+            }
+        
         }
 
         public HalconRun halcon;
         public Color_Detection Color_detection;
         public Color_classify _Classify;
-        private bool isMove = false;
+        private bool isMove = true;
 
         public void Get_Pragram(Color_classify color_Classify)
         {
@@ -83,6 +126,20 @@ namespace Vision2.vision.HalconRunFile.Controls
             try
             {
                 _Classify = color_Classify;
+                numericUpDownSkewing.Value = (decimal)_Classify.Skewing;
+                checkBoxIsModeCta.Checked = _Classify.IsModeCta;
+                dataGridView2.Rows.Clear();
+                for (int i = 0; i < _Classify.ModeRow.Length; i++)
+                {
+                    int dde = dataGridView2.Rows.Add();
+                    dataGridView2.Rows[i].Cells[0].Value = _Classify.ModeRow.TupleSelect(i);
+                    dataGridView2.Rows[i].Cells[1].Value = _Classify.ModeCol.TupleSelect(i);
+                    if (_Classify.OutRow.Length>i)
+                    {
+                        dataGridView2.Rows[i].Cells[2].Value = _Classify.OutRow.TupleSelect(i);
+                        dataGridView2.Rows[i].Cells[3].Value = _Classify.OutCol.TupleSelect(i);
+                    }
+                }
                 propertyGrid2.SelectedObject = _Classify;
                 if (color_Classify.H_enabled)
                 {
@@ -116,7 +173,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 }
                 checkBoxEnbleDifference.Checked = _Classify.EnbleDifference;
                 checkBoxEnbleDifferenceAngl.Checked = _Classify.EnbleDifferenceAngl;
-
+                checkBox3.Checked = _Classify.IsObj;
                 checkBox_Enble.Checked = _Classify.Enble;
                 checkBox_IsColt.Checked = _Classify.IsColt;
                 thresholdControl1.SetData(color_Classify.threshold_Min_Maxes);
@@ -154,6 +211,9 @@ namespace Vision2.vision.HalconRunFile.Controls
             {
                 _Classify = color_Classify;
                 halcon.HobjClear();
+                _Classify.Skewing = (double)numericUpDownSkewing.Value;
+                _Classify.IsObj = checkBox3.Checked;
+                _Classify.IsModeCta = checkBoxIsModeCta.Checked;
                 _Classify.EnbleDifferenceAngl = checkBoxEnbleDifferenceAngl.Checked;
                 _Classify.ImageType = (ImageTypeObj)Enum.Parse(typeof(ImageTypeObj), comboBox_ImageType.SelectedItem.ToString());
                 _Classify.EnbleSelect = checkBox_EnbleSelect.Checked;
@@ -166,7 +226,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 _Classify.SelectMin = (double)numericUpDown_SelectMin.Value;
                 _Classify.SelectMax = (double)numericUpDown_SelectMax.Value;
                 _Classify.ClosingCir = (double)numericUpDown_ClosingCir.Value;
-                _Classify.ColorNumber = (byte)numericUpDown_ColorNumber.Value;
+                _Classify.ColorNumber = (int)numericUpDown_ColorNumber.Value;
                 _Classify.Color_ID = (byte)numericUpDown_Color_ID.Value;
                 _Classify.DifferenceInt = (double)numericUpDownDifferenceInt.Value;
                 _Classify.COlorES = button3.BackColor;
@@ -191,7 +251,7 @@ namespace Vision2.vision.HalconRunFile.Controls
             //UpDataOBJ(welding_Spot);
         }
 
-       private RunProgramFile.RunProgram RunProgram;
+       private RunProgram RunProgram;
 
         //public void UpDataOBJ(RunProgramFile.Welding_Spot welding_Spot)
         //{
@@ -209,8 +269,9 @@ namespace Vision2.vision.HalconRunFile.Controls
                 }
                 Set_Pragram(Color_detection.keyColor[listBox1.SelectedItem.ToString()]);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                MessageBox.Show(ex.Message);
             }
         }
 
@@ -244,17 +305,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 aoiObj.SelseAoi = _Classify.DrawObj;
                 aoiObj.CiName = _Classify.Name;
                 List<HTuple> homitd=      Color_detection.GetHomMatList(halcon.GetOneImageR());
-                //if (homitd.Count >= 1)
-                //{
-                //    HOperatorSet.AffineTransRegion(aoiObj.SelseAoi, out aoiObj.SelseAoi, homitd[0], "nearest_neighbor");
-                //}
-                //if (!_Classify.EnbleSelect)
-                //{
-                //    if (aoiObj.SelseAoi != null && aoiObj.SelseAoi.IsInitialized())
-                //    {
-                //        halcon.AddObj(aoiObj.SelseAoi, ColorResult.coral);
-                //    }
-                //}
+        
                 aoiObj.DebugID = 1;
                 _Classify.Classify(halcon.GetOneImageR(), aoiObj, Color_detection, out HObject hObject,
                 this.hObjects);
@@ -278,11 +329,11 @@ namespace Vision2.vision.HalconRunFile.Controls
                 {
                     id = HTuple.TupleGenConst(area.Length, _Classify.Color_ID);
                     //halcon.AddMessage("ID:" + id + "面积:" + area + "长度:" + ra + "宽度:" + rb + "角度:" + phi.TupleDeg());
-                    halcon.GetOneImageR().AddImageMassage(row, column, "面积" + area.TupleString("0.3f") + "ra" + ra.TupleString("0.3f") + "rb" + rb.TupleString("0.3f") + "高" +
-                        height.TupleString("0.3f") + "宽" + width.TupleString("0.3f") + "半径" + radius.TupleString("0.3f"));
-                    halcon.GetOneImageR().AddImageMassage(row + 40, column, "MM:面积" + Math.Sqrt(halcon.GetCaliConstMM(area)).ToString("0.000") + "ra" + halcon.GetCaliConstMM(ra).TupleString("0.3f")
-                        + "rb" + halcon.GetCaliConstMM(rb).TupleString("0.3f") + "高" + halcon.GetCaliConstMM(height).TupleString("0.3f") + "宽" + halcon.GetCaliConstMM(width).TupleString("0.3f") +
-                        "半径" + halcon.GetCaliConstMM(radius).TupleString("0.3f"));
+                    halcon.GetOneImageR().AddImageMassage(row, column, "面积" + area + "ra" + ra.TupleString("0.2f") + "rb" + rb.TupleString("0.2f") + "高" +
+                        height.TupleString("0.2f") + "宽" + width.TupleString("0.2f") + "半径" + radius.TupleString("0.2f"));
+                    halcon.GetOneImageR().AddImageMassage(row + 40, column, "MM:面积" + halcon.GetCaliConstMM(area).TupleSqrt().TupleString("0.2f") + "ra" + halcon.GetCaliConstMM(ra).TupleString("0.2f")
+                        + "rb" + halcon.GetCaliConstMM(rb).TupleString("0.2f") + "高" + halcon.GetCaliConstMM(height).TupleString("0.2f") + "宽" + halcon.GetCaliConstMM(width).TupleString("0.2f") +
+                        "半径" + halcon.GetCaliConstMM(radius).TupleString("0.2f"));
                 }
                 halcon.ShowImage();
                 halcon.ShowObj();
@@ -458,9 +509,13 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             try
             {
+                halcon.HobjClear();
+              
                 _Classify.RunSeleRoi(Color_detection.
                     GetEmset(halcon.GetImageOBJ(_Classify.ImageType)), 0, out HObject hObject);
                 _Classify.DrawObj = hObject;
+                halcon.AddObj(hObject);
+                halcon.ShowObj();
             }
             catch (Exception ex)
             {
@@ -520,7 +575,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                 }
                 groupBox3.Text = listBox2.SelectedItem.ToString();
                 hWindID.SetPerpetualPart(row - 100, col1 - 100, row2 + 100, col2 + 100);
-                hWindID.SetDraw(checkBox2.Checked);
+                hWindID.SetDraw(checkBoxIFliu.Checked);
                 hWindID.OneResIamge.AddObj(_Classify.DrawObj, ColorResult.blue);
                 hWindID.OneResIamge.AddObj(hObjects[listBox2.SelectedIndex]);
                 hWindID.ShowObj();
@@ -598,12 +653,13 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             try
             {
-              
 
+     
             }
             catch (Exception)
             {
             }
+            isMove = false;
         }
 
         private void UserCtrlThreshold1_ThresholdChanged(Threshold_Min_Max threshold_Min_Max)
@@ -654,7 +710,6 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             try
             {
-
                 _Classify.ModeRoing = _Classify.OutRiong;
             }
             catch (Exception)
@@ -664,8 +719,7 @@ namespace Vision2.vision.HalconRunFile.Controls
 
         private void thresholdControl1_DispButt(string dispV,int dispIdxe)
         {
-            try
-            {
+        
                 try
                 {
                     hWindID.HobjClear();
@@ -692,7 +746,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                     }
                     groupBox3.Text = dispV;
                     //hWindID.SetPerpetualPart(row - 100, col1 - 100, row2 + 100, col2 + 100);
-                    hWindID.SetDraw(checkBox2.Checked);
+                    hWindID.SetDraw(checkBoxIFliu.Checked);
                     hWindID.OneResIamge.AddObj(_Classify.DrawObj, ColorResult.blue);
                     hWindID.OneResIamge.AddObj(hObjects[dispIdxe+1]);
                     hWindID.ShowObj();
@@ -704,11 +758,6 @@ namespace Vision2.vision.HalconRunFile.Controls
                 {
                 }
 
-            }
-            catch (Exception)
-            {
-
-            }
         }
 
         private void userCtrlThreshold2_ThresholdChanged(Threshold_Min_Max threshold_Min_Max)
@@ -750,13 +799,10 @@ namespace Vision2.vision.HalconRunFile.Controls
                 }
                 groupBox3.Text = listBox2.SelectedItem.ToString();
                 //hWindID.SetPerpetualPart(row - 100, col1 - 100, row2 + 100, col2 + 100);
-                hWindID.SetDraw(checkBox2.Checked);
+                hWindID.SetDraw(checkBoxIFliu.Checked);
                 hWindID.OneResIamge.AddObj(_Classify.DrawObj, ColorResult.blue);
                 hWindID.OneResIamge.AddObj(hObjects[listBox2.SelectedIndex]);
                 hWindID.ShowObj();
-
-                //HImage hImage = new HImage(hWindID.Image());
-                //userCtrlThreshold1.Fuction(hImage);
             }
             catch (Exception)
             {
@@ -766,6 +812,309 @@ namespace Vision2.vision.HalconRunFile.Controls
         private void button10_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void dataGridView2_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            try
+            {
+                if (isMove)
+                {
+                    return;
+                }
+                if (e.ColumnIndex == 0)
+                {
+                    _Classify.ModeRow[e.RowIndex] = double.Parse(dataGridView2.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString());
+                }
+                else if (e.ColumnIndex == 1)
+                {
+                    _Classify.ModeCol[e.RowIndex] = double.Parse(dataGridView2.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString());
+                }
+            }
+            catch (Exception ex)
+            {
+                ErosProjcetDLL.Project.ErrForm.Show(ex);
+            }
+      
+
+        }
+
+        private void button12_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                isMove = true;
+                _Classify.ModeRow = _Classify.OutRow;
+                _Classify.ModeCol = _Classify.OutCol;
+                dataGridView2.Rows.Clear();
+                for (int i = 0; i < _Classify.ModeRow.Length; i++)
+                {
+                    int dde = dataGridView2.Rows.Add();
+                    dataGridView2.Rows[i].Cells[0].Value = _Classify.ModeRow.TupleSelect(i).ToString();
+                    dataGridView2.Rows[i].Cells[1].Value = _Classify.ModeCol.TupleSelect(i).ToString();
+                    if (_Classify.OutRow.Length > i)
+                    {
+                        dataGridView2.Rows[i].Cells[2].Value = _Classify.OutRow.TupleSelect(i).ToString();
+                        dataGridView2.Rows[i].Cells[3].Value = _Classify.OutCol.TupleSelect(i).ToString();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ErosProjcetDLL.Project.ErrForm.Show(ex);
+            }
+            isMove = false;
+        }
+
+        private void button13_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                halcon.HobjClear();
+
+                HOperatorSet.GenCrossContourXld(out HObject hObject, _Classify.ModeRow, _Classify.ModeCol, 100, 0);
+                HOperatorSet.GenCrossContourXld(out HObject hObject2, _Classify.OutRow, _Classify.OutCol, 100, 10);
+                halcon.AddObj(hObject, ColorResult.blue);
+                halcon.AddObj(hObject2,ColorResult.green);
+                halcon.ShowObj();
+            }
+            catch (Exception ex)
+            {
+                ErosProjcetDLL.Project.ErrForm.Show(ex);
+            }
+        }
+
+        private void comboBox3_DropDown(object sender, EventArgs e)
+        {
+            try
+            {
+                if (isMove)
+                {
+                    return;
+                }
+                comboBox3.Items.Clear();
+                foreach (var item in Color_detection.keyColor.Keys)
+                {
+                    comboBox3.Items.Add(item);
+                }
+                //comboBox3.SelectedItem = Color_detection.AxisXName;
+            }
+            catch (Exception)
+            {
+
+            }
+          
+        }
+
+        private void comboBox3_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (isMove)
+                {
+                    return;
+                }
+           
+                Color_detection.AxisXName = comboBox3.SelectedItem.ToString();
+                Color_detection.CMint = (double)numericUpDown1.Value;
+            }
+            catch (Exception)
+            {
+
+            }
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (isMove)
+                {
+                    return;
+                }
+            
+                Color_detection.IsAxisName = checkBox1.Checked;
+            }
+            catch (Exception ex)
+            {
+                ErosProjcetDLL.Project.ErrForm.Show(ex);
+            }
+        }
+
+        private void dataGridView3_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            try
+            {
+                if (isMove)
+                {
+                    return;
+                }
+                if (e.ColumnIndex == 0)
+                {
+                    Color_detection.ModeRow[e.RowIndex] = double.Parse(dataGridView3.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString());
+                }
+                else if (e.ColumnIndex == 1)
+                {
+                    Color_detection.ModeCol[e.RowIndex] = double.Parse(dataGridView3.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString());
+                }
+                if (e.ColumnIndex == 4)
+                {
+                    Color_detection.MRows[e.RowIndex] = double.Parse(dataGridView3.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString());
+                }
+                else if (e.ColumnIndex == 5)
+                {
+                    Color_detection.MCols[e.RowIndex] = double.Parse(dataGridView3.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString());
+                }
+            }
+            catch (Exception ex)
+            {
+                ErosProjcetDLL.Project.ErrForm.Show(ex);
+            }
+
+        }
+
+        private void button15_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                isMove = true;
+                Color_detection.ModeRow = Color_detection.OutRow;
+                Color_detection.ModeCol = Color_detection.OutCol;
+                Color_detection.MRows = Color_detection.Rows;
+                Color_detection.MCols = Color_detection.Cols;
+                dataGridView3.Rows.Clear();
+                for (int i = 0; i < Color_detection.ModeRow.Length; i++)
+                {
+                    int dde = dataGridView3.Rows.Add();
+                    dataGridView3.Rows[i].Cells[0].Value = Math.Round(Color_detection.ModeRow.TupleSelect(i).D, 2);
+                    dataGridView3.Rows[i].Cells[1].Value = Math.Round(Color_detection.ModeCol.TupleSelect(i).D, 2);
+                    if (Color_detection.OutRow.Length > i)
+                    {
+                        dataGridView3.Rows[i].Cells[2].Value = Math.Round(Color_detection.OutRow.TupleSelect(i).D, 2);
+                        dataGridView3.Rows[i].Cells[3].Value = Math.Round(Color_detection.OutCol.TupleSelect(i).D, 2);
+                    }
+                    if (Color_detection.MRows.Length > i)
+                    {
+                        dataGridView3.Rows[i].Cells[4].Value = Math.Round(Color_detection.MRows.TupleSelect(i).D, 2);
+                        dataGridView3.Rows[i].Cells[5].Value = Math.Round(Color_detection.MCols.TupleSelect(i).D, 2);
+                    }
+                    if (Color_detection.Rows.Length > i)
+                    {
+                        dataGridView3.Rows[i].Cells[6].Value = Math.Round(Color_detection.Rows.TupleSelect(i).D, 2);
+                        dataGridView3.Rows[i].Cells[7].Value = Math.Round(Color_detection.Cols.TupleSelect(i).D, 2);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ErosProjcetDLL.Project.ErrForm.Show(ex);
+            }
+            isMove = false;
+        }
+
+        private void button14_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Color_detection.CMint = (double)numericUpDown1.Value;
+                halcon.HobjClear();
+                Color_detection.Run(halcon.GetOneImageR(), new AoiObj() { DebugID = 1 });
+                
+
+                //HOperatorSet.GenCrossContourXld(out HObject hObject, Color_detection.OutRow, Color_detection.ModeCol, 100, 0);
+                //HOperatorSet.GenCrossContourXld(out HObject hObject2, Color_detection.OutRow, Color_detection.OutCol, 100, 10);
+                //halcon.AddObj(hObject, ColorResult.blue);
+                //halcon.AddObj(hObject2, ColorResult.green);
+                halcon.ShowObj();
+            }
+            catch (Exception ex)
+            {
+                ErosProjcetDLL.Project.ErrForm.Show(ex);
+            }
+        }
+
+ 
+        private void dataGridView3_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            try
+            {
+                halcon.HobjClear();
+               
+                HOperatorSet.GenCrossContourXld(out HObject hObject, 
+                    Color_detection.Rows[e.RowIndex] , Color_detection.Cols[e.RowIndex],
+                    100, 0);
+                HOperatorSet.GenCircle(out HObject circle,
+                    Color_detection.Rows[e.RowIndex], Color_detection.Cols[e.RowIndex],
+               halcon.GetCaliConstPx(     Color_detection.CMint));
+                HOperatorSet.GenCrossContourXld(out HObject hObject2,
+                 Color_detection.MRows[e.RowIndex], Color_detection.MCols[e.RowIndex], 100, 1);
+                halcon.AddObj(circle, ColorResult.green);
+                halcon.AddObj(hObject, ColorResult.green);
+                halcon.AddObj(hObject2, ColorResult.blue);
+                halcon.ShowObj();
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        private void button16_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                halcon.HobjClear();
+
+                HOperatorSet.GenCrossContourXld(out HObject hObject,
+                    Color_detection.Rows, Color_detection.Cols,
+                    100, 0);
+                HOperatorSet.GenCircle(out HObject circle,
+                    Color_detection.Rows, Color_detection.Cols,
+               HTuple.TupleGenConst(  Color_detection.Cols.Length, halcon.GetCaliConstPx(Color_detection.CMint)));
+                HOperatorSet.GenCrossContourXld(out HObject hObject2,
+                 Color_detection.MRows, Color_detection.MCols, 100, 1);
+                halcon.AddObj(circle, ColorResult.green);
+                halcon.AddObj(hObject, ColorResult.green);
+                halcon.AddObj(hObject2, ColorResult.blue);
+                halcon.ShowObj();
+            }
+            catch (Exception)
+            {
+            }
+
+        }
+
+        private void button17_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                isMove = true;
+                for (int i = 0; i < Color_detection.ModeRow.Length; i++)
+                {
+                    //int dde = dataGridView3.Rows.Add();
+                    //dataGridView3.Rows[i].Cells[0].Value = Math.Round(Color_detection.ModeRow.TupleSelect(i).D, 2);
+                    //dataGridView3.Rows[i].Cells[1].Value = Math.Round(Color_detection.ModeCol.TupleSelect(i).D, 2);
+                    if (Color_detection.OutRow.Length > i)
+                    {
+                        dataGridView3.Rows[i].Cells[2].Value = Math.Round(Color_detection.OutRow.TupleSelect(i).D, 2);
+                        dataGridView3.Rows[i].Cells[3].Value = Math.Round(Color_detection.OutCol.TupleSelect(i).D, 2);
+                    }
+                    //if (Color_detection.MRows.Length > i)
+                    //{
+                    //    dataGridView3.Rows[i].Cells[4].Value = Math.Round(Color_detection.MRows.TupleSelect(i).D, 2);
+                    //    dataGridView3.Rows[i].Cells[5].Value = Math.Round(Color_detection.MCols.TupleSelect(i).D, 2);
+                    //}
+                    if (Color_detection.Rows.Length > i)
+                    {
+                        dataGridView3.Rows[i].Cells[6].Value = Math.Round(Color_detection.Rows.TupleSelect(i).D, 2);
+                        dataGridView3.Rows[i].Cells[7].Value = Math.Round(Color_detection.Cols.TupleSelect(i).D, 2);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            isMove = false;
         }
     }
 }

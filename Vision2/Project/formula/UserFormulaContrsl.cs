@@ -8,6 +8,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
 using Vision2.ConClass;
@@ -27,6 +28,7 @@ namespace Vision2.Project.formula
         {
             InitializeComponent();
             This = this;
+            this.toolTip1.SetToolTip(this.label3, "Second Label");
         }
 
         public static UserFormulaContrsl This;
@@ -37,6 +39,10 @@ namespace Vision2.Project.formula
         {
             try
             {
+                if (RecipeCompiler.Instance==null)
+                {
+                    return;
+                }
                 if (DebugCompiler.GetLinkNmae(RecipeCompiler.Instance.GetTrageNmae) == "1"
               || DebugCompiler.GetLinkNmae(RecipeCompiler.Instance.GetTrageNmae) == true.ToString())
                 {
@@ -292,8 +298,14 @@ namespace Vision2.Project.formula
                 {
                     RecipeCompiler.Instance.ProductEX.Add(Product.ProductionName, new ProductEX());
                 }
-                RecipeCompiler.Instance.Data.SetData(RecipeCompiler.GetProductEX().ListDicData);
+                try
+                {
+                    RecipeCompiler.Instance.Data.SetData(RecipeCompiler.GetProductEX().ListDicData);
+                }
+                catch (Exception)
+                {
 
+                }
                 try
                 {
                     runUControl1.Visible = DebugCompiler.Instance.IsCtr;
@@ -548,7 +560,7 @@ namespace Vision2.Project.formula
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.StackTrace + ex.Message);
+                ErrForm.Show(ex);
             }
 
             isUP = false;
@@ -600,14 +612,6 @@ namespace Vision2.Project.formula
         public void EnabledLog(bool enable)
         {
             comboBox1.Enabled = button1.Enabled = enable;
-        }
-
-        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-        }
-
-        private void comboBox1_Click(object sender, EventArgs e)
-        {
         }
 
         private SynchronizationForm synchronizationForm;
@@ -752,6 +756,11 @@ namespace Vision2.Project.formula
                         }
                     }
                 }
+                if (data!=null)
+                {
+                    data.Dispose();
+                }
+                data = new OneDataVale();
                 Vision.Instance.HObjCler();
                 dataVales.Clear(); ;
                 UserFormulaContrsl.SetOK(0);
@@ -769,10 +778,11 @@ namespace Vision2.Project.formula
                 ProcessControl.ProcessUser.QRCode = "";
 
                 RecipeCompiler.Instance.Data.Clear();
+                GC.Collect();
             }
             catch (Exception EX)
             {
-                AlarmText.LogErr(EX.Message, "写入数据");
+                AlarmText.LogErr(EX.Message, "清除数据");
             }
         }
 
@@ -793,7 +803,7 @@ namespace Vision2.Project.formula
                 }
                 if (RecipeCompiler.Instance.GetMes() != null)
                 {
-                    RecipeCompiler.Instance.GetMes().WrietMesAll(data, ProcessControl.ProcessUser.QRCode, Product.ProductionName);
+                    RecipeCompiler.Instance.GetMes().WrietMesAll(data,  Product.ProductionName);
                 }
                 if (RecipeCompiler.Instance.MesType != "")
                 {
@@ -824,9 +834,83 @@ namespace Vision2.Project.formula
                 {
                     datas = DebugF.IO.TrayDataUserControl.GetTray();
                 }
+                if (RecipeCompiler.Instance.WritDataFileName=="")
+                {
+                }
                 if (RecipeCompiler.Instance.GetMes() != null)
                 {
-                    RecipeCompiler.Instance.GetMes().WrietMesAll(datas, ProcessControl.ProcessUser.QRCode, Product.ProductionName);
+                    RecipeCompiler.Instance.GetMes().WrietMesAll(datas, Product.ProductionName);
+                    Task task = new Task(new Action(() =>
+                    {
+                        try
+                        {
+                            string strTimed = DateTime.Now.ToString("yyyy年M月d日");
+                            string pathEx = RecipeCompiler.Instance.DataPaht + "\\" + strTimed + ".csv";
+                            TrayData tray = datas as TrayData;
+                            if (tray != null)
+                            {
+                                List<string> dat = new List<string>();
+                                if (!File.Exists(pathEx))
+                                {
+                                    List<string> columnText = new List<string>() { "StratTime", "EndTime", "status", 
+                                        "SN", "机检", "Mes结果", "Fvt结果","人工处理","复判完成" };
+                                    ErosProjcetDLL.Excel.Npoi.AddWriteCSV(pathEx, columnText.ToArray());
+                                }
+                                dat.Add(DebugCompiler.Instance.DDAxis.StartTime.ToString("HH:mm:ss"));
+                                dat.Add(DateTime.Now.ToString("HH:mm:ss"));
+                                if (tray.OK)
+                                {
+                                    dat.Add("OK");
+                                }
+                                else
+                                {
+                                    dat.Add("NG");
+                                }
+                                dat.Add(tray.TrayIDQR);
+                                dat.Add("");
+                                dat.Add(tray.MesRestStr);
+                                dat.Add("");
+                                if (tray.UserRest)
+                                {
+                                    dat.Add("人工处理");
+                                }
+                                else
+                                {
+                                    dat.Add("人工未处理");
+                                }
+                                dat.Add(tray.Done.ToString());
+                           
+                                ErosProjcetDLL.Excel.Npoi.AddWriteCSV(pathEx, dat.ToArray());
+                                for (int i = 0; i < tray.Count; i++)
+                                {
+                                    if (tray.GetDataVales().Count <= i)
+                                    {
+                                        AlarmText.AddTextNewLine("mes产品数量错误");
+                                        continue;
+                                    }
+                                    if (tray.GetDataVales()[i].NotNull)
+                                    {
+                                        RecipeCompiler.Instance.GetMes().WrietOneData(tray.GetOneDataVale(i), pathEx);
+                                        RecipeCompiler.Instance.GetMes().WrietDATA(tray.GetOneDataVale(i));
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                OneDataVale oneDataVale= datas as OneDataVale;
+                                if (oneDataVale!=null)
+                                {
+                                    RecipeCompiler.Instance.GetMes().WrietOneData(oneDataVale, pathEx);
+                                    RecipeCompiler.Instance.GetMes().WrietDATA(oneDataVale);
+                                }
+                            } 
+                        }
+                        catch (Exception)
+                        {
+                        }
+                    }));
+                    task.Start();
+
                 }
                 This.label4.Text = "产品码:";
                 This.dataGridView1.Rows.Clear();
@@ -838,14 +922,14 @@ namespace Vision2.Project.formula
                 AlarmText.LogErr(ex.Message, "Mes写入数据");
             }
         }
-
+    
         public List<bool> ListOkNumber = new List<bool>();
 
         /// <summary>
         ///
         /// </summary>
         /// <param name="oKNumber"></param>
-        public void AddData(RecipeCompiler.OKNumberClass oKNumber)
+        public void AddData(OKNumberClass oKNumber)
         {
             RecipeCompiler.GetSPC();
             ISOk = oKNumber.IsOK;
@@ -871,7 +955,7 @@ namespace Vision2.Project.formula
         ///
         /// </summary>
         /// <param name="oKNumber"></param>
-        public static void StaticAddData(RecipeCompiler.OKNumberClass oKNumber)
+        public static void StaticAddData(OKNumberClass oKNumber)
         {
             This.AddData(oKNumber);
         }
@@ -924,21 +1008,6 @@ namespace Vision2.Project.formula
             public string Name { get; set; }
 
             /// <summary>
-            /// 结果集合，
-            /// </summary>
-            public Dictionary<string, Dictionary<string, bool>> DicBool { get; set; } = new Dictionary<string, Dictionary<string, bool>>();
-
-            /// <summary>
-            /// 结果
-            /// </summary>
-            public Dictionary<string, bool> ReseltBool { get; set; } = new Dictionary<string, bool>();
-
-            /// <summary>
-            /// 单次执行的程序结果
-            /// </summary>
-            public Dictionary<string, bool> CompoundReseltBool { get; set; } = new Dictionary<string, bool>();
-
-            /// <summary>
             /// 程序的最大流程号
             /// </summary>
             public int MaxNumber { get; set; }
@@ -954,9 +1023,19 @@ namespace Vision2.Project.formula
             public List<string> ListVerData = new List<string>();
 
             /// <summary>
-            /// 结果
+            /// 上次单片结果
             /// </summary>
-            public bool OK { get; set; }
+            public bool aOK { get; set; }
+
+            public  bool OK {
+            get {
+                    if (ListReselt.Contains(false))
+                    {
+                        return false;
+                    }
+                    return true;
+             } 
+            }
         }
 
         public int MAXt;
@@ -1220,6 +1299,7 @@ namespace Vision2.Project.formula
             int det = -1;
             try
             {
+             
                 if (This.dataGridView1.InvokeRequired)
                 {
                     This.dataGridView1.Invoke(new Action<string, int>(StaticAddQRCode), datas, id);
@@ -1565,15 +1645,17 @@ namespace Vision2.Project.formula
 
         private LinkDataForm1 linkDataForm1;
 
-        private void toolStripButton2_Click(object sender, EventArgs e)
-        {
-        }
+     
 
         public static OneDataVale GetDataVale(OneDataVale dataD = null)
         {
             if (dataD != null)
             {
                 data = dataD;
+            }
+            if (data==null)
+            {
+                data = new OneDataVale();
             }
             return data;
         }
@@ -1593,26 +1675,12 @@ namespace Vision2.Project.formula
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
-            //try
-            //{
-            //    timer1.Interval = 500;
-            //    if (!timer1.Enabled)
-            //    {
-            //        timer1.Start();
-            //    }
-            //}
-            //catch (Exception ex)
-            //{
-            //}
+   
         }
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            //if (textBox1.Text.Length >= numericUpDown1.Value)
-            //{
-            //    StaticAddQRCode(textBox1.Text);
-            //    textBox1.Text = "";
-            //}
+     
         }
 
         private void 附加测试ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1622,7 +1690,7 @@ namespace Vision2.Project.formula
                 linkDataForm1 = new LinkDataForm1();
                 linkDataForm1.SetData(RecipeCompiler.Instance.Data);
             }
-            ErosProjcetDLL.UI.UICon.WindosFormerShow(ref linkDataForm1);
+            UICon.WindosFormerShow(ref linkDataForm1);
         }
 
         private Form form;
@@ -1679,15 +1747,6 @@ namespace Vision2.Project.formula
             }
         }
 
-        private void 清除数据ToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            if (MessageBox.Show("是否清除数据?", "清除产能数据", MessageBoxButtons.OKCancel, MessageBoxIcon.Information) == DialogResult.OK)
-            {
-                RecipeCompiler.ResetDATA();
-                label2.Text = "";
-                label2.BackColor = Color.Wheat;
-            }
-        }
 
         private void toolStripDropDownButton1_MouseMove(object sender, EventArgs e)
         {
@@ -1701,12 +1760,20 @@ namespace Vision2.Project.formula
 
         private void 清除统计数据ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("是否清除数据?", "清除产能数据", MessageBoxButtons.OKCancel, MessageBoxIcon.Information) == DialogResult.OK)
+            try
             {
-                RecipeCompiler.ResetDATA();
-                label2.Text = "";
-                label2.BackColor = Color.Wheat;
+                if (MessageBox.Show("是否清除数据?", "清除产能数据", MessageBoxButtons.OKCancel, MessageBoxIcon.Information) == DialogResult.OK)
+                {
+                    RecipeCompiler.ResetDATA();
+                    label2.Text = "";
+                    label2.BackColor = Color.Wheat;
+                }
             }
+            catch (Exception ex)
+            {
+                ErrForm.Show(ex);
+            }
+         
         }
 
         private void textBox2_TextChanged(object sender, EventArgs e)
@@ -1728,13 +1795,13 @@ namespace Vision2.Project.formula
         {
             try
             {
-                if (System.IO.Directory.Exists(RecipeCompiler.Instance.GetMes().DataPaht))
+                if (Directory.Exists(RecipeCompiler.Instance.DataPaht))
                 {
-                    System.Diagnostics.Process.Start(RecipeCompiler.Instance.GetMes().DataPaht);
+                    System.Diagnostics.Process.Start(RecipeCompiler.Instance.DataPaht);
                 }
                 else
                 {
-                    System.Diagnostics.Process.Start(RecipeCompiler.Instance.GetMes().DataPaht);
+                    System.Diagnostics.Process.Start(RecipeCompiler.Instance.DataPaht);
                 }
             }
             catch (Exception ex)
@@ -1747,18 +1814,24 @@ namespace Vision2.Project.formula
         {
             try
             {
-                System.Windows.Forms.FolderBrowserDialog fbd = new System.Windows.Forms.FolderBrowserDialog();
+                FolderBrowserDialog fbd = new FolderBrowserDialog();        
                 fbd.Description = "请选择文件夹";
                 if (ProcessControl.ProcessUser.Instancen.ExcelPath == null)
-                {
-                    ProcessControl.ProcessUser.Instancen.ExcelPath = Application.StartupPath;
+                {       
+                    ProcessControl.ProcessUser.Instancen.ExcelPath = "D:\\Mes";
                 }
-                if (System.IO.Directory.Exists(ProcessControl.ProcessUser.Instancen.ExcelPath.ToString()))
+                string[] FILES = ProcessControl.ProcessUser.Instancen.ExcelPath.Split(':');
+                if (!Directory.Exists(FILES[0]))
+                {
+                    ProcessControl.ProcessUser.Instancen.ExcelPath = "D:\\Mes";
+                }
+                Directory.CreateDirectory(ProcessControl.ProcessUser.Instancen.ExcelPath);
+                if (Directory.Exists(ProcessControl.ProcessUser.Instancen.ExcelPath.ToString()))
                 {
                     fbd.SelectedPath = ProcessControl.ProcessUser.Instancen.ExcelPath.ToString();
                 }
-                System.Windows.Forms.DialogResult dialog = FolderBrowserLauncher.ShowFolderBrowser(fbd);
-                if (dialog == System.Windows.Forms.DialogResult.OK)
+                   DialogResult dialog = FolderBrowserLauncher.ShowFolderBrowser(fbd);
+                if (dialog == DialogResult.OK)
                 {
                     ProcessControl.ProcessUser.Instancen.ExcelPath = fbd.SelectedPath;
                     ProcessControl.ProcessUser.Instancen.SaveThis();
@@ -1775,20 +1848,25 @@ namespace Vision2.Project.formula
             {
                 FolderBrowserDialog fbd = new FolderBrowserDialog();
                 fbd.Description = "请选择文件夹";
-
-                Directory.CreateDirectory(RecipeCompiler.Instance.GetMes().DataPaht);
-                if (Directory.Exists(RecipeCompiler.Instance.GetMes().DataPaht))
+                string[] FILES = RecipeCompiler.Instance.DataPaht.Split(':');
+                if (!Directory.Exists(FILES[0]))
                 {
-                    fbd.SelectedPath = RecipeCompiler.Instance.GetMes().DataPaht;
+                    RecipeCompiler.Instance.DataPaht = "D:\\历史记录";     
+                }
+                Directory.CreateDirectory(RecipeCompiler.Instance.DataPaht);
+                if (Directory.Exists(RecipeCompiler.Instance.DataPaht))
+                {
+                    fbd.SelectedPath = RecipeCompiler.Instance.DataPaht;
                 }
                 DialogResult dialog = FolderBrowserLauncher.ShowFolderBrowser(fbd);
                 if (dialog == DialogResult.OK)
                 {
-                    RecipeCompiler.Instance.GetMes().DataPaht = fbd.SelectedPath;
+                    RecipeCompiler.Instance.DataPaht = fbd.SelectedPath;
                 }
             }
             catch (Exception ex)
             {
+                MessageBox.Show(ex.Message);
             }
         }
 
@@ -1796,11 +1874,6 @@ namespace Vision2.Project.formula
         {
             try
             {
-                //chartType.Series.Clear();
-                //           chartType.ChartAreas.Clear();
-
-                //Series Series1 = new Series();
-                //chartType.Series.Add(Series1);
                 chartType.Series["Series1"].ChartType = SeriesChartType.Pie;
                 chartType.Legends[0].Enabled = true;
                 chartType.Series["Series1"].LegendText = "#INDEX:#VALX";//开启图例
@@ -1819,15 +1892,6 @@ namespace Vision2.Project.formula
                 chartType.ChartAreas["ChartArea1"].Area3DStyle.LightStyle = LightStyle.Realistic;//表面光泽度
                 chartType.Series[0].XValueMember = "name";
                 chartType.Series[0].YValueMembers = "sumcount";
-                //int x = 0;
-                //float[] values = { 905, 100, 20, 23, 60, 87, 42, 77, 92, 51, 29 };
-                //foreach (float v in values)
-
-                //{
-                //    chartType.Series["Series1"].Points.AddXY(x, v);
-                //    x++;
-
-                //}
             }
             catch (Exception)
             {
@@ -1869,7 +1933,7 @@ namespace Vision2.Project.formula
                 ChartArea1.AxisY.Minimum = 0d;
                 int x = 0;
 
-                RecipeCompiler.OKNumberClass[] oKNumberClass = RecipeCompiler.Instance.GetOKNumberList();
+                OKNumberClass[] oKNumberClass = RecipeCompiler.Instance.GetOKNumberList();
                 List<int> vs = new List<int>();
 
                 for (int i = 0; i < oKNumberClass.Length; i++)
@@ -1910,51 +1974,10 @@ namespace Vision2.Project.formula
             }
         }
 
-        private void toolStripButton4_Click(object sender, EventArgs e)
-        {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            //openFileDialog.InitialDirectory = ProjectINI.ProjectPathRun + "\\产品配方\\";
-            openFileDialog.Filter = "csv文件|*.Csv";
-            DialogResult dialog = openFileDialog.ShowDialog();
-            try
-            {
-                if (dialog == DialogResult.OK)
-                {
-                    Npoi.ReadText(openFileDialog.FileName, out List<string> str);
-
-                    if (str == null)
-                    {
-                        MessageBox.Show("参数信息不存在;" + Environment.NewLine);
-                    }
-                    else
-                    {
-                        string dsat = Path.GetDirectoryName(openFileDialog.FileName) + "\\";
-                        dsat += Path.GetFileNameWithoutExtension(openFileDialog.FileName) + "CRD";
-                        for (int i = 0; i < str.Count; i++)
-                        {
-                            if (str[i].Contains("导航图1"))
-                            {
-                                str[i] = str[i].Remove(str[i].IndexOf("导航图1."));
-                            }
-                        }
-                        //string daa=       str[4000];
-                        Npoi.WriteF(dsat, str);
-                        MessageBox.Show("处理完成");
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("导入失败:" + ex.Message);
-            }
-        }
-
         private void textBox1_KeyDown(object sender, KeyEventArgs e)
         {
             try
             {
-                //if (textBox1.Text.Length >= numericUpDown1.Value)
-                //{
                 StaticAddQRCode(textBox1.Text);
                 textBox1.Text = "";
             }
@@ -2029,6 +2052,17 @@ namespace Vision2.Project.formula
 
         private void toolStripButton5_Click(object sender, EventArgs e)
         {
+        }
+
+        private void toolTip1_Popup(object sender, PopupEventArgs e)
+        {
+            try
+            {
+                //this.toolTip1.SetToolTip(this.label3, RecipeCompiler.Instance.OKNumber.GetSPC());
+            }
+            catch (Exception)
+            {
+            }
         }
     }
 }

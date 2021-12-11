@@ -33,17 +33,25 @@ namespace Vision2.Project.DebugF.IO
             {
                 tray = trayData;
                 label1.Text = tray.GetTrayString();
-                //tray.GetDataVales().AddRange(new Mes.DataVale [tray.Count]);
-                for (int i = 0; i < panel1.Controls.Count; i++)
+                if (trayData.Count!= panel1.Controls.Count)
                 {
-                    Label control = panel1.Controls[i] as Label;
-                    if (control != null)
-                    {
-                        control.Text = control.Name;
-                        control.BackColor = Color.White;
-                        control.Tag = null;
-                    }
+                    Initialize(trayData);
                 }
+                else
+                {                //tray.GetDataVales().AddRange(new Mes.DataVale [tray.Count]);
+                    for (int i = 0; i < panel1.Controls.Count; i++)
+                    {
+                        Label control = panel1.Controls[i] as Label;
+                        if (control != null)
+                        {
+                            control.Text = control.Name;
+                            control.BackColor = Color.White;
+                            control.Tag = null;
+                        }
+                    }
+
+                }
+
             }
         }
 

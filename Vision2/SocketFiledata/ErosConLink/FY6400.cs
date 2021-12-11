@@ -109,12 +109,10 @@ namespace ErosSocket.ErosConLink
             if (hDevice == (IntPtr)(-1))
             {
                 IsInitialBool = true;
+                alarmStruct = new Vision2.ErosProjcetDLL.Project.AlarmText.alarmStruct();
                 alarmStruct.Text = "板卡初始化失败";
                 alarmStruct.Name = "FY6400";
-                alarmStruct.Time = DateTime.Now.ToLongTimeString();
                 alarmStruct.AlaType = "致命报警";
-                //Vision2.ErosProjcetDLL.Project.AlarmListBoxt.AddAlarmText(alarmStruct);
-
                 Vision2.ErosProjcetDLL.Project.AlarmText.AddTextNewLine("FY6400板卡初始化失败", System.Drawing.Color.Red);
             }
             base.initialization();

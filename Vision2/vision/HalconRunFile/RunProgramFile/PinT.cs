@@ -30,6 +30,9 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         public bool isCTX { get; set; } = false;
 
         public List<double> ListCTY { get; set; } = new List<double>();
+        /// <summary>
+        /// 检查方式，0=矩阵，1=坐标，2=测量
+        /// </summary>
         public int EnveType { get; set; } = 0;
         public HTuple HalconWindow { get; set; }
 
@@ -83,7 +86,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         /// <summary>
         /// 针区R
         /// </summary>
-        public HTuple ModeRow { get; set; } = new HTuple();
+        public new HTuple ModeRow { get; set; } = new HTuple();
 
         /// <summary>
         /// 针区C
@@ -112,7 +115,9 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         /// 列间距
         /// </summary>
         public double ColumnMM { get; set; }
-
+        /// <summary>
+        /// 标准值
+        /// </summary>
         public double ToleranceMM { get; set; } = 0.1;
 
         public double DifferenceRow { get; set; } = 30;
@@ -173,17 +178,23 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         {
             oneRObjs = new List<OneRObj>();
             bool isOk = false;
-            int err = 0;
+            OneRObj rObj = new OneRObj();
             bool istBool = false;
+            HObject hObject = null;
+            HObject ho_PinSort= null;
+            HObject pointObj = new HObject();
+            HObject errObj = new HObject();
+            errObj.GenEmptyObj();
+
             try
             {
                 //ISCompound = false;
                 oneResultOBj.GetHalcon().GetHomdeMobel(this.HomName);
-                HObject hObject, ho_PinSort;
+
                 nGRoi = new HObject();
                 nGRoi.GenEmptyObj();
                 //Pin好坏
-                HTuple rows, columns, area;
+                HTuple rows, columns;
                 HObject FreiAmpImage;
                 HOperatorSet.GenRectangle2(out hObject, rowRenge1, ColumnRenge2, PhiRenge2, Lengt1Renge2, Lengt2Renge2);
 
@@ -204,7 +215,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 }
                 try
                 {
-                    CheckPin(oneResultOBj, FreiAmpImage, out rows, out columns, aoiObj.DebugID);
+                    CheckPin(oneResultOBj, FreiAmpImage, out rows, out columns, out pointObj, aoiObj.DebugID);
 
                     HTuple rowCent, columnCent, phi, lengt;
                     DicHtuple.SortTuple(rows, columns, out HTuple rows2, out HTuple columns2);
@@ -215,16 +226,18 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     for (int i = 0; i < RowNumber; i++)
                     {
                         DicHtuple.SortTuple(columns2.TupleSelectRange(columns2.Length / RowNumber * i, columns2.Length / RowNumber * (i + 1) - 1),
-                            rows2.TupleSelectRange(columns2.Length / RowNumber * i, columns2.Length / RowNumber * (i + 1) - 1), out HTuple columns3, out HTuple rows3);
+                            rows2.TupleSelectRange(columns2.Length / RowNumber * i, columns2.Length / RowNumber * (i + 1) - 1), 
+                            out HTuple columns3, out HTuple rows3);
                         columns.Append(columns3);
                         rows.Append(rows3);
                     }
+               
                     if (EnveType == 0)
                     {
                         if (rows.Length != ColumnNumber * RowNumber)
                         {
+                            NGNumber++;
                             oneResultOBj.AddMeassge("点数量错误" + rows.Length);
-                            err++;
                         }
                         if (aoiObj.DebugID < 7)
                         {
@@ -249,7 +262,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                                     if (lengt > TolerMM + ToleranceMM || lengt < TolerMM - ToleranceMM)
                                     {
                                         oneResultOBj.AddImageMassage(rowCent, columnCent, new HTuple(lengt).TupleString(".3") + "C", ColorResult.red);
-                                        err++;
+                                        NGNumber++;
                                         //oneCompo.AddNgObj("", Name,r)
                                         oneResultOBj.AddNGOBJ(aoiObj.CiName, "偏移", ho_PinSort, ho_PinSort, this.GetBackNames());
                                     }
@@ -272,7 +285,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                                         {
                                             oneResultOBj.AddNGOBJ(aoiObj.CiName, "偏移", ho_PinSort, ho_PinSort, this.GetBackNames());
                                             oneResultOBj.AddImageMassage(rowCent, columnCent, new HTuple(lengt).TupleString(".3") + "R", ColorResult.red);
-                                            err++;
+                                            NGNumber++;
                                         }
                                         else
                                         {
@@ -301,7 +314,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                                 RowMt.Append(-99999.9);
                                 HOperatorSet.GenCrossContourXld(out HObject hObjectxt, MRows[i], MColumns[i], 60, 0);
                                 oneResultOBj.AddObj(hObjec.ConcatObj(hObjectxt), ColorResult.red);
-                                err++;
+                                NGNumber++;
                             }
                             else
                             {
@@ -320,6 +333,10 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     }
                     else
                     {
+                        if (rows.Length != RowNumber)
+                        {
+                            NGNumber++;
+                        }
                         HTuple XaxisRow = new HTuple();
                         HTuple XaxisCol = new HTuple();
                         HTuple YaxisRow = new HTuple();
@@ -340,12 +357,12 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                                 }
                                 else
                                 {
-                                    HOperatorSet.LinePosition(YaxisRow, YaxisCol,
+                                    HOperatorSet.LinePosition(XaxisRow, XaxisCol,
                                    Dic_Measure.Keys_Measure[X2AxisName].OutRows,
                                    Dic_Measure.Keys_Measure[X2AxisName].OutCols, out HTuple rowc, out HTuple colC,
                                    out HTuple length, out HTuple phic);
                                     XaxisRow = rowc;
-                                    XaxisRow = colC;
+                                    XaxisCol = colC;
                                 }
                             }
                         }
@@ -395,31 +412,42 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                                 minlengt = oneResultOBj.GetCaliConstMM(minlengt);
                                 ModeRow.Append(minlengt);
                                 HTuple iletM = minlengt - MRows.TupleSelect(i);
-                                if (iletM.TupleAbs() < RowMM)
+                                if (iletM.TupleAbs() < this.ToleranceMM)
                                 {
                                     oneResultOBj.AddObj(hObject2, ColorResult.yellow);
-                                    oneResultOBj.AddImageMassage(rows.TupleSelect(i), columns.TupleSelect(i), "Y" + minlengt);
+                                    oneResultOBj.AddImageMassage(rows.TupleSelect(i), columns.TupleSelect(i),
+                                        "Y" + minlengt.TupleString("0.3f"), ColorResult. yellow);
                                 }
                                 else
                                 {
-                                    oneResultOBj.AddImageMassage(rows.TupleSelect(i), columns.TupleSelect(i), iletM, ColorResult.red);
-                                    err++;
+                                    rObj.AddImageMessage(rows.TupleSelect(i), columns.TupleSelect(i), 
+                                        "Y" + iletM.TupleString("0.3f"));
+                                    oneResultOBj.AddImageMassage(rows.TupleSelect(i),
+                                        columns.TupleSelect(i), iletM.TupleString("0.3f"),
+                                        ColorResult.red);
+                                    NGNumber++;
                                     oneResultOBj.AddObj(hObject2, ColorResult.red);
+                                    errObj = errObj.ConcatObj(pointObj.SelectObj(i + 1));
                                 }
                                 MeasureMlet.PointToLineExtension(new HTuple(rows.TupleSelect(i), columns.TupleSelect(i)), YaxisRow, YaxisCol, out HTuple minlengt1,
                                               out HObject hObject3, out HTuple outRow1, out HTuple outCol1);
                                 minlengt1 = oneResultOBj.GetCaliConstMM(minlengt1);
                                 ModeColumn.Append(minlengt1);
                                 iletM = minlengt1 - MColumns.TupleSelect(i);
-                                if (iletM.TupleAbs() < ColumnMM)
+                                if (iletM.TupleAbs() < ToleranceMM)
                                 {
                                     oneResultOBj.AddObj(hObject3, ColorResult.blue);
-                                    oneResultOBj.AddImageMassage(rows.TupleSelect(i) + 80, columns.TupleSelect(i), "X" + minlengt1);
+                                    oneResultOBj.AddImageMassage(rows.TupleSelect(i) + 80, columns.TupleSelect(i),
+                                        "X" + minlengt1.TupleString("0.3f"), ColorResult.blue);
                                 }
                                 else
                                 {
-                                    oneResultOBj.AddImageMassage(rows.TupleSelect(i) + 80, columns.TupleSelect(i), iletM, ColorResult.red);
-                                    err++;
+                                    rObj.AddImageMessage(rows.TupleSelect(i) + 80, columns.TupleSelect(i),
+                                        "X"+ iletM.TupleString("0.3f"));
+                                    errObj = errObj.ConcatObj(pointObj.SelectObj(i + 1));
+                                    oneResultOBj.AddImageMassage(rows.TupleSelect(i) + 80, 
+                                        columns.TupleSelect(i), iletM.TupleString("0.3f"), ColorResult.red);
+                                    NGNumber++;
                                     oneResultOBj.AddObj(hObject3, ColorResult.red);
                                 }
                             }
@@ -455,30 +483,26 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 }
                 catch (Exception ex)
                 {
-                    err++;
+                    NGNumber++;
                 }
                 if (aoiObj.DebugID == 7)
                 {
                     oneResultOBj.AddObj(hObjectTE);
                     return false;
                 }
-                if (err == 0)
-                {
-                    isOk = true;
-                }
-                else
-                {
-                    oneResultOBj.AddMeassge("间距");
-                }
                 if (aoiObj.DebugID != 0 && aoiObj.DebugID < 8)
                 {
                     return false;
                 }
                 HObject imagetd = GetEmset(oneResultOBj.Image);
-                HOperatorSet.Difference(this.AOIObj, this.hObjectTE, out HObject hObject1);
-                if (aoiObj.DebugID != 0 && aoiObj.DebugID > 7)
+                HObject hObject1 = this.AOIObj;
+                if (hObjectTE!=null)
                 {
-                    oneResultOBj.AddObj(hObject1, ColorResult.blue);
+                    HOperatorSet.Difference(this.AOIObj, this.hObjectTE, out  hObject1);
+                    if (aoiObj.DebugID != 0 && aoiObj.DebugID > 7)
+                    {
+                        oneResultOBj.AddObj(hObject1, ColorResult.blue);
+                    }
                 }
                 HOperatorSet.ReduceDomain(imagetd, hObject1, out imagetd);
                 DeFilt(oneResultOBj, imagetd, aoiObj.DebugID);
@@ -490,18 +514,26 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             {
                 ErosProjcetDLL.Project.AlarmText.AddTextNewLine(ex.Message);
             }
-
             if (!istBool)
             {
+                NGNumber++;
                 oneResultOBj.AddMeassge("异物");
             }
-
-            if (istBool && isOk)
+            if (NGNumber==0)
             {
                 return true;
             }
             else
             {
+                rObj.NGText = "Skewing";
+                rObj.ComponentID = aoiObj.CiName;
+                rObj.ROI = hObject;
+                rObj.NGROI = errObj;
+                //RunName = runPa,
+                rObj.RestStrings.Add(rObj.NGText);
+                rObj.RestStrings.AddRange(this.GetBackNames().ToSArr());
+                oneResultOBj.AddNGOBJ(rObj);
+         //       oneResultOBj.AddNGOBJ(aoiObj.CiName, "Skewing", hObject, errObj, this.GetBackNames());
                 return false;
             }
         }
@@ -666,8 +698,17 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
 
             HOperatorSet.DispObj(hObject, HalconWiid);
         }
-
-        public bool CheckPin(OneResultOBj halcon, HObject imageT, out HTuple rows, out HTuple columns, int runID = 0)
+        /// <summary>
+        /// 点检查
+        /// </summary>
+        /// <param name="halcon"></param>
+        /// <param name="imageT"></param>
+        /// <param name="rows"></param>
+        /// <param name="columns"></param>
+        /// <param name="OutPint"></param>
+        /// <param name="runID"></param>
+        /// <returns></returns>
+        public bool CheckPin(OneResultOBj halcon, HObject imageT, out HTuple rows, out HTuple columns,out HObject OutPint , int runID = 0)
         {
             bool OKt = false;
             rows = new HTuple();
@@ -682,6 +723,8 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             HOperatorSet.GenEmptyObj(out ho_PinNo);
             HOperatorSet.GenEmptyObj(out ho_Line);
             HOperatorSet.GenEmptyObj(out ho_PinSort);
+            OutPint = new HObject();
+            OutPint.GenEmptyObj();
             //Pin好坏
             HTuple area;
             try
@@ -971,11 +1014,12 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 HOperatorSet.AreaCenter(ho_PinHave, out area, out rows, out columns);
                 columns = columns.TupleRemove(rows.TupleFind(0));
                 rows = rows.TupleRemove(rows.TupleFind(0));
-                nGRoi = nGRoi.ConcatObj(ho_PinHave);
+                //nGRoi = nGRoi.ConcatObj(ho_PinHave);
+                OutPint = ho_PinHave;
             }
             catch (HalconException HDevExpDefaultException)
             {
-                Vision2.ErosProjcetDLL.Project.AlarmText.AddTextNewLine(HDevExpDefaultException.Message);
+                Vision2.ErosProjcetDLL.Project.AlarmText.AddTextNewLine(this.Name+ ".Pint:"+ HDevExpDefaultException.Message);
             }
             return OKt;
         }

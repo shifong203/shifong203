@@ -64,7 +64,7 @@ namespace ErosSocket.DebugPLC.PLC
                                 {
                                     labHome.BackColor = Color.Green;
                                 }
-                                if (axisData.IsError)
+                                if (axisData.Alarm)
                                 {
                                     labErrer.BackColor = Color.Red;
                                 }

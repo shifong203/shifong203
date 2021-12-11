@@ -12,12 +12,20 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
     /// <summary>
     ///
     /// </summary>
-    public class Color_Detection : RunProgram
+    public class Color_Detection : RunProgram 
     {
         public override string ShowHelpText()
         {
             return "2.6_颜色识别";
         }
+        public string AxisXName { get; set; } = "";
+        public double CMint { get; set; } = 10;
+
+        public bool IsAxisName { get; set; }
+        public HTuple Rows = new HTuple();
+        public HTuple Cols = new HTuple();
+        public HTuple MRows = new HTuple();
+        public HTuple MCols = new HTuple();
 
         public override Control GetControl(IDrawHalcon halcon)
         {
@@ -31,8 +39,21 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
 
         public Dictionary<string, Color_classify> keyColor { get; set; } = new Dictionary<string, Color_classify>();
 
-        public class Color_classify
+        public class Color_classify :PCBFile.DataMaxMinDic
         {
+            [Category("坐标位置"), DisplayName("搜索坐标Row"), Description("")]
+            /// <summary>
+            /// 搜索点位
+            /// </summary>
+            public double AoiRow { get; set; }
+
+            [Category("坐标位置"), DisplayName("搜索坐标Col"), Description("")]
+            /// <summary>
+            /// 搜索点位
+            /// </summary>
+            public double AoiCol { get; set; }
+
+
             public Color_classify()
             {
                 Threshold_H.Max = Threshold_S.Max = Threshold_V.Max = 255;
@@ -106,7 +127,18 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             [Description(""), Category("图像通道"), DisplayName("通道"),]
             public ImageTypeObj ImageType { get; set; }
 
+            /// <summary>
+            /// 显示区域
+            /// </summary>
+            [Description(""), Category("显示"), DisplayName("显示区域"),]
+
+            public bool IsObj { get; set; } = true;
+
+            /// <summary>
+            /// 显示中心
+            /// </summary>
             [Description(""), Category("显示"), DisplayName("显示中心"),]
+            
             public bool IsColt { get; set; } = true;
 
 
@@ -182,10 +214,14 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             /// </summary>
             public bool ISSelecRoiFillUP { get; set; }
 
+            ///// <summary>
+            ///// 定位
+            ///// </summary>
+            //public bool ModeHom { get; set; }
 
-            public bool ModeHom { get; set; }
-
-            
+            /// <summary>
+            /// 设置当前为模板位置
+            /// </summary>
             public bool ISModeC { get; set; } 
 
             public void RunSeleRoi(HObject image, int id, out HObject iamget)
@@ -233,27 +269,19 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                  List<HObject> Listobjs = null)
             {
                 int NGNumber = 0;
-                Color_region = oneResultOBj.Image;
-                HObject Err = drawObj.SelseAoi;
+      
+                HObject iamge = oneResultOBj.Image;
+                Color_region = null;
+                HOperatorSet.GetImageSize(iamge, out HTuple width, out HTuple height);
 
-                HOperatorSet.CountChannels(oneResultOBj.Image, out HTuple htcon);
-                if (htcon != 3)
-                {
-                    oneResultOBj.AddMeassge("图像类型错误,需要3通道图像");
-                    return true;
-                }
-                HOperatorSet.GetImageSize(Color_region, out HTuple width, out HTuple height);
-                HTuple row1 = new HTuple(-1);
-                HTuple col1 = new HTuple(-1);
-                HObject H = new HObject();
-                HObject S = new HObject();
                 HObject V = new HObject();
+                HObject hObject = new HObject();
                 ///检测区
                 HObject hObjectROI = oneResultOBj.GetHalcon().GetModelHaoMatRegion(RunPa.HomName, drawObj.SelseAoi);
-                HObject hObject = oneResultOBj.GetHalcon().GetModelHaoMatRegion(RunPa.HomName, drawObj.SelseAoi);
+                //HObject hObject = oneResultOBj.GetHalcon().GetModelHaoMatRegion(RunPa.HomName, drawObj.SelseAoi);
                 if (EnbleSelect)
                 {
-                    this.RunSeleRoi(RunPa.GetEmset(oneResultOBj.GetHalcon().GetImageOBJ(ImageType)), 0, out hObject);
+                    this.RunSeleRoi(oneResultOBj.GetHalcon().GetImageOBJ(ImageType), 0, out hObject);
                     hObjectROI = hObject;
                     HOperatorSet.AreaCenter(hObjectROI, out HTuple area, out HTuple row, out HTuple column);
                     oneResultOBj.AddObj(hObjectROI, ColorResult.blue);
@@ -272,42 +300,42 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     oneResultOBj.AddObj(hObjectROI, ColorResult.coral);
                 }
                 hObject = hObjectROI;
-                HOperatorSet.SmallestRectangle1(hObjectROI, out row1, out col1, out height, out width);
-                HObject hObjectH = new HObject();
-                HObject hObjectS = new HObject();
-                HObject hObjectV = new HObject();
-                if (H_enabled) hObjectH = Threshold_H.Threshold(oneResultOBj.GetHalcon().GetImageOBJ(ImageTypeObj.H));
-                if (S_enabled) hObjectS = Threshold_S.Threshold(oneResultOBj.GetHalcon().GetImageOBJ(ImageTypeObj.S));
-                if (V_enabled) hObjectV = Threshold_V.Threshold(oneResultOBj.GetHalcon().GetImageOBJ(ImageTypeObj.V));
-                if (H_enabled && S_enabled)
-                {
-                    HOperatorSet.Intersection(hObject, hObjectH, out hObjectH);
-                    HOperatorSet.Intersection(hObjectH, hObjectS, out hObject);
-                }
-                if (H_enabled && S_enabled && V_enabled)
-                {
-                    HOperatorSet.Intersection(hObject, hObjectV, out hObject);
-                }
-                else if (H_enabled && V_enabled)
-                {
-                    HOperatorSet.Intersection(hObjectH, hObjectV, out hObject);
-                }
-                else if (S_enabled && V_enabled)
-                {
-                    HOperatorSet.Intersection(hObjectS, hObjectV, out hObject);
-                }
-                else if (H_enabled)
-                {
-                    hObject = hObjectH;
-                }
-                else if (S_enabled)
-                {
-                    hObject = hObjectS;
-                }
-                else if (V_enabled)
-                {
-                    hObject = hObjectV;
-                }
+                //HOperatorSet.SmallestRectangle1(hObjectROI, out row1, out col1, out height, out width);
+                //HObject hObjectH = new HObject();
+                //HObject hObjectS = new HObject();
+                //HObject hObjectV = new HObject();
+                //if (H_enabled) hObjectH = Threshold_H.Threshold(oneResultOBj.GetHalcon().GetImageOBJ(ImageTypeObj.H));
+                //if (S_enabled) hObjectS = Threshold_S.Threshold(oneResultOBj.GetHalcon().GetImageOBJ(ImageTypeObj.S));
+                //if (V_enabled) hObjectV = Threshold_V.Threshold(oneResultOBj.GetHalcon().GetImageOBJ(ImageTypeObj.V));
+                //if (H_enabled && S_enabled)
+                //{
+                //    HOperatorSet.Intersection(hObject, hObjectH, out hObjectH);
+                //    HOperatorSet.Intersection(hObjectH, hObjectS, out hObject);
+                //}
+                //if (H_enabled && S_enabled && V_enabled)
+                //{
+                //    HOperatorSet.Intersection(hObject, hObjectV, out hObject);
+                //}
+                //else if (H_enabled && V_enabled)
+                //{
+                //    HOperatorSet.Intersection(hObjectH, hObjectV, out hObject);
+                //}
+                //else if (S_enabled && V_enabled)
+                //{
+                //    HOperatorSet.Intersection(hObjectS, hObjectV, out hObject);
+                //}
+                //else if (H_enabled)
+                //{
+                //    hObject = hObjectH;
+                //}
+                //else if (S_enabled)
+                //{
+                //    hObject = hObjectS;
+                //}
+                //else if (V_enabled)
+                //{
+                //    hObject = hObjectV;
+                //}
                 if (Listobjs != null)
                 {
                     Listobjs.Clear();
@@ -318,6 +346,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     if (threshold_Min_Maxes[i].Enabled)
                     {
                         HObject hObject1 = threshold_Min_Maxes[i].Threshold(V);
+                        V.Dispose();
                         if (Listobjs != null)
                         {
                             Listobjs.Add(hObject1);
@@ -366,9 +395,9 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         }
                         HOperatorSet.DilationRectangle1(Color_region, out hObject1, Vision.Instance.DilationRectangle1, Vision.Instance.DilationRectangle1);
                         HOperatorSet.Union1(hObject1, out hObject1);
-                        HOperatorSet.SmallestRectangle1(hObject1, out row1, out col1, out HTuple row2, out HTuple column2);
-                        HOperatorSet.AreaCenter(hObjectROI, out HTuple area, out HTuple row, out HTuple column);
-                        HOperatorSet.GenRectangle1(out hObject1, row1, col1, row2, column2);
+                        HOperatorSet.SmallestRectangle1(hObject1, out HTuple  row1, out HTuple col1, out HTuple row2, out HTuple column2);
+                        //HOperatorSet.AreaCenter(hObjectROI, out HTuple area, out HTuple row, out HTuple column);
+                        //HOperatorSet.GenRectangle1(out hObject1, row1, col1, row2, column2);
                     }
                     oneResultOBj.AddMeassge(drawObj.CiName + "." + this.Name + ":" + Color_ID + Name + "数量" + Color_region.CountObj());
                     NGNumber++;
@@ -376,18 +405,26 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 else if (IsColt)
                 {
                     HOperatorSet.Connection(hObjectROI, out hObjectROI);
-                    HOperatorSet.AreaCenter(hObjectROI, out HTuple area, out HTuple row, out HTuple column);
+                    HOperatorSet.AreaCenter(Color_region, out HTuple area, out HTuple row, out HTuple column);
                     HOperatorSet.GenCrossContourXld(out HObject hObject1, row, column, 50, 0);
                     oneResultOBj.AddObj(hObject1);
                 }
+                if (IsObj)
+                {
+                    oneResultOBj.AddObj(Color_region);
+                }
                 HOperatorSet.AreaCenter(Color_region, out HTuple areaTd, out HTuple rowTd, out HTuple coluTd);
-                RunPa.nGRoi = RunPa.nGRoi.ConcatObj(Color_region);
-                OBJRow = rowTd;
-                OBJCol = coluTd;
-                drawObj.SelseAoi = hObjectROI;
+                //RunPa.nGRoi = RunPa.nGRoi.ConcatObj(Color_region);
            
-                OutRiong = Color_region;
-                if (OutRiong.CountObj()==1)
+                drawObj.SelseAoi = hObjectROI.Clone();
+                if (rowTd.Length!=0)
+                {
+                    OBJRow = rowTd;
+                    OBJCol = coluTd;
+                    OutRiong = Color_region;
+                }
+          
+                if (OutRiong != null&& OutRiong.CountObj()==1)
                 {
                     if (EnbleDifference)
                     {
@@ -406,8 +443,6 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         {
                             HOperatorSet.VectorAngleToRigid(Moderow, Modecolu, 0, row, colu, 0, out homMat2d);
                         }
-     
-
                         HOperatorSet.AffineTransRegion(ModeRoing, out HObject modeHomMatRoing, homMat2d, "nearest_neighbor");
                         HOperatorSet.Difference(modeHomMatRoing, OutRiong, out HObject hObject1);
                         HOperatorSet.Difference(OutRiong, modeHomMatRoing, out HObject hObject2);
@@ -416,65 +451,68 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         hObject2 = RunProgram.OpneOrCosingCircle(hObject2, DifferenceInt);
                         HOperatorSet.Connection(hObject2, out hObject2);
                         hObject2= Diffe_Max_area.select_shape(hObject2);
-                        //oneResultOBj.AddObj(modeHomMatRoing, ColorResult.yellow);
-                        //oneResultOBj.AddObj(ModeRoing, ColorResult.blue);
-                        //hObject2 = RunProgram.DilationOrErosingCircle(hObject2, DifferenceInt);
-                        //hObject1 = RunProgram.DilationOrErosingCircle(hObject1, DifferenceInt);
-                        //HOperatorSet.ErosionCircle(hObject2, out hObject2, DifferenceInt);
-                        //HOperatorSet.ErosionCircle(hObject1, out hObject1, DifferenceInt);
                         oneResultOBj.AddObj(hObject2, ColorResult.red);
-                    
-                        //oneResultOBj.AddObj(modeHomMatRoing, ColorResult.blue);
-
                     }
                 }
-          
-                    if (AotuThreshold)
+                OutRow = rowTd;
+                OutCol = coluTd;
+                if (!this.CompareData(oneResultOBj, out drawObj.NGErr))
+                {
+                    NGNumber++;
+                }
+                  if (AotuThreshold)
                     {
-                    //HOperatorSet.BinaryThreshold(imaget, out hObject,
-                    //      "max_separability", "light",
-                    //      out HTuple usedThreshold);
                       HOperatorSet.ReduceDomain(oneResultOBj.GetHalcon().GetImageOBJ(ImageTypeObj), hObjectROI, out HObject imaget );
                       HOperatorSet.LocalThreshold(imaget, out hObject, "adapted_std_deviation", LightD, AotuThresholdPagr, AotuThresholdValue);
                         HOperatorSet.FillUp(hObject, out hObject);
-                    oneResultOBj.AddObj(hObject,ColorResult.red);
+                        oneResultOBj.AddObj(hObject,ColorResult.red);
+                         NGNumber++;
+                        drawObj.NGErr = drawObj.NGErr.ConcatObj(hObject);
                     }
-                
                 if (NGNumber != 0)
                 {
                     HOperatorSet.Union1(Color_region, out Color_region);
                     HOperatorSet.DilationRectangle1(Color_region, out HObject hObject1, Vision.Instance.DilationRectangle1, Vision.Instance.DilationRectangle1);
                     HOperatorSet.Connection(hObject1, out hObject1);
-                    //oneResultOBj.AddNGOBJ(RunPa.Name, Name, hObject1, hObjectROI);
-                    HOperatorSet.AreaCenter(hObjectROI, out HTuple area, out HTuple row, out HTuple column);
-                    HOperatorSet.AreaCenter(hObject1, out HTuple areat, out HTuple rowt, out HTuple columnt);
-                    if (areat.Length == 0)
+                    HOperatorSet.FillUp(hObject1, out hObject1);
+                    drawObj.NGErr = drawObj.NGErr.ConcatObj(Color_region);
+                    if (hObject1.CountObj()==0)
                     {
-                        hObject1 = hObjectROI;
+                        hObject1 = drawObj.SelseAoi;
                     }
                     if (RunPa.ISShowText)
                     {
-                        HTuple Colorid = new HTuple();
-                        Colorid = HTuple.TupleGenConst(area.Length, Color_ID);
+                        HOperatorSet.AreaCenter(hObjectROI, out HTuple area, out HTuple row, out HTuple column);
+                        HTuple Colorid = HTuple.TupleGenConst(area.Length, Color_ID);
                         oneResultOBj.AddImageMassage(row, column, drawObj.CiName + "." + Colorid + Name, ColorResult.yellow);
                     }
-                  
-                    oneResultOBj.AddNGOBJ(drawObj.CiName, RunPa.Name + "." + Name, hObject1, Color_region, RunPa.GetBackNames());
+             
+                    Color_region = drawObj.NGErr;
+                    if (ColorNumber==-1)
+                    {
+                        return false;
+                    }
+                    //HOperatorSet.Connection(drawObj.SelseAoi, out drawObj.SelseAoi);
+                    //int ined = drawObj.SelseAoi.CountObj();
+                    oneResultOBj.AddNGOBJ(drawObj.CiName, RunPa.Name + "." + Name, hObject1, drawObj.NGErr, RunPa.GetBackNames());
                     return false;
+                    //oneResultOBj.AddNGOBJ(drawObj.CiName, RunPa.Name + "." + Name, hObject1.Clone(), Color_region.Clone(), RunPa.GetBackNames());
                 }
                 return true;
             }
         }
 
-        //[DescriptionAttribute("是否在结果图像中显示文本。"), Category("结果显示"), DisplayName("显示文本")]
-        //public bool ISShowText { get; set; }
+       
 
         public override bool RunHProgram(OneResultOBj oneResultOBj, out List<OneRObj> oneRObjs, AoiObj aoiObj)
         {
             oneRObjs = new List<OneRObj>();
 
             this.AOIObj.GenEmptyObj();
-            
+            HTuple area;
+            Rows = new HTuple();
+            Cols = new HTuple();
+            HTuple row;
             //HOperatorSet.AreaCenter(aoiObj.Aoi, out HTuple area, out HTuple row, out HTuple col);
             foreach (var item in keyColor)
             {
@@ -484,11 +522,15 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     {
                         continue;
                     }
+                    if (item.Key==AxisXName)
+                    {
+                        continue;
+                    }
                     item.Value.Name = item.Key;
-                    aoiObj.SelseAoi = item.Value.DrawObj;
+                    aoiObj.SelseAoi = item.Value.DrawObj.Clone();
                     if (aoiObj.IsLibrary)
                     {
-                        HOperatorSet.AreaCenter(item.Value.DrawObj, out HTuple area, out HTuple row, out HTuple col);
+                        HOperatorSet.AreaCenter(item.Value.DrawObj, out area, out row, out HTuple col);
                         HOperatorSet.VectorAngleToRigid(row, col, 0, aoiObj.AoiRow, aoiObj.AoiCol, new HTuple(aoiObj.Angle).TupleRad(), out HTuple hom2dt);
                         HOperatorSet.AffineTransRegion(item.Value.DrawObj, out aoiObj.SelseAoi, hom2dt, "nearest_neighbor");
                     }
@@ -503,17 +545,15 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                             aoiObj.CiName = CRDName;
                         }
                     }
-                    //if (homitd.Count >= 1)
-                    //{
-                    //    HOperatorSet.AffineTransRegion(aoiObj.SelseAoi, out aoiObj.SelseAoi, homitd[0], "nearest_neighbor");
-                    //}
-                    //HOperatorSet.AffineTransRegion(aoiObj.Drow, out aoiObj.Drow, hom2dt, "nearest_neighbor");
                     if (!item.Value.Classify(oneResultOBj, aoiObj, this, out HObject hObject))
                     {
-             
-                        //HOperatorSet.AreaCenter(hObject, out HTuple area, out HTuple row, out HTuple column);
-                        HTuple Colorid = new HTuple();
                         ResltBool = false;
+                    }
+                    HOperatorSet.AreaCenter(hObject, out  area, out  row, out HTuple column);
+                    if (item.Key!=this.AxisXName)
+                    {
+                        Rows.Append(row);
+                        Cols.Append(column);
                     }
                     this.AOIObj = this.AOIObj.ConcatObj(aoiObj.SelseAoi);
                 }
@@ -521,7 +561,121 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 {
                 }
             }
+        
+            if (IsAxisName)
+            {
+                HTuple row1p = new HTuple();
+                HTuple row2p = new HTuple();
+                HTuple row3p = new HTuple();
+                HTuple Col1p = new HTuple();
+                HTuple Col2p = new HTuple();
+                HTuple Col3p = new HTuple();
+                if (keyColor.ContainsKey(this.AxisXName))
+                {
 
+                    if (keyColor[this.AxisXName].Enble)
+                    {
+                        aoiObj.SelseAoi = keyColor[this.AxisXName].DrawObj;
+                        keyColor[this.AxisXName].Classify(oneResultOBj, aoiObj, this, out HObject color);
+                        HOperatorSet.Connection(color, out color);
+                        HOperatorSet.AreaCenter(color, out area, out row, out HTuple column);
+                        Vision.Pts_to_best_line(out HObject line, row, column, 2, out row1p, out Col1p, out row2p, out Col2p);
+                        Vision.Gen_arrow_contour_xld(out line, row1p, Col1p, row2p, Col2p);
+                        HOperatorSet.HomMat2dIdentity(out HTuple hTuple);
+                        HOperatorSet.HomMat2dRotate(hTuple, new HTuple(-90).TupleRad(), row1p, Col1p, out hTuple);
+                        //HOperatorSet.HomMat2dTranslateLocal(hTuple, heith, 0, out hTuple1);
+                        HOperatorSet.AffineTransPoint2d(hTuple, row2p, Col2p, out row3p, out Col3p);
+                        //HOperatorSet.DistancePp()
+                        HOperatorSet.GenCrossContourXld(out HObject cor, row3p, Col3p, 150, 10);
+                     
+                        oneResultOBj.AddImageMassage(row3p, Col3p, "C");
+                        oneResultOBj.AddImageMassage(row2p, Col2p, "R");
+                        oneResultOBj.AddObj(cor);
+                        oneResultOBj.AddObj(line);
+                        Vision.Gen_arrow_contour_xld(out line, row1p, Col1p, row3p, Col3p);
+                        oneResultOBj.AddObj(line);
+                        HOperatorSet.DistancePl(Rows, Cols, row1p, Col1p, row2p, Col2p, out HTuple dist);
+                        dist = oneResultOBj.GetCaliConstMM(dist);
+                        HOperatorSet.ProjectionPl(Rows, Cols, HTuple.TupleGenConst(Rows.Length, row1p)
+                        , HTuple.TupleGenConst(Rows.Length, Col1p), HTuple.TupleGenConst(Rows.Length, row2p),
+                        HTuple.TupleGenConst(Rows.Length, Col2p), out HTuple outRows, out HTuple outOutCol);
+                        HOperatorSet.DistancePl(Rows, Cols, row1p, Col1p, row3p, Col3p, out HTuple dist2);
+                        dist2 = oneResultOBj.GetCaliConstMM(dist2);
+                        if (this.ISShowText)
+                        {
+                            oneResultOBj.AddImageMassage(Rows - (100), Cols, "R" + dist);
+                            oneResultOBj.AddImageMassage(Rows, Cols, "C" + dist2);
+                        }
+                        HOperatorSet.GenCrossContourXld(out cor, outRows, outOutCol, 100, 0);
+                        OutRow = dist;
+                        OutCol = dist2;
+                        if (aoiObj.DebugID==1)
+                        {
+                            HOperatorSet.GenCrossContourXld(out HObject hObjecte, MRows, MCols, 100, 10);
+                            oneResultOBj.AddObj(hObjecte,ColorResult.blue);
+                        }
+                        if (ModeRow.Length == 0)
+                        {
+                            ModeRow = OutRow;
+                        }
+                        if (ModeCol.Length == 0)
+                        {
+                            ModeCol = OutCol;
+                        }
+                        if (ModeRow.Length != OutRow.Length)
+                        {
+                            NGNumber++;
+                        }
+                        else
+                        {
+                            HTuple minR = ModeRow.TupleSub(OutRow);
+                            HTuple det = minR.TupleAbs().TupleGreaterEqualElem(CMint);
+                            det = det.TupleFind(1);
+                            if (det >= 0)
+                            {
+                                if (det.Length != 0)
+                                {
+                                    NGNumber++;
+                                    HOperatorSet.GenRectangle2(out HObject err, MRows.TupleSelect(det),
+                                        MCols.TupleSelect(det), HTuple.TupleGenConst(det.Length, 0),
+                                        HTuple.TupleGenConst(det.Length, 20), HTuple.TupleGenConst(det.Length, 20));
+                                    aoiObj.NGErr = aoiObj.NGErr.ConcatObj(err);
+                                    oneResultOBj.AddImageMassage(MRows.TupleSelect(det) + (10), MCols.TupleSelect(det), "c" + minR.TupleSelect(det), ColorResult.red);
+                                }
+                            }
+                        }
+                        if (ModeCol.Length != OutCol.Length)
+                        {
+                            NGNumber++;
+                        }
+                        else
+                        {
+                            HTuple minC = ModeCol.TupleSub(OutCol);
+                            //minC[12] = 10;
+                            HTuple det = minC.TupleAbs().TupleGreaterEqualElem(CMint);
+                            det = det.TupleFind(1);
+                            if (det >= 0)
+                            {
+                                if (det.Length != 0)
+                                {
+                                    NGNumber++;
+                                    HOperatorSet.GenRectangle2(out HObject err, MRows.TupleSelect(det),
+                                     MCols.TupleSelect(det), HTuple.TupleGenConst(det.Length, 0),
+                                     HTuple.TupleGenConst(det.Length, oneResultOBj.GetCaliConstPx( CMint)),
+                                     HTuple.TupleGenConst(det.Length, oneResultOBj.GetCaliConstPx(CMint)));
+                                    aoiObj.NGErr = aoiObj.NGErr.ConcatObj(err);
+                                    oneResultOBj.AddImageMassage(MRows.TupleSelect(det) + (60), MCols.TupleSelect(det), "r" + minC.TupleSelect(det), ColorResult.red);
+                                }
+                            }
+                        }
+                        oneResultOBj.AddObj(aoiObj.NGErr,ColorResult.red);
+                    }
+                }
+            }
+            if (NGNumber!=0)
+            {
+                ResltBool = false;
+            }
             HOperatorSet.Union1(AOIObj, out AOIObj);
             HOperatorSet.AreaCenter(AOIObj, out HTuple area2, out HTuple rows, out HTuple colu);
 

@@ -40,7 +40,7 @@ namespace Vision2.Project
                 {
                     if (RecipeCompiler.Instance.GetMes() != null)
                     {
-                        RecipeCompiler.Instance.GetMes().WrietMesAll(trayRobot, ProcessControl.ProcessUser.QRCode, Product.ProductionName);
+                        RecipeCompiler.Instance.GetMes().WrietMesAll(trayRobot,  Product.ProductionName);
                     }
                     DebugF.IO.DODIAxis.RresOK = true;
                     DebugF.IO.DODIAxis.RresWait = false;
@@ -139,7 +139,7 @@ namespace Vision2.Project
             {
                 if (RecipeCompiler.Instance.GetMes() != null)
                 {
-                    RecipeCompiler.Instance.GetMes().WrietMesAll(trayRobot1, ProcessControl.ProcessUser.QRCode, Product.ProductionName);
+                    RecipeCompiler.Instance.GetMes().WrietMesAll(trayRobot1, Product.ProductionName);
                 }
             }
 

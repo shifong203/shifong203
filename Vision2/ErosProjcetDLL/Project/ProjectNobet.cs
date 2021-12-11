@@ -139,7 +139,7 @@ namespace Vision2.ErosProjcetDLL.Project
             this.UpProject();
         }
 
-        private bool isDrawNod;
+        //private bool isDrawNod;
 
         //在绘制节点事件中，按自已想的绘制
 
@@ -267,7 +267,7 @@ namespace Vision2.ErosProjcetDLL.Project
             }
             catch (Exception ex)
             {
-                isDrawNod = false;
+                //isDrawNod = false;
                 MessageBox.Show(ex.Message);
             }
         }

@@ -2000,6 +2000,7 @@ namespace ErosSocket.ErosConLink
                         if (this.SendString.Length > 2)
                         {
                             this.SetIDValue(this.SendString, true, out string err);
+                            this.SetIDValue(this.SendString, 1, out  err);
                         }
                     }
                 }
@@ -2255,8 +2256,8 @@ namespace ErosSocket.ErosConLink
         /// <summary>
         ///
         /// </summary>
-        /// <param name="mess"></param>
-        public void ErrerLog(Exception mess)
+        /// <param name="ex"></param>
+        public void ErrerLog(Exception ex)
         {
             if (LogNet == null)
             {
@@ -2265,16 +2266,17 @@ namespace ErosSocket.ErosConLink
 
             if (ProjectINI.DebugMode)
             {
-                MessageBox.Show(this.Name + "异常信息:" + mess.Message);
+                ErrForm.Show(ex);
+                //MessageBox.Show(this.Name + "异常信息:" + ex.Message);
             }
             else
             {
                 if (IsStataText)
                 {
-                    this.AddTextBox(this.Name + "异常信息:" + mess);
+                    this.AddTextBox(this.Name + "异常信息:" + ex);
                 }
             }
-            LogNet.WriteException("", mess);
+            LogNet.WriteException("", ex);
         }
 
         /// <summary>

@@ -12,10 +12,11 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             InitializeComponent();
             comboBox1.Items.Clear();
+            ErosProjcetDLL.UI.DataGridViewF.StCon.AddCon(dataGridView1);
         }
 
         private RunProgramFile.MeasureMlet measure;
-        private HalconRunFile.RunProgramFile.HalconRun HalconRun;
+        private HalconRunFile.RunProgramFile.HalconRun halcon;
         private bool isChanged = true;
 
         public MeasureMletUserControlcs(MeasureMlet measureMlet) : this()
@@ -35,8 +36,11 @@ namespace Vision2.vision.HalconRunFile.Controls
             comboBox2.SelectedItem = measure.MeasureName1;
             comboBox3.SelectedItem = measure.MeasureName2;
             comboBox1.SelectedItem = measure.MeasureMode.ToString();
-
-            HalconRun = measure.GetPThis();
+            foreach (var item in measure.MestaNames)
+            {
+                listBox2.Items.Add(item.Key);
+            }
+            halcon = measure.GetPThis();
             listBox1.Items.Clear();
             listBox1.Items.AddRange(measure.Dic_Measure.Keys_Measure.Keys.ToArray());
             isChanged = false;
@@ -60,19 +64,19 @@ namespace Vision2.vision.HalconRunFile.Controls
             return null;
         }
 
-        private HalconDotNet.HObject image;
+      
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             try
             {
-                HalconRun.HobjClear();
+                halcon.HobjClear();
                 if (listBox1.SelectedItem != null)
                 {
                     //Measure.Dic_Measure[listBox1.SelectedItem.ToString()].HomName = Measure.HomName;
-                    measureConTrolEx1.Updata(measure.Dic_Measure[listBox1.SelectedItem.ToString()], HalconRun);
-                    HalconRun.AddObj(measure.Dic_Measure[listBox1.SelectedItem.ToString()].GetHamMatDraw());
-                    HalconRun.ShowObj();
+                    measureConTrolEx1.Updata(measure.Dic_Measure[listBox1.SelectedItem.ToString()], halcon);
+                    halcon.AddObj(measure.Dic_Measure[listBox1.SelectedItem.ToString()].GetHamMatDraw());
+                    halcon.ShowObj();
                 }
             }
             catch (Exception)
@@ -211,13 +215,166 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             try
             {
-                measure.Run(HalconRun.GetOneImageR(), new AoiObj());
+                measure.Run(halcon.GetOneImageR(), new AoiObj());
                 double vaet = (double)numericUpDown5.Value / measure.ValuePP;
                 DialogResult dialogResult = MessageBox.Show("校准值:" + vaet + "=" + numericUpDown5.Value + "/" + measure.ValuePP, "校准完成!点击YES完成校准", MessageBoxButtons.YesNo);
                 if (dialogResult == DialogResult.Yes) measure.Scale = vaet;
             }
             catch (Exception ex)
             {
+            }
+        }
+
+        private void listBox2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                AoiObj aoiObj = measure.GetAoi();
+                aoiObj.DebugID = 1;
+                measure.Run(halcon.GetOneImageR(), aoiObj);
+                halcon.GetOneImageR().DebugID = 2;
+                propertyGrid2.SelectedObject = measure.MestaNames[listBox2.SelectedItem.ToString()];
+                measure.MestaNames[listBox2.SelectedItem.ToString()].Mestan(halcon.GetOneImageR(), measure,
+                measure.XYzroeRows, measure.  XYzroeColus, measure.dinRowX2, 
+                measure.dinColX2, measure.dinRowY2, measure.dinColY2);
+                halcon.ShowObj();
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
+        private void 添加ToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string name = "P";
+                foreach (var item in measure.MestaNames)
+                {
+                    name = item.Key;
+                    break;
+                }
+               st:
+                string nameStr = "";
+                if (measure.MestaNames.ContainsKey(name))
+                {
+                    int idx = ErosProjcetDLL.Project.ProjectINI.GetStrReturnInt(name, out name);
+                    name = name + (idx + 1);
+                    goto st;
+                }
+                    nameStr = Interaction.InputBox("请输入产品名", "新建产品", name, 100, 100);
+                    if (nameStr == "")
+                    {
+                        return;
+                    }
+                    measure.MestaNames.Add(nameStr,new MeasureMlet.MestanData());
+                if (nameStr.Length == 0)
+                {
+                    return;
+                }
+                listBox2.Items.Add(nameStr);
+               
+            }
+            catch (Exception)
+            { }
+        }
+
+        private void 删除ToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                measure.MestaNames.Remove(listBox2.SelectedItem.ToString());
+                listBox2.Items.Remove(listBox2.SelectedItem.ToString());
+
+            }
+            catch (Exception)
+            { }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            try
+            {
+            AoiObj aoiObj=     measure.GetAoi();
+                aoiObj.DebugID = 1;
+                measure.Run(halcon.GetOneImageR(), aoiObj);
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                isChanged = true;
+                dataGridView1.Rows.Clear();
+                Column6.Items.Clear();
+              
+                Column6.Items.AddRange(measure.Dic_Measure.Keys_Measure.Keys.ToArray());
+                foreach (var item in measure.MestaNames)
+                {
+                    int det=dataGridView1.Rows.Add();
+                    dataGridView1.Rows[det].Cells[0].Value = item.Key;
+                    dataGridView1.Rows[det].Cells[1].Value = item.Value.MeasureX;
+                    dataGridView1.Rows[det].Cells[2].Value = item.Value.MeasureY;
+                    dataGridView1.Rows[det].Cells[3].Value = item.Value.ValueX;
+                    dataGridView1.Rows[det].Cells[4].Value = item.Value.ValueY;
+                    dataGridView1.Rows[det].Cells[5].Value = item.Value.MeasureName;
+                    //dataGridView1.Rows[det].Cells[5].Value = item.Value.ValueXp;
+                    //dataGridView1.Rows[det].Cells[6].Value = item.Value.ValueYp;
+                }
+            }
+            catch (Exception)
+            {
+            }
+            isChanged = false;
+        }
+
+        private void dataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            try
+            {
+                if (isChanged)
+                {
+                    return;
+                }
+                string names = dataGridView1.Rows[e.RowIndex].Cells[0].Value.ToString();
+                if (e.ColumnIndex==1)
+                {
+                    measure.MestaNames[names].MeasureX =double.Parse( dataGridView1.Rows[e.RowIndex].Cells[1].Value.ToString());
+                }
+                if (e.ColumnIndex == 2)
+                {
+                    measure.MestaNames[names].MeasureY = double.Parse(dataGridView1.Rows[e.RowIndex].Cells[2].Value.ToString());
+                }
+                if (e.ColumnIndex == 5)
+                {
+                    measure.MestaNames[names].MeasureName = dataGridView1.Rows[e.RowIndex].Cells[5].Value.ToString();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                AoiObj aoiObj = measure.GetAoi();
+                aoiObj.DebugID = 2;
+                halcon.GetOneImageR().DebugID = 2;
+                measure.Run(halcon.GetOneImageR(), aoiObj);
+            }
+            catch (Exception ex)
+            {
+
             }
         }
     }

@@ -70,7 +70,7 @@ namespace Vision2.Project.Mes.环旭SISF
         {
             AlarmText.AddTextNewLine("SISF:" + text);
             text = DateTime.Now + " " + text;
-            ErosProjcetDLL.Excel.Npoi.AddTextLine(this.DataPaht + "\\SFIS记录" + "\\" +
+            ErosProjcetDLL.Excel.Npoi.AddTextLine(RecipeCompiler.Instance.DataPaht + "\\SFIS记录" + "\\" +
                       DateTime.Now.ToString("yyyy-MM-dd") + ".txt", text);
         }
         [DescriptionAttribute("CODE_NAME,"), Category("SISF"), DisplayName("SISF版本")]
@@ -115,10 +115,7 @@ namespace Vision2.Project.Mes.环旭SISF
             return new SisfForm1(this);
         }
 
-        public override void WrietMes(UserFormulaContrsl userFormulaContrsl, string QRCODE, string Product_Name)
-        {
-            throw new NotImplementedException();
-        }
+     
 
         public override void WrietMes(TrayData trayData, string Product_Name)
         {
@@ -134,7 +131,7 @@ namespace Vision2.Project.Mes.环旭SISF
                 if (!this.GetSocketClint().IsConn)
                 {
                     AlarmListBoxt.AddAlarmText("SISF", "错误:SISF连接断开");
-                    //trayData.SetNumberValue(false);
+                    trayData.SetNumberValue(false);
                 }
                 else
                 {
@@ -162,7 +159,7 @@ namespace Vision2.Project.Mes.环旭SISF
         {
             try
             {
-                string FileName = this.DataPaht + "\\" + DateTime.Now.ToString("yyyyMMdd") + ".xls";
+                string FileName = RecipeCompiler.Instance.DataPaht + "\\" + DateTime.Now.ToString("yyyyMMdd") + ".xls";
                 if (!System.IO.File.Exists(FileName))
                 {
                     Npoi.AddWriteColumnToExcel(FileName, "数据", "位号", "SN", "状态", "SISF信息");
@@ -526,7 +523,7 @@ namespace Vision2.Project.Mes.环旭SISF
             throw new NotImplementedException();
         }
 
-        public override void WrietMesAll<T>(T data, string QRCODE, string Product_Name)
+        public override void WrietMesAll<T>(T data, string Product_Name)
         {
             throw new NotImplementedException();
         }

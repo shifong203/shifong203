@@ -54,7 +54,7 @@ namespace Vision2.Project.formula
             st:
                 if (ThisDic.ContainsKey(name))
                 {
-                    int idx = Vision2.ErosProjcetDLL.Project.ProjectINI.GetStrReturnInt(name, out name);
+                    int idx = ProjectINI.GetStrReturnInt(name, out name);
                     name = name + (idx + 1);
                     goto st;
                 }
@@ -87,12 +87,12 @@ namespace Vision2.Project.formula
         public string Size { get; set; }
 
         [Description("产品显示的图片"), Category("产品信息"), DisplayName("显示产品图片"),
-            EditorAttribute(typeof(Vision2.ErosProjcetDLL.UI.PropertyGrid.PageTypeEditor_OpenFileDialog), typeof(System.Drawing.Design.UITypeEditor))]
+            EditorAttribute(typeof(PageTypeEditor_OpenFileDialog), typeof(System.Drawing.Design.UITypeEditor))]
         public string ImagePath
         {
             get
             {
-                Vision2.ErosProjcetDLL.UI.PropertyGrid.PageTypeEditor_OpenFileDialog.Filter
+                PageTypeEditor_OpenFileDialog.Filter
                     = "图片文件|*.jpg;*.tif;*.tiff;*.gif;*.bmp;*.jpg;*.jpeg;*.jp2;*.png;*.pcx;*.pgm;*.ppm;*.pbm;*.xwd;*.ima;*.hobj";
                 return imagePath;
             }
@@ -102,7 +102,7 @@ namespace Vision2.Project.formula
         private string imagePath = "";
 
         [Description("多个产品图片地址组"), Category("产品信息"), DisplayName("产品图片组")]
-        [Editor(typeof(Vision2.ErosProjcetDLL.UI.PropertyGrid.ListStringEditor), typeof(UITypeEditor))]
+        [Editor(typeof(ListStringEditor), typeof(UITypeEditor))]
         public List<string> ListImages { get; set; } = new List<string>();
 
         [Description("首关键字>表示从第一个，<表示从结尾开始，无关键字表示只要存在；ProductName匹配配方名，或其他固定字符"), Category("物料信息"), DisplayName("二维码匹配"),
@@ -196,27 +196,19 @@ namespace Vision2.Project.formula
         /// <param name="productName">选择的产品名称</param>
         /// <paramref name="lingks">连接集合</paramref>
         /// </summary>
-        public static bool Aotu(string productName, Dictionary<string, ErosSocket.ErosConLink.SocketClint> lingks)
+        public static bool Aotu(string productName, Dictionary<string, SocketClint> lingks)
         {
             string err = "";
             if (ValuePairs.ContainsKey(productName))
             {
                 int errN = 0;
                 string errStr = "";
-
                 userVisionManagement.UPSetGetPargam();
-
                 if (vision.Vision.Instance.ISPName)
                 {
                     vision.Vision.UpReadThis(ProductionName);
                 }
-                //if (userVisionManagement != null)
-                //{
-                //    userVisionManagement.toolStripLabel1.Text = "当前生产:" + ProductionName;
-                //    userVisionManagement.comboBox1.SelectedItem = ProductionName;
-                //}
-
-                ErosSocket.ErosConLink.IErosLinkNet Linl;
+                IErosLinkNet Linl;
                 foreach (var item in GetListLinkNames)
                 {
                     if (lingks.ContainsKey(item))
@@ -235,7 +227,7 @@ namespace Vision2.Project.formula
                     ///值
                     List<string> Values = new List<string>();
 
-                    if (Linl.Split_Mode != ErosSocket.ErosConLink.SocketClint.SplitMode.Array)
+                    if (Linl.Split_Mode != SocketClint.SplitMode.Array)
                     {
                         foreach (var item2 in GetProduct().Parameter_Dic.ParameterMap[item])
                         {
@@ -271,7 +263,7 @@ namespace Vision2.Project.formula
                         {
                             Values.Add(GetProd(productName)[item2.Key]);
                         }
-                        if (Linl.Split_Mode == ErosSocket.ErosConLink.SocketClint.SplitMode.Array)
+                        if (Linl.Split_Mode == SocketClint.SplitMode.Array)
                         {
                             Linl.SetValues(names.ToArray(), Values.ToArray(), out err);
                         }
@@ -282,7 +274,7 @@ namespace Vision2.Project.formula
                     {
                         for (int i = 0; i < names.Count; i++)
                         {
-                            if (ErosSocket.ErosConLink.UClass.GetTypeList().Contains(GetParameters()[pramName[i]].TypeStr))
+                            if (UClass.GetTypeList().Contains(GetParameters()[pramName[i]].TypeStr))
                             {
                                 if (Linl.IsConn)
                                 {
@@ -301,9 +293,9 @@ namespace Vision2.Project.formula
                             errStr = Linl.Name + string.Format("包含{0}个值写入失败;" + Environment.NewLine, errN) + errStr;
                         }
                     }
-                    if (Linl is ErosSocket.ErosConLink.SocketClint)
+                    if (Linl is SocketClint)
                     {
-                        ErosSocket.ErosConLink.SocketClint itnem = Linl as ErosSocket.ErosConLink.SocketClint;
+                        SocketClint itnem = Linl as SocketClint;
                         if (itnem.PLCRun != null)
                         {
                             if (itnem.PLCRun.LinkHCIF != null && itnem.PLCRun.LinkCOn != null && itnem.PLCRun.LinkIDname != null &&
@@ -325,7 +317,7 @@ namespace Vision2.Project.formula
                                 else
                                 {
                                     errStr += "加载失败:" + itnem.Name + "换型条件不满足！";
-                                    ErosProjcetDLL.Project.AlarmText.AddTextNewLine("加载失败:" + itnem.Name + "换型条件不满足！");
+                                    AlarmText.AddTextNewLine("加载失败:" + itnem.Name + "换型条件不满足！");
                                 }
                             }
                         }
@@ -333,18 +325,18 @@ namespace Vision2.Project.formula
                 }
                 if (errStr == "")
                 {
-                    Vision2.ErosProjcetDLL.Project.AlarmText.AddTextNewLine(productName + ",产品加载成功!");
+                    AlarmText.AddTextNewLine(productName + ",产品加载成功!");
                     ProductionName = productName;
                     return true;
                 }
                 else
                 {
-                    Vision2.ErosProjcetDLL.Project.AlarmText.AddTextNewLine(productName + ",加载失败:" + errStr, System.Drawing.Color.Red);
+                    AlarmText.AddTextNewLine(productName + ",加载失败:" + errStr, System.Drawing.Color.Red);
                 }
             }
             else
             {
-                Vision2.ErosProjcetDLL.Project.AlarmText.AddTextNewLine("加载失败:不存在的产品" + productName);
+                AlarmText.AddTextNewLine("加载失败:不存在的产品" + productName);
             }
             return false;
         }
@@ -355,7 +347,7 @@ namespace Vision2.Project.formula
         /// </summary>
         public static bool Aotu(string productName)
         {
-            return Aotu(productName, ErosSocket.ErosConLink.DicSocket.Instance.SocketClint);
+            return Aotu(productName, DicSocket.Instance.SocketClint);
         }
 
         public static bool SetGetPLCPrgream(IErosLinkNet erosLink, Dictionary<string, string> prgaem)
@@ -368,14 +360,14 @@ namespace Vision2.Project.formula
                     string err = "";
                     erosLink.SetIDValue(GetProduct().Parameter_Dic.ParameterMap[erosLink.Name][item.Key], GetParameters()[item.Key].TypeStr,
                           item.Value, out err);
-                    Vision2.ErosProjcetDLL.Project.AlarmText.AddTextNewLine(err);
+                    AlarmText.AddTextNewLine(err);
                     erosLink.GetIDValue(GetProduct().Parameter_Dic.ParameterMap[erosLink.Name][item.Key], GetParameters()[item.Key].TypeStr, out dynamic value);
                     UClass.GetTypeValue(GetParameters()[item.Key].TypeStr, item.Value, out dynamic valutS);
 
                     if (value != valutS)
                     {
                         errI++;
-                        Vision2.ErosProjcetDLL.Project.AlarmText.AddTextNewLine("参数值加载错误;" + item.Key + "/Set[" + item.Value + "]Get[" + value.ToString() + "]");
+                        AlarmText.AddTextNewLine("参数值加载错误;" + item.Key + "/Set[" + item.Value + "]Get[" + value.ToString() + "]");
                     }
                 }
                 if (errI == 0)
@@ -565,7 +557,7 @@ namespace Vision2.Project.formula
             if (ValuePairs.ContainsKey(NewName))
             {
             st:
-                int idx = ErosProjcetDLL.Project.ProjectINI.GetStrReturnInt(NewName, out NewName);
+                int idx = ProjectINI.GetStrReturnInt(NewName, out NewName);
                 NewName = NewName + (idx + 1);
                 if (ValuePairs.ContainsKey(NewName))
                 {
@@ -761,7 +753,7 @@ namespace Vision2.Project.formula
                 }
                 return ValuePairs[name];
             }
-            return null;
+       
         }
 
         /// <summary>
@@ -1233,7 +1225,7 @@ namespace Vision2.Project.formula
                     }
                     else
                     {
-                        Vision2.ErosProjcetDLL.Project.AlarmText.LogErr("当前配方不存在参数:" + index, "配方参数");
+                        AlarmText.LogErr("当前配方不存在参数:" + index, "配方参数");
                         return "null";
                     }
                 }

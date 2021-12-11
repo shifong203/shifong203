@@ -23,7 +23,7 @@ namespace ErosSocket.DebugPLC.DIDO
             dID = dIDO;
             if (dID != null)
             {
-                Run(dIDO.Int.Name.Count);
+                Run(dIDO.Int.Count);
             }
         }
 
@@ -38,7 +38,7 @@ namespace ErosSocket.DebugPLC.DIDO
             List<bool> listBool_Input = new List<bool>();
 
             isMoe = true;
-            for (int i = 0; i <= dID.Out.Name.Count - 1; i++)
+            for (int i = 0; i <= dID.Out.Count - 1; i++)
             {
                 if (dID.Out.Name[i] != null)
                 {

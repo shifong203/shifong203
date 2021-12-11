@@ -37,6 +37,7 @@ namespace Vision2.Project.DebugF.IO
             this.components = new System.ComponentModel.Container();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.runCodeUserControl1 = new Vision2.Project.DebugF.IO.RunCodeUserControl();
             this.tabPage15 = new System.Windows.Forms.TabPage();
@@ -87,7 +88,13 @@ namespace Vision2.Project.DebugF.IO
             this.dataGridViewComboBoxColumn5 = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.dataGridViewComboBoxColumn6 = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.dataGridViewComboBoxColumn7 = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.listBox1 = new System.Windows.Forms.ListBox();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.添加脚本ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.删除ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -101,6 +108,9 @@ namespace Vision2.Project.DebugF.IO
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown4)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).BeginInit();
             this.tabPage17.SuspendLayout();
+            this.tabPage4.SuspendLayout();
+            this.panel2.SuspendLayout();
+            this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -112,6 +122,7 @@ namespace Vision2.Project.DebugF.IO
             this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Controls.Add(this.tabPage5);
             this.tabControl1.Controls.Add(this.tabPage17);
+            this.tabControl1.Controls.Add(this.tabPage4);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
@@ -130,6 +141,14 @@ namespace Vision2.Project.DebugF.IO
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "调试";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // flowLayoutPanel1
+            // 
+            this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 3);
+            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(1327, 439);
+            this.flowLayoutPanel1.TabIndex = 0;
             // 
             // tabPage1
             // 
@@ -587,13 +606,64 @@ namespace Vision2.Project.DebugF.IO
             this.dataGridViewComboBoxColumn7.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             this.dataGridViewComboBoxColumn7.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
             // 
-            // flowLayoutPanel1
+            // tabPage4
             // 
-            this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 3);
-            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(1327, 439);
-            this.flowLayoutPanel1.TabIndex = 0;
+            this.tabPage4.Controls.Add(this.panel2);
+            this.tabPage4.Location = new System.Drawing.Point(4, 22);
+            this.tabPage4.Name = "tabPage4";
+            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage4.Size = new System.Drawing.Size(1333, 445);
+            this.tabPage4.TabIndex = 12;
+            this.tabPage4.Text = "线程脚本";
+            this.tabPage4.UseVisualStyleBackColor = true;
+            // 
+            // listBox1
+            // 
+            this.listBox1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.listBox1.FormattingEnabled = true;
+            this.listBox1.ItemHeight = 12;
+            this.listBox1.Location = new System.Drawing.Point(0, 0);
+            this.listBox1.Name = "listBox1";
+            this.listBox1.Size = new System.Drawing.Size(221, 172);
+            this.listBox1.TabIndex = 0;
+            // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this.propertyGrid1);
+            this.panel2.Controls.Add(this.listBox1);
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Left;
+            this.panel2.Location = new System.Drawing.Point(3, 3);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(221, 439);
+            this.panel2.TabIndex = 1;
+            // 
+            // propertyGrid1
+            // 
+            this.propertyGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.propertyGrid1.Location = new System.Drawing.Point(0, 172);
+            this.propertyGrid1.Name = "propertyGrid1";
+            this.propertyGrid1.Size = new System.Drawing.Size(221, 267);
+            this.propertyGrid1.TabIndex = 1;
+            // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.添加脚本ToolStripMenuItem,
+            this.删除ToolStripMenuItem});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(125, 48);
+            // 
+            // 添加脚本ToolStripMenuItem
+            // 
+            this.添加脚本ToolStripMenuItem.Name = "添加脚本ToolStripMenuItem";
+            this.添加脚本ToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.添加脚本ToolStripMenuItem.Text = "添加线程";
+            // 
+            // 删除ToolStripMenuItem
+            // 
+            this.删除ToolStripMenuItem.Name = "删除ToolStripMenuItem";
+            this.删除ToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
+            this.删除ToolStripMenuItem.Text = "删除";
             // 
             // MP_C154Form1
             // 
@@ -620,6 +690,9 @@ namespace Vision2.Project.DebugF.IO
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown4)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown3)).EndInit();
             this.tabPage17.ResumeLayout(false);
+            this.tabPage4.ResumeLayout(false);
+            this.panel2.ResumeLayout(false);
+            this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
 
 		}
@@ -694,5 +767,12 @@ namespace Vision2.Project.DebugF.IO
         private TabPage tabPage16;
         private TabPage tabPage17;
         private FlowLayoutPanel flowLayoutPanel1;
+        private TabPage tabPage4;
+        private Panel panel2;
+        private PropertyGrid propertyGrid1;
+        private ListBox listBox1;
+        private ContextMenuStrip contextMenuStrip1;
+        private ToolStripMenuItem 添加脚本ToolStripMenuItem;
+        private ToolStripMenuItem 删除ToolStripMenuItem;
     }
 }

@@ -1076,9 +1076,7 @@ namespace ErosSocket.DebugPLC.Robot
 
         public void SetPointZ(double z)
         {
-            if (z != null)
-            {
-            }
+           
         }
 
         public void SetSeep(double seelp, double? addSeelp = null, double? accSeelp = null)

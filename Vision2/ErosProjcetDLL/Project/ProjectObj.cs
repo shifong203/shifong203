@@ -211,7 +211,7 @@ namespace Vision2.ErosProjcetDLL.Project
         /// <param name="text"></param>
         public void LogErr(string text)
         {
-            AlarmText.LogErr(text, "类型" + this.GetType() + "名称:" + this.Name);
+            AlarmText.LogErr(text, "类型" + this.GetType().Name + "名称:" + this.Name);
         }
 
         /// <summary>
@@ -279,7 +279,7 @@ namespace Vision2.ErosProjcetDLL.Project
                 this.Text = this.Name;
             }
             Node.Name = this.Name;
-            Node.Text = this.Text;
+            Node.Text = this.Name;
             Node.Tag = this;
             if (tree != null)
             {

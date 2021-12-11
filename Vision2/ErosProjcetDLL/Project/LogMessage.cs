@@ -15,9 +15,6 @@ namespace Vision2.ErosProjcetDLL.Project
                 {
                     LogMessage(File.ReadAllText(LogPath));
                 }
-                else
-                {
-                }
             }
             catch (Exception ex)
             {
@@ -42,7 +39,7 @@ namespace Vision2.ErosProjcetDLL.Project
             try
             {
                 OpenFileDialog openFileDialog = new OpenFileDialog();
-                openFileDialog.InitialDirectory = Application.StartupPath;
+                openFileDialog.InitialDirectory = ProjectINI.TempPath;
                 openFileDialog.Title = "打开一个文本文件";
                 openFileDialog.Filter = "文本文件|*.txt|所有文件|*.*";
                 openFileDialog.ShowDialog();

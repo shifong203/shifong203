@@ -1138,7 +1138,7 @@ namespace ErosSocket.ErosConLink
         }
 
         /// <summary>
-        /// Bool数组转换为整数
+        /// Bool数组转换为反整数
         /// </summary>
         /// <param name="barray"></param>
         /// <returns></returns>
@@ -1151,6 +1151,11 @@ namespace ErosSocket.ErosConLink
 
                 if (len < 33)
                 {
+            
+                    //for (int i = 0; i < barray.Length; i++)
+                    //{
+                    //    result = (result<<(1   )) + (barray[i] ? 1 : 0);
+                    //}
                     foreach (bool b in barray)
                     {
                         result = (result << 1) + (b ? 1 : 0);
@@ -1167,6 +1172,30 @@ namespace ErosSocket.ErosConLink
             }
 
             return result;
+        }
+        /// <summary>
+        /// bit转为Int
+        /// </summary>
+        /// <param name="barray"></param>
+        /// <returns></returns>
+        public static int ConvertBoolArrayInt(bool[] barray)
+        {
+            int result = 0;
+            if (barray != null)
+            {
+                for (int i = barray.Length -1; i >= 0; i--)
+                {
+                    result = barray[i] ? result + (1 << i) : result;
+                }
+           
+            }
+            else
+            {
+                Console.WriteLine("bool数组为空。");
+            }
+
+            return result;
+
         }
 
         /// <summary>

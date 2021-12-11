@@ -92,7 +92,7 @@ namespace Vision2.ErosProjcetDLL.Project
                 if (!AlarmText.DicAlarm.ContainsKey(text.Name))
                 {
                     AlarmText.DicAlarm.Add(text.Name, text);
-                    Excel.Npoi.AddText(ProjectINI.TempPath + "\\报警记录\\" + DateTime.Now.ToLongDateString() + ".CSV",
+                    Excel.Npoi.AddText(ProjectINI.TempPath + "\\报警记录\\" + DateTime.Now.ToString("yyyy年M月d日") + ".CSV",
                         text.ToString() + Environment.NewLine);
                 }
                 if (ite == 0)
@@ -124,11 +124,11 @@ namespace Vision2.ErosProjcetDLL.Project
                 alarmList.richTextBox1.Select(ste, date.Length);
                 if (ite % 2 == 1)
                 {
-                    alarmList.richTextBox1.SelectionBackColor = System.Drawing.SystemColors.ActiveCaption;
+                    alarmList.richTextBox1.SelectionBackColor = SystemColors.ActiveCaption;
                 }
                 else
                 {
-                    alarmList.richTextBox1.SelectionBackColor = System.Drawing.SystemColors.ActiveBorder;
+                    alarmList.richTextBox1.SelectionBackColor = SystemColors.ActiveBorder;
                 }
                 if (text.AlaType == "一般报警")
                 {
@@ -151,6 +151,10 @@ namespace Vision2.ErosProjcetDLL.Project
             catch (Exception ex)
             {
             }
+        }
+        public static void AddAlarmText(string name, string alarmType, string text = "")
+        {
+            AddAlarmText(new AlarmText.alarmStruct() { Name = name, AlaType = alarmType, Text = text });
         }
 
         public static void AddAlarmText(string name, string text = "")
@@ -195,6 +199,7 @@ namespace Vision2.ErosProjcetDLL.Project
                     for (int i = 0; i < alarmList.richTextBox1.Lines.Length; i++)
                     {
                         string[] data = alarmList.richTextBox1.Lines[i].Split('{');
+                        AlarmText.DicAlarm.Remove(name);
                         if (data.Length > 2 && data[2] == AlarmText.DicAlarm[name].Name)
                         {
                             alarmList.richTextBox1.Text = alarmList.richTextBox1.Text.Remove(ste, alarmList.richTextBox1.Lines[i].Length + 1);
@@ -202,11 +207,11 @@ namespace Vision2.ErosProjcetDLL.Project
                         }
                         ste += alarmList.richTextBox1.Lines[i].Length;
                     }
-
-                    AlarmText.DicAlarm.Remove(name);
+                   
+                    
                 }
             }
-            catch (Exception)
+            catch (Exception EX)
             {
             }
             RomveAlarmText();

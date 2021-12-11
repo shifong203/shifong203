@@ -16,7 +16,7 @@ namespace ErosSocket.DebugPLC.DIDO
         public double MaxVel { get; set; }
 
         public bool IsHome { get; set; }
-        public bool IsError { get; set; }
+        public bool Alarm { get; set; }
         public bool IsEnabled { get; set; }
         public sbyte IsBand_type_brakeNumber { get; set; } = -1;
         public int HomeTime { get; set; }

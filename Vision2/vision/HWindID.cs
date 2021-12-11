@@ -408,9 +408,6 @@ namespace Vision2.vision
                     OneResIamge = new OneResultOBj();
                 }
                 OneResIamge.Image = imaget;
-
-  
-
                 if (isPart)
                 {
                     HOperatorSet.GetImageSize(OneResIamge.Image, out HTuple wi, out HTuple heit);
@@ -425,6 +422,18 @@ namespace Vision2.vision
             }
             catch (Exception ex)
             {
+            }
+        }
+        public void RaedIamge(string paht)
+        {
+            try
+            {
+                HOperatorSet.ReadImage(out HObject hObject, paht);
+                SetImaage(hObject);
+            }
+            catch (Exception)
+            {
+
             }
         }
 
@@ -482,7 +491,7 @@ namespace Vision2.vision
             }
         }
 
-        public HTuple hWindowHalcon(HTuple hawid = null)
+        public HWindow hWindowHalcon(HWindow hawid = null)
         {
             return this.hWindow;
         }

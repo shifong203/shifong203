@@ -127,14 +127,7 @@ namespace Vision2.vision.HalconRunFile.Controls
                                         ng++;
                                     }
                                     string dtaT = "";
-                                    foreach (var itemt in halcon.TrayRestData.DicBool)
-                                    {
-                                        dtaT += itemt.Key + ':';
-                                        foreach (var itemt2 in itemt.Value)
-                                        {
-                                            dtaT += itemt2.Key + "," + itemt2.Value + ";";
-                                        }
-                                    }
+                    
                                     upText();
                                     dataGridView1.Rows[i].Cells[2].Value = dtaT;
                                     halcon.SaveDataExcel("遍历数据", halcon.WriteDataCName.Keys.ToArray(), (i + 1).ToString(), halcon.WriteDataCName.Values.ToArray());

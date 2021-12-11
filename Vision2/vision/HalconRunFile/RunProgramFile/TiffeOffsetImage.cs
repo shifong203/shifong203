@@ -9,7 +9,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         [DescriptionAttribute("拼接行数。"), Category("排列"), DisplayName("图像行")]
         public int ImageNumberROW { get; set; } = 2;
 
-        [DescriptionAttribute("拼接列数。"), Category("排列"), DisplayName("图像列")]
+        [DescriptionAttribute("拼接列数。平铺时使用列矩阵"), Category("排列"), DisplayName("图像列平铺")]
         public int ImageNumberCol { get; set; } = 2;
 
         [Browsable(false)]
@@ -273,7 +273,11 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             }
             return hObject;
         }
-
+        /// <summary>
+        /// 执行拼图
+        /// </summary>
+        /// <param name="hObjects"></param>
+        /// <returns></returns>
         public HObject TiffeOffsetImage(HObject[] hObjects)
         {
             HObject hObjectImage = new HObject();
@@ -299,8 +303,16 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                     }
                     else
                     {
-                        HOperatorSet.ZoomImageSize(hObjects[i], out HObject hObject1, ImageWidthI / ZoomImageSize, ImageHeightI / ZoomImageSize, "constant");
-                        hObjectImage = hObjectImage.ConcatObj(hObject1);
+                        if (ZoomImageSize!=1)
+                        {
+                            HOperatorSet.ZoomImageSize(hObjects[i], out HObject hObject1, ImageWidthI / ZoomImageSize, ImageHeightI / ZoomImageSize, "constant");
+                            hObjectImage = hObjectImage.ConcatObj(hObject1);
+                        }
+                        else
+                        {
+                            hObjectImage = hObjectImage.ConcatObj(hObjects[i]);
+                        } 
+                  
                     }
                 }
                 int d = hObjectImage.CountObj();
@@ -322,7 +334,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             }
             catch (Exception ex)
             {
-                ErosProjcetDLL.Project.AlarmText.AddTextNewLine("拼图失败，行:" + ex.StackTrace.Remove(0, ex.StackTrace.Length - 5) + ":" + ex.Message);
+                ErosProjcetDLL.Project.AlarmText.AddTextNewLine("拼图失败，行:" + ex.StackTrace.ToString()+ ":" + ex.Message);
             }
             return hObjectImage;
         }

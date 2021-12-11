@@ -56,6 +56,10 @@ namespace Vision2.vision.Cams
                 {
                     listBox1.Items.Add(item.Key);
                 }
+                foreach (var item in Vision.Instance.RunDahenCams)
+                {
+                    listBox3.Items.Add(item.Key);
+                }
             }
             catch (Exception ex)
             {
@@ -69,14 +73,35 @@ namespace Vision2.vision.Cams
             {
                 if (listBox2.SelectedItem != null)
                 {
-                    if (!Vision.Instance.RunCams.ContainsKey(listBox2.SelectedItem.ToString()))
+               
+                        IDeviceInfo device = Enumerator.getDeviceInfoByKey(listBox2.SelectedItem.ToString());
+                   
+                        if (device.ManufactureInfo.StartsWith("Daheng"))
                     {
-                        DahuaCamera camera = new DahuaCamera();
-                        camera.Index = listBox2.SelectedIndex;
-                        camera.ID = listBox2.SelectedItem.ToString();
-                        camera.Name = listBox2.SelectedItem.ToString();
-                        Vision.Instance.RunCams.Add(listBox2.SelectedItem.ToString(), camera);
-                        listBox1.Items.Add(listBox2.SelectedItem.ToString());
+                        if (!Vision.Instance.RunDahenCams.ContainsKey(listBox2.SelectedItem.ToString()))
+                        {
+                            DaHenCamera camera = new DaHenCamera();
+                            camera.Index = listBox2.SelectedIndex;
+                            camera.ID = listBox2.SelectedItem.ToString();
+                            camera.SerialNum = device.SerialNumber;
+                            camera.Name = listBox2.SelectedItem.ToString();
+                            Vision.Instance.RunDahenCams.Add(listBox2.SelectedItem.ToString(), camera);
+                            listBox3.Items.Add(listBox2.SelectedItem.ToString());
+                        }
+                        }
+                        else
+                    {
+                        if (!Vision.Instance.RunCams.ContainsKey(listBox2.SelectedItem.ToString()))
+                        {
+                            DahuaCamera camera = new DahuaCamera();
+                            camera.Index = listBox2.SelectedIndex;
+                            camera.ID = listBox2.SelectedItem.ToString();
+                            camera.SerialNum = device.SerialNumber;
+                            camera.Name = listBox2.SelectedItem.ToString();
+                            Vision.Instance.RunCams.Add(listBox2.SelectedItem.ToString(), camera);
+                            listBox1.Items.Add(listBox2.SelectedItem.ToString());
+                        }
+          
                     }
                 }
             }
@@ -148,6 +173,11 @@ namespace Vision2.vision.Cams
 
                             propertyGrid3.SelectedObject = m_deve.ParameterCollection;
                         }
+                        else
+                        {
+                            propertyGrid1.SelectedObject = Vision.GetNameCam(listBox1.SelectedItem.ToString());
+                        }
+                 
                     }
                 }
             }
@@ -178,6 +208,64 @@ namespace Vision2.vision.Cams
             {
                 MessageBox.Show(ex.Message);
             }
+        }
+
+        private void 删除ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (listBox3.SelectedItem != null)
+                {
+                    if (Vision.Instance.RunDahenCams.ContainsKey(listBox3.SelectedItem.ToString()))
+                    {
+                        Vision.Instance.RunDahenCams.Remove(listBox3.SelectedItem.ToString());
+                        listBox3.Items.Remove(listBox3.SelectedItem.ToString());
+                    }
+                    else
+                    {
+                        MessageBox.Show(listBox3.SelectedItem.ToString() + "不存在");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void listBox3_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (listBox3.SelectedItem != null)
+                {
+                    if (Vision.GetNameCam(listBox3.SelectedItem.ToString()) != null)
+                    {
+                        IDevice m_deve = Vision.GetNameCam(listBox3.SelectedItem.ToString()).GetIDevice() as IDevice;
+                        if (m_deve != null)
+                        {
+                            propertyGrid1.SelectedObject = m_deve.DeviceInfo;
+
+                            propertyGrid3.SelectedObject = m_deve.ParameterCollection;
+                        }
+                        else
+                        {
+                            propertyGrid1.SelectedObject = Vision.GetNameCam(listBox3.SelectedItem.ToString());
+                        }
+
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            CamsForm camsForm = new CamsForm();
+            camsForm.Show();
         }
     }
 }

@@ -35,6 +35,12 @@
             this.listBox2 = new System.Windows.Forms.ListBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.tabControl2 = new System.Windows.Forms.TabControl();
+            this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.tabPage6 = new System.Windows.Forms.TabPage();
+            this.listBox3 = new System.Windows.Forms.ListBox();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.删除ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.设置IP = new System.Windows.Forms.Button();
             this.label12 = new System.Windows.Forms.Label();
             this.TxCamIp_address = new System.Windows.Forms.TextBox();
@@ -48,10 +54,14 @@
             this.propertyGrid3 = new System.Windows.Forms.PropertyGrid();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.propertyGrid4 = new System.Windows.Forms.PropertyGrid();
-            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.button2 = new System.Windows.Forms.Button();
+            this.button4 = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            this.tabControl2.SuspendLayout();
+            this.tabPage5.SuspendLayout();
+            this.tabPage6.SuspendLayout();
+            this.contextMenuStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -85,9 +95,9 @@
             this.listBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listBox1.FormattingEnabled = true;
             this.listBox1.ItemHeight = 12;
-            this.listBox1.Location = new System.Drawing.Point(3, 17);
+            this.listBox1.Location = new System.Drawing.Point(3, 3);
             this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(241, 231);
+            this.listBox1.Size = new System.Drawing.Size(227, 199);
             this.listBox1.TabIndex = 44;
             this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
             // 
@@ -105,7 +115,7 @@
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.listBox2);
-            this.groupBox1.Location = new System.Drawing.Point(3, 3);
+            this.groupBox1.Location = new System.Drawing.Point(2, 2);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(214, 252);
             this.groupBox1.TabIndex = 46;
@@ -114,7 +124,7 @@
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.listBox1);
+            this.groupBox2.Controls.Add(this.tabControl2);
             this.groupBox2.Location = new System.Drawing.Point(430, 4);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(247, 251);
@@ -122,9 +132,68 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "本地列表";
             // 
+            // tabControl2
+            // 
+            this.tabControl2.Controls.Add(this.tabPage5);
+            this.tabControl2.Controls.Add(this.tabPage6);
+            this.tabControl2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabControl2.Location = new System.Drawing.Point(3, 17);
+            this.tabControl2.Name = "tabControl2";
+            this.tabControl2.SelectedIndex = 0;
+            this.tabControl2.Size = new System.Drawing.Size(241, 231);
+            this.tabControl2.TabIndex = 56;
+            // 
+            // tabPage5
+            // 
+            this.tabPage5.Controls.Add(this.listBox1);
+            this.tabPage5.Location = new System.Drawing.Point(4, 22);
+            this.tabPage5.Name = "tabPage5";
+            this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage5.Size = new System.Drawing.Size(233, 205);
+            this.tabPage5.TabIndex = 0;
+            this.tabPage5.Text = "大华";
+            this.tabPage5.UseVisualStyleBackColor = true;
+            // 
+            // tabPage6
+            // 
+            this.tabPage6.Controls.Add(this.listBox3);
+            this.tabPage6.Location = new System.Drawing.Point(4, 22);
+            this.tabPage6.Name = "tabPage6";
+            this.tabPage6.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage6.Size = new System.Drawing.Size(233, 205);
+            this.tabPage6.TabIndex = 1;
+            this.tabPage6.Text = "大恒";
+            this.tabPage6.UseVisualStyleBackColor = true;
+            // 
+            // listBox3
+            // 
+            this.listBox3.ContextMenuStrip = this.contextMenuStrip1;
+            this.listBox3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listBox3.FormattingEnabled = true;
+            this.listBox3.ItemHeight = 12;
+            this.listBox3.Location = new System.Drawing.Point(3, 3);
+            this.listBox3.Name = "listBox3";
+            this.listBox3.Size = new System.Drawing.Size(227, 199);
+            this.listBox3.TabIndex = 0;
+            this.listBox3.SelectedIndexChanged += new System.EventHandler(this.listBox3_SelectedIndexChanged);
+            // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.删除ToolStripMenuItem});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(101, 26);
+            // 
+            // 删除ToolStripMenuItem
+            // 
+            this.删除ToolStripMenuItem.Name = "删除ToolStripMenuItem";
+            this.删除ToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
+            this.删除ToolStripMenuItem.Text = "删除";
+            this.删除ToolStripMenuItem.Click += new System.EventHandler(this.删除ToolStripMenuItem_Click);
+            // 
             // 设置IP
             // 
-            this.设置IP.Location = new System.Drawing.Point(359, 83);
+            this.设置IP.Location = new System.Drawing.Point(222, 66);
             this.设置IP.Name = "设置IP";
             this.设置IP.Size = new System.Drawing.Size(65, 29);
             this.设置IP.TabIndex = 51;
@@ -249,32 +318,38 @@
             this.propertyGrid4.Size = new System.Drawing.Size(708, 395);
             this.propertyGrid4.TabIndex = 55;
             // 
-            // contextMenuStrip1
-            // 
-            this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
-            // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(299, 128);
+            this.button2.Location = new System.Drawing.Point(352, 68);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(125, 33);
+            this.button2.Size = new System.Drawing.Size(68, 27);
             this.button2.TabIndex = 55;
             this.button2.Text = "删除本地";
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
+            // button4
+            // 
+            this.button4.Location = new System.Drawing.Point(351, 101);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(68, 27);
+            this.button4.TabIndex = 56;
+            this.button4.Text = "调试图像";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
+            // 
             // DahuaCams
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.button4);
+            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.设置IP);
             this.Controls.Add(this.label12);
             this.Controls.Add(this.TxCamIp_address);
             this.Controls.Add(this.groupBox2);
-            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.button1);
             this.Name = "DahuaCams";
@@ -282,6 +357,10 @@
             this.Load += new System.EventHandler(this.DahuaCams_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
+            this.tabControl2.ResumeLayout(false);
+            this.tabPage5.ResumeLayout(false);
+            this.tabPage6.ResumeLayout(false);
+            this.contextMenuStrip1.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
@@ -316,5 +395,11 @@
         private System.Windows.Forms.PropertyGrid propertyGrid4;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.TabControl tabControl2;
+        private System.Windows.Forms.TabPage tabPage5;
+        private System.Windows.Forms.TabPage tabPage6;
+        private System.Windows.Forms.ListBox listBox3;
+        private System.Windows.Forms.ToolStripMenuItem 删除ToolStripMenuItem;
+        private System.Windows.Forms.Button button4;
     }
 }

@@ -47,13 +47,15 @@
             this.panel3 = new System.Windows.Forms.Panel();
             this.tabControl2 = new System.Windows.Forms.TabControl();
             this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.checkBox3 = new System.Windows.Forms.CheckBox();
+            this.panel4 = new System.Windows.Forms.Panel();
             this.listBox2 = new System.Windows.Forms.ListBox();
             this.checkBox_ISFillUp = new System.Windows.Forms.CheckBox();
             this.numericUpDown_ClosingCircleValue = new System.Windows.Forms.NumericUpDown();
             this.label4 = new System.Windows.Forms.Label();
             this.checkBox7 = new System.Windows.Forms.CheckBox();
             this.checkBox_Enble = new System.Windows.Forms.CheckBox();
-            this.checkBox2 = new System.Windows.Forms.CheckBox();
+            this.checkBoxIFliu = new System.Windows.Forms.CheckBox();
             this.checkBox_IsColt = new System.Windows.Forms.CheckBox();
             this.tabPage9 = new System.Windows.Forms.TabPage();
             this.tabPage4 = new System.Windows.Forms.TabPage();
@@ -82,11 +84,23 @@
             this.label8 = new System.Windows.Forms.Label();
             this.button8 = new System.Windows.Forms.Button();
             this.tabPage7 = new System.Windows.Forms.TabPage();
+            this.button13 = new System.Windows.Forms.Button();
+            this.dataGridView2 = new System.Windows.Forms.DataGridView();
+            this.label10 = new System.Windows.Forms.Label();
+            this.button12 = new System.Windows.Forms.Button();
+            this.numericUpDownSkewing = new System.Windows.Forms.NumericUpDown();
+            this.checkBoxIsModeCta = new System.Windows.Forms.CheckBox();
             this.tabPage8 = new System.Windows.Forms.TabPage();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.label9 = new System.Windows.Forms.Label();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.button11 = new System.Windows.Forms.Button();
             this.tabPage10 = new System.Windows.Forms.TabPage();
             this.propertyGrid2 = new System.Windows.Forms.PropertyGrid();
             this.listBox1 = new System.Windows.Forms.ListBox();
+            this.label12 = new System.Windows.Forms.Label();
+            this.comboBox3 = new System.Windows.Forms.ComboBox();
             this.panel2 = new System.Windows.Forms.Panel();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.hWindowControl1 = new HalconDotNet.HWindowControl();
@@ -94,14 +108,45 @@
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
-            this.button11 = new System.Windows.Forms.Button();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
-            this.label9 = new System.Windows.Forms.Label();
+            this.tabPage11 = new System.Windows.Forms.TabPage();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.button14 = new System.Windows.Forms.Button();
+            this.label13 = new System.Windows.Forms.Label();
+            this.button15 = new System.Windows.Forms.Button();
+            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
+            this.dataGridView3 = new System.Windows.Forms.DataGridView();
+            this.button16 = new System.Windows.Forms.Button();
+            this.button17 = new System.Windows.Forms.Button();
+            this.panel5 = new System.Windows.Forms.Panel();
+            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn7 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn8 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn9 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn10 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn11 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn12 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn13 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn14 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn15 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn16 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.select_obj_type1 = new Vision2.vision.HalconRunFile.RunProgramFile.Select_obj_type();
             this.thresholdControl1 = new Vision2.vision.HalconRunFile.RunProgramFile.ThresholdControl();
             this.userCtrlThreshold2 = new Vision2.vision.HalconRunFile.Controls.UserCtrlThreshold();
             this.select_obj_type2 = new Vision2.vision.HalconRunFile.RunProgramFile.Select_obj_type();
-            this.select_obj_type1 = new Vision2.vision.HalconRunFile.RunProgramFile.Select_obj_type();
             this.userCtrlThresholdList1 = new Vision2.vision.HalconRunFile.Controls.UserCtrlThresholdList();
+            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column7 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column8 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.contextMenuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_Color_ID)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_ColorNumber)).BeginInit();
@@ -109,6 +154,7 @@
             this.panel3.SuspendLayout();
             this.tabControl2.SuspendLayout();
             this.tabPage5.SuspendLayout();
+            this.panel4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_ClosingCircleValue)).BeginInit();
             this.tabPage9.SuspendLayout();
             this.tabPage4.SuspendLayout();
@@ -120,14 +166,21 @@
             this.tabPage6.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDifferenceInt)).BeginInit();
             this.tabPage7.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSkewing)).BeginInit();
             this.tabPage8.SuspendLayout();
             this.tabPage3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.tabPage10.SuspendLayout();
             this.panel2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
+            this.tabPage11.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).BeginInit();
+            this.panel5.SuspendLayout();
             this.SuspendLayout();
             // 
             // button1
@@ -135,7 +188,7 @@
             this.button1.Location = new System.Drawing.Point(1, 2);
             this.button1.Margin = new System.Windows.Forms.Padding(5);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(89, 31);
+            this.button1.Size = new System.Drawing.Size(88, 26);
             this.button1.TabIndex = 0;
             this.button1.Text = "绘制检测区";
             this.button1.UseVisualStyleBackColor = true;
@@ -181,10 +234,10 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(1, 33);
+            this.button2.Location = new System.Drawing.Point(1, 28);
             this.button2.Margin = new System.Windows.Forms.Padding(5);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(89, 31);
+            this.button2.Size = new System.Drawing.Size(88, 26);
             this.button2.TabIndex = 2;
             this.button2.Text = "擦除绘制区";
             this.button2.UseVisualStyleBackColor = true;
@@ -218,10 +271,10 @@
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(90, 33);
+            this.button3.Location = new System.Drawing.Point(89, 29);
             this.button3.Margin = new System.Windows.Forms.Padding(5);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(89, 31);
+            this.button3.Size = new System.Drawing.Size(63, 25);
             this.button3.TabIndex = 77;
             this.button3.Text = "颜色";
             this.button3.UseVisualStyleBackColor = true;
@@ -237,6 +290,11 @@
             0,
             0,
             0});
+            this.numericUpDown_ColorNumber.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            -2147483648});
             this.numericUpDown_ColorNumber.Name = "numericUpDown_ColorNumber";
             this.numericUpDown_ColorNumber.Size = new System.Drawing.Size(44, 23);
             this.numericUpDown_ColorNumber.TabIndex = 79;
@@ -260,10 +318,10 @@
             // 
             // button4
             // 
-            this.button4.Location = new System.Drawing.Point(90, 2);
+            this.button4.Location = new System.Drawing.Point(89, 2);
             this.button4.Margin = new System.Windows.Forms.Padding(5);
             this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(89, 31);
+            this.button4.Size = new System.Drawing.Size(89, 26);
             this.button4.TabIndex = 83;
             this.button4.Text = "移动检测区";
             this.button4.UseVisualStyleBackColor = true;
@@ -309,8 +367,8 @@
             // 
             // tabPage5
             // 
-            this.tabPage5.Controls.Add(this.listBox2);
-            this.tabPage5.Controls.Add(this.thresholdControl1);
+            this.tabPage5.Controls.Add(this.checkBox3);
+            this.tabPage5.Controls.Add(this.panel4);
             this.tabPage5.Controls.Add(this.checkBox_ISFillUp);
             this.tabPage5.Controls.Add(this.button2);
             this.tabPage5.Controls.Add(this.button3);
@@ -323,7 +381,7 @@
             this.tabPage5.Controls.Add(this.checkBox_Enble);
             this.tabPage5.Controls.Add(this.numericUpDown_ColorNumber);
             this.tabPage5.Controls.Add(this.button1);
-            this.tabPage5.Controls.Add(this.checkBox2);
+            this.tabPage5.Controls.Add(this.checkBoxIFliu);
             this.tabPage5.Controls.Add(this.checkBox_IsColt);
             this.tabPage5.Controls.Add(this.numericUpDown_Color_ID);
             this.tabPage5.Location = new System.Drawing.Point(4, 24);
@@ -334,13 +392,36 @@
             this.tabPage5.Text = "绘制区域";
             this.tabPage5.UseVisualStyleBackColor = true;
             // 
+            // checkBox3
+            // 
+            this.checkBox3.AutoSize = true;
+            this.checkBox3.Location = new System.Drawing.Point(290, 39);
+            this.checkBox3.Name = "checkBox3";
+            this.checkBox3.Size = new System.Drawing.Size(82, 18);
+            this.checkBox3.TabIndex = 181;
+            this.checkBox3.Text = "显示区域";
+            this.checkBox3.UseVisualStyleBackColor = true;
+            this.checkBox3.CheckedChanged += new System.EventHandler(this.numericUpDown2_ValueChanged);
+            // 
+            // panel4
+            // 
+            this.panel4.Controls.Add(this.select_obj_type1);
+            this.panel4.Controls.Add(this.thresholdControl1);
+            this.panel4.Controls.Add(this.listBox2);
+            this.panel4.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panel4.Location = new System.Drawing.Point(3, 82);
+            this.panel4.Name = "panel4";
+            this.panel4.Size = new System.Drawing.Size(587, 159);
+            this.panel4.TabIndex = 180;
+            // 
             // listBox2
             // 
+            this.listBox2.Dock = System.Windows.Forms.DockStyle.Left;
             this.listBox2.FormattingEnabled = true;
             this.listBox2.ItemHeight = 14;
-            this.listBox2.Location = new System.Drawing.Point(361, 99);
+            this.listBox2.Location = new System.Drawing.Point(0, 0);
             this.listBox2.Name = "listBox2";
-            this.listBox2.Size = new System.Drawing.Size(120, 88);
+            this.listBox2.Size = new System.Drawing.Size(46, 159);
             this.listBox2.TabIndex = 175;
             this.listBox2.SelectedIndexChanged += new System.EventHandler(this.listBox2_SelectedIndexChanged);
             // 
@@ -390,7 +471,7 @@
             // checkBox7
             // 
             this.checkBox7.AutoSize = true;
-            this.checkBox7.Location = new System.Drawing.Point(59, 67);
+            this.checkBox7.Location = new System.Drawing.Point(59, 58);
             this.checkBox7.Name = "checkBox7";
             this.checkBox7.Size = new System.Drawing.Size(54, 18);
             this.checkBox7.TabIndex = 174;
@@ -400,7 +481,7 @@
             // checkBox_Enble
             // 
             this.checkBox_Enble.AutoSize = true;
-            this.checkBox_Enble.Location = new System.Drawing.Point(6, 67);
+            this.checkBox_Enble.Location = new System.Drawing.Point(6, 58);
             this.checkBox_Enble.Name = "checkBox_Enble";
             this.checkBox_Enble.Size = new System.Drawing.Size(54, 18);
             this.checkBox_Enble.TabIndex = 88;
@@ -408,21 +489,21 @@
             this.checkBox_Enble.UseVisualStyleBackColor = true;
             this.checkBox_Enble.CheckedChanged += new System.EventHandler(this.numericUpDown2_ValueChanged);
             // 
-            // checkBox2
+            // checkBoxIFliu
             // 
-            this.checkBox2.AutoSize = true;
-            this.checkBox2.Location = new System.Drawing.Point(290, 41);
-            this.checkBox2.Name = "checkBox2";
-            this.checkBox2.Size = new System.Drawing.Size(82, 18);
-            this.checkBox2.TabIndex = 87;
-            this.checkBox2.Text = "显示填充";
-            this.checkBox2.UseVisualStyleBackColor = true;
-            this.checkBox2.CheckedChanged += new System.EventHandler(this.numericUpDown2_ValueChanged);
+            this.checkBoxIFliu.AutoSize = true;
+            this.checkBoxIFliu.Location = new System.Drawing.Point(290, 56);
+            this.checkBoxIFliu.Name = "checkBoxIFliu";
+            this.checkBoxIFliu.Size = new System.Drawing.Size(82, 18);
+            this.checkBoxIFliu.TabIndex = 87;
+            this.checkBoxIFliu.Text = "显示填充";
+            this.checkBoxIFliu.UseVisualStyleBackColor = true;
+            this.checkBoxIFliu.CheckedChanged += new System.EventHandler(this.numericUpDown2_ValueChanged);
             // 
             // checkBox_IsColt
             // 
             this.checkBox_IsColt.AutoSize = true;
-            this.checkBox_IsColt.Location = new System.Drawing.Point(290, 22);
+            this.checkBox_IsColt.Location = new System.Drawing.Point(290, 21);
             this.checkBox_IsColt.Name = "checkBox_IsColt";
             this.checkBox_IsColt.Size = new System.Drawing.Size(82, 18);
             this.checkBox_IsColt.TabIndex = 151;
@@ -775,14 +856,97 @@
             // 
             // tabPage7
             // 
-            this.tabPage7.Controls.Add(this.select_obj_type1);
+            this.tabPage7.Controls.Add(this.button13);
+            this.tabPage7.Controls.Add(this.dataGridView2);
+            this.tabPage7.Controls.Add(this.label10);
+            this.tabPage7.Controls.Add(this.button12);
+            this.tabPage7.Controls.Add(this.numericUpDownSkewing);
+            this.tabPage7.Controls.Add(this.checkBoxIsModeCta);
             this.tabPage7.Location = new System.Drawing.Point(4, 24);
             this.tabPage7.Name = "tabPage7";
             this.tabPage7.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage7.Size = new System.Drawing.Size(593, 244);
             this.tabPage7.TabIndex = 3;
-            this.tabPage7.Text = "筛选";
+            this.tabPage7.Text = "偏移检测";
             this.tabPage7.UseVisualStyleBackColor = true;
+            // 
+            // button13
+            // 
+            this.button13.Location = new System.Drawing.Point(99, 25);
+            this.button13.Margin = new System.Windows.Forms.Padding(5);
+            this.button13.Name = "button13";
+            this.button13.Size = new System.Drawing.Size(72, 31);
+            this.button13.TabIndex = 184;
+            this.button13.Text = "显示位置";
+            this.button13.UseVisualStyleBackColor = true;
+            this.button13.Click += new System.EventHandler(this.button13_Click);
+            // 
+            // dataGridView2
+            // 
+            this.dataGridView2.AllowUserToAddRows = false;
+            this.dataGridView2.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dataGridView2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView2.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.dataGridViewTextBoxColumn1,
+            this.dataGridViewTextBoxColumn2,
+            this.dataGridViewTextBoxColumn3,
+            this.dataGridViewTextBoxColumn4});
+            this.dataGridView2.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.dataGridView2.Location = new System.Drawing.Point(3, 56);
+            this.dataGridView2.Name = "dataGridView2";
+            this.dataGridView2.RowTemplate.Height = 23;
+            this.dataGridView2.Size = new System.Drawing.Size(587, 185);
+            this.dataGridView2.TabIndex = 178;
+            this.dataGridView2.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView2_CellValueChanged);
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label10.Location = new System.Drawing.Point(79, 6);
+            this.label10.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(63, 14);
+            this.label10.TabIndex = 182;
+            this.label10.Text = "偏移距离";
+            // 
+            // button12
+            // 
+            this.button12.Location = new System.Drawing.Point(1, 25);
+            this.button12.Margin = new System.Windows.Forms.Padding(5);
+            this.button12.Name = "button12";
+            this.button12.Size = new System.Drawing.Size(99, 31);
+            this.button12.TabIndex = 179;
+            this.button12.Text = "读取当前位置";
+            this.button12.UseVisualStyleBackColor = true;
+            this.button12.Click += new System.EventHandler(this.button12_Click);
+            // 
+            // numericUpDownSkewing
+            // 
+            this.numericUpDownSkewing.DecimalPlaces = 2;
+            this.numericUpDownSkewing.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.numericUpDownSkewing.Location = new System.Drawing.Point(142, 2);
+            this.numericUpDownSkewing.Margin = new System.Windows.Forms.Padding(5);
+            this.numericUpDownSkewing.Maximum = new decimal(new int[] {
+            250,
+            0,
+            0,
+            0});
+            this.numericUpDownSkewing.Name = "numericUpDownSkewing";
+            this.numericUpDownSkewing.Size = new System.Drawing.Size(66, 23);
+            this.numericUpDownSkewing.TabIndex = 183;
+            this.numericUpDownSkewing.ValueChanged += new System.EventHandler(this.numericUpDown2_ValueChanged);
+            // 
+            // checkBoxIsModeCta
+            // 
+            this.checkBoxIsModeCta.AutoSize = true;
+            this.checkBoxIsModeCta.Location = new System.Drawing.Point(2, 4);
+            this.checkBoxIsModeCta.Name = "checkBoxIsModeCta";
+            this.checkBoxIsModeCta.Size = new System.Drawing.Size(82, 18);
+            this.checkBoxIsModeCta.TabIndex = 176;
+            this.checkBoxIsModeCta.Text = "偏移检测";
+            this.checkBoxIsModeCta.UseVisualStyleBackColor = true;
+            this.checkBoxIsModeCta.CheckedChanged += new System.EventHandler(this.numericUpDown2_ValueChanged);
             // 
             // tabPage8
             // 
@@ -797,6 +961,7 @@
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.dataGridView1);
             this.tabPage3.Controls.Add(this.label9);
             this.tabPage3.Controls.Add(this.comboBox1);
             this.tabPage3.Controls.Add(this.button11);
@@ -807,6 +972,47 @@
             this.tabPage3.TabIndex = 6;
             this.tabPage3.Text = "异常检测";
             this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // dataGridView1
+            // 
+            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.Column1,
+            this.Column2,
+            this.Column3,
+            this.Column4});
+            this.dataGridView1.Location = new System.Drawing.Point(297, 53);
+            this.dataGridView1.Name = "dataGridView1";
+            this.dataGridView1.RowTemplate.Height = 23;
+            this.dataGridView1.Size = new System.Drawing.Size(236, 174);
+            this.dataGridView1.TabIndex = 177;
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(112, 10);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(35, 14);
+            this.label9.TabIndex = 3;
+            this.label9.Text = "极性";
+            // 
+            // comboBox1
+            // 
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Location = new System.Drawing.Point(151, 6);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(121, 22);
+            this.comboBox1.TabIndex = 2;
+            // 
+            // button11
+            // 
+            this.button11.Location = new System.Drawing.Point(4, 6);
+            this.button11.Margin = new System.Windows.Forms.Padding(5);
+            this.button11.Name = "button11";
+            this.button11.Size = new System.Drawing.Size(89, 31);
+            this.button11.TabIndex = 1;
+            this.button11.Text = "显示结果";
+            this.button11.UseVisualStyleBackColor = true;
             // 
             // tabPage10
             // 
@@ -838,6 +1044,25 @@
             this.listBox1.Size = new System.Drawing.Size(87, 272);
             this.listBox1.TabIndex = 154;
             this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(87, 6);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(56, 16);
+            this.label12.TabIndex = 188;
+            this.label12.Text = "坐标轴";
+            // 
+            // comboBox3
+            // 
+            this.comboBox3.FormattingEnabled = true;
+            this.comboBox3.Location = new System.Drawing.Point(142, 3);
+            this.comboBox3.Name = "comboBox3";
+            this.comboBox3.Size = new System.Drawing.Size(121, 24);
+            this.comboBox3.TabIndex = 187;
+            this.comboBox3.DropDown += new System.EventHandler(this.comboBox3_DropDown);
+            this.comboBox3.SelectedIndexChanged += new System.EventHandler(this.comboBox3_SelectedIndexChanged);
             // 
             // panel2
             // 
@@ -876,6 +1101,7 @@
             // 
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Controls.Add(this.tabPage11);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
@@ -914,40 +1140,259 @@
             this.propertyGrid1.Size = new System.Drawing.Size(688, 696);
             this.propertyGrid1.TabIndex = 0;
             // 
-            // button11
+            // tabPage11
             // 
-            this.button11.Location = new System.Drawing.Point(4, 6);
-            this.button11.Margin = new System.Windows.Forms.Padding(5);
-            this.button11.Name = "button11";
-            this.button11.Size = new System.Drawing.Size(89, 31);
-            this.button11.TabIndex = 1;
-            this.button11.Text = "显示结果";
-            this.button11.UseVisualStyleBackColor = true;
+            this.tabPage11.Controls.Add(this.dataGridView3);
+            this.tabPage11.Controls.Add(this.panel5);
+            this.tabPage11.Location = new System.Drawing.Point(4, 26);
+            this.tabPage11.Name = "tabPage11";
+            this.tabPage11.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage11.Size = new System.Drawing.Size(694, 698);
+            this.tabPage11.TabIndex = 2;
+            this.tabPage11.Text = "坐标偏移";
+            this.tabPage11.UseVisualStyleBackColor = true;
             // 
-            // comboBox1
+            // checkBox1
             // 
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(151, 6);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(121, 22);
-            this.comboBox1.TabIndex = 2;
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Location = new System.Drawing.Point(3, 5);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(91, 20);
+            this.checkBox1.TabIndex = 193;
+            this.checkBox1.Text = "偏移检测";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             // 
-            // label9
+            // button14
             // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(112, 10);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(35, 14);
-            this.label9.TabIndex = 3;
-            this.label9.Text = "极性";
+            this.button14.Location = new System.Drawing.Point(388, 1);
+            this.button14.Margin = new System.Windows.Forms.Padding(5);
+            this.button14.Name = "button14";
+            this.button14.Size = new System.Drawing.Size(88, 31);
+            this.button14.TabIndex = 192;
+            this.button14.Text = "显示坐标";
+            this.button14.UseVisualStyleBackColor = true;
+            this.button14.Click += new System.EventHandler(this.button14_Click);
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label13.Location = new System.Drawing.Point(3, 33);
+            this.label13.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(63, 14);
+            this.label13.TabIndex = 190;
+            this.label13.Text = "偏移距离";
+            // 
+            // button15
+            // 
+            this.button15.Location = new System.Drawing.Point(271, 1);
+            this.button15.Margin = new System.Windows.Forms.Padding(5);
+            this.button15.Name = "button15";
+            this.button15.Size = new System.Drawing.Size(115, 31);
+            this.button15.TabIndex = 189;
+            this.button15.Text = "读取当前位置";
+            this.button15.UseVisualStyleBackColor = true;
+            this.button15.Click += new System.EventHandler(this.button15_Click);
+            // 
+            // numericUpDown1
+            // 
+            this.numericUpDown1.DecimalPlaces = 2;
+            this.numericUpDown1.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.numericUpDown1.Location = new System.Drawing.Point(63, 29);
+            this.numericUpDown1.Margin = new System.Windows.Forms.Padding(5);
+            this.numericUpDown1.Maximum = new decimal(new int[] {
+            250,
+            0,
+            0,
+            0});
+            this.numericUpDown1.Name = "numericUpDown1";
+            this.numericUpDown1.Size = new System.Drawing.Size(66, 23);
+            this.numericUpDown1.TabIndex = 191;
+            this.numericUpDown1.ValueChanged += new System.EventHandler(this.comboBox3_SelectedIndexChanged);
+            // 
+            // dataGridView3
+            // 
+            this.dataGridView3.AllowUserToAddRows = false;
+            this.dataGridView3.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.DisplayedCells;
+            this.dataGridView3.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView3.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.dataGridViewTextBoxColumn9,
+            this.dataGridViewTextBoxColumn10,
+            this.dataGridViewTextBoxColumn11,
+            this.dataGridViewTextBoxColumn12,
+            this.Column5,
+            this.Column6,
+            this.Column7,
+            this.Column8});
+            this.dataGridView3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridView3.Location = new System.Drawing.Point(3, 72);
+            this.dataGridView3.Name = "dataGridView3";
+            this.dataGridView3.RowTemplate.Height = 23;
+            this.dataGridView3.Size = new System.Drawing.Size(688, 623);
+            this.dataGridView3.TabIndex = 179;
+            this.dataGridView3.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView3_CellContentClick);
+            this.dataGridView3.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView3_CellValueChanged);
+            // 
+            // button16
+            // 
+            this.button16.Location = new System.Drawing.Point(388, 33);
+            this.button16.Margin = new System.Windows.Forms.Padding(5);
+            this.button16.Name = "button16";
+            this.button16.Size = new System.Drawing.Size(88, 31);
+            this.button16.TabIndex = 194;
+            this.button16.Text = "显示点";
+            this.button16.UseVisualStyleBackColor = true;
+            this.button16.Click += new System.EventHandler(this.button16_Click);
+            // 
+            // button17
+            // 
+            this.button17.Location = new System.Drawing.Point(271, 33);
+            this.button17.Margin = new System.Windows.Forms.Padding(5);
+            this.button17.Name = "button17";
+            this.button17.Size = new System.Drawing.Size(116, 31);
+            this.button17.TabIndex = 195;
+            this.button17.Text = "更新当前坐标";
+            this.button17.UseVisualStyleBackColor = true;
+            this.button17.Click += new System.EventHandler(this.button17_Click);
+            // 
+            // panel5
+            // 
+            this.panel5.Controls.Add(this.checkBox1);
+            this.panel5.Controls.Add(this.button17);
+            this.panel5.Controls.Add(this.comboBox3);
+            this.panel5.Controls.Add(this.button16);
+            this.panel5.Controls.Add(this.label12);
+            this.panel5.Controls.Add(this.numericUpDown1);
+            this.panel5.Controls.Add(this.button14);
+            this.panel5.Controls.Add(this.button15);
+            this.panel5.Controls.Add(this.label13);
+            this.panel5.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel5.Location = new System.Drawing.Point(3, 3);
+            this.panel5.Name = "panel5";
+            this.panel5.Size = new System.Drawing.Size(688, 69);
+            this.panel5.TabIndex = 196;
+            // 
+            // dataGridViewTextBoxColumn1
+            // 
+            this.dataGridViewTextBoxColumn1.FillWeight = 50F;
+            this.dataGridViewTextBoxColumn1.HeaderText = "ModeRow";
+            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
+            // 
+            // dataGridViewTextBoxColumn2
+            // 
+            this.dataGridViewTextBoxColumn2.FillWeight = 50F;
+            this.dataGridViewTextBoxColumn2.HeaderText = "ModeCol";
+            this.dataGridViewTextBoxColumn2.Name = "dataGridViewTextBoxColumn2";
+            // 
+            // dataGridViewTextBoxColumn3
+            // 
+            this.dataGridViewTextBoxColumn3.FillWeight = 50F;
+            this.dataGridViewTextBoxColumn3.HeaderText = "OutRow";
+            this.dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
+            this.dataGridViewTextBoxColumn3.ReadOnly = true;
+            // 
+            // dataGridViewTextBoxColumn4
+            // 
+            this.dataGridViewTextBoxColumn4.FillWeight = 50F;
+            this.dataGridViewTextBoxColumn4.HeaderText = "OutCol";
+            this.dataGridViewTextBoxColumn4.Name = "dataGridViewTextBoxColumn4";
+            this.dataGridViewTextBoxColumn4.ReadOnly = true;
+            // 
+            // dataGridViewTextBoxColumn5
+            // 
+            this.dataGridViewTextBoxColumn5.HeaderText = "ModeRow";
+            this.dataGridViewTextBoxColumn5.Name = "dataGridViewTextBoxColumn5";
+            // 
+            // dataGridViewTextBoxColumn6
+            // 
+            this.dataGridViewTextBoxColumn6.HeaderText = "ModeCol";
+            this.dataGridViewTextBoxColumn6.Name = "dataGridViewTextBoxColumn6";
+            // 
+            // dataGridViewTextBoxColumn7
+            // 
+            this.dataGridViewTextBoxColumn7.HeaderText = "OutRow";
+            this.dataGridViewTextBoxColumn7.Name = "dataGridViewTextBoxColumn7";
+            // 
+            // dataGridViewTextBoxColumn8
+            // 
+            this.dataGridViewTextBoxColumn8.HeaderText = "OutCol";
+            this.dataGridViewTextBoxColumn8.Name = "dataGridViewTextBoxColumn8";
+            // 
+            // dataGridViewTextBoxColumn9
+            // 
+            this.dataGridViewTextBoxColumn9.FillWeight = 50F;
+            this.dataGridViewTextBoxColumn9.HeaderText = "ModeRow";
+            this.dataGridViewTextBoxColumn9.Name = "dataGridViewTextBoxColumn9";
+            this.dataGridViewTextBoxColumn9.Width = 89;
+            // 
+            // dataGridViewTextBoxColumn10
+            // 
+            this.dataGridViewTextBoxColumn10.FillWeight = 50F;
+            this.dataGridViewTextBoxColumn10.HeaderText = "ModeCol";
+            this.dataGridViewTextBoxColumn10.Name = "dataGridViewTextBoxColumn10";
+            this.dataGridViewTextBoxColumn10.Width = 89;
+            // 
+            // dataGridViewTextBoxColumn11
+            // 
+            this.dataGridViewTextBoxColumn11.FillWeight = 50F;
+            this.dataGridViewTextBoxColumn11.HeaderText = "OutRow";
+            this.dataGridViewTextBoxColumn11.Name = "dataGridViewTextBoxColumn11";
+            this.dataGridViewTextBoxColumn11.ReadOnly = true;
+            this.dataGridViewTextBoxColumn11.Width = 81;
+            // 
+            // dataGridViewTextBoxColumn12
+            // 
+            this.dataGridViewTextBoxColumn12.FillWeight = 50F;
+            this.dataGridViewTextBoxColumn12.HeaderText = "OutCol";
+            this.dataGridViewTextBoxColumn12.Name = "dataGridViewTextBoxColumn12";
+            this.dataGridViewTextBoxColumn12.ReadOnly = true;
+            this.dataGridViewTextBoxColumn12.Width = 81;
+            // 
+            // dataGridViewTextBoxColumn13
+            // 
+            this.dataGridViewTextBoxColumn13.HeaderText = "MRos";
+            this.dataGridViewTextBoxColumn13.Name = "dataGridViewTextBoxColumn13";
+            this.dataGridViewTextBoxColumn13.Width = 108;
+            // 
+            // dataGridViewTextBoxColumn14
+            // 
+            this.dataGridViewTextBoxColumn14.HeaderText = "MCols";
+            this.dataGridViewTextBoxColumn14.Name = "dataGridViewTextBoxColumn14";
+            this.dataGridViewTextBoxColumn14.Width = 107;
+            // 
+            // dataGridViewTextBoxColumn15
+            // 
+            this.dataGridViewTextBoxColumn15.HeaderText = "Ros";
+            this.dataGridViewTextBoxColumn15.Name = "dataGridViewTextBoxColumn15";
+            this.dataGridViewTextBoxColumn15.ReadOnly = true;
+            this.dataGridViewTextBoxColumn15.Width = 108;
+            // 
+            // dataGridViewTextBoxColumn16
+            // 
+            this.dataGridViewTextBoxColumn16.HeaderText = "Cols";
+            this.dataGridViewTextBoxColumn16.Name = "dataGridViewTextBoxColumn16";
+            this.dataGridViewTextBoxColumn16.ReadOnly = true;
+            this.dataGridViewTextBoxColumn16.Width = 107;
+            // 
+            // select_obj_type1
+            // 
+            this.select_obj_type1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.select_obj_type1.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.select_obj_type1.Location = new System.Drawing.Point(288, 0);
+            this.select_obj_type1.Name = "select_obj_type1";
+            this.select_obj_type1.Size = new System.Drawing.Size(299, 159);
+            this.select_obj_type1.TabIndex = 0;
             // 
             // thresholdControl1
             // 
+            this.thresholdControl1.Dock = System.Windows.Forms.DockStyle.Left;
             this.thresholdControl1.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.thresholdControl1.Location = new System.Drawing.Point(1, 83);
+            this.thresholdControl1.Location = new System.Drawing.Point(46, 0);
             this.thresholdControl1.Margin = new System.Windows.Forms.Padding(5);
             this.thresholdControl1.Name = "thresholdControl1";
-            this.thresholdControl1.Size = new System.Drawing.Size(352, 113);
+            this.thresholdControl1.Size = new System.Drawing.Size(242, 159);
             this.thresholdControl1.TabIndex = 88;
             this.thresholdControl1.DispButt += new Vision2.vision.HalconRunFile.RunProgramFile.ThresholdControl.dispButt(this.thresholdControl1_DispButt);
             this.thresholdControl1.Load += new System.EventHandler(this.thresholdControl1_Load);
@@ -973,15 +1418,6 @@
             this.select_obj_type2.Size = new System.Drawing.Size(443, 238);
             this.select_obj_type2.TabIndex = 181;
             // 
-            // select_obj_type1
-            // 
-            this.select_obj_type1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.select_obj_type1.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.select_obj_type1.Location = new System.Drawing.Point(3, 3);
-            this.select_obj_type1.Name = "select_obj_type1";
-            this.select_obj_type1.Size = new System.Drawing.Size(587, 238);
-            this.select_obj_type1.TabIndex = 0;
-            // 
             // userCtrlThresholdList1
             // 
             this.userCtrlThresholdList1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -991,6 +1427,52 @@
             this.userCtrlThresholdList1.Name = "userCtrlThresholdList1";
             this.userCtrlThresholdList1.Size = new System.Drawing.Size(587, 238);
             this.userCtrlThresholdList1.TabIndex = 0;
+            // 
+            // Column1
+            // 
+            this.Column1.HeaderText = "ModeRow";
+            this.Column1.Name = "Column1";
+            // 
+            // Column2
+            // 
+            this.Column2.HeaderText = "ModeCol";
+            this.Column2.Name = "Column2";
+            // 
+            // Column3
+            // 
+            this.Column3.HeaderText = "OutRow";
+            this.Column3.Name = "Column3";
+            // 
+            // Column4
+            // 
+            this.Column4.HeaderText = "OutCol";
+            this.Column4.Name = "Column4";
+            // 
+            // Column5
+            // 
+            this.Column5.HeaderText = "MRos";
+            this.Column5.Name = "Column5";
+            this.Column5.Width = 65;
+            // 
+            // Column6
+            // 
+            this.Column6.HeaderText = "MCols";
+            this.Column6.Name = "Column6";
+            this.Column6.Width = 73;
+            // 
+            // Column7
+            // 
+            this.Column7.HeaderText = "Ros";
+            this.Column7.Name = "Column7";
+            this.Column7.ReadOnly = true;
+            this.Column7.Width = 57;
+            // 
+            // Column8
+            // 
+            this.Column8.HeaderText = "Cols";
+            this.Column8.Name = "Column8";
+            this.Column8.ReadOnly = true;
+            this.Column8.Width = 65;
             // 
             // Color_DetectionUserControl
             // 
@@ -1010,6 +1492,7 @@
             this.tabControl2.ResumeLayout(false);
             this.tabPage5.ResumeLayout(false);
             this.tabPage5.PerformLayout();
+            this.panel4.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_ClosingCircleValue)).EndInit();
             this.tabPage9.ResumeLayout(false);
             this.tabPage4.ResumeLayout(false);
@@ -1023,15 +1506,24 @@
             this.tabPage6.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDifferenceInt)).EndInit();
             this.tabPage7.ResumeLayout(false);
+            this.tabPage7.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSkewing)).EndInit();
             this.tabPage8.ResumeLayout(false);
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.tabPage10.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
             this.groupBox3.ResumeLayout(false);
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
+            this.tabPage11.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).EndInit();
+            this.panel5.ResumeLayout(false);
+            this.panel5.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1061,7 +1553,7 @@
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.PropertyGrid propertyGrid1;
-        private System.Windows.Forms.CheckBox checkBox2;
+        private System.Windows.Forms.CheckBox checkBoxIFliu;
         private RunProgramFile.ThresholdControl thresholdControl1;
         public System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Label label1;
@@ -1111,5 +1603,50 @@
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.Button button11;
+        private System.Windows.Forms.CheckBox checkBoxIsModeCta;
+        private System.Windows.Forms.DataGridView dataGridView2;
+        private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column3;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column4;
+        private System.Windows.Forms.Button button12;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn4;
+        private System.Windows.Forms.Panel panel4;
+        private System.Windows.Forms.CheckBox checkBox3;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.NumericUpDown numericUpDownSkewing;
+        private System.Windows.Forms.Button button13;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.ComboBox comboBox3;
+        private System.Windows.Forms.TabPage tabPage11;
+        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.Button button14;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Button button15;
+        private System.Windows.Forms.NumericUpDown numericUpDown1;
+        private System.Windows.Forms.DataGridView dataGridView3;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn5;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn6;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn7;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn8;
+        private System.Windows.Forms.Button button16;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn13;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn14;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn15;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn16;
+        private System.Windows.Forms.Panel panel5;
+        private System.Windows.Forms.Button button17;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn9;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn10;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn11;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn12;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column5;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column6;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column7;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column8;
     }
 }

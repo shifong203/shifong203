@@ -239,53 +239,53 @@ namespace Vision2.vision.Calib
         public bool RunAutoTCalib(string path, int i, int cont, HTuple hWindowID, HTuple pose3D, HObject image)
         {
             return false;
-            if (i == 0)
-            {
-                Errs = "";
-                if (!ReadCamPar(path + "\\固定相机\\final_campar.dat", this.TCalibPaht, true))
-                {
-                    MessageBox.Show("读取相机标定板错误");
-                    return false;
-                }
-            }
-            Vision.Disp_message(hWindowID, i + "\\", 20, 20);
-            RunCalib(image, pose3D, i, true, hWindowID);
-            if (i >= cont)
-            {
-                HOperatorSet.CalibrateHandEye(calibDataID, out HTuple errs);//手眼标定操作
-                HTuple CalObjInCamPose;
-                HOperatorSet.GetCalibData(calibDataID, "camera", 0, "params", out tCamParam);//获取相机内部参数
-                HOperatorSet.GetCalibData(calibDataID, "camera", 0, "base_in_cam_pose", out this.tBaseInCamPose);//获取相机的工具坐标
-                HOperatorSet.GetCalibData(calibDataID, "calib_obj", 0, "obj_in_tool_pose", out this.tCalibInCamPose);//获取标定板目标的工具坐标
-                HOperatorSet.QueryCalibDataObservIndices(calibDataID, "camera", 0, out HTuple CalibObjIdx, out HTuple PoseIds);
-                for (int it = 0; it < PoseIds.Length; it++)
-                {
-                    HOperatorSet.ReadImage(out image, path + "\\T\\" + PoseIds[it] + ".bmp");
-                    HOperatorSet.DispObj(image, hWindowID);
-                    Vision.Disp_message(hWindowID, it + "\\" + PoseIds.Length, 20, 20);
-                    HOperatorSet.GetCalibData(calibDataID, "tool", PoseIds[it], "tool_in_base_pose", out HTuple ToolInBasePose);
-                    CalObjInCamPose = Calc_calplate_pose_stationarycam(tCalibInCamPose, tBaseInCamPose, ToolInBasePose);
-                    Disp3DCoordSystem(tCamParam, CalObjInCamPose, 0.01, hWindowID);
-                    HOperatorSet.WaitSeconds(0.5);
-                }
-                HTuple hTuple = new HTuple();
-                if (ReadCamCalib(image, this.TCalibPaht, true))
-                {
-                    AutoCalibPoint.Disp3DCoordSystem(TCamParam, tCalibInCamPose, 0.01, hWindowID);
-                    hTuple.Append(tCalibInCamPose);
-                }
-                else
-                {
-                    MessageBox.Show("读取出错");
-                }
-                SaveCalib(path + "\\", true);
-                hTuple.Append("平移位置单位:" + errs.TupleSelect(0).TupleMult(1000).TupleString("0.04f") + "mm|" + errs.TupleSelect(2).TupleMult(1000).TupleString("0.04f") + "mm");
-                hTuple.Append("旋转角度单位:" + errs.TupleSelect(1).TupleString("0.04f") + "|" + errs.TupleSelect(3).TupleString("0.04f"));
-                Vision.Disp_message(hWindowID, hTuple, 20, 20);
-                Errs = hTuple;
-                HOperatorSet.ClearCalibData(calibDataID);
-            }
-            return false;
+            //if (i == 0)
+            //{
+            //    Errs = "";
+            //    if (!ReadCamPar(path + "\\固定相机\\final_campar.dat", this.TCalibPaht, true))
+            //    {
+            //        MessageBox.Show("读取相机标定板错误");
+            //        return false;
+            //    }
+            //}
+            //Vision.Disp_message(hWindowID, i + "\\", 20, 20);
+            //RunCalib(image, pose3D, i, true, hWindowID);
+            //if (i >= cont)
+            //{
+            //    HOperatorSet.CalibrateHandEye(calibDataID, out HTuple errs);//手眼标定操作
+            //    HTuple CalObjInCamPose;
+            //    HOperatorSet.GetCalibData(calibDataID, "camera", 0, "params", out tCamParam);//获取相机内部参数
+            //    HOperatorSet.GetCalibData(calibDataID, "camera", 0, "base_in_cam_pose", out this.tBaseInCamPose);//获取相机的工具坐标
+            //    HOperatorSet.GetCalibData(calibDataID, "calib_obj", 0, "obj_in_tool_pose", out this.tCalibInCamPose);//获取标定板目标的工具坐标
+            //    HOperatorSet.QueryCalibDataObservIndices(calibDataID, "camera", 0, out HTuple CalibObjIdx, out HTuple PoseIds);
+            //    for (int it = 0; it < PoseIds.Length; it++)
+            //    {
+            //        HOperatorSet.ReadImage(out image, path + "\\T\\" + PoseIds[it] + ".bmp");
+            //        HOperatorSet.DispObj(image, hWindowID);
+            //        Vision.Disp_message(hWindowID, it + "\\" + PoseIds.Length, 20, 20);
+            //        HOperatorSet.GetCalibData(calibDataID, "tool", PoseIds[it], "tool_in_base_pose", out HTuple ToolInBasePose);
+            //        CalObjInCamPose = Calc_calplate_pose_stationarycam(tCalibInCamPose, tBaseInCamPose, ToolInBasePose);
+            //        Disp3DCoordSystem(tCamParam, CalObjInCamPose, 0.01, hWindowID);
+            //        HOperatorSet.WaitSeconds(0.5);
+            //    }
+            //    HTuple hTuple = new HTuple();
+            //    if (ReadCamCalib(image, this.TCalibPaht, true))
+            //    {
+            //        AutoCalibPoint.Disp3DCoordSystem(TCamParam, tCalibInCamPose, 0.01, hWindowID);
+            //        hTuple.Append(tCalibInCamPose);
+            //    }
+            //    else
+            //    {
+            //        MessageBox.Show("读取出错");
+            //    }
+            //    SaveCalib(path + "\\", true);
+            //    hTuple.Append("平移位置单位:" + errs.TupleSelect(0).TupleMult(1000).TupleString("0.04f") + "mm|" + errs.TupleSelect(2).TupleMult(1000).TupleString("0.04f") + "mm");
+            //    hTuple.Append("旋转角度单位:" + errs.TupleSelect(1).TupleString("0.04f") + "|" + errs.TupleSelect(3).TupleString("0.04f"));
+            //    Vision.Disp_message(hWindowID, hTuple, 20, 20);
+            //    Errs = hTuple;
+            //    HOperatorSet.ClearCalibData(calibDataID);
+            //}
+            //return false;
         }
 
         /// <summary>

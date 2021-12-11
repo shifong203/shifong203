@@ -108,7 +108,7 @@ namespace Vision2.Project.formula
         private void toolStripButton1_Click(object sender, EventArgs e)
         {
             Cursor = Cursors.WaitCursor;
-            if (Vision2.ErosProjcetDLL.Project.ProjectINI.Enbt || Vision2.ErosProjcetDLL.Project.ProjectINI.GetUserJurisdiction("管理权限"))
+            if (ProjectINI.Enbt || ProjectINI.GetUserJurisdiction("管理权限"))
             {
                 Product.SaveDicExcel(ProjectINI.ProjectPathRun + "\\产品配方\\产品文件");
             }

@@ -62,12 +62,9 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         [Description(""), Category("划痕处理"), DisplayName("划痕第一次赛选最小长度"),]
         public double SocekSeleMin1 { get; set; } = 5;
 
-        [Description(""), Category("划痕处理"), DisplayName("划痕第二次赛选最小长度"),]
-        public double SocekSeleMin2 { get; set; } = 20;
-
-        [Description(""), Category("划痕处理"), DisplayName("划痕赛选最大宽度"),]
-        public double SocekSeleMax { get; set; } = 20;
-
+        /// <summary>
+        /// 
+        /// </summary>
         [Description(""), Category("划痕处理"), DisplayName("划痕第一次赛选后圆闭运算大小"),]
         public double ColsingSocek { get; set; } = 10;
         /// <summary>
@@ -84,12 +81,22 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
 
         [Description(""), Category("搜索区域"), DisplayName("倒角尺寸"),]
         public double ChamferPhi { get; set; } = 5;
+        /// <summary>
+        /// 显示裂痕
+        /// </summary>
 
         [Description(""), Category("结果输出"), DisplayName("裂痕显示"),]
         public bool SockeObj { get; set; }
 
+        /// <summary>
+        /// 划痕处理
+        /// </summary>
+
         [Description(""), Category("划痕处理"), DisplayName("使用划痕检测")]
         public bool EnableScratch { get; set; } = true;
+        /// <summary>
+        /// 对称性分析
+        /// </summary>
 
         [Description(""), Category("对称性分析"), DisplayName("使用对称性分析")]
         public bool EnableSymmetry { get; set; }
@@ -127,12 +134,18 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 HOperatorSet.Connection(hObject2, out hObject2);
                 HOperatorSet.SelectShape(hObject2, out hObject2, "ra", "and", SocekSeleMin1, 9999999999);
                 HOperatorSet.Union1(hObject2, out hObject2);
+
             }
             catch (Exception ex)
             {
             }
         }
-
+        /// <summary>
+        /// 对称检测
+        /// </summary>
+        /// <param name="oneResult"></param>
+        /// <param name="debugID"></param>
+        /// <param name="hObject2"></param>
         public void Symmetry(OneResultOBj oneResult , int debugID,out HObject hObject2)
         {
             hObject2 = new HObject();
@@ -207,54 +220,57 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 hobj1 = threshold_Min_Max.Threshold(hImage);
                 //HOperatorSet.Threshold(, out hobj1, ThresSelectMin, ThresSelectMax);
                 HOperatorSet.Connection(hobj1, out hobj1);
-                hobj1 = Select_Shape_Min_Max.select_shape(hobj1);
-                //ImageHdt(halcon.Image);
-
                 if (id == 1)
                 {
                     halcon.AddObj(hobj1);
                 }
-                //HOperatorSet.FillUp(hObject, out hObject);
 
-                hobj1 = DilationOrErosingCircle(hobj1, DilationCircle);
+                hobj1 = Select_Shape_Min_Max.select_shape(hobj1);
                 if (id == 2)
                 {
                     halcon.AddObj(hobj1);
+                    HOperatorSet.AreaCenter(hobj1, out HTuple areat, out HTuple row1, out HTuple column1);
+                    halcon.AddImageMassage(row1 + 20, column1, "面积" + areat);
+                    HOperatorSet.HeightWidthRatio(hobj1, out  HTuple height, out HTuple width, out HTuple ratio);
+
+                    halcon.AddImageMassage(row1 + 40, column1, "高度" + height+"宽度"+width+"ratio"+ratio);
                 }
+                //ImageHdt(halcon.Image);
+                //HOperatorSet.FillUp(hObject, out hObject);
+                hobj1 = DilationOrErosingCircle(hobj1, DilationCircle);
                 HObject hObject = DilationOrErosingCircle(hobj1, ErosinCircle);
                 HOperatorSet.Union1(hObject, out HObject rectangle3);
                 if (IsDisObj)
                 {
                     halcon.AddObj(rectangle3, ColorResult.yellow);
                 }
-                if (id == 2)
+                if (id == 3)
                 {
+                    halcon.AddObj(rectangle3);
                     HOperatorSet.AreaCenter(rectangle3, out HTuple areat, out HTuple row1, out HTuple column1);
-                    
-                    halcon.AddImageMassage(row1+80,column1,"检测区域面积"+areat);
+                    halcon.AddImageMassage(row1, column1, "面积" + areat);
                 }
                 HOperatorSet.ReduceDomain(halcon.GetHalcon().GetImageOBJ(ImageTypeOb), rectangle3, out hImage);
-
-                if (id >= 2)
+                if (id >= 4)
                 {
                     halcon.AddObj(rectangle3, ColorResult.yellow);
                 }
-                if (false)
-                {
-                    HOperatorSet.AreaCenter(ModeOBj, out HTuple areat, out HTuple rowt, out HTuple columnt);
-                    HOperatorSet.SmallestRectangle2(ModeOBj, out HTuple rowtd, out HTuple columntd, out HTuple phi, out HTuple leng1, out HTuple leng2);
-                    HOperatorSet.AreaCenter(rectangle3, out HTuple areas, out HTuple rowdt, out HTuple columnttd);
-                    HOperatorSet.SmallestRectangle2(rectangle3, out HTuple rowtdd, out HTuple columntdd, out HTuple phdi, out HTuple lengd1, out HTuple lengd2);
-                    HOperatorSet.VectorAngleToRigid(rowtd, columntd, phi, rowtdd,
-                        columntdd, phdi, out HTuple hTuple);
-                    HOperatorSet.AffineTransRegion(ModeOBj, out HObject modeObjT, hTuple, "nearest_neighbor");
-                    HOperatorSet.Difference(modeObjT, rectangle3, out HObject ertd);
-                    if (id >= 3)
-                    {
-                        halcon.AddObj(ertd, ColorResult.red);
-                    }
-                    HOperatorSet.OpeningCircle(ertd, out ertd, 5);
-                }
+                //if (false)
+                //{
+                //    HOperatorSet.AreaCenter(ModeOBj, out HTuple areat, out HTuple rowt, out HTuple columnt);
+                //    HOperatorSet.SmallestRectangle2(ModeOBj, out HTuple rowtd, out HTuple columntd, out HTuple phi, out HTuple leng1, out HTuple leng2);
+                //    HOperatorSet.AreaCenter(rectangle3, out HTuple areas, out HTuple rowdt, out HTuple columnttd);
+                //    HOperatorSet.SmallestRectangle2(rectangle3, out HTuple rowtdd, out HTuple columntdd, out HTuple phdi, out HTuple lengd1, out HTuple lengd2);
+                //    HOperatorSet.VectorAngleToRigid(rowtd, columntd, phi, rowtdd,
+                //        columntdd, phdi, out HTuple hTuple);
+                //    HOperatorSet.AffineTransRegion(ModeOBj, out HObject modeObjT, hTuple, "nearest_neighbor");
+                //    HOperatorSet.Difference(modeObjT, rectangle3, out HObject ertd);
+                //    if (id >= 3)
+                //    {
+                //        halcon.AddObj(ertd, ColorResult.red);
+                //    }
+                //    HOperatorSet.OpeningCircle(ertd, out ertd, 5);
+                //}
 
                 //if (IsDisObj)
                 //{
@@ -267,10 +283,19 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 HObject hObject2 = new HObject();
                 hObject2.GenEmptyObj();
                 HObject hObject1 = new HObject();
-
                 if (EnableScratch)
                 {
                     Scratch(hImage, out hObject2);
+                    if (id == 4)
+                    {
+                        HOperatorSet.Connection(hObject2,out hObject2);
+                        HOperatorSet.AreaCenter(hObject2, out HTuple areat, out HTuple row1, out HTuple column1);
+                        halcon.AddImageMassage(row1 + 20, column1, "面积" + areat);
+                        HOperatorSet.HeightWidthRatio(hObject2, out HTuple height, out HTuple width, out HTuple ratio);
+                        halcon.AddImageMassage(row1 + 40, column1, "高度" + height + "宽度" + width + "ratio" + ratio);
+                        halcon.AddObj(hObject2,ColorResult.red);
+                        return;
+                    }
                     HOperatorSet.ClosingCircle(hObject2, out hObject2, ColsingSocek);
                 }
                 if (EnableSymmetry)
@@ -290,7 +315,16 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 {
                     HOperatorSet.Skeleton(errt, out errt);
                 }
-
+                if (id == 5)
+                {
+                    HOperatorSet.Connection(errt, out hObject2);
+                    HOperatorSet.AreaCenter(hObject2, out HTuple areat, out HTuple row1, out HTuple column1);
+                    halcon.AddImageMassage(row1 + 20, column1, "面积" + areat);
+                    HOperatorSet.HeightWidthRatio(hObject2, out HTuple height, out HTuple width, out HTuple ratio);
+                    halcon.AddImageMassage(row1 + 40, column1, "高度" + height + "宽度" + width + "ratio" + ratio);
+                    halcon.AddObj(hObject2, ColorResult.red);
+                    return;
+                }
                 if (errt.CountObj() != 0)
                 {
                     errRoi = errt;
@@ -300,51 +334,51 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
 
                 //HOperatorSet.Intersection(SelecRoi, errRoi, out errRoi);
 
-                HOperatorSet.ReduceDomain(hImage, errRoi, out hImage);
-                HOperatorSet.Connection(errRoi, out errRoi);
-                HOperatorSet.Intensity(errRoi, hObject1, out HTuple mean, out HTuple deviation);
-                HObject hObject4 = new HObject();
-                hObject4.GenEmptyObj();
-                HObject hObject7 = new HObject();
-                hObject7.GenEmptyObj();
-                for (int i = 0; i < mean.Length; i++)
-                {
-                    HOperatorSet.SelectObj(errRoi, out HObject hObject5, i + 1);
-                    HOperatorSet.ReduceDomain(hImage, hObject5, out HObject hObject6);
-                    HOperatorSet.AutoThreshold(hObject6, out HObject hObject3, 1);
-                    HOperatorSet.AreaCenter(hObject3, out HTuple area2, out HTuple row2, out HTuple column2);
-                    HOperatorSet.Connection(hObject3, out hObject3);
+                //HOperatorSet.ReduceDomain(hImage, errRoi, out hImage);
+                //HOperatorSet.Connection(errRoi, out errRoi);
+                //HOperatorSet.Intensity(errRoi, hObject1, out HTuple mean, out HTuple deviation);
+                //HObject hObject4 = new HObject();
+                //hObject4.GenEmptyObj();
+                //HObject hObject7 = new HObject();
+                //hObject7.GenEmptyObj();
+                //for (int i = 0; i < mean.Length; i++)
+                //{
+                //    HOperatorSet.SelectObj(errRoi, out HObject hObject5, i + 1);
+                //    HOperatorSet.ReduceDomain(hImage, hObject5, out HObject hObject6);
+                //    HOperatorSet.AutoThreshold(hObject6, out HObject hObject3, 1);
+                //    HOperatorSet.AreaCenter(hObject3, out HTuple area2, out HTuple row2, out HTuple column2);
+                //    HOperatorSet.Connection(hObject3, out hObject3);
 
-                    if (area2.Length != 0)
-                    {
-                        HOperatorSet.Intensity(hObject5, hImage, out HTuple mean2, out deviation);
-                        //halcon.AddObj(hObject3, ColorResult.yellow);
-                        if (deviation.TupleMax() > Dicet)
-                        {
-                            HOperatorSet.SelectShape(hObject3, out hObject3, "area", "and", 10, area2.TupleMax() - 1);
-                            HOperatorSet.Union1(hObject3, out hObject3);
-                            if (hObject3.CountObj() != 0)
-                            {
-                                HOperatorSet.ClosingCircle(hObject3, out hObject3, 2);
-                                //HOperatorSet.Intensity(hObject3, hImage, out mean, out deviation);
-                                //halcon.AddObj(hObject3, ColorResult.blue);
-                                hObject7 = hObject7.ConcatObj(hObject5);
-                                hObject4 = hObject4.ConcatObj(hObject3);
-                            }
-                        }
-                    }
-                }
+                //    if (area2.Length != 0)
+                //    {
+                //        HOperatorSet.Intensity(hObject5, hImage, out HTuple mean2, out deviation);
+                //        //halcon.AddObj(hObject3, ColorResult.yellow);
+                //        if (deviation.TupleMax() > Dicet)
+                //        {
+                //            HOperatorSet.SelectShape(hObject3, out hObject3, "area", "and", 10, area2.TupleMax() - 1);
+                //            HOperatorSet.Union1(hObject3, out hObject3);
+                //            if (hObject3.CountObj() != 0)
+                //            {
+                //                HOperatorSet.ClosingCircle(hObject3, out hObject3, 2);
+                //                //HOperatorSet.Intensity(hObject3, hImage, out mean, out deviation);
+                //                //halcon.AddObj(hObject3, ColorResult.blue);
+                //                hObject7 = hObject7.ConcatObj(hObject5);
+                //                hObject4 = hObject4.ConcatObj(hObject3);
+                //            }
+                //        }
+                //    }
+                //}
 
-                HOperatorSet.DilationCircle(hObject4.ConcatObj(errt), out hObject4, 1);
-                errRoi = hObject4;
+                //HOperatorSet.DilationCircle(hObject4.ConcatObj(errt), out hObject4, 1);
+                //errRoi = hObject4;
 
-                HOperatorSet.Intensity(hObject7, hImage, out mean, out deviation);
-                //halcon.AddObj(hObject3,ColorResult.red);
-                HOperatorSet.AreaCenter(hObject7, out HTuple area, out HTuple row, out HTuple column);
-                if (id != 0)
-                {
-                    halcon.AddImageMassage(row, column, mean + ":" + deviation);
-                }
+                //HOperatorSet.Intensity(hObject7, hImage, out mean, out deviation);
+                ////halcon.AddObj(hObject3,ColorResult.red);
+                //HOperatorSet.AreaCenter(hObject7, out HTuple area, out HTuple row, out HTuple column);
+                //if (id != 0)
+                //{
+                //    halcon.AddImageMassage(row, column, mean + ":" + deviation);
+                //}
                 //halcon.AddObj(hObject);
             }
             catch (Exception ex)

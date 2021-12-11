@@ -110,26 +110,28 @@ namespace Vision2.ErosProjcetDLL.Project
         /// <returns></returns>
         public static string GetMemory()
         {
-            long b = 0;
+            double b = 0;
             try
             {
                 Process proc = Process.GetCurrentProcess();
                 b = proc.PrivateMemorySize64;
                 for (int i = 0; i < 2; i++)
                 {
-                    b /= 1024;
+                    b /= 1024.0;
                 }
+                b /= 1024.0;
             }
             catch (Exception)
             {
             }
             //proc.m
-            return b + "MB";
+            return b.ToString("0.00") + "G";
         }
 
         public static bool DebugMode { get; set; }
 
         private static ProjectINI iNI;
+
 
         /// <summary>
         /// 设置数据到INI文件
@@ -137,16 +139,16 @@ namespace Vision2.ErosProjcetDLL.Project
         /// <param name="item">节点</param>
         /// <param name="key">键</param>
         /// <param name="data">值</param>
-        public static void SetTempPrjectDataINI(string item, string key, string data)
-        {
-            try
-            {
-                WritePrivateProfileString(item, key, data, TempPath + "PrjectData.ini");
-            }
-            catch (Exception)
-            {
-            }
-        }
+        //public static void SetTempPrjectDataINI(string item, string key, string data)
+        //{
+        //    try
+        //    {
+        //        WritePrivateProfileString(item, key, data, TempPath + "PrjectData.ini");
+        //    }
+        //    catch (Exception)
+        //    {
+        //    }
+        //}
 
         /// <summary>
         ///
@@ -154,19 +156,19 @@ namespace Vision2.ErosProjcetDLL.Project
         /// <param name="item"></param>
         /// <param name="key"></param>
         /// <param name="data"></param>
-        public static void GetTempPrjectDataINI(string item, string key, out string data)
-        {
-            StringBuilder stringBuilder = new StringBuilder();
-            data = "";
-            try
-            {
-                GetPrivateProfileString(item, key, " ", stringBuilder, 100, TempPath + "PrjectData.ini");
-            }
-            catch (Exception)
-            {
-            }
-            data = stringBuilder.ToString();
-        }
+        //public static void GetTempPrjectDataINI(string item, string key, out string data)
+        //{
+        //    StringBuilder stringBuilder = new StringBuilder();
+        //    data = "";
+        //    try
+        //    {
+        //        GetPrivateProfileString(item, key, " ", stringBuilder, 100, TempPath + "PrjectData.ini");
+        //    }
+        //    catch (Exception)
+        //    {
+        //    }
+        //    data = stringBuilder.ToString();
+        //}
 
         public static string GetInI(string path, string item, string key)
         {
@@ -322,7 +324,16 @@ namespace Vision2.ErosProjcetDLL.Project
             this.RunName = "AppRun1";
         }
 
+
+
+        /// <summary>
+        /// 项目读取地址
+        /// </summary>
         public static string ProjietPath = "C:\\Vision2\\";
+
+
+        public List< string> DicNameRunFacility { get; set; } = new List< string>();
+
 
         ///// <summary>
         /////
@@ -697,9 +708,8 @@ namespace Vision2.ErosProjcetDLL.Project
                 }
                 if (File.Exists(path))
                 {
-                    string strdata = File.ReadAllText(path);
-                    obje = JsonConvert.DeserializeObject<T>(strdata);
-                    //登录窗口中 读取语言资源文件
+                           string strdata = File.ReadAllText(path);
+                        obje = JsonConvert.DeserializeObject<T>(strdata);
                     return true;
                 }
                 else
@@ -709,11 +719,53 @@ namespace Vision2.ErosProjcetDLL.Project
             }
             catch (Exception ex)
             {
-                MessageBox.Show("读取文件:" + path + " 失败;" + ex.Message);
+                ErrForm.Show(ex, "读取文件:" + path + " 失败");
+                //MessageBox.Show("读取文件:" + path + " 失败;" + ex.Message);
             }
             return false;
         }
+        public static bool ReadPathJsonToCalssEX<T>(string path, out T obje    )
+        {
+            obje = default(T);
+            try
+            {
+                if (!Path.GetFileName(path).Contains("."))
+                {
+                    path = path + ".txt";
+                }
+                if (File.Exists(path))
+                {
+                    string strdata = File.ReadAllText(path);
+                    obje = JsonConvert.DeserializeObject<T>(strdata);
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+            return false;
 
+        }
+
+        public static bool ClassToJsonSave(object obj,string path)
+        {
+            try
+            {
+                if (!Path.GetFileName(path).Contains('.'))
+                {
+                    path = path + ".txt";
+                }
+                Directory.CreateDirectory(Path.GetDirectoryName(path));
+                string jsonStr = JsonConvert.SerializeObject(obj);
+                File.WriteAllText(path, jsonStr);
+                return true;
+            }
+            catch (Exception ex)
+            {
+            }
+            return false;
+
+        }
         public static bool ClassToJsonSavePath(object obje, string path)
         {
             try

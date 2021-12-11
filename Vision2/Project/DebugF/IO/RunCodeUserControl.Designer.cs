@@ -48,15 +48,15 @@
             this.toolStripStatusLabel4 = new System.Windows.Forms.ToolStripStatusLabel();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.toolStripCheckbox1 = new Vision2.ErosProjcetDLL.UI.ToolStrip.ToolStripCheckbox();
+            this.panel2 = new System.Windows.Forms.Panel();
             this.tsButton1 = new Vision2.ErosProjcetDLL.UI.ToolStrip.TSButton();
             this.tsButton3 = new Vision2.ErosProjcetDLL.UI.ToolStrip.TSButton();
             this.tsButton4 = new Vision2.ErosProjcetDLL.UI.ToolStrip.TSButton();
             this.tsButton2 = new Vision2.ErosProjcetDLL.UI.ToolStrip.TSButton();
-            this.toolStripCheckbox1 = new Vision2.ErosProjcetDLL.UI.ToolStrip.ToolStripCheckbox();
             this.tsButton5 = new Vision2.ErosProjcetDLL.UI.ToolStrip.TSButton();
             this.tsButton6 = new Vision2.ErosProjcetDLL.UI.ToolStrip.TSButton();
             this.tsButton7 = new Vision2.ErosProjcetDLL.UI.ToolStrip.TSButton();
-            this.panel2 = new System.Windows.Forms.Panel();
             this.groupBox1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
@@ -166,6 +166,23 @@
             this.toolStrip1.TabIndex = 63;
             this.toolStrip1.Text = "toolStrip1";
             // 
+            // toolStripCheckbox1
+            // 
+            this.toolStripCheckbox1.Name = "toolStripCheckbox1";
+            this.toolStripCheckbox1.Size = new System.Drawing.Size(61, 29);
+            this.toolStripCheckbox1.Text = "模拟";
+            this.toolStripCheckbox1.Click += new System.EventHandler(this.toolStripCheckbox1_Click);
+            // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this.richTextBox1);
+            this.panel2.Controls.Add(this.panel1);
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel2.Location = new System.Drawing.Point(0, 32);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(646, 598);
+            this.panel2.TabIndex = 64;
+            // 
             // tsButton1
             // 
             this.tsButton1.Image = ((System.Drawing.Image)(resources.GetObject("tsButton1.Image")));
@@ -209,13 +226,6 @@
             this.tsButton2.ToolTipText = "F5";
             this.tsButton2.Click += new System.EventHandler(this.tsButton2_Click);
             // 
-            // toolStripCheckbox1
-            // 
-            this.toolStripCheckbox1.Name = "toolStripCheckbox1";
-            this.toolStripCheckbox1.Size = new System.Drawing.Size(61, 29);
-            this.toolStripCheckbox1.Text = "模拟";
-            this.toolStripCheckbox1.Click += new System.EventHandler(this.toolStripCheckbox1_Click);
-            // 
             // tsButton5
             // 
             this.tsButton5.Image = ((System.Drawing.Image)(resources.GetObject("tsButton5.Image")));
@@ -245,16 +255,6 @@
             this.tsButton7.Size = new System.Drawing.Size(71, 29);
             this.tsButton7.Text = "帮助";
             this.tsButton7.Click += new System.EventHandler(this.tsButton7_Click);
-            // 
-            // panel2
-            // 
-            this.panel2.Controls.Add(this.richTextBox1);
-            this.panel2.Controls.Add(this.panel1);
-            this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel2.Location = new System.Drawing.Point(0, 32);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(646, 598);
-            this.panel2.TabIndex = 64;
             // 
             // RunCodeUserControl
             // 

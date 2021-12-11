@@ -481,8 +481,8 @@ namespace ErosSocket.DebugPLC.Robot
 
                     for (int i = 0; i < dataGridView4.Rows.Count; i++)
                     {
-                        if (dataGridView4.Rows[i].Cells[0].Value != null && dataGridView4.Rows[i].Cells[0].Value != ""
-                            && dataGridView4.Rows[i].Cells[1].Value != null && dataGridView4.Rows[i].Cells[1].Value != "")
+                        if (dataGridView4.Rows[i].Cells[0].Value != null && dataGridView4.Rows[i].Cells[0].Value.ToString() != ""
+                            && dataGridView4.Rows[i].Cells[1].Value != null && dataGridView4.Rows[i].Cells[1].Value.ToString() != "")
                         {
                             item.Add(dataGridView4.Rows[i].Cells[0].Value.ToString(), dataGridView4.Rows[i].Cells[1].Value.ToString());
                         }

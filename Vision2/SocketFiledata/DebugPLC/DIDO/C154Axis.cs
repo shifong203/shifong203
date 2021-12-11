@@ -88,7 +88,7 @@ namespace ErosSocket.DebugPLC.DIDO
         public bool IsHome { get; set; }
 
         public sbyte HomeMode { get; set; } = 1;
-        public bool IsError { get; set; }
+        public bool Alarm { get; set; }
         public bool IsEnabled { get; set; }
         public sbyte IsBand_type_brakeNumber { get; set; } = -1;
 

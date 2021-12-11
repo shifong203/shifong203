@@ -30,6 +30,10 @@ namespace ErosSocket.DebugPLC.DIDO
                 }
                 try
                 {
+                    if (Valeu.Count==0)
+                    {
+                        return false;
+                    }
                     return Valeu[index];
                 }
                 catch (Exception)
@@ -39,32 +43,47 @@ namespace ErosSocket.DebugPLC.DIDO
             }
             set
             {
+             
                 if (Valeu[index] != value)
                 {
-                    EventDs[index].TimeVlue = 0;
+                    EventDs[index].timeOutBool = false;
                     Valeu[index] = value;
                     EventDs[index].OnEventValueCh(value, EventDs[index].TimeVlue);
-                }
-                else
-                {
-                    EventDs[index].TimeVlue++;
+                    EventDs[index].WatchT.Restart();
                 }
             }
         }
 
         public class EventD
         {
-            public long TimeVlue;
 
+            public System.Diagnostics.Stopwatch WatchT = new System.Diagnostics.Stopwatch();
+            /// <summary>
+            ///变化时间
+            /// </summary>
+            public double TimeVlue { 
+                get {
+                 
+                    return  Math.Round( WatchT.Elapsed.TotalSeconds,2); 
+                }
+            }
+            public double TimeOut { get; set; } = 2;
+
+            public bool TimeOutBool {
+                get {
+                 
+                    return timeOutBool; }
+                }
+         public     bool timeOutBool;
             public event ValueCh EventValueCh;
 
-            public void OnEventValueCh(bool value, long timeRun)
+            public void OnEventValueCh(bool value, double timeRun)
             {
                 EventValueCh?.Invoke(value, timeRun);
             }
         }
 
-        public delegate void ValueCh(bool value, long timeRun);
+        public delegate void ValueCh(bool value, double timeRun);
 
         public List<EventD> EventDs;
         private List<bool> Valeu { get; set; } = new List<bool>();

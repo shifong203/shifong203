@@ -344,6 +344,8 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         [DescriptionAttribute("模板彷射模式。图片仿射模式、模板区域仿射模式，和绘制仿射模式"), Category("结果显示"), DisplayName("原点Col")]
         [TypeConverter(typeof(ErosConverter)), ErosConverter.ThisDropDownAttribute("", true, "图片", "模板区域", "绘制区域","不执行")]
         public string Mode { get; set; } = "";
+        [DescriptionAttribute("颜色定位名称。"), Category("仿射方式"), DisplayName("颜色定位名称")]
+        public string HomMatName { get; set; } = string.Empty;
 
         [DescriptionAttribute("是否显示模板绘制中心点。"), Category("结果显示"), DisplayName("显示模板绘制中心点")]
         public bool ISPoint { get; set; } = true;
@@ -360,6 +362,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
         [DescriptionAttribute("中心大小。"), Category("结果显示"), DisplayName("中心大小")]
         public int PointSize { get; set; } = 60;
 
+
         public bool IsDip { get; set; }
         public List<DIP> DIPs { get; set; } = new List<DIP>();
 
@@ -372,7 +375,9 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             public double DistanceMax { get; set; } = 100;
             public double AngleMax { get; set; } = 50;
         }
-
+        public double OriginColorY;
+        public double OriginColorX;
+        public double OriginColorA;
         public Text_Model.Text_Mo HTextMod = new Text_Model.Text_Mo();
 
         public Variation_Model Variation_Model = new Variation_Model();
@@ -865,9 +870,10 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 //获得中心点并显示
                 //halcon.POnShowObj(halcon, this.Name);
             }
-            catch (HalconException hdEx)
+            catch (HalconException ex   )
             {
-                MessageBox.Show(hdEx.Message);
+                ErrForm.Show(ex);
+                //MessageBox.Show(ex.Message);
                 halcon.AddNGMessage("创建模板过程失败");
                 //Vision.Disp_message(halcon.hWindowHalcon(), "创建模板过程失败!",  20, 20, true);
             }
@@ -925,12 +931,17 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                         HOperatorSet.GenCrossContourXld(out HObject hObjectt, DIPs[i].Row, DIPs[i].Col, 50, 0);
                         HObjectGreen = HObjectGreen.ConcatObj(hObjectt);
                     }
+        
+                 
                     if (AoiRow.Length == 0)
                     {
                         Rste = false;
                     }
                     else
                     {
+                        //HOperatorSet.DistancePr(hObject, AoiRow, AoiCol, out HTuple dingmin, out HTuple distmax);
+                        //HTuple idt = dingmin.TupleFind(dingmin.TupleMin());
+
                         HTuple indet = new HTuple();
                         for (int id = 0; id < AoiRow.Length; id++)
                         {
@@ -961,7 +972,6 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                                 AoiRow = AoiRow.TupleRemove(id);
                                 AoiCol = AoiCol.TupleRemove(id);
                                 angle = angle.TupleRemove(id);
-
                                 break;
                             }
                         }
@@ -1007,6 +1017,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             this.X = new HTuple();
             this.Y = new HTuple();
             this.m_HomMat2D = new HTuple();
+
             HTuple phi = null;
             try
             {
@@ -1081,6 +1092,7 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 {
                     HOperatorSet.VectorAngleToRigid(MRModelHomMat.Row, MRModelHomMat.Col, MRModelHomMat.Angle, this.OriginY, this.OriginX, 0, out this.m_HomMat2D);
                     HOperatorSet.AffineTransImage(halcon.Image, out HObject images, this.m_HomMat2D, "bicubic", "false");
+                    //halcon.Image.Dispose();
                     halcon.Image = images;
                     halcon.GetHalcon().ImageHdt(images);
                     AddGreen(ROIModeXLD.Clone());
@@ -1238,18 +1250,92 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             this.SetDefault("模板U");
             bool dst = true;
             Watch.Restart();
-            if (this.Mode!="不执行")
-            {
-                if (!this.FindShapeModel(oneResultOBj, this.Mode, aoiObj))
-                {
-                    oneResultOBj.AddNGOBJ(aoiObj.CiName, "Skewing", aoiObj.SelseAoi, nGRoi, this.GetBackNames());
-                    NGNumber++;
-                }
-            }
+         if (!this.ColorDic.ContainsKey(HomMatName))
+           {
+                    if (!this.FindShapeModel(oneResultOBj, this.Mode, aoiObj))
+                    {
+                        oneResultOBj.AddNGOBJ(aoiObj.CiName, "Skewing", aoiObj.SelseAoi, aoiObj.NGErr, this.GetBackNames());
+                        NGNumber++;
+                    }
+           }
             else
             {
-                aoiObj.SelseAoi = AOIObj;
-                nGRoi = AOIObj.Clone();
+                    HObject hObject = new HObject();
+                    hObject.GenEmptyObj();
+                    aoiObj.SelseAoi = ColorDic[HomMatName].DrawObj;
+                ColorDic[HomMatName].IsObj = false;
+                    if (!ColorDic[HomMatName].Classify(oneResultOBj, aoiObj, this, out hObject))
+                    {
+                        //    oneResultOBj.ADDRed(this.Name, item.Value.Name, item.Value.DrawObj.Clone(), hObject);
+                        NGNumber++;
+                    }
+                       HOperatorSet.AreaCenter(hObject, out HTuple area, out HTuple row, out HTuple column);
+                        if (row.Length >= 2)
+                        {
+                             HOperatorSet.LineOrientation(row[0], column[0], row[1], column[1], out HTuple ohi);
+                            //oneResultOBj.AddImageMassage(row[0], column[0],ohi.TupleDeg());
+                            HOperatorSet.LinePosition(row[0], column[0], row[1], column[1], out HTuple rowC, out HTuple colC, out HTuple length, out HTuple phit);
+                            if (ColorDic[HomMatName].IsColt)
+                            {
+                                HOperatorSet.GenCrossContourXld(out HObject cross, rowC, colC, 60, phit);
+                                 oneResultOBj.AddObj(cross);
+                            }
+                            if (this.ISShowText)
+                            {
+                                oneResultOBj.AddImageMassage(rowC, colC, "R" + rowC + "C" + colC + "A" + phit.TupleDeg());
+                            }
+                            if (ColorDic[HomMatName].ISModeC)
+                            {
+                                oneResultOBj.AddImageMassage(rowC, colC, "R" + rowC + "C" + colC + "A" + phit.TupleDeg());
+                                this.OriginColorY = rowC;
+                                this.OriginColorX = colC;
+                                this.OriginColorA = phit;
+                                ColorDic[HomMatName].ISModeC = false;
+                                this.ModeRow = row;
+                                this.ModeCol = column;
+                            }
+                            MRModelHomMat.HomMat.Clear();
+                            HOperatorSet.VectorAngleToRigid(this.OriginColorY, this.OriginColorX, this.OriginColorA, rowC, colC, phit, out HTuple hTuple);
+                            MRModelHomMat.HomMat.Add(hTuple);
+                            if (this.Mode == "绘制区域")
+                            {
+                                Vision.Gen_arrow_contour_xld(out HObject hObject1, row[0], column[0], row[1], column[1]);
+                                HOperatorSet.GenCrossContourXld(out HObject cross, row, column, 60, 0);
+                                oneResultOBj.AddObj(cross, ColorDic[HomMatName].color);
+                                oneResultOBj.AddObj(hObject1, ColorDic[HomMatName].color);
+                                if (this.IsDisObj)
+                                {
+                                    oneResultOBj.AddObj(hObject, ColorDic[HomMatName].color);
+                                }
+                            }
+                            else if (Mode == "图片")
+                            {
+                                HOperatorSet.VectorAngleToRigid( rowC, colC, phit, this.OriginColorY, this.OriginColorX, this.OriginColorA, out this.m_HomMat2D);
+                                HOperatorSet.AffineTransImage(oneResultOBj.Image, out HObject images, this.m_HomMat2D, "bicubic", "false");
+                                   HOperatorSet.AffineTransRegion(hObject, out HObject rongt, m_HomMat2D, "nearest_neighbor");
+                                 oneResultOBj.Image.Dispose();
+                                //
+                                oneResultOBj.GetHalcon().Image(images);
+                                oneResultOBj.GetHalcon().ImageHdt(images);
+                                //oneResultOBj.Image = images;
+                              Vision.Gen_arrow_contour_xld(out HObject hObject1, ModeRow[0],ModeCol[0], ModeRow[1], ModeCol[1]);
+                                oneResultOBj.AddObj(hObject1);
+                                  oneResultOBj.AddObj(rongt,ColorResult.yellow);
+                         }//图片彷设
+                        }
+                        else if(row.Length!=0)
+                        {
+                            HOperatorSet.SmallestRectangle2(hObject, out HTuple row2, out HTuple colu2, out HTuple phi, out HTuple length1, out HTuple length2);
+                            Vision.gen_rectangle2_line_point(row2, colu2, phi, length1, out HTuple rows1, out HTuple colus1, out HTuple rows2, out HTuple colus2);
+                                HOperatorSet.GenCrossContourXld(out HObject cross, rows1, colus1, 100.0,0);
+                               oneResultOBj.AddObj(cross);
+                        HOperatorSet.GenCrossContourXld(out HObject cross2, rows2, colus2, 100.0, 0);
+                       oneResultOBj.AddObj(cross2);
+                        Vision.Gen_arrow_contour_xld(out HObject hObject1, rows1, colus1, rows2, colus2);
+                        oneResultOBj.AddObj(hObject1);
+                }
+                aoiObj.SelseAoi = AOIObj.Clone();
+                aoiObj.NGErr = AOIObj.Clone();
             }
             if (IsDip)
             {
@@ -1257,26 +1343,36 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 if (xldt.CountObj() > 0)
                 {
                     NGNumber++;
-                    nGRoi = nGRoi.ConcatObj(xldt);
+                    aoiObj.NGErr = aoiObj.NGErr.ConcatObj(xldt);
                     HOperatorSet.GenRectangle2(out HObject hObject1, row, col, HTuple.TupleGenConst(row.Length, 0),
                         HTuple.TupleGenConst(row.Length, Vision.Instance.DilationRectangle1),
                         HTuple.TupleGenConst(row.Length, Vision.Instance.DilationRectangle1));
-                    oneResultOBj.AddImageMassage(row, col, phi.TupleString("0.02f") + ":" + DIPs[idt].Name, ColorResult.red);
-                    oneResultOBj.AddNGOBJ(aoiObj.CiName, "Skewing", hObject1, nGRoi, this.GetBackNames());
+                    HTuple mest = "a"+ phi.TupleString("0.02f");
+
+                    if (row.Length==MRModelHomMat.Row.Length)
+                    {
+                        HOperatorSet.DistancePp(row, col, MRModelHomMat.Row, MRModelHomMat.Col, out HTuple dist);
+                        dist= oneResultOBj.GetCaliConstMM(dist);
+                        mest += "d" + dist.TupleString("0.02f");
+                    }
+            
+              
+                    oneResultOBj.AddImageMassage(row, col, DIPs[idt].Name+ ":" + mest, ColorResult.red);
+                    oneResultOBj.AddNGOBJ(aoiObj.CiName, "Skewing", hObject1, aoiObj.NGErr, this.GetBackNames());
                     dst = false;
                 }
             }
             else if (!dst)
             {
-                if (nGRoi.IsInitialized())
+                if (aoiObj.NGErr.IsInitialized())
                 {
-                    HOperatorSet.AreaCenter(nGRoi, out HTuple area, out HTuple row, out HTuple column);
+                    HOperatorSet.AreaCenter(aoiObj.NGErr, out HTuple area, out HTuple row, out HTuple column);
                     if (area > 100)
                     {
                         NGNumber++;
                         HOperatorSet.GenRectangle2(out HObject hObject1, row, column, HTuple.TupleGenConst(row.Length, 0),
                         HTuple.TupleGenConst(row.Length, Vision.Instance.DilationRectangle1), HTuple.TupleGenConst(row.Length, Vision.Instance.DilationRectangle1));
-                        oneResultOBj.AddNGOBJ(aoiObj.CiName, "Skewing", hObject1, nGRoi, this.GetBackNames());
+                        oneResultOBj.AddNGOBJ(aoiObj.CiName, "Skewing", hObject1, aoiObj.NGErr, this.GetBackNames());
                     }
                 }
             }
@@ -1288,6 +1384,10 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
             {
                 try
                 {
+                    if (item.Key==(HomMatName))
+                    {
+                        continue;
+                    }
                     if (!item.Value.Enble)
                     {
                         continue;
@@ -1330,40 +1430,9 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                             oneResultOBj.AddObj(hObject, item.Value.color);
                         }
                     }
-
-                    if (item.Value.ModeHom)
-                    {
-                        HOperatorSet.AreaCenter(hObject, out HTuple area, out HTuple row, out HTuple column);
-                        if (row.Length>=2)
-                        {
-                            Vision.Gen_arrow_contour_xld(out HObject hObject1, row[0], column[0], row[1], column[1]);
-                            oneResultOBj.AddObj(hObject1, item.Value.color);
-                            HOperatorSet.LineOrientation(row[0], column[0], row[1], column[1], out HTuple ohi);
-                            //oneResultOBj.AddImageMassage(row[0], column[0],ohi.TupleDeg());
-                            HOperatorSet.LinePosition(row[0], column[0], row[1], column[1], out HTuple rowC, out HTuple colC, out HTuple length, out HTuple phit);
-                            if (item.Value.IsColt)
-                            {
-                                oneResultOBj.AddImageMassage(rowC, colC, "R" + rowC + "C" + colC + "A" + phit.TupleDeg());
-                            }
-                            if (item.Value.ISModeC)
-                            {
-                                oneResultOBj.AddImageMassage(rowC, colC, "R" + rowC + "C" + colC + "A" + phit.TupleDeg());
-                                this.OriginY = rowC;
-                                this.OriginX = colC;
-                                this.OriginU = phit.TupleDeg();
-                                item.Value.ISModeC = false;
-                                this.ModeRow = row;
-                                this.ModeCol = column;
-                            }
-                            MRModelHomMat.HomMat.Clear();
-                            HOperatorSet.VectorAngleToRigid(this.OriginY, this.OriginX, this.OriginU.TupleRad(), rowC, colC, phit, out HTuple hTuple);
-                            MRModelHomMat.HomMat.Add(hTuple);
-                        }
-                    }
                 }
-                catch (Exception)
-                {
-                }
+                catch (Exception EX)
+                {   }
             }
             if (oneResultOBj.GetHalcon() != null)
             {
@@ -1376,10 +1445,10 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                 {
                     oneResultOBj.GetHalcon().GDicModelR()[this.Name] = MRModelHomMat;
                 }
-                string data = "ModelVision,null";
+                string data =this.Name+ ",0,-999,-999,-999";
                 if (oneResultOBj.GetHalcon().GDicModelR().ContainsKey(this.Name))
                 {
-                    data = "ModelVision," + this.Name + "," + oneResultOBj.GetHalcon().GDicModelR()[this.Name].NumberT.ToString() + ",";
+                    data =  this.Name + "," + oneResultOBj.GetHalcon().GDicModelR()[this.Name].NumberT.ToString() + ",";
                     this["模板数量"] = oneResultOBj.GetHalcon().GDicModelR()[this.Name].NumberT;
                     this["模板X"] = oneResultOBj.GetHalcon().GDicModelR()[this.Name].X;
                     this["模板Y"] = oneResultOBj.GetHalcon().GDicModelR()[this.Name].Y;
@@ -1427,9 +1496,20 @@ namespace Vision2.vision.HalconRunFile.RunProgramFile
                                 "," + oneResultOBj.GetHalcon().GDicModelR()[this.Name].Y.TupleSelect(i).TupleString("0.3f")
                                 + "," + oneResultOBj.GetHalcon().GDicModelR()[this.Name].Angle.TupleSelect(i).TupleDeg().TupleString("0.3f") + ",";
                         }
+                        if (oneResultOBj.GetHalcon().GDicModelR()[this.Name].NumberT==0)
+                        {
+                            data += "-999,-999,-999";
+                        }
                     }
                 }
-                oneResultOBj.GetHalcon().SendMesage(data.TrimEnd(','));
+                if (StaticCon.GetSocketClint(this.ReadRunIDName)!=null)
+                {
+                    StaticCon.GetSocketClint(this.ReadRunIDName).Send(data.TrimEnd(','));
+                }
+                else
+                {
+                    oneResultOBj.GetHalcon().SendMesage(data.TrimEnd(','));
+                } 
             }
             if (dst)
             {

@@ -87,9 +87,10 @@ namespace Vision2.ErosUI
                         }
                     }
                 }
-                catch (Exception msg)
+                catch (Exception ex)
                 {
-                    MessageBox.Show(msg.Message);                   //异常处理
+                    Vision2.ErosProjcetDLL.Project.ErrForm.Show(ex);
+                    /*MessageBox.Show(ex.Message);   */                //异常处理
                 }
             }
         }
@@ -210,9 +211,10 @@ namespace Vision2.ErosUI
                     this.filesList.EndUpdate();
                 }
             }
-            catch (Exception msg)  //异常处理
+            catch (Exception ex)  //异常处理
             {
-                MessageBox.Show(msg.Message);
+                Vision2.ErosProjcetDLL.Project.ErrForm.Show(ex);
+                MessageBox.Show(ex.Message);
             }
         }
 
@@ -254,9 +256,10 @@ namespace Vision2.ErosUI
                     p.Start(); //开始打开文件
                 }
             }
-            catch (Exception msg) //异常处理
+            catch (Exception ex ) //异常处理
             {
-                MessageBox.Show(msg.Message);
+                Vision2.ErosProjcetDLL.Project.ErrForm.Show(ex);
+                MessageBox.Show(ex.Message);
             }
         }
 
@@ -340,9 +343,10 @@ namespace Vision2.ErosUI
                 }
                 MessageBox.Show(this, "成功删除了文件！", "信息提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-            catch (Exception msg) //异常处理
+            catch (Exception ex ) //异常处理
             {
-                MessageBox.Show(msg.Message);
+                Vision2.ErosProjcetDLL.Project.ErrForm.Show(ex);
+             //   MessageBox.Show(ex.Message);
             }
         }
 

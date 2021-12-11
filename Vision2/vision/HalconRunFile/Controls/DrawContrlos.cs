@@ -439,7 +439,7 @@ namespace Vision2.vision.HalconRunFile.Controls
             oBJSeleForm.Show();
 
             oBJSeleForm.ShowImage(halcon.GetOneImageR());
-            oBJSeleForm.AddErrObj(runPa.nGRoi);
+            //oBJSeleForm.AddErrObj(runPa.nGRoi);
         }
 
         private void toolStripComboBox1_Click(object sender, EventArgs e)

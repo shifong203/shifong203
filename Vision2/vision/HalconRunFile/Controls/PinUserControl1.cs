@@ -15,6 +15,7 @@ namespace Vision2.vision.HalconRunFile.Controls
         {
             InitializeComponent();
             StCon.AddCon(this.dataGridView2);
+            StCon.AddCon(this.dataGridView3);
             height = this.Height;
         }
 
@@ -150,9 +151,10 @@ namespace Vision2.vision.HalconRunFile.Controls
                     }
                 }
             }
-            catch (Exception exception)
+            catch (Exception ex )
             {
-                MessageBox.Show(exception.Message);
+                Vision2.ErosProjcetDLL.Project.ErrForm.Show(ex);
+                //MessageBox.Show(ex.Message);
             }
             this.isup = false;
         }
@@ -251,8 +253,8 @@ namespace Vision2.vision.HalconRunFile.Controls
                 this.dataGridView2.Visible = false;
             Label_0354:
                 this.label4.Text = this.progressBar1.Value.ToString() + "/" + this.progressBar1.Maximum.ToString();
-                HOperatorSet.GetImageType(this.halconRun.Image(null), out tuple);
-                this.halconRun.ListObjCler();
+                HOperatorSet.GetImageType(this.halconRun.Image(), out tuple);
+                this.halconRun.HobjClear();
                 this.progressBar1.Maximum = 30;
                 this.progressBar1.Value = runID;
                 if (tuple == "")
@@ -269,9 +271,10 @@ namespace Vision2.vision.HalconRunFile.Controls
                 }
                 this.halconRun.ShowObj();
             }
-            catch (Exception exception)
+            catch (Exception ex )
             {
-                MessageBox.Show(exception.Message);
+                Vision2.ErosProjcetDLL.Project.ErrForm.Show(ex);
+                //MessageBox.Show(ex.Message);
             }
         }
 
@@ -293,9 +296,10 @@ namespace Vision2.vision.HalconRunFile.Controls
                     return;
                 }
             }
-            catch (Exception exception)
+            catch (Exception ex)
             {
-                MessageBox.Show(exception.Message);
+                Vision2.ErosProjcetDLL.Project.ErrForm.Show(ex);
+                //MessageBox.Show(ex.Message);
             }
             this.halconRun.Drawing = false;
         }
@@ -356,9 +360,10 @@ namespace Vision2.vision.HalconRunFile.Controls
                 this.halconRun.Focus();
                 this.PinTTD.ShowReing(this.halconRun.hWindowHalcon());
             }
-            catch (Exception exception)
+            catch (Exception ex )
             {
-                MessageBox.Show(exception.Message);
+                Vision2.ErosProjcetDLL.Project.ErrForm.Show(ex);
+                //MessageBox.Show(ex.Message);
             }
         }
 
@@ -440,9 +445,10 @@ namespace Vision2.vision.HalconRunFile.Controls
                     this.SetValueT(0);
                 }
             }
-            catch (Exception exception)
+            catch (Exception ex )
             {
-                MessageBox.Show(exception.Message);
+                Vision2.ErosProjcetDLL.Project.ErrForm.Show(ex);
+                //MessageBox.Show(ex.Message);
             }
         }
 

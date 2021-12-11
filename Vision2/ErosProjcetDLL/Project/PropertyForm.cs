@@ -147,33 +147,43 @@ namespace Vision2.ErosProjcetDLL.Project
                 Data = data;
                 ProjectINI.Form().Invoke(new Action(() =>
                 {
-                    this.attributeUI = data as ProjectNodet.IClickNodeProject;
-                    if (this.attributeUI != null)
+                    try
                     {
-                        this.tabPage1.Text = this.attributeUI.Name + "属性";
-                        this.Text = "属性" + this.attributeUI.Name;
+                        this.attributeUI = data as ProjectNodet.IClickNodeProject;
+                        if (this.attributeUI != null)
+                        {
+                            this.tabPage1.Text = this.attributeUI.Name + "属性";
+                            this.Text = "属性" + this.attributeUI.Name;
+                        }
+                        if (this.attributeUI != null)
+                        {
+                            TabPage tabPage = new TabPage();
+                            tabPage.Text = tabPage.Name = "调试窗口";
+                            this.tabControl1.TabPages.Add(tabPage);
+                            tabPage.Controls.Add(this.attributeUI.GetThisControl());
+                            this.tabControl1.SelectedTab = tabPage;
+                        }
+                        else
+                        {
+                            this.tabPage1.Controls.Clear();
+                            this.tabPage1.Controls.Add(this.propertyGrid1);
+                        }
+                        //this.tabControl1.TabPages.Add(this.tabPage1);
+                        this.propertyGrid1.SelectedObject = data;
+                        tabControl1.Dock = DockStyle.Fill;
                     }
-                    if (this.attributeUI != null)
+                    catch (Exception ex)
                     {
-                        TabPage tabPage = new TabPage();
-                        tabPage.Text = tabPage.Name = "调试窗口";
-                        this.tabControl1.TabPages.Add(tabPage);
-                        tabPage.Controls.Add(this.attributeUI.GetThisControl());
-                        this.tabControl1.SelectedTab = tabPage;
+                        ErrForm.Show(ex);
+
                     }
-                    else
-                    {
-                        this.tabPage1.Controls.Clear();
-                        this.tabPage1.Controls.Add(this.propertyGrid1);
-                    }
-                    //this.tabControl1.TabPages.Add(this.tabPage1);
-                    this.propertyGrid1.SelectedObject = data;
-                    tabControl1.Dock = DockStyle.Fill;
+           
                 }));
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                ErrForm.Show(ex);
+               
             }
         }
 

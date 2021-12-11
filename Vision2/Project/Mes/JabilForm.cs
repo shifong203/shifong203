@@ -266,9 +266,9 @@ namespace Vision2.Project.formula
                     }
                 }
 
-                if (Directory.Exists(mesJib.DataPaht + "//Mes记录//" + dataTime))
+                if (Directory.Exists(RecipeCompiler.Instance.DataPaht + "//Mes记录//" + dataTime))
                 {
-                    files = Directory.GetFiles(mesJib.DataPaht + "//Mes记录//" + dataTime);
+                    files = Directory.GetFiles(RecipeCompiler.Instance.DataPaht + "//Mes记录//" + dataTime);
                     List<string> mestPahts = new List<string>();
 
                     for (int i = 0; i < files.Length; i++)
@@ -285,9 +285,9 @@ namespace Vision2.Project.formula
                     }
                 }
 
-                if (Directory.Exists(mesJib.DataPaht + "//FVT//" + dataTime))
+                if (Directory.Exists(RecipeCompiler.Instance.DataPaht + "//FVT//" + dataTime))
                 {
-                    files = Directory.GetFiles(mesJib.DataPaht + "//FVT//" + dataTime);
+                    files = Directory.GetFiles(RecipeCompiler.Instance.DataPaht + "//FVT//" + dataTime);
                     for (int i = 0; i < files.Length; i++)
                     {
                         bool iscd = false;
@@ -309,9 +309,9 @@ namespace Vision2.Project.formula
                     }
                 }
 
-                if (File.Exists(mesJib.DataPaht + "//" + dataTime + ".csv"))
+                if (File.Exists(RecipeCompiler.Instance.DataPaht + "//" + dataTime + ".csv"))
                 {
-                    string[] txte = File.ReadAllLines(mesJib.DataPaht + "//" + dataTime + ".csv");
+                    string[] txte = File.ReadAllLines(RecipeCompiler.Instance.DataPaht + "//" + dataTime + ".csv");
                     List<string> dasts = new List<string>();
                     bool isdta = false;
                     for (int i = 0; i < txte.Length; i++)
@@ -360,6 +360,16 @@ namespace Vision2.Project.formula
             {
                 HalconDotNet.HOperatorSet.ReadImage(out HalconDotNet.HObject hObject, imagepsht[listBox2.SelectedIndex]);
                 HWindI.SetImaage(hObject);
+            }
+            catch (Exception ex)
+            {}
+        }
+
+        private void button8_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                mesJib.MesSN.Clear();
             }
             catch (Exception)
             {

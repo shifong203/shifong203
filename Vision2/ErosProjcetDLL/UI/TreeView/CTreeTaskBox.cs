@@ -440,10 +440,10 @@ namespace XoExpress.SeControl
                 {
                     rectTop.Height = (int)(rectTop.Height * basePosition);
                 }
-                else
-                {
-                    rectTop.Width = (int)(rect.Width * basePosition);
-                }
+                //else
+                //{
+                //    rectTop.Width = (int)(rect.Width * basePosition);
+                //}
                 using (SolidBrush brushAlpha =
                     new SolidBrush(Color.FromArgb(80, 255, 255, 255)))
                 {

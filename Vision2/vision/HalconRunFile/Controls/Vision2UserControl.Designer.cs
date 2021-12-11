@@ -36,6 +36,7 @@
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
             this.toolStripButton4 = new System.Windows.Forms.ToolStripButton();
             this.toolStRowCol = new System.Windows.Forms.ToolStripComboBox();
+            this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.imageFielNumber = new System.Windows.Forms.ToolStripDropDownButton();
@@ -67,8 +68,8 @@
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.tcbRunType = new System.Windows.Forms.ToolStripComboBox();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripButton5 = new System.Windows.Forms.ToolStripButton();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.toolStripLabel2 = new System.Windows.Forms.ToolStripLabel();
             this.visionUserControl1 = new Vision2.vision.HalconRunFile.Controls.VisionUserControl();
             this.toolStrip2.SuspendLayout();
             this.toolStrip1.SuspendLayout();
@@ -144,6 +145,12 @@
             this.toolStRowCol.Size = new System.Drawing.Size(121, 30);
             this.toolStRowCol.SelectedIndexChanged += new System.EventHandler(this.toolStRowCol_SelectedIndexChanged);
             // 
+            // toolStripLabel2
+            // 
+            this.toolStripLabel2.Name = "toolStripLabel2";
+            this.toolStripLabel2.Size = new System.Drawing.Size(61, 27);
+            this.toolStripLabel2.Text = "Count:";
+            // 
             // toolStrip1
             // 
             this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
@@ -158,7 +165,8 @@
             this.toolStripButton3,
             this.toolStripButton1,
             this.tcbRunType,
-            this.toolStripSeparator4});
+            this.toolStripSeparator4,
+            this.toolStripButton5});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(942, 27);
@@ -418,6 +426,16 @@
             this.toolStripSeparator4.Name = "toolStripSeparator4";
             this.toolStripSeparator4.Size = new System.Drawing.Size(6, 27);
             // 
+            // toolStripButton5
+            // 
+            this.toolStripButton5.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.toolStripButton5.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton5.Image")));
+            this.toolStripButton5.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton5.Name = "toolStripButton5";
+            this.toolStripButton5.Size = new System.Drawing.Size(60, 24);
+            this.toolStripButton5.Text = "元件管理";
+            this.toolStripButton5.Click += new System.EventHandler(this.toolStripButton5_Click);
+            // 
             // panel1
             // 
             this.panel1.AutoScroll = true;
@@ -427,12 +445,6 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(942, 425);
             this.panel1.TabIndex = 5;
-            // 
-            // toolStripLabel2
-            // 
-            this.toolStripLabel2.Name = "toolStripLabel2";
-            this.toolStripLabel2.Size = new System.Drawing.Size(63, 27);
-            this.toolStripLabel2.Text = "Cont：";
             // 
             // visionUserControl1
             // 
@@ -515,5 +527,6 @@
         private System.Windows.Forms.ToolStripMenuItem 保存到产品文件夹ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 库调试ToolStripMenuItem;
         private System.Windows.Forms.ToolStripLabel toolStripLabel2;
+        private System.Windows.Forms.ToolStripButton toolStripButton5;
     }
 }
